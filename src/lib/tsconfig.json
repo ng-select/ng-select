@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+      "experimentalDecorators": true,
+    "outDir": "../../out-tsc/lib-es2015/",
+    "target": "es2015",
+    "rootDir": "./",
+    "baseUrl": "",
+    "types": ["jasmine"]
+  },
+  "angularCompilerOptions": {
+    "annotateForClosureCompiler": true,
+    "strictMetadataEmit": true,
+    "skipTemplateCodegen": true,
+    "flatModuleOutFile": "quickstart-lib.js",
+    "flatModuleId": "quickstart-lib",
+    "genDir": "../../out-tsc/lib-gen-dir/"
+  }
+}

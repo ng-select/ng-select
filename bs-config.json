@@ -1,0 +1,10 @@
+{
+  "server": {
+    "baseDir": "src/demo",
+      "http2": true,
+    "routes": {
+      "/node_modules": "node_modules",
+      "/quickstart-lib": "src/lib"
+    }
+  }
+}

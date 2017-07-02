@@ -1,0 +1,23 @@
+<div (click)="toggle()" class="ang-select-container">
+    <ng-container *ngIf="displayTemplateRef" [ngTemplateOutlet]="displayTemplateRef.template"
+                  [ngOutletContext]="getDisplayTemplateContext()"></ng-container>
+
+    <ng-container *ngIf="!displayTemplateRef">{{getTextValue()}}</ng-container>
+
+    <span *ngIf="allowClear && selectedItem" class="ang-select-clear" (click)="clear()">×</span>
+    <span class="ang-select-arrow"></span>
+</div>
+<div class="ang-select-dropdown" *ngIf="isOpen">
+    <ng-container>
+        <div class="ang-option" (click)="select(item)" *ngFor="let item of items; let index = index; let first = first; let last = last; let even = even; let odd = odd"
+             [class.selected]="item == selectedItem">
+
+            <ng-container *ngIf="!optionTemplateRef">{{item[bindText]}}</ng-container>
+
+            <ng-container *ngIf="optionTemplateRef" [ngTemplateOutlet]="optionTemplateRef.template"
+                          [ngOutletContext]="getOptionTemplateContext(item, index, first, last, even, odd)">
+            </ng-container>
+        </div>
+    </ng-container>
+</div>
+
