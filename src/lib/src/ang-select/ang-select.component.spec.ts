@@ -1,34 +1,24 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DebugElement, Component, ViewChild} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement, Component, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
-import {AngSelectModule} from '../module';
-import {AngSelectComponent, Key} from './ang-select.component';
+import { AngSelectModule } from '../module';
+import { AngSelectComponent, Key } from './ang-select.component';
 
 describe('AngSelectComponent', function () {
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            imports: [FormsModule, AngSelectModule],
-            declarations: [AngSelectTestPage]
-        })
-            .compileComponents();
-    }));
-
-
-    it('should create component', () => {
-        const fixture = TestBed.createComponent(AngSelectTestPage);
-        fixture.detectChanges();
-        expect(fixture.componentInstance).toBeDefined();
-    });
-
-    describe('dropdown container click', () => {
-        let fixture: ComponentFixture<AngSelectTestPage>;
+    describe('Dropdown container click', () => {
+        let fixture: ComponentFixture<AngSelectBasic>;
         let trigger: HTMLElement;
 
         beforeEach(() => {
-            fixture = TestBed.createComponent(AngSelectTestPage);
+            TestBed.configureTestingModule({
+                imports: [FormsModule, AngSelectModule],
+                declarations: [AngSelectBasic]
+            })
+                .compileComponents();
+            fixture = TestBed.createComponent(AngSelectBasic);
             fixture.detectChanges();
             trigger = fixture.debugElement.query(By.css('.ang-select-container')).nativeElement;
         });
@@ -56,19 +46,25 @@ describe('AngSelectComponent', function () {
         });
     });
 
-    describe('model changes', () => {
-        let fixture: ComponentFixture<AngSelectTestPage>;
+    describe('Model changes', () => {
+        let fixture: ComponentFixture<AngSelectBasic>;
 
         beforeEach(() => {
-            fixture = TestBed.createComponent(AngSelectTestPage);
+
+            TestBed.configureTestingModule({
+                imports: [FormsModule, AngSelectModule],
+                declarations: [AngSelectBasic]
+            })
+                .compileComponents();
+            fixture = TestBed.createComponent(AngSelectBasic);
             fixture.detectChanges();
         });
 
-        xit('should update app model value', () => {
+        it('should update app model value', () => {
             triggerKeyDownEvent(getAngSelectElement(fixture), Key.ArrowDown);
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[1]);
+            expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[0]);
         });
 
         it('should update select model value', () => {
@@ -81,11 +77,16 @@ describe('AngSelectComponent', function () {
         });
     });
 
-    describe('keyboard events', () => {
-        let fixture: ComponentFixture<AngSelectTestPage>;
+    describe('Keyboard events', () => {
+        let fixture: ComponentFixture<AngSelectBasic>;
 
         beforeEach(() => {
-            fixture = TestBed.createComponent(AngSelectTestPage);
+            TestBed.configureTestingModule({
+                imports: [FormsModule, AngSelectModule],
+                declarations: [AngSelectBasic]
+            })
+                .compileComponents();
+            fixture = TestBed.createComponent(AngSelectBasic);
             fixture.detectChanges();
         });
 
@@ -95,10 +96,10 @@ describe('AngSelectComponent', function () {
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         });
 
-        xit('should select next value on arrow down', () => {
+        it('should select next value on arrow down', () => {
             triggerKeyDownEvent(getAngSelectElement(fixture), Key.ArrowDown);
 
-            expect(fixture.componentInstance.select.selectedItem).toEqual(fixture.componentInstance.cities[1]);
+            expect(fixture.componentInstance.select.selectedItem).toEqual(fixture.componentInstance.cities[0]);
         });
 
         it('should select first value on arrow down when current selected value is last', () => {
@@ -134,6 +135,79 @@ describe('AngSelectComponent', function () {
 
     });
 
+    describe('Custom display template', () => {
+        let fixture: ComponentFixture<AngSelectBasic>;
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                imports: [FormsModule, AngSelectModule],
+                declarations: [AngSelectBasic]
+            })
+                .overrideComponent(AngSelectBasic, {
+                    set: {
+                        template: `
+                        <ang-select [items]="cities" [(ngModel)]="selectedCity">
+                            <ng-template ang-display-tmp let-item="item">
+                                <div class="custom-header">{{item.name}}</div>
+                            </ng-template>
+                        </ang-select>
+                    `
+                    }
+                })
+                .compileComponents();
+
+            fixture = TestBed.createComponent(AngSelectBasic);
+            fixture.detectChanges();
+        });
+
+        it('should display custom html', async(() => {
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const el = fixture.debugElement.query(By.css('.custom-header')).nativeElement;
+                expect(el).not.toBeNull();
+            });
+        }));
+    });
+
+    describe('Custom option template', () => {
+        let fixture: ComponentFixture<AngSelectBasic>;
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                imports: [FormsModule, AngSelectModule],
+                declarations: [AngSelectBasic]
+            })
+                .overrideComponent(AngSelectBasic, {
+                    set: {
+                        template: `
+                        <ang-select [items]="cities" [(ngModel)]="selectedCity">
+                            <ng-template ang-option-tmp let-item="item">
+                                <div class="custom-option">{{item.name}}</div>
+                            </ng-template>
+                        </ang-select>
+                    `
+                    }
+                })
+                .compileComponents();
+
+            fixture = TestBed.createComponent(AngSelectBasic);
+            fixture.detectChanges();
+        });
+
+        it('should display custom html', async(() => {
+            const trigger = fixture.debugElement.query(By.css('.ang-select-container')).nativeElement;
+            trigger.click();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const el = fixture.debugElement.query(By.css('.custom-option')).nativeElement;
+                expect(el).not.toBeNull();
+            });
+        }));
+    });
+
 });
 
 function getAngSelectElement(fixture: ComponentFixture<any>): DebugElement {
@@ -151,31 +225,19 @@ function triggerKeyDownEvent(element: DebugElement, key: number): void {
 @Component({
     template: `
         <div>
-            <button (click)="toggle()">Click</button>
-            <div *ngIf="show">Show</div>
-            <ang-select [items]="cities" [(ngModel)]="selectedCity">
-                <ng-template ang-display-tmp let-item="item">
-                    {{item.name}}
-                </ng-template>
-                <ng-template ang-option-tmp let-item="item">
-                    Template <b>{{item.name}}</b>
-                </ng-template>
+            <ang-select [items]="cities" 
+                        bindText="name"
+                        [(ngModel)]="selectedCity">
             </ang-select>
         </div>
     `
 })
-class AngSelectTestPage {
+class AngSelectBasic {
     @ViewChild(AngSelectComponent) select: AngSelectComponent;
     selectedCity: { id: number; name: string };
-    show = true;
-
     cities = [
-        {id: 1, name: 'Vilnius'},
-        {id: 2, name: 'Kaunas'},
-        {id: 3, name: 'Pabrade'},
+        { id: 1, name: 'Vilnius' },
+        { id: 2, name: 'Kaunas' },
+        { id: 3, name: 'Pabrade' },
     ];
-
-    toggle() {
-        this.show = !this.show;
-    }
 }
