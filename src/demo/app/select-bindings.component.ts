@@ -6,6 +6,7 @@ import {Component} from '@angular/core';
         <label>Bind display text to property</label>
         <ang-select [items]="cities"
                     bindText="name"
+                    placeholder="Select value"
                     [allowClear]="true"
                     [(ngModel)]="selectedCity">
         </ang-select>

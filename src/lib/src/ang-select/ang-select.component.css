@@ -7,6 +7,7 @@ ang-select {
 .ang-select-container {
     width: 100%;
     padding: .5rem .75rem;
+    height: calc(2.25rem + 2px);
     font-size: 1rem;
     line-height: 1.25;
     color: #464a4c;
@@ -21,6 +22,10 @@ ang-select {
     -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+}
+
+.ang-select-placeholder {
+    color: #999;
 }
 
 .ang-select-arrow {

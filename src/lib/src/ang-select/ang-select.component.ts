@@ -56,6 +56,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     @Input() bindValue: string;
     @Input() allowClear: boolean;
     @Input() allowSearch: boolean;
+    @Input() placeholder: string;
 
     isOpen = false;
     selectedItem: any = null;
@@ -113,7 +114,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
                 this.selectedItemIndex = this.items.indexOf(obj);
             }
         }
-        this.changeDetectorRef.markForCheck();
+        this.changeDetectorRef.detectChanges();
     }
 
     registerOnChange(fn: any): void {
@@ -153,14 +154,18 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
         };
     }
 
-    private close() {
-        this.isOpen = false;
-    }
-
     select(item: any) {
         this.selectedItem = item;
         this.notifyModelChanged(item);
         this.close();
+    }
+
+    showPlaceholder() {
+        return this.placeholder && !this.selectedItem;
+    }
+
+    private close() {
+        this.isOpen = false;
     }
 
     private selectNextItem() {

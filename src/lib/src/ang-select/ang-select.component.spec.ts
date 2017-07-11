@@ -13,13 +13,11 @@ describe('AngSelectComponent', function () {
         let trigger: HTMLElement;
 
         beforeEach(() => {
-            TestBed.configureTestingModule({
-                imports: [FormsModule, AngSelectModule],
-                declarations: [AngSelectBasic]
-            })
-                .compileComponents();
-            fixture = TestBed.createComponent(AngSelectBasic);
-            fixture.detectChanges();
+            fixture = createTestingModule(
+                `<ang-select [items]="cities" 
+                        bindText="name"
+                        [(ngModel)]="selectedCity">
+                </ang-select>`);
             trigger = fixture.debugElement.query(By.css('.ang-select-container')).nativeElement;
         });
 
@@ -50,14 +48,11 @@ describe('AngSelectComponent', function () {
         let fixture: ComponentFixture<AngSelectBasic>;
 
         beforeEach(() => {
-
-            TestBed.configureTestingModule({
-                imports: [FormsModule, AngSelectModule],
-                declarations: [AngSelectBasic]
-            })
-                .compileComponents();
-            fixture = TestBed.createComponent(AngSelectBasic);
-            fixture.detectChanges();
+            fixture = createTestingModule(
+                `<ang-select [items]="cities" 
+                        bindText="name"
+                        [(ngModel)]="selectedCity">
+                </ang-select>`);
         });
 
         it('should update app model value', () => {
@@ -81,13 +76,11 @@ describe('AngSelectComponent', function () {
         let fixture: ComponentFixture<AngSelectBasic>;
 
         beforeEach(() => {
-            TestBed.configureTestingModule({
-                imports: [FormsModule, AngSelectModule],
-                declarations: [AngSelectBasic]
-            })
-                .compileComponents();
-            fixture = TestBed.createComponent(AngSelectBasic);
-            fixture.detectChanges();
+            fixture = createTestingModule(
+                `<ang-select [items]="cities" 
+                        bindText="name"
+                        [(ngModel)]="selectedCity">
+                </ang-select>`);
         });
 
         it('should open dropdown on space click', () => {
@@ -139,25 +132,12 @@ describe('AngSelectComponent', function () {
         let fixture: ComponentFixture<AngSelectBasic>;
 
         beforeEach(() => {
-            TestBed.configureTestingModule({
-                imports: [FormsModule, AngSelectModule],
-                declarations: [AngSelectBasic]
-            })
-                .overrideComponent(AngSelectBasic, {
-                    set: {
-                        template: `
-                        <ang-select [items]="cities" [(ngModel)]="selectedCity">
-                            <ng-template ang-display-tmp let-item="item">
-                                <div class="custom-header">{{item.name}}</div>
-                            </ng-template>
-                        </ang-select>
-                    `
-                    }
-                })
-                .compileComponents();
-
-            fixture = TestBed.createComponent(AngSelectBasic);
-            fixture.detectChanges();
+            fixture = createTestingModule(`
+                <ang-select [items]="cities" [(ngModel)]="selectedCity">
+                    <ng-template ang-display-tmp let-item="item">
+                        <div class="custom-header">{{item.name}}</div>
+                    </ng-template>
+                </ang-select>`);
         });
 
         it('should display custom html', async(() => {
@@ -175,25 +155,12 @@ describe('AngSelectComponent', function () {
         let fixture: ComponentFixture<AngSelectBasic>;
 
         beforeEach(() => {
-            TestBed.configureTestingModule({
-                imports: [FormsModule, AngSelectModule],
-                declarations: [AngSelectBasic]
-            })
-                .overrideComponent(AngSelectBasic, {
-                    set: {
-                        template: `
-                        <ang-select [items]="cities" [(ngModel)]="selectedCity">
-                            <ng-template ang-option-tmp let-item="item">
-                                <div class="custom-option">{{item.name}}</div>
-                            </ng-template>
-                        </ang-select>
-                    `
-                    }
-                })
-                .compileComponents();
-
-            fixture = TestBed.createComponent(AngSelectBasic);
-            fixture.detectChanges();
+            fixture = createTestingModule(`
+                <ang-select [items]="cities" [(ngModel)]="selectedCity">
+                    <ng-template ang-option-tmp let-item="item">
+                        <div class="custom-option">{{item.name}}</div>
+                    </ng-template>
+                </ang-select>`);
         });
 
         it('should display custom html', async(() => {
@@ -204,6 +171,38 @@ describe('AngSelectComponent', function () {
             fixture.whenStable().then(() => {
                 const el = fixture.debugElement.query(By.css('.custom-option')).nativeElement;
                 expect(el).not.toBeNull();
+            });
+        }));
+    });
+
+    describe('Placeholder', () => {
+        let fixture: ComponentFixture<AngSelectBasic>;
+
+        beforeEach(() => {
+            fixture = createTestingModule(`
+                <ang-select [items]="cities" 
+                    bindText="name"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ang-select>`);
+        });
+
+        it('should display then no selected value', async(() => {
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const el = fixture.debugElement.query(By.css('.ang-select-placeholder')).nativeElement;
+                expect(el.innerText).toBe('select value');
+            });
+        }));
+
+        it('should not display then selected value', async(() => {
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const el = fixture.debugElement.query(By.css('.ang-select-placeholder'));
+                expect(el).toBeNull();
             });
         }));
     });
@@ -222,14 +221,25 @@ function triggerKeyDownEvent(element: DebugElement, key: number): void {
     });
 }
 
+function createTestingModule(template: string): ComponentFixture<AngSelectBasic> {
+    TestBed.configureTestingModule({
+        imports: [FormsModule, AngSelectModule],
+        declarations: [AngSelectBasic]
+    })
+        .overrideComponent(AngSelectBasic, {
+            set: {
+                template: template
+            }
+        })
+        .compileComponents();
+
+    const fixture = TestBed.createComponent(AngSelectBasic);
+    fixture.detectChanges();
+    return fixture;
+}
+
 @Component({
     template: `
-        <div>
-            <ang-select [items]="cities" 
-                        bindText="name"
-                        [(ngModel)]="selectedCity">
-            </ang-select>
-        </div>
     `
 })
 class AngSelectBasic {
