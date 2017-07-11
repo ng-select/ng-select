@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "App for integration tests",
   "scripts": {
-    "clean": "rimraf aot/ dist/ node_modules/quickstart-lib/",
+    "clean": "rimraf aot/ dist/ node_modules/ang-select/",
     "build": "tsc -p src/",
     "build:watch": "tsc -p src/ -w",
     "build:e2e": "tsc -p e2e/",
@@ -25,23 +25,24 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@angular/common": "^4.0.0-rc.3",
-    "@angular/compiler": "^4.0.0-rc.3",
-    "@angular/compiler-cli": "^4.0.0-rc.3",
-    "@angular/core": "^4.0.0-rc.3",
-    "@angular/platform-browser": "^4.0.0-rc.3",
-    "@angular/platform-browser-dynamic": "^4.0.0-rc.3",
-    "quickstart-lib": "../dist/",
+    "@angular/common": "^4.2.6",
+    "@angular/compiler": "^4.2.6",
+    "@angular/compiler-cli": "^4.2.6",
+    "@angular/core": "^4.2.6",
+    "@angular/forms": "^4.2.6",
+    "@angular/platform-browser": "^4.2.6",
+    "@angular/platform-browser-dynamic": "^4.2.6",
+    "ang-select": "../dist/",
     "core-js": "^2.4.1",
-    "rxjs": "5.0.1",
+    "rxjs": "^5.4.2",
     "systemjs": "0.19.40",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
     "@types/jasmine": "2.5.36",
     "concurrently": "^3.2.0",
-    "jasmine-core": "~2.4.1",
     "glob": "^7.1.1",
+    "jasmine-core": "~2.4.1",
     "lite-server": "^2.2.2",
     "protractor": "~5.1.0",
     "rimraf": "^2.5.4",
@@ -49,7 +50,7 @@
     "rollup-plugin-commonjs": "^7.0.0",
     "rollup-plugin-node-resolve": "2.0.0",
     "rollup-plugin-uglify": "^1.0.1",
-    "typescript": "^2.0.10"
+    "typescript": "^2.4.1"
   },
   "repository": {}
 }

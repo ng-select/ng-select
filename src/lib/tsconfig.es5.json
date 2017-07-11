@@ -15,8 +15,8 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
-    "flatModuleOutFile": "quickstart-lib.js",
-    "flatModuleId": "quickstart-lib",
+    "flatModuleOutFile": "ang-select.js",
+    "flatModuleId": "ang-select",
     "genDir": "../../out-tsc/lib-gen-dir/"
   }
 }
