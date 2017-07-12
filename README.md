@@ -5,8 +5,8 @@ Library is under development
 # Angular customizable select
 [![Build Status][travis-badge]][travis-badge-url]
 
-[travis-badge]: https://travis-ci.org/filipesilva/angular-quickstart-lib.svg?branch=master
-[travis-badge-url]: https://travis-ci.org/filipesilva/angular-quickstart-lib
+[travis-badge]: https://travis-ci.org/anjmao/ang-select.svg?branch=master
+[travis-badge-url]: https://travis-ci.org/anjmao/ang-select
 
 ## Installation
 
