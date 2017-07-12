@@ -15,8 +15,8 @@ import {
 } from '@angular/core';
 
 
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {AngOptionDirective, AngDisplayDirective} from './ang-templates.directive';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AngOptionDirective, AngDisplayDirective } from './ang-templates.directive';
 
 
 const NGB_ANG_SELECT_VALUE_ACCESSOR = {
@@ -140,7 +140,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     getDisplayTemplateContext() {
-       return this.selectedItem ? {item: this.selectedItem} : {item: {}};
+        return this.selectedItem ? { item: this.selectedItem } : { item: {} };
     }
 
     getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {
