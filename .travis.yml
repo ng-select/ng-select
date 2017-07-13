@@ -5,7 +5,6 @@ node_js:
   - "6"
 
 cache:
-  yarn: true
   directories:
     - node_modules
 os:
@@ -17,9 +16,10 @@ before_install:
   - sh -e /etc/init.d/xvfb start
   # Install latest chrome.
   - export CHROME_BIN=chromium-browser
+  - npm install -g npm@5.0.4
 
 install:
-  - yarn install
+  - npm install
 
 script:
   - npm run lint
