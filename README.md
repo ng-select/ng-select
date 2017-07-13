@@ -1,6 +1,7 @@
+
 # Warning
 
-Library is under development
+Library is under development. Library build process is forked from https://github.com/filipesilva/angular-quickstart-lib but I changed SystemJs build system to Webpack for faster builds and easer deployments to github pages.
 
 # Angular customizable select
 [![Build Status][travis-badge]][travis-badge-url]
