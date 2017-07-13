@@ -95,6 +95,8 @@ Perform the _clone-to-launch_ steps with these terminal commands.
 git clone https://github.com/anjmao/ang-select.git
 cd ang-select
 npm install
-npm start
+npm run serve-demo
 ```
 
+### Contributing
+Contributions are welcome. Lets make best angular select together! Just create new issue with proposal :)
