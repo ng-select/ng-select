@@ -7,6 +7,8 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Input,
+    Output,
+    EventEmitter,
     ContentChild,
     TemplateRef,
     ViewEncapsulation,
@@ -15,7 +17,7 @@ import {
 } from '@angular/core';
 
 
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { AngOptionDirective, AngDisplayDirective } from './ang-templates.directive';
 
 
@@ -55,11 +57,15 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     @Input() bindText: string;
     @Input() bindValue: string;
     @Input() allowClear: boolean;
-    @Input() allowSearch: boolean;
     @Input() placeholder: string;
+    @Input() searchInput: FormControl;
+    @Output() search = new EventEmitter();
+    @Output() blur = new EventEmitter();
 
     isOpen = false;
     selectedItem: any = null;
+    private filteredItems: any[] = [];
+    private showSearch = false;
     private selectedItemIndex = -1;
     private propagateChange = (_: any) => {
     }
@@ -68,6 +74,8 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     ngOnInit() {
+        this.showSearch = this.search.observers.length > 0;
+        this.filteredItems = [...this.items];
     }
 
     handleKeyDown(event: KeyboardEvent) {
@@ -164,27 +172,34 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
         return this.placeholder && !this.selectedItem;
     }
 
+    onSearchKeyup($event) {
+        const val = $event.target.value;
+        this.search.next(val);
+        this.filteredItems = val ? this.items.filter(s => s[this.bindText].toLowerCase().indexOf(val.toLowerCase()) === 0)
+               : this.items;
+    }
+
     private close() {
         this.isOpen = false;
     }
 
     private selectNextItem() {
-        if (this.selectedItemIndex === this.items.length - 1) {
+        if (this.selectedItemIndex === this.filteredItems.length - 1) {
             this.selectedItemIndex = 0;
         } else {
             this.selectedItemIndex++;
         }
-        this.selectedItem = this.items[this.selectedItemIndex];
+        this.selectedItem = this.filteredItems[this.selectedItemIndex];
         this.notifyModelChanged(this.selectedItem);
     }
 
     private selectPreviousItem() {
         if (this.selectedItemIndex === 0) {
-            this.selectedItemIndex = this.items.length - 1;
+            this.selectedItemIndex = this.filteredItems.length - 1;
         } else {
             this.selectedItemIndex--;
         }
-        this.selectedItem = this.items[this.selectedItemIndex];
+        this.selectedItem = this.filteredItems[this.selectedItemIndex];
         this.notifyModelChanged(this.selectedItem);
     }
 

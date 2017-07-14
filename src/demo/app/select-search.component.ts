@@ -6,8 +6,7 @@ import {Component} from '@angular/core';
         <label>Search in text value (TODO)</label>
         <ang-select [items]="companies"
                     bindText="name"
-                    [allowSearch]="true"
-                    [allowClear]="true"
+                    (search)="onSearch($event)"
                     [(ngModel)]="selectedCompany">
         </ang-select>
         <p>
@@ -26,6 +25,10 @@ export class SelectSearchComponent {
         this.companiesNames.forEach((c, i) => {
             this.companies.push({id: i, name: c});
         });
+    }
+
+    onSearch($event) {
+        console.log($event);
     }
 }
 

@@ -28,6 +28,14 @@ ang-select {
     color: #999;
 }
 
+.search-input-container {
+    padding: 5px;
+}
+
+.search-input-container input {
+    width: 100%;
+}
+
 .ang-select-arrow {
     position: absolute;
     top: 16px;

@@ -10,8 +10,11 @@
     <span class="ang-select-arrow"></span>
 </div>
 <div class="ang-select-dropdown" *ngIf="isOpen">
+    <div *ngIf="showSearch" class="search-input-container">
+        <input type="text" [(ngModel)]="searchInput" (keyup)="onSearchKeyup($event)" />
+    </div>
     <ng-container>
-        <div class="ang-option" (click)="select(item)" *ngFor="let item of items; let index = index; let first = first; let last = last; let even = even; let odd = odd"
+        <div class="ang-option" (click)="select(item)" *ngFor="let item of filteredItems; let index = index; let first = first; let last = last; let even = even; let odd = odd"
              [class.selected]="item == selectedItem">
 
             <ng-container *ngIf="!optionTemplateRef">{{item[bindText]}}</ng-container>

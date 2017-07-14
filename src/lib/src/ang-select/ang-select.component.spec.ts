@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DebugElement, Component, ViewChild } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { DebugElement, Component, ViewChild, Type } from '@angular/core';
+import { FormsModule, FormControl } from '@angular/forms';
 
 import { AngSelectModule } from '../module';
 import { AngSelectComponent, Key } from './ang-select.component';
@@ -14,6 +14,7 @@ describe('AngSelectComponent', function () {
 
         beforeEach(() => {
             fixture = createTestingModule(
+                AngSelectBasic,
                 `<ang-select [items]="cities" 
                         bindText="name"
                         [(ngModel)]="selectedCity">
@@ -49,6 +50,7 @@ describe('AngSelectComponent', function () {
 
         beforeEach(() => {
             fixture = createTestingModule(
+                AngSelectBasic,
                 `<ang-select [items]="cities" 
                         bindText="name"
                         [(ngModel)]="selectedCity">
@@ -77,6 +79,7 @@ describe('AngSelectComponent', function () {
 
         beforeEach(() => {
             fixture = createTestingModule(
+                AngSelectBasic,
                 `<ang-select [items]="cities" 
                         bindText="name"
                         [(ngModel)]="selectedCity">
@@ -132,8 +135,9 @@ describe('AngSelectComponent', function () {
         let fixture: ComponentFixture<AngSelectBasic>;
 
         beforeEach(() => {
-            fixture = createTestingModule(`
-                <ang-select [items]="cities" [(ngModel)]="selectedCity">
+            fixture = createTestingModule(
+                AngSelectBasic,
+                `<ang-select [items]="cities" [(ngModel)]="selectedCity">
                     <ng-template ang-display-tmp let-item="item">
                         <div class="custom-header">{{item.name}}</div>
                     </ng-template>
@@ -155,8 +159,9 @@ describe('AngSelectComponent', function () {
         let fixture: ComponentFixture<AngSelectBasic>;
 
         beforeEach(() => {
-            fixture = createTestingModule(`
-                <ang-select [items]="cities" [(ngModel)]="selectedCity">
+            fixture = createTestingModule(
+                AngSelectBasic,
+                `<ang-select [items]="cities" [(ngModel)]="selectedCity">
                     <ng-template ang-option-tmp let-item="item">
                         <div class="custom-option">{{item.name}}</div>
                     </ng-template>
@@ -179,8 +184,9 @@ describe('AngSelectComponent', function () {
         let fixture: ComponentFixture<AngSelectBasic>;
 
         beforeEach(() => {
-            fixture = createTestingModule(`
-                <ang-select [items]="cities" 
+            fixture = createTestingModule(
+                AngSelectBasic,
+                `<ang-select [items]="cities" 
                     bindText="name"
                     placeholder="select value"
                     [(ngModel)]="selectedCity">
@@ -207,6 +213,43 @@ describe('AngSelectComponent', function () {
         }));
     });
 
+    fdescribe('Search', () => {
+        let fixture: ComponentFixture<AngSelectSearch>;
+
+        beforeEach(() => {
+            fixture = createTestingModule(
+                AngSelectSearch,
+                `<ang-select [items]="cities" 
+                    bindText="name"
+                    (search)="onSearch($event)"
+                    [(ngModel)]="selectedCity">
+                </ang-select>`);
+        });
+
+        it('should show search input when panel is opened', async(() => {
+            fixture.componentInstance.select.isOpen = true;
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const searchInput = fixture.debugElement.query(By.css('.search-input-container')).nativeElement;
+                expect(searchInput).toBeDefined();
+            });
+        }));
+
+        it('should fire search event and filter values', async(() => {
+            fixture.detectChanges();
+            spyOn(fixture.componentInstance, 'onSearch').and.callThrough();
+
+            fixture.whenStable().then(() => {
+                fixture.componentInstance.select.search.next('vilnius');
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.onSearch).toHaveBeenCalledWith('vilnius');
+            });
+        }));
+
+    });
+
 });
 
 function getAngSelectElement(fixture: ComponentFixture<any>): DebugElement {
@@ -221,19 +264,19 @@ function triggerKeyDownEvent(element: DebugElement, key: number): void {
     });
 }
 
-function createTestingModule(template: string): ComponentFixture<AngSelectBasic> {
+function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixture<T> {
     TestBed.configureTestingModule({
         imports: [FormsModule, AngSelectModule],
-        declarations: [AngSelectBasic]
+        declarations: [AngSelectBasic, AngSelectSearch]
     })
-        .overrideComponent(AngSelectBasic, {
+        .overrideComponent(cmp, {
             set: {
                 template: template
             }
         })
         .compileComponents();
 
-    const fixture = TestBed.createComponent(AngSelectBasic);
+    const fixture = TestBed.createComponent(cmp);
     fixture.detectChanges();
     return fixture;
 }
@@ -250,4 +293,23 @@ class AngSelectBasic {
         { id: 2, name: 'Kaunas' },
         { id: 3, name: 'Pabrade' },
     ];
+}
+
+@Component({
+    template: `
+    `
+})
+class AngSelectSearch {
+    @ViewChild(AngSelectComponent) select: AngSelectComponent;
+    selectedCity: { id: number; name: string };
+    searchInput = new FormControl();
+    cities = [
+        { id: 1, name: 'Vilnius' },
+        { id: 2, name: 'Kaunas' },
+        { id: 3, name: 'Pabrade' },
+    ];
+
+    onSearch($event) {
+        console.log($event);
+    }
 }
