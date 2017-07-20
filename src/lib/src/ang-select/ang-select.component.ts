@@ -93,7 +93,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     handleBlur() {
-        // this.close();
+        this.close();
     }
 
     clear() {
