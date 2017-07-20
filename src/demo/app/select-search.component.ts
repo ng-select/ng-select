@@ -6,7 +6,7 @@ import {Component} from '@angular/core';
         <label>Search in text value (TODO)</label>
         <ang-select [items]="companies"
                     bindText="name"
-                    (search)="onSearch($event)"
+                    allowSearch="true"
                     [(ngModel)]="selectedCompany">
         </ang-select>
         <p>
@@ -27,9 +27,6 @@ export class SelectSearchComponent {
         });
     }
 
-    onSearch($event) {
-        console.log($event);
-    }
 }
 
 

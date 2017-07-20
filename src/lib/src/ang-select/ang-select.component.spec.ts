@@ -221,7 +221,7 @@ describe('AngSelectComponent', function () {
                 AngSelectSearch,
                 `<ang-select [items]="cities" 
                     bindText="name"
-                    (search)="onSearch($event)"
+                    allowSearch="true"
                     [(ngModel)]="selectedCity">
                 </ang-select>`);
         });
@@ -236,15 +236,16 @@ describe('AngSelectComponent', function () {
             });
         }));
 
-        it('should fire search event and filter values', async(() => {
+        it('should filter by search input value', async(() => {
             fixture.detectChanges();
-            spyOn(fixture.componentInstance, 'onSearch').and.callThrough();
+
+            fixture.componentInstance.select.onSearchKeyup({target: {value: 'vilnius'}});
+            fixture.componentInstance.select.open();
 
             fixture.whenStable().then(() => {
-                fixture.componentInstance.select.search.next('vilnius');
-                fixture.detectChanges();
-
-                expect(fixture.componentInstance.onSearch).toHaveBeenCalledWith('vilnius');
+                const angOptions = fixture.debugElement.queryAll(By.css('.ang-option'));
+                expect(angOptions.length).toBe(1);
+                expect(angOptions[0].nativeElement.innerText).toBe('Vilnius');
             });
         }));
 
@@ -302,14 +303,9 @@ class AngSelectBasic {
 class AngSelectSearch {
     @ViewChild(AngSelectComponent) select: AngSelectComponent;
     selectedCity: { id: number; name: string };
-    searchInput = new FormControl();
     cities = [
         { id: 1, name: 'Vilnius' },
         { id: 2, name: 'Kaunas' },
         { id: 3, name: 'Pabrade' },
     ];
-
-    onSearch($event) {
-        console.log($event);
-    }
 }

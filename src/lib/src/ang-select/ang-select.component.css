@@ -38,7 +38,7 @@ ang-select {
 
 .ang-select-arrow {
     position: absolute;
-    top: 16px;
+    top: 18px;
     right: 5px;
     width: 0;
     height: 0;
@@ -51,7 +51,7 @@ ang-select {
 
 .ang-select-clear {
     position: absolute;
-    top: 5px;
+    top: 7px;
     right: 25px;
     height: 10px;
     width: 10px;

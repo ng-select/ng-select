@@ -57,9 +57,8 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     @Input() bindText: string;
     @Input() bindValue: string;
     @Input() allowClear: boolean;
+    @Input() allowSearch: boolean;
     @Input() placeholder: string;
-    @Input() searchInput: FormControl;
-    @Output() search = new EventEmitter();
     @Output() blur = new EventEmitter();
 
     isOpen = false;
@@ -74,7 +73,6 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     ngOnInit() {
-        this.showSearch = this.search.observers.length > 0;
         this.filteredItems = [...this.items];
     }
 
@@ -174,7 +172,6 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
 
     onSearchKeyup($event) {
         const val = $event.target.value;
-        this.search.next(val);
         this.filteredItems = val ? this.items.filter(s => s[this.bindText].toLowerCase().indexOf(val.toLowerCase()) === 0)
                : this.items;
     }
