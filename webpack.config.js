@@ -17,7 +17,7 @@ const { TsConfigPathsPlugin } = require('awesome-typescript-loader');
  * Get npm lifecycle event to identify the environment
  */
 const ENV = process.env.npm_lifecycle_event;
-const isProd = ENV === 'build';
+const isProd = ENV === 'build-demo';
 
 module.exports = function makeWebpackConfig() {
     /**
