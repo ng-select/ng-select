@@ -7,17 +7,23 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Input,
+    Output,
+    EventEmitter,
     ContentChild,
     TemplateRef,
     ViewEncapsulation,
     HostListener,
-    HostBinding
+    HostBinding,
+    ViewChild,
+    ElementRef
 } from '@angular/core';
 
 
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { AngOptionDirective, AngDisplayDirective } from './ang-templates.directive';
-
+import { ScrollToSelectedDirective } from './scroll-to-selected.directive';
+import * as domHelper from './dom-helper';
+import * as searchHelper from './search-helper';
 
 const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
@@ -50,6 +56,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
 
     @ContentChild(AngOptionDirective) optionTemplateRef: TemplateRef<any>;
     @ContentChild(AngDisplayDirective) displayTemplateRef: TemplateRef<any>;
+    @ViewChild('dropdownList') dropdownList;
 
     @Input() items: any[] = [];
     @Input() bindText: string;
@@ -57,17 +64,22 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     @Input() allowClear: boolean;
     @Input() allowSearch: boolean;
     @Input() placeholder: string;
+    @Output() blur = new EventEmitter();
 
     isOpen = false;
     selectedItem: any = null;
+    searchValue: string = null;
+    private filteredItems: any[] = [];
+    private showSearch = false;
     private selectedItemIndex = -1;
     private propagateChange = (_: any) => {
     }
 
-    constructor(private changeDetectorRef: ChangeDetectorRef) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
     }
 
     ngOnInit() {
+        this.filteredItems = [...this.items];
     }
 
     handleKeyDown(event: KeyboardEvent) {
@@ -77,9 +89,11 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
             switch (event.which) {
                 case Key.ArrowDown:
                     this.selectNextItem();
+                    this.scrollToSelected();
                     break;
                 case Key.ArrowUp:
                     this.selectPreviousItem();
+                    this.scrollToSelected();
                     break;
                 case Key.Space:
                     this.open();
@@ -129,10 +143,14 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
 
     open() {
         this.isOpen = true;
+        this.scrollToSelected();
     }
 
     toggle() {
         this.isOpen = !this.isOpen;
+        if (this.isOpen) {
+            this.scrollToSelected();
+        }
     }
 
     getTextValue() {
@@ -164,27 +182,56 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
         return this.placeholder && !this.selectedItem;
     }
 
+    onSearch($event) {
+        const term = $event.target.value;
+        this.searchValue = term;
+        const filterFunc = (val) => {
+            return searchHelper.stripSpecialChars(val[this.bindText])
+                .toUpperCase()
+                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) === 0;
+        };
+
+        this.filteredItems = term ? this.items.filter(val => filterFunc(val)) : this.items;
+
+        if (term && this.selectedItemIndex > -1) {
+            this.selectedItemIndex = -1;
+        }
+    }
+
     private close() {
         this.isOpen = false;
     }
 
+    private scrollToSelected() {
+        setTimeout(() => {
+            if (!this.selectedItem) {
+                return;
+            }
+
+            const selectedOption = <HTMLElement>this.dropdownList.nativeElement.querySelector('.ang-option.selected');
+            domHelper.scrollToElement(this.dropdownList.nativeElement, selectedOption);
+        });
+    }
+
     private selectNextItem() {
-        if (this.selectedItemIndex === this.items.length - 1) {
+        console.log(this.selectedItemIndex);
+        if (this.selectedItemIndex === this.filteredItems.length - 1) {
             this.selectedItemIndex = 0;
         } else {
             this.selectedItemIndex++;
         }
-        this.selectedItem = this.items[this.selectedItemIndex];
+        this.selectedItem = this.filteredItems[this.selectedItemIndex];
         this.notifyModelChanged(this.selectedItem);
+        console.log(this.selectedItem);
     }
 
     private selectPreviousItem() {
         if (this.selectedItemIndex === 0) {
-            this.selectedItemIndex = this.items.length - 1;
+            this.selectedItemIndex = this.filteredItems.length - 1;
         } else {
             this.selectedItemIndex--;
         }
-        this.selectedItem = this.items[this.selectedItemIndex];
+        this.selectedItem = this.filteredItems[this.selectedItemIndex];
         this.notifyModelChanged(this.selectedItem);
     }
 
