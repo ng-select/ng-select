@@ -88,15 +88,24 @@ export class SelectWithTemplatesComponent {
 | `@Input() allowClear: boolean;`  | Allow to clear selected value |
 | `@Input() allowSearch: boolean;`  | Allow to search in dropdown list by `bindText` property |
 
-### Clone
+### Clone and play
 
 Perform the _clone-to-launch_ steps with these terminal commands.
 
+#### Run demo
 ```
 git clone https://github.com/anjmao/ang-select.git
 cd ang-select
 npm install
 npm run serve-demo
+```
+#### Testing
+```
+npm run test
+or
+npm run test-watch
+or
+npm run integration
 ```
 
 ### Contributing
