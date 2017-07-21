@@ -11,9 +11,9 @@
 </div>
 <div class="ang-select-dropdown" *ngIf="isOpen">
     <div *ngIf="allowSearch" class="search-input-container">
-        <input type="text" (keyup)="onSearchKeyup($event)" angSearchFocus />
+        <input type="text" [value]="searchValue" (input)="onSearch($event)" angSearchFocus />
     </div>
-    <ng-container>
+    <div #dropdownList class="ang-select-dropdown-list">
         <div class="ang-option" (click)="select(item)" *ngFor="let item of filteredItems; let index = index; let first = first; let last = last; let even = even; let odd = odd"
              [class.selected]="item == selectedItem">
 
@@ -23,6 +23,6 @@
                           [ngOutletContext]="getOptionTemplateContext(item, index, first, last, even, odd)">
             </ng-container>
         </div>
-    </ng-container>
+    </div>
 </div>
 

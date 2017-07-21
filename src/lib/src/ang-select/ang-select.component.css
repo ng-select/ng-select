@@ -24,6 +24,7 @@ ang-select {
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
 }
 
+
 .ang-select-placeholder {
     color: #999;
 }
@@ -63,15 +64,18 @@ ang-select {
 
 .ang-select-dropdown{
     position: absolute;
-    overflow-y: scroll;
-    max-height: 200px;
     width: 100%;
     z-index: 1000;
     background: #fff;
-    top: 36px;
+    top: 0;
     left: 0;
     padding-bottom: 0;
     box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+.ang-select-dropdown-list {
+    overflow-y: scroll;
+    max-height: 200px;
 }
 
 .ang-option:hover {

@@ -239,7 +239,7 @@ describe('AngSelectComponent', function () {
         it('should filter by search input value', async(() => {
             fixture.detectChanges();
 
-            fixture.componentInstance.select.onSearchKeyup({target: {value: 'vilnius'}});
+            fixture.componentInstance.select.onSearch({target: {value: 'vilnius'}});
             fixture.componentInstance.select.open();
 
             fixture.whenStable().then(() => {
