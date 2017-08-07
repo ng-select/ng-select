@@ -42,11 +42,11 @@ export enum Key {
 @Component({
     selector: 'ang-select',
     templateUrl: './ang-select.component.html',
-    styleUrls: ['./ang-select.component.css'],
+    styleUrls: ['./ang-select.component.scss'],
     providers: [NGB_ANG_SELECT_VALUE_ACCESSOR],
     encapsulation: ViewEncapsulation.None,
     host: {
-        'tabindex': '0',
+        // 'tabindex': '0',
         'role': 'dropdown',
         '(blur)': 'handleBlur()',
         '(keydown)': 'handleKeyDown($event)'
@@ -57,6 +57,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     @ContentChild(AngOptionDirective) optionTemplateRef: TemplateRef<any>;
     @ContentChild(AngDisplayDirective) displayTemplateRef: TemplateRef<any>;
     @ViewChild('dropdownList') dropdownList;
+    @ViewChild('searchInput') searchInput;
 
     @Input() items: any[] = [];
     @Input() bindText: string;
@@ -65,8 +66,9 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     @Input() allowSearch: boolean;
     @Input() placeholder: string;
     @Output() blur = new EventEmitter();
+    @HostBinding('class.as-single') single= true;
 
-    isOpen = false;
+    @HostBinding('class.opened') isOpen = false;
     selectedItem: any = null;
     searchValue: string = null;
     private filteredItems: any[] = [];
@@ -107,7 +109,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     handleBlur() {
-        this.close();
+        // this.close();
     }
 
     clear() {
@@ -144,13 +146,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     open() {
         this.isOpen = true;
         this.scrollToSelected();
-    }
-
-    toggle() {
-        this.isOpen = !this.isOpen;
-        if (this.isOpen) {
-            this.scrollToSelected();
-        }
+        // this.focusSearchInput();
     }
 
     getTextValue() {
@@ -202,13 +198,21 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
         this.isOpen = false;
     }
 
+    private focusSearchInput() {
+        if (this.allowSearch) {
+            setTimeout(() => {
+                this.searchInput.nativeElement.focus();
+            });
+        }
+    }
+
     private scrollToSelected() {
         setTimeout(() => {
             if (!this.selectedItem) {
                 return;
             }
 
-            const selectedOption = <HTMLElement>this.dropdownList.nativeElement.querySelector('.ang-option.selected');
+            const selectedOption = <HTMLElement>this.dropdownList.nativeElement.querySelector('.as-option.selected');
             domHelper.scrollToElement(this.dropdownList.nativeElement, selectedOption);
         });
     }

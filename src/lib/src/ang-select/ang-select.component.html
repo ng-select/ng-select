@@ -1,20 +1,38 @@
-<div (click)="toggle()" class="ang-select-container">
-    <ng-container *ngIf="displayTemplateRef" [ngTemplateOutlet]="displayTemplateRef.template"
-                  [ngOutletContext]="getDisplayTemplateContext()"></ng-container>
+<div (click)="open()" class="as-control">
 
-    <ng-container *ngIf="!displayTemplateRef">{{getTextValue()}}</ng-container>
 
-    <span class="ang-select-placeholder" *ngIf="showPlaceholder()">{{placeholder}}</span>
+    <span class="as-multi-value-wrapper">
 
-    <span *ngIf="allowClear && selectedItem" class="ang-select-clear" (click)="clear()">×</span>
-    <span class="ang-select-arrow"></span>
+        <span class="as-placeholder" *ngIf="showPlaceholder()">{{placeholder}}</span>
+
+        <div class="as-value State-Vic">
+            <span *ngIf="selectedItem" class="as-value-label" role="option" aria-selected="true">
+                <ng-container *ngIf="displayTemplateRef" [ngTemplateOutlet]="displayTemplateRef.template"
+                              [ngOutletContext]="getDisplayTemplateContext()"></ng-container>
+
+                <ng-container *ngIf="!displayTemplateRef">{{getTextValue()}}</ng-container>
+            </span>
+        </div>
+        <div class="as-input">
+            <input role="combobox" aria-expanded="false" aria-owns="" aria-haspopup="false" value=""
+                style="width: 5px; box-sizing: content-box;">
+        </div>
+    </span>
+
+    <span (click)="clear()" class="as-clear-zone" title="Clear all" aria-label="Clear all"><span class="as-clear">×</span></span>
+    <span class="as-arrow-zone"><span class="as-arrow"></span></span>
+
+    <input type="hidden" name="selected-state" value="south-australia-TODO">
 </div>
-<div class="ang-select-dropdown" *ngIf="isOpen">
-    <div *ngIf="allowSearch" class="search-input-container">
-        <input type="text" [value]="searchValue" (input)="onSearch($event)" angSearchFocus />
-    </div>
-    <div #dropdownList class="ang-select-dropdown-list">
-        <div class="ang-option" (click)="select(item)" *ngFor="let item of filteredItems; let index = index; let first = first; let last = last; let even = even; let odd = odd"
+
+
+<div class="as-menu-outer" *ngIf="isOpen">
+    <!--  <div *ngIf="allowSearch" class="search-input-container">
+          <input type="text" #searchInput [value]="searchValue" (input)="onSearch($event)"/>
+      </div>-->
+    <div #dropdownList role="listbox" class="as-menu">
+        <div class="as-option" role="option" (click)="select(item)"
+             *ngFor="let item of filteredItems; let index = index; let first = first; let last = last; let even = even; let odd = odd"
              [class.selected]="item == selectedItem">
 
             <ng-container *ngIf="!optionTemplateRef">{{item[bindText]}}</ng-container>
@@ -25,4 +43,3 @@
         </div>
     </div>
 </div>
-

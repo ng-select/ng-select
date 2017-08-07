@@ -3,7 +3,7 @@ import {Component} from '@angular/core';
 @Component({
     selector: 'select-search',
     template: `
-        <label>Search in text</label>
+        <label>Search in text (TODO)</label>
         <ang-select [items]="companies"
                     bindText="name"
                     allowSearch="true"

@@ -1,13 +1,13 @@
-import { Directive, AfterViewInit, ElementRef } from '@angular/core';
+import { Directive, OnInit, ElementRef } from '@angular/core';
 
 @Directive({
   selector: '[angSearchFocus]'
 })
-export class AngSearchFocusDirective implements AfterViewInit {
+export class AngSearchFocusDirective implements OnInit {
 
   constructor(private elementRef: ElementRef) { };
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.elementRef.nativeElement.focus();
   }
 }

@@ -75,11 +75,12 @@
         "karma-sourcemap-loader": "^0.3.7",
         "karma-webpack": "2.0.2",
         "lite-server": "^2.2.2",
-        "node-sass": "^4.5.0",
+        "node-sass": "^4.5.3",
         "null-loader": "0.1.1",
         "postcss-loader": "^1.1.0",
         "protractor": "^4.0.10",
         "raw-loader": "0.5.1",
+        "reflect-metadata": "^0.1.10",
         "remap-istanbul": "^0.6.4",
         "rimraf": "^2.6.1",
         "rollup": "^0.41.5",
@@ -98,7 +99,6 @@
         "url-loader": "^0.5.6",
         "webpack": "2.2.1",
         "webpack-dev-server": "2.3.0",
-        "zone.js": "^0.8.12",
-        "reflect-metadata": "^0.1.10"
+        "zone.js": "^0.8.12"
     }
 }
