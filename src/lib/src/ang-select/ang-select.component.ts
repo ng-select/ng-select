@@ -19,9 +19,9 @@ import {
 } from '@angular/core';
 
 
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
-import { AngOptionDirective, AngDisplayDirective } from './ang-templates.directive';
-import { ScrollToSelectedDirective } from './scroll-to-selected.directive';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl} from '@angular/forms';
+import {AngOptionDirective, AngDisplayDirective} from './ang-templates.directive';
+import {ScrollToSelectedDirective} from './scroll-to-selected.directive';
 import * as domHelper from './dom-helper';
 import * as searchHelper from './search-helper';
 
@@ -46,10 +46,7 @@ export enum Key {
     providers: [NGB_ANG_SELECT_VALUE_ACCESSOR],
     encapsulation: ViewEncapsulation.None,
     host: {
-        // 'tabindex': '0',
-        'role': 'dropdown',
-        '(blur)': 'handleBlur()',
-        '(keydown)': 'handleKeyDown($event)'
+        'role': 'dropdown'
     },
 })
 export class AngSelectComponent implements OnInit, ControlValueAccessor {
@@ -66,9 +63,10 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     @Input() allowSearch: boolean;
     @Input() placeholder: string;
     @Output() blur = new EventEmitter();
-    @HostBinding('class.as-single') single= true;
-
+    @HostBinding('class.as-single') single = true;
     @HostBinding('class.opened') isOpen = false;
+    @HostBinding('class.focused') isFocused = false;
+
     selectedItem: any = null;
     searchValue: string = null;
     private filteredItems: any[] = [];
@@ -84,11 +82,12 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
         this.filteredItems = [...this.items];
     }
 
-    handleKeyDown(event: KeyboardEvent) {
-        if (Key[event.which]) {
-            event.preventDefault();
+    @HostListener('keydown', ['$event'])
+    handleKeyDown($event: KeyboardEvent) {
+        if (Key[$event.which]) {
+            $event.preventDefault();
 
-            switch (event.which) {
+            switch ($event.which) {
                 case Key.ArrowDown:
                     this.selectNextItem();
                     this.scrollToSelected();
@@ -108,8 +107,16 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
         }
     }
 
-    handleBlur() {
-        // this.close();
+    @HostListener('document:click', ['$event'])
+    handleDocumentClick($event) {
+        if (!this.elementRef.nativeElement.contains(event.target)) {
+            console.log('clicked inside');
+        }
+
+        this.isFocused = false;
+        if (this.isOpen) {
+            this.close();
+        }
     }
 
     clear() {
@@ -146,7 +153,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     open() {
         this.isOpen = true;
         this.scrollToSelected();
-        // this.focusSearchInput();
+        this.focusSearchInput();
     }
 
     getTextValue() {
@@ -154,7 +161,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     getDisplayTemplateContext() {
-        return this.selectedItem ? { item: this.selectedItem } : { item: {} };
+        return this.selectedItem ? {item: this.selectedItem} : {item: {}};
     }
 
     getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {
@@ -194,16 +201,24 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
         }
     }
 
+    onInputFocus($event) {
+        console.log('focus');
+        this.isFocused = true;
+    }
+
+    onInputBlur($event) {
+        console.log('blur');
+        this.isFocused = false;
+    }
+
     private close() {
         this.isOpen = false;
     }
 
     private focusSearchInput() {
-        if (this.allowSearch) {
-            setTimeout(() => {
-                this.searchInput.nativeElement.focus();
-            });
-        }
+        setTimeout(() => {
+            this.searchInput.nativeElement.focus();
+        });
     }
 
     private scrollToSelected() {

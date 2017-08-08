@@ -30,6 +30,13 @@ ang-select {
     }
   }
 
+  &.focused {
+    &:not(.opened) > .as-control {
+      border-color: #007eff;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px rgba(0, 126, 255, 0.1);
+    }
+  }
+
   .as-control {
     background-color: #fff;
     border-radius: 4px;
@@ -64,6 +71,10 @@ ang-select {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    .as-value-label {
+      color:#333;
+    }
   }
 
   .as-input {

@@ -14,8 +14,7 @@
             </span>
         </div>
         <div class="as-input">
-            <input role="combobox" aria-expanded="false" aria-owns="" aria-haspopup="false" value=""
-                style="width: 5px; box-sizing: content-box;">
+            <input #searchInput (focus)="onInputFocus($event)" (blur)="onInputBlur($event)" role="combobox" aria-expanded="false" aria-owns="" aria-haspopup="false" value="" style="width: 30px; box-sizing: content-box;">
         </div>
     </span>
 
