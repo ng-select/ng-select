@@ -16,7 +16,7 @@ describe('AngSelectComponent', function () {
             fixture = createTestingModule(
                 AngSelectBasic,
                 `<ang-select [items]="cities" 
-                        bindText="name"
+                        bindLabel="name"
                         [(ngModel)]="selectedCity">
                 </ang-select>`);
             trigger = fixture.debugElement.query(By.css('.ang-select-container')).nativeElement;
@@ -52,7 +52,7 @@ describe('AngSelectComponent', function () {
             fixture = createTestingModule(
                 AngSelectBasic,
                 `<ang-select [items]="cities" 
-                        bindText="name"
+                        bindLabel="name"
                         [(ngModel)]="selectedCity">
                 </ang-select>`);
         });
@@ -81,7 +81,7 @@ describe('AngSelectComponent', function () {
             fixture = createTestingModule(
                 AngSelectBasic,
                 `<ang-select [items]="cities" 
-                        bindText="name"
+                        bindLabel="name"
                         [(ngModel)]="selectedCity">
                 </ang-select>`);
         });
@@ -187,7 +187,7 @@ describe('AngSelectComponent', function () {
             fixture = createTestingModule(
                 AngSelectBasic,
                 `<ang-select [items]="cities" 
-                    bindText="name"
+                    bindLabel="name"
                     placeholder="select value"
                     [(ngModel)]="selectedCity">
                 </ang-select>`);
@@ -220,7 +220,7 @@ describe('AngSelectComponent', function () {
             fixture = createTestingModule(
                 AngSelectSearch,
                 `<ang-select [items]="cities" 
-                    bindText="name"
+                    bindLabel="name"
                     allowSearch="true"
                     [(ngModel)]="selectedCity">
                 </ang-select>`);

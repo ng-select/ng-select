@@ -4,7 +4,7 @@ import {Component} from '@angular/core';
     selector: 'select-with-templates',
     template: `
         <label>Custom label</label>
-        <ang-select [items]="cities" [(ngModel)]="selectedCity" bindText="name" bindValue="name">
+        <ang-select [items]="cities" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
             <ng-template ang-display-tmp let-item="item">
                 <img height="15" width="15" [src]="item.avatar" />
                 {{item.name}}
@@ -16,7 +16,7 @@ import {Component} from '@angular/core';
         <hr>
 
         <label>Custom option</label>
-        <ang-select [items]="cities" [(ngModel)]="selectedCity2" bindText="name" bindValue="name">
+        <ang-select [items]="cities" [(ngModel)]="selectedCity2" bindLabel="name" bindValue="name">
             <ng-template ang-option-tmp let-item="item" let-index="index">
                 <img height="15" width="15" [src]="item.avatar" />
                 <b>{{item.name}}</b>
@@ -28,7 +28,7 @@ import {Component} from '@angular/core';
         <hr>
         
         <label>Custom label and option</label>
-        <ang-select [items]="cities" [(ngModel)]="selectedCity3" bindText="name" bindValue="name">
+        <ang-select [items]="cities" [(ngModel)]="selectedCity3" bindLabel="name" bindValue="name">
             <ng-template ang-display-tmp let-item="item">
                 <img height="15" width="15" [src]="item.avatar" />
                 <b>{{item.name}}</b>

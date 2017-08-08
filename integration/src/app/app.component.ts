@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   template: `
   <h2>Hello ang-select</h2>
    <ang-select [items]="cities"
-                    bindText="name"
+                    bindLabel="name"
                     [allowClear]="true"
                     [(ngModel)]="selectedCity">
         </ang-select>

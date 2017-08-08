@@ -5,7 +5,7 @@ import {Component} from '@angular/core';
     template: `
         <label>Search in text</label>
         <ang-select [items]="companies"
-                    bindText="name"
+                    bindLabel="name"
                     bindValue="this"
                     [(ngModel)]="selectedCompany">
         </ang-select>

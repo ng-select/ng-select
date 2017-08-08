@@ -1,6 +1,7 @@
 import {
     Component,
     OnInit,
+    OnChanges,
     forwardRef,
     ChangeDetectorRef,
     Input,
@@ -47,7 +48,7 @@ export enum Key {
         'role': 'dropdown'
     },
 })
-export class AngSelectComponent implements OnInit, ControlValueAccessor {
+export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccessor {
 
     @ContentChild(AngOptionDirective) optionTemplateRef: TemplateRef<any>;
     @ContentChild(AngDisplayDirective) displayTemplateRef: TemplateRef<any>;
@@ -55,7 +56,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     @ViewChild('searchInput') searchInput;
 
     @Input() items: AngOption[] = [];
-    @Input() bindText: string;
+    @Input() bindLabel: string;
     @Input() bindValue: string;
     @Input() allowClear = true;
     @Input() placeholder: string;
@@ -63,6 +64,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     @HostBinding('class.as-single') single = true;
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
+    @HostBinding('class.disabled') isDisabled = false;
 
     selectedItem: AngOption = null;
     searchValue: string = null;
@@ -77,10 +79,17 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     ngOnInit() {
         this.filteredItems = [...this.items];
 
-        this.bindText = this.bindText || 'label';
+        this.bindLabel = this.bindLabel || 'label';
         this.bindValue = this.bindValue || 'value';
         if (this.bindValue === 'this') {
             this.bindValue = undefined;
+        }
+    }
+
+    ngOnChanges(changes: any) {
+        if (changes.items && changes.items.currentValue) {
+            this.items = changes.items.currentValue;
+            this.filteredItems = [...this.items];
         }
     }
 
@@ -101,6 +110,9 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
                     $event.preventDefault();
                     break;
                 case Key.Space:
+                    if (this.isOpen) {
+                        return;
+                    }
                     this.open();
                     $event.preventDefault();
                     break;
@@ -160,16 +172,20 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     setDisabledState(isDisabled: boolean): void {
+        this.isDisabled = isDisabled;
     }
 
     open() {
+        if (this.isDisabled) {
+            return;
+        }
         this.isOpen = true;
         this.scrollToSelected();
         this.focusSearchInput();
     }
 
     getTextValue() {
-        return this.selectedItem ? this.selectedItem[this.bindText] : '';
+        return this.selectedItem ? this.selectedItem[this.bindLabel] : '';
     }
 
     getDisplayTemplateContext() {
@@ -198,14 +214,14 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     showPlaceholder() {
-        return this.placeholder && !this.selectedItem;
+        return this.placeholder && !this.selectedItem && !this.searchValue;
     }
 
     onSearch($event) {
         const term = $event.target.value;
         this.searchValue = term;
         const filterFunc = (val: AngOption) => {
-            return searchHelper.stripSpecialChars(val[this.bindText])
+            return searchHelper.stripSpecialChars(val[this.bindLabel])
                 .toUpperCase()
                 .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) === 0;
         };
@@ -293,7 +309,3 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     }
 }
 
-
-function isObject(obj) {
-    return obj === Object(obj);
-}

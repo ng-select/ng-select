@@ -33,7 +33,7 @@ import {AngSelectModule} from 'ang-select';
     selector: 'basic-demo',
     template: `
         <ang-select [items]="cities"
-                    bindText="name"
+                    bindLabel="name"
                     [allowClear]="true"
                     [(ngModel)]="selectedCity">
         </ang-select>
@@ -82,11 +82,11 @@ export class SelectWithTemplatesComponent {
 | Name  | Description |
 | ------------- | ------------- |
 | `@Input() items: any[] = [];` | Data array  |
-| `@Input() bindText: string;`  | Set which property to display as text in dropdown |
+| `@Input() bindLabel: string;`  | Set which property to display as text in dropdown |
 | `@Input() bindValue: string;`  | Set which property to bind to model on dropdown select |
 | `@Input() placeholder: string;`  | Set input placeholder |
 | `@Input() allowClear: boolean;`  | Allow to clear selected value |
-| `@Input() allowSearch: boolean;`  | Allow to search in dropdown list by `bindText` property |
+| `@Input() allowSearch: boolean;`  | Allow to search in dropdown list by `bindLabel` property |
 
 ### Clone and play
 

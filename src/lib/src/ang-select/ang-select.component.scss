@@ -37,6 +37,10 @@ ang-select {
     }
   }
 
+  &.disabled > .as-control {
+    background-color: #f9f9f9;
+  }
+
   .as-control {
     background-color: #fff;
     border-radius: 4px;

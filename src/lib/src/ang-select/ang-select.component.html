@@ -14,7 +14,7 @@
             </span>
         </div>
 
-        <div class="as-input">
+        <div *ngIf="!isDisabled" class="as-input">
             <input #searchInput
                    [value]="searchValue"
                    (input)="onSearch($event)"
@@ -27,7 +27,7 @@
         </div>
     </span>
 
-    <span *ngIf="allowClear" (click)="clear()" class="as-clear-zone" title="Clear all" aria-label="Clear all"><span class="as-clear">×</span></span>
+    <span *ngIf="allowClear && selectedItem" (click)="clear()" class="as-clear-zone" title="Clear all" aria-label="Clear all"><span class="as-clear">×</span></span>
     <span class="as-arrow-zone"><span class="as-arrow"></span></span>
 
     <input type="hidden" name="selected-state" value="south-australia-TODO">
@@ -35,16 +35,13 @@
 
 
 <div class="as-menu-outer" *ngIf="isOpen">
-    <!--  <div *ngIf="allowSearch" class="search-input-container">
-          <input type="text" #searchInput [value]="searchValue" (input)="onSearch($event)"/>
-      </div>-->
     <div #dropdownList role="listbox" class="as-menu">
         <div class="as-option" role="option" (click)="select(item)"
              *ngFor="let item of filteredItems; let index = index; let first = first; let last = last; let even = even; let odd = odd"
              [class.disabled]="item.disabled"
              [class.selected]="item == selectedItem">
 
-            <ng-container *ngIf="!optionTemplateRef">{{item[bindText]}}</ng-container>
+            <ng-container *ngIf="!optionTemplateRef">{{item[bindLabel]}}</ng-container>
 
             <ng-container *ngIf="optionTemplateRef" [ngTemplateOutlet]="optionTemplateRef.template"
                           [ngOutletContext]="getOptionTemplateContext(item, index, first, last, even, odd)">

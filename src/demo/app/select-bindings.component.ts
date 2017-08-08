@@ -13,7 +13,7 @@ import {Component} from '@angular/core';
         <hr>
         <label>Bind model to object</label>
         <ang-select [items]="cities"
-                    bindText="name"
+                    bindLabel="name"
                     bindValue="this"
                     placeholder="Select value"
                     [allowClear]="false"
@@ -25,7 +25,7 @@ import {Component} from '@angular/core';
         <hr>
         <label>Bind model to custom property</label>
         <ang-select [items]="cities"
-                    bindText="name"
+                    bindLabel="name"
                     bindValue="id"
                     [(ngModel)]="selectedCityId2">
         </ang-select>

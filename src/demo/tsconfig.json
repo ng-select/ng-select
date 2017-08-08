@@ -6,7 +6,7 @@
     "declaration": false,
     "emitDecoratorMetadata": true,
     "paths": {
-      "quickstart-lib": [
+      "ang-select": [
         "../lib"
       ]
     }
