@@ -54,7 +54,7 @@ module.exports = function makeWebpackConfig() {
      */
     config.output = {
         path: root('dist'),
-        publicPath: isProd ? '/' : 'http://localhost:8080/',
+        publicPath: isProd ? 'ang-select' : 'http://localhost:8080/',
         filename: isProd ? 'js/[name].[hash].js' : 'js/[name].js',
         chunkFilename: isProd ? '[id].[hash].chunk.js' : '[id].chunk.js'
     };
@@ -98,12 +98,16 @@ module.exports = function makeWebpackConfig() {
             // Support for *.json files.
             { test: /\.json$/, loader: 'json-loader' },
 
-            // all css required in src/app files will be merged in js files
-            { test: /\.css$/, include: root('src', 'demo', 'app'), loader: 'raw-loader!postcss-loader' },
-            { test: /\.css$/, include: root('src', 'lib', 'src'), loader: 'raw-loader!postcss-loader' },
+            // all scss files in app demo style will be merged to index.html
+            {
+                test: /\.scss$/,
+                include: root('src', 'demo', 'style'),
+                loader: ExtractTextPlugin.extract({fallback: 'style-loader', use: ['css-loader', 'postcss-loader']})
+            },
 
-            // all css required in src/app files will be merged in js files
-            {test: /\.(scss|sass)$/, exclude: [root('src', 'style')], loader: 'raw-loader!postcss-loader!sass-loader'},
+
+            // all css required in src/lib files will be merged in js files
+            {test: /\.(scss|sass)$/, exclude: root('src', 'demo', 'style'), loader: 'raw-loader!postcss-loader!sass-loader'},
 
             // support for .html as raw text
             // todo: change the loader to something that adds a hash to images
@@ -229,7 +233,7 @@ module.exports = function makeWebpackConfig() {
         contentBase: './src/demo',
         historyApiFallback: true,
         quiet: true,
-        stats: 'minimal' // none (or false), errors-only, minimal, normal (or true) and verbose
+        stats: 'normal' // none (or false), errors-only, minimal, normal (or true) and verbose
     };
 
     return config;
