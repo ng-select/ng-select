@@ -5,34 +5,32 @@ import {Component} from '@angular/core';
     template: `        
         <label>Bind to default <b>label</b>, <b>value</b> bindings</label>
         <ang-select [items]="defaultBindingsList"
-                    [allowClear]="true"
                     [(ngModel)]="selectedCityId">
         </ang-select>
         <p>
             Selected value: {{selectedCityId | json}}
         </p>
         <hr>
-        <label>Bind display text to property and value to object</label>
+        <label>Bind model to object</label>
         <ang-select [items]="cities"
                     bindText="name"
                     bindValue="this"
                     placeholder="Select value"
-                    [allowClear]="true"
+                    [allowClear]="false"
                     [(ngModel)]="selectedCity">
         </ang-select>
         <p>
             Selected value: {{selectedCity | json}}
         </p>
         <hr>
-        <label>Bind selected model value to property</label>
+        <label>Bind model to custom property</label>
         <ang-select [items]="cities"
                     bindText="name"
                     bindValue="id"
-                    [allowClear]="true"
-                    [(ngModel)]="selectedCityId">
+                    [(ngModel)]="selectedCityId2">
         </ang-select>
         <p>
-            Selected value: {{selectedCityId | json}}
+            Selected value: {{selectedCityId2 | json}}
         </p>
     `
 })
@@ -52,6 +50,7 @@ export class SelectBindingsComponent {
 
     selectedCity: any;
     selectedCityId: number = null;
+    selectedCityId2: number = null;
 
     ngOnInit() {
     }

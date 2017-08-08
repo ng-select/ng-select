@@ -29,6 +29,7 @@ const NGB_ANG_SELECT_VALUE_ACCESSOR = {
 };
 
 export enum Key {
+    Tab = 9,
     Enter = 13,
     Esc = 27,
     Space = 32,
@@ -56,8 +57,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     @Input() items: AngOption[] = [];
     @Input() bindText: string;
     @Input() bindValue: string;
-    @Input() allowClear: boolean;
-    @Input() allowSearch: boolean;
+    @Input() allowClear = true;
     @Input() placeholder: string;
     @Output() blur = new EventEmitter();
     @HostBinding('class.as-single') single = true;
@@ -87,22 +87,24 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     @HostListener('keydown', ['$event'])
     handleKeyDown($event: KeyboardEvent) {
         if (Key[$event.which]) {
-            $event.preventDefault();
-
             switch ($event.which) {
                 case Key.ArrowDown:
                     this.selectNextItem();
                     this.notifyModelChanged();
                     this.scrollToSelected();
+                    $event.preventDefault();
                     break;
                 case Key.ArrowUp:
                     this.selectPreviousItem();
                     this.notifyModelChanged();
                     this.scrollToSelected();
+                    $event.preventDefault();
                     break;
                 case Key.Space:
                     this.open();
+                    $event.preventDefault();
                     break;
+                case Key.Tab:
                 case Key.Enter:
                 case Key.Esc:
                     this.close();
@@ -135,14 +137,18 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     writeValue(obj: any): void {
-        this.selectedItem = obj;
         if (obj) {
             if (this.bindValue) {
-                this.selectedItemIndex = this.items.findIndex(x => x[this.bindValue] === obj[this.bindValue]);
+                this.selectedItemIndex = this.items.findIndex(x => x[this.bindValue] === obj);
             } else {
                 this.selectedItemIndex = this.items.indexOf(obj);
             }
+
+            this.selectedItem = this.items[this.selectedItemIndex];
+        } else {
+            this.selectedItem = null;
         }
+
         this.changeDetectorRef.detectChanges();
     }
 
@@ -188,6 +194,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
         this.selectedItem = item;
         this.close();
         this.notifyModelChanged();
+        console.log('select', this.selectedItem);
     }
 
     showPlaceholder() {
@@ -213,6 +220,11 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     onInputFocus() {
         console.log('focus');
         this.isFocused = true;
+    }
+
+    onInputBlur() {
+        console.log('blur');
+        this.isFocused = false;
     }
 
     private clearSearch() {
@@ -279,4 +291,9 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
             this.propagateChange(this.selectedItem);
         }
     }
+}
+
+
+function isObject(obj) {
+    return obj === Object(obj);
 }

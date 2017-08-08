@@ -3,16 +3,44 @@ import {Component} from '@angular/core';
 @Component({
     selector: 'select-with-templates',
     template: `
-        <ang-select [items]="cities" [(ngModel)]="selectedCity">
+        <label>Custom label</label>
+        <ang-select [items]="cities" [(ngModel)]="selectedCity" bindText="name" bindValue="name">
             <ng-template ang-display-tmp let-item="item">
-                <span class="badge badge-primary custom-id-label">{{item.id}}</span>
+                <img height="15" width="15" [src]="item.avatar" />
                 {{item.name}}
+            </ng-template>
+        </ang-select>
+        <p>
+            Selected city name: {{selectedCity}}
+        </p>
+        <hr>
+
+        <label>Custom option</label>
+        <ang-select [items]="cities" [(ngModel)]="selectedCity2" bindText="name" bindValue="name">
+            <ng-template ang-option-tmp let-item="item" let-index="index">
+                <img height="15" width="15" [src]="item.avatar" />
+                <b>{{item.name}}</b>
+            </ng-template>
+        </ang-select>
+        <p>
+            Selected city name: {{selectedCity2}}
+        </p>
+        <hr>
+        
+        <label>Custom label and option</label>
+        <ang-select [items]="cities" [(ngModel)]="selectedCity3" bindText="name" bindValue="name">
+            <ng-template ang-display-tmp let-item="item">
+                <img height="15" width="15" [src]="item.avatar" />
+                <b>{{item.name}}</b>
             </ng-template>
             <ng-template ang-option-tmp let-item="item" let-index="index">
                 <img height="15" width="15" [src]="item.avatar" />
                 <b>{{item.name}}</b>
             </ng-template>
         </ang-select>
+        <p>
+            Selected city name: {{selectedCity3}}
+        </p>
     `
 })
 export class SelectWithTemplatesComponent {
@@ -23,7 +51,9 @@ export class SelectWithTemplatesComponent {
         {id: 3, name: 'Pavilnys', avatar: '//www.gravatar.com/avatar/6acb7abf486516ab7fb0a6efa372042b?d=retro&r=g&s=15'}
     ];
 
-    selectedCity = this.cities[0];
+    selectedCity = this.cities[0].name;
+    selectedCity2 = this.cities[1].name;
+    selectedCity3 = this.cities[2].name;
 
     ngOnInit() {
     }

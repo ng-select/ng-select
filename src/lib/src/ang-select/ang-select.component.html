@@ -19,6 +19,7 @@
                    [value]="searchValue"
                    (input)="onSearch($event)"
                    (focus)="onInputFocus($event)"
+                   (blur)="onInputBlur($event)"
                    role="combobox"
                    aria-expanded="false"
                    aria-owns=""
@@ -26,7 +27,7 @@
         </div>
     </span>
 
-    <span (click)="clear()" class="as-clear-zone" title="Clear all" aria-label="Clear all"><span class="as-clear">×</span></span>
+    <span *ngIf="allowClear" (click)="clear()" class="as-clear-zone" title="Clear all" aria-label="Clear all"><span class="as-clear">×</span></span>
     <span class="as-arrow-zone"><span class="as-arrow"></span></span>
 
     <input type="hidden" name="selected-state" value="south-australia-TODO">
