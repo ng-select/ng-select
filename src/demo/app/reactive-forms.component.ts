@@ -100,7 +100,7 @@ export class ReactiveFormsComponent {
     }
 
     private loadAlbums() {
-        this.http.get<any[]>('http://jsonplaceholder.typicode.com/albums').subscribe(rsp => {
+        this.http.get<any[]>('https://jsonplaceholder.typicode.com/albums').subscribe(rsp => {
             this.albums = rsp;
             console.log(this.albums[0]);
         });
