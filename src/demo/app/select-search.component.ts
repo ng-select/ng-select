@@ -6,6 +6,7 @@ import {Component} from '@angular/core';
         <label>Search in text (TODO)</label>
         <ang-select [items]="companies"
                     bindText="name"
+                    bindValue="this"
                     allowSearch="true"
                     allowClear="true"
                     [(ngModel)]="selectedCompany">

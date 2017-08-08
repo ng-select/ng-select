@@ -85,7 +85,8 @@ ang-select {
     display: inline-block;
 
     > input {
-      width: 100%;
+      min-width: 5px;
+      box-sizing: content-box;
       background: none transparent;
       border: 0 none;
       box-shadow: none;
@@ -143,14 +144,14 @@ ang-select {
       color: #333;
     }
 
-    &:hover {
+    &:not(.disabled):hover {
       background-color: #ebf5ff;
       /* Fallback color for IE 8 */
       background-color: rgba(0, 126, 255, 0.08);
       color: #333;
     }
 
-    &.is-disabled {
+    &.disabled {
       color: #cccccc;
       cursor: default;
     }

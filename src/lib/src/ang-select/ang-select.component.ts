@@ -1,10 +1,7 @@
 import {
     Component,
-    ContentChildren,
-    QueryList,
     OnInit,
     forwardRef,
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Input,
     Output,
@@ -19,9 +16,9 @@ import {
 } from '@angular/core';
 
 
-import {ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl} from '@angular/forms';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {AngOptionDirective, AngDisplayDirective} from './ang-templates.directive';
-import {ScrollToSelectedDirective} from './scroll-to-selected.directive';
+import {AngOption} from './ang-option';
 import * as domHelper from './dom-helper';
 import * as searchHelper from './search-helper';
 
@@ -56,7 +53,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     @ViewChild('dropdownList') dropdownList;
     @ViewChild('searchInput') searchInput;
 
-    @Input() items: any[] = [];
+    @Input() items: AngOption[] = [];
     @Input() bindText: string;
     @Input() bindValue: string;
     @Input() allowClear: boolean;
@@ -67,10 +64,9 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
 
-    selectedItem: any = null;
+    selectedItem: AngOption = null;
     searchValue: string = null;
-    private filteredItems: any[] = [];
-    private showSearch = false;
+    private filteredItems: AngOption[] = [];
     private selectedItemIndex = -1;
     private propagateChange = (_: any) => {
     }
@@ -80,6 +76,12 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
 
     ngOnInit() {
         this.filteredItems = [...this.items];
+
+        this.bindText = this.bindText || 'label';
+        this.bindValue = this.bindValue || 'value';
+        if (this.bindValue === 'this') {
+            this.bindValue = undefined;
+        }
     }
 
     @HostListener('keydown', ['$event'])
@@ -90,10 +92,12 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
             switch ($event.which) {
                 case Key.ArrowDown:
                     this.selectNextItem();
+                    this.notifyModelChanged();
                     this.scrollToSelected();
                     break;
                 case Key.ArrowUp:
                     this.selectPreviousItem();
+                    this.notifyModelChanged();
                     this.scrollToSelected();
                     break;
                 case Key.Space:
@@ -109,8 +113,9 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
 
     @HostListener('document:click', ['$event'])
     handleDocumentClick($event) {
-        if (!this.elementRef.nativeElement.contains(event.target)) {
-            console.log('clicked inside');
+        if (this.elementRef.nativeElement.contains($event.target) ||
+            this.isOpen && this.dropdownList.nativeElement.contains($event.target)) {
+            return;
         }
 
         this.isFocused = false;
@@ -125,7 +130,8 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
         }
         this.selectedItem = null;
         this.selectedItemIndex = -1;
-        this.notifyModelChanged(null);
+        this.clearSearch();
+        this.notifyModelChanged();
     }
 
     writeValue(obj: any): void {
@@ -175,10 +181,13 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
         };
     }
 
-    select(item: any) {
+    select(item: AngOption) {
+        if (item.disabled) {
+            return;
+        }
         this.selectedItem = item;
-        this.notifyModelChanged(item);
         this.close();
+        this.notifyModelChanged();
     }
 
     showPlaceholder() {
@@ -188,7 +197,7 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     onSearch($event) {
         const term = $event.target.value;
         this.searchValue = term;
-        const filterFunc = (val) => {
+        const filterFunc = (val: AngOption) => {
             return searchHelper.stripSpecialChars(val[this.bindText])
                 .toUpperCase()
                 .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) === 0;
@@ -201,18 +210,19 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
         }
     }
 
-    onInputFocus($event) {
+    onInputFocus() {
         console.log('focus');
         this.isFocused = true;
     }
 
-    onInputBlur($event) {
-        console.log('blur');
-        this.isFocused = false;
+    private clearSearch() {
+        this.searchValue = null;
+        this.filteredItems = this.items;
     }
 
     private close() {
         this.isOpen = false;
+        this.clearSearch();
     }
 
     private focusSearchInput() {
@@ -222,13 +232,16 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     private scrollToSelected() {
+        // TODO: is it possible to implement without using timeouts
         setTimeout(() => {
             if (!this.selectedItem) {
                 return;
             }
 
             const selectedOption = <HTMLElement>this.dropdownList.nativeElement.querySelector('.as-option.selected');
-            domHelper.scrollToElement(this.dropdownList.nativeElement, selectedOption);
+            if (selectedOption) {
+                domHelper.scrollToElement(this.dropdownList.nativeElement, selectedOption);
+            }
         });
     }
 
@@ -240,8 +253,9 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
             this.selectedItemIndex++;
         }
         this.selectedItem = this.filteredItems[this.selectedItemIndex];
-        this.notifyModelChanged(this.selectedItem);
-        console.log(this.selectedItem);
+        while (this.selectedItem.disabled) {
+            this.selectNextItem();
+        }
     }
 
     private selectPreviousItem() {
@@ -251,16 +265,18 @@ export class AngSelectComponent implements OnInit, ControlValueAccessor {
             this.selectedItemIndex--;
         }
         this.selectedItem = this.filteredItems[this.selectedItemIndex];
-        this.notifyModelChanged(this.selectedItem);
+        while (this.selectedItem.disabled) {
+            this.selectPreviousItem();
+        }
     }
 
-    private notifyModelChanged(selectedValue: any) {
-        if (!selectedValue) {
+    private notifyModelChanged() {
+        if (!this.selectedItem) {
             this.propagateChange(null);
         } else if (this.bindValue) {
-            this.propagateChange(selectedValue[this.bindValue]);
+            this.propagateChange(this.selectedItem[this.bindValue]);
         } else {
-            this.propagateChange(selectedValue);
+            this.propagateChange(this.selectedItem);
         }
     }
 }
