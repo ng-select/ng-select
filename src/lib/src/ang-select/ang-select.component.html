@@ -7,8 +7,8 @@
 
         <div class="as-value" *ngIf="!searchValue">
             <span *ngIf="selectedItem" class="as-value-label" role="option" aria-selected="true">
-                <ng-container *ngIf="displayTemplateRef" [ngTemplateOutlet]="displayTemplateRef.template"
-                              [ngOutletContext]="getDisplayTemplateContext()"></ng-container>
+                <ng-template *ngIf="displayTemplateRef" [ngTemplateOutlet]="displayTemplateRef.template"
+                              [ngOutletContext]="getDisplayTemplateContext()"></ng-template>
 
                 <ng-container *ngIf="!displayTemplateRef">{{getTextValue()}}</ng-container>
             </span>
@@ -34,22 +34,22 @@
 </div>
 
 
-<div class="as-menu-outer" *ngIf="isOpen">
-    <div #dropdownList role="listbox" class="as-menu">
+<div class="as-menu-outer" [ngStyle]="{'visibility': isOpen ? 'visible' : 'hidden'}">
+    <virtual-scroll role="listbox" class="as-menu" [bufferAmount]="15" [items]="filteredItems" (update)="viewPortItems = $event">
         <div class="as-option" role="option" (click)="select(item)"
-             *ngFor="let item of filteredItems; let index = index; let first = first; let last = last; let even = even; let odd = odd"
+             *ngFor="let item of viewPortItems; let index = index; let first = first; let last = last; let even = even; let odd = odd"
              [class.disabled]="item.disabled"
              [class.selected]="item == selectedItem">
 
             <ng-container *ngIf="!optionTemplateRef">{{item[bindLabel]}}</ng-container>
 
-            <ng-container *ngIf="optionTemplateRef" [ngTemplateOutlet]="optionTemplateRef.template"
+            <ng-template *ngIf="optionTemplateRef" [ngTemplateOutlet]="optionTemplateRef.template"
                           [ngOutletContext]="getOptionTemplateContext(item, index, first, last, even, odd)">
-            </ng-container>
+            </ng-template>
         </div>
 
         <div *ngIf="filteredItems.length === 0" class="as-option disabled">
             No items found
         </div>
-    </div>
+    </virtual-scroll>
 </div>

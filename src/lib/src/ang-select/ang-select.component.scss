@@ -1,14 +1,21 @@
-ang-select {
-  position: relative;
-  display: block;
+@mixin box-sizing() {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+}
 
-  div, input, span {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+ang-select {
+  position: relative;
+  display: block;
+  @include box-sizing;
+
+  div, input, span, virtual-scroll {
+    @include box-sizing;
+  }
+
+  virtual-scroll {
+    display: block;
+    height: auto;
   }
 
   &.opened {
@@ -27,6 +34,10 @@ ang-select {
       &:hover {
         border-color: transparent transparent #666;;
       }
+    }
+
+    .as-menu-outer{
+      visibility: visible;
     }
   }
 
@@ -109,6 +120,7 @@ ang-select {
   }
 
   .as-menu-outer {
+    visibility: hidden;
     border-bottom-right-radius: 4px;
     border-bottom-left-radius: 4px;
     background-color: #fff;

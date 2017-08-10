@@ -50,7 +50,26 @@ import {HttpClient} from '@angular/common/http';
                         <small><b>Id:</b> {{item.id}} | <b>UserId:</b> {{item.userId}}</small>
                     </ng-template>
                 </ang-select>
-                <small id="fileHelp" class="form-text text-muted">Albums data from backend using HttpClient.</small>
+                <small class="form-text text-muted">Albums data from backend using HttpClient.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="album">Favorite photo</label>
+                <ang-select [items]="photos"
+                            bindLabel="title"
+                            bindValue="thumbnailUrl"
+                            placeholder="Select photo"
+                            formControlName="photo">
+                    <ng-template ang-display-tmp let-item="item">
+                        <img height="15" width="15" [src]="item.thumbnailUrl" />
+                        <span>{{item.title}}</span>
+                    </ng-template>
+                    <ng-template ang-option-tmp let-item="item" let-index="index">
+                        <img height="15" width="15" [src]="item.thumbnailUrl" />
+                        <span>{{item.title}}</span>
+                    </ng-template>
+                </ang-select>
+                <small class="form-text text-muted">5000 items with virtual scroll</small>
             </div>
         </form>
 
@@ -74,6 +93,7 @@ export class ReactiveFormsComponent {
     ];
 
     albums = [];
+    photos = [];
 
     constructor(private fb: FormBuilder, private http: HttpClient) {
     }
@@ -81,13 +101,15 @@ export class ReactiveFormsComponent {
     ngOnInit() {
 
         this.loadAlbums();
+        this.loadPhotos();
 
         this.heroForm = this.fb.group({
             name: ['', Validators.required],
             street: '',
             city: '',
             age: '',
-            album: ''
+            album: '',
+            photo: ''
         });
     }
 
@@ -102,7 +124,13 @@ export class ReactiveFormsComponent {
     private loadAlbums() {
         this.http.get<any[]>('https://jsonplaceholder.typicode.com/albums').subscribe(rsp => {
             this.albums = rsp;
-            console.log(this.albums[0]);
+        });
+    }
+
+    private loadPhotos() {
+        this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').subscribe(rsp => {
+             this.photos = rsp;
+            console.log('loaded photos:', this.photos.length);
         });
     }
 }

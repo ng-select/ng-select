@@ -22,6 +22,7 @@ import {AngOptionDirective, AngDisplayDirective} from './ang-templates.directive
 import {AngOption} from './ang-option';
 import * as domHelper from './dom-helper';
 import * as searchHelper from './search-helper';
+import {VirtualScrollComponent} from './virtual-scroll';
 
 const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
@@ -46,13 +47,13 @@ export enum Key {
     encapsulation: ViewEncapsulation.None,
     host: {
         'role': 'dropdown'
-    },
+    }
 })
 export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccessor {
 
     @ContentChild(AngOptionDirective) optionTemplateRef: TemplateRef<any>;
     @ContentChild(AngDisplayDirective) displayTemplateRef: TemplateRef<any>;
-    @ViewChild('dropdownList') dropdownList;
+    @ViewChild(VirtualScrollComponent) dropdownList;
     @ViewChild('searchInput') searchInput;
 
     @Input() items: AngOption[] = [];
@@ -116,8 +117,11 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
                     this.open();
                     $event.preventDefault();
                     break;
-                case Key.Tab:
                 case Key.Enter:
+                    this.close();
+                    $event.preventDefault();
+                    break;
+                case Key.Tab:
                 case Key.Esc:
                     this.close();
                     break;
@@ -127,14 +131,16 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
 
     @HostListener('document:click', ['$event'])
     handleDocumentClick($event) {
+        const dropdown = this.getDropdownMenu();
         if (this.elementRef.nativeElement.contains($event.target) ||
-            this.isOpen && this.dropdownList.nativeElement.contains($event.target)) {
+            dropdown && dropdown.contains($event.target)) {
             return;
         }
 
         this.isFocused = false;
         if (this.isOpen) {
             this.close();
+            console.log('document click close');
         }
     }
 
@@ -213,6 +219,10 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         console.log('select', this.selectedItem);
     }
 
+    onOptionMouseover($e) {
+        console.log('hover', $e);
+    }
+
     showPlaceholder() {
         return this.placeholder && !this.selectedItem && !this.searchValue;
     }
@@ -265,10 +275,15 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
             if (!this.selectedItem) {
                 return;
             }
+            const dropdown = this.getDropdownMenu();
+            if (!dropdown) {
+                return;
+            }
 
-            const selectedOption = <HTMLElement>this.dropdownList.nativeElement.querySelector('.as-option.selected');
+            // TODO: how to scroll to virtual element which is not rendered
+            const selectedOption = <HTMLElement>dropdown.querySelector('.as-option.selected');
             if (selectedOption) {
-                domHelper.scrollToElement(this.dropdownList.nativeElement, selectedOption);
+                domHelper.scrollToElement(dropdown, selectedOption);
             }
         });
     }
@@ -306,6 +321,14 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         } else {
             this.propagateChange(this.selectedItem);
         }
+    }
+
+    private getDropdownMenu() {
+        if (!this.isOpen || !this.dropdownList) {
+            return null;
+        }
+
+        return <HTMLElement>this.dropdownList.element.nativeElement;
     }
 }
 
