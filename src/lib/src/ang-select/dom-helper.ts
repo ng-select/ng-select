@@ -1,23 +1,3 @@
-export function scrollToElement2(container: HTMLElement, element: HTMLElement) {
-    const offset = element.offsetTop;
-    container.scrollTop = offset;
-}
-
-export function isOverflowing(el) {
-    const curOverflow = el.style.overflow;
-
-    if (!curOverflow || curOverflow === 'visible') {
-        el.style.overflow = 'hidden';
-    }
-
-    const isOverflowing = el.clientWidth < el.scrollWidth
-        || el.clientHeight < el.scrollHeight;
-
-    el.style.overflow = curOverflow;
-
-    return isOverflowing;
-}
-
 export function scrollToElement(container: HTMLElement, element: HTMLElement) {
     let borderTopValue: string = getComputedStyle(container).getPropertyValue('borderTopWidth');
     let borderTop: number = borderTopValue ? parseFloat(borderTopValue) : 0;

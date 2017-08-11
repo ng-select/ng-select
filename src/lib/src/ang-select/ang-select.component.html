@@ -35,7 +35,7 @@
 
 
 <div class="as-menu-outer" [ngStyle]="{'visibility': isOpen ? 'visible' : 'hidden'}">
-    <virtual-scroll role="listbox" class="as-menu" [bufferAmount]="15" [items]="filteredItems" (update)="viewPortItems = $event">
+    <virtual-scroll role="listbox" class="as-menu" [bufferAmount]="4" [items]="filteredItems" (update)="viewPortItems = $event">
         <div class="as-option" role="option" (click)="select(item)"
              *ngFor="let item of viewPortItems; let index = index; let first = first; let last = last; let even = even; let odd = odd"
              [class.disabled]="item.disabled"
@@ -47,10 +47,11 @@
                           [ngOutletContext]="getOptionTemplateContext(item, index, first, last, even, odd)">
             </ng-template>
         </div>
+    </virtual-scroll>
 
-        <!--TODO: message is not visible due to virtual scroll-->
-        <div *ngIf="filteredItems.length === 0" class="as-option disabled">
+    <div class="as-menu" *ngIf="filteredItems.length === 0">
+        <div class="as-option disabled">
             No items found
         </div>
-    </virtual-scroll>
+    </div>
 </div>

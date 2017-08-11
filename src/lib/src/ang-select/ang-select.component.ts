@@ -55,7 +55,7 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
 
     @ContentChild(AngOptionDirective) optionTemplateRef: TemplateRef<any>;
     @ContentChild(AngDisplayDirective) displayTemplateRef: TemplateRef<any>;
-    @ViewChild(VirtualScrollComponent) dropdownList;
+    @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
     @ViewChild('filterInput') filterInput;
 
     // inputs
@@ -74,12 +74,17 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
 
+    // model value
     selectedItem: AngOption = null;
+
+    // search term value
     filterValue: string = null;
-    private filteredItems: AngOption[] = [];
+
+    // used for keyboard selection;
+    private tempSelectedItem: AngOption = null;
     private selectedItemIndex = -1;
-    private propagateChange = (_: any) => {
-    }
+    private filteredItems: AngOption[] = [];
+    private propagateChange = (_: AngOption) => {};
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
     }
@@ -193,7 +198,6 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
             return;
         }
         this.isOpen = true;
-        this.scrollToSelected();
         this.focusSearchInput();
     }
 
@@ -224,10 +228,6 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         this.close();
         this.notifyModelChanged();
         console.log('select', this.selectedItem);
-    }
-
-    onOptionMouseover($e) {
-        console.log('hover', $e);
     }
 
     showPlaceholder() {
@@ -279,24 +279,14 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
     }
 
     private scrollToSelected() {
-        setTimeout(() => {
-            if (!this.selectedItem) {
-                return;
-            }
-            const dropdown = this.getDropdownMenu();
-            if (!dropdown) {
-                return;
-            }
+        this.dropdownList.scrollInto(this.selectedItem);
+    }
 
-            const selectedOption = <HTMLElement>dropdown.querySelector('.as-option.selected');
-            if (selectedOption) {
-                domHelper.scrollToElement(dropdown, selectedOption);
-            }
-        });
+    private writeSelectedItem() {
+
     }
 
     private selectNextItem() {
-        console.log(this.selectedItemIndex);
         if (this.selectedItemIndex === this.filteredItems.length - 1) {
             this.selectedItemIndex = 0;
         } else {
@@ -334,8 +324,7 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         if (!this.isOpen || !this.dropdownList) {
             return null;
         }
-
-        return <HTMLElement>this.dropdownList.element.nativeElement;
+        return <HTMLElement>this.elementRef.nativeElement.querySelector('.as-menu-outer');
     }
 }
 

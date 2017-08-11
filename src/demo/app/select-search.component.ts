@@ -14,7 +14,7 @@ import {AngOption} from 'ang-select';
             Selected value: {{selectedCompany | json}}
         </p>
 
-        <label>Search using custom filter handler (try search for Roo)</label>
+        <label>Search using custom filter handler (try search for Ro)</label>
         <ang-select [items]="companies"
                     bindLabel="name"
                     bindValue="this"
@@ -31,10 +31,11 @@ export class SelectSearchComponent {
     companies: any[] = [];
     selectedCompany: any;
     selectedCompany2?: any;
+
     /* tslint:disable */
     companiesNames = ['Miškas', 'Žalias', 'Flexigen', 'Rooforia', 'Rooblia', 'Tropoli', 'Eargo', 'Gadtron', 'Elentrix', 'Terragen', 'Medalert', 'Xelegyl', 'Bristo', 'Xylar', 'Imperium', 'Kangle', 'Earwax', 'Zanity', 'Portico', 'Tsunamia', 'Kage', 'Comstar', 'Radiantix', 'Bostonic', 'Geekko', 'Eventex', 'Stockpost', 'Silodyne', 'Enersave', 'Perkle', 'Pyramis', 'Accuprint', 'Papricut', 'Pathways', 'Circum', 'Gology', 'Buzzworks', 'Dancerity', 'Zounds', 'Diginetic', 'Snips', 'Chillium', 'Exotechno', 'Accufarm', 'Vidto', 'Signidyne', 'Escenta', 'Sureplex', 'Quarmony', 'Interfind', 'Exoswitch', 'Mondicil', 'Pyramia', 'Digitalus', 'Earthplex', 'Limozen', 'Twiist', 'Tubalum', 'Securia', 'Uni', 'Biospan', 'Zensus', 'Memora'];
-
     /* tslint:enable */
+
     ngOnInit() {
         this.companiesNames.forEach((c, i) => {
             this.companies.push({id: i, name: c});
