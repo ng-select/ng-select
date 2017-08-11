@@ -3,7 +3,23 @@
 
 Library is under development. Library build process is forked from https://github.com/filipesilva/angular-quickstart-lib but I changed SystemJs build system to Webpack for faster builds and easer deployments to github pages.
 
-# Angular customizable select
+## Roadmap
+
+- [x] Custom binding to property or object
+- [x] Custom option and label templates
+- [x] Virtual Scroll support with large data sets (>5000 items).
+- [x] Filter data by display text
+- [x] Filter data by custom filter function
+- [ ] Expose usefull events like blur, change, focus, close, open ...
+- [ ] HTML5 Standart https://developer.mozilla.org/en/docs/Web/HTML/Element/select except multiselect
+- [ ] Correct keyboard events behaviour
+- [ ] Good base functionality test coverage
+- [ ] Integration app generated with angular-cli
+- [ ] First alpha release and documentation
+- [ ] Multiselect support
+- [ ] Accessibility
+
+## Build status
 [![Build Status][travis-badge]][travis-badge-url]
 
 [travis-badge]: https://travis-ci.org/anjmao/ang-select.svg?branch=master
@@ -13,18 +29,6 @@ Library is under development. Library build process is forked from https://githu
 ```
 TODO
 ```
-
-
-## API
-### Inputs
-| Name  | Description |
-| ------------- | ------------- |
-| `@Input() items: any[] = [];` | Data array  |
-| `@Input() bindLabel: string;`  | Set which property to display as text in dropdown |
-| `@Input() bindValue: string;`  | Set which property to bind to model on dropdown select |
-| `@Input() placeholder: string;`  | Set input placeholder |
-| `@Input() allowClear: boolean;`  | Allow to clear selected value |
-| `@Input() allowSearch: boolean;`  | Allow to search in dropdown list by `bindLabel` property |
 
 ### Clone and play
 
