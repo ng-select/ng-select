@@ -10,20 +10,8 @@ Library is under development. Library build process is forked from https://githu
 [travis-badge-url]: https://travis-ci.org/anjmao/ang-select
 
 ## Installation
-
 ```
-npm install ang-select --save
-```
-
-```js
-import {AngSelectModule} from 'ang-select';
-
-// ...
-
-@NgModule({
-    imports: [AngSelectModule]
-})
-
+TODO
 ```
 
 ## Usage
