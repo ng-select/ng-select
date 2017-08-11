@@ -15,9 +15,9 @@
         </div>
 
         <div *ngIf="!isDisabled" class="as-input">
-            <input #searchInput
-                   [value]="searchValue"
-                   (input)="onSearch($event)"
+            <input #filterInput
+                   [value]="filterValue"
+                   (input)="onFilter($event)"
                    (focus)="onInputFocus($event)"
                    (blur)="onInputBlur($event)"
                    role="combobox"
@@ -48,6 +48,7 @@
             </ng-template>
         </div>
 
+        <!--TODO: message is not visible due to virtual scroll-->
         <div *ngIf="filteredItems.length === 0" class="as-option disabled">
             No items found
         </div>

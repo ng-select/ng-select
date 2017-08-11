@@ -30,6 +30,8 @@ const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     multi: true
 };
 
+export type FilterFunc = (term: string) => (val: AngOption) => boolean;
+
 export enum Key {
     Tab = 9,
     Enter = 13,
@@ -54,21 +56,26 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
     @ContentChild(AngOptionDirective) optionTemplateRef: TemplateRef<any>;
     @ContentChild(AngDisplayDirective) displayTemplateRef: TemplateRef<any>;
     @ViewChild(VirtualScrollComponent) dropdownList;
-    @ViewChild('searchInput') searchInput;
+    @ViewChild('filterInput') filterInput;
 
+    // inputs
     @Input() items: AngOption[] = [];
     @Input() bindLabel: string;
     @Input() bindValue: string;
     @Input() allowClear = true;
     @Input() placeholder: string;
+    @Input() filterFunc: FilterFunc;
+
+    // output events
     @Output() blur = new EventEmitter();
+
     @HostBinding('class.as-single') single = true;
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
 
     selectedItem: AngOption = null;
-    searchValue: string = null;
+    filterValue: string = null;
     private filteredItems: AngOption[] = [];
     private selectedItemIndex = -1;
     private propagateChange = (_: any) => {
@@ -224,23 +231,17 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
     }
 
     showPlaceholder() {
-        return this.placeholder && !this.selectedItem && !this.searchValue;
+        return this.placeholder && !this.selectedItem && !this.filterValue;
     }
 
-    onSearch($event) {
+    onFilter($event) {
+        this.selectedItemIndex = -1;
+
         const term = $event.target.value;
-        this.searchValue = term;
-        const filterFunc = (val: AngOption) => {
-            return searchHelper.stripSpecialChars(val[this.bindLabel])
-                .toUpperCase()
-                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) === 0;
-        };
+        this.filterValue = term;
 
-        this.filteredItems = term ? this.items.filter(val => filterFunc(val)) : this.items;
-
-        if (term && this.selectedItemIndex > -1) {
-            this.selectedItemIndex = -1;
-        }
+        const filterFuncVal = this.filterFunc ? this.filterFunc(this.filterValue) : this.getDefaultFilterFunc(this.filterValue);
+        this.filteredItems = term ? this.items.filter(val => filterFuncVal(val)) : this.items;
     }
 
     onInputFocus() {
@@ -253,8 +254,16 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         this.isFocused = false;
     }
 
+    private getDefaultFilterFunc(term) {
+        return (val: AngOption) => {
+            return searchHelper.stripSpecialChars(val[this.bindLabel])
+                .toUpperCase()
+                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) === 0;
+        };
+    }
+
     private clearSearch() {
-        this.searchValue = null;
+        this.filterValue = null;
         this.filteredItems = this.items;
     }
 
@@ -265,12 +274,11 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
 
     private focusSearchInput() {
         setTimeout(() => {
-            this.searchInput.nativeElement.focus();
+            this.filterInput.nativeElement.focus();
         });
     }
 
     private scrollToSelected() {
-        // TODO: is it possible to implement without using timeouts
         setTimeout(() => {
             if (!this.selectedItem) {
                 return;
@@ -280,7 +288,6 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
                 return;
             }
 
-            // TODO: how to scroll to virtual element which is not rendered
             const selectedOption = <HTMLElement>dropdown.querySelector('.as-option.selected');
             if (selectedOption) {
                 domHelper.scrollToElement(dropdown, selectedOption);
