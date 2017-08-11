@@ -12,7 +12,8 @@
   },
   "files": [
     "./index.ts",
-    "./typings.d.ts"
+    "./typings.d.ts",
+    "./src/ang-select.component.spec.ts"
   ],
   "angularCompilerOptions": {
     "annotateForClosureCompiler": true,

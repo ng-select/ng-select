@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { AngSelectComponent } from './ang-select.component';
 import { AngOptionDirective, AngDisplayDirective } from './ang-templates.directive';
 import { AngSearchFocusDirective } from './ang-search-focus.directive';
-import { ScrollToSelectedDirective } from './scroll-to-selected.directive';
 import {VirtualScrollModule} from './virtual-scroll';
 
 @NgModule({
@@ -13,8 +12,7 @@ import {VirtualScrollModule} from './virtual-scroll';
         AngSelectComponent,
         AngOptionDirective,
         AngDisplayDirective,
-        AngSearchFocusDirective,
-        ScrollToSelectedDirective
+        AngSearchFocusDirective
     ],
     imports: [
         FormsModule,

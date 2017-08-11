@@ -20,7 +20,6 @@ import {
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {AngOptionDirective, AngDisplayDirective} from './ang-templates.directive';
 import {AngOption} from './ang-option';
-import * as domHelper from './dom-helper';
 import * as searchHelper from './search-helper';
 import {VirtualScrollComponent} from './virtual-scroll';
 
@@ -80,8 +79,6 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
     // search term value
     filterValue: string = null;
 
-    // used for keyboard selection;
-    private tempSelectedItem: AngOption = null;
     private selectedItemIndex = -1;
     private filteredItems: AngOption[] = [];
     private propagateChange = (_: AngOption) => {};

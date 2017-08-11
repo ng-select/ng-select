@@ -8,43 +8,6 @@ import { AngSelectComponent, Key } from './ang-select.component';
 
 describe('AngSelectComponent', function () {
 
-    describe('Dropdown container click', () => {
-        let fixture: ComponentFixture<AngSelectBasic>;
-        let trigger: HTMLElement;
-
-        beforeEach(() => {
-            fixture = createTestingModule(
-                AngSelectBasic,
-                `<ang-select [items]="cities" 
-                        bindLabel="name"
-                        [(ngModel)]="selectedCity">
-                </ang-select>`);
-            trigger = fixture.debugElement.query(By.css('.ang-select-container')).nativeElement;
-        });
-
-        it('should toggle dropdown on select container click', () => {
-            trigger.click();
-            fixture.detectChanges();
-            expect(fixture.componentInstance.select.isOpen).toBe(true);
-
-            trigger.click();
-            fixture.detectChanges();
-            expect(fixture.componentInstance.select.isOpen).toBe(false);
-        });
-
-        it('should select value and close dropdown on option select', () => {
-            trigger.click();
-            fixture.detectChanges();
-
-            const angOptionElement = fixture.debugElement.query(By.css('.ang-option')).nativeElement;
-            angOptionElement.click();
-            fixture.detectChanges();
-
-            expect(fixture.componentInstance.select.isOpen).toBe(false);
-            expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[0]);
-        });
-    });
-
     describe('Model changes', () => {
         let fixture: ComponentFixture<AngSelectBasic>;
 
@@ -53,6 +16,7 @@ describe('AngSelectComponent', function () {
                 AngSelectBasic,
                 `<ang-select [items]="cities" 
                         bindLabel="name"
+                        bindValue="this"
                         [(ngModel)]="selectedCity">
                 </ang-select>`);
         });
@@ -62,15 +26,6 @@ describe('AngSelectComponent', function () {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[0]);
-        });
-
-        it('should update select model value', () => {
-            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[2];
-            fixture.detectChanges();
-
-            fixture.whenStable().then(() => {
-                expect(fixture.componentInstance.select.selectedItem).toEqual(fixture.componentInstance.cities[2]);
-            });
         });
     });
 
@@ -82,6 +37,7 @@ describe('AngSelectComponent', function () {
                 AngSelectBasic,
                 `<ang-select [items]="cities" 
                         bindLabel="name"
+                        bindValue="id"
                         [(ngModel)]="selectedCity">
                 </ang-select>`);
         });
@@ -169,8 +125,6 @@ describe('AngSelectComponent', function () {
         });
 
         it('should display custom html', async(() => {
-            const trigger = fixture.debugElement.query(By.css('.ang-select-container')).nativeElement;
-            trigger.click();
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
@@ -188,6 +142,7 @@ describe('AngSelectComponent', function () {
                 AngSelectBasic,
                 `<ang-select [items]="cities" 
                     bindLabel="name"
+                    bindValue="id"
                     placeholder="select value"
                     [(ngModel)]="selectedCity">
                 </ang-select>`);
@@ -213,7 +168,7 @@ describe('AngSelectComponent', function () {
         }));
     });
 
-    fdescribe('Search', () => {
+    describe('Search', () => {
         let fixture: ComponentFixture<AngSelectSearch>;
 
         beforeEach(() => {
@@ -221,29 +176,19 @@ describe('AngSelectComponent', function () {
                 AngSelectSearch,
                 `<ang-select [items]="cities" 
                     bindLabel="name"
-                    allowSearch="true"
+                    bindValue="id"
                     [(ngModel)]="selectedCity">
                 </ang-select>`);
         });
 
-        it('should show search input when panel is opened', async(() => {
-            fixture.componentInstance.select.isOpen = true;
-            fixture.detectChanges();
-
-            fixture.whenStable().then(() => {
-                const searchInput = fixture.debugElement.query(By.css('.search-input-container')).nativeElement;
-                expect(searchInput).toBeDefined();
-            });
-        }));
-
         it('should filter by search input value', async(() => {
             fixture.detectChanges();
 
-            fixture.componentInstance.select.onSearch({target: {value: 'vilnius'}});
+            fixture.componentInstance.select.onFilter({target: {value: 'vilnius'}});
             fixture.componentInstance.select.open();
 
             fixture.whenStable().then(() => {
-                const angOptions = fixture.debugElement.queryAll(By.css('.ang-option'));
+                const angOptions = fixture.debugElement.queryAll(By.css('.as-option'));
                 expect(angOptions.length).toBe(1);
                 expect(angOptions[0].nativeElement.innerText).toBe('Vilnius');
             });
@@ -283,8 +228,7 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
 }
 
 @Component({
-    template: `
-    `
+    template: ``
 })
 class AngSelectBasic {
     @ViewChild(AngSelectComponent) select: AngSelectComponent;
