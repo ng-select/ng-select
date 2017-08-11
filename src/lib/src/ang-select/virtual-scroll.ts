@@ -13,7 +13,6 @@ import {
     OnChanges,
     OnInit,
     Output,
-    Renderer,
     SimpleChanges,
     ViewChild,
 } from '@angular/core';
@@ -97,7 +96,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges {
     previousEnd: number;
     startupLoop = true;
 
-    constructor(private element: ElementRef, private renderer: Renderer) {
+    constructor(private element: ElementRef) {
     }
 
     @HostListener('scroll')

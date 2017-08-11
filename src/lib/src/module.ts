@@ -6,7 +6,7 @@ import { AngSelectComponent } from './ang-select/ang-select.component';
 import { AngOptionDirective, AngDisplayDirective } from './ang-select/ang-templates.directive';
 import { AngSearchFocusDirective } from './ang-select/ang-search-focus.directive';
 import { ScrollToSelectedDirective } from './ang-select/scroll-to-selected.directive';
-import {VirtualScrollModule} from "./ang-select/virtual-scroll";
+import {VirtualScrollModule} from './ang-select/virtual-scroll';
 
 @NgModule({
     declarations: [
