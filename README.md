@@ -23,6 +23,9 @@ Library is under active development. Library build process is forked from https:
 - [ ] Multiselect support
 - [ ] Accessibility
 
+## Demos
+https://anjmao.github.io/ang-select/
+
 ### Installation
 ```
 TODO
