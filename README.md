@@ -14,56 +14,6 @@ Library is under development. Library build process is forked from https://githu
 TODO
 ```
 
-## Usage
-## Basic dropdown
-```ts
-@Component({
-    selector: 'basic-demo',
-    template: `
-        <ang-select [items]="cities"
-                    bindLabel="name"
-                    [allowClear]="true"
-                    [(ngModel)]="selectedCity">
-        </ang-select>
-    `
-})
-export class SelectBindingsComponent {
-    cities = [
-        {id: 1, name: 'Vilnius'},
-        {id: 2, name: 'Kaunas'},
-        {id: 3, name: 'Pavilnys'}
-    ];
-    selectedCity: any;
-}
-```
-## Custom header and dropdown list items templates
-
-```ts
-@Component({
-    selector: 'select-with-templates',
-    template: `
-        <ang-select [items]="cities" [(ngModel)]="selectedCity">
-            <ng-template ang-display-tmp let-item="item">
-                <span class="badge badge-primary">{{item.id}}</span>
-                {{item.name}}
-            </ng-template>
-            <ng-template ang-option-tmp let-item="item" let-index="index">
-                <i class="fa fa-check" aria-hidden="true"></i>
-                <b>{{item.name}}</b>
-            </ng-template>
-        </ang-select>
-    `
-})
-export class SelectWithTemplatesComponent {
-    cities = [
-        {id: 1, name: 'Vilnius'},
-        {id: 2, name: 'Kaunas'},
-        {id: 3, name: 'Pavilnys'}
-    ];
-    selectedCity = this.cities[0];
-}
-```
-
 
 ## API
 ### Inputs
@@ -92,8 +42,6 @@ npm run serve-demo
 npm run test
 or
 npm run test-watch
-or
-npm run integration
 ```
 
 ### Contributing
