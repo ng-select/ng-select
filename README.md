@@ -1,7 +1,11 @@
+[![Build Status][travis-badge]][travis-badge-url]
+
+[travis-badge]: https://travis-ci.org/anjmao/ang-select.svg?branch=master
+[travis-badge-url]: https://travis-ci.org/anjmao/ang-select
 
 # Warning
 
-Library is under development. Library build process is forked from https://github.com/filipesilva/angular-quickstart-lib but I changed SystemJs build system to Webpack for faster builds and easer deployments to github pages.
+Library is under active development. Library build process is forked from https://github.com/filipesilva/angular-quickstart-lib but I changed SystemJs build system to Webpack for faster builds and easer deployments to github pages.
 
 ## Roadmap
 
@@ -19,13 +23,7 @@ Library is under development. Library build process is forked from https://githu
 - [ ] Multiselect support
 - [ ] Accessibility
 
-## Build status
-[![Build Status][travis-badge]][travis-badge-url]
-
-[travis-badge]: https://travis-ci.org/anjmao/ang-select.svg?branch=master
-[travis-badge-url]: https://travis-ci.org/anjmao/ang-select
-
-## Installation
+### Installation
 ```
 TODO
 ```
@@ -47,6 +45,3 @@ npm run test
 or
 npm run test-watch
 ```
-
-### Contributing
-Contributions are welcome. Lets make best angular select together! Just create new issue with proposal :)
