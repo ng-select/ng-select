@@ -1,0 +1,222 @@
+@mixin box-sizing() {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+ang-select {
+  position: relative;
+  display: block;
+  @include box-sizing;
+
+  div, input, span, virtual-scroll {
+    @include box-sizing;
+  }
+
+  virtual-scroll {
+    display: block;
+    height: auto;
+  }
+
+  &.opened {
+    > .as-control {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+      background: #fff;
+      border-color: #b3b3b3 #ccc #d9d9d9;
+    }
+
+    > .as-control .as-arrow {
+      top: -2px;
+      border-color: transparent transparent #999;
+      border-width: 0 5px 5px;
+
+      &:hover {
+        border-color: transparent transparent #666;;
+      }
+    }
+
+    .as-menu-outer{
+      visibility: visible;
+    }
+  }
+
+  &.focused {
+    &:not(.opened) > .as-control {
+      border-color: #007eff;
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px rgba(0, 126, 255, 0.1);
+    }
+  }
+
+  &.disabled > .as-control {
+    background-color: #f9f9f9;
+  }
+
+  .as-control {
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    color: #333;
+    cursor: default;
+    display: table;
+    border-spacing: 0;
+    border-collapse: separate;
+    height: 36px;
+    outline: none;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+
+    &:hover {
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+    }
+  }
+
+  .as-placeholder, &.as-single > .as-control .as-value {
+    bottom: 0;
+    color: #aaa;
+    left: 0;
+    line-height: 34px;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    .as-value-label {
+      color:#333;
+    }
+  }
+
+  .as-input {
+    height: 34px;
+    padding-left: 10px;
+    padding-right: 10px;
+    vertical-align: middle;
+    display: inline-block;
+
+    > input {
+      min-width: 5px;
+      box-sizing: content-box;
+      background: none transparent;
+      border: 0 none;
+      box-shadow: none;
+      cursor: default;
+      display: inline-block;
+      font-family: inherit;
+      font-size: inherit;
+      margin: 0;
+      outline: none;
+      line-height: 14px;
+      /* For IE 8 compatibility */
+      padding: 8px 0 12px;
+      /* For IE 8 compatibility */
+      -webkit-appearance: none;
+    }
+  }
+
+  .as-menu-outer {
+    visibility: hidden;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top-color: #e6e6e6;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+    box-sizing: border-box;
+    margin-top: -1px;
+    max-height: 200px;
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    z-index: 1;
+    -webkit-overflow-scrolling: touch;
+  }
+  .as-menu {
+    max-height: 198px;
+    overflow-y: auto;
+  }
+  .as-option {
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #666666;
+    cursor: pointer;
+    display: block;
+    padding: 8px 10px;
+
+    &:last-child {
+      border-bottom-right-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+
+    &.selected {
+      background-color: #f5faff;
+      /* Fallback color for IE 8 */
+      background-color: rgba(0, 126, 255, 0.04);
+      color: #333;
+    }
+
+    &:not(.disabled):hover {
+      background-color: #ebf5ff;
+      /* Fallback color for IE 8 */
+      background-color: rgba(0, 126, 255, 0.08);
+      color: #333;
+    }
+
+    &.disabled {
+      color: #cccccc;
+      cursor: default;
+    }
+  }
+
+  .as-clear-zone {
+    -webkit-animation: Select-animation-fadeIn 200ms;
+    -o-animation: Select-animation-fadeIn 200ms;
+    animation: Select-animation-fadeIn 200ms;
+    color: #999;
+    cursor: pointer;
+    display: table-cell;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    width: 17px;
+
+    .as-clear {
+      display: inline-block;
+      font-size: 18px;
+      line-height: 1;
+
+      &:hover {
+        color: #D0021B;
+      }
+    }
+  }
+
+  .as-arrow-zone {
+    cursor: pointer;
+    display: table-cell;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    width: 25px;
+    padding-right: 5px;
+
+    .as-arrow {
+      border-color: #999 transparent transparent;
+      border-style: solid;
+      border-width: 5px 5px 2.5px;
+      display: inline-block;
+      height: 0;
+      width: 0;
+      position: relative;
+
+      &:hover {
+        border-top-color: #666;
+      }
+    }
+  }
+}
