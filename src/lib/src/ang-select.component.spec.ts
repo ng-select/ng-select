@@ -1,10 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement, Component, ViewChild, Type } from '@angular/core';
-import { FormsModule, FormControl } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { AngSelectModule } from './ang-select.module';
-import { AngSelectComponent, Key } from './ang-select.component';
+import {AngSelectComponent} from './ang-select.component';
+import {KeyCode, AngOption} from './ang-select.types';
 
 describe('AngSelectComponent', function () {
 
@@ -22,7 +23,9 @@ describe('AngSelectComponent', function () {
         });
 
         it('should update app model value', () => {
-            triggerKeyDownEvent(getAngSelectElement(fixture), Key.ArrowDown);
+            triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.Space);
+            triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.ArrowDown);
+            triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.Enter);
             fixture.detectChanges();
 
             expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[0]);
@@ -43,15 +46,17 @@ describe('AngSelectComponent', function () {
         });
 
         it('should open dropdown on space click', () => {
-            triggerKeyDownEvent(getAngSelectElement(fixture), Key.Space);
+            triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.Space);
 
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         });
 
         it('should select next value on arrow down', () => {
-            triggerKeyDownEvent(getAngSelectElement(fixture), Key.ArrowDown);
+            triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.Space);
+            triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.ArrowDown);
+            triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.Enter);
 
-            expect(fixture.componentInstance.select.selectedItem).toEqual(fixture.componentInstance.cities[0]);
+            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
         });
 
         it('should select first value on arrow down when current selected value is last', () => {
@@ -59,8 +64,8 @@ describe('AngSelectComponent', function () {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                triggerKeyDownEvent(getAngSelectElement(fixture), Key.ArrowDown);
-                expect(fixture.componentInstance.select.selectedItem).toEqual(fixture.componentInstance.cities[0]);
+                triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.ArrowDown);
+                expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
             });
         });
 
@@ -69,8 +74,8 @@ describe('AngSelectComponent', function () {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                triggerKeyDownEvent(getAngSelectElement(fixture), Key.ArrowUp);
-                expect(fixture.componentInstance.select.selectedItem).toEqual(fixture.componentInstance.cities[0]);
+                triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.ArrowUp);
+                expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
             });
 
         });
@@ -80,8 +85,8 @@ describe('AngSelectComponent', function () {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                triggerKeyDownEvent(getAngSelectElement(fixture), Key.ArrowUp);
-                expect(fixture.componentInstance.select.selectedItem).toEqual(fixture.componentInstance.cities[2]);
+                triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.ArrowUp);
+                expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[2]);
             });
         });
 
@@ -105,8 +110,9 @@ describe('AngSelectComponent', function () {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                const el = fixture.debugElement.query(By.css('.custom-header')).nativeElement;
+                const el = fixture.debugElement.query(By.css('.custom-header'));
                 expect(el).not.toBeNull();
+                expect(el.nativeElement).not.toBeNull();
             });
         }));
     });
@@ -171,7 +177,7 @@ describe('AngSelectComponent', function () {
     describe('Search', () => {
         let fixture: ComponentFixture<AngSelectSearch>;
 
-        beforeEach(() => {
+        it('should filter items with default filter', async(() => {
             fixture = createTestingModule(
                 AngSelectSearch,
                 `<ang-select [items]="cities" 
@@ -179,19 +185,27 @@ describe('AngSelectComponent', function () {
                     bindValue="id"
                     [(ngModel)]="selectedCity">
                 </ang-select>`);
-        });
 
-        it('should filter by search input value', async(() => {
             fixture.detectChanges();
-
             fixture.componentInstance.select.onFilter({target: {value: 'vilnius'}});
-            fixture.componentInstance.select.open();
 
-            fixture.whenStable().then(() => {
-                const angOptions = fixture.debugElement.queryAll(By.css('.as-option'));
-                expect(angOptions.length).toBe(1);
-                expect(angOptions[0].nativeElement.innerText).toBe('Vilnius');
-            });
+            expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual([{ id: 1, name: 'Vilnius' }]);
+        }));
+
+        it('should filter items with custom filter function', async(() => {
+            fixture = createTestingModule(
+                AngSelectSearch,
+                `<ang-select [items]="cities" 
+                    bindLabel="name"
+                    bindValue="id"
+                    [filterFunc]="customFilterFunc"
+                    [(ngModel)]="selectedCity">
+                </ang-select>`);
+
+            fixture.detectChanges();
+            fixture.componentInstance.select.onFilter({target: {value: 'no matter'}});
+
+            expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual([{ id: 3, name: 'Pabrade' }]);
         }));
 
     });
@@ -252,4 +266,10 @@ class AngSelectSearch {
         { id: 2, name: 'Kaunas' },
         { id: 3, name: 'Pabrade' },
     ];
+
+    customFilterFunc(term: string) {
+        return (item: AngOption) => {
+            return item.id === 3;
+        };
+    }
 }

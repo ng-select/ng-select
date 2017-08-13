@@ -13,15 +13,17 @@ import {
     HostListener,
     HostBinding,
     ViewChild,
-    ElementRef
+    ElementRef,
+    ChangeDetectionStrategy
 } from '@angular/core';
 
 
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {AngOptionDirective, AngDisplayDirective} from './ang-templates.directive';
-import {AngOption} from './ang-option';
 import * as searchHelper from './search-helper';
-import {VirtualScrollComponent} from './virtual-scroll';
+import {VirtualScrollComponent} from './virtual-scroll.component';
+import {AngOption, FilterFunc, KeyCode} from './ang-select.types';
+import {ItemsList} from './items-list';
 
 const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
@@ -29,16 +31,7 @@ const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     multi: true
 };
 
-export type FilterFunc = (term: string) => (val: AngOption) => boolean;
 
-export enum Key {
-    Tab = 9,
-    Enter = 13,
-    Esc = 27,
-    Space = 32,
-    ArrowUp = 38,
-    ArrowDown = 40
-}
 
 @Component({
     selector: 'ang-select',
@@ -46,6 +39,7 @@ export enum Key {
     styleUrls: ['./ang-select.component.scss'],
     providers: [NGB_ANG_SELECT_VALUE_ACCESSOR],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'role': 'dropdown'
     }
@@ -73,25 +67,33 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
 
-    // model value
-    selectedItem: AngOption = null;
+    itemsList: ItemsList = new ItemsList([]);
 
-    // search term value
     filterValue: string = null;
 
-    private selectedItemIndex = -1;
-    private filteredItems: AngOption[] = [];
+    private _value: AngOption = null;
+
+    private _openClicked = false;
     private propagateChange = (_: AngOption) => {};
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
     }
 
+    get value(): AngOption {
+        return this._value;
+    }
+
+    set value(value: AngOption) {
+        this._value = value;
+    }
+
     ngOnInit() {
-        this.filteredItems = [...this.items];
+        this.itemsList.update(this.items);
 
         this.bindLabel = this.bindLabel || 'label';
         this.bindValue = this.bindValue || 'value';
         if (this.bindValue === 'this') {
+            // bind to whole object
             this.bindValue = undefined;
         }
     }
@@ -99,39 +101,28 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
     ngOnChanges(changes: any) {
         if (changes.items && changes.items.currentValue) {
             this.items = changes.items.currentValue;
-            this.filteredItems = [...this.items];
+            this.itemsList.update(this.items);
         }
     }
 
     @HostListener('keydown', ['$event'])
     handleKeyDown($event: KeyboardEvent) {
-        if (Key[$event.which]) {
+        if (KeyCode[$event.which]) {
             switch ($event.which) {
-                case Key.ArrowDown:
-                    this.selectNextItem();
-                    this.notifyModelChanged();
-                    this.scrollToSelected();
-                    $event.preventDefault();
+                case KeyCode.ArrowDown:
+                    this.handleArrowDown($event);
                     break;
-                case Key.ArrowUp:
-                    this.selectPreviousItem();
-                    this.notifyModelChanged();
-                    this.scrollToSelected();
-                    $event.preventDefault();
+                case KeyCode.ArrowUp:
+                    this.handleArrowUp($event);
                     break;
-                case Key.Space:
-                    if (this.isOpen) {
-                        return;
-                    }
-                    this.open();
-                    $event.preventDefault();
+                case KeyCode.Space:
+                    this.handleSpace($event);
                     break;
-                case Key.Enter:
-                    this.close();
-                    $event.preventDefault();
+                case KeyCode.Enter:
+                    this.handleEnter($event);
                     break;
-                case Key.Tab:
-                case Key.Esc:
+                case KeyCode.Tab:
+                case KeyCode.Esc:
                     this.close();
                     break;
             }
@@ -140,16 +131,30 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
 
     @HostListener('document:click', ['$event'])
     handleDocumentClick($event) {
-        const dropdown = this.getDropdownMenu();
-        if (this.elementRef.nativeElement.contains($event.target) ||
-            dropdown && dropdown.contains($event.target)) {
+        // prevent closing dropdown on first open click
+        if (this._openClicked) {
+            this._openClicked = false;
             return;
         }
 
-        this.isFocused = false;
+        // prevent close if clicked on select
+        if (this.elementRef.nativeElement.contains($event.target)) {
+            return;
+        }
+
+        // prevent close if clicked on dropdown menu
+        const dropdown = this.getDropdownMenu();
+        if (dropdown && dropdown.contains($event.target)
+        ) {
+            return;
+        }
+
+        if (this.isFocused) {
+            this.onInputBlur();
+        }
+
         if (this.isOpen) {
             this.close();
-            console.log('document click close');
         }
     }
 
@@ -157,26 +162,28 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         if (!this.allowClear) {
             return;
         }
-        this.selectedItem = null;
-        this.selectedItemIndex = -1;
+        this._value = null;
+        this.itemsList.clearSelected();
+
         this.clearSearch();
         this.notifyModelChanged();
     }
 
     writeValue(obj: any): void {
         if (obj) {
+            let index = -1;
             if (this.bindValue) {
-                this.selectedItemIndex = this.items.findIndex(x => x[this.bindValue] === obj);
+                index = this.items.findIndex(x => x[this.bindValue] === obj);
             } else {
-                this.selectedItemIndex = this.items.indexOf(obj);
+                index = this.items.indexOf(obj);
             }
-
-            this.selectedItem = this.items[this.selectedItemIndex];
+            this._value = this.items[index];
+            this.itemsList.select(this._value);
         } else {
-            this.selectedItem = null;
+            this._value = null;
         }
 
-        this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.markForCheck();
     }
 
     registerOnChange(fn: any): void {
@@ -184,6 +191,7 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
     }
 
     registerOnTouched(fn: any): void {
+        // TODO: touch event
     }
 
     setDisabledState(isDisabled: boolean): void {
@@ -194,16 +202,18 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         if (this.isDisabled) {
             return;
         }
+        this._openClicked = true;
         this.isOpen = true;
+        this.itemsList.markCurrentValue();
         this.focusSearchInput();
     }
 
     getTextValue() {
-        return this.selectedItem ? this.selectedItem[this.bindLabel] : '';
+        return this._value ? this._value[this.bindLabel] : '';
     }
 
     getDisplayTemplateContext() {
-        return this.selectedItem ? {item: this.selectedItem} : {item: {}};
+        return this._value ? {item: this._value} : {item: {}};
     }
 
     getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {
@@ -221,33 +231,37 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         if (item.disabled) {
             return;
         }
-        this.selectedItem = item;
+
+        this.itemsList.select(item);
+        this._value = this.itemsList.value;
+
         this.close();
         this.notifyModelChanged();
-        console.log('select', this.selectedItem);
+        console.log('select', this._value);
     }
 
     showPlaceholder() {
-        return this.placeholder && !this.selectedItem && !this.filterValue;
+        return this.placeholder && !this._value && !this.filterValue;
     }
 
     onFilter($event) {
-        this.selectedItemIndex = -1;
+        if (!this.isOpen) {
+            this.open();
+        }
+
 
         const term = $event.target.value;
         this.filterValue = term;
 
-        const filterFuncVal = this.filterFunc ? this.filterFunc(this.filterValue) : this.getDefaultFilterFunc(this.filterValue);
-        this.filteredItems = term ? this.items.filter(val => filterFuncVal(val)) : this.items;
+        const filterFuncVal = this.filterFunc ? this.filterFunc : this.getDefaultFilterFunc.bind(this);
+        this.itemsList.filter(term, filterFuncVal);
     }
 
     onInputFocus() {
-        console.log('focus');
         this.isFocused = true;
     }
 
     onInputBlur() {
-        console.log('blur');
         this.isFocused = false;
     }
 
@@ -261,12 +275,13 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
 
     private clearSearch() {
         this.filterValue = null;
-        this.filteredItems = this.items;
+        this.itemsList.clearFilter();
     }
 
     private close() {
         this.isOpen = false;
         this.clearSearch();
+        this.itemsList.unmarkCurrentItem();
     }
 
     private focusSearchInput() {
@@ -275,45 +290,46 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         });
     }
 
-    private scrollToSelected() {
-        this.dropdownList.scrollInto(this.selectedItem);
+    private scrollToMarked() {
+        this.dropdownList.scrollInto(this.itemsList.markedItem);
     }
 
-    private writeSelectedItem() {
-
+    private handleEnter($event: KeyboardEvent) {
+        this.select(this.itemsList.markedItem);
+        $event.preventDefault();
     }
 
-    private selectNextItem() {
-        if (this.selectedItemIndex === this.filteredItems.length - 1) {
-            this.selectedItemIndex = 0;
+    private handleSpace($event: KeyboardEvent) {
+        if (this.isOpen) {
+            return;
+        }
+        this.open();
+        $event.preventDefault();
+    }
+
+    private handleArrowDown($event: KeyboardEvent) {
+        if (!this.isOpen) {
+            this.open();
         } else {
-            this.selectedItemIndex++;
+            this.itemsList.markNextItem();
+            this.scrollToMarked();
         }
-        this.selectedItem = this.filteredItems[this.selectedItemIndex];
-        while (this.selectedItem.disabled) {
-            this.selectNextItem();
-        }
+        $event.preventDefault();
     }
 
-    private selectPreviousItem() {
-        if (this.selectedItemIndex === 0) {
-            this.selectedItemIndex = this.filteredItems.length - 1;
-        } else {
-            this.selectedItemIndex--;
-        }
-        this.selectedItem = this.filteredItems[this.selectedItemIndex];
-        while (this.selectedItem.disabled) {
-            this.selectPreviousItem();
-        }
+    private handleArrowUp($event: KeyboardEvent) {
+        this.itemsList.markPreviousItem();
+        this.scrollToMarked();
+        $event.preventDefault();
     }
 
     private notifyModelChanged() {
-        if (!this.selectedItem) {
+        if (!this._value) {
             this.propagateChange(null);
         } else if (this.bindValue) {
-            this.propagateChange(this.selectedItem[this.bindValue]);
+            this.propagateChange(this._value[this.bindValue]);
         } else {
-            this.propagateChange(this.selectedItem);
+            this.propagateChange(this._value);
         }
     }
 

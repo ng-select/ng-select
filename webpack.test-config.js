@@ -5,12 +5,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 // Webpack Plugins
-const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 const autoprefixer = require('autoprefixer');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const {TsConfigPathsPlugin} = require('awesome-typescript-loader');
 
 
 /**
@@ -37,14 +32,11 @@ module.exports = function makeWebpackConfig() {
      */
     if (isProd) {
         config.devtool = 'source-map';
-    }
-    else if (isTest) {
+    } else if (isTest) {
         config.devtool = 'inline-source-map';
-    }
-    else {
+    } else {
         config.devtool = 'eval-source-map';
     }
-
 
     /**
      * Output
@@ -78,7 +70,7 @@ module.exports = function makeWebpackConfig() {
             // Support for .ts files.
             {
                 test: /\.ts$/,
-                loaders: ['awesome-typescript-loader?configFileName=./src/lib/tsconfig.spec.json&' + atlOptions, 'angular2-template-loader', '@angularclass/hmr-loader'],
+                loaders: ['awesome-typescript-loader?configFileName=./src/lib/tsconfig.json&' + atlOptions, 'angular2-template-loader', '@angularclass/hmr-loader'],
                 exclude: [isTest ? /\.(e2e)\.ts$/ : /\.(spec|e2e)\.ts$/, /node_modules\/(?!(ng2-.+))/],
             },
 

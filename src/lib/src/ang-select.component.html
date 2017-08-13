@@ -5,12 +5,12 @@
 
         <span class="as-placeholder" *ngIf="showPlaceholder()">{{placeholder}}</span>
 
-        <div class="as-value" *ngIf="!searchValue">
-            <span *ngIf="selectedItem" class="as-value-label" role="option" aria-selected="true">
+        <div class="as-value" *ngIf="!filterValue && value">
+            <span class="as-value-label" role="option" aria-selected="true">
                 <ng-template *ngIf="displayTemplateRef" [ngTemplateOutlet]="displayTemplateRef.template"
                               [ngOutletContext]="getDisplayTemplateContext()"></ng-template>
 
-                <ng-container *ngIf="!displayTemplateRef">{{getTextValue()}}</ng-container>
+                <span *ngIf="!displayTemplateRef">{{getTextValue()}}</span>
             </span>
         </div>
 
@@ -27,29 +27,33 @@
         </div>
     </span>
 
-    <span *ngIf="allowClear && selectedItem" (click)="clear()" class="as-clear-zone" title="Clear all" aria-label="Clear all"><span class="as-clear">×</span></span>
-    <span class="as-arrow-zone"><span class="as-arrow"></span></span>
+    <span *ngIf="allowClear && value" (click)="clear()" class="as-clear-zone" title="Clear all" aria-label="Clear all">
+        <span class="as-clear">×</span>
+    </span>
 
-    <input type="hidden" name="selected-state" value="south-australia-TODO">
+    <span class="as-arrow-zone">
+        <span class="as-arrow"></span>
+    </span>
 </div>
 
-
 <div class="as-menu-outer" [ngStyle]="{'visibility': isOpen ? 'visible' : 'hidden'}">
-    <virtual-scroll role="listbox" class="as-menu" [bufferAmount]="4" [items]="filteredItems" (update)="viewPortItems = $event">
+    <virtual-scroll role="listbox" class="as-menu" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
         <div class="as-option" role="option" (click)="select(item)"
              *ngFor="let item of viewPortItems; let index = index; let first = first; let last = last; let even = even; let odd = odd"
              [class.disabled]="item.disabled"
-             [class.selected]="item == selectedItem">
+             [class.selected]="item.selected"
+             [class.marked]="item.marked">
 
-            <ng-container *ngIf="!optionTemplateRef">{{item[bindLabel]}}</ng-container>
+            <span *ngIf="!optionTemplateRef">{{item[bindLabel]}}</span>
 
-            <ng-template *ngIf="optionTemplateRef" [ngTemplateOutlet]="optionTemplateRef.template"
+            <ng-template *ngIf="optionTemplateRef"
+                          [ngTemplateOutlet]="optionTemplateRef.template"
                           [ngOutletContext]="getOptionTemplateContext(item, index, first, last, even, odd)">
             </ng-template>
         </div>
     </virtual-scroll>
 
-    <div class="as-menu" *ngIf="filteredItems.length === 0">
+    <div class="as-menu" *ngIf="itemsList.filteredItems.length === 0">
         <div class="as-option disabled">
             No items found
         </div>

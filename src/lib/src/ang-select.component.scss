@@ -155,15 +155,16 @@ ang-select {
 
     &.selected {
       background-color: #f5faff;
-      /* Fallback color for IE 8 */
-      background-color: rgba(0, 126, 255, 0.04);
+      color: #333;
+    }
+
+    &.marked {
+      background-color: #ebf5ff;
       color: #333;
     }
 
     &:not(.disabled):hover {
       background-color: #ebf5ff;
-      /* Fallback color for IE 8 */
-      background-color: rgba(0, 126, 255, 0.08);
       color: #333;
     }
 

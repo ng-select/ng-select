@@ -1,25 +1,19 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "outDir": "../../out-tsc/lib-es2015/",
-    "target": "es2015",
-    "rootDir": "./",
     "baseUrl": "",
-    "types": [
-      "jasmine"
-    ]
+    "declaration": false,
+    "target": "ES5",
+    "module": "commonjs",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "noEmitHelpers": true,
+    "noUnusedLocals": true,
+    "lib": ["es2015", "dom"]
   },
-  "files": [
-    "./index.ts",
-    "./typings.d.ts"
-  ],
-  "angularCompilerOptions": {
-    "annotateForClosureCompiler": true,
-    "strictMetadataEmit": true,
-    "skipTemplateCodegen": true,
-    "flatModuleOutFile": "ang-select.js",
-    "flatModuleId": "ang-select",
-    "genDir": "../../out-tsc/lib-gen-dir/"
+  "awesomeTypescriptLoaderOptions": {
+    "forkChecker": true,
+    "useWebpackText": true
   }
 }

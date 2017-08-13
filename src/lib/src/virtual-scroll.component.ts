@@ -16,7 +16,7 @@ import {
     OnInit,
     Output,
     SimpleChanges,
-    ViewChild,
+    ViewChild
 } from '@angular/core';
 
 export interface ChangeEvent {
@@ -142,6 +142,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         if ((changes as any).items != undefined && items.previousValue == undefined || (items.previousValue != undefined && items.previousValue.length === 0)) {
             this.startupLoop = true;
         }
+        this.items = items.currentValue;
         this.refresh();
     }
 
@@ -151,7 +152,6 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
 
     scrollInto(item: any) {
         let el: Element = this.parentScroll instanceof Window ? document.body : this.parentScroll || this.element.nativeElement;
-        let offsetTop = this.getElementsOffset();
         let index: number = (this.items || []).indexOf(item);
         if (index < 0 || index >= (this.items || []).length) return;
 
