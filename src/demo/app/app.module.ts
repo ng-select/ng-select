@@ -11,7 +11,7 @@ import {SelectWithTemplatesComponent} from './select-with-templates.component';
 import {SelectBindingsComponent} from './select-bindings.component';
 import {SelectSearchComponent} from './select-search.component';
 import {ReactiveFormsComponent} from './reactive-forms.component';
-import {SelectEventsComponent} from "./select-events.component";
+import {SelectEventsComponent} from './select-events.component';
 
 
 const appRoutes: Routes = [

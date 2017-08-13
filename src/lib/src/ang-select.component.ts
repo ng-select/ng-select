@@ -60,7 +60,11 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
     @Input() filterFunc: FilterFunc;
 
     // output events
-    @Output() blur = new EventEmitter();
+    @Output('blur') onBlur = new EventEmitter();
+    @Output('focus') onFocus = new EventEmitter();
+    @Output('change') onChange = new EventEmitter();
+    @Output('open') onOpen = new EventEmitter();
+    @Output('close') onClose = new EventEmitter();
 
     @HostBinding('class.as-single') single = true;
     @HostBinding('class.opened') isOpen = false;
@@ -150,7 +154,7 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         }
 
         if (this.isFocused) {
-            this.onInputBlur();
+            this.onInputBlur($event);
         }
 
         if (this.isOpen) {
@@ -206,6 +210,7 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         this.isOpen = true;
         this.itemsList.markCurrentValue();
         this.focusSearchInput();
+        this.onOpen.emit();
     }
 
     getTextValue() {
@@ -257,12 +262,14 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         this.itemsList.filter(term, filterFuncVal);
     }
 
-    onInputFocus() {
+    onInputFocus($event) {
         this.isFocused = true;
+        this.onFocus.emit($event);
     }
 
-    onInputBlur() {
+    onInputBlur($event) {
         this.isFocused = false;
+        this.onBlur.emit($event);
     }
 
     private getDefaultFilterFunc(term) {
@@ -282,6 +289,7 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         this.isOpen = false;
         this.clearSearch();
         this.itemsList.unmarkCurrentItem();
+        this.onClose.emit();
     }
 
     private focusSearchInput() {
@@ -331,6 +339,7 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         } else {
             this.propagateChange(this._value);
         }
+        this.onChange.emit(this._value);
     }
 
     private getDropdownMenu() {

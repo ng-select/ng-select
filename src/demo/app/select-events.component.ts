@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {AngOption} from 'ang-select';
 
 
 interface AngSelectEvent {
@@ -15,13 +14,24 @@ interface AngSelectEvent {
                     [(ngModel)]="selectedCity"
                     bindLabel="name"
                     bindValue="id"
+                    (open)="onOpen()"
+                    (close)="onClose()"
+                    (focus)="onFocus($event)"
+                    (blur)="onBlur($event)"
                     (change)="onChange($event)">
         </ang-select>
-        <br>
-        <div *ngFor="let event of events">
-            {{event.name}} - {{event.value | json}}
+        
+        <div *ngIf="events.length > 0">
+            <br>
+            <button (click)="events = []" class="btn btn-secondary btn-sm">Clear events</button>
+            <br>
+            <br>
         </div>
         
+        <div *ngFor="let event of events">
+            <small>{{event.name}} - {{event.value | json}}</small>
+            <hr>
+        </div>
     `
 })
 export class SelectEventsComponent {
@@ -36,9 +46,24 @@ export class SelectEventsComponent {
     events: AngSelectEvent[] = [];
 
     onChange($event) {
-        this.events.push({name:'(change)', value:$event});
+        this.events.push({name: '(change)', value: $event});
     }
 
+    onFocus($event: Event) {
+        this.events.push({name: '(focus)', value: $event});
+    }
+
+    onBlur($event: Event) {
+        this.events.push({name: '(blur)', value: $event});
+    }
+
+    onOpen() {
+        this.events.push({name: '(open)', value: null});
+    }
+
+    onClose() {
+        this.events.push({name: '(close)', value: null});
+    }
 }
 
 
