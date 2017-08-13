@@ -14,8 +14,8 @@ import {AngOption} from 'ang-select';
             Selected value: {{selectedCompany | json}}
         </p>
 
-        <label>Search using custom filter handler (try search for Ro)</label>
-        <ang-select [items]="companies"
+        <label>Search using custom filter handler (search for Rooforia)</label>
+        <ang-select [items]="companies2"
                     bindLabel="name"
                     bindValue="this"
                     [filterFunc]="customFilterFunc"
@@ -29,6 +29,7 @@ import {AngOption} from 'ang-select';
 export class SelectSearchComponent {
 
     companies: any[] = [];
+    companies2: any[] = [];
     selectedCompany: any;
     selectedCompany2?: any;
 
@@ -39,12 +40,13 @@ export class SelectSearchComponent {
     ngOnInit() {
         this.companiesNames.forEach((c, i) => {
             this.companies.push({id: i, name: c});
+            this.companies2.push({id: i, name: c});
         });
     }
 
     customFilterFunc(term: string) {
         return (val: AngOption) => {
-            return term && val.name.indexOf(term) > -1 && term.startsWith('Ro');
+            return term === 'Rooforia' && val.name === term;
         };
     }
 

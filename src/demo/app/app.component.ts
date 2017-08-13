@@ -1,25 +1,20 @@
 import '../style/styles.scss';
 
 import {Component} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
     selector: 'demo-app',
     templateUrl: './app.component.html'
 })
 export class AppComponent {
-    meaning: number;
 
-    cities = [
-        {id: 1, name: 'Vilnius'},
-        {id: 2, name: 'Kaunas'},
-        {id: 3, name: 'Pavilnys'}
-    ];
+    title: string;
 
-    selectedCity = this.cities[0];
-
-    constructor() {
+    constructor(private route: ActivatedRoute) {
+        this.route.data.subscribe(d => {
+            this.title = d.title;
+        });
     }
 
-    ngOnInit() {
-    }
 }

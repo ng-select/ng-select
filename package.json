@@ -40,6 +40,7 @@
         "@angular/forms": "^4.3.3",
         "@angular/platform-browser": "^4.3.3",
         "@angular/platform-browser-dynamic": "^4.3.3",
+        "@angular/router": "^4.3.3",
         "@angularclass/hmr": "^1.0.1",
         "@angularclass/hmr-loader": "^3.0.4",
         "@types/jasmine": "^2.5.36",
