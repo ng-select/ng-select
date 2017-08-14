@@ -1,27 +1,27 @@
-import {AngOption, FilterFunc} from './ang-select.types';
+import {NgOption, FilterFunc} from './ng-select.types';
 
 export class ItemsList {
 
-    items: AngOption[] = [];
-    filteredItems: AngOption[] = [];
+    items: NgOption[] = [];
+    filteredItems: NgOption[] = [];
 
-    markedItem: AngOption = null;
+    markedItem: NgOption = null;
     private _markedItemIndex = -1;
 
-    private _value: AngOption = null;
+    private _value: NgOption = null;
     private _valueIndex = -1;
 
-    constructor(items: AngOption[]) {
+    constructor(items: NgOption[]) {
         this.items = items;
         this.filteredItems = [...items];
     }
 
-    update(items: AngOption[]) {
+    update(items: NgOption[]) {
         this.items = items || [];
         this.filteredItems = [...this.items];
     }
 
-    select(item: AngOption) {
+    select(item: NgOption) {
         if (!item) {
             return;
         }
@@ -49,11 +49,11 @@ export class ItemsList {
         this._value = null;
     }
 
-    get value(): AngOption {
+    get value(): NgOption {
         return this._value;
     }
 
-    set value(value: AngOption) {
+    set value(value: NgOption) {
         this._value = value;
     }
 

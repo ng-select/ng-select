@@ -18,8 +18,8 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
-    "flatModuleOutFile": "ang-select.js",
-    "flatModuleId": "ang-select",
+    "flatModuleOutFile": "ng-select.js",
+    "flatModuleId": "ng-select",
     "genDir": "../../out-tsc/lib-gen-dir/"
   }
 }

@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { AngSelectComponent } from './ang-select.component';
-import { AngOptionDirective, AngDisplayDirective } from './ang-templates.directive';
-import { AngSearchFocusDirective } from './ang-search-focus.directive';
+import { NgSelectComponent } from './ng-select.component';
+import { AngOptionDirective, AngDisplayDirective } from './ng-templates.directive';
+import { AngSearchFocusDirective } from './ng-search-focus.directive';
 import {VirtualScrollModule} from './virtual-scroll.component';
 
 @NgModule({
     declarations: [
-        AngSelectComponent,
+        NgSelectComponent,
         AngOptionDirective,
         AngDisplayDirective,
         AngSearchFocusDirective
@@ -20,11 +20,11 @@ import {VirtualScrollModule} from './virtual-scroll.component';
         VirtualScrollModule
     ],
     exports: [
-        AngSelectComponent,
+        NgSelectComponent,
         AngOptionDirective,
         AngDisplayDirective
     ]
 })
-export class AngSelectModule {
+export class NgSelectModule {
 
 }

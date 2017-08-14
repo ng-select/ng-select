@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AngOption} from 'ang-select';
+import {NgOption} from 'ng-select';
 import {HttpClient} from '@angular/common/http';
 
 @Component({
@@ -20,27 +20,27 @@ import {HttpClient} from '@angular/common/http';
 
             <div class="form-group">
                 <label for="state">City</label>
-                <ang-select [items]="cities"
+                <ng-select [items]="cities"
                             bindLabel="name"
                             bindValue="id"
                             placeholder="Select city"
                             formControlName="city">
-                </ang-select>
+                </ng-select>
             </div>
 
             <div class="form-group">
                 <label for="state">Age</label>
-                <ang-select [items]="ages"
+                <ng-select [items]="ages"
                             placeholder="Select age"
                             formControlName="age">
-                </ang-select>
+                </ng-select>
                 <br>
                 <button class="btn btn-secondary btn-sm" (click)="toggleAgeDisable()">Toggle disabled</button>
             </div>
 
             <div class="form-group">
                 <label for="album">Favorite album</label>
-                <ang-select [items]="albums"
+                <ng-select [items]="albums"
                             bindLabel="title"
                             bindValue="id"
                             placeholder="Select album"
@@ -49,13 +49,13 @@ import {HttpClient} from '@angular/common/http';
                         <div>Title: {{item.title}}</div>
                         <small><b>Id:</b> {{item.id}} | <b>UserId:</b> {{item.userId}}</small>
                     </ng-template>
-                </ang-select>
+                </ng-select>
                 <small class="form-text text-muted">Albums data from backend using HttpClient.</small>
             </div>
 
             <div class="form-group">
                 <label for="album">Favorite photo</label>
-                <ang-select [items]="photos"
+                <ng-select [items]="photos"
                             bindLabel="title"
                             bindValue="thumbnailUrl"
                             placeholder="Select photo"
@@ -68,7 +68,7 @@ import {HttpClient} from '@angular/common/http';
                         <img height="15" width="15" [src]="item.thumbnailUrl" />
                         <span>{{item.title}}</span>
                     </ng-template>
-                </ang-select>
+                </ng-select>
                 <small class="form-text text-muted">5000 items with virtual scroll</small>
             </div>
         </form>
@@ -80,13 +80,13 @@ export class ReactiveFormsComponent {
 
     heroForm: FormGroup;
 
-    cities: AngOption[] = [
+    cities: NgOption[] = [
         {id: 1, name: 'Vilnius'},
         {id: 2, name: 'Kaunas'},
         {id: 3, name: 'Pavilnys', disabled: true}
     ];
 
-    ages: AngOption[] = [
+    ages: NgOption[] = [
         {value: '<18', label: 'Under 18'},
         {value: '18', label: '18'},
         {value: '>18', label: 'More than 18'},

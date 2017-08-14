@@ -1,26 +1,26 @@
 import {Component} from '@angular/core';
-import {AngOption} from 'ang-select';
+import {NgOption} from 'ng-select';
 
 @Component({
     selector: 'select-search',
     template: `
         <label>Search in label text (default)</label>
-        <ang-select [items]="companies"
+        <ng-select [items]="companies"
                     bindLabel="name"
                     bindValue="this"
                     [(ngModel)]="selectedCompany">
-        </ang-select>
+        </ng-select>
         <p>
             Selected value: {{selectedCompany | json}}
         </p>
 
         <label>Search using custom filter handler (search for Rooforia)</label>
-        <ang-select [items]="companies2"
+        <ng-select [items]="companies2"
                     bindLabel="name"
                     bindValue="this"
                     [filterFunc]="customFilterFunc"
                     [(ngModel)]="selectedCompany2">
-        </ang-select>
+        </ng-select>
         <p>
             Selected value: {{selectedCompany2 | json}}
         </p>
@@ -45,7 +45,7 @@ export class SelectSearchComponent {
     }
 
     customFilterFunc(term: string) {
-        return (val: AngOption) => {
+        return (val: NgOption) => {
             return term === 'Rooforia' && val.name === term;
         };
     }

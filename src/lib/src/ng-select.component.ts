@@ -19,24 +19,22 @@ import {
 
 
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {AngOptionDirective, AngDisplayDirective} from './ang-templates.directive';
+import {AngOptionDirective, AngDisplayDirective} from './ng-templates.directive';
 import * as searchHelper from './search-helper';
 import {VirtualScrollComponent} from './virtual-scroll.component';
-import {AngOption, FilterFunc, KeyCode} from './ang-select.types';
+import {NgOption, FilterFunc, KeyCode} from './ng-select.types';
 import {ItemsList} from './items-list';
 
 const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => AngSelectComponent),
+    useExisting: forwardRef(() => NgSelectComponent),
     multi: true
 };
 
-
-
 @Component({
-    selector: 'ang-select',
-    templateUrl: './ang-select.component.html',
-    styleUrls: ['./ang-select.component.scss'],
+    selector: 'ng-select',
+    templateUrl: './ng-select.component.html',
+    styleUrls: ['./ng-select.component.scss'],
     providers: [NGB_ANG_SELECT_VALUE_ACCESSOR],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -44,7 +42,7 @@ const NGB_ANG_SELECT_VALUE_ACCESSOR = {
         'role': 'dropdown'
     }
 })
-export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccessor {
+export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccessor {
 
     @ContentChild(AngOptionDirective) optionTemplateRef: TemplateRef<any>;
     @ContentChild(AngDisplayDirective) displayTemplateRef: TemplateRef<any>;
@@ -52,7 +50,7 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
     @ViewChild('filterInput') filterInput;
 
     // inputs
-    @Input() items: AngOption[] = [];
+    @Input() items: NgOption[] = [];
     @Input() bindLabel: string;
     @Input() bindValue: string;
     @Input() allowClear = true;
@@ -75,19 +73,19 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
 
     filterValue: string = null;
 
-    private _value: AngOption = null;
+    private _value: NgOption = null;
 
     private _openClicked = false;
-    private propagateChange = (_: AngOption) => {};
+    private propagateChange = (_: NgOption) => {};
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
     }
 
-    get value(): AngOption {
+    get value(): NgOption {
         return this._value;
     }
 
-    set value(value: AngOption) {
+    set value(value: NgOption) {
         this._value = value;
     }
 
@@ -232,7 +230,7 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
         };
     }
 
-    select(item: AngOption) {
+    select(item: NgOption) {
         if (item.disabled) {
             return;
         }
@@ -273,7 +271,7 @@ export class AngSelectComponent implements OnInit, OnChanges, ControlValueAccess
     }
 
     private getDefaultFilterFunc(term) {
-        return (val: AngOption) => {
+        return (val: NgOption) => {
             return searchHelper.stripSpecialChars(val[this.bindLabel])
                 .toUpperCase()
                 .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) === 0;

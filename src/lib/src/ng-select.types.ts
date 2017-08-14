@@ -1,4 +1,4 @@
-export interface AngOption {
+export interface NgOption {
     [name: string]: any;
     selected?: boolean;
     disabled?: boolean;
@@ -6,7 +6,7 @@ export interface AngOption {
     value?: string;
 }
 
-export type FilterFunc = (term: string) => (val: AngOption) => boolean;
+export type FilterFunc = (term: string) => (val: NgOption) => boolean;
 
 export enum KeyCode {
     Tab = 9,

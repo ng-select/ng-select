@@ -1,7 +1,7 @@
 [![Build Status][travis-badge]][travis-badge-url]
 
-[travis-badge]: https://travis-ci.org/anjmao/ang-select.svg?branch=master
-[travis-badge-url]: https://travis-ci.org/anjmao/ang-select
+[travis-badge]: https://travis-ci.org/anjmao/ng-select.svg?branch=master
+[travis-badge-url]: https://travis-ci.org/anjmao/ng-select
 
 # Warning
 
@@ -24,7 +24,7 @@ Library is under active development. Library build process is forked from https:
 - [ ] Accessibility
 
 ## Demos
-https://anjmao.github.io/ang-select/
+https://anjmao.github.io/ng-select/
 
 ### Installation
 ```
@@ -37,8 +37,8 @@ Perform the _clone-to-launch_ steps with these terminal commands.
 
 #### Run demo
 ```
-git clone https://github.com/anjmao/ang-select.git
-cd ang-select
+git clone https://github.com/anjmao/ng-select.git
+cd ng-select
 npm install
 npm run serve-demo
 ```

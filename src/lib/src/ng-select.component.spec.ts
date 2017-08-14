@@ -3,11 +3,11 @@ import { By } from '@angular/platform-browser';
 import { DebugElement, Component, ViewChild, Type } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { AngSelectModule } from './ang-select.module';
-import {AngSelectComponent} from './ang-select.component';
-import {KeyCode, AngOption} from './ang-select.types';
+import { NgSelectModule } from './ng-select.module';
+import {NgSelectComponent} from './ng-select.component';
+import {KeyCode, NgOption} from './ng-select.types';
 
-describe('AngSelectComponent', function () {
+describe('NgSelectComponent', function () {
 
     describe('Model changes', () => {
         let fixture: ComponentFixture<AngSelectBasic>;
@@ -15,17 +15,17 @@ describe('AngSelectComponent', function () {
         beforeEach(() => {
             fixture = createTestingModule(
                 AngSelectBasic,
-                `<ang-select [items]="cities" 
+                `<ng-select [items]="cities" 
                         bindLabel="name"
                         bindValue="this"
                         [(ngModel)]="selectedCity">
-                </ang-select>`);
+                </ng-select>`);
         });
 
         it('should update app model value', () => {
-            triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.Space);
-            triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.ArrowDown);
-            triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.Enter);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
             fixture.detectChanges();
 
             expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[0]);
@@ -38,23 +38,23 @@ describe('AngSelectComponent', function () {
         beforeEach(() => {
             fixture = createTestingModule(
                 AngSelectBasic,
-                `<ang-select [items]="cities" 
+                `<ng-select [items]="cities" 
                         bindLabel="name"
                         bindValue="id"
                         [(ngModel)]="selectedCity">
-                </ang-select>`);
+                </ng-select>`);
         });
 
         it('should open dropdown on space click', () => {
-            triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.Space);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         });
 
         it('should select next value on arrow down', () => {
-            triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.Space);
-            triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.ArrowDown);
-            triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.Enter);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
 
             expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
         });
@@ -64,7 +64,7 @@ describe('AngSelectComponent', function () {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.ArrowDown);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
                 expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
             });
         });
@@ -74,7 +74,7 @@ describe('AngSelectComponent', function () {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.ArrowUp);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowUp);
                 expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
             });
 
@@ -85,7 +85,7 @@ describe('AngSelectComponent', function () {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                triggerKeyDownEvent(getAngSelectElement(fixture), KeyCode.ArrowUp);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowUp);
                 expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[2]);
             });
         });
@@ -98,11 +98,11 @@ describe('AngSelectComponent', function () {
         beforeEach(() => {
             fixture = createTestingModule(
                 AngSelectBasic,
-                `<ang-select [items]="cities" [(ngModel)]="selectedCity">
+                `<ng-select [items]="cities" [(ngModel)]="selectedCity">
                     <ng-template ang-display-tmp let-item="item">
                         <div class="custom-header">{{item.name}}</div>
                     </ng-template>
-                </ang-select>`);
+                </ng-select>`);
         });
 
         it('should display custom html', async(() => {
@@ -123,11 +123,11 @@ describe('AngSelectComponent', function () {
         beforeEach(() => {
             fixture = createTestingModule(
                 AngSelectBasic,
-                `<ang-select [items]="cities" [(ngModel)]="selectedCity">
+                `<ng-select [items]="cities" [(ngModel)]="selectedCity">
                     <ng-template ang-option-tmp let-item="item">
                         <div class="custom-option">{{item.name}}</div>
                     </ng-template>
-                </ang-select>`);
+                </ng-select>`);
         });
 
         it('should display custom html', async(() => {
@@ -146,19 +146,19 @@ describe('AngSelectComponent', function () {
         beforeEach(() => {
             fixture = createTestingModule(
                 AngSelectBasic,
-                `<ang-select [items]="cities" 
+                `<ng-select [items]="cities" 
                     bindLabel="name"
                     bindValue="id"
                     placeholder="select value"
                     [(ngModel)]="selectedCity">
-                </ang-select>`);
+                </ng-select>`);
         });
 
         it('should display then no selected value', async(() => {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                const el = fixture.debugElement.query(By.css('.ang-select-placeholder')).nativeElement;
+                const el = fixture.debugElement.query(By.css('.ng-select-placeholder')).nativeElement;
                 expect(el.innerText).toBe('select value');
             });
         }));
@@ -168,7 +168,7 @@ describe('AngSelectComponent', function () {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                const el = fixture.debugElement.query(By.css('.ang-select-placeholder'));
+                const el = fixture.debugElement.query(By.css('.ng-select-placeholder'));
                 expect(el).toBeNull();
             });
         }));
@@ -180,11 +180,11 @@ describe('AngSelectComponent', function () {
         it('should filter items with default filter', async(() => {
             fixture = createTestingModule(
                 AngSelectSearch,
-                `<ang-select [items]="cities" 
+                `<ng-select [items]="cities" 
                     bindLabel="name"
                     bindValue="id"
                     [(ngModel)]="selectedCity">
-                </ang-select>`);
+                </ng-select>`);
 
             fixture.detectChanges();
             fixture.componentInstance.select.onFilter({target: {value: 'vilnius'}});
@@ -195,12 +195,12 @@ describe('AngSelectComponent', function () {
         it('should filter items with custom filter function', async(() => {
             fixture = createTestingModule(
                 AngSelectSearch,
-                `<ang-select [items]="cities" 
+                `<ng-select [items]="cities" 
                     bindLabel="name"
                     bindValue="id"
                     [filterFunc]="customFilterFunc"
                     [(ngModel)]="selectedCity">
-                </ang-select>`);
+                </ng-select>`);
 
             fixture.detectChanges();
             fixture.componentInstance.select.onFilter({target: {value: 'no matter'}});
@@ -212,8 +212,8 @@ describe('AngSelectComponent', function () {
 
 });
 
-function getAngSelectElement(fixture: ComponentFixture<any>): DebugElement {
-    return fixture.debugElement.query(By.css('ang-select'));
+function getNgSelectElement(fixture: ComponentFixture<any>): DebugElement {
+    return fixture.debugElement.query(By.css('ng-select'));
 }
 
 function triggerKeyDownEvent(element: DebugElement, key: number): void {
@@ -226,7 +226,7 @@ function triggerKeyDownEvent(element: DebugElement, key: number): void {
 
 function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixture<T> {
     TestBed.configureTestingModule({
-        imports: [FormsModule, AngSelectModule],
+        imports: [FormsModule, NgSelectModule],
         declarations: [AngSelectBasic, AngSelectSearch]
     })
         .overrideComponent(cmp, {
@@ -245,7 +245,7 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
     template: ``
 })
 class AngSelectBasic {
-    @ViewChild(AngSelectComponent) select: AngSelectComponent;
+    @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
     cities = [
         { id: 1, name: 'Vilnius' },
@@ -259,7 +259,7 @@ class AngSelectBasic {
     `
 })
 class AngSelectSearch {
-    @ViewChild(AngSelectComponent) select: AngSelectComponent;
+    @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
     cities = [
         { id: 1, name: 'Vilnius' },
@@ -268,7 +268,7 @@ class AngSelectSearch {
     ];
 
     customFilterFunc(term: string) {
-        return (item: AngOption) => {
+        return (item: NgOption) => {
             return item.id === 3;
         };
     }

@@ -1,4 +1,4 @@
-export {AngSelectComponent} from './src/ang-select.component';
-export {AngSelectModule} from './src/ang-select.module';
-export {AngOption} from './src/ang-select.types';
+export {NgSelectComponent} from './src/ng-select.component';
+export {NgSelectModule} from './src/ng-select.module';
+export {NgOption} from './src/ng-select.types';
 export {stripSpecialChars} from './src/search-helper';

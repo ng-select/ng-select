@@ -10,7 +10,7 @@ interface AngSelectEvent {
     selector: 'select-events',
     template: `
         <label>Focus, Blur, Change, Filter</label>
-        <ang-select [items]="cities"
+        <ng-select [items]="cities"
                     [(ngModel)]="selectedCity"
                     bindLabel="name"
                     bindValue="id"
@@ -19,7 +19,7 @@ interface AngSelectEvent {
                     (focus)="onFocus($event)"
                     (blur)="onBlur($event)"
                     (change)="onChange($event)">
-        </ang-select>
+        </ng-select>
         
         <div *ngIf="events.length > 0">
             <br>

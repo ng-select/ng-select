@@ -4,7 +4,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
-import {AngSelectModule} from 'ang-select';
+import {NgSelectModule} from 'ng-select';
 
 import {AppComponent} from './app.component';
 import {SelectWithTemplatesComponent} from './select-with-templates.component';
@@ -29,7 +29,7 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         BrowserModule,
-        AngSelectModule,
+        NgSelectModule,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
