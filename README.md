@@ -1,7 +1,7 @@
 [![Build Status][travis-badge]][travis-badge-url]
 
-[travis-badge]: https://travis-ci.org/anjmao/ng-select.svg?branch=master
-[travis-badge-url]: https://travis-ci.org/anjmao/ng-select
+[travis-badge]: https://travis-ci.org/ng-select/ng-select.svg?branch=master
+[travis-badge-url]: https://travis-ci.org/ng-select/ng-select
 
 # Warning
 
