@@ -6,9 +6,7 @@
     "target": "es2015",
     "rootDir": "./",
     "baseUrl": "",
-    "types": [
-      "jasmine"
-    ]
+    "types": []
   },
   "files": [
     "./index.ts",

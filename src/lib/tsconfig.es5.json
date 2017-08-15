@@ -1,11 +1,10 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "./tsconfig.lib.json",
   "compilerOptions": {
     "target": "es5",
     "outDir": "../../out-tsc/lib-es5/",
     "baseUrl": "",
-    "types": [],
-      "experimentalDecorators": true
+    "types": []
   },
   "files": [
     "./index.ts",
