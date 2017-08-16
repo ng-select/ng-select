@@ -14,22 +14,23 @@ Library is under active development. Library build process is forked from https:
 - [x] Virtual Scroll support with large data sets (>5000 items).
 - [x] Filter data by display text
 - [x] Filter data by custom filter function
-- [ ] Expose usefull events like blur, change, focus, close, open ...
+- [x] Expose usefull events like blur, change, focus, close, open ...
+- [x] Correct keyboard events behaviour
 - [ ] HTML5 Standart https://developer.mozilla.org/en/docs/Web/HTML/Element/select except multiselect
-- [ ] Correct keyboard events behaviour
 - [ ] Good base functionality test coverage
 - [ ] Integration app generated with angular-cli
 - [ ] First alpha release and documentation
 - [ ] Multiselect support
 - [ ] Accessibility
 
-## Demos
-https://anjmao.github.io/ng-select/
-
 ### Installation
 ```
 TODO
 ```
+
+### Contributing
+
+Contributions are welcome. You can start by looking at issues with label Help wanted https://github.com/ng-select/ng-select/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22 or creating new Issue with proposal or bug.
 
 ### Clone and play
 
