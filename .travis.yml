@@ -16,7 +16,7 @@ before_install:
   - sh -e /etc/init.d/xvfb start
   # Install latest chrome.
   - export CHROME_BIN=chromium-browser
-  - npm install -g npm@5.0.4
+  - npm install -g npm@5.3.0
 
 install:
   - npm install

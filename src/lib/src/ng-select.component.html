@@ -1,11 +1,9 @@
 <div (click)="open()" class="as-control">
-
-
     <span class="as-multi-value-wrapper">
 
         <span class="as-placeholder" *ngIf="showPlaceholder()">{{placeholder}}</span>
 
-        <div class="as-value" *ngIf="!filterValue && value">
+        <div class="as-value" *ngIf="showValue()">
             <span class="as-value-label" role="option" aria-selected="true">
                 <ng-template *ngIf="displayTemplateRef" [ngTemplateOutlet]="displayTemplateRef.template"
                               [ngOutletContext]="getDisplayTemplateContext()"></ng-template>
@@ -27,7 +25,7 @@
         </div>
     </span>
 
-    <span *ngIf="allowClear && value" (click)="clear()" class="as-clear-zone" title="Clear all" aria-label="Clear all">
+    <span *ngIf="showClear()" (click)="clear()" class="as-clear-zone" title="Clear all" aria-label="Clear all">
         <span class="as-clear">×</span>
     </span>
 

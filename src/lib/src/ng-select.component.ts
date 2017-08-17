@@ -70,6 +70,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @HostBinding('class.disabled') isDisabled = false;
 
     itemsList: ItemsList = new ItemsList([]);
+    viewPortItems: NgOption[] = [];
 
     filterValue: string = null;
 
@@ -244,7 +245,15 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     showPlaceholder() {
-        return this.placeholder && !this._value && !this.filterValue;
+        return this.placeholder && !isDefined(this._value) && !this.filterValue;
+    }
+
+    showValue() {
+        return !this.filterValue && isDefined(this.value);
+    }
+
+    showClear() {
+        return this.allowClear && isDefined(this.value);
     }
 
     onFilter($event) {
@@ -348,3 +357,6 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 }
 
+function isDefined(value: any): boolean {
+    return !!value;
+}

@@ -17,7 +17,7 @@
     "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
     "flatModuleOutFile": "ng-select.js",
-    "flatModuleId": "ng-select",
+    "flatModuleId": "@ng-select/ng-select",
     "genDir": "../../out-tsc/lib-gen-dir/"
   }
 }

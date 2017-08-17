@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NgOption} from 'ng-select';
+import {NgOption} from '@ng-select/ng-select';
 
 @Component({
     selector: 'select-search',
