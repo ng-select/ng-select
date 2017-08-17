@@ -1,5 +1,7 @@
 /**
- * Author: https://github.com/rintoj/angular2-virtual-scroll
+ * The MIT License (MIT)
+ * Copyright (c) 2016 Rinto Jose (rintoj)
+ * Source code https://github.com/rintoj/angular2-virtual-scroll
  */
 
 /* tslint:disable */
