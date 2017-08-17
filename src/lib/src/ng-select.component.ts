@@ -70,6 +70,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @HostBinding('class.disabled') isDisabled = false;
 
     itemsList: ItemsList = new ItemsList([]);
+    viewPortItems: NgOption = [];
 
     filterValue: string = null;
 
