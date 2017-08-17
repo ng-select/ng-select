@@ -5,7 +5,6 @@ import {CommonModule} from '@angular/common';
 
 import {AppComponent} from './app.component';
 import {NgSelectModule} from '@ng-select/ng-select';
-//import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -15,8 +14,7 @@ import {NgSelectModule} from '@ng-select/ng-select';
     CommonModule,
     FormsModule,
     BrowserModule,
-    NgSelectModule,
-    //NgbModule.forRoot()
+    NgSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]
