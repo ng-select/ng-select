@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NgOption} from 'ng-select';
+import {NgOption} from '@ng-select/ng-select';
 import {HttpClient} from '@angular/common/http';
 
 @Component({

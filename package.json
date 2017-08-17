@@ -25,11 +25,13 @@
         "integration": "npm run integration:aot && npm run integration:jit",
         "integration:jit": "cd integration && npm run e2e",
         "integration:aot": "cd integration && npm run e2e:aot",
-        "lint": "tslint ./src/**/*.ts -t verbose"
+        "lint": "tslint ./src/**/*.ts -t verbose",
+        "release": "standard-version"
     },
     "peerDependencies": {
-        "@angular/core": ">=4.0.0 <5.0.0 || >=4.0.0-beta <5.0.0",
-        "@angular/forms": ">=4.0.0 <5.0.0 || >=4.0.0-beta <5.0.0"
+        "@angular/core": ">=2.4.10 <5.0.0",
+        "@angular/forms": ">=2.4.10 <5.0.0",
+        "@angular/common": ">=2.4.10 <5.0.0"
     },
     "devDependencies": {
         "@angular/common": "^4.3.3",
@@ -84,17 +86,18 @@
         "remap-istanbul": "^0.6.4",
         "rimraf": "^2.6.1",
         "rollup": "^0.41.5",
-        "rollup-plugin-sourcemaps": "^0.4.1",
-        "rollup-plugin-uglify": "^1.0.1",
         "rollup-plugin-commonjs": "^8.0.2",
         "rollup-plugin-node-resolve": "^3.0.0",
+        "rollup-plugin-sourcemaps": "^0.4.1",
+        "rollup-plugin-uglify": "^1.0.1",
         "rxjs": "^5.0.1",
         "sass-loader": "^6.0.1",
         "shelljs": "^0.7.0",
+        "standard-version": "^4.2.0",
         "style-loader": "^0.13.0",
         "systemjs": "^0.19.40",
         "ts-helpers": "^1.1.1",
-        "tslint": "^4.4.2",
+        "tslint": "^4.5.1",
         "tslint-loader": "^3.3.0",
         "typedoc": "^0.5.1",
         "typescript": "^2.4.2",
