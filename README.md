@@ -1,3 +1,4 @@
+[![npm version](https://badge.fury.io/js/%40ng-select%2Fng-select.svg)](https://badge.fury.io/js/%40ng-select%2Fng-select)
 [![Build Status][travis-badge]][travis-badge-url]
 
 [travis-badge]: https://travis-ci.org/ng-select/ng-select.svg?branch=master
