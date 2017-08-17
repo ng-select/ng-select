@@ -5,8 +5,7 @@
 
 # Warning
 
-Library is under active development. Library build process is forked from https://github.com/filipesilva/angular-quickstart-lib but I changed SystemJs build system to Webpack for faster builds and easer deployments to github pages.
-
+Library is under active development and may not work as expected until stable 1.0.0 release.
 ## Roadmap
 
 - [x] Custom binding to property or object
