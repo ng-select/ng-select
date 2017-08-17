@@ -22,9 +22,26 @@ Library is under active development and may not work as expected until stable 1.
 - [ ] Multiselect support
 - [ ] Accessibility
 
+### Usage
+| Input  | Description |
+| ------------- | ------------- |
+| bindLabel  | Bind option display text to object property. Default `label`  |
+| bindValue  | Bind selected option model value to property or whole object if used as `bindValue="this"`. Default  `value`|
+| [clearable] | Set is allowed to clear selected value. Default `true`|
+| placeholder | Set placeholder text. Default `null`|
+| [filterFunc] | Set custom filter function. Default `null`|
+
+| Output  | Description |
+| ------------- | ------------- |
+| (focus)  | Fired on select focus |
+| (blur)  | Fired on select blur |
+| (change)  | Fired on selected value change |
+| (open)  | Fired on select dropdown open |
+| (close)  | Fired on select dropdown close |
+
 ### Installation
 ```
-TODO
+npm install @ng-select/ng-select --save
 ```
 
 ### Contributing
@@ -37,7 +54,7 @@ Perform the _clone-to-launch_ steps with these terminal commands.
 
 #### Run demo
 ```
-git clone https://github.com/anjmao/ng-select.git
+git clone https://github.com/ng-select/ng-select
 cd ng-select
 npm install
 npm run serve-demo
