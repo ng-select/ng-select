@@ -18,12 +18,12 @@ import {
 } from '@angular/core';
 
 
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {AngOptionDirective, AngDisplayDirective} from './ng-templates.directive';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AngOptionDirective, AngDisplayDirective } from './ng-templates.directive';
 import * as searchHelper from './search-helper';
-import {VirtualScrollComponent} from './virtual-scroll.component';
-import {NgOption, FilterFunc, KeyCode} from './ng-select.types';
-import {ItemsList} from './items-list';
+import { VirtualScrollComponent } from './virtual-scroll.component';
+import { NgOption, FilterFunc, KeyCode } from './ng-select.types';
+import { ItemsList } from './items-list';
 
 const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
@@ -55,6 +55,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Input() bindValue: string;
     @Input() allowClear = true;
     @Input() placeholder: string;
+    @Input() multiple: boolean;
     @Input() filterFunc: FilterFunc;
 
     // output events
@@ -77,7 +78,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     private _value: NgOption = null;
 
     private _openClicked = false;
-    private propagateChange = (_: NgOption) => {};
+    private propagateChange = (_: NgOption) => { };
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
     }
@@ -91,20 +92,20 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     ngOnInit() {
-        this.itemsList.update(this.items);
-
+        this.multiple = this.multiple !== undefined;
         this.bindLabel = this.bindLabel || 'label';
         this.bindValue = this.bindValue || 'value';
         if (this.bindValue === 'this') {
             // bind to whole object
             this.bindValue = undefined;
         }
+        this.itemsList.setMultiple(this.multiple);
     }
 
     ngOnChanges(changes: any) {
         if (changes.items && changes.items.currentValue) {
             this.items = changes.items.currentValue;
-            this.itemsList.update(this.items);
+            this.itemsList = new ItemsList(this.items)
         }
     }
 
@@ -217,7 +218,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     getDisplayTemplateContext() {
-        return this._value ? {item: this._value} : {item: {}};
+        return this._value ? { item: this._value } : { item: {} };
     }
 
     getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {

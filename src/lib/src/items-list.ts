@@ -1,4 +1,4 @@
-import {NgOption, FilterFunc} from './ng-select.types';
+import { NgOption, FilterFunc } from './ng-select.types';
 
 export class ItemsList {
 
@@ -10,6 +10,7 @@ export class ItemsList {
 
     private _value: NgOption = null;
     private _valueIndex = -1;
+    private _multiple: boolean;
 
     constructor(items: NgOption[]) {
         this.items = items;
@@ -55,6 +56,10 @@ export class ItemsList {
 
     set value(value: NgOption) {
         this._value = value;
+    }
+
+    setMultiple(multiple: boolean) {
+        this._multiple = multiple;
     }
 
     filter(term: string, filterFunc: FilterFunc) {
