@@ -1,4 +1,4 @@
-import {NgOption, FilterFunc} from './ng-select.types';
+import { NgOption, FilterFunc } from './ng-select.types';
 
 export class ItemsList {
 
