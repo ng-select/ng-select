@@ -53,7 +53,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Input() items: NgOption[] = [];
     @Input() bindLabel: string;
     @Input() bindValue: string;
-    @Input() allowClear = true;
+    @Input() clearable = true;
     @Input() placeholder: string;
     @Input() filterFunc: FilterFunc;
 
@@ -162,7 +162,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     clear() {
-        if (!this.allowClear) {
+        if (!this.clearable) {
             return;
         }
         this._value = null;
@@ -253,7 +253,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     showClear() {
-        return this.allowClear && isDefined(this.value);
+        return this.clearable && isDefined(this.value);
     }
 
     onFilter($event) {

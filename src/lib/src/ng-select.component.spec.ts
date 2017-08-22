@@ -4,8 +4,8 @@ import { DebugElement, Component, ViewChild, Type } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { NgSelectModule } from './ng-select.module';
-import {NgSelectComponent} from './ng-select.component';
-import {KeyCode, NgOption} from './ng-select.types';
+import { NgSelectComponent } from './ng-select.component';
+import { KeyCode, NgOption } from './ng-select.types';
 
 describe('NgSelectComponent', function () {
 
@@ -15,7 +15,7 @@ describe('NgSelectComponent', function () {
         beforeEach(() => {
             fixture = createTestingModule(
                 AngSelectBasic,
-                `<ng-select [items]="cities" 
+                `<ng-select [items]="cities"
                         bindLabel="name"
                         bindValue="this"
                         [(ngModel)]="selectedCity">
@@ -38,7 +38,7 @@ describe('NgSelectComponent', function () {
         beforeEach(() => {
             fixture = createTestingModule(
                 AngSelectBasic,
-                `<ng-select [items]="cities" 
+                `<ng-select [items]="cities"
                         bindLabel="name"
                         bindValue="id"
                         [(ngModel)]="selectedCity">
@@ -146,7 +146,7 @@ describe('NgSelectComponent', function () {
         beforeEach(() => {
             fixture = createTestingModule(
                 AngSelectBasic,
-                `<ng-select [items]="cities" 
+                `<ng-select [items]="cities"
                     bindLabel="name"
                     bindValue="id"
                     placeholder="select value"
@@ -180,7 +180,7 @@ describe('NgSelectComponent', function () {
         it('should filter items with default filter', async(() => {
             fixture = createTestingModule(
                 AngSelectSearch,
-                `<ng-select [items]="cities" 
+                `<ng-select [items]="cities"
                     bindLabel="name"
                     bindValue="id"
                     [(ngModel)]="selectedCity">
@@ -189,13 +189,13 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
             fixture.componentInstance.select.onFilter({target: {value: 'vilnius'}});
 
-            expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual([{ id: 1, name: 'Vilnius' }]);
+            expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual([{id: 1, name: 'Vilnius'}]);
         }));
 
         it('should filter items with custom filter function', async(() => {
             fixture = createTestingModule(
                 AngSelectSearch,
-                `<ng-select [items]="cities" 
+                `<ng-select [items]="cities"
                     bindLabel="name"
                     bindValue="id"
                     [filterFunc]="customFilterFunc"
@@ -205,7 +205,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
             fixture.componentInstance.select.onFilter({target: {value: 'no matter'}});
 
-            expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual([{ id: 3, name: 'Pabrade' }]);
+            expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual([{id: 3, name: 'Pabrade'}]);
         }));
 
     });
@@ -248,9 +248,9 @@ class AngSelectBasic {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
     cities = [
-        { id: 1, name: 'Vilnius' },
-        { id: 2, name: 'Kaunas' },
-        { id: 3, name: 'Pabrade' },
+        {id: 1, name: 'Vilnius'},
+        {id: 2, name: 'Kaunas'},
+        {id: 3, name: 'Pabrade'},
     ];
 }
 
@@ -262,9 +262,9 @@ class AngSelectSearch {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
     cities = [
-        { id: 1, name: 'Vilnius' },
-        { id: 2, name: 'Kaunas' },
-        { id: 3, name: 'Pabrade' },
+        {id: 1, name: 'Vilnius'},
+        {id: 2, name: 'Kaunas'},
+        {id: 3, name: 'Pabrade'},
     ];
 
     customFilterFunc(term: string) {
