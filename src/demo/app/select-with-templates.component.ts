@@ -1,12 +1,12 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'select-with-templates',
     template: `
         <label>Custom label</label>
         <ng-select [items]="cities" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
-            <ng-template ang-display-tmp let-item="item">
-                <img height="15" width="15" [src]="item.avatar" />
+            <ng-template ng-display-tmp let-item="item">
+                <img height="15" width="15" [src]="item.avatar"/>
                 {{item.name}}
             </ng-template>
         </ng-select>
@@ -17,8 +17,8 @@ import {Component} from '@angular/core';
 
         <label>Custom option</label>
         <ng-select [items]="cities2" [(ngModel)]="selectedCity2" bindLabel="name" bindValue="name">
-            <ng-template ang-option-tmp let-item="item" let-index="index">
-                <img height="15" width="15" [src]="item.avatar" />
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+                <img height="15" width="15" [src]="item.avatar"/>
                 <b>{{item.name}}</b>
             </ng-template>
         </ng-select>
@@ -26,15 +26,15 @@ import {Component} from '@angular/core';
             Selected city name: {{selectedCity2}}
         </p>
         <hr>
-        
+
         <label>Custom label and option</label>
         <ng-select [items]="cities3" [(ngModel)]="selectedCity3" bindLabel="name" bindValue="name">
-            <ng-template ang-display-tmp let-item="item">
-                <img height="15" width="15" [src]="item.avatar" />
+            <ng-template ng-display-tmp let-item="item">
+                <img height="15" width="15" [src]="item.avatar"/>
                 <b>{{item.name}}</b>
             </ng-template>
-            <ng-template ang-option-tmp let-item="item" let-index="index">
-                <img height="15" width="15" [src]="item.avatar" />
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+                <img height="15" width="15" [src]="item.avatar"/>
                 <b>{{item.name}}</b>
             </ng-template>
         </ng-select>
