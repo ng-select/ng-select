@@ -249,7 +249,6 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     showValue() {
-        console.log('showValue', this.value);
         return !this.filterValue && isDefined(this.value);
     }
 
