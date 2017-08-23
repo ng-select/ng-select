@@ -98,8 +98,8 @@ describe('NgSelectComponent', function () {
         beforeEach(() => {
             fixture = createTestingModule(
                 AngSelectBasic,
-                `<ng-select [items]="cities" [(ngModel)]="selectedCity">
-                    <ng-template ang-display-tmp let-item="item">
+                `<ng-select [items]="cities" [(ngModel)]="selectedCity" bindValue="this">
+                    <ng-template ng-display-tmp let-item="item">
                         <div class="custom-header">{{item.name}}</div>
                     </ng-template>
                 </ng-select>`);
@@ -124,7 +124,7 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 AngSelectBasic,
                 `<ng-select [items]="cities" [(ngModel)]="selectedCity">
-                    <ng-template ang-option-tmp let-item="item">
+                    <ng-template ng-option-tmp let-item="item">
                         <div class="custom-option">{{item.name}}</div>
                     </ng-template>
                 </ng-select>`);
@@ -158,7 +158,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                const el = fixture.debugElement.query(By.css('.ng-select-placeholder')).nativeElement;
+                const el = fixture.debugElement.query(By.css('.as-placeholder')).nativeElement;
                 expect(el.innerText).toBe('select value');
             });
         }));
@@ -168,7 +168,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                const el = fixture.debugElement.query(By.css('.ng-select-placeholder'));
+                const el = fixture.debugElement.query(By.css('.as-placeholder'));
                 expect(el).toBeNull();
             });
         }));

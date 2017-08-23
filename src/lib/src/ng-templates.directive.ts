@@ -1,13 +1,13 @@
 import { Directive, TemplateRef } from '@angular/core';
 
-@Directive({ selector: '[ang-option-tmp]' })
-export class AngOptionDirective {
+@Directive({ selector: '[ng-option-tmp]' })
+export class NgOptionDirective {
     constructor(public template: TemplateRef<any>) {
     }
 }
 
-@Directive({ selector: '[ang-display-tmp]' })
-export class AngDisplayDirective {
+@Directive({ selector: '[ng-display-tmp]' })
+export class NgDisplayDirective {
     constructor(public template: TemplateRef<any>) {
     }
 }
