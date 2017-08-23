@@ -18,7 +18,7 @@ import {NgSelectModule} from '@ng-select/ng-select';
 ```
 The only remaining part is to list the imported module in your application module.:
 ```js
-import {NgSelectModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgSelectModule} from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [AppComponent, ...],
