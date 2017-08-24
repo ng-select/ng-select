@@ -4,6 +4,8 @@
   box-sizing: border-box;
 }
 
+$color-selected: #f5faff;
+
 ng-select {
   position: relative;
   display: block;
@@ -92,6 +94,36 @@ ng-select {
     }
   }
 
+  &.as-multiple > .as-control .as-value {
+    background-color: $color-selected;
+    color:#333;
+    border-radius: 2px;
+    border: 1px solid #c2e0ff;
+    border: 1px solid rgba(0, 126, 255, 0.24);
+    display: inline-block;
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin-left: 5px;
+    margin-top: 5px;
+    vertical-align: top;
+
+    .as-clear {
+      cursor: pointer;
+      border-bottom-left-radius: 2px;
+      border-top-left-radius: 2px;
+      border-right: 1px solid #c2e0ff;
+      border-right: 1px solid rgba(0, 126, 255, 0.24);
+      padding: 1px 5px 3px;
+    }
+
+    .as-value-label {
+      border-bottom-right-radius: 2px;
+      border-top-right-radius: 2px;
+      cursor: default;
+      padding: 2px 5px;
+    }
+  }
+
   .as-input {
     height: 34px;
     padding-left: 10px;
@@ -154,7 +186,7 @@ ng-select {
     }
 
     &.selected {
-      background-color: #f5faff;
+      background-color: $color-selected;
       color: #333;
     }
 

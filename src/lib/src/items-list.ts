@@ -8,7 +8,8 @@ export class ItemsList {
     markedItem: NgOption = null;
     private _markedItemIndex = -1;
 
-    private _value: NgOption = null;
+    private _selected: NgOption[] = [];
+
     private _valueIndex = -1;
     private _multiple: boolean;
 
@@ -17,45 +18,42 @@ export class ItemsList {
         this.filteredItems = [...items];
     }
 
-    update(items: NgOption[]) {
-        this.items = items || [];
-        this.filteredItems = [...this.items];
+    select(item: NgOption) {
+        if (!this._multiple) {
+            this.clearSelected();
+        }
+
+        if (item.selected) {
+            this._selected = this._selected.filter(x => x !== item)
+        } else {
+            this._selected.push(item);
+        }
+        item.selected = !item.selected;
+
+        //TODO: move mark logic to onOpen event?
+        this.markItem();
     }
 
-    select(item: NgOption) {
-        if (!item) {
-            return;
-        }
-
-        if (this.markedItem) {
-            this.markedItem.selected = false;
-            this.markedItem.marked = false;
-        }
-        if (this._value) {
-            this._value.selected = false;
-        }
-
-        this._value = item;
-        this._valueIndex = this.filteredItems.indexOf(this._value);
-        this._value.selected = true;
-        this.markedItem = this._value;
+    markItem() {
+        this.markedItem = this._selected[this._selected.length - 1]; //start from last selected
+        this._valueIndex = this.filteredItems.indexOf(this.markedItem);
     }
 
     clearSelected() {
-        if (this._value) {
-            this._value.selected = false;
-        }
+        this._selected.forEach((item) => {
+            item.selected = false;
+        })
+        this._selected = [];
+
         this._valueIndex = -1;
         this._markedItemIndex = -1;
-        this._value = null;
     }
 
-    get value(): NgOption {
-        return this._value;
-    }
-
-    set value(value: NgOption) {
-        this._value = value;
+    get value(): NgOption | NgOption[] {
+        if (this._multiple) {
+            return this._selected;
+        }
+        return this._selected[0];
     }
 
     setMultiple(multiple: boolean) {

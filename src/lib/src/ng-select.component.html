@@ -3,14 +3,25 @@
 
         <span class="as-placeholder" *ngIf="showPlaceholder()">{{placeholder}}</span>
 
-        <div class="as-value" *ngIf="showValue()">
-            <span class="as-value-label" role="option" aria-selected="true">
-                <ng-template *ngIf="displayTemplateRef" [ngTemplateOutlet]="displayTemplateRef.template"
-                              [ngOutletContext]="getDisplayTemplateContext()"></ng-template>
+        <ng-container *ngIf="!multiple;else multipleValue">
+            <div class="as-value" *ngIf="showValue()">
+                    <span class="as-value-label" role="option" aria-selected="true">
+                            <ng-template 
+                                *ngIf="displayTemplateRef" 
+                                [ngTemplateOutlet]="displayTemplateRef.template"
+                                [ngOutletContext]="getDisplayTemplateContext()">
+                            </ng-template>
+                            <span *ngIf="!displayTemplateRef">{{getTextValue(value)}}</span>
+                    </span>
+            </div>
+        </ng-container>
 
-                <span *ngIf="!displayTemplateRef">{{getTextValue()}}</span>
-            </span>
-        </div>
+        <ng-template #multipleValue>
+            <div class="as-value" *ngFor="let item of value">
+                <span class="as-clear" (click)="select(item)" aria-hidden="true">×</span>
+                <span class="as-value-label" aria-selected="true">{{getTextValue(item)}}</span>
+            </div>
+        </ng-template>
 
         <div *ngIf="!isDisabled" class="as-input">
             <input #filterInput
@@ -26,7 +37,7 @@
     </span>
 
     <span *ngIf="showClear()" (click)="clear()" class="as-clear-zone" title="Clear all" aria-label="Clear all">
-        <span class="as-clear">×</span>
+        <span class="as-clear" aria-hidden="true">×</span>
     </span>
 
     <span class="as-arrow-zone">

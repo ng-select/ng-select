@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgOption } from 'ng-select';
+import { NgOption } from '@ng-select/ng-select';
 
 @Component({
     template: `
@@ -7,7 +7,7 @@ import { NgOption } from 'ng-select';
         <ng-select [items]="companies"
                     bindLabel="name"
                     bindValue="this"
-                    multiple
+                    [multiple]="true"
                     [(ngModel)]="selectedCompany">
         </ng-select>
         <p>

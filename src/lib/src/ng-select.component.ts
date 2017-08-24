@@ -14,7 +14,8 @@ import {
     HostBinding,
     ViewChild,
     ElementRef,
-    ChangeDetectionStrategy
+    ChangeDetectionStrategy,
+    SimpleChange
 } from '@angular/core';
 
 
@@ -55,8 +56,8 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Input() bindValue: string;
     @Input() allowClear = true;
     @Input() placeholder: string;
-    @Input() multiple: boolean;
     @Input() filterFunc: FilterFunc;
+    @HostBinding('class.as-multiple') @Input() multiple: boolean = false;
 
     // output events
     @Output('blur') onBlur = new EventEmitter();
@@ -65,12 +66,12 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Output('open') onOpen = new EventEmitter();
     @Output('close') onClose = new EventEmitter();
 
-    @HostBinding('class.as-single') single = true;
+    @HostBinding('class.as-single') single = true; //TODO: use single by default
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
 
-    itemsList: ItemsList = new ItemsList([]);
+    itemsList: ItemsList;
     viewPortItems: NgOption[] = [];
 
     filterValue: string = null;
@@ -92,7 +93,6 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     ngOnInit() {
-        this.multiple = this.multiple !== undefined;
         this.bindLabel = this.bindLabel || 'label';
         this.bindValue = this.bindValue || 'value';
         if (this.bindValue === 'this') {
@@ -100,9 +100,10 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
             this.bindValue = undefined;
         }
         this.itemsList.setMultiple(this.multiple);
+        this.single = !this.multiple;
     }
 
-    ngOnChanges(changes: any) {
+    ngOnChanges(changes: { [key: string]: SimpleChange }) {
         if (changes.items && changes.items.currentValue) {
             this.items = changes.items.currentValue;
             this.itemsList = new ItemsList(this.items)
@@ -213,8 +214,8 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         this.onOpen.emit();
     }
 
-    getTextValue() {
-        return this._value ? this._value[this.bindLabel] : '';
+    getTextValue(value: NgOption) {
+        return value ? value[this.bindLabel] : '';
     }
 
     getDisplayTemplateContext() {
