@@ -185,8 +185,6 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         } else {
             this._value = null;
         }
-
-        this.changeDetectorRef.markForCheck();
     }
 
     registerOnChange(fn: any): void {
@@ -241,7 +239,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
 
         this.close();
         this.notifyModelChanged();
-        console.log('select', this._value);
+        this.changeDetectorRef.markForCheck();
     }
 
     showPlaceholder() {
