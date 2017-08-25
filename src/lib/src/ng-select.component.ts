@@ -286,7 +286,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         return (val: NgOption) => {
             return searchHelper.stripSpecialChars(val[this.bindLabel])
                 .toUpperCase()
-                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) === 0;
+                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
         };
     }
 
