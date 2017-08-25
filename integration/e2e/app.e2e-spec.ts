@@ -1,14 +1,32 @@
-import { AppPage } from './app.po';
+import { browser, by, element, ElementFinder } from 'protractor';
 
-describe('integration App', () => {
-  let page: AppPage;
+describe('ng-select', () => {
+
+  let select: ElementFinder;
 
   beforeEach(() => {
-    page = new AppPage();
+    browser.get('/');
+    select = element(by.tagName('ng-select'));
   });
 
-  it('should display welcome message', () => {
-    page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to app!');
+  it('should be rendered', () => {
+    expect(select).toBeDefined();
   });
+
+  it('should open dropdown on click', () => {
+    select.element(by.css('.as-control')).click();
+
+    expect(select.getAttribute('class')).toMatch('opened');
+  });
+
+  it('should select value and close dropdown', () => {
+    select.element(by.css('.as-control')).click();
+
+    select.all(by.css('.as-option')).first().click();
+
+    expect(select.getAttribute('class')).not.toMatch('opened');
+    expect(element(by.id('ngModel')).getText()).toBe('{ "id": 1, "name": "Vilnius", "selected": true, "marked": false }');
+  });
+
+
 });

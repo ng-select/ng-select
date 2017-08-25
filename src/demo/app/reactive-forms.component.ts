@@ -45,7 +45,7 @@ import {HttpClient} from '@angular/common/http';
                             bindValue="id"
                             placeholder="Select album"
                             formControlName="album">
-                    <ng-template ang-option-tmp let-item="item">
+                    <ng-template ng-option-tmp let-item="item">
                         <div>Title: {{item.title}}</div>
                         <small><b>Id:</b> {{item.id}} | <b>UserId:</b> {{item.userId}}</small>
                     </ng-template>
@@ -60,11 +60,11 @@ import {HttpClient} from '@angular/common/http';
                             bindValue="thumbnailUrl"
                             placeholder="Select photo"
                             formControlName="photo">
-                    <ng-template ang-display-tmp let-item="item">
+                    <ng-template ng-display-tmp let-item="item">
                         <img height="15" width="15" [src]="item.thumbnailUrl" />
                         <span>{{item.title}}</span>
                     </ng-template>
-                    <ng-template ang-option-tmp let-item="item" let-index="index">
+                    <ng-template ng-option-tmp let-item="item" let-index="index">
                         <img height="15" width="15" [src]="item.thumbnailUrl" />
                         <span>{{item.title}}</span>
                     </ng-template>

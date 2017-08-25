@@ -20,7 +20,7 @@ import {
 
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { AngOptionDirective, AngDisplayDirective } from './ng-templates.directive';
+import { NgOptionDirective, NgDisplayDirective } from './ng-templates.directive';
 import * as searchHelper from './search-helper';
 import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, FilterFunc, KeyCode } from './ng-select.types';
@@ -45,8 +45,8 @@ const NGB_ANG_SELECT_VALUE_ACCESSOR = {
 })
 export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccessor {
 
-    @ContentChild(AngOptionDirective) optionTemplateRef: TemplateRef<any>;
-    @ContentChild(AngDisplayDirective) displayTemplateRef: TemplateRef<any>;
+    @ContentChild(NgOptionDirective) optionTemplateRef: TemplateRef<any>;
+    @ContentChild(NgDisplayDirective) displayTemplateRef: TemplateRef<any>;
     @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
     @ViewChild('filterInput') filterInput;
 
@@ -54,7 +54,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Input() items: NgOption[] = [];
     @Input() bindLabel: string;
     @Input() bindValue: string;
-    @Input() allowClear = true;
+    @Input() clearable = true;
     @Input() placeholder: string;
     @Input() filterFunc: FilterFunc;
     @HostBinding('class.as-multiple') @Input() multiple: boolean = false;
@@ -164,7 +164,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     clear() {
-        if (!this.allowClear) {
+        if (!this.clearable) {
             return;
         }
         this._value = null;
@@ -188,7 +188,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
             this._value = null;
         }
 
-        this.changeDetectorRef.markForCheck();
+        this.changeDetectorRef.detectChanges();
     }
 
     registerOnChange(fn: any): void {
@@ -243,11 +243,11 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
 
         this.close();
         this.notifyModelChanged();
-        console.log('select', this._value);
+        this.changeDetectorRef.markForCheck();
     }
 
     showPlaceholder() {
-        return this.placeholder && !isDefined(this._value) && !this.filterValue;
+        return this.placeholder && !isDefined(this.value) && !this.filterValue;
     }
 
     showValue() {
@@ -255,14 +255,17 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     showClear() {
-        return this.allowClear && isDefined(this.value);
+        return this.clearable && isDefined(this.value);
+    }
+
+    showFilter() {
+        return !this.isDisabled;
     }
 
     onFilter($event) {
         if (!this.isOpen) {
             this.open();
         }
-
 
         const term = $event.target.value;
         this.filterValue = term;

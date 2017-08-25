@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
 
 interface AngSelectEvent {
@@ -11,23 +11,23 @@ interface AngSelectEvent {
     template: `
         <label>Focus, Blur, Change, Filter</label>
         <ng-select [items]="cities"
-                    [(ngModel)]="selectedCity"
-                    bindLabel="name"
-                    bindValue="id"
-                    (open)="onOpen()"
-                    (close)="onClose()"
-                    (focus)="onFocus($event)"
-                    (blur)="onBlur($event)"
-                    (change)="onChange($event)">
+                   [(ngModel)]="selectedCity"
+                   bindLabel="name"
+                   bindValue="id"
+                   (open)="onOpen()"
+                   (close)="onClose()"
+                   (focus)="onFocus($event)"
+                   (blur)="onBlur($event)"
+                   (change)="onChange($event)">
         </ng-select>
-        
+
         <div *ngIf="events.length > 0">
             <br>
             <button (click)="events = []" class="btn btn-secondary btn-sm">Clear events</button>
             <br>
             <br>
         </div>
-        
+
         <div *ngFor="let event of events">
             <small>{{event.name}} - {{event.value | json}}</small>
             <hr>

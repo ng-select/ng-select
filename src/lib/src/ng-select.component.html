@@ -23,7 +23,7 @@
             </div>
         </ng-template>
 
-        <div *ngIf="!isDisabled" class="as-input">
+        <div *ngIf="showFilter()" class="as-input">
             <input #filterInput
                    [value]="filterValue"
                    (input)="onFilter($event)"
