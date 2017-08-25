@@ -4,13 +4,10 @@ export class ItemsList {
 
     items: NgOption[] = [];
     filteredItems: NgOption[] = [];
-
     markedItem: NgOption = null;
+
     private _markedItemIndex = -1;
-
     private _selected: NgOption[] = [];
-
-    private _valueIndex = -1;
     private _multiple: boolean;
 
     constructor(items: NgOption[], multiple: boolean) {
@@ -30,14 +27,6 @@ export class ItemsList {
             this._selected.push(item);
         }
         item.selected = !item.selected;
-
-        //TODO: move mark logic to onOpen event?
-        this.markItem();
-    }
-
-    markItem() {
-        this.markedItem = this._selected[this._selected.length - 1]; //start from last selected
-        this._valueIndex = this.filteredItems.indexOf(this.markedItem);
     }
 
     clearSelected() {
@@ -45,9 +34,6 @@ export class ItemsList {
             item.selected = false;
         });
         this._selected = [];
-
-        this._valueIndex = -1;
-        this._markedItemIndex = -1;
     }
 
     get value(): NgOption | NgOption[] {
@@ -55,10 +41,6 @@ export class ItemsList {
             return this._selected;
         }
         return this._selected[0];
-    }
-
-    setMultiple(multiple: boolean) {
-        this._multiple = multiple;
     }
 
     filter(term: string, filterFunc: FilterFunc) {
@@ -88,11 +70,12 @@ export class ItemsList {
         while (this.markedItem.disabled) {
             this.markPreviousItem();
         }
-        this.markedItem.marked = true;
+        this.markedItem.marked = true; //TODO: do we need marked property on model?
     }
 
-    markCurrentValue() {
-        this._markedItemIndex = this._valueIndex;
+    markLastSelection() {
+        const lastSelected = this._selected[this._selected.length - 1];
+        this._markedItemIndex = this.filteredItems.indexOf(lastSelected);
     }
 
     private getNextItemIndex(delta: number) {

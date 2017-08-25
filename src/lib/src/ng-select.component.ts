@@ -57,7 +57,9 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Input() clearable = true;
     @Input() placeholder: string;
     @Input() filterFunc: FilterFunc;
-    @HostBinding('class.as-multiple') @Input() multiple: boolean = false;
+
+    @Input()
+    @HostBinding('class.as-multiple') multiple: boolean = false;
 
     // output events
     @Output('blur') onBlur = new EventEmitter();
@@ -66,7 +68,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Output('open') onOpen = new EventEmitter();
     @Output('close') onClose = new EventEmitter();
 
-    @HostBinding('class.as-single') single = true; //TODO: use single by default
+    @HostBinding('class.as-single') get single() { return !this.multiple } 
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
@@ -99,7 +101,6 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
             // bind to whole object
             this.bindValue = undefined;
         }
-        this.single = !this.multiple;
     }
 
     ngOnChanges(changes: { [key: string]: SimpleChange }) {
@@ -208,7 +209,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         }
         this._openClicked = true;
         this.isOpen = true;
-        this.itemsList.markCurrentValue();
+        this.itemsList.markLastSelection();
         this.focusSearchInput();
         this.onOpen.emit();
     }
