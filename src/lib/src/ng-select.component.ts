@@ -99,14 +99,13 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
             // bind to whole object
             this.bindValue = undefined;
         }
-        // this.itemsList.setMultiple(this.multiple);
         this.single = !this.multiple;
     }
 
     ngOnChanges(changes: { [key: string]: SimpleChange }) {
         if (changes.items && changes.items.currentValue) {
             this.items = changes.items.currentValue;
-            this.itemsList = new ItemsList(this.items)
+            this.itemsList = new ItemsList(this.items, this.multiple)
         }
     }
 

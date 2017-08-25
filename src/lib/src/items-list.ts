@@ -13,9 +13,10 @@ export class ItemsList {
     private _valueIndex = -1;
     private _multiple: boolean;
 
-    constructor(items: NgOption[]) {
+    constructor(items: NgOption[], multiple: boolean) {
         this.items = items;
         this.filteredItems = [...items];
+        this._multiple = multiple;
     }
 
     select(item: NgOption) {
