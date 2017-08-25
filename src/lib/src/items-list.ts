@@ -42,7 +42,7 @@ export class ItemsList {
     clearSelected() {
         this._selected.forEach((item) => {
             item.selected = false;
-        })
+        });
         this._selected = [];
 
         this._valueIndex = -1;

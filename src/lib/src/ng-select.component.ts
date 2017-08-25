@@ -99,7 +99,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
             // bind to whole object
             this.bindValue = undefined;
         }
-        this.itemsList.setMultiple(this.multiple);
+        // this.itemsList.setMultiple(this.multiple);
         this.single = !this.multiple;
     }
 
@@ -241,7 +241,10 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         this.itemsList.select(item);
         this._value = this.itemsList.value;
 
-        this.close();
+        if (!this.multiple) {
+            this.close();
+        }
+
         this.notifyModelChanged();
         this.changeDetectorRef.markForCheck();
     }
