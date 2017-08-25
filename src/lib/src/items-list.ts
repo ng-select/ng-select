@@ -54,23 +54,11 @@ export class ItemsList {
     }
 
     markNextItem() {
-        this._markedItemIndex = this.getNextItemIndex(+1);
-        this.unmarkCurrentItem();
-        this.markedItem = this.filteredItems[this._markedItemIndex];
-        while (this.markedItem.disabled) {
-            this.markNextItem();
-        }
-        this.markedItem.marked = true;
+        this.stepToItem(+1);
     }
 
     markPreviousItem() {
-        this._markedItemIndex = this.getNextItemIndex(-1);
-        this.unmarkCurrentItem();
-        this.markedItem = this.filteredItems[this._markedItemIndex];
-        while (this.markedItem.disabled) {
-            this.markPreviousItem();
-        }
-        this.markedItem.marked = true; //TODO: do we need marked property on model?
+        this.stepToItem(-1);
     }
 
     markLastSelection() {
@@ -84,6 +72,20 @@ export class ItemsList {
         } else {
             return (this._markedItemIndex === 0) ? (this.filteredItems.length - 1) : (this._markedItemIndex - 1);
         }
+    }
+
+    private stepToItem(steps: number) {
+        if (this.filteredItems.length === 0) {
+            return;
+        }
+
+        this._markedItemIndex = this.getNextItemIndex(steps);
+        this.unmarkCurrentItem();
+        this.markedItem = this.filteredItems[this._markedItemIndex];
+        while (this.markedItem.disabled) {
+            this.stepToItem(steps);
+        }
+        this.markedItem.marked = true; //TODO: do we need marked property on model?
     }
 
     unmarkCurrentItem() {
