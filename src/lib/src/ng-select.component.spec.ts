@@ -25,10 +25,7 @@ describe('NgSelectComponent', function () {
 
         it('update parent selected model on value change', fakeAsync(() => {
             // select second city
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space); // open
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter); // select
+            selectOption(fixture, KeyCode.ArrowDown, 2);
 
             fixture.detectChanges();
             tick();
@@ -60,6 +57,85 @@ describe('NgSelectComponent', function () {
         }));
     });
 
+    describe('Model bindings', () => {
+
+        it('bind to default label value properties', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectDefaultBindingsTestCmp,
+                `<ng-select [items]="cities" [(ngModel)]="selectedCityId">
+                </ng-select>`);
+
+            // from component to model
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+
+            fixture.detectChanges();
+            tick();
+
+            expect(fixture.componentInstance.selectedCityId).toEqual('1');
+
+            // from model to component
+            fixture.componentInstance.selectedCityId = '2';
+
+            fixture.detectChanges();
+            tick();
+
+            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[1]);
+        }));
+
+        it('bind to custom object properties', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectCustomBindingsTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            bindValue="id"
+                            [(ngModel)]="selectedCityId">
+                </ng-select>`);
+
+            // from component to model
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+
+            fixture.detectChanges();
+            tick();
+
+            expect(fixture.componentInstance.selectedCityId).toEqual(1);
+
+            // from model to component
+            fixture.componentInstance.selectedCityId = 2;
+
+            fixture.detectChanges();
+            tick();
+
+            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[1]);
+        }));
+
+        it('bind to object', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            bindValue="this"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            // from component to model
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+
+            fixture.detectChanges();
+            tick();
+
+            expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[0]);
+
+            // from model to component
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[1];
+
+            fixture.detectChanges();
+            tick();
+
+            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[1]);
+        }));
+
+    });
+
     describe('Keyboard events', () => {
         let fixture: ComponentFixture<NgSelectBasicTestCmp>;
 
@@ -80,9 +156,7 @@ describe('NgSelectComponent', function () {
         });
 
         it('select next value on arrow down', () => {
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space); // open
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter); // select
+            selectOption(fixture, KeyCode.ArrowDown, 1);
 
             expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
         });
@@ -92,9 +166,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space); // open
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter); // select
+                selectOption(fixture, KeyCode.ArrowDown, 1);
                 expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
             });
         }));
@@ -104,9 +176,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space); // open
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowUp);
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter); // select
+                selectOption(fixture, KeyCode.ArrowUp, 1);
                 expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
             });
 
@@ -117,9 +187,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space); // open
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowUp);
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter); // select
+                selectOption(fixture, KeyCode.ArrowUp, 1);
                 expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[2]);
             });
         }));
@@ -128,7 +196,7 @@ describe('NgSelectComponent', function () {
 
     describe('Custom templates', () => {
 
-        xit('display custom header template', async(() => {
+        it('display custom header template', async(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities" [(ngModel)]="selectedCity" bindValue="this">
@@ -136,6 +204,7 @@ describe('NgSelectComponent', function () {
                         <div class="custom-header">{{item.name}}</div>
                     </ng-template>
                 </ng-select>`);
+
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             fixture.detectChanges();
 
@@ -155,6 +224,7 @@ describe('NgSelectComponent', function () {
                         <div class="custom-option">{{item.name}}</div>
                     </ng-template>
                 </ng-select>`);
+
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
@@ -187,16 +257,14 @@ describe('NgSelectComponent', function () {
             });
         }));
 
-        // TODO: fix timeout due to conditional virtual scroll
-        xit('not display then selected value', async(() => {
+        it('do not display on selected value', async(() => {
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                console.log('stable');
                 const el = fixture.debugElement.query(By.css('.as-placeholder'));
                 expect(el).toBeNull();
-            });
+            })
         }));
     });
 
@@ -238,6 +306,14 @@ describe('NgSelectComponent', function () {
 
 });
 
+function selectOption(fixture, key: KeyCode, steps: number) {
+    triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space); // open
+    for (let i = 0; i < steps; i++) {
+        triggerKeyDownEvent(getNgSelectElement(fixture), key);
+    }
+    triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter); // select
+}
+
 function getNgSelectElement(fixture: ComponentFixture<any>): DebugElement {
     return fixture.debugElement.query(By.css('ng-select'));
 }
@@ -253,7 +329,13 @@ function triggerKeyDownEvent(element: DebugElement, key: number): void {
 function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixture<T> {
     TestBed.configureTestingModule({
         imports: [FormsModule, NgSelectModule],
-        declarations: [NgSelectBasicTestCmp, NgSelectFilterTestCmp, NgSelectModelChangesTestCmp]
+        declarations: [
+            NgSelectBasicTestCmp,
+            NgSelectFilterTestCmp,
+            NgSelectModelChangesTestCmp,
+            NgSelectDefaultBindingsTestCmp,
+            NgSelectCustomBindingsTestCmp
+        ]
     })
         .overrideComponent(cmp, {
             set: {
@@ -277,6 +359,33 @@ class NgSelectBasicTestCmp {
         {id: 1, name: 'Vilnius'},
         {id: 2, name: 'Kaunas'},
         {id: 3, name: 'Pabrade'},
+    ];
+}
+
+@Component({
+    template: ``
+})
+class NgSelectDefaultBindingsTestCmp {
+    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    selectedCityId: string;
+    cities = [
+        {value: '1', label: 'Vilnius'},
+        {value: '2', label: 'Kaunas'},
+        {value: '3', label: 'Pabrade'},
+    ];
+}
+
+@Component({
+    template: ``
+})
+class NgSelectCustomBindingsTestCmp {
+    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    selectedCityId: number;
+    cities = [
+        {id: 1, name: 'Vilnius'},
+        {id: 2, name: 'Kaunas'},
+        {id: 3, name: 'Pabrade'},
+        {id: 4, name: 'Klaipėda'},
     ];
 }
 

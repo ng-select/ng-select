@@ -185,6 +185,8 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         } else {
             this._value = null;
         }
+
+        this.changeDetectorRef.detectChanges();
     }
 
     registerOnChange(fn: any): void {
