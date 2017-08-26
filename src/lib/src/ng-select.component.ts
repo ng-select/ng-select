@@ -68,7 +68,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Output('open') onOpen = new EventEmitter();
     @Output('close') onClose = new EventEmitter();
 
-    @HostBinding('class.as-single') get single() { return !this.multiple } 
+    @HostBinding('class.as-single') get single() { return !this.multiple }
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
@@ -78,7 +78,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
 
     filterValue: string = null;
 
-    private _value: NgOption = null;
+    private _value: NgOption | NgOption[] = null;
 
     private _openClicked = false;
     private propagateChange = (_: NgOption) => { };
@@ -350,7 +350,10 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         if (!this._value) {
             this.propagateChange(null);
         } else if (this.bindValue) {
-            this.propagateChange(this._value[this.bindValue]);
+            const bindValue = this._value instanceof Array ?
+                this._value.map(x => x[this.bindValue]) :
+                this._value[this.bindValue];
+            this.propagateChange(bindValue);
         } else {
             this.propagateChange(this._value);
         }
