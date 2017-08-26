@@ -13,11 +13,23 @@ import { NgOption } from '@ng-select/ng-select';
         <p>
             Selected value: {{selectedCompany | json}}
         </p>
+
+        <label>Disabled multiple elements</label>
+        <ng-select [items]="companies2"
+                    bindLabel="name"
+                    bindValue="this"
+                    [multiple]="true"
+                    [disabled]="disable"
+                    [(ngModel)]="selectedCompanyDisabled">
+        </ng-select>
+        <br>
+        <button class="btn btn-secondary btn-sm" (click)="disable = !disable">Toggle disabled</button>
     `
 })
 export class SelectMultiComponent {
 
     companies: any[] = [];
+    companies2: any[] = [];
     selectedCompany: any;
 
     /* tslint:disable */
@@ -27,6 +39,7 @@ export class SelectMultiComponent {
     ngOnInit() {
         this.companiesNames.forEach((c, i) => {
             this.companies.push({ id: i, name: c });
+            this.companies2.push({ id: i, name: c });
         });
     }
 }

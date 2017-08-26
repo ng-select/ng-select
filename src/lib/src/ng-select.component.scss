@@ -94,33 +94,46 @@ ng-select {
     }
   }
 
-  &.as-multiple > .as-control .as-value {
-    background-color: $color-selected;
-    border-radius: 2px;
-    border: 1px solid #c2e0ff;
-    border: 1px solid rgba(0, 126, 255, 0.24);
-    display: inline-block;
-    font-size: 0.9em;
-    line-height: 1.4;
-    margin-left: 5px;
-    margin-top: 5px;
-    vertical-align: top;
+  &.as-multiple {
+    &.disabled  {
+      > .as-control .as-value {
+        background-color: #f9f9f9;
+        border: 1px solid #e3e3e3;
 
-    .as-clear {
-      cursor: pointer;
-      border-bottom-left-radius: 2px;
-      border-top-left-radius: 2px;
-      border-right: 1px solid #c2e0ff;
-      border-right: 1px solid rgba(0, 126, 255, 0.24);
-      padding: 1px 5px 3px;
+        .as-clear {
+          display: none;
+        }
+      }
     }
 
-    .as-value-label {
-      border-bottom-right-radius: 2px;
-      border-top-right-radius: 2px;
-      cursor: default;
-      padding: 2px 5px;
-    }
+    > .as-control .as-value {
+      background-color: $color-selected;
+      border-radius: 2px;
+      border: 1px solid #c2e0ff;
+      border: 1px solid rgba(0, 126, 255, 0.24);
+      display: inline-block;
+      font-size: 0.9em;
+      line-height: 1.4;
+      margin-left: 5px;
+      margin-top: 5px;
+      vertical-align: top;
+
+      .as-clear {
+        cursor: pointer;
+        border-bottom-left-radius: 2px;
+        border-top-left-radius: 2px;
+        border-right: 1px solid #c2e0ff;
+        border-right: 1px solid rgba(0, 126, 255, 0.24);
+        padding: 1px 5px 3px;
+      }
+
+      .as-value-label {
+        border-bottom-right-radius: 2px;
+        border-top-right-radius: 2px;
+        cursor: default;
+        padding: 2px 5px;
+      }
+    } 
   }
 
   .as-input {

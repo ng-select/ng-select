@@ -234,7 +234,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     select(item: NgOption) {
-        if (item.disabled) {
+        if (item.disabled || this.isDisabled) {
             return;
         }
 
@@ -258,7 +258,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     showClear() {
-        return this.clearable && isDefined(this.value);
+        return this.clearable && isDefined(this.value) && !this.isDisabled;
     }
 
     showFilter() {
