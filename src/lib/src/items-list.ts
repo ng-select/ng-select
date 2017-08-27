@@ -1,4 +1,4 @@
-import { NgOption, FilterFunc } from './ng-select.types';
+import { FilterFunc, NgOption } from './ng-select.types';
 
 export class ItemsList {
 
@@ -16,13 +16,20 @@ export class ItemsList {
         this._multiple = multiple;
     }
 
+    get value(): NgOption | NgOption[] {
+        if (this._multiple) {
+            return this._selected;
+        }
+        return this._selected[0];
+    }
+
     select(item: NgOption) {
         if (!this._multiple) {
             this.clearSelected();
         }
 
         if (item.selected) {
-            this._selected = this._selected.filter(x => x !== item)
+            this._selected = this._selected.filter(x => x !== item);
         } else {
             this._selected.push(item);
         }
@@ -36,17 +43,10 @@ export class ItemsList {
         this._selected = [];
     }
 
-    get value(): NgOption | NgOption[] {
-        if (this._multiple) {
-            return this._selected;
-        }
-        return this._selected[0];
-    }
-
     filter(term: string, filterFunc: FilterFunc) {
         this._markedItemIndex = -1;
         const filterFuncVal = filterFunc(term);
-        this.filteredItems = term ? this.items.filter(val => filterFuncVal(val)) : this.items;
+        this.filteredItems = term ? this.items.filter(filterFuncVal) : this.items;
     }
 
     clearFilter() {
@@ -64,6 +64,12 @@ export class ItemsList {
     markLastSelection() {
         const lastSelected = this._selected[this._selected.length - 1];
         this._markedItemIndex = this.filteredItems.indexOf(lastSelected);
+    }
+
+    unmarkCurrentItem() {
+        if (this.markedItem) {
+            this.markedItem.marked = false;
+        }
     }
 
     private getNextItemIndex(delta: number) {
@@ -85,12 +91,6 @@ export class ItemsList {
         while (this.markedItem.disabled) {
             this.stepToItem(steps);
         }
-        this.markedItem.marked = true; //TODO: do we need marked property on model?
-    }
-
-    unmarkCurrentItem() {
-        if (this.markedItem) {
-            this.markedItem.marked = false;
-        }
+        this.markedItem.marked = true; // TODO: do we need marked property on model?
     }
 }
