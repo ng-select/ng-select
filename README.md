@@ -4,6 +4,9 @@
 [travis-badge]: https://travis-ci.org/ng-select/ng-select.svg?branch=master
 [travis-badge-url]: https://travis-ci.org/ng-select/ng-select
 
+## Angular native ui-select
+See [Demos](https://ng-select.github.io/#/forms) or try in [Plunker](https://plnkr.co/edit/V5tFfNY28fiaLlNwvcWb?p=preview)
+
 ## Warning
 Library is under active development and may not work as expected until stable 1.0.0 release.
 
@@ -48,10 +51,10 @@ map: {
 - [x] Expose usefull events like blur, change, focus, close, open ...
 - [x] Correct keyboard events behaviour
 - [x] Integration app generated with angular-cli
+- [x] Good base functionality test coverage
 - [ ] HTML5 Standart https://developer.mozilla.org/en/docs/Web/HTML/Element/select except multiselect
-- [ ] Good base functionality test coverage
-- [ ] First alpha release and documentation
 - [ ] Multiselect support
+- [ ] Autocomplete
 - [ ] Accessibility
 
 ### Usage
