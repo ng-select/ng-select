@@ -59,7 +59,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Input() filterFunc: FilterFunc;
 
     @Input()
-    @HostBinding('class.as-multiple') multiple: boolean = false;
+    @HostBinding('class.as-multiple') multiple = false;
 
     // output events
     @Output('blur') onBlur = new EventEmitter();

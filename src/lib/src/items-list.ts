@@ -85,7 +85,7 @@ export class ItemsList {
         while (this.markedItem.disabled) {
             this.stepToItem(steps);
         }
-        this.markedItem.marked = true; //TODO: do we need marked property on model?
+        this.markedItem.marked = true; // TODO: do we need marked property on model?
     }
 
     unmarkCurrentItem() {

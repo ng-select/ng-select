@@ -35,7 +35,7 @@
     "integration": "npm run integration:aot && npm run integration:jit",
     "integration:jit": "cd integration && npm run e2e",
     "integration:aot": "cd integration && npm run build",
-    "lint": "tslint -c tslint.json src/**/*.ts -t verbose",
+    "lint": "tslint --type-check --project ./src/lib/tsconfig.json",
     "release": "standard-version"
   },
   "peerDependencies": {
