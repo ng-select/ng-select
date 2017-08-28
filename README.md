@@ -51,10 +51,10 @@ map: {
 - [x] Expose usefull events like blur, change, focus, close, open ...
 - [x] Correct keyboard events behaviour
 - [x] Integration app generated with angular-cli
+- [x] Good base functionality test coverage
 - [ ] HTML5 Standart https://developer.mozilla.org/en/docs/Web/HTML/Element/select except multiselect
-- [ ] Good base functionality test coverage
-- [ ] First alpha release and documentation
 - [ ] Multiselect support
+- [ ] Autocomplete
 - [ ] Accessibility
 
 ### Usage
