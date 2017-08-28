@@ -17,6 +17,8 @@ import {
     ChangeDetectionStrategy
 } from '@angular/core';
 
+import {Subject} from 'rxjs/Subject';
+
 
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {NgOptionDirective, NgDisplayDirective} from './ng-templates.directive';
@@ -56,6 +58,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Input() clearable = true;
     @Input() placeholder: string;
     @Input() filterFunc: FilterFunc;
+    @Input() autoComplete: Subject<string>;
 
     // output events
     @Output('blur') onBlur = new EventEmitter();
@@ -99,6 +102,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
             // bind to whole object
             this.bindValue = undefined;
         }
+
     }
 
     ngOnChanges(changes: any) {
@@ -170,6 +174,9 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
 
         this.clearSearch();
         this.notifyModelChanged();
+        if (this.autoComplete) {
+            this.autoComplete.next(null);
+        }
     }
 
     writeValue(obj: any): void {
@@ -268,8 +275,12 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         const term = $event.target.value;
         this.filterValue = term;
 
-        const filterFuncVal = this.filterFunc ? this.filterFunc : this.getDefaultFilterFunc.bind(this);
-        this.itemsList.filter(term, filterFuncVal);
+        if (this.autoComplete) {
+            this.autoComplete.next(this.filterValue);
+        } else {
+            const filterFuncVal = this.filterFunc ? this.filterFunc : this.getDefaultFilterFunc.bind(this);
+            this.itemsList.filter(term, filterFuncVal);
+        }
     }
 
     onInputFocus($event) {

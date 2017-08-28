@@ -44,7 +44,7 @@
 
             <span *ngIf="!optionTemplateRef">{{item[bindLabel]}}</span>
 
-            <ng-template *ngIf="optionTemplateRef"
+            <ng-template  *ngIf="optionTemplateRef"
                           [ngTemplateOutlet]="optionTemplateRef.template"
                           [ngOutletContext]="getOptionTemplateContext(item, index, first, last, even, odd)">
             </ng-template>
