@@ -4,57 +4,43 @@ export class ItemsList {
 
     items: NgOption[] = [];
     filteredItems: NgOption[] = [];
-
     markedItem: NgOption = null;
+
     private _markedItemIndex = -1;
+    private _selected: NgOption[] = [];
+    private _multiple: boolean;
 
-    private _value: NgOption = null;
-    private _valueIndex = -1;
-
-    constructor(items: NgOption[]) {
+    constructor(items: NgOption[], multiple: boolean) {
         this.items = items;
         this.filteredItems = [...items];
-    }
-
-    update(items: NgOption[]) {
-        this.items = items || [];
-        this.filteredItems = [...this.items];
+        this._multiple = multiple;
     }
 
     select(item: NgOption) {
-        if (!item) {
-            return;
+        if (!this._multiple) {
+            this.clearSelected();
         }
 
-        if (this.markedItem) {
-            this.markedItem.selected = false;
-            this.markedItem.marked = false;
+        if (item.selected) {
+            this._selected = this._selected.filter(x => x !== item)
+        } else {
+            this._selected.push(item);
         }
-        if (this._value) {
-            this._value.selected = false;
-        }
-
-        this._value = item;
-        this._valueIndex = this.filteredItems.indexOf(this._value);
-        this._value.selected = true;
-        this.markedItem = this._value;
+        item.selected = !item.selected;
     }
 
     clearSelected() {
-        if (this._value) {
-            this._value.selected = false;
+        this._selected.forEach((item) => {
+            item.selected = false;
+        });
+        this._selected = [];
+    }
+
+    get value(): NgOption | NgOption[] {
+        if (this._multiple) {
+            return this._selected;
         }
-        this._valueIndex = -1;
-        this._markedItemIndex = -1;
-        this._value = null;
-    }
-
-    get value(): NgOption {
-        return this._value;
-    }
-
-    set value(value: NgOption) {
-        this._value = value;
+        return this._selected[0];
     }
 
     filter(term: string, filterFunc: FilterFunc) {
@@ -68,27 +54,16 @@ export class ItemsList {
     }
 
     markNextItem() {
-        this._markedItemIndex = this.getNextItemIndex(+1);
-        this.unmarkCurrentItem();
-        this.markedItem = this.filteredItems[this._markedItemIndex];
-        while (this.markedItem.disabled) {
-            this.markNextItem();
-        }
-        this.markedItem.marked = true;
+        this.stepToItem(+1);
     }
 
     markPreviousItem() {
-        this._markedItemIndex = this.getNextItemIndex(-1);
-        this.unmarkCurrentItem();
-        this.markedItem = this.filteredItems[this._markedItemIndex];
-        while (this.markedItem.disabled) {
-            this.markPreviousItem();
-        }
-        this.markedItem.marked = true;
+        this.stepToItem(-1);
     }
 
-    markCurrentValue() {
-        this._markedItemIndex = this._valueIndex;
+    markLastSelection() {
+        const lastSelected = this._selected[this._selected.length - 1];
+        this._markedItemIndex = this.filteredItems.indexOf(lastSelected);
     }
 
     private getNextItemIndex(delta: number) {
@@ -97,6 +72,20 @@ export class ItemsList {
         } else {
             return (this._markedItemIndex === 0) ? (this.filteredItems.length - 1) : (this._markedItemIndex - 1);
         }
+    }
+
+    private stepToItem(steps: number) {
+        if (this.filteredItems.length === 0) {
+            return;
+        }
+
+        this._markedItemIndex = this.getNextItemIndex(steps);
+        this.unmarkCurrentItem();
+        this.markedItem = this.filteredItems[this._markedItemIndex];
+        while (this.markedItem.disabled) {
+            this.stepToItem(steps);
+        }
+        this.markedItem.marked = true; //TODO: do we need marked property on model?
     }
 
     unmarkCurrentItem() {
