@@ -62,7 +62,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Input() autoComplete: Subject<string>;
 
     @Input()
-    @HostBinding('class.as-multiple') multiple: boolean = false;
+    @HostBinding('class.as-multiple') multiple = false;
 
     // output events
     @Output('blur') onBlur = new EventEmitter();
