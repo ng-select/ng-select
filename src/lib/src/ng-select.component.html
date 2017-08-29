@@ -36,6 +36,8 @@
         </div>
     </span>
 
+    <spinner class="as-spinner-zone" *ngIf="isLoading"></spinner>
+
     <span *ngIf="showClear()" (click)="clear()" class="as-clear-zone" title="Clear all" aria-label="Clear all">
         <span class="as-clear" aria-hidden="true">×</span>
     </span>

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NgOption } from '@ng-select/ng-select';
 import { Subject } from 'rxjs/Subject';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'select-search',
@@ -27,15 +28,14 @@ import { HttpClient } from '@angular/common/http';
             Selected value: {{selectedCompany2 | json}}
         </p>
 
-        <label>Search with autocomplete from server side</label>
-        <ng-select [items]="todos"
-                   bindLabel="title"
+        <label>Search with autocomplete in Github accounts</label>
+        <ng-select bindLabel="login"
                    bindValue="id"
-                   [autoComplete]="todoListFilter"
-                   [(ngModel)]="selectedTodoId">
+                   [itemsFunc]="loadGithubUsers.bind(this)"
+                   [(ngModel)]="selectedGithubAccountId">
         </ng-select>
         <p>
-            Selected value: {{selectedTodoId}}
+            Selected value: {{selectedGithubAccountId}}
         </p>
     `
 })
@@ -46,8 +46,7 @@ export class SelectSearchComponent {
     selectedCompany: any;
     selectedCompany2?: any;
 
-    todos: any[] = [];
-    selectedTodoId: number;
+    selectedGithubAccountId: number;
 
     todoListFilter = new Subject<string>();
 
@@ -63,13 +62,6 @@ export class SelectSearchComponent {
             this.companies.push({id: i, name: c});
             this.companies2.push({id: i, name: c});
         });
-
-        this.todoListFilter
-            .distinctUntilChanged()
-            .debounceTime(200)
-            .subscribe(val => {
-                this.loadTodos(val);
-            });
     }
 
     customFilterFunc(term: string) {
@@ -78,13 +70,8 @@ export class SelectSearchComponent {
         };
     }
 
-    private loadTodos(term: string) {
-        this.http.get<any[]>('https://jsonplaceholder.typicode.com/todos').subscribe(rsp => {
-            console.log('term', term);
-            console.log('loaded todos', rsp.length);
-            this.todos = term ? rsp.filter(x => x.title.indexOf(term) > -1) : rsp;
-            console.log('filtered todos', this.todos);
-        });
+    loadGithubUsers(term: string): Observable<any[]> {
+        return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).map(rsp => rsp.items);
     }
 
 }

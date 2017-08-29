@@ -18,15 +18,19 @@ import {
     SimpleChange
 } from '@angular/core';
 
-import {Subject} from 'rxjs/Subject';
-
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgOptionDirective, NgDisplayDirective } from './ng-templates.directive';
 import * as searchHelper from './search-helper';
 import { VirtualScrollComponent } from './virtual-scroll.component';
-import { NgOption, FilterFunc, KeyCode } from './ng-select.types';
+import { NgOption, FilterFunc, KeyCode, ItemsFunc } from './ng-select.types';
 import { ItemsList } from './items-list';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
 
 const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
@@ -54,12 +58,13 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
 
     // inputs
     @Input() items: NgOption[] = [];
+    @Input() itemsFunc: ItemsFunc;
     @Input() bindLabel: string;
     @Input() bindValue: string;
     @Input() clearable = true;
     @Input() placeholder: string;
     @Input() filterFunc: FilterFunc;
-    @Input() autoComplete: Subject<string>;
+    @Input() debounceTime = 200;
 
     @Input()
     @HostBinding('class.as-multiple') multiple = false;
@@ -71,20 +76,27 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Output('open') onOpen = new EventEmitter();
     @Output('close') onClose = new EventEmitter();
 
-    @HostBinding('class.as-single') get single() { return !this.multiple } 
+    @HostBinding('class.as-single')
+    get single() {
+        return !this.multiple
+    }
+
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
 
-    itemsList: ItemsList;
+    itemsList = new ItemsList([], false);
     viewPortItems: NgOption[] = [];
+    isLoading = false;
 
-    filterValue: string = null;
+    private _filterValue: string = null;
+    private _filterValueStream = new BehaviorSubject<string>(null);
 
     private _value: NgOption = null;
 
     private _openClicked = false;
-    private propagateChange = (_: NgOption) => { };
+    private propagateChange = (_: NgOption) => {
+    };
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
     }
@@ -97,6 +109,15 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         this._value = value;
     }
 
+    get filterValue() {
+        return this._filterValue;
+    };
+
+    set filterValue(val: string) {
+        this._filterValue = val;
+        this._filterValueStream.next(val);
+    }
+
     ngOnInit() {
         this.bindLabel = this.bindLabel || 'label';
         this.bindValue = this.bindValue || 'value';
@@ -105,6 +126,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
             this.bindValue = undefined;
         }
 
+        this.handleFilterChanges();
     }
 
     ngOnChanges(changes: { [key: string]: SimpleChange }) {
@@ -176,20 +198,17 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
 
         this.clearSearch();
         this.notifyModelChanged();
-        if (this.autoComplete) {
-            this.autoComplete.next(null);
-        }
     }
 
     writeValue(obj: any): void {
         if (obj) {
             let index = -1;
             if (this.bindValue) {
-                index = this.items.findIndex(x => x[this.bindValue] === obj);
+                index = this.itemsList.items.findIndex(x => x[this.bindValue] === obj);
             } else {
-                index = this.items.indexOf(obj);
+                index = this.itemsList.items.indexOf(obj);
             }
-            this._value = this.items[index];
+            this._value = this.itemsList.items[index];
             this.itemsList.select(this._value);
         } else {
             this._value = null;
@@ -226,7 +245,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     getDisplayTemplateContext() {
-        return this._value ? { item: this._value } : { item: {} };
+        return this._value ? {item: this._value} : {item: {}};
     }
 
     getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {
@@ -279,13 +298,6 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
 
         const term = $event.target.value;
         this.filterValue = term;
-
-        if (this.autoComplete) {
-            this.autoComplete.next(this.filterValue);
-        } else {
-            const filterFuncVal = this.filterFunc ? this.filterFunc : this.getDefaultFilterFunc.bind(this);
-            this.itemsList.filter(term, filterFuncVal);
-        }
     }
 
     onInputFocus($event) {
@@ -373,6 +385,40 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
             return null;
         }
         return <HTMLElement>this.elementRef.nativeElement.querySelector('.as-menu-outer');
+    }
+
+    private handleFilterChanges() {
+        let loadItems: (term: string) => Observable<any>;
+        if (this.itemsFunc) {
+            loadItems = (term: string) => {
+                return this.itemsFunc(term).map(items => {
+                    if (!Array.isArray(items)) {
+                        throw new Error('[itemsFunc] should return array');
+                    }
+                    this.itemsList = new ItemsList(items, this.multiple);
+                });
+            };
+        } else {
+            loadItems = (term: string) => {
+                const filterFuncVal = this.filterFunc ? this.filterFunc : this.getDefaultFilterFunc.bind(this);
+                this.itemsList.filter(term, filterFuncVal);
+                return Observable.of([]);
+            };
+        }
+
+        this._filterValueStream
+            .distinctUntilChanged()
+            .debounceTime(this.debounceTime)
+            .subscribe(term => {
+                console.log('term', term);
+                this.isLoading = true;
+                loadItems(term).subscribe(() => {
+                    this.isLoading = false;
+                    this.changeDetectorRef.markForCheck();
+                }, () => {
+                    this.isLoading = false;
+                });
+            });
     }
 }
 
