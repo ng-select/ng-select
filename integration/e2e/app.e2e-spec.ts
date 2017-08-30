@@ -25,7 +25,7 @@ describe('ng-select', () => {
     select.all(by.css('.as-option')).first().click();
 
     expect(select.getAttribute('class')).not.toMatch('opened');
-    expect(element(by.id('ngModel')).getText()).toBe('{ "id": 1, "name": "Vilnius", "selected": true, "marked": false }');
+    expect(element(by.id('ngModel')).getText()).toBe('1');
   });
 
 
