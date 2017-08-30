@@ -1,4 +1,5 @@
-import { NgOption, FilterFunc } from './ng-select.types';
+import { NgOption, FilterFunc, ItemsFunc } from './ng-select.types';
+import { Observable } from 'rxjs/Observable';
 
 export class ItemsList {
 
@@ -43,10 +44,22 @@ export class ItemsList {
         return this._selected[0];
     }
 
-    filter(term: string, filterFunc: FilterFunc) {
+    filterClient(term: string, filterFunc: FilterFunc): Observable<any> {
         this._markedItemIndex = -1;
         const filterFuncVal = filterFunc(term);
         this.filteredItems = term ? this.items.filter(val => filterFuncVal(val)) : this.items;
+        return Observable.of(true);
+    }
+
+    filterServer(term: string, inputFunc: ItemsFunc): Observable<any> {
+        this._markedItemIndex = -1;
+        return inputFunc(term).map(items => {
+            if (!Array.isArray(items)) {
+                throw new Error('[itemsFunc] should return array');
+            }
+            this.items = items;
+            this.filteredItems = [...this.items];
+        });
     }
 
     clearFilter() {

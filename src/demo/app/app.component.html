@@ -13,7 +13,10 @@
                             <a class="nav-link" routerLink="/forms" routerLinkActive="active">Reactive forms</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" routerLink="/filter" routerLinkActive="active">Filter</a>
+                            <a class="nav-link" routerLink="/filter-client" routerLinkActive="active">Filter <small>(client side)</small></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="/filter-server" routerLinkActive="active">Filter <small>(server side)</small></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" routerLink="/multiselect" routerLinkActive="active">Multiselect</a>
@@ -29,7 +32,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="card-block">
+                <div class="card-body">
                     <router-outlet></router-outlet>
                 </div>
             </div>

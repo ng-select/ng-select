@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
 import { NgOption } from '@ng-select/ng-select';
-import { Subject } from 'rxjs/Subject';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'select-search',
@@ -27,16 +24,6 @@ import { Observable } from 'rxjs/Observable';
         <p>
             Selected value: {{selectedCompany2 | json}}
         </p>
-
-        <label>Search with autocomplete in Github accounts</label>
-        <ng-select bindLabel="login"
-                   bindValue="id"
-                   [itemsFunc]="loadGithubUsers.bind(this)"
-                   [(ngModel)]="selectedGithubAccountId">
-        </ng-select>
-        <p>
-            Selected value: {{selectedGithubAccountId}}
-        </p>
     `
 })
 export class SelectSearchComponent {
@@ -46,16 +33,9 @@ export class SelectSearchComponent {
     selectedCompany: any;
     selectedCompany2?: any;
 
-    selectedGithubAccountId: number;
-
-    todoListFilter = new Subject<string>();
-
     /* tslint:disable */
     companiesNames = ['Miškas', 'Žalias', 'Flexigen', 'Rooforia', 'Rooblia', 'Tropoli', 'Eargo', 'Gadtron', 'Elentrix', 'Terragen', 'Medalert', 'Xelegyl', 'Bristo', 'Xylar', 'Imperium', 'Kangle', 'Earwax', 'Zanity', 'Portico', 'Tsunamia', 'Kage', 'Comstar', 'Radiantix', 'Bostonic', 'Geekko', 'Eventex', 'Stockpost', 'Silodyne', 'Enersave', 'Perkle', 'Pyramis', 'Accuprint', 'Papricut', 'Pathways', 'Circum', 'Gology', 'Buzzworks', 'Dancerity', 'Zounds', 'Diginetic', 'Snips', 'Chillium', 'Exotechno', 'Accufarm', 'Vidto', 'Signidyne', 'Escenta', 'Sureplex', 'Quarmony', 'Interfind', 'Exoswitch', 'Mondicil', 'Pyramia', 'Digitalus', 'Earthplex', 'Limozen', 'Twiist', 'Tubalum', 'Securia', 'Uni', 'Biospan', 'Zensus', 'Memora'];
     /* tslint:enable */
-
-    constructor(private http: HttpClient) {
-    }
 
     ngOnInit() {
         this.companiesNames.forEach((c, i) => {
@@ -68,10 +48,6 @@ export class SelectSearchComponent {
         return (val: NgOption) => {
             return term === 'Rooforia' && val.name === term;
         };
-    }
-
-    loadGithubUsers(term: string): Observable<any[]> {
-        return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).map(rsp => rsp.items);
     }
 
 }

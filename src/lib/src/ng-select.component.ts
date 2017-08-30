@@ -388,21 +388,13 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     private handleFilterChanges() {
-        let loadItems: (term: string) => Observable<any>;
+        let filter: (term: string) => Observable<any>;
         if (this.itemsFunc) {
-            loadItems = (term: string) => {
-                return this.itemsFunc(term).map(items => {
-                    if (!Array.isArray(items)) {
-                        throw new Error('[itemsFunc] should return array');
-                    }
-                    this.itemsList = new ItemsList(items, this.multiple);
-                });
-            };
+            filter = (term: string) => this.itemsList.filterServer(term, this.itemsFunc);
         } else {
-            loadItems = (term: string) => {
+            filter = (term: string) => {
                 const filterFuncVal = this.filterFunc ? this.filterFunc : this.getDefaultFilterFunc.bind(this);
-                this.itemsList.filter(term, filterFuncVal);
-                return Observable.of([]);
+                return this.itemsList.filterClient(term, filterFuncVal);
             };
         }
 
@@ -412,7 +404,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
             .subscribe(term => {
                 console.log('term', term);
                 this.isLoading = true;
-                loadItems(term).subscribe(() => {
+                filter(term).subscribe(() => {
                     this.isLoading = false;
                     this.changeDetectorRef.markForCheck();
                 }, () => {
