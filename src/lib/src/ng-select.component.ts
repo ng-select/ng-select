@@ -14,16 +14,17 @@ import {
     HostBinding,
     ViewChild,
     ElementRef,
-    ChangeDetectionStrategy
+    ChangeDetectionStrategy,
+    SimpleChange
 } from '@angular/core';
 
 
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {NgOptionDirective, NgDisplayDirective} from './ng-templates.directive';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NgOptionDirective, NgDisplayDirective } from './ng-templates.directive';
 import * as searchHelper from './search-helper';
-import {VirtualScrollComponent} from './virtual-scroll.component';
-import {NgOption, FilterFunc, KeyCode} from './ng-select.types';
-import {ItemsList} from './items-list';
+import { VirtualScrollComponent } from './virtual-scroll.component';
+import { NgOption, FilterFunc, KeyCode } from './ng-select.types';
+import { ItemsList } from './items-list';
 
 const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
@@ -57,6 +58,9 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Input() placeholder: string;
     @Input() filterFunc: FilterFunc;
 
+    @Input()
+    @HostBinding('class.as-multiple') multiple = false;
+
     // output events
     @Output('blur') onBlur = new EventEmitter();
     @Output('focus') onFocus = new EventEmitter();
@@ -64,12 +68,12 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Output('open') onOpen = new EventEmitter();
     @Output('close') onClose = new EventEmitter();
 
-    @HostBinding('class.as-single') single = true;
+    @HostBinding('class.as-single') get single() { return !this.multiple } 
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
 
-    itemsList: ItemsList = new ItemsList([]);
+    itemsList: ItemsList;
     viewPortItems: NgOption[] = [];
 
     filterValue: string = null;
@@ -77,7 +81,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     private _value: NgOption = null;
 
     private _openClicked = false;
-    private propagateChange = (_: NgOption) => {};
+    private propagateChange = (_: NgOption) => { };
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
     }
@@ -91,8 +95,6 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     ngOnInit() {
-        this.itemsList.update(this.items);
-
         this.bindLabel = this.bindLabel || 'label';
         this.bindValue = this.bindValue || 'value';
         if (this.bindValue === 'this') {
@@ -101,10 +103,10 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         }
     }
 
-    ngOnChanges(changes: any) {
+    ngOnChanges(changes: { [key: string]: SimpleChange }) {
         if (changes.items && changes.items.currentValue) {
             this.items = changes.items.currentValue;
-            this.itemsList.update(this.items);
+            this.itemsList = new ItemsList(this.items, this.multiple)
         }
     }
 
@@ -207,17 +209,17 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         }
         this._openClicked = true;
         this.isOpen = true;
-        this.itemsList.markCurrentValue();
+        this.itemsList.markLastSelection();
         this.focusSearchInput();
         this.onOpen.emit();
     }
 
-    getTextValue() {
-        return this._value ? this._value[this.bindLabel] : '';
+    getTextValue(value: NgOption) {
+        return value ? value[this.bindLabel] : '';
     }
 
     getDisplayTemplateContext() {
-        return this._value ? {item: this._value} : {item: {}};
+        return this._value ? { item: this._value } : { item: {} };
     }
 
     getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {
@@ -239,7 +241,10 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         this.itemsList.select(item);
         this._value = this.itemsList.value;
 
-        this.close();
+        if (!this.multiple) {
+            this.close();
+        }
+
         this.notifyModelChanged();
         this.changeDetectorRef.markForCheck();
     }
