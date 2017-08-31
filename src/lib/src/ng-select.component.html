@@ -18,8 +18,8 @@
 
         <ng-template #multipleValue>
             <div class="as-value" *ngFor="let item of value">
-                <span class="as-clear" (click)="unselect(item)" aria-hidden="true">×</span>
                 <span class="as-value-label" aria-selected="true">{{getLabelValue(item)}}</span>
+                <span class="as-clear" (click)="unselect(item)" aria-hidden="true">×</span>
             </div>
         </ng-template>
 
