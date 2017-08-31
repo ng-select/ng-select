@@ -27,13 +27,13 @@ export class ItemsList {
         if (!this._multiple) {
             this.clearSelected();
         }
+        this._selected.push(item);
+        item.selected = true;
+    }
 
-        if (item.selected) {
-            this._selected = this._selected.filter(x => x !== item);
-        } else {
-            this._selected.push(item);
-        }
-        item.selected = !item.selected;
+    unselect(item: NgOption) {
+        this._selected = this._selected.filter(x => x !== item);
+        item.selected = false;
     }
 
     clearSelected() {
@@ -46,7 +46,7 @@ export class ItemsList {
     filter(term: string, filterFunc: FilterFunc) {
         this._markedItemIndex = -1;
         const filterFuncVal = filterFunc(term);
-        this.filteredItems = term ? this.items.filter(filterFuncVal) : this.items;
+        this.filteredItems = term ? this.items.filter(val => filterFuncVal(val)) : this.items;
     }
 
     clearFilter() {
