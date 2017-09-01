@@ -64,9 +64,21 @@
         </div>
     </virtual-scroll>
 
-    <div class="as-menu" *ngIf="itemsList.filteredItems.length === 0">
+    <div class="as-menu" *ngIf="showNoItemsFound()">
         <div class="as-option disabled">
             No items found
+        </div>
+    </div>
+
+    <div class="as-menu" *ngIf="showTypeToSearch()">
+        <div class="as-option disabled">
+            Type to search
+        </div>
+    </div>
+
+    <div class="as-menu" *ngIf="isErrorLoading">
+        <div class="as-option disabled">
+            Error occurred while loading data
         </div>
     </div>
 </div>

@@ -76,7 +76,11 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Output('open') onOpen = new EventEmitter();
     @Output('close') onClose = new EventEmitter();
 
-    @HostBinding('class.as-single') get single() { return !this.multiple }
+    @HostBinding('class.as-single')
+    get single() {
+        return !this.multiple
+    }
+
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
@@ -84,6 +88,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     itemsList = new ItemsList([], false);
     viewPortItems: NgOption[] = [];
     isLoading = false;
+    isErrorLoading = false;
 
     private _filterValue: string = null;
     private _filterValueStream = new Subject<string>();
@@ -91,7 +96,8 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     private _value: NgOption | NgOption[] = null;
 
     private _openClicked = false;
-    private propagateChange = (_: NgOption) => { };
+    private propagateChange = (_: NgOption) => {
+    };
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
     }
@@ -240,7 +246,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     getDisplayTemplateContext() {
-        return this._value ? { item: this._value } : { item: {} };
+        return this._value ? {item: this._value} : {item: {}};
     }
 
     getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {
@@ -293,6 +299,17 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
 
     showFilter() {
         return !this.isDisabled;
+    }
+
+    showNoItemsFound() {
+        const empty = this.itemsList.filteredItems.length === 0;
+        return (empty && !this.itemsFunc) ||
+            (empty && this.itemsFunc && this.filterValue && !this.isLoading && !this.isErrorLoading);
+    }
+
+    showTypeToSearch() {
+        const empty = this.itemsList.filteredItems.length === 0;
+        return empty && this.itemsFunc && !this.filterValue && !this.isLoading && !this.isErrorLoading;
     }
 
     onFilter($event) {
@@ -414,11 +431,13 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
             .debounceTime(this.debounceTime)
             .subscribe(term => {
                 this.isLoading = true;
+                this.isErrorLoading = false;
                 filter(term).subscribe(() => {
                     this.isLoading = false;
                     this.changeDetectorRef.markForCheck();
                 }, () => {
                     this.isLoading = false;
+                    this.isErrorLoading = true;
                 });
             });
     }

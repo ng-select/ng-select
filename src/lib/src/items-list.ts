@@ -53,13 +53,20 @@ export class ItemsList {
 
     filterServer(term: string, inputFunc: ItemsFunc): Observable<any> {
         this._markedItemIndex = -1;
-        return inputFunc(term).map(items => {
-            if (!Array.isArray(items)) {
-                throw new Error('[itemsFunc] should return array');
-            }
-            this.items = items;
-            this.filteredItems = [...this.items];
-        });
+        return new Observable(s => {
+            inputFunc(term).subscribe(items => {
+                if (!Array.isArray(items)) {
+                    throw new Error('[itemsFunc] should return array');
+                }
+                this.items = items;
+                this.filteredItems = [...this.items];
+                s.next();
+            }, (err) => {
+                this.items = [];
+                this.filteredItems = [];
+                s.error(err);
+            });
+        })
     }
 
     clearFilter() {
