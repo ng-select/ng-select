@@ -11,15 +11,15 @@
                                 [ngTemplateOutlet]="displayTemplateRef.template"
                                 [ngOutletContext]="getDisplayTemplateContext()">
                             </ng-template>
-                            <span *ngIf="!displayTemplateRef">{{getTextValue(value)}}</span>
+                            <span *ngIf="!displayTemplateRef">{{getLabelValue(value)}}</span>
                     </span>
             </div>
         </ng-container>
 
         <ng-template #multipleValue>
             <div class="as-value" *ngFor="let item of value">
-                <span class="as-clear" (click)="select(item)" aria-hidden="true">×</span>
-                <span class="as-value-label" aria-selected="true">{{getTextValue(item)}}</span>
+                <span class="as-value-label" aria-selected="true">{{getLabelValue(item)}}</span>
+                <span class="as-clear" (click)="unselect(item)" aria-hidden="true">×</span>
             </div>
         </ng-template>
 
@@ -47,7 +47,7 @@
 
 <div class="as-menu-outer" [ngStyle]="{'visibility': isOpen ? 'visible' : 'hidden'}">
     <virtual-scroll role="listbox" class="as-menu" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
-        <div class="as-option" role="option" (click)="select(item)"
+        <div class="as-option" role="option" (click)="toggle(item)"
              *ngFor="let item of viewPortItems; let index = index; let first = first; let last = last; let even = even; let odd = odd"
              [class.disabled]="item.disabled"
              [class.selected]="item.selected"

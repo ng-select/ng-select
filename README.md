@@ -53,7 +53,7 @@ map: {
 - [x] Integration app generated with angular-cli
 - [x] Good base functionality test coverage
 - [ ] HTML5 Standart https://developer.mozilla.org/en/docs/Web/HTML/Element/select except multiselect
-- [ ] Multiselect support
+- [x] Multiselect support
 - [ ] Autocomplete
 - [ ] Accessibility
 

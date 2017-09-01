@@ -68,7 +68,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Output('open') onOpen = new EventEmitter();
     @Output('close') onClose = new EventEmitter();
 
-    @HostBinding('class.as-single') get single() { return !this.multiple } 
+    @HostBinding('class.as-single') get single() { return !this.multiple }
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
@@ -78,7 +78,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
 
     filterValue: string = null;
 
-    private _value: NgOption = null;
+    private _value: NgOption | NgOption[] = null;
 
     private _openClicked = false;
     private propagateChange = (_: NgOption) => { };
@@ -214,7 +214,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         this.onOpen.emit();
     }
 
-    getTextValue(value: NgOption) {
+    getLabelValue(value: NgOption) {
         return value ? value[this.bindLabel] : '';
     }
 
@@ -233,20 +233,29 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         };
     }
 
-    select(item: NgOption) {
-        if (item.disabled) {
+    toggle(item: NgOption) {
+        if (item.disabled || this.isDisabled) {
             return;
         }
 
-        this.itemsList.select(item);
-        this._value = this.itemsList.value;
+        if (this.multiple && item.selected) {
+            this.unselect(item);
+        } else {
+            this.select(item);
+        }
+    }
 
+    select(item: NgOption) {
+        this.itemsList.select(item);
+        this.updateModel();
         if (!this.multiple) {
             this.close();
         }
+    }
 
-        this.notifyModelChanged();
-        this.changeDetectorRef.markForCheck();
+    unselect(item: NgOption) {
+        this.itemsList.unselect(item);
+        this.updateModel();
     }
 
     showPlaceholder() {
@@ -258,7 +267,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     showClear() {
-        return this.clearable && isDefined(this.value);
+        return this.clearable && isDefined(this.value) && !this.isDisabled;
     }
 
     showFilter() {
@@ -285,6 +294,12 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     onInputBlur($event) {
         this.isFocused = false;
         this.onBlur.emit($event);
+    }
+
+    private updateModel() {
+        this._value = this.itemsList.value;
+        this.notifyModelChanged();
+        this.changeDetectorRef.markForCheck();
     }
 
     private getDefaultFilterFunc(term) {
@@ -318,7 +333,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     private handleEnter($event: KeyboardEvent) {
-        this.select(this.itemsList.markedItem);
+        this.toggle(this.itemsList.markedItem);
         $event.preventDefault();
     }
 
@@ -350,7 +365,10 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         if (!this._value) {
             this.propagateChange(null);
         } else if (this.bindValue) {
-            this.propagateChange(this._value[this.bindValue]);
+            const bindValue = Array.isArray(this._value) ?
+                this._value.map(x => x[this.bindValue]) :
+                this._value[this.bindValue];
+            this.propagateChange(bindValue);
         } else {
             this.propagateChange(this._value);
         }
