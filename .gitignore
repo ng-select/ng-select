@@ -4,3 +4,4 @@ coverage
 dist
 out-tsc
 .idea
+.DS_Store
