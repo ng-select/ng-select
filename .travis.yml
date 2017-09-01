@@ -30,4 +30,5 @@ install:
 script:
   - npm run lint
   - npm run test
+  - npm run-script coveralls
   - npm run integration
