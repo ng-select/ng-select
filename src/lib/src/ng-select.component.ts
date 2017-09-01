@@ -86,11 +86,11 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
     }
 
-    get value(): NgOption {
+    get value(): NgOption | NgOption[] {
         return this._value;
     }
 
-    set value(value: NgOption) {
+    set value(value: NgOption | NgOption[]) {
         this._value = value;
     }
 
