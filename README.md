@@ -1,8 +1,11 @@
 [![npm version](https://badge.fury.io/js/%40ng-select%2Fng-select.svg)](https://badge.fury.io/js/%40ng-select%2Fng-select)
 [![Build Status][travis-badge]][travis-badge-url]
+[![Coverage Status][coveralls-image]][coveralls-url]
 
 [travis-badge]: https://travis-ci.org/ng-select/ng-select.svg?branch=master
 [travis-badge-url]: https://travis-ci.org/ng-select/ng-select
+[coveralls-image]: https://coveralls.io/repos/github/ng-select/ng-select/badge.svg?branch=coveralls
+[coveralls-url]: https://coveralls.io/github/ng-select/ng-select?branch=coveralls
 
 ## Angular native ui-select
 See [Demos](https://ng-select.github.io/#/forms) or try in [Plunker](https://plnkr.co/edit/V5tFfNY28fiaLlNwvcWb?p=preview)
