@@ -1,4 +1,7 @@
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import {
+    async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick,
+} from '@angular/core/testing';
+
 import { By } from '@angular/platform-browser';
 import { DebugElement, Component, ViewChild, Type, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -38,6 +41,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
             tick();
             expect(fixture.componentInstance.selectedCity).toEqual(null);
+            discardPeriodicTasks();
         }));
 
         it('update ng-select value on parent model change', fakeAsync(() => {
@@ -54,6 +58,7 @@ describe('NgSelectComponent', function () {
             tick();
 
             expect(fixture.componentInstance.select.value).toEqual(null);
+            discardPeriodicTasks();
         }));
     });
 
@@ -80,6 +85,8 @@ describe('NgSelectComponent', function () {
             tick();
 
             expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[1]);
+
+            discardPeriodicTasks();
         }));
 
         it('bind to custom object properties', fakeAsync(() => {
@@ -106,6 +113,7 @@ describe('NgSelectComponent', function () {
             tick();
 
             expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[1]);
+            discardPeriodicTasks();
         }));
 
         it('bind to object', fakeAsync(() => {
@@ -132,6 +140,7 @@ describe('NgSelectComponent', function () {
             tick();
 
             expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[1]);
+            discardPeriodicTasks();
         }));
 
     });
@@ -271,7 +280,7 @@ describe('NgSelectComponent', function () {
     describe('Filter', () => {
         let fixture: ComponentFixture<NgSelectFilterTestCmp>;
 
-        it('filter items with default filter', async(() => {
+        it('filter items with default filter', fakeAsync(() => {
             fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
@@ -282,11 +291,12 @@ describe('NgSelectComponent', function () {
 
             fixture.detectChanges();
             fixture.componentInstance.select.onFilter({target: {value: 'vilnius'}});
+            tick(200);
 
             expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual([{id: 1, name: 'Vilnius'}]);
         }));
 
-        it('filter items with custom filter function', async(() => {
+        it('filter items with custom filter function', fakeAsync(() => {
             fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
@@ -298,6 +308,7 @@ describe('NgSelectComponent', function () {
 
             fixture.detectChanges();
             fixture.componentInstance.select.onFilter({target: {value: 'no matter'}});
+            tick(200);
 
             expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual([{id: 3, name: 'Pabrade'}]);
         }));

@@ -25,7 +25,7 @@ import * as searchHelper from './search-helper';
 import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, FilterFunc, KeyCode, ItemsFunc } from './ng-select.types';
 import { ItemsList } from './items-list';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/of';
@@ -90,7 +90,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     isLoading = false;
 
     private _filterValue: string = null;
-    private _filterValueStream = new BehaviorSubject<string>(null);
+    private _filterValueStream = new Subject<string>();
 
     private _value: NgOption = null;
 
@@ -295,9 +295,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         if (!this.isOpen) {
             this.open();
         }
-
-        const term = $event.target.value;
-        this.filterValue = term;
+        this.filterValue = $event.target.value;
     }
 
     onInputFocus($event) {
@@ -402,7 +400,6 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
             .distinctUntilChanged()
             .debounceTime(this.debounceTime)
             .subscribe(term => {
-                console.log('term', term);
                 this.isLoading = true;
                 filter(term).subscribe(() => {
                     this.isLoading = false;
