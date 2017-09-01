@@ -69,17 +69,12 @@ module.exports = function (config) {
     singleRun: true
   };
 
-  if (!isTestWatch) {
-    _config.reporters.push("coverage");
-
-    _config.coverageReporter = {
-      dir: 'coverage/',
-      reporters: [{
-        type: 'lcovonly',
-        dir: 'coverage',
-        subdir: 'lcov'
-      }]
-    };
+  if (process.env.TRAVIS) {
+    coverage_reporters.push({
+      type: 'lcovonly',
+      dir: 'coverage'
+    });
+    reporters.push('coveralls');
   }
 
   config.set(_config);
