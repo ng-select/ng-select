@@ -16,9 +16,10 @@ module.exports = function (config) {
     frameworks: ['jasmine'],
 
     // list of files / patterns to load in the browser
-    files: [
-      { pattern: './karma-shim.js', watched: false }
-    ],
+    files: [{
+      pattern: './karma-shim.js',
+      watched: false
+    }],
 
     // list of files to exclude
     exclude: [],
@@ -74,10 +75,9 @@ module.exports = function (config) {
     _config.coverageReporter = {
       dir: 'coverage/',
       reporters: [{
-        type: 'json',
+        type: 'lcovonly',
         dir: 'coverage',
-        subdir: 'json',
-        file: 'coverage-final.json'
+        subdir: 'lcov'
       }]
     };
   }

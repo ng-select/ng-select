@@ -17,17 +17,24 @@ export class ItemsList {
         this._multiple = multiple;
     }
 
+    get value(): NgOption | NgOption[] {
+        if (this._multiple) {
+            return this._selected;
+        }
+        return this._selected[0];
+    }
+
     select(item: NgOption) {
         if (!this._multiple) {
             this.clearSelected();
         }
+        this._selected.push(item);
+        item.selected = true;
+    }
 
-        if (item.selected) {
-            this._selected = this._selected.filter(x => x !== item)
-        } else {
-            this._selected.push(item);
-        }
-        item.selected = !item.selected;
+    unselect(item: NgOption) {
+        this._selected = this._selected.filter(x => x !== item);
+        item.selected = false;
     }
 
     clearSelected() {
@@ -35,13 +42,6 @@ export class ItemsList {
             item.selected = false;
         });
         this._selected = [];
-    }
-
-    get value(): NgOption | NgOption[] {
-        if (this._multiple) {
-            return this._selected;
-        }
-        return this._selected[0];
     }
 
     filterClient(term: string, filterFunc: FilterFunc): Observable<any> {
@@ -79,6 +79,12 @@ export class ItemsList {
         this._markedItemIndex = this.filteredItems.indexOf(lastSelected);
     }
 
+    unmarkCurrentItem() {
+        if (this.markedItem) {
+            this.markedItem.marked = false;
+        }
+    }
+
     private getNextItemIndex(delta: number) {
         if (delta > 0) {
             return (this._markedItemIndex === this.filteredItems.length - 1) ? 0 : (this._markedItemIndex + 1);
@@ -99,11 +105,5 @@ export class ItemsList {
             this.stepToItem(steps);
         }
         this.markedItem.marked = true; // TODO: do we need marked property on model?
-    }
-
-    unmarkCurrentItem() {
-        if (this.markedItem) {
-            this.markedItem.marked = false;
-        }
     }
 }
