@@ -326,9 +326,9 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         }
 
         this.filterValue = $event.target.value;
-        this.isLoading = true;
-        // TODO: handle debounce here
-        this.onSearch.emit({ term: this.filterValue });
+
+        // TODO: if autocomplete emit term; else filter items based on filter func
+        this.search(this.filterValue);
     }
 
     onInputFocus($event) {
@@ -345,6 +345,12 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         this._value = this.itemsList.value;
         this.notifyModelChanged();
         this.changeDetectorRef.markForCheck();
+    }
+
+    private search(term: string) {
+        // TODO: handle debounce
+        this.isLoading = true;
+        this.onSearch.emit({ term: this.filterValue });
     }
 
     private getDefaultFilterFunc(term) {
