@@ -8,6 +8,8 @@ import { Observable } from 'rxjs/Observable';
         <label>Search with autocomplete in Github accounts</label>
         <ng-select bindLabel="login"
                    bindValue="this"
+                   [items]="users"
+                   (search)="loadGithubUsers($event)"
                    [itemsFunc]="loadGithubUsers.bind(this)"
                    [(ngModel)]="githubAccount">
             
@@ -27,11 +29,14 @@ import { Observable } from 'rxjs/Observable';
 export class SelectAutocompleteComponent {
 
     githubAccount: any;
+    users: any[];
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
-    loadGithubUsers(term: string): Observable<any[]> {
-        return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).map(rsp => rsp.items);
+    loadGithubUsers(event: { term: string }) {
+        this.http.get<any>(`https://api.github.com/search/users?q=${event.term}`).subscribe(rsp => {
+            this.users = rsp.items;
+        });
     }
 }
 
