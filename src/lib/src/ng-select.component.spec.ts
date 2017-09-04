@@ -8,7 +8,8 @@ import { FormsModule } from '@angular/forms';
 
 import { NgSelectModule } from './ng-select.module';
 import { NgSelectComponent } from './ng-select.component';
-import { KeyCode, NgOption } from './ng-select.types';
+import { KeyCode } from './ng-select.types';
+import { Subject } from 'rxjs/Subject';
 
 describe('NgSelectComponent', function () {
 
@@ -19,8 +20,8 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,
                 `<ng-select [items]="cities"
-                        bindLabel="name"
-                        bindValue="this"
+                        labelKey="name"
+                        valueKey="this"
                         [clearable]="true"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
@@ -93,8 +94,8 @@ describe('NgSelectComponent', function () {
             const fixture = createTestingModule(
                 NgSelectCustomBindingsTestCmp,
                 `<ng-select [items]="cities"
-                            bindLabel="name"
-                            bindValue="id"
+                            labelKey="name"
+                            valueKey="id"
                             [(ngModel)]="selectedCityId">
                 </ng-select>`);
 
@@ -120,8 +121,8 @@ describe('NgSelectComponent', function () {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
-                            bindLabel="name"
-                            bindValue="this"
+                            labelKey="name"
+                            valueKey="this"
                             [(ngModel)]="selectedCity">
                 </ng-select>`);
 
@@ -152,8 +153,8 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
-                        bindLabel="name"
-                        bindValue="this"
+                        labelKey="name"
+                        valueKey="this"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
         });
@@ -208,7 +209,7 @@ describe('NgSelectComponent', function () {
         it('display custom header template', async(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
-                `<ng-select [items]="cities" [(ngModel)]="selectedCity" bindValue="this">
+                `<ng-select [items]="cities" [(ngModel)]="selectedCity" valueKey="this">
                     <ng-template ng-display-tmp let-item="item">
                         <div class="custom-header">{{item.name}}</div>
                     </ng-template>
@@ -250,8 +251,8 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
-                    bindLabel="name"
-                    bindValue="this"
+                    labelKey="name"
+                    valueKey="this"
                     placeholder="select value"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
@@ -284,8 +285,8 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
-                    bindLabel="name"
-                    bindValue="this"
+                    labelKey="name"
+                    valueKey="this"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
@@ -296,21 +297,22 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual([{id: 1, name: 'Vilnius'}]);
         }));
 
-        it('filter items with custom filter function', fakeAsync(() => {
+        it('filter items with custom observable typeahead', async(() => {
             fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
-                    bindLabel="name"
-                    bindValue="this"
-                    [filterFunc]="customFilterFunc"
+                    [typeahead]="customFilter"
+                    labelKey="name"
+                    valueKey="this"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
             fixture.detectChanges();
-            fixture.componentInstance.select.onFilter({target: {value: 'no matter'}});
-            tick(200);
+            fixture.componentInstance.select.onFilter({target: {value: 'vilnius'}});
 
-            expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual([{id: 3, name: 'Pabrade'}]);
+            fixture.componentInstance.customeFilter.subscribe(term => {
+                expect(term).toBe('vilnius');
+            });
         }));
 
     });
@@ -428,9 +430,5 @@ class NgSelectFilterTestCmp {
         {id: 3, name: 'Pabrade'},
     ];
 
-    customFilterFunc(term: string) {
-        return (item: NgOption) => {
-            return item.id === 3;
-        };
-    }
+    customeFilter = new Subject<string>();
 }

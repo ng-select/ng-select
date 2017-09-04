@@ -1,7 +1,6 @@
 import {
     Component,
     OnInit,
-    OnChanges,
     forwardRef,
     ChangeDetectorRef,
     Input,
@@ -15,22 +14,15 @@ import {
     ViewChild,
     ElementRef,
     ChangeDetectionStrategy,
-    SimpleChange
 } from '@angular/core';
 
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgOptionDirective, NgDisplayDirective } from './ng-templates.directive';
-import * as searchHelper from './search-helper';
 import { VirtualScrollComponent } from './virtual-scroll.component';
-import { NgOption, FilterFunc, KeyCode, ItemsFunc } from './ng-select.types';
+import { NgOption, KeyCode } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
 
 const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
@@ -57,13 +49,11 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     @ViewChild('filterInput') filterInput;
 
     // inputs
-    @Input() itemsFunc: ItemsFunc;
-    @Input() bindLabel: string;
-    @Input() bindValue: string;
+    @Input() labelKey: string;
+    @Input() valueKey: string;
     @Input() clearable = true;
     @Input() placeholder: string;
-    @Input() filterFunc: FilterFunc;
-    @Input() debounceTime = 200;
+    @Input() typeahead: Subject<string>;
 
     @Input()
     @HostBinding('class.as-multiple') multiple = false;
@@ -85,31 +75,28 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
 
-    _items: NgOption[];
     itemsList = new ItemsList([], false);
     viewPortItems: NgOption[] = [];
     isLoading = false;
-    isErrorLoading = false;
+    filterValue: string = null;
 
-    private _filterValue: string = null;
-    private _filterValueStream = new Subject<string>();
     private _value: NgOption | NgOption[] = null;
 
     private _openClicked = false;
-    private propagateChange = (_: NgOption) => { };
+    private _items: NgOption[];
+    private propagateChange: (_: NgOption) => { };
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
     }
 
-    @Input() get items(): any[] {
+    @Input()
+    get items(): any[] {
         return this._items;
     }
 
     set items(items: any[]) {
         this._items = items || [];
         this.itemsList = new ItemsList(this._items, this.multiple);
-
-        // TODO: since items changed, it means user request has completed
         this.isLoading = false;
     }
 
@@ -121,24 +108,13 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         this._value = value;
     }
 
-    get filterValue() {
-        return this._filterValue;
-    };
-
-    set filterValue(val: string) {
-        this._filterValue = val;
-        this._filterValueStream.next(val);
-    }
-
     ngOnInit() {
-        this.bindLabel = this.bindLabel || 'label';
-        this.bindValue = this.bindValue || 'value';
-        if (this.bindValue === 'this') {
+        this.labelKey = this.labelKey || 'label';
+        this.valueKey = this.valueKey || 'value';
+        if (this.valueKey === 'this') {
             // bind to whole object
-            this.bindValue = undefined;
+            this.valueKey = undefined;
         }
-
-        // this.handleFilterChanges();
     }
 
     @HostListener('keydown', ['$event'])
@@ -208,8 +184,8 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     writeValue(obj: any): void {
         if (obj) {
             let index = -1;
-            if (this.bindValue) {
-                index = this.itemsList.items.findIndex(x => x[this.bindValue] === obj);
+            if (this.valueKey) {
+                index = this.itemsList.items.findIndex(x => x[this.valueKey] === obj);
             } else {
                 index = this.itemsList.items.indexOf(obj);
             }
@@ -246,7 +222,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     getLabelValue(value: NgOption) {
-        return value ? value[this.bindLabel] : '';
+        return value ? value[this.labelKey] : '';
     }
 
     getDisplayTemplateContext() {
@@ -307,13 +283,13 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
 
     showNoItemsFound() {
         const empty = this.itemsList.filteredItems.length === 0;
-        return (empty && !this.itemsFunc) ||
-            (empty && this.itemsFunc && this.filterValue && !this.isLoading && !this.isErrorLoading);
+        return (empty && !this.isTypeahead()) ||
+            (empty && this.isTypeahead() && this.filterValue && !this.isLoading);
     }
 
     showTypeToSearch() {
         const empty = this.itemsList.filteredItems.length === 0;
-        return empty && this.itemsFunc && !this.filterValue && !this.isLoading && !this.isErrorLoading;
+        return empty && this.isTypeahead() && !this.filterValue && !this.isLoading;
     }
 
     onFilter($event) {
@@ -321,14 +297,14 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
             this.open();
         }
 
-        if (!$event.target.value) {
-            return;
-        }
-
         this.filterValue = $event.target.value;
 
-        // TODO: if autocomplete emit term; else filter items based on filter func
-        this.search(this.filterValue);
+        if (this.isTypeahead()) {
+            this.isLoading = true;
+            this.typeahead.next(this.filterValue);
+        } else {
+            this.itemsList.filter(this.filterValue, this.labelKey);
+        }
     }
 
     onInputFocus($event) {
@@ -345,20 +321,6 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         this._value = this.itemsList.value;
         this.notifyModelChanged();
         this.changeDetectorRef.markForCheck();
-    }
-
-    private search(term: string) {
-        // TODO: handle debounce
-        this.isLoading = true;
-        this.onSearch.emit({ term: this.filterValue });
-    }
-
-    private getDefaultFilterFunc(term) {
-        return (val: NgOption) => {
-            return searchHelper.stripSpecialChars(val[this.bindLabel])
-                .toUpperCase()
-                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
-        };
     }
 
     private clearSearch() {
@@ -415,10 +377,10 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     private notifyModelChanged() {
         if (!this._value) {
             this.propagateChange(null);
-        } else if (this.bindValue) {
+        } else if (this.valueKey) {
             const bindValue = Array.isArray(this._value) ?
-                this._value.map(x => x[this.bindValue]) :
-                this._value[this.bindValue];
+                this._value.map(x => x[this.valueKey]) :
+                this._value[this.valueKey];
             this.propagateChange(bindValue);
         } else {
             this.propagateChange(this._value);
@@ -433,31 +395,8 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         return <HTMLElement>this.elementRef.nativeElement.querySelector('.as-menu-outer');
     }
 
-    private handleFilterChanges() {
-        let filter: (term: string) => Observable<any>;
-        if (this.itemsFunc) {
-            filter = (term: string) => this.itemsList.filterServer(term, this.itemsFunc);
-        } else {
-            filter = (term: string) => {
-                const filterFuncVal = this.filterFunc ? this.filterFunc : this.getDefaultFilterFunc.bind(this);
-                return this.itemsList.filterClient(term, filterFuncVal);
-            };
-        }
-
-        this._filterValueStream
-            .distinctUntilChanged()
-            .debounceTime(this.debounceTime)
-            .subscribe(term => {
-                this.isLoading = true;
-                this.isErrorLoading = false;
-                filter(term).subscribe(() => {
-                    this.isLoading = false;
-                    this.changeDetectorRef.markForCheck();
-                }, () => {
-                    this.isLoading = false;
-                    this.isErrorLoading = true;
-                });
-            });
+    private isTypeahead() {
+        return this.typeahead && this.typeahead.observers.length > 0;
     }
 }
 

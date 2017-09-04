@@ -21,18 +21,18 @@ import {HttpClient} from '@angular/common/http';
             <div class="form-group">
                 <label for="state">City</label>
                 <ng-select [items]="cities"
-                            bindLabel="name"
-                            bindValue="id"
-                            placeholder="Select city"
-                            formControlName="city">
+                           labelKey="name"
+                           valueKey="id"
+                           placeholder="Select city"
+                           formControlName="city">
                 </ng-select>
             </div>
 
             <div class="form-group">
                 <label for="state">Age</label>
                 <ng-select [items]="ages"
-                            placeholder="Select age"
-                            formControlName="age">
+                           placeholder="Select age"
+                           formControlName="age">
                 </ng-select>
                 <br>
                 <button class="btn btn-secondary btn-sm" (click)="toggleAgeDisable()">Toggle disabled</button>
@@ -41,10 +41,10 @@ import {HttpClient} from '@angular/common/http';
             <div class="form-group">
                 <label for="album">Favorite album</label>
                 <ng-select [items]="albums"
-                            bindLabel="title"
-                            bindValue="id"
-                            placeholder="Select album"
-                            formControlName="album">
+                           labelKey="title"
+                           valueKey="id"
+                           placeholder="Select album"
+                           formControlName="album">
                     <ng-template ng-option-tmp let-item="item">
                         <div>Title: {{item.title}}</div>
                         <small><b>Id:</b> {{item.id}} | <b>UserId:</b> {{item.userId}}</small>
@@ -56,16 +56,16 @@ import {HttpClient} from '@angular/common/http';
             <div class="form-group">
                 <label for="album">Favorite photo</label>
                 <ng-select [items]="photos"
-                            bindLabel="title"
-                            bindValue="thumbnailUrl"
-                            placeholder="Select photo"
-                            formControlName="photo">
+                           labelKey="title"
+                           valueKey="thumbnailUrl"
+                           placeholder="Select photo"
+                           formControlName="photo">
                     <ng-template ng-display-tmp let-item="item">
-                        <img height="15" width="15" [src]="item.thumbnailUrl" />
+                        <img height="15" width="15" [src]="item.thumbnailUrl"/>
                         <span>{{item.title}}</span>
                     </ng-template>
                     <ng-template ng-option-tmp let-item="item" let-index="index">
-                        <img height="15" width="15" [src]="item.thumbnailUrl" />
+                        <img height="15" width="15" [src]="item.thumbnailUrl"/>
                         <span>{{item.title}}</span>
                     </ng-template>
                 </ng-select>

@@ -1,5 +1,5 @@
-import { NgOption, FilterFunc, ItemsFunc } from './ng-select.types';
-import { Observable } from 'rxjs/Observable';
+import { NgOption } from './ng-select.types';
+import * as searchHelper from './search-helper';
 
 export class ItemsList {
 
@@ -44,29 +44,18 @@ export class ItemsList {
         this._selected = [];
     }
 
-    filterClient(term: string, filterFunc: FilterFunc): Observable<any> {
+    filter(term: string, bindLabel: string) {
         this._markedItemIndex = -1;
-        const filterFuncVal = filterFunc(term);
+        const filterFuncVal = this.getDefaultFilterFunc(term, bindLabel);
         this.filteredItems = term ? this.items.filter(val => filterFuncVal(val)) : this.items;
-        return Observable.of(true);
     }
 
-    filterServer(term: string, inputFunc: ItemsFunc): Observable<any> {
-        this._markedItemIndex = -1;
-        return new Observable(s => {
-            inputFunc(term).subscribe(items => {
-                if (!Array.isArray(items)) {
-                    throw new Error('[itemsFunc] should return array');
-                }
-                this.items = items;
-                this.filteredItems = [...this.items];
-                s.next();
-            }, (err) => {
-                this.items = [];
-                this.filteredItems = [];
-                s.error(err);
-            });
-        })
+    private getDefaultFilterFunc(term, bindLabel: string) {
+        return (val: NgOption) => {
+            return searchHelper.stripSpecialChars(val[bindLabel])
+                .toUpperCase()
+                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
+        };
     }
 
     clearFilter() {

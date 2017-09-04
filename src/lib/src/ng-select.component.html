@@ -55,7 +55,7 @@
              [class.selected]="item.selected"
              [class.marked]="item.marked">
 
-            <span *ngIf="!optionTemplateRef">{{item[bindLabel]}}</span>
+            <span *ngIf="!optionTemplateRef">{{item[labelKey]}}</span>
 
             <ng-template  *ngIf="optionTemplateRef"
                           [ngTemplateOutlet]="optionTemplateRef.template"
@@ -73,12 +73,6 @@
     <div class="as-menu" *ngIf="showTypeToSearch()">
         <div class="as-option disabled">
             Type to search
-        </div>
-    </div>
-
-    <div class="as-menu" *ngIf="isErrorLoading">
-        <div class="as-option disabled">
-            Error occurred while loading data
         </div>
     </div>
 </div>

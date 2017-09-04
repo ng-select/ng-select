@@ -5,10 +5,10 @@ import { NgOption } from '@ng-select/ng-select';
     template: `
         <label>Select multiple elements</label>
         <ng-select [items]="companies"
-                    bindLabel="name"
-                    bindValue="this"
-                    [multiple]="true"
-                    [(ngModel)]="selectedCompany">
+                   labelKey="name"
+                   valueKey="this"
+                   [multiple]="true"
+                   [(ngModel)]="selectedCompany">
         </ng-select>
         <p>
             Selected value: {{selectedCompany | json}}
@@ -16,11 +16,11 @@ import { NgOption } from '@ng-select/ng-select';
 
         <label>Disabled multiple elements</label>
         <ng-select [items]="companies2"
-                    bindLabel="name"
-                    bindValue="this"
-                    [multiple]="true"
-                    [disabled]="disable"
-                    [(ngModel)]="selectedCompanyDisabled">
+                   labelKey="name"
+                   valueKey="this"
+                   [multiple]="true"
+                   [disabled]="disable"
+                   [(ngModel)]="selectedCompanyDisabled">
         </ng-select>
         <br>
         <button class="btn btn-secondary btn-sm" (click)="disable = !disable">Toggle disabled</button>
