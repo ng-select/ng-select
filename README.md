@@ -4,8 +4,8 @@
 
 [travis-badge]: https://travis-ci.org/ng-select/ng-select.svg?branch=master
 [travis-badge-url]: https://travis-ci.org/ng-select/ng-select
-[coveralls-image]: https://coveralls.io/repos/github/ng-select/ng-select/badge.svg?branch=coveralls
-[coveralls-url]: https://coveralls.io/github/ng-select/ng-select?branch=coveralls
+[coveralls-image]: https://coveralls.io/repos/github/ng-select/ng-select/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/ng-select/ng-select?branch=master
 
 ## Angular native ui-select
 See [Demos](https://ng-select.github.io/#/forms) or try in [Plunker](https://plnkr.co/edit/V5tFfNY28fiaLlNwvcWb?p=preview)

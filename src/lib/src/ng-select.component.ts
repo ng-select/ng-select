@@ -104,7 +104,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         return this._value;
     }
 
-    set value(value: NgOption) {
+    set value(value: NgOption | NgOption[]) {
         this._value = value;
     }
 

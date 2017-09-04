@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 
 import { NgSelectModule } from './ng-select.module';
 import { NgSelectComponent } from './ng-select.component';
-import { KeyCode } from './ng-select.types';
+import { KeyCode, NgOption } from './ng-select.types';
 import { Subject } from 'rxjs/Subject';
 
 describe('NgSelectComponent', function () {
@@ -161,13 +161,11 @@ describe('NgSelectComponent', function () {
 
         it('open dropdown on space click', () => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         });
 
         it('select next value on arrow down', () => {
             selectOption(fixture, KeyCode.ArrowDown, 1);
-
             expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
         });
 
@@ -181,6 +179,15 @@ describe('NgSelectComponent', function () {
             });
         }));
 
+        it('should skip disabled option and select next one', fakeAsync(() => {
+            const city: any = fixture.componentInstance.cities[0];
+            city.disabled = true;
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+            fixture.detectChanges();
+            tick();
+            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[1]);
+        }));
+
         it('select previous value on arrow up', async(() => {
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[1];
             fixture.detectChanges();
@@ -189,7 +196,6 @@ describe('NgSelectComponent', function () {
                 selectOption(fixture, KeyCode.ArrowUp, 1);
                 expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
             });
-
         }));
 
         it('select last value on arrow up when current selected value is first', async(() => {
@@ -225,7 +231,7 @@ describe('NgSelectComponent', function () {
             });
         }));
 
-        it('display custom dropßdown option template', async(() => {
+        it('display custom dropdown option template', async(() => {
 
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
@@ -242,6 +248,44 @@ describe('NgSelectComponent', function () {
                 expect(el).not.toBeNull();
             });
         }));
+    });
+
+    describe('Multiple', () => {
+        let fixture: ComponentFixture<NgSelectBasicTestCmp>;
+        beforeEach(() => {
+            fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    bindValue="this"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity"
+                    [multiple]="true">
+                </ng-select>`);
+        });
+
+        it('should select several items', fakeAsync(() => {
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+            selectOption(fixture, KeyCode.ArrowDown, 2);
+            detectChanges();
+            expect((<NgOption[]>fixture.componentInstance.select.value).length).toBe(2);
+        }));
+
+        it('should toggle selected item', fakeAsync(() => {
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+            selectOption(fixture, KeyCode.ArrowDown, 2);
+            detectChanges();
+            expect((<NgOption[]>fixture.componentInstance.select.value).length).toBe(2);
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+            detectChanges();
+            expect((<NgOption[]>fixture.componentInstance.select.value).length).toBe(1);
+            expect(fixture.componentInstance.select.value[0].name).toBe('Pabrade');
+        }));
+
+        function detectChanges() {
+            fixture.detectChanges();
+            tick();
+        }
     });
 
     describe('Placeholder', () => {
@@ -274,7 +318,7 @@ describe('NgSelectComponent', function () {
             fixture.whenStable().then(() => {
                 const el = fixture.debugElement.query(By.css('.as-placeholder'));
                 expect(el).toBeNull();
-            })
+            });
         }));
     });
 
@@ -369,9 +413,9 @@ class NgSelectBasicTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
     cities = [
-        {id: 1, name: 'Vilnius'},
-        {id: 2, name: 'Kaunas'},
-        {id: 3, name: 'Pabrade'},
+        { id: 1, name: 'Vilnius' },
+        { id: 2, name: 'Kaunas' },
+        { id: 3, name: 'Pabrade' },
     ];
 }
 
@@ -382,9 +426,9 @@ class NgSelectDefaultBindingsTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCityId: string;
     cities = [
-        {value: '1', label: 'Vilnius'},
-        {value: '2', label: 'Kaunas'},
-        {value: '3', label: 'Pabrade'},
+        { value: '1', label: 'Vilnius' },
+        { value: '2', label: 'Kaunas' },
+        { value: '3', label: 'Pabrade' },
     ];
 }
 
@@ -395,10 +439,10 @@ class NgSelectCustomBindingsTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCityId: number;
     cities = [
-        {id: 1, name: 'Vilnius'},
-        {id: 2, name: 'Kaunas'},
-        {id: 3, name: 'Pabrade'},
-        {id: 4, name: 'Klaipėda'},
+        { id: 1, name: 'Vilnius' },
+        { id: 2, name: 'Kaunas' },
+        { id: 3, name: 'Pabrade' },
+        { id: 4, name: 'Klaipėda' },
     ];
 }
 
@@ -410,10 +454,10 @@ class NgSelectModelChangesTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
     cities = [
-        {id: 1, name: 'Vilnius'},
-        {id: 2, name: 'Kaunas'},
-        {id: 3, name: 'Pabrade'},
-        {id: 4, name: 'Klaipėda'},
+        { id: 1, name: 'Vilnius' },
+        { id: 2, name: 'Kaunas' },
+        { id: 3, name: 'Pabrade' },
+        { id: 4, name: 'Klaipėda' },
     ];
 }
 
@@ -425,9 +469,9 @@ class NgSelectFilterTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
     cities = [
-        {id: 1, name: 'Vilnius'},
-        {id: 2, name: 'Kaunas'},
-        {id: 3, name: 'Pabrade'},
+        { id: 1, name: 'Vilnius' },
+        { id: 2, name: 'Kaunas' },
+        { id: 3, name: 'Pabrade' },
     ];
 
     customeFilter = new Subject<string>();
