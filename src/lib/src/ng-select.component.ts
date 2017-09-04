@@ -100,7 +100,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         this.isLoading = false;
     }
 
-    get value(): NgOption {
+    get value(): NgOption | NgOption[] {
         return this._value;
     }
 
