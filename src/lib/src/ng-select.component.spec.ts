@@ -143,7 +143,6 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[1]);
             discardPeriodicTasks();
         }));
-
     });
 
     describe('Keyboard events', () => {
@@ -208,10 +207,63 @@ describe('NgSelectComponent', function () {
             });
         }));
 
+        it('close opened dropdown on esc click', () => {
+            fixture.componentInstance.select.isOpen = true;
+
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Esc);
+
+            expect(fixture.componentInstance.select.isOpen).toBe(false);
+        });
+
+        it('close opened dropdown on tab click', () => {
+            fixture.componentInstance.select.isOpen = true;
+
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+
+            expect(fixture.componentInstance.select.isOpen).toBe(false);
+        });
+    });
+
+    describe('document:click', () => {
+        let fixture: ComponentFixture<NgSelectBasicTestCmp>;
+
+        beforeEach(() => {
+            fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<button id="close">close</button>
+                <ng-select id="select" [items]="cities"
+                        labelKey="name"
+                        valueKey="this"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+        });
+
+       it('close dropdown if opened and clicked outside dropdown container', () => {
+          fixture.componentInstance.select.isOpen = true;
+
+          document.getElementById('close').click();
+
+          expect(fixture.componentInstance.select.isOpen).toBe(false);
+       });
+
+       it('prevent dropdown close if clicked on select', () => {
+            fixture.componentInstance.select.isOpen = true;
+
+            document.getElementById('select').click();
+
+            expect(fixture.componentInstance.select.isOpen).toBe(true);
+        });
+
+        it('prevent dropdown close if after first open', () => {
+            fixture.componentInstance.select.open();
+
+            document.getElementById('close').click();
+
+            expect(fixture.componentInstance.select.isOpen).toBe(true);
+        });
     });
 
     describe('Custom templates', () => {
-
         it('display custom header template', async(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
