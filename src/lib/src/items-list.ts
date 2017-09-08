@@ -1,4 +1,5 @@
-import { FilterFunc, NgOption } from './ng-select.types';
+import { NgOption } from './ng-select.types';
+import * as searchHelper from './search-helper';
 
 export class ItemsList {
 
@@ -43,10 +44,18 @@ export class ItemsList {
         this._selected = [];
     }
 
-    filter(term: string, filterFunc: FilterFunc) {
+    filter(term: string, bindLabel: string) {
         this._markedItemIndex = -1;
-        const filterFuncVal = filterFunc(term);
+        const filterFuncVal = this.getDefaultFilterFunc(term, bindLabel);
         this.filteredItems = term ? this.items.filter(val => filterFuncVal(val)) : this.items;
+    }
+
+    private getDefaultFilterFunc(term, bindLabel: string) {
+        return (val: NgOption) => {
+            return searchHelper.stripSpecialChars(val[bindLabel])
+                .toUpperCase()
+                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
+        };
     }
 
     clearFilter() {

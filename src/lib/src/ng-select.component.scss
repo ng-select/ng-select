@@ -241,6 +241,17 @@ ng-select {
     }
   }
 
+  .as-spinner-zone {
+    cursor: pointer;
+    display: table-cell;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    width: 25px;
+    padding-right: 5px;
+    padding-top: 5px;
+  }
+
   .as-arrow-zone {
     cursor: pointer;
     display: table-cell;

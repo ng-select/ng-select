@@ -64,11 +64,11 @@ map: {
 | Input  | Type | Default | Required | Description |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | [items] | Array<NgOption> | `[]` | yes | Items array|
-| bindLabel  | string | `label` | no | Bind option display text to object property. Default `label`  |
-| bindValue  | string | `value` | no | Bind selected option model value to property or whole object if used as `bindValue="this"`. Default  `value`|
+| labelKey  | string | `label` | no | Bind option display text to object property. Default `label`  |
+| valueKey  | string | `value` | no | Bind selected option model value to property or whole object if used as `bindValue="this"`. Default  `value`|
 | [clearable] | boolean | `true` | no | Set is allowed to clear selected value. Default `true`|
 | placeholder | string | `null` | no | Set placeholder text. Default `null`|
-| [filterFunc] | function|  `null` | no | Set custom filter function. Default `null`|
+| [typeahead] | Subject |  `null` | no | Set custom filter. Default `null`|
 
 | Output  | Description |
 | ------------- | ------------- |

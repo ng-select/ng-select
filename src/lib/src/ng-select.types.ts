@@ -6,8 +6,6 @@ export interface NgOption {
     value?: string;
 }
 
-export type FilterFunc = (term: string) => (val: NgOption) => boolean;
-
 export enum KeyCode {
     Tab = 9,
     Enter = 13,

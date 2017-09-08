@@ -36,6 +36,8 @@
         </div>
     </span>
 
+    <spinner class="as-spinner-zone" *ngIf="isLoading"></spinner>
+
     <span *ngIf="showClear()" (click)="clear()" class="as-clear-zone" title="Clear all" aria-label="Clear all">
         <span class="as-clear" aria-hidden="true">×</span>
     </span>
@@ -53,18 +55,24 @@
              [class.selected]="item.selected"
              [class.marked]="item.marked">
 
-            <span *ngIf="!optionTemplateRef">{{item[bindLabel]}}</span>
+            <span *ngIf="!optionTemplateRef">{{item[labelKey]}}</span>
 
-            <ng-template *ngIf="optionTemplateRef"
+            <ng-template  *ngIf="optionTemplateRef"
                           [ngTemplateOutlet]="optionTemplateRef.template"
                           [ngOutletContext]="getOptionTemplateContext(item, index, first, last, even, odd)">
             </ng-template>
         </div>
     </virtual-scroll>
 
-    <div class="as-menu" *ngIf="itemsList.filteredItems.length === 0">
+    <div class="as-menu" *ngIf="showNoItemsFound()">
         <div class="as-option disabled">
             No items found
+        </div>
+    </div>
+
+    <div class="as-menu" *ngIf="showTypeToSearch()">
+        <div class="as-option disabled">
+            Type to search
         </div>
     </div>
 </div>

@@ -1,7 +1,6 @@
 import {
     Component,
     OnInit,
-    OnChanges,
     forwardRef,
     ChangeDetectorRef,
     Input,
@@ -15,16 +14,15 @@ import {
     ViewChild,
     ElementRef,
     ChangeDetectionStrategy,
-    SimpleChange
 } from '@angular/core';
 
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgOptionDirective, NgDisplayDirective } from './ng-templates.directive';
-import * as searchHelper from './search-helper';
 import { VirtualScrollComponent } from './virtual-scroll.component';
-import { NgOption, FilterFunc, KeyCode } from './ng-select.types';
+import { NgOption, KeyCode } from './ng-select.types';
 import { ItemsList } from './items-list';
+import { Subject } from 'rxjs/Subject';
 
 const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
@@ -43,7 +41,7 @@ const NGB_ANG_SELECT_VALUE_ACCESSOR = {
         'role': 'dropdown'
     }
 })
-export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccessor {
+export class NgSelectComponent implements OnInit, ControlValueAccessor {
 
     @ContentChild(NgOptionDirective) optionTemplateRef: TemplateRef<any>;
     @ContentChild(NgDisplayDirective) displayTemplateRef: TemplateRef<any>;
@@ -51,12 +49,11 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @ViewChild('filterInput') filterInput;
 
     // inputs
-    @Input() items: NgOption[] = [];
-    @Input() bindLabel: string;
-    @Input() bindValue: string;
+    @Input() labelKey: string;
+    @Input() valueKey: string;
     @Input() clearable = true;
     @Input() placeholder: string;
-    @Input() filterFunc: FilterFunc;
+    @Input() typeahead: Subject<string>;
 
     @Input()
     @HostBinding('class.as-multiple') multiple = false;
@@ -67,23 +64,40 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     @Output('change') onChange = new EventEmitter();
     @Output('open') onOpen = new EventEmitter();
     @Output('close') onClose = new EventEmitter();
+    @Output('search') onSearch = new EventEmitter();
 
-    @HostBinding('class.as-single') get single() { return !this.multiple }
+    @HostBinding('class.as-single')
+    get single() {
+        return !this.multiple;
+    }
+
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
 
-    itemsList: ItemsList;
+    itemsList = new ItemsList([], false);
     viewPortItems: NgOption[] = [];
-
+    isLoading = false;
     filterValue: string = null;
 
     private _value: NgOption | NgOption[] = null;
 
     private _openClicked = false;
-    private propagateChange = (_: NgOption) => { };
+    private _items: NgOption[];
+    private propagateChange: (_: NgOption) => { };
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
+    }
+
+    @Input()
+    get items(): any[] {
+        return this._items;
+    }
+
+    set items(items: any[]) {
+        this._items = items || [];
+        this.itemsList = new ItemsList(this._items, this.multiple);
+        this.isLoading = false;
     }
 
     get value(): NgOption | NgOption[] {
@@ -95,18 +109,11 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     ngOnInit() {
-        this.bindLabel = this.bindLabel || 'label';
-        this.bindValue = this.bindValue || 'value';
-        if (this.bindValue === 'this') {
+        this.labelKey = this.labelKey || 'label';
+        this.valueKey = this.valueKey || 'value';
+        if (this.valueKey === 'this') {
             // bind to whole object
-            this.bindValue = undefined;
-        }
-    }
-
-    ngOnChanges(changes: { [key: string]: SimpleChange }) {
-        if (changes.items && changes.items.currentValue) {
-            this.items = changes.items.currentValue;
-            this.itemsList = new ItemsList(this.items, this.multiple)
+            this.valueKey = undefined;
         }
     }
 
@@ -177,12 +184,12 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     writeValue(obj: any): void {
         if (obj) {
             let index = -1;
-            if (this.bindValue) {
-                index = this.items.findIndex(x => x[this.bindValue] === obj);
+            if (this.valueKey) {
+                index = this.itemsList.items.findIndex(x => x[this.valueKey] === obj);
             } else {
-                index = this.items.indexOf(obj);
+                index = this.itemsList.items.indexOf(obj);
             }
-            this._value = this.items[index];
+            this._value = this.itemsList.items[index];
             this.itemsList.select(this._value);
         } else {
             this._value = null;
@@ -215,7 +222,7 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     }
 
     getLabelValue(value: NgOption) {
-        return value ? value[this.bindLabel] : '';
+        return value ? value[this.labelKey] : '';
     }
 
     getDisplayTemplateContext() {
@@ -274,16 +281,30 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         return !this.isDisabled;
     }
 
+    showNoItemsFound() {
+        const empty = this.itemsList.filteredItems.length === 0;
+        return (empty && !this.isTypeahead()) ||
+            (empty && this.isTypeahead() && this.filterValue && !this.isLoading);
+    }
+
+    showTypeToSearch() {
+        const empty = this.itemsList.filteredItems.length === 0;
+        return empty && this.isTypeahead() && !this.filterValue && !this.isLoading;
+    }
+
     onFilter($event) {
         if (!this.isOpen) {
             this.open();
         }
 
-        const term = $event.target.value;
-        this.filterValue = term;
+        this.filterValue = $event.target.value;
 
-        const filterFuncVal = this.filterFunc ? this.filterFunc : this.getDefaultFilterFunc.bind(this);
-        this.itemsList.filter(term, filterFuncVal);
+        if (this.isTypeahead()) {
+            this.isLoading = true;
+            this.typeahead.next(this.filterValue);
+        } else {
+            this.itemsList.filter(this.filterValue, this.labelKey);
+        }
     }
 
     onInputFocus($event) {
@@ -300,14 +321,6 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
         this._value = this.itemsList.value;
         this.notifyModelChanged();
         this.changeDetectorRef.markForCheck();
-    }
-
-    private getDefaultFilterFunc(term) {
-        return (val: NgOption) => {
-            return searchHelper.stripSpecialChars(val[this.bindLabel])
-                .toUpperCase()
-                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
-        };
     }
 
     private clearSearch() {
@@ -364,10 +377,10 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
     private notifyModelChanged() {
         if (!this._value) {
             this.propagateChange(null);
-        } else if (this.bindValue) {
+        } else if (this.valueKey) {
             const bindValue = Array.isArray(this._value) ?
-                this._value.map(x => x[this.bindValue]) :
-                this._value[this.bindValue];
+                this._value.map(x => x[this.valueKey]) :
+                this._value[this.valueKey];
             this.propagateChange(bindValue);
         } else {
             this.propagateChange(this._value);
@@ -380,6 +393,10 @@ export class NgSelectComponent implements OnInit, OnChanges, ControlValueAccesso
             return null;
         }
         return <HTMLElement>this.elementRef.nativeElement.querySelector('.as-menu-outer');
+    }
+
+    private isTypeahead() {
+        return this.typeahead && this.typeahead.observers.length > 0;
     }
 }
 
