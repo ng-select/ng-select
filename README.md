@@ -8,7 +8,7 @@
 [coveralls-url]: https://coveralls.io/github/ng-select/ng-select?branch=master
 
 ## Angular native ui-select
-See [Demos](https://ng-select.github.io/#/forms) or try in [Plunker](https://plnkr.co/edit/V5tFfNY28fiaLlNwvcWb?p=preview)
+See [Demos](https://ng-select.github.io/ng-select) or try in [Plunker](https://plnkr.co/edit/V5tFfNY28fiaLlNwvcWb?p=preview)
 
 ## Warning
 Library is under active development and may not work as expected until stable 1.0.0 release.
