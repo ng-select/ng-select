@@ -90,6 +90,7 @@ map: {
 | (close)  | Fired on select dropdown close |
 
 ### Basic example
+This example in [Plunkr](https://plnkr.co/edit/tjxQgDY2Pn8RRPsoVAa0?p=preview)
 
 ```js
 import {Component} from '@angular/core';
