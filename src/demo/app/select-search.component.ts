@@ -1,6 +1,4 @@
-import { Component } from '@angular/core';
-import { NgOption } from '@ng-select/ng-select';
-import { Subject } from 'rxjs/Subject';
+import { Component, EventEmitter } from '@angular/core';
 
 @Component({
     selector: 'select-search',
@@ -35,7 +33,7 @@ export class SelectSearchComponent {
     selectedCompany: any;
     selectedCompany2?: any;
 
-    customFilter = new Subject<string>();
+    customFilter = new EventEmitter<string>();
 
     /* tslint:disable */
     companiesNames = ['Miškas', 'Žalias', 'Flexigen', 'Rooforia', 'Rooblia', 'Tropoli', 'Eargo', 'Gadtron', 'Elentrix', 'Terragen', 'Medalert', 'Xelegyl', 'Bristo', 'Xylar', 'Imperium', 'Kangle', 'Earwax', 'Zanity', 'Portico', 'Tsunamia', 'Kage', 'Comstar', 'Radiantix', 'Bostonic', 'Geekko', 'Eventex', 'Stockpost', 'Silodyne', 'Enersave', 'Perkle', 'Pyramis', 'Accuprint', 'Papricut', 'Pathways', 'Circum', 'Gology', 'Buzzworks', 'Dancerity', 'Zounds', 'Diginetic', 'Snips', 'Chillium', 'Exotechno', 'Accufarm', 'Vidto', 'Signidyne', 'Escenta', 'Sureplex', 'Quarmony', 'Interfind', 'Exoswitch', 'Mondicil', 'Pyramia', 'Digitalus', 'Earthplex', 'Limozen', 'Twiist', 'Tubalum', 'Securia', 'Uni', 'Biospan', 'Zensus', 'Memora'];

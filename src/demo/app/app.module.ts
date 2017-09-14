@@ -15,7 +15,6 @@ import { SelectEventsComponent } from './select-events.component';
 import { SelectMultiComponent } from './select-multi.component';
 import { SelectAutocompleteComponent } from './select-autocomplete.component';
 
-
 const appRoutes: Routes = [
     {
         path: '',

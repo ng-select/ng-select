@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'select-autocomplete',
@@ -30,7 +29,7 @@ export class SelectAutocompleteComponent {
 
     githubAccount: any;
     items = [];
-    typeahead = new Subject<string>();
+    typeahead = new EventEmitter<string>();
 
     constructor(private http: HttpClient) {
         this.typeahead
