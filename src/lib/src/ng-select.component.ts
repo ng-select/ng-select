@@ -84,7 +84,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
 
     private _openClicked = false;
     private _items: NgOption[];
-    private propagateChange: (_: NgOption) => { };
+    private propagateChange = (_: NgOption) => { };
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
     }
