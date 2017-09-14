@@ -93,8 +93,6 @@ map: {
 This example in [Plunkr](https://plnkr.co/edit/tjxQgDY2Pn8RRPsoVAa0?p=preview)
 
 ```js
-import {Component} from '@angular/core';
-
 @Component({
     selector: 'cities-page',
     template: `
@@ -117,6 +115,59 @@ export class CitiesPageComponent {
         {id: 3, name: 'Pabradė'}
     ];
     selectedCityId: any;
+}
+```
+
+### Flexible autocomplete
+
+This example in [Plunkr](https://plnkr.co/edit/sArBdPLJDUy4Da7zBOGJ?p=preview)
+```js
+@Component({
+    selector: 'select-autocomplete',
+    template: `
+        <label>Search with autocomplete in Github accounts</label>
+        <ng-select [items]="items"
+                   labelKey="login"
+                   valueKey="this"
+                   placeholder="Type to search"
+                   [typeahead]="typeahead"
+                   [(ngModel)]="githubAccount">
+            <ng-template ng-option-tmp let-item="item">
+                <img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}
+            </ng-template>
+        </ng-select>
+        <p>
+            Selected github account:
+            <span *ngIf="githubAccount">
+                <img [src]="githubAccount.avatar_url" width="20px" height="20px"> {{githubAccount.login}}
+            </span>
+        </p>
+    `
+})
+export class SelectAutocompleteComponent {
+
+    githubAccount: any;
+    items = [];
+    
+    // event emmiter is just RxJs Subject
+    typeahead = new EventEmitter<string>();
+
+    constructor(private http: HttpClient) {
+        this.typeahead
+            .distinctUntilChanged()
+            .debounceTime(200)
+            .switchMap(term => this.loadGithubUsers(term))
+            .subscribe(items => {
+                this.items = items;
+            }, (err) => {
+                console.log(err);
+                this.items = [];
+            });
+    }
+
+    loadGithubUsers(term: string): Observable<any[]> {
+        return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).map(rsp => rsp.items);
+    }
 }
 ```
 
