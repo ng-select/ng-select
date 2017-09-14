@@ -7,8 +7,17 @@
 [coveralls-image]: https://coveralls.io/repos/github/ng-select/ng-select/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/ng-select/ng-select?branch=master
 
-## Angular native ui-select
+# Angular native ng-select
 See [Demos](https://ng-select.github.io/ng-select) or try in [Plunker](https://plnkr.co/edit/V5tFfNY28fiaLlNwvcWb?p=preview)
+
+## Features
+- [x] Custom bindings to property or object
+- [x] Custom option and label templates
+- [x] Virtual Scroll support with large data sets (>5000 items).
+- [x] Keyboard navigation
+- [x] Correct keyboard events behaviour
+- [x] Multiselect
+- [x] Flexible autocomplete with client/server filtering
 
 ## Warning
 Library is under active development and may not work as expected until stable 1.0.0 release.
@@ -57,18 +66,20 @@ map: {
 - [x] Good base functionality test coverage
 - [ ] HTML5 Standart https://developer.mozilla.org/en/docs/Web/HTML/Element/select except multiselect
 - [x] Multiselect support
-- [ ] Autocomplete
+- [x] Autocomplete
 - [ ] Accessibility
 
-### Usage
+## Usage
+
+### API
 | Input  | Type | Default | Required | Description |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | [items] | Array<NgOption> | `[]` | yes | Items array|
 | labelKey  | string | `label` | no | Bind option display text to object property. Default `label`  |
-| valueKey  | string | `value` | no | Bind selected option model value to property or whole object if used as `bindValue="this"`. Default  `value`|
+| valueKey  | string | `value` | no | Bind selected option model value to property or whole object if used as `valueKey="this"`. Default  `value`|
 | [clearable] | boolean | `true` | no | Set is allowed to clear selected value. Default `true`|
 | placeholder | string | `null` | no | Set placeholder text. Default `null`|
-| [typeahead] | Subject |  `null` | no | Set custom filter. Default `null`|
+| [typeahead] | Subject |  `null` | no | Set custom autocomplete or filter. Default `null`|
 
 | Output  | Description |
 | ------------- | ------------- |
@@ -78,6 +89,87 @@ map: {
 | (open)  | Fired on select dropdown open |
 | (close)  | Fired on select dropdown close |
 
+### Basic example
+This example in [Plunkr](https://plnkr.co/edit/tjxQgDY2Pn8RRPsoVAa0?p=preview)
+
+```js
+@Component({
+    selector: 'cities-page',
+    template: `
+        <label>City</label>
+        <ng-select [items]="cities"
+                   labelKey="name"
+                   valueKey="id"
+                   placeholder="Select city"
+                   [(ngModel)]="selectedCityId">
+        </ng-select>
+        <p>
+            Selected city ID: {{selectedCityId}}
+        </p>
+    `
+})
+export class CitiesPageComponent {
+    cities = [
+        {id: 1, name: 'Vilnius'},
+        {id: 2, name: 'Kaunas'},
+        {id: 3, name: 'Pabradė'}
+    ];
+    selectedCityId: any;
+}
+```
+
+### Flexible autocomplete
+
+This example in [Plunkr](https://plnkr.co/edit/sArBdPLJDUy4Da7zBOGJ?p=preview)
+```js
+@Component({
+    selector: 'select-autocomplete',
+    template: `
+        <label>Search with autocomplete in Github accounts</label>
+        <ng-select [items]="items"
+                   labelKey="login"
+                   valueKey="this"
+                   placeholder="Type to search"
+                   [typeahead]="typeahead"
+                   [(ngModel)]="githubAccount">
+            <ng-template ng-option-tmp let-item="item">
+                <img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}
+            </ng-template>
+        </ng-select>
+        <p>
+            Selected github account:
+            <span *ngIf="githubAccount">
+                <img [src]="githubAccount.avatar_url" width="20px" height="20px"> {{githubAccount.login}}
+            </span>
+        </p>
+    `
+})
+export class SelectAutocompleteComponent {
+
+    githubAccount: any;
+    items = [];
+    
+    // event emmiter is just RxJs Subject
+    typeahead = new EventEmitter<string>();
+
+    constructor(private http: HttpClient) {
+        this.typeahead
+            .distinctUntilChanged()
+            .debounceTime(200)
+            .switchMap(term => this.loadGithubUsers(term))
+            .subscribe(items => {
+                this.items = items;
+            }, (err) => {
+                console.log(err);
+                this.items = [];
+            });
+    }
+
+    loadGithubUsers(term: string): Observable<any[]> {
+        return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).map(rsp => rsp.items);
+    }
+}
+```
 
 ### Contributing
 
