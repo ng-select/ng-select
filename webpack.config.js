@@ -11,7 +11,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { TsConfigPathsPlugin } = require('awesome-typescript-loader');
 
-
 /**
  * Env
  * Get npm lifecycle event to identify the environment
@@ -176,7 +175,6 @@ module.exports = function makeWebpackConfig() {
         })
     ];
 
-
     config.plugins.push(
         // Generate common chunks if necessary
         // Reference: https://webpack.github.io/docs/code-splitting.html
@@ -188,8 +186,9 @@ module.exports = function makeWebpackConfig() {
         // Inject script and link tags into html files
         // Reference: https://github.com/ampedandwired/html-webpack-plugin
         new HtmlWebpackPlugin({
-            template: './src/demo/index.html',
-            chunksSortMode: 'dependency'
+            template: './src/demo/index.ejs',
+            chunksSortMode: 'dependency',
+            basePath: isProd ? '/ng-select' : '/'
         }),
 
         // Extract css files
