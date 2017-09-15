@@ -193,3 +193,10 @@ or
 npm run test-watch
 ```
 
+#### Deploy demo to gh-pages
+```
+npm run gh-pages
+
+// after swith to gh-pages branch run
+./publish-demo.sh
+```

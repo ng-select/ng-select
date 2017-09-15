@@ -37,7 +37,8 @@
     "integration:jit": "cd integration && npm run e2e",
     "integration:aot": "cd integration && npm run build",
     "lint": "tslint --type-check --project ./src/lib/tsconfig.json",
-    "release": "standard-version"
+    "release": "standard-version",
+    "gh-pages": "npm run build-demo && git checkout gh-pages"
   },
   "peerDependencies": {
     "@angular/core": ">=2.4.10 <5.0.0",
