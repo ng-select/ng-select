@@ -1,5 +1,5 @@
 import {
-    async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick,
+    async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick
 } from '@angular/core/testing';
 
 import { By } from '@angular/platform-browser';
@@ -137,6 +137,20 @@ describe('NgSelectComponent', function () {
         it('should select by labelKey when binding to object', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectSelectedObjectCmp,
+                `<ng-select [items]="cities"
+                    labelKey="name"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.detectChanges();
+            tick();
+            expect(fixture.componentInstance.select.value).toEqual({ id: 2, name: 'Kaunas', selected: true })
+        }))
+
+        it('should select object reference', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectSelectedObjectByRefCmp,
                 `<ng-select [items]="cities"
                     labelKey="name"
                     placeholder="select value"
@@ -476,12 +490,12 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
             NgSelectBasicTestCmp,
             NgSelectFilterTestCmp,
             NgSelectModelChangesTestCmp,
-            NgSelectDefaultBindingsTestCmp,
             NgSelectCustomBindingsTestCmp,
             NgSelectSelectedSimpleCmp,
             NgSelectSelectedObjectCmp,
+            NgSelectSelectedObjectByRefCmp,
             NgSelectSelectedSimpleMultipleCmp,
-            NgSelectSelectedObjectMultipleCmp
+            NgSelectSelectedObjectMultipleCmp,
         ]
     })
         .overrideComponent(cmp, {
@@ -564,14 +578,14 @@ class NgSelectSelectedObjectCmp {
 @Component({
     template: ``
 })
-class NgSelectDefaultBindingsTestCmp {
+class NgSelectSelectedObjectByRefCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
-    selectedCityId: string;
     cities = [
-        { value: '1', label: 'Vilnius' },
-        { value: '2', label: 'Kaunas' },
-        { value: '3', label: 'Pabrade' },
+        { id: 1, name: 'Vilnius' },
+        { id: 2, name: 'Kaunas' },
+        { id: 3, name: 'Pabrade' },
     ];
+    selectedCity = this.cities[1];
 }
 
 @Component({
