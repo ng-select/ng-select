@@ -312,14 +312,14 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         this.onBlur.emit($event);
     }
 
-    private validateBindValue(value: any) {
+    private validateWriteValue(value: any) {
         if (value instanceof Object && this.valueKey) {
             throw new Error('Binding object with valueKey is not allowed.')
         }
     }
 
     private selectWriteValue(value: any) {
-        this.validateBindValue(value);
+        this.validateWriteValue(value);
         let index = -1;
         if (this.valueKey) {
             index = this.itemsList.items.findIndex(x => x[this.valueKey] === value);
