@@ -110,11 +110,6 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
 
     ngOnInit() {
         this.labelKey = this.labelKey || 'label';
-        this.valueKey = this.valueKey || 'value';
-        if (this.valueKey === 'this') {
-            // bind to whole object
-            this.valueKey = undefined;
-        }
     }
 
     @HostListener('keydown', ['$event'])
@@ -181,13 +176,15 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         this.notifyModelChanged();
     }
 
-    writeValue(obj: any): void {
-        if (obj) {
+    writeValue(value: any): void {
+        if (value) {
+            this.validateBindValue(value);
+
             let index = -1;
             if (this.valueKey) {
-                index = this.itemsList.items.findIndex(x => x[this.valueKey] === obj);
+                index = this.itemsList.items.findIndex(x => x[this.valueKey] === value);
             } else {
-                index = this.itemsList.items.indexOf(obj);
+                index = this.itemsList.items.indexOf(value);
             }
             this._value = this.itemsList.items[index];
             this.itemsList.select(this._value);
@@ -315,6 +312,14 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     onInputBlur($event) {
         this.isFocused = false;
         this.onBlur.emit($event);
+    }
+
+    private validateBindValue(value: any) {
+        if (this.multiple && !Array.isArray(value)) {
+            throw new Error('Multi-select should bind to array!')
+        } else if (value instanceof Object && this.valueKey) {
+            throw new Error('Binding object with valueKey is not allowed.')
+        }
     }
 
     private updateModel() {
