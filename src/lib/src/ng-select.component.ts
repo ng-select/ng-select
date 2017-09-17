@@ -178,16 +178,14 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
 
     writeValue(value: any): void {
         if (value) {
-            this.validateBindValue(value);
-
-            let index = -1;
-            if (this.valueKey) {
-                index = this.itemsList.items.findIndex(x => x[this.valueKey] === value);
+            if (this.multiple) {
+                value.forEach(item => {
+                    this.selectWriteValue(item);
+                });
             } else {
-                index = this.itemsList.items.indexOf(value);
+                this.selectWriteValue(value);
             }
-            this._value = this.itemsList.items[index];
-            this.itemsList.select(this._value);
+            this._value = this.itemsList.value;
         } else {
             this._value = null;
         }
@@ -315,11 +313,22 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     private validateBindValue(value: any) {
-        if (this.multiple && !Array.isArray(value)) {
-            throw new Error('Multi-select should bind to array!')
-        } else if (value instanceof Object && this.valueKey) {
+        if (value instanceof Object && this.valueKey) {
             throw new Error('Binding object with valueKey is not allowed.')
         }
+    }
+
+    private selectWriteValue(value: any) {
+        this.validateBindValue(value);
+        let index = -1;
+        if (this.valueKey) {
+            index = this.itemsList.items.findIndex(x => x[this.valueKey] === value);
+        } else {
+            index = this.itemsList.items.indexOf(value);
+            index = index > -1 ? index :
+                this.itemsList.items.findIndex(x => x[this.labelKey] === value[this.labelKey])
+        }
+        this.itemsList.select(this.itemsList.items[index]);
     }
 
     private updateModel() {

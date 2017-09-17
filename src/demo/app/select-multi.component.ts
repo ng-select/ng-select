@@ -3,21 +3,19 @@ import { NgOption } from '@ng-select/ng-select';
 
 @Component({
     template: `
-    <label>Select multiple elements</label>
-    <ng-select [items]="companies"
-               labelKey="name"
-               valueKey="this"
-               [multiple]="true"
-               [(ngModel)]="selectedCompany">
-    </ng-select>
-    <p>
-        Selected value: {{selectedCompany | json}}
-    </p>
+        <label>Select multiple elements</label>
+        <ng-select [items]="companies"
+            labelKey="name"
+            [multiple]="true"
+            [(ngModel)]="selectedCompany">
+        </ng-select>
+        <p>
+            Selected value: {{selectedCompany | json}}
+        </p>
 
         <label>Disabled multiple elements</label>
         <ng-select [items]="companies2"
                    labelKey="name"
-                   valueKey="this"
                    [multiple]="true"
                    [disabled]="disable"
                    [(ngModel)]="selectedCompanyDisabled">
