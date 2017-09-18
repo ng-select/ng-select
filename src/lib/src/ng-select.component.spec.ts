@@ -119,51 +119,53 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Pre-selected model', () => {
-        it('should select by valueKey when primitive type', fakeAsync(() => {
-            const fixture = createTestingModule(
-                NgSelectSelectedSimpleCmp,
-                `<ng-select [items]="cities"
+        describe('single', () => {
+            it('should select by valueKey when primitive type', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectSelectedSimpleCmp,
+                    `<ng-select [items]="cities"
                     labelKey="name"
                     valueKey="id"
                     placeholder="select value"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            fixture.detectChanges();
-            tick();
-            expect(fixture.componentInstance.select.value).toEqual({ id: 2, name: 'Kaunas', selected: true })
-        }))
+                fixture.detectChanges();
+                tick();
+                expect(fixture.componentInstance.select.value).toEqual({ id: 2, name: 'Kaunas', selected: true });
+            }));
 
-        it('should select by labelKey when binding to object', fakeAsync(() => {
-            const fixture = createTestingModule(
-                NgSelectSelectedObjectCmp,
-                `<ng-select [items]="cities"
+            it('should select by labelKey when binding to object', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectSelectedObjectCmp,
+                    `<ng-select [items]="cities"
                     labelKey="name"
                     placeholder="select value"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            fixture.detectChanges();
-            tick();
-            expect(fixture.componentInstance.select.value).toEqual({ id: 2, name: 'Kaunas', selected: true })
-        }))
+                fixture.detectChanges();
+                tick();
+                expect(fixture.componentInstance.select.value).toEqual({ id: 2, name: 'Kaunas', selected: true });
+            }));
 
-        it('should select object reference', fakeAsync(() => {
-            const fixture = createTestingModule(
-                NgSelectSelectedObjectByRefCmp,
-                `<ng-select [items]="cities"
+            it('should select object reference', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectSelectedObjectByRefCmp,
+                    `<ng-select [items]="cities"
                     labelKey="name"
                     placeholder="select value"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            fixture.detectChanges();
-            tick();
-            expect(fixture.componentInstance.select.value).toEqual({ id: 2, name: 'Kaunas', selected: true })
-        }))
+                fixture.detectChanges();
+                tick();
+                expect(fixture.componentInstance.select.value).toEqual({ id: 2, name: 'Kaunas', selected: true })
+            }));
+        });
 
         describe('multiple', () => {
-            const result = [{ id: 2, name: 'Kaunas', selected: true }, { id: 3, name: 'Pabrade', selected: true }]
+            const result = [{ id: 2, name: 'Kaunas', selected: true }, { id: 3, name: 'Pabrade', selected: true }];
             it('should select by valueKey when primitive type', fakeAsync(() => {
                 const fixture = createTestingModule(
                     NgSelectSelectedSimpleMultipleCmp,
@@ -179,7 +181,7 @@ describe('NgSelectComponent', function () {
                 tick();
 
                 expect(fixture.componentInstance.select.value).toEqual(result)
-            }))
+            }));
 
             it('should select by labelKey when binding to object', fakeAsync(() => {
                 const fixture = createTestingModule(
@@ -193,9 +195,9 @@ describe('NgSelectComponent', function () {
 
                 fixture.detectChanges();
                 tick();
-                expect(fixture.componentInstance.select.value).toEqual(result)
-            }))
-        })
+                expect(fixture.componentInstance.select.value).toEqual(result);
+            }));
+        });
     });
 
     describe('Keyboard events', () => {

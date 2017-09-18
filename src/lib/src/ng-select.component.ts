@@ -328,7 +328,9 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
             index = index > -1 ? index :
                 this.itemsList.items.findIndex(x => x[this.labelKey] === value[this.labelKey])
         }
-        this.itemsList.select(this.itemsList.items[index]);
+        if (index > -1) {
+            this.itemsList.select(this.itemsList.items[index]);
+        }
     }
 
     private updateModel() {
