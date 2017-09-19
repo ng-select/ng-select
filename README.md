@@ -74,12 +74,12 @@ map: {
 ### API
 | Input  | Type | Default | Required | Description |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| [items] | Array<NgOption> | `[]` | yes | Items array|
-| labelKey  | string | `label` | no | Bind option display text to object property. Default `label`  |
-| valueKey  | string | `value` | no | Bind selected option model value to property or whole object if used as `valueKey="this"`. Default  `value`|
-| [clearable] | boolean | `true` | no | Set is allowed to clear selected value. Default `true`|
-| placeholder | string | `null` | no | Set placeholder text. Default `null`|
-| [typeahead] | Subject |  `null` | no | Set custom autocomplete or filter. Default `null`|
+| [items] | Array<NgOption> | `[]` | yes | Items array |
+| labelKey  | string | `label` | no | Object property to use for label. Default `label`  |
+| valueKey  | string | `-` | no | Object property to use for selected model. By default binds to whole object. |
+| [clearable] | boolean | `true` | no | Allow to clear selected value. Default `true`|
+| placeholder | string | `-` | no | Placeholder text. |
+| [typeahead] | Subject |  `-` | no | Custom autocomplete or filter. |
 
 | Output  | Description |
 | ------------- | ------------- |

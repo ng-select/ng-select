@@ -6,7 +6,6 @@ import { Component, EventEmitter } from '@angular/core';
         <label>Search in label text (default)</label>
         <ng-select [items]="companies"
                    labelKey="name"
-                   valueKey="this"
                    [(ngModel)]="selectedCompany">
         </ng-select>
         <p>
@@ -16,7 +15,6 @@ import { Component, EventEmitter } from '@angular/core';
         <label>Search using custom filter handler (search for Rooforia)</label>
         <ng-select [items]="filteredCompanies2"
                    labelKey="name"
-                   valueKey="this"
                    [typeahead]="customFilter"
                    [(ngModel)]="selectedCompany2">
         </ng-select>

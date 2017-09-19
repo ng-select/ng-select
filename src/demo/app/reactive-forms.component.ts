@@ -31,6 +31,7 @@ import {HttpClient} from '@angular/common/http';
             <div class="form-group">
                 <label for="state">Age</label>
                 <ng-select [items]="ages"
+                           valueKey="value"
                            placeholder="Select age"
                            formControlName="age">
                 </ng-select>

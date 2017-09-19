@@ -110,11 +110,6 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
 
     ngOnInit() {
         this.labelKey = this.labelKey || 'label';
-        this.valueKey = this.valueKey || 'value';
-        if (this.valueKey === 'this') {
-            // bind to whole object
-            this.valueKey = undefined;
-        }
     }
 
     @HostListener('keydown', ['$event'])
@@ -181,16 +176,16 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         this.notifyModelChanged();
     }
 
-    writeValue(obj: any): void {
-        if (obj) {
-            let index = -1;
-            if (this.valueKey) {
-                index = this.itemsList.items.findIndex(x => x[this.valueKey] === obj);
+    writeValue(value: any): void {
+        if (value) {
+            if (this.multiple) {
+                value.forEach(item => {
+                    this.selectWriteValue(item);
+                });
             } else {
-                index = this.itemsList.items.indexOf(obj);
+                this.selectWriteValue(value);
             }
-            this._value = this.itemsList.items[index];
-            this.itemsList.select(this._value);
+            this._value = this.itemsList.value;
         } else {
             this._value = null;
         }
@@ -315,6 +310,27 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     onInputBlur($event) {
         this.isFocused = false;
         this.onBlur.emit($event);
+    }
+
+    private validateWriteValue(value: any) {
+        if (value instanceof Object && this.valueKey) {
+            throw new Error('Binding object with valueKey is not allowed.')
+        }
+    }
+
+    private selectWriteValue(value: any) {
+        this.validateWriteValue(value);
+        let index = -1;
+        if (this.valueKey) {
+            index = this.itemsList.items.findIndex(x => x[this.valueKey] === value);
+        } else {
+            index = this.itemsList.items.indexOf(value);
+            index = index > -1 ? index :
+                this.itemsList.items.findIndex(x => x[this.labelKey] === value[this.labelKey])
+        }
+        if (index > -1) {
+            this.itemsList.select(this.itemsList.items[index]);
+        }
     }
 
     private updateModel() {
