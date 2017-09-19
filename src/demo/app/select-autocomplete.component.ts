@@ -8,7 +8,6 @@ import { Observable } from 'rxjs/Observable';
         <label>Search with autocomplete in Github accounts</label>
         <ng-select [items]="items"
                    labelKey="login"
-                   valueKey="this"
                    [typeahead]="typeahead"
                    [(ngModel)]="githubAccount">
 

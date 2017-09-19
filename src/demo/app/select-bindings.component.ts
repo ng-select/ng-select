@@ -14,7 +14,6 @@ import {Component} from '@angular/core';
         <label>Bind model to object</label>
         <ng-select [items]="cities"
                    labelKey="name"
-                   valueKey="this"
                    placeholder="Select value"
                    [clearable]="false"
                    [(ngModel)]="selectedCity">
