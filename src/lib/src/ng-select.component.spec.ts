@@ -124,11 +124,11 @@ describe('NgSelectComponent', function () {
                 const fixture = createTestingModule(
                     NgSelectSelectedSimpleCmp,
                     `<ng-select [items]="cities"
-                    labelKey="name"
-                    valueKey="id"
-                    placeholder="select value"
-                    [(ngModel)]="selectedCity">
-                </ng-select>`);
+                        labelKey="name"
+                        valueKey="id"
+                        placeholder="select value"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
 
                 fixture.detectChanges();
                 tick();
@@ -139,10 +139,10 @@ describe('NgSelectComponent', function () {
                 const fixture = createTestingModule(
                     NgSelectSelectedObjectCmp,
                     `<ng-select [items]="cities"
-                    labelKey="name"
-                    placeholder="select value"
-                    [(ngModel)]="selectedCity">
-                </ng-select>`);
+                        labelKey="name"
+                        placeholder="select value"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
 
                 fixture.detectChanges();
                 tick();
@@ -153,14 +153,29 @@ describe('NgSelectComponent', function () {
                 const fixture = createTestingModule(
                     NgSelectSelectedObjectByRefCmp,
                     `<ng-select [items]="cities"
-                    labelKey="name"
-                    placeholder="select value"
-                    [(ngModel)]="selectedCity">
-                </ng-select>`);
+                        labelKey="name"
+                        placeholder="select value"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
 
                 fixture.detectChanges();
                 tick();
                 expect(fixture.componentInstance.select.value).toEqual({ id: 2, name: 'Kaunas', selected: true })
+            }));
+
+            it('should select none when there is no items', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectSelectedEmptyCmp,
+                    `<ng-select [items]="cities"
+                        labelKey="name"
+                        valueKey="id"
+                        placeholder="select value"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+
+                fixture.detectChanges();
+                tick();
+                expect(fixture.componentInstance.select.value).toBeUndefined();
             }));
         });
 
@@ -498,6 +513,7 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
             NgSelectSelectedObjectByRefCmp,
             NgSelectSelectedSimpleMultipleCmp,
             NgSelectSelectedObjectMultipleCmp,
+            NgSelectSelectedEmptyCmp
         ]
     })
         .overrideComponent(cmp, {
@@ -536,6 +552,15 @@ class NgSelectSelectedSimpleCmp {
         { id: 2, name: 'Kaunas' },
         { id: 3, name: 'Pabrade' },
     ];
+}
+
+@Component({
+    template: ``
+})
+class NgSelectSelectedEmptyCmp {
+    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    selectedCity = 2;
+    cities = [];
 }
 
 @Component({
