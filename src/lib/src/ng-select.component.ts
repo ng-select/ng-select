@@ -211,7 +211,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         }
         this._openClicked = true;
         this.isOpen = true;
-        this.itemsList.markLastSelection();
+        this.itemsList.markSelection();
         this.focusSearchInput();
         this.onOpen.emit();
     }
@@ -236,7 +236,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     toggle(item: NgOption) {
-        if (item.disabled || this.isDisabled) {
+        if (!item || item.disabled || this.isDisabled) {
             return;
         }
 
