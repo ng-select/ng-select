@@ -362,7 +362,9 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     private handleEnter($event: KeyboardEvent) {
-        this.toggle(this.itemsList.markedItem);
+        if (this.isOpen) {
+            this.toggle(this.itemsList.markedItem);
+        }
         $event.preventDefault();
     }
 
