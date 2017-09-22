@@ -97,7 +97,10 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     set items(items: any[]) {
         this._items = items || [];
         this.itemsList = new ItemsList(this._items, this.multiple);
-        this.isLoading = false;
+        
+        if (this.isTypeahead()) {
+            this.handleItemsChange();
+        }
     }
 
     get value(): NgOption | NgOption[] {
@@ -129,6 +132,8 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
                     this.handleEnter($event);
                     break;
                 case KeyCode.Tab:
+                    this.handleTab($event);
+                    break;
                 case KeyCode.Esc:
                     this.close();
                     break;
@@ -318,6 +323,11 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         }
     }
 
+    private handleItemsChange() {
+        this.isLoading = false;
+        this.itemsList.markSelection();
+    }
+
     private selectWriteValue(value: any) {
         this.validateWriteValue(value);
         let index = -1;
@@ -359,6 +369,12 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
 
     private scrollToMarked() {
         this.dropdownList.scrollInto(this.itemsList.markedItem);
+    }
+
+    private handleTab($event: KeyboardEvent) {
+        if (this.isOpen) {
+            this.toggle(this.itemsList.markedItem);
+        }
     }
 
     private handleEnter($event: KeyboardEvent) {

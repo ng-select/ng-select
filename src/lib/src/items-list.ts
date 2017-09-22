@@ -45,9 +45,10 @@ export class ItemsList {
     }
 
     filter(term: string, bindLabel: string) {
-        this._markedItemIndex = -1;
+        this.unmarkCurrentItem();
         const filterFuncVal = this.getDefaultFilterFunc(term, bindLabel);
         this.filteredItems = term ? this.items.filter(val => filterFuncVal(val)) : this.items;
+        this.markItem(0);
     }
 
     clearFilter() {
@@ -63,12 +64,13 @@ export class ItemsList {
     }
 
     markSelection() {
-        const lastSelected = this._selected[this._selected.length - 1];
-        this._markedItemIndex = lastSelected ? this.filteredItems.indexOf(lastSelected) : 0;
-        this.markedItem = this.filteredItems[this._markedItemIndex];
-        if (this.markedItem) {
-            this.markedItem.marked = true;
+        if (this.filteredItems.length === 0) {
+            return;
         }
+
+        const lastSelected = this._selected[this._selected.length - 1];
+        const index = lastSelected ? this.filteredItems.indexOf(lastSelected) : 0;
+        this.markItem(index);
     }
 
     unmarkCurrentItem() {
@@ -105,5 +107,13 @@ export class ItemsList {
                 .toUpperCase()
                 .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
         };
+    }
+
+    private markItem(index: number) {
+        this._markedItemIndex = index;
+        this.markedItem = this.filteredItems[this._markedItemIndex];
+        if (this.markedItem) {
+            this.markedItem.marked = true;
+        }
     }
 }
