@@ -7,7 +7,7 @@
 [coveralls-image]: https://coveralls.io/repos/github/ng-select/ng-select/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/ng-select/ng-select?branch=master
 
-# Angular native ng-select
+# Angular ng-select - All in One UI Select, Multiselect and Autocomplete
 See [Demos](https://ng-select.github.io/ng-select) or try in [Plunker](https://plnkr.co/edit/V5tFfNY28fiaLlNwvcWb?p=preview)
 
 ## Features
@@ -170,29 +170,33 @@ export class SelectAutocompleteComponent {
 }
 ```
 
-### Contributing
+### More demos
+Visit https://github.com/ng-select/ng-select/tree/master/src/demo/app for more examples
 
-Contributions are welcome. You can start by looking at issues with label Help wanted https://github.com/ng-select/ng-select/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22 or creating new Issue with proposal or bug.
 
-### Development
+## Contributing
+
+Contributions are welcome. You can start by looking at issues with label Help wanted https://github.com/ng-select/ng-select/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22 or creating new Issue with proposal or bug report.
+
+## Development
 
 Perform the _clone-to-launch_ steps with these terminal commands.
 
-#### Run demo page in watch mode
+### Run demo page in watch mode
 ```
 git clone https://github.com/ng-select/ng-select
 cd ng-select
 npm install
 npm run serve-demo
 ```
-#### Testing
+### Testing
 ```
 npm run test
 or
 npm run test-watch
 ```
 
-#### Deploy demo to gh-pages
+### Deploy demo to gh-pages
 ```
 npm run gh-pages
 
@@ -200,5 +204,5 @@ npm run gh-pages
 ./publish-demo.sh
 ```
 
-#### Commits
+### Commits
 Follow https://conventionalcommits.org/
