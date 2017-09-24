@@ -218,6 +218,16 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         this.onOpen.emit();
     }
 
+    close() {
+        if (!this.isOpen) {
+            return;
+        }
+        this.isOpen = false;
+        this.clearSearch();
+        this.itemsList.unmarkCurrentItem();
+        this.onClose.emit();
+    }
+
     getLabelValue(value: NgOption) {
         return value ? value[this.bindLabel] : '';
     }
@@ -350,13 +360,6 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     private clearSearch() {
         this.filterValue = null;
         this.itemsList.clearFilter();
-    }
-
-    private close() {
-        this.isOpen = false;
-        this.clearSearch();
-        this.itemsList.unmarkCurrentItem();
-        this.onClose.emit();
     }
 
     private focusSearchInput() {

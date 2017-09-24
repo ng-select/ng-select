@@ -524,6 +524,81 @@ describe('NgSelectComponent', function () {
             }));
         });
     });
+
+    describe('Output events', () => {
+        it('fire open event once', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectEventsTestCmp,
+                `<ng-select [items]="cities"
+                            (open)="onOpen()"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            spyOn(fixture.componentInstance, 'onOpen');
+
+            fixture.componentInstance.select.open();
+            fixture.componentInstance.select.open();
+            tick();
+
+            expect(fixture.componentInstance.onOpen).toHaveBeenCalledTimes(1);
+        }));
+
+        it('fire close event once', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectEventsTestCmp,
+                `<ng-select [items]="cities"
+                            (close)="onClose()"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            spyOn(fixture.componentInstance, 'onClose');
+
+            fixture.componentInstance.select.open();
+            fixture.componentInstance.select.close();
+            fixture.componentInstance.select.close();
+            tick();
+
+            expect(fixture.componentInstance.onClose).toHaveBeenCalledTimes(1);
+        }));
+
+        it('fire change when changed', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectEventsTestCmp,
+                `<ng-select [items]="cities"
+                            (change)="onChange()"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            spyOn(fixture.componentInstance, 'onChange');
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            fixture.detectChanges();
+            tick();
+
+            fixture.componentInstance.select.select(fixture.componentInstance.cities[1]);
+
+            expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
+        }));
+
+        it('do not fire change when item not changed', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectEventsTestCmp,
+                `<ng-select [items]="cities"
+                            (change)="onChange()"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            spyOn(fixture.componentInstance, 'onChange');
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            fixture.detectChanges();
+            tick();
+
+            fixture.componentInstance.select.select(fixture.componentInstance.cities[0]);
+
+            expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(0);
+        }));
+    });
 });
 
 function selectOption(fixture, key: KeyCode, steps: number) {
@@ -559,7 +634,8 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
             NgSelectSelectedObjectByRefCmp,
             NgSelectSelectedSimpleMultipleCmp,
             NgSelectSelectedObjectMultipleCmp,
-            NgSelectSelectedEmptyCmp
+            NgSelectSelectedEmptyCmp,
+            NgSelectEventsTestCmp
         ]
     })
         .overrideComponent(cmp, {
@@ -703,4 +779,32 @@ class NgSelectFilterTestCmp {
     ];
 
     customFilter = new Subject<string>();
+}
+
+@Component({
+    template: ``
+})
+class NgSelectEventsTestCmp {
+    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    selectedCity: { id: number; name: string };
+    cities = [
+        { id: 1, name: 'Vilnius' },
+        { id: 2, name: 'Kaunas' },
+        { id: 3, name: 'Pabrade' },
+    ];
+
+    onChange($event) {
+    }
+
+    onFocus($event: Event) {
+    }
+
+    onBlur($event: Event) {
+    }
+
+    onOpen() {
+    }
+
+    onClose() {
+    }
 }
