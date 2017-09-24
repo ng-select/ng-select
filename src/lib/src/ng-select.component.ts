@@ -81,22 +81,19 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     filterValue: string = null;
 
     private _value: NgOption | NgOption[] = null;
-
     private _openClicked = false;
-    private _items: NgOption[];
     private propagateChange = (_: NgOption) => { };
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
     }
 
     @Input()
-    get items(): any[] {
-        return this._items;
+    get items(): NgOption[] {
+        return this.itemsList.items;
     }
 
-    set items(items: any[]) {
-        this._items = items || [];
-        this.itemsList = new ItemsList(this._items, this.multiple);
+    set items(items: NgOption[]) {
+        this.itemsList = new ItemsList(items || [], this.multiple);
         
         if (this.isTypeahead()) {
             this.handleItemsChange();
