@@ -45,17 +45,10 @@ export class ItemsList {
     }
 
     filter(term: string, bindLabel: string) {
-        this._markedItemIndex = -1;
+        this.unmarkCurrentItem();
         const filterFuncVal = this.getDefaultFilterFunc(term, bindLabel);
         this.filteredItems = term ? this.items.filter(val => filterFuncVal(val)) : this.items;
-    }
-
-    private getDefaultFilterFunc(term, bindLabel: string) {
-        return (val: NgOption) => {
-            return searchHelper.stripSpecialChars(val[bindLabel])
-                .toUpperCase()
-                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
-        };
+        this.markItem(0);
     }
 
     clearFilter() {
@@ -70,9 +63,14 @@ export class ItemsList {
         this.stepToItem(-1);
     }
 
-    markLastSelection() {
+    markSelection() {
+        if (this.filteredItems.length === 0) {
+            return;
+        }
+
         const lastSelected = this._selected[this._selected.length - 1];
-        this._markedItemIndex = this.filteredItems.indexOf(lastSelected);
+        const index = lastSelected ? this.filteredItems.indexOf(lastSelected) : 0;
+        this.markItem(index);
     }
 
     unmarkCurrentItem() {
@@ -101,5 +99,21 @@ export class ItemsList {
             this.stepToItem(steps);
         }
         this.markedItem.marked = true; // TODO: do we need marked property on model?
+    }
+
+    private getDefaultFilterFunc(term, bindLabel: string) {
+        return (val: NgOption) => {
+            return searchHelper.stripSpecialChars(val[bindLabel])
+                .toUpperCase()
+                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
+        };
+    }
+
+    private markItem(index: number) {
+        this._markedItemIndex = index;
+        this.markedItem = this.filteredItems[this._markedItemIndex];
+        if (this.markedItem) {
+            this.markedItem.marked = true;
+        }
     }
 }
