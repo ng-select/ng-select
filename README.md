@@ -75,8 +75,8 @@ map: {
 | Input  | Type | Default | Required | Description |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | [items] | Array<NgOption> | `[]` | yes | Items array |
-| labelKey  | string | `label` | no | Object property to use for label. Default `label`  |
-| valueKey  | string | `-` | no | Object property to use for selected model. By default binds to whole object. |
+| bindLabel  | string | `label` | no | Object property to use for label. Default `label`  |
+| bindValue  | string | `-` | no | Object property to use for selected model. By default binds to whole object. |
 | [clearable] | boolean | `true` | no | Allow to clear selected value. Default `true`|
 | placeholder | string | `-` | no | Placeholder text. |
 | [typeahead] | Subject |  `-` | no | Custom autocomplete or filter. |
@@ -98,8 +98,8 @@ This example in [Plunkr](https://plnkr.co/edit/tjxQgDY2Pn8RRPsoVAa0?p=preview)
     template: `
         <label>City</label>
         <ng-select [items]="cities"
-                   labelKey="name"
-                   valueKey="id"
+                   bindLabel="name"
+                   bindValue="id"
                    placeholder="Select city"
                    [(ngModel)]="selectedCityId">
         </ng-select>
@@ -127,7 +127,7 @@ This example in [Plunkr](https://plnkr.co/edit/sArBdPLJDUy4Da7zBOGJ?p=preview)
     template: `
         <label>Search with autocomplete in Github accounts</label>
         <ng-select [items]="items"
-                   labelKey="login"
+                   bindLabel="login"
                    placeholder="Type to search"
                    [typeahead]="typeahead"
                    [(ngModel)]="githubAccount">

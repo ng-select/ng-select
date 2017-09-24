@@ -20,7 +20,7 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,
                 `<ng-select [items]="cities"
-                        labelKey="name"
+                        bindLabel="name"
                         [clearable]="true"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
@@ -68,8 +68,8 @@ describe('NgSelectComponent', function () {
             const fixture = createTestingModule(
                 NgSelectCustomBindingsTestCmp,
                 `<ng-select [items]="cities"
-                            labelKey="name"
-                            valueKey="id"
+                            bindLabel="name"
+                            bindValue="id"
                             [(ngModel)]="selectedCityId">
                 </ng-select>`);
 
@@ -95,7 +95,7 @@ describe('NgSelectComponent', function () {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
-                            labelKey="name"
+                            bindLabel="name"
                             [(ngModel)]="selectedCity">
                 </ng-select>`);
 
@@ -120,12 +120,12 @@ describe('NgSelectComponent', function () {
 
     describe('Pre-selected model', () => {
         describe('single', () => {
-            it('should select by valueKey when primitive type', fakeAsync(() => {
+            it('should select by bindValue when primitive type', fakeAsync(() => {
                 const fixture = createTestingModule(
                     NgSelectSelectedSimpleCmp,
                     `<ng-select [items]="cities"
-                        labelKey="name"
-                        valueKey="id"
+                        bindLabel="name"
+                        bindValue="id"
                         placeholder="select value"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
@@ -135,11 +135,11 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.value).toEqual({ id: 2, name: 'Kaunas', selected: true });
             }));
 
-            it('should select by labelKey when binding to object', fakeAsync(() => {
+            it('should select by bindLabel when binding to object', fakeAsync(() => {
                 const fixture = createTestingModule(
                     NgSelectSelectedObjectCmp,
                     `<ng-select [items]="cities"
-                        labelKey="name"
+                        bindLabel="name"
                         placeholder="select value"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
@@ -153,7 +153,7 @@ describe('NgSelectComponent', function () {
                 const fixture = createTestingModule(
                     NgSelectSelectedObjectByRefCmp,
                     `<ng-select [items]="cities"
-                        labelKey="name"
+                        bindLabel="name"
                         placeholder="select value"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
@@ -167,8 +167,8 @@ describe('NgSelectComponent', function () {
                 const fixture = createTestingModule(
                     NgSelectSelectedEmptyCmp,
                     `<ng-select [items]="cities"
-                        labelKey="name"
-                        valueKey="id"
+                        bindLabel="name"
+                        bindValue="id"
                         placeholder="select value"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
@@ -181,12 +181,12 @@ describe('NgSelectComponent', function () {
 
         describe('multiple', () => {
             const result = [{ id: 2, name: 'Kaunas', selected: true }, { id: 3, name: 'Pabrade', selected: true }];
-            it('should select by valueKey when primitive type', fakeAsync(() => {
+            it('should select by bindValue when primitive type', fakeAsync(() => {
                 const fixture = createTestingModule(
                     NgSelectSelectedSimpleMultipleCmp,
                     `<ng-select [items]="cities"
-                        labelKey="name"
-                        valueKey="id"
+                        bindLabel="name"
+                        bindValue="id"
                         multiple="true"
                         placeholder="select value"
                         [(ngModel)]="selectedCity">
@@ -198,11 +198,11 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.value).toEqual(result)
             }));
 
-            it('should select by labelKey when binding to object', fakeAsync(() => {
+            it('should select by bindLabel when binding to object', fakeAsync(() => {
                 const fixture = createTestingModule(
                     NgSelectSelectedObjectMultipleCmp,
                     `<ng-select [items]="cities"
-                        labelKey="name"
+                        bindLabel="name"
                         multiple="true"
                         placeholder="select value"
                         [(ngModel)]="selectedCity">
@@ -222,7 +222,7 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
-                        labelKey="name"
+                        bindLabel="name"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
         });
@@ -304,7 +304,7 @@ describe('NgSelectComponent', function () {
                 NgSelectBasicTestCmp,
                 `<button id="close">close</button>
                 <ng-select id="select" [items]="cities"
-                        labelKey="name"
+                        bindLabel="name"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
         });
@@ -427,7 +427,7 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
-                    labelKey="name"
+                    bindLabel="name"
                     placeholder="select value"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
@@ -460,7 +460,7 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
-                    labelKey="name"
+                    bindLabel="name"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
@@ -475,7 +475,7 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
-                    labelKey="name"
+                    bindLabel="name"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
@@ -492,7 +492,7 @@ describe('NgSelectComponent', function () {
                     NgSelectFilterTestCmp,
                     `<ng-select [items]="cities"
                         [typeahead]="customFilter"
-                        labelKey="name"
+                        bindLabel="name"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
                 fixture.detectChanges();

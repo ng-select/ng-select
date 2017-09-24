@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
     template: `
         <label>Search with autocomplete in Github accounts</label>
         <ng-select [items]="items"
-                   labelKey="login"
+                   bindLabel="login"
                    [typeahead]="typeahead"
                    [(ngModel)]="githubAccount">
 
