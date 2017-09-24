@@ -12,8 +12,8 @@ interface AngSelectEvent {
         <label>Focus, Blur, Change, Filter</label>
         <ng-select [items]="cities"
                    [(ngModel)]="selectedCity"
-                   labelKey="name"
-                   valueKey="id"
+                   bindLabel="name"
+                   bindValue="id"
                    (open)="onOpen()"
                    (close)="onClose()"
                    (focus)="onFocus($event)"

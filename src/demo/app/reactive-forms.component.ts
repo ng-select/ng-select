@@ -21,8 +21,8 @@ import {HttpClient} from '@angular/common/http';
             <div class="form-group">
                 <label for="state">City</label>
                 <ng-select [items]="cities"
-                           labelKey="name"
-                           valueKey="id"
+                           bindLabel="name"
+                           bindValue="id"
                            placeholder="Select city"
                            formControlName="city">
                 </ng-select>
@@ -31,7 +31,7 @@ import {HttpClient} from '@angular/common/http';
             <div class="form-group">
                 <label for="state">Age</label>
                 <ng-select [items]="ages"
-                           valueKey="value"
+                           bindValue="value"
                            placeholder="Select age"
                            formControlName="age">
                 </ng-select>
@@ -42,8 +42,8 @@ import {HttpClient} from '@angular/common/http';
             <div class="form-group">
                 <label for="album">Favorite album</label>
                 <ng-select [items]="albums"
-                           labelKey="title"
-                           valueKey="id"
+                           bindLabel="title"
+                           bindValue="id"
                            placeholder="Select album"
                            formControlName="album">
                     <ng-template ng-option-tmp let-item="item">
@@ -57,8 +57,8 @@ import {HttpClient} from '@angular/common/http';
             <div class="form-group">
                 <label for="album">Favorite photo</label>
                 <ng-select [items]="photos"
-                           labelKey="title"
-                           valueKey="thumbnailUrl"
+                           bindLabel="title"
+                           bindValue="thumbnailUrl"
                            placeholder="Select photo"
                            formControlName="photo">
                     <ng-template ng-display-tmp let-item="item">

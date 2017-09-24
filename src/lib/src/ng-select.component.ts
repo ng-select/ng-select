@@ -49,8 +49,8 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     @ViewChild('filterInput') filterInput;
 
     // inputs
-    @Input() labelKey: string;
-    @Input() valueKey: string;
+    @Input() bindLabel: string;
+    @Input() bindValue: string;
     @Input() clearable = true;
     @Input() placeholder: string;
     @Input() typeahead: Subject<string>;
@@ -112,7 +112,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     ngOnInit() {
-        this.labelKey = this.labelKey || 'label';
+        this.bindLabel = this.bindLabel || 'label';
     }
 
     @HostListener('keydown', ['$event'])
@@ -222,7 +222,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     getLabelValue(value: NgOption) {
-        return value ? value[this.labelKey] : '';
+        return value ? value[this.bindLabel] : '';
     }
 
     getDisplayTemplateContext() {
@@ -303,7 +303,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
             this.isLoading = true;
             this.typeahead.next(this.filterValue);
         } else {
-            this.itemsList.filter(this.filterValue, this.labelKey);
+            this.itemsList.filter(this.filterValue, this.bindLabel);
         }
     }
 
@@ -318,8 +318,8 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     private validateWriteValue(value: any) {
-        if (value instanceof Object && this.valueKey) {
-            throw new Error('Binding object with valueKey is not allowed.')
+        if (value instanceof Object && this.bindValue) {
+            throw new Error('Binding object with bindValue is not allowed.')
         }
     }
 
@@ -331,12 +331,12 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     private selectWriteValue(value: any) {
         this.validateWriteValue(value);
         let index = -1;
-        if (this.valueKey) {
-            index = this.itemsList.items.findIndex(x => x[this.valueKey] === value);
+        if (this.bindValue) {
+            index = this.itemsList.items.findIndex(x => x[this.bindValue] === value);
         } else {
             index = this.itemsList.items.indexOf(value);
             index = index > -1 ? index :
-                this.itemsList.items.findIndex(x => x[this.labelKey] === value[this.labelKey])
+                this.itemsList.items.findIndex(x => x[this.bindLabel] === value[this.bindLabel])
         }
         if (index > -1) {
             this.itemsList.select(this.itemsList.items[index]);
@@ -411,10 +411,10 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     private notifyModelChanged() {
         if (!this._value) {
             this.propagateChange(null);
-        } else if (this.valueKey) {
+        } else if (this.bindValue) {
             const bindValue = Array.isArray(this._value) ?
-                this._value.map(x => x[this.valueKey]) :
-                this._value[this.valueKey];
+                this._value.map(x => x[this.bindValue]) :
+                this._value[this.bindValue];
             this.propagateChange(bindValue);
         } else {
             this.propagateChange(this._value);

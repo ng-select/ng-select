@@ -3,33 +3,33 @@ import {Component} from '@angular/core';
 @Component({
     selector: 'select-bindings',
     template: `
-        <label>Bind to default <b>label</b>, <b>value</b> bindings</label>
+        <label>Bind to default <b>label</b>, <b>object</b> bindings</label>
         <ng-select [items]="defaultBindingsList"
-                   [(ngModel)]="selectedCityId">
+                   [(ngModel)]="selectedCity2">
         </ng-select>
         <p>
-            Selected value: {{selectedCityId | json}}
+            Selected city object: {{selectedCity2 | json}}
         </p>
         <hr>
-        <label>Bind model to object</label>
+        <label>Bind label to custom property</label>
         <ng-select [items]="cities"
-                   labelKey="name"
+                   bindLabel="name"
                    placeholder="Select value"
                    [clearable]="false"
                    [(ngModel)]="selectedCity">
         </ng-select>
         <p>
-            Selected value: {{selectedCity | json}}
+            Selected city object: {{selectedCity | json}}
         </p>
         <hr>
-        <label>Bind model to custom property</label>
+        <label>Bind label and model to custom properties</label>
         <ng-select [items]="cities"
-                   labelKey="name"
-                   valueKey="id"
+                   bindLabel="name"
+                   bindValue="id"
                    [(ngModel)]="selectedCityId2">
         </ng-select>
         <p>
-            Selected value: {{selectedCityId2 | json}}
+            Selected city ID: {{selectedCityId2 | json}}
         </p>
     `
 })
@@ -48,7 +48,7 @@ export class SelectBindingsComponent {
     ];
 
     selectedCity: any;
-    selectedCityId: number = null;
+    selectedCity2: number = null;
     selectedCityId2: number = null;
 
     ngOnInit() {
