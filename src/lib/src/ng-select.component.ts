@@ -49,8 +49,8 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     @ViewChild('filterInput') filterInput;
 
     // inputs
-    @Input() labelKey: string;
-    @Input() valueKey: string;
+    @Input() bindLabel: string;
+    @Input() bindValue: string;
     @Input() clearable = true;
     @Input() placeholder: string;
     @Input() typeahead: Subject<string>;
@@ -81,24 +81,23 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     filterValue: string = null;
 
     private _value: NgOption | NgOption[] = null;
-
     private _openClicked = false;
-    private _items: NgOption[];
-    private propagateChange = (_: NgOption) => {
-    };
+    private propagateChange = (_: NgOption) => { };
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
     }
 
     @Input()
-    get items(): any[] {
-        return this._items;
+    get items(): NgOption[] {
+        return this.itemsList.items;
     }
 
-    set items(items: any[]) {
-        this._items = items || [];
-        this.itemsList = new ItemsList(this._items, this.multiple);
-        this.isLoading = false;
+    set items(items: NgOption[]) {
+        this.itemsList = new ItemsList(items || [], this.multiple);
+
+        if (this.isTypeahead()) {
+            this.handleItemsChange();
+        }
     }
 
     get value(): NgOption | NgOption[] {
@@ -110,7 +109,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     ngOnInit() {
-        this.labelKey = this.labelKey || 'label';
+        this.bindLabel = this.bindLabel || 'label';
     }
 
     @HostListener('keydown', ['$event'])
@@ -130,6 +129,8 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
                     this.handleEnter($event);
                     break;
                 case KeyCode.Tab:
+                    this.handleTab($event);
+                    break;
                 case KeyCode.Esc:
                     this.close();
                     break;
@@ -212,13 +213,13 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         }
         this._openClicked = true;
         this.isOpen = true;
-        this.itemsList.markLastSelection();
+        this.itemsList.markSelection();
         this.focusSearchInput();
         this.onOpen.emit();
     }
 
     getLabelValue(value: NgOption) {
-        return value ? value[this.labelKey] : '';
+        return value ? value[this.bindLabel] : '';
     }
 
     getDisplayTemplateContext() {
@@ -237,7 +238,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     toggle(item: NgOption) {
-        if (item.disabled || this.isDisabled) {
+        if (!item || item.disabled || this.isDisabled) {
             return;
         }
 
@@ -300,7 +301,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
             this.isLoading = true;
             this.typeahead.next(this.filterValue);
         } else {
-            this.itemsList.filter(this.filterValue, this.labelKey);
+            this.itemsList.filter(this.filterValue, this.bindLabel);
         }
     }
 
@@ -315,20 +316,25 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     private validateWriteValue(value: any) {
-        if (value instanceof Object && this.valueKey) {
-            throw new Error('Binding object with valueKey is not allowed.')
+        if (value instanceof Object && this.bindValue) {
+            throw new Error('Binding object with bindValue is not allowed.')
         }
+    }
+
+    private handleItemsChange() {
+        this.isLoading = false;
+        this.itemsList.markSelection();
     }
 
     private selectWriteValue(value: any) {
         this.validateWriteValue(value);
         let index = -1;
-        if (this.valueKey) {
-            index = this.itemsList.items.findIndex(x => x[this.valueKey] === value);
+        if (this.bindValue) {
+            index = this.itemsList.items.findIndex(x => x[this.bindValue] === value);
         } else {
             index = this.itemsList.items.indexOf(value);
             index = index > -1 ? index :
-                this.itemsList.items.findIndex(x => x[this.labelKey] === value[this.labelKey])
+                this.itemsList.items.findIndex(x => x[this.bindLabel] === value[this.bindLabel])
         }
         if (index > -1) {
             this.itemsList.select(this.itemsList.items[index]);
@@ -363,8 +369,16 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         this.dropdownList.scrollInto(this.itemsList.markedItem);
     }
 
+    private handleTab($event: KeyboardEvent) {
+        if (this.isOpen) {
+            this.toggle(this.itemsList.markedItem);
+        }
+    }
+
     private handleEnter($event: KeyboardEvent) {
-        this.toggle(this.itemsList.markedItem);
+        if (this.isOpen) {
+            this.toggle(this.itemsList.markedItem);
+        }
         $event.preventDefault();
     }
 
@@ -395,10 +409,10 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     private notifyModelChanged() {
         if (!this._value) {
             this.propagateChange(null);
-        } else if (this.valueKey) {
+        } else if (this.bindValue) {
             const bindValue = Array.isArray(this._value) ?
-                this._value.map(x => x[this.valueKey]) :
-                this._value[this.valueKey];
+                this._value.map(x => x[this.bindValue]) :
+                this._value[this.bindValue];
             this.propagateChange(bindValue);
         } else {
             this.propagateChange(this._value);

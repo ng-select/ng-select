@@ -55,7 +55,7 @@
              [class.selected]="item.selected"
              [class.marked]="item.marked">
 
-            <span *ngIf="!optionTemplateRef">{{item[labelKey]}}</span>
+            <span *ngIf="!optionTemplateRef">{{item[bindLabel]}}</span>
 
             <ng-template  *ngIf="optionTemplateRef"
                           [ngTemplateOutlet]="optionTemplateRef.template"

@@ -6,7 +6,7 @@ import { NgOption } from '@ng-select/ng-select';
         <label>Select multiple elements</label>
         <ng-select 
             [items]="companies"
-            labelKey="name"
+            bindLabel="name"
             [multiple]="true"
             [(ngModel)]="selectedCompany">
         </ng-select>
@@ -17,7 +17,7 @@ import { NgOption } from '@ng-select/ng-select';
         <label>Disabled multiple elements</label>
         <ng-select 
             [items]="companies2"
-            labelKey="name"
+            bindLabel="name"
             [multiple]="true"
             [disabled]="disable"
             [(ngModel)]="selectedCompanyDisabled">

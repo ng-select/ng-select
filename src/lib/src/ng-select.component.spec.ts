@@ -20,7 +20,7 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,
                 `<ng-select [items]="cities"
-                        labelKey="name"
+                        bindLabel="name"
                         [clearable]="true"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
@@ -28,7 +28,7 @@ describe('NgSelectComponent', function () {
 
         it('update parent selected model on value change', fakeAsync(() => {
             // select second city
-            selectOption(fixture, KeyCode.ArrowDown, 2);
+            selectOption(fixture, KeyCode.ArrowDown, 1);
 
             fixture.detectChanges();
             tick();
@@ -68,13 +68,13 @@ describe('NgSelectComponent', function () {
             const fixture = createTestingModule(
                 NgSelectCustomBindingsTestCmp,
                 `<ng-select [items]="cities"
-                            labelKey="name"
-                            valueKey="id"
+                            bindLabel="name"
+                            bindValue="id"
                             [(ngModel)]="selectedCityId">
                 </ng-select>`);
 
             // from component to model
-            selectOption(fixture, KeyCode.ArrowDown, 1);
+            selectOption(fixture, KeyCode.ArrowDown, 0);
 
             fixture.detectChanges();
             tick();
@@ -95,12 +95,12 @@ describe('NgSelectComponent', function () {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
-                            labelKey="name"
+                            bindLabel="name"
                             [(ngModel)]="selectedCity">
                 </ng-select>`);
 
             // from component to model
-            selectOption(fixture, KeyCode.ArrowDown, 1);
+            selectOption(fixture, KeyCode.ArrowDown, 0);
 
             fixture.detectChanges();
             tick();
@@ -120,12 +120,12 @@ describe('NgSelectComponent', function () {
 
     describe('Pre-selected model', () => {
         describe('single', () => {
-            it('should select by valueKey when primitive type', fakeAsync(() => {
+            it('should select by bindValue when primitive type', fakeAsync(() => {
                 const fixture = createTestingModule(
                     NgSelectSelectedSimpleCmp,
                     `<ng-select [items]="cities"
-                        labelKey="name"
-                        valueKey="id"
+                        bindLabel="name"
+                        bindValue="id"
                         placeholder="select value"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
@@ -135,11 +135,11 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.value).toEqual({ id: 2, name: 'Kaunas', selected: true });
             }));
 
-            it('should select by labelKey when binding to object', fakeAsync(() => {
+            it('should select by bindLabel when binding to object', fakeAsync(() => {
                 const fixture = createTestingModule(
                     NgSelectSelectedObjectCmp,
                     `<ng-select [items]="cities"
-                        labelKey="name"
+                        bindLabel="name"
                         placeholder="select value"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
@@ -153,7 +153,7 @@ describe('NgSelectComponent', function () {
                 const fixture = createTestingModule(
                     NgSelectSelectedObjectByRefCmp,
                     `<ng-select [items]="cities"
-                        labelKey="name"
+                        bindLabel="name"
                         placeholder="select value"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
@@ -167,8 +167,8 @@ describe('NgSelectComponent', function () {
                 const fixture = createTestingModule(
                     NgSelectSelectedEmptyCmp,
                     `<ng-select [items]="cities"
-                        labelKey="name"
-                        valueKey="id"
+                        bindLabel="name"
+                        bindValue="id"
                         placeholder="select value"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
@@ -181,12 +181,12 @@ describe('NgSelectComponent', function () {
 
         describe('multiple', () => {
             const result = [{ id: 2, name: 'Kaunas', selected: true }, { id: 3, name: 'Pabrade', selected: true }];
-            it('should select by valueKey when primitive type', fakeAsync(() => {
+            it('should select by bindValue when primitive type', fakeAsync(() => {
                 const fixture = createTestingModule(
                     NgSelectSelectedSimpleMultipleCmp,
                     `<ng-select [items]="cities"
-                        labelKey="name"
-                        valueKey="id"
+                        bindLabel="name"
+                        bindValue="id"
                         multiple="true"
                         placeholder="select value"
                         [(ngModel)]="selectedCity">
@@ -198,11 +198,11 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.value).toEqual(result)
             }));
 
-            it('should select by labelKey when binding to object', fakeAsync(() => {
+            it('should select by bindLabel when binding to object', fakeAsync(() => {
                 const fixture = createTestingModule(
                     NgSelectSelectedObjectMultipleCmp,
                     `<ng-select [items]="cities"
-                        labelKey="name"
+                        bindLabel="name"
                         multiple="true"
                         placeholder="select value"
                         [(ngModel)]="selectedCity">
@@ -222,7 +222,7 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
-                        labelKey="name"
+                        bindLabel="name"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
         });
@@ -232,9 +232,15 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         });
 
+        it('should mark first item on open', () => {
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
+        });
+
         it('select next value on arrow down', () => {
             selectOption(fixture, KeyCode.ArrowDown, 1);
-            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
+            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[1]);
         });
 
         it('select first value on arrow down when current selected value is last', async(() => {
@@ -278,18 +284,15 @@ describe('NgSelectComponent', function () {
 
         it('close opened dropdown on esc click', () => {
             fixture.componentInstance.select.isOpen = true;
-
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Esc);
-
             expect(fixture.componentInstance.select.isOpen).toBe(false);
         });
 
-        it('close opened dropdown on tab click', () => {
-            fixture.componentInstance.select.isOpen = true;
-
+        it('should close opened dropdown and select marked value on tab click', () => {
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
-
-            expect(fixture.componentInstance.select.isOpen).toBe(false);
+            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
+            expect(fixture.componentInstance.select.isOpen).toBeFalsy()
         });
     });
 
@@ -301,7 +304,7 @@ describe('NgSelectComponent', function () {
                 NgSelectBasicTestCmp,
                 `<button id="close">close</button>
                 <ng-select id="select" [items]="cities"
-                        labelKey="name"
+                        bindLabel="name"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
         });
@@ -392,15 +395,24 @@ describe('NgSelectComponent', function () {
         }));
 
         it('should toggle selected item', fakeAsync(() => {
-            selectOption(fixture, KeyCode.ArrowDown, 1);
+            selectOption(fixture, KeyCode.ArrowDown, 0);
             selectOption(fixture, KeyCode.ArrowDown, 2);
             detectChanges();
             expect((<NgOption[]>fixture.componentInstance.select.value).length).toBe(2);
+
             selectOption(fixture, KeyCode.ArrowDown, 1);
             detectChanges();
             expect((<NgOption[]>fixture.componentInstance.select.value).length).toBe(1);
             expect(fixture.componentInstance.select.value[0].name).toBe('Pabrade');
         }));
+
+        it('should not toggle item on enter when dropdown is closed', () => {
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Esc);
+            expect((<NgOption[]>fixture.componentInstance.select.value).length).toBe(1);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect((<NgOption[]>fixture.componentInstance.select.value).length).toBe(1);
+        })
 
         function detectChanges() {
             fixture.detectChanges();
@@ -415,7 +427,7 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
-                    labelKey="name"
+                    bindLabel="name"
                     placeholder="select value"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
@@ -444,11 +456,11 @@ describe('NgSelectComponent', function () {
     describe('Filter', () => {
         let fixture: ComponentFixture<NgSelectFilterTestCmp>;
 
-        it('filter items with default filter', fakeAsync(() => {
+        it('should filter using default implementation', fakeAsync(() => {
             fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
-                    labelKey="name"
+                    bindLabel="name"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
@@ -456,28 +468,62 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.select.onFilter({ target: { value: 'vilnius' } });
             tick(200);
 
-            expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual([{ id: 1, name: 'Vilnius' }]);
+            expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual([{ id: 1, name: 'Vilnius', marked: true }]);
         }));
 
-        it('filter items with custom observable typeahead', async(() => {
+        it('should mark first item on filter', fakeAsync(() => {
             fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
-                    [typeahead]="customFilter"
-                    labelKey="name"
+                    bindLabel="name"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
             fixture.detectChanges();
-            fixture.componentInstance.select.onFilter({ target: { value: 'vilnius' } });
-
-            fixture.componentInstance.customeFilter.subscribe(term => {
-                expect(term).toBe('vilnius');
-            });
+            fixture.componentInstance.select.onFilter({ target: { value: 'pab' } });
+            tick(200);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[2])
         }));
 
-    });
+        describe('with typeahead', () => {
+            beforeEach(() => {
+                fixture = createTestingModule(
+                    NgSelectFilterTestCmp,
+                    `<ng-select [items]="cities"
+                        [typeahead]="customFilter"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+                fixture.detectChanges();
+            });
 
+            it('should push term to custom observable', async(() => {
+                fixture.componentInstance.customFilter.subscribe(term => {
+                    expect(term).toBe('vilnius');
+                });
+                fixture.componentInstance.select.onFilter({ target: { value: 'vilnius' } });
+            }));
+
+            it('should mark first item when typeahead results are loaded', async(() => {
+                fixture.componentInstance.customFilter.subscribe();
+                fixture.componentInstance.select.onFilter({ target: { value: 'buk' } });
+                fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];
+                fixture.detectChanges();
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining({ id: 4, name: 'Bukiskes' }))
+            }));
+
+            it('should start and stop loading indicator', async(() => {
+                fixture.componentInstance.customFilter.subscribe();
+                fixture.componentInstance.select.onFilter({ target: { value: 'buk' } });
+                expect(fixture.componentInstance.select.isLoading).toBeTruthy();
+                fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];
+                fixture.detectChanges();
+                expect(fixture.componentInstance.select.isLoading).toBeFalsy();
+            }));
+        });
+    });
 });
 
 function selectOption(fixture, key: KeyCode, steps: number) {
@@ -656,5 +702,5 @@ class NgSelectFilterTestCmp {
         { id: 3, name: 'Pabrade' },
     ];
 
-    customeFilter = new Subject<string>();
+    customFilter = new Subject<string>();
 }
