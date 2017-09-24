@@ -84,7 +84,8 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
 
     private _openClicked = false;
     private _items: NgOption[];
-    private propagateChange = (_: NgOption) => { };
+    private propagateChange = (_: NgOption) => {
+    };
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
     }
@@ -206,7 +207,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     open() {
-        if (this.isDisabled) {
+        if (this.isDisabled || this.isOpen) {
             return;
         }
         this._openClicked = true;
@@ -221,7 +222,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     getDisplayTemplateContext() {
-        return this._value ? { item: this._value } : { item: {} };
+        return this._value ? {item: this._value} : {item: {}};
     }
 
     getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {
@@ -241,22 +242,23 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         }
 
         if (this.multiple && item.selected) {
-            this.unselect(item);
+            this.unSelect(item);
         } else {
             this.select(item);
         }
     }
 
     select(item: NgOption) {
-        this.itemsList.select(item);
-        this.updateModel();
+        if (this.itemsList.select(item)) {
+            this.updateModel();
+        }
         if (!this.multiple) {
             this.close();
         }
     }
 
-    unselect(item: NgOption) {
-        this.itemsList.unselect(item);
+    unSelect(item: NgOption) {
+        this.itemsList.unSelect(item);
         this.updateModel();
     }
 

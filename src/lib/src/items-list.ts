@@ -24,15 +24,19 @@ export class ItemsList {
         return this._selected[0];
     }
 
-    select(item: NgOption) {
+    select(item: NgOption): boolean {
+        if (this._selected.indexOf(item) > -1) {
+            return false;
+        }
         if (!this._multiple) {
             this.clearSelected();
         }
         this._selected.push(item);
         item.selected = true;
+        return true;
     }
 
-    unselect(item: NgOption) {
+    unSelect(item: NgOption) {
         this._selected = this._selected.filter(x => x !== item);
         item.selected = false;
     }
