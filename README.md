@@ -60,13 +60,13 @@ map: {
 - [x] Virtual Scroll support with large data sets (>5000 items).
 - [x] Filter data by display text
 - [x] Filter data by custom filter function
-- [x] Expose usefull events like blur, change, focus, close, open ...
+- [x] Expose useful events like blur, change, focus, close, open ...
 - [x] Correct keyboard events behaviour
 - [x] Integration app generated with angular-cli
 - [x] Good base functionality test coverage
-- [ ] HTML5 Standart https://developer.mozilla.org/en/docs/Web/HTML/Element/select except multiselect
 - [x] Multiselect support
 - [x] Autocomplete
+- [ ] Custom tags
 - [ ] Accessibility
 
 ## Usage
