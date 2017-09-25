@@ -260,9 +260,12 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     select(item: NgOption) {
-        if (this.itemsList.select(item)) {
-            this.updateModel();
+        if (item.selected) {
+            return;
         }
+
+        this.itemsList.select(item);
+        this.updateModel();
         if (!this.multiple) {
             this.close();
         }

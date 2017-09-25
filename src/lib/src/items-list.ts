@@ -25,9 +25,6 @@ export class ItemsList {
     }
 
     select(item: NgOption): boolean {
-        if (this._selected.indexOf(item) > -1) {
-            return false;
-        }
         if (!this._multiple) {
             this.clearSelected();
         }
