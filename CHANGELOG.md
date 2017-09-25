@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.1.0"></a>
+# [0.1.0](https://github.com/ng-select/ng-select/compare/v0.0.5...v0.1.0) (2017-09-25)
+
+
+### Bug Fixes
+
+* do not fire duplicate events ([ebf2927](https://github.com/ng-select/ng-select/commit/ebf2927))
+* Fire close event only dropdown was opened ([e4084ea](https://github.com/ng-select/ng-select/commit/e4084ea))
+* increase dropdown container height ([1c30d71](https://github.com/ng-select/ng-select/commit/1c30d71))
+
+
+### Features
+
+* focus first item on open/keyup ([72f4dd0](https://github.com/ng-select/ng-select/commit/72f4dd0))
+
+
+
 <a name="0.0.5"></a>
 ## [0.0.5](https://github.com/ng-select/ng-select/compare/v0.0.4...v0.0.5) (2017-09-14)
 
