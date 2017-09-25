@@ -8,14 +8,14 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
-* do not fire duplicate events ([ebf2927](https://github.com/ng-select/ng-select/commit/ebf2927))
+* Do not fire duplicate events ([ebf2927](https://github.com/ng-select/ng-select/commit/ebf2927))
 * Fire close event only dropdown was opened ([e4084ea](https://github.com/ng-select/ng-select/commit/e4084ea))
-* increase dropdown container height ([1c30d71](https://github.com/ng-select/ng-select/commit/1c30d71))
+* Increase dropdown container height ([1c30d71](https://github.com/ng-select/ng-select/commit/1c30d71))
 
 
 ### Features
 
-* focus first item on open/keyup ([72f4dd0](https://github.com/ng-select/ng-select/commit/72f4dd0))
+* Focus first item on open/keyup ([72f4dd0](https://github.com/ng-select/ng-select/commit/72f4dd0))
 
 
 
