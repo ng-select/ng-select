@@ -94,7 +94,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
 
     set items(items: NgOption[]) {
         this.itemsList = new ItemsList(items || [], this.multiple);
-        
+
         if (this.isTypeahead()) {
             this.handleItemsChange();
         }
@@ -208,7 +208,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     open() {
-        if (this.isDisabled) {
+        if (this.isDisabled || this.isOpen) {
             return;
         }
         this._openClicked = true;
@@ -218,12 +218,22 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         this.onOpen.emit();
     }
 
+    close() {
+        if (!this.isOpen) {
+            return;
+        }
+        this.isOpen = false;
+        this.clearSearch();
+        this.itemsList.unmarkCurrentItem();
+        this.onClose.emit();
+    }
+
     getLabelValue(value: NgOption) {
         return value ? value[this.bindLabel] : '';
     }
 
     getDisplayTemplateContext() {
-        return this._value ? { item: this._value } : { item: {} };
+        return this._value ? {item: this._value} : {item: {}};
     }
 
     getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {
@@ -243,13 +253,17 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         }
 
         if (this.multiple && item.selected) {
-            this.unselect(item);
+            this.unSelect(item);
         } else {
             this.select(item);
         }
     }
 
     select(item: NgOption) {
+        if (item.selected) {
+            return;
+        }
+
         this.itemsList.select(item);
         this.updateModel();
         if (!this.multiple) {
@@ -257,8 +271,8 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         }
     }
 
-    unselect(item: NgOption) {
-        this.itemsList.unselect(item);
+    unSelect(item: NgOption) {
+        this.itemsList.unSelect(item);
         this.updateModel();
     }
 
@@ -349,13 +363,6 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     private clearSearch() {
         this.filterValue = null;
         this.itemsList.clearFilter();
-    }
-
-    private close() {
-        this.isOpen = false;
-        this.clearSearch();
-        this.itemsList.unmarkCurrentItem();
-        this.onClose.emit();
     }
 
     private focusSearchInput() {

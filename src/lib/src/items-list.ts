@@ -32,7 +32,7 @@ export class ItemsList {
         item.selected = true;
     }
 
-    unselect(item: NgOption) {
+    unSelect(item: NgOption) {
         this._selected = this._selected.filter(x => x !== item);
         item.selected = false;
     }
