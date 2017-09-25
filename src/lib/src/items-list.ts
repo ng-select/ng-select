@@ -24,13 +24,12 @@ export class ItemsList {
         return this._selected[0];
     }
 
-    select(item: NgOption): boolean {
+    select(item: NgOption) {
         if (!this._multiple) {
             this.clearSelected();
         }
         this._selected.push(item);
         item.selected = true;
-        return true;
     }
 
     unSelect(item: NgOption) {
