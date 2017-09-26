@@ -121,6 +121,8 @@ export class CitiesPageComponent {
 ### Flexible autocomplete
 
 This example in [Plunkr](https://plnkr.co/edit/sArBdPLJDUy4Da7zBOGJ?p=preview)
+
+In case of autocomplete you can get full control by creating simple `EventEmmiter` and passing it as an input to ng-select. When you type text, ng-select will fire events to EventEmmiter to which you can subscribe and control bunch of things like debounce, http cancellation and so on.
 ```js
 @Component({
     selector: 'select-autocomplete',
@@ -166,6 +168,49 @@ export class SelectAutocompleteComponent {
 
     loadGithubUsers(term: string): Observable<any[]> {
         return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).map(rsp => rsp.items);
+    }
+}
+```
+
+### Custom display and option templates
+This example in [Plunkr](https://plnkr.co/edit/IXZ53DD6jRaIPlei8yVI?p=preview)
+
+To customize look of input display or option item you can use `ng-template` with `ng-display-tmp` or `ng-option-tmp` directives applied to it.
+```js
+import {Component, NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {FormsModule} from '@angular/forms';
+import {NgSelectModule} from '@ng-select/ng-select';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+
+@Component({
+    selector: 'select-custom-templates',
+    template: `
+        <label>Demo for ng-select with custom templates</label>
+        <ng-select [items]="albums"
+                   [(ngModel)]="selectedAlbumId"
+                   bindLabel="title"
+                   bindValue="id"
+                   placeholder="Select album">
+            <ng-template ng-display-tmp let-item="item">
+               <b>({{item.id}})</b> {{item.title}}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+                <div>Title: {{item.title}}</div>
+                <small><b>Id:</b> {{item.id}} | <b>UserId:</b> {{item.userId}}</small>
+            </ng-template>
+        </ng-select>
+        <p>Selected album ID: {{selectedAlbumId || 'none'}}</p>
+    `
+})
+export class SelectCustomTemplatesComponent {
+    albums = [];
+    selectedAlbumId = null;
+
+    constructor(http: HttpClient) {
+        http.get<any[]>('https://jsonplaceholder.typicode.com/albums').subscribe(albums => {
+            this.albums = albums;
+        });
     }
 }
 ```
