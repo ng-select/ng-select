@@ -10,6 +10,12 @@
 # Angular ng-select - All in One UI Select, Multiselect and Autocomplete
 See [Demos](https://ng-select.github.io/ng-select) or try in [Plunker](https://plnkr.co/edit/V5tFfNY28fiaLlNwvcWb?p=preview)
 
+Table of contents
+=================
+
+  * [Features](#features)
+  * [Examples](#examples)
+
 ## Features
 - [x] Custom bindings to property or object
 - [x] Custom option and label templates
@@ -69,7 +75,7 @@ map: {
 - [ ] Custom tags
 - [ ] Accessibility
 
-## Usage
+## Examples
 
 ### API
 | Input  | Type | Default | Required | Description |
