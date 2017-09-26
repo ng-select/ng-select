@@ -14,7 +14,15 @@ Table of contents
 =================
 
   * [Features](#features)
+  * [Getting started](#getting-started)
+  * [Roadmap](#roadmap)
   * [Examples](#examples)
+    * [API](#api)
+    * [Basic example](#basic-example)
+    * [Flexible autocomplete](#flexible-autocomplete)
+    * [Custom display and option templates](#custom-display-and-option-templates)
+  * [Contributing](#contributing)
+  * [Development](#development)
 
 ## Features
 - [x] Custom bindings to property or object
