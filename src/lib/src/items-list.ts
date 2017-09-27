@@ -40,6 +40,7 @@ export class ItemsList {
     clearSelected() {
         this._selected.forEach((item) => {
             item.selected = false;
+            item.marked = false;
         });
         this._selected = [];
     }

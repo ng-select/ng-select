@@ -179,6 +179,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     writeValue(value: any): void {
+        this.itemsList.clearSelected();
         if (value) {
             if (this.multiple) {
                 value.forEach(item => {

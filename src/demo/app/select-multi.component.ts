@@ -4,23 +4,24 @@ import { NgOption } from '@ng-select/ng-select';
 @Component({
     template: `
         <label>Select multiple elements</label>
-        <ng-select 
-            [items]="companies"
-            bindLabel="name"
-            [multiple]="true"
-            [(ngModel)]="selectedCompany">
+        <ng-select
+                [items]="companies"
+                bindLabel="name"
+                [multiple]="true"
+                [(ngModel)]="selectedCompanies">
         </ng-select>
         <p>
-            Selected value: {{selectedCompany | json}}
+            Selected value: {{selectedCompanies | json}} <br>
+            <button (click)="clearModel()" class="btn btn-secondary btn-sm">Clear model</button>
         </p>
 
         <label>Disabled multiple elements</label>
-        <ng-select 
-            [items]="companies2"
-            bindLabel="name"
-            [multiple]="true"
-            [disabled]="disable"
-            [(ngModel)]="selectedCompanyDisabled">
+        <ng-select
+                [items]="companies2"
+                bindLabel="name"
+                [multiple]="true"
+                [disabled]="disable"
+                [(ngModel)]="selectedCompaniesDisabled">
         </ng-select>
         <br>
         <button class="btn btn-secondary btn-sm" (click)="disable = !disable">Toggle disabled</button>
@@ -30,8 +31,8 @@ export class SelectMultiComponent {
 
     companies: any[] = [];
     companies2: any[] = [];
-    selectedCompany: any;
-    selectedCompanyDisabled: any;
+    selectedCompanies: any;
+    selectedCompaniesDisabled: any;
     disable = true;
 
     /* tslint:disable */
@@ -44,7 +45,11 @@ export class SelectMultiComponent {
             this.companies2.push({ id: i, name: c });
         });
 
-        this.selectedCompanyDisabled = [{ id: 0, name: 'Miškas' }, { id: 1, name: 'Žalias' }]
+        this.selectedCompaniesDisabled = [{ id: 0, name: 'Miškas' }, { id: 1, name: 'Žalias' }]
+    }
+
+    clearModel() {
+        this.selectedCompanies = [];
     }
 }
 
