@@ -455,5 +455,3 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         return !!value;
     }
 }
-
-
