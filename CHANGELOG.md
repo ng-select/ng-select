@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.1.1"></a>
+## [0.1.1](https://github.com/ng-select/ng-select/compare/v0.1.0...v0.1.1) (2017-09-27)
+
+
+### Bug Fixes
+
+* Clear all selected values before new model write action ([c76d410](https://github.com/ng-select/ng-select/commit/c76d410))
+
+
+
 <a name="0.1.0"></a>
 # [0.1.0](https://github.com/ng-select/ng-select/compare/v0.0.5...v0.1.0) (2017-09-25)
 
