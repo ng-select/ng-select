@@ -224,7 +224,8 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
             return;
         }
         this.isOpen = false;
-        this.clearSearch();
+        this.filterValue = this.getLabelValue(this.value);
+        this.itemsList.clearFilter();
         this.itemsList.unmarkCurrentItem();
         this.onClose.emit();
     }
@@ -316,6 +317,10 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
             this.typeahead.next(this.filterValue);
         } else {
             this.itemsList.filter(this.filterValue, this.bindLabel);
+        }
+
+        if (!this.filterValue && this.clearable) {
+            this.clear();
         }
     }
 
