@@ -7,27 +7,21 @@ import {HttpClient} from '@angular/common/http';
     selector: 'reactive-forms',
     template: `
         <form [formGroup]="heroForm" novalidate>
-
             <div class="form-group">
-                <label for="name">Name</label>
-                <input formControlName="name" class="form-control" id="name" placeholder="Enter name">
-            </div>
-
-            <div class="form-group">
-                <label for="street">Street</label>
-                <input formControlName="street" class="form-control" id="street" placeholder="Enter street">
-            </div>
-
-            <div class="form-group">
-                <label for="state">City</label>
-                <ng-select [items]="cities"
+                <label for="state">Cities</label>
+                <ng-select *ngIf="isCitiesControlVisible"
+                           [items]="cities"
                            bindLabel="name"
                            bindValue="id"
-                           placeholder="Select city"
-                           formControlName="city">
+                           [multiple]="true"
+                           placeholder="Select cities"
+                           formControlName="selectedCitiesIds">
                 </ng-select>
+                <br>
+                <button (click)="toggleCitiesControl()" class="btn btn-sm btn-secondary">Show/Hide</button>
+                <button (click)="clearCities()" class="btn btn-sm btn-secondary">Clear</button>
             </div>
-
+            <hr>
             <div class="form-group">
                 <label for="state">Age</label>
                 <ng-select [items]="ages"
@@ -38,7 +32,7 @@ import {HttpClient} from '@angular/common/http';
                 <br>
                 <button class="btn btn-secondary btn-sm" (click)="toggleAgeDisable()">Toggle disabled</button>
             </div>
-
+            <hr>
             <div class="form-group">
                 <label for="album">Favorite album</label>
                 <ng-select [items]="albums"
@@ -53,7 +47,7 @@ import {HttpClient} from '@angular/common/http';
                 </ng-select>
                 <small class="form-text text-muted">Albums data from backend using HttpClient.</small>
             </div>
-
+            <hr>
             <div class="form-group">
                 <label for="album">Favorite photo</label>
                 <ng-select [items]="photos"
@@ -81,10 +75,12 @@ export class ReactiveFormsComponent {
 
     heroForm: FormGroup;
 
+    isCitiesControlVisible = true;
     cities: NgOption[] = [
         {id: 1, name: 'Vilnius'},
         {id: 2, name: 'Kaunas'},
-        {id: 3, name: 'Pavilnys', disabled: true}
+        {id: 3, name: 'Pavilnys (Disabled)', disabled: true},
+        {id: 4, name: 'Pabradė'},
     ];
 
     ages: NgOption[] = [
@@ -105,9 +101,7 @@ export class ReactiveFormsComponent {
         this.loadPhotos();
 
         this.heroForm = this.fb.group({
-            name: ['', Validators.required],
-            street: '',
-            city: '',
+            selectedCitiesIds: [],
             age: '',
             album: '',
             photo: ''
@@ -120,6 +114,14 @@ export class ReactiveFormsComponent {
         } else {
             this.heroForm.controls.age.disable();
         }
+    }
+
+    toggleCitiesControl() {
+        this.isCitiesControlVisible = !this.isCitiesControlVisible;
+    }
+
+    clearCities() {
+        this.heroForm.get('selectedCitiesIds').patchValue([]);
     }
 
     private loadAlbums() {
