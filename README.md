@@ -255,6 +255,14 @@ or
 npm run test-watch
 ```
 
+### Publishing to npm
+```
+./prerelease.sh
+```
+Script will pull from master, run command `npm run release` and `npm run build`. 
+After this you need to check if CHANGELOG is correct and run `npm publish --access=public
+` from `dist` folder.
+
 ### Deploy demo to gh-pages
 ```
 npm run gh-pages
