@@ -14,13 +14,12 @@ import {
     HostBinding,
     ViewChild,
     ElementRef,
-    ChangeDetectionStrategy,
-    AfterContentInit
+    ChangeDetectionStrategy
 } from '@angular/core';
 
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NgOptionDirective, NgDisplayDirective } from './ng-templates.directive';
+import { NgOptionTemplateDirective, NgLabelTemplateDirective } from './ng-templates.directive';
 import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, KeyCode } from './ng-select.types';
 import { ItemsList } from './items-list';
@@ -43,10 +42,11 @@ const NGB_ANG_SELECT_VALUE_ACCESSOR = {
         'role': 'dropdown'
     }
 })
-export class NgSelectComponent implements OnInit, OnDestroy, AfterContentInit, ControlValueAccessor {
+export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
-    @ContentChild(NgOptionDirective) optionDirective: NgOptionDirective;
-    @ContentChild(NgDisplayDirective) displayDirective: NgDisplayDirective;
+    @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
+    @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
+    
     @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
     @ViewChild('filterInput') filterInput;
 
@@ -76,9 +76,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, AfterContentInit, C
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
-
-    optionTemplate: TemplateRef<any>;
-    labelTemplate: TemplateRef<any>;
 
     itemsList = new ItemsList([], false);
     viewPortItems: NgOption[] = [];
@@ -110,15 +107,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, AfterContentInit, C
 
     ngOnInit() {
         this.bindLabel = this.bindLabel || 'label';
-    }
-
-    ngAfterContentInit() {
-        if (this.optionDirective) {
-            this.optionTemplate = this.optionDirective.template;
-        }
-        if (this.displayDirective) {
-            this.labelTemplate = this.displayDirective.template;
-        }
     }
 
     ngOnDestroy() {

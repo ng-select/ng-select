@@ -392,7 +392,7 @@ describe('NgSelectComponent', function () {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities" [(ngModel)]="selectedCity">
-                    <ng-template ng-display-tmp let-item="item">
+                    <ng-template ng-label-tmp let-item="item">
                         <div class="custom-header">{{item.name}}</div>
                     </ng-template>
                 </ng-select>`);
