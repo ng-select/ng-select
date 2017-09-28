@@ -1,6 +1,7 @@
 import {
     Component,
     OnInit,
+    OnDestroy,
     forwardRef,
     ChangeDetectorRef,
     Input,
@@ -41,7 +42,7 @@ const NGB_ANG_SELECT_VALUE_ACCESSOR = {
         'role': 'dropdown'
     }
 })
-export class NgSelectComponent implements OnInit, ControlValueAccessor {
+export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
     @ContentChild(NgOptionDirective) optionTemplateRef: TemplateRef<any>;
     @ContentChild(NgDisplayDirective) displayTemplateRef: TemplateRef<any>;
@@ -80,7 +81,6 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     isLoading = false;
     filterValue: string = null;
 
-    private _value: NgOption | NgOption[] = null;
     private _openClicked = false;
     private propagateChange = (_: NgOption) => { };
 
@@ -101,15 +101,15 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     get value(): NgOption | NgOption[] {
-        return this._value;
-    }
-
-    set value(value: NgOption | NgOption[]) {
-        this._value = value;
+        return this.itemsList.value;
     }
 
     ngOnInit() {
         this.bindLabel = this.bindLabel || 'label';
+    }
+
+    ngOnDestroy() {
+        this.changeDetectorRef.detach();
     }
 
     @HostListener('keydown', ['$event'])
@@ -171,7 +171,6 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         if (!this.clearable) {
             return;
         }
-        this._value = null;
         this.itemsList.clearSelected();
 
         this.clearSearch();
@@ -188,12 +187,8 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
             } else {
                 this.selectWriteValue(value);
             }
-            this._value = this.itemsList.value;
-        } else {
-            this._value = null;
         }
-
-        this.changeDetectorRef.detectChanges();
+        this.detectChanges();
     }
 
     registerOnChange(fn: any): void {
@@ -234,7 +229,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     getDisplayTemplateContext() {
-        return this._value ? {item: this._value} : {item: {}};
+        return this.itemsList.value ? {item: this.itemsList.value} : {item: {}};
     }
 
     getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {
@@ -278,15 +273,15 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     showPlaceholder() {
-        return this.placeholder && !isDefined(this.value) && !this.filterValue;
+        return this.placeholder && !this.isValueSet(this.value) && !this.filterValue;
     }
 
     showValue() {
-        return !this.filterValue && isDefined(this.value);
+        return !this.filterValue && this.isValueSet(this.value);
     }
 
     showClear() {
-        return this.clearable && isDefined(this.value) && !this.isDisabled;
+        return this.clearable && this.isValueSet(this.value) && !this.isDisabled;
     }
 
     showFilter() {
@@ -356,7 +351,6 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     private updateModel() {
-        this._value = this.itemsList.value;
         this.notifyModelChanged();
         this.changeDetectorRef.markForCheck();
     }
@@ -414,17 +408,18 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     private notifyModelChanged() {
-        if (!this._value) {
+        const value = this.itemsList.value;
+        if (!value) {
             this.propagateChange(null);
         } else if (this.bindValue) {
-            const bindValue = Array.isArray(this._value) ?
-                this._value.map(x => x[this.bindValue]) :
-                this._value[this.bindValue];
+            const bindValue = Array.isArray(value) ?
+                value.map(x => x[this.bindValue]) :
+                value[this.bindValue];
             this.propagateChange(bindValue);
         } else {
-            this.propagateChange(this._value);
+            this.propagateChange(value);
         }
-        this.onChange.emit(this._value);
+        this.onChange.emit(value);
     }
 
     private getDropdownMenu() {
@@ -437,8 +432,17 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     private isTypeahead() {
         return this.typeahead && this.typeahead.observers.length > 0;
     }
-}
 
-function isDefined(value: any): boolean {
-    return !!value;
+    private detectChanges() {
+        if (!(<any>this.changeDetectorRef).destroyed) {
+            this.changeDetectorRef.detectChanges();
+        }
+    }
+
+    private isValueSet(value: any): boolean {
+        if (this.multiple) {
+            return !!value && value.length > 0;
+        }
+        return !!value;
+    }
 }
