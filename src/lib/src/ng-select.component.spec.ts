@@ -61,7 +61,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
             tick();
 
-            expect(fixture.componentInstance.select.value).toBeUndefined();
+            expect(fixture.componentInstance.select.value).toEqual(null);
             discardPeriodicTasks();
         }));
 
@@ -89,7 +89,29 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.selectedCity = null;
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.select.value).toBeUndefined();
+            expect(fixture.componentInstance.select.value).toEqual(null);
+        }));
+
+        it('should clear previous value when setting new model', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectModelChangesTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            fixture.detectChanges();
+            tick();
+
+            const lastSelection: any = fixture.componentInstance.cities[0];
+            expect(lastSelection.selected).toBeTruthy();
+
+            fixture.componentInstance.selectedCity = null;
+            fixture.detectChanges();
+            tick();
+            expect(lastSelection.selected).toBeFalsy();
         }));
     });
 
@@ -206,7 +228,7 @@ describe('NgSelectComponent', function () {
 
                 fixture.detectChanges();
                 tick();
-                expect(fixture.componentInstance.select.value).toBeUndefined();
+                expect(fixture.componentInstance.select.value).toEqual(null);
             }));
         });
 
