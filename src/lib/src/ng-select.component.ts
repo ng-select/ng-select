@@ -15,6 +15,7 @@ import {
     ViewChild,
     ElementRef,
     ChangeDetectionStrategy,
+    AfterContentInit
 } from '@angular/core';
 
 
@@ -42,10 +43,10 @@ const NGB_ANG_SELECT_VALUE_ACCESSOR = {
         'role': 'dropdown'
     }
 })
-export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class NgSelectComponent implements OnInit, OnDestroy, AfterContentInit, ControlValueAccessor {
 
-    @ContentChild(NgOptionDirective) optionTemplateRef: TemplateRef<any>;
-    @ContentChild(NgDisplayDirective) displayTemplateRef: TemplateRef<any>;
+    @ContentChild(NgOptionDirective) optionDirective: NgOptionDirective;
+    @ContentChild(NgDisplayDirective) displayDirective: NgDisplayDirective;
     @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
     @ViewChild('filterInput') filterInput;
 
@@ -75,6 +76,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
+
+    optionTemplate: TemplateRef<any>;
+    labelTemplate: TemplateRef<any>;
 
     itemsList = new ItemsList([], false);
     viewPortItems: NgOption[] = [];
@@ -106,6 +110,15 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     ngOnInit() {
         this.bindLabel = this.bindLabel || 'label';
+    }
+
+    ngAfterContentInit() {
+        if (this.optionDirective) {
+            this.optionTemplate = this.optionDirective.template;
+        }
+        if (this.displayDirective) {
+            this.labelTemplate = this.displayDirective.template;
+        }
     }
 
     ngOnDestroy() {
@@ -229,18 +242,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     getDisplayTemplateContext() {
-        return this.itemsList.value ? {item: this.itemsList.value} : {item: {}};
-    }
-
-    getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {
-        return {
-            item: item || {},
-            index: index,
-            first: first,
-            last: last,
-            even: even,
-            odd: odd
-        };
+        return this.itemsList.value ? { item: this.itemsList.value } : { item: {} };
     }
 
     toggle(item: NgOption) {
