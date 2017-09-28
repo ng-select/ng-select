@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgOption} from '@ng-select/ng-select';
 import {HttpClient} from '@angular/common/http';
@@ -65,6 +65,8 @@ import {HttpClient} from '@angular/common/http';
                     </ng-template>
                 </ng-select>
                 <small class="form-text text-muted">5000 items with virtual scroll</small>
+                <br>
+                <button class="btn btn-secondary btn-sm" (click)="selectFirstPhoto()">Select first photo</button>
             </div>
         </form>
 
@@ -122,6 +124,10 @@ export class ReactiveFormsComponent {
 
     clearCities() {
         this.heroForm.get('selectedCitiesIds').patchValue([]);
+    }
+
+    selectFirstPhoto() {
+        this.heroForm.get('photo').patchValue(this.photos[0].thumbnailUrl);
     }
 
     private loadAlbums() {

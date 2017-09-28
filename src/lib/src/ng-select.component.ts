@@ -81,7 +81,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     isLoading = false;
     filterValue: string = null;
 
-    private _value: NgOption | NgOption[] = null;
     private _openClicked = false;
     private propagateChange = (_: NgOption) => { };
 
@@ -102,11 +101,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     get value(): NgOption | NgOption[] {
-        return this._value;
-    }
-
-    set value(value: NgOption | NgOption[]) {
-        this._value = value;
+        return this.itemsList.value;
     }
 
     ngOnInit() {
@@ -176,7 +171,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         if (!this.clearable) {
             return;
         }
-        this._value = null;
         this.itemsList.clearSelected();
 
         this.clearSearch();
@@ -193,9 +187,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
             } else {
                 this.selectWriteValue(value);
             }
-            this._value = this.itemsList.value;
-        } else {
-            this._value = null;
         }
         this.detectChanges();
     }
@@ -238,7 +229,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     getDisplayTemplateContext() {
-        return this._value ? {item: this._value} : {item: {}};
+        return this.itemsList.value ? {item: this.itemsList.value} : {item: {}};
     }
 
     getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {
@@ -360,7 +351,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     private updateModel() {
-        this._value = this.itemsList.value;
         this.notifyModelChanged();
         this.changeDetectorRef.markForCheck();
     }
@@ -418,17 +408,18 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     private notifyModelChanged() {
-        if (!this._value) {
+        const value = this.itemsList.value;
+        if (!value) {
             this.propagateChange(null);
         } else if (this.bindValue) {
-            const bindValue = Array.isArray(this._value) ?
-                this._value.map(x => x[this.bindValue]) :
-                this._value[this.bindValue];
+            const bindValue = Array.isArray(value) ?
+                value.map(x => x[this.bindValue]) :
+                value[this.bindValue];
             this.propagateChange(bindValue);
         } else {
-            this.propagateChange(this._value);
+            this.propagateChange(value);
         }
-        this.onChange.emit(this._value);
+        this.onChange.emit(value);
     }
 
     private getDropdownMenu() {

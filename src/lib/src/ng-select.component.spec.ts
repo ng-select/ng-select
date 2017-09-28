@@ -13,38 +13,42 @@ import { Subject } from 'rxjs/Subject';
 
 describe('NgSelectComponent', function () {
 
-    describe('Model changes', () => {
-        let fixture: ComponentFixture<NgSelectBasicTestCmp>;
-
-        beforeEach(() => {
-            fixture = createTestingModule(
+    describe('Model change detection', () => {
+        it('update ngModel on value change', fakeAsync(() => {
+            const fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,
                 `<ng-select [items]="cities"
                         bindLabel="name"
                         [clearable]="true"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
-        });
 
-        it('update parent selected model on value change', fakeAsync(() => {
             // select second city
             selectOption(fixture, KeyCode.ArrowDown, 1);
 
             fixture.detectChanges();
             tick();
 
-            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[1]);
             expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[1]);
 
             // clear select
             fixture.componentInstance.select.clear();
             fixture.detectChanges();
             tick();
+
             expect(fixture.componentInstance.selectedCity).toEqual(null);
             discardPeriodicTasks();
         }));
 
-        it('update ng-select value on parent model change', fakeAsync(() => {
+        it('update internal model on ngModel change', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectModelChangesTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
             // select first city
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             fixture.detectChanges();
@@ -57,8 +61,35 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
             tick();
 
-            expect(fixture.componentInstance.select.value).toEqual(null);
+            expect(fixture.componentInstance.select.value).toBeUndefined();
             discardPeriodicTasks();
+        }));
+
+        it('update internal model after it was toggled with *ngIf', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectModelChangesTestCmp,
+                `<ng-select *ngIf="visible"
+                        [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            // select first city
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            fixture.detectChanges();
+
+            // toggle to hide/show
+            fixture.componentInstance.toggleVisible();
+            fixture.detectChanges();
+            fixture.componentInstance.toggleVisible();
+            fixture.detectChanges();
+
+            // select second city
+            fixture.componentInstance.selectedCity = null;
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.select.value).toBeUndefined();
         }));
     });
 
@@ -757,6 +788,8 @@ class NgSelectCustomBindingsTestCmp {
 })
 class NgSelectModelChangesTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
+
+    visible = true;
     selectedCity: { id: number; name: string };
     cities = [
         { id: 1, name: 'Vilnius' },
@@ -764,6 +797,10 @@ class NgSelectModelChangesTestCmp {
         { id: 3, name: 'Pabrade' },
         { id: 4, name: 'Klaipėda' },
     ];
+
+    toggleVisible() {
+        this.visible = !this.visible;
+    }
 }
 
 @Component({
