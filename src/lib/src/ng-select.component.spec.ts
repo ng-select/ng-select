@@ -175,7 +175,7 @@ describe('NgSelectComponent', function () {
 
                 fixture.detectChanges();
                 tick();
-                expect(fixture.componentInstance.select.value).toBeUndefined();
+                expect(fixture.componentInstance.select.value).toBeNull();
             }));
         });
 
