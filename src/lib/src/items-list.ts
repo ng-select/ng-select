@@ -45,6 +45,13 @@ export class ItemsList {
         this._selected = [];
     }
 
+    unSelectLastItem() {
+        if (this._selected.length) {
+            this._selected[this._selected.length - 1].selected = false;
+            this._selected.splice(this._selected.length - 1, 1);
+        }
+    }
+
     filter(term: string, bindLabel: string) {
         this.unmarkCurrentItem();
         const filterFuncVal = this.getDefaultFilterFunc(term, bindLabel);

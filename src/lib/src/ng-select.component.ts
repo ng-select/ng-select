@@ -134,6 +134,11 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
                 case KeyCode.Esc:
                     this.close();
                     break;
+                case KeyCode.Backspace:
+                    if (this.multiple) {
+                        this.unSelectLastItem();
+                    }
+                    break;
             }
         }
     }
@@ -189,6 +194,10 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
                 this.selectWriteValue(value);
             }
             this._value = this.itemsList.value;
+
+            if (this.single) {
+                this.filterValue = this.getLabelValue(this.value);
+            }
         } else {
             this._value = null;
         }
@@ -224,7 +233,6 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
             return;
         }
         this.isOpen = false;
-        this.filterValue = this.getLabelValue(this.value);
         this.itemsList.clearFilter();
         this.itemsList.unmarkCurrentItem();
         this.onClose.emit();
@@ -235,7 +243,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
     }
 
     getDisplayTemplateContext() {
-        return this._value ? {item: this._value} : {item: {}};
+        return this._value ? { item: this._value } : { item: {} };
     }
 
     getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {
@@ -270,6 +278,7 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         this.updateModel();
         if (!this.multiple) {
             this.close();
+            this.filterValue = this.getLabelValue(this.value);
         }
     }
 
@@ -278,16 +287,21 @@ export class NgSelectComponent implements OnInit, ControlValueAccessor {
         this.updateModel();
     }
 
+    unSelectLastItem() {
+        this.itemsList.unSelectLastItem();
+        this.updateModel();
+    }
+
     showPlaceholder() {
         return this.placeholder && !isDefined(this.value) && !this.filterValue;
     }
 
     showValue() {
-        return !this.filterValue && isDefined(this.value);
+        return (!this.isFocused || !this.filterValue) && isDefined(this.value);
     }
 
     showClear() {
-        return this.clearable && isDefined(this.value) && !this.isDisabled;
+        return (isDefined(this.filterValue) || isDefined(this.value)) && this.clearable && !this.isDisabled;
     }
 
     showFilter() {
