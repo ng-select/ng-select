@@ -21,7 +21,7 @@ export class ItemsList {
         if (this._multiple) {
             return this._selected;
         }
-        return this._selected[0];
+        return this._selected[0] || null;
     }
 
     select(item: NgOption) {
