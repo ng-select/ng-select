@@ -160,6 +160,10 @@ ng-select {
       padding: 8px 0 12px;
       /* For IE 8 compatibility */
       -webkit-appearance: none;
+
+      &:not(:focus){
+        text-indent: -9999px;
+      }
     }
   }
 

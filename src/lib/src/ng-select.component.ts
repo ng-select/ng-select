@@ -134,6 +134,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
                 case KeyCode.Esc:
                     this.close();
                     break;
+                case KeyCode.Backspace:
+                    if (this.multiple) {
+                        this.unSelectLastItem();
+                    }
+                    break;
             }
         }
     }
@@ -187,6 +192,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
             } else {
                 this.selectWriteValue(value);
             }
+            if (this.single) {
+                this.filterValue = this.getLabelValue(this.value);
+            }
         }
         this.detectChanges();
     }
@@ -219,7 +227,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
             return;
         }
         this.isOpen = false;
-        this.clearSearch();
+        this.itemsList.clearFilter();
         this.itemsList.unmarkCurrentItem();
         this.onClose.emit();
     }
@@ -229,7 +237,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     getDisplayTemplateContext() {
-        return this.itemsList.value ? {item: this.itemsList.value} : {item: {}};
+        return this.itemsList.value ? { item: this.itemsList.value } : { item: {} };
     }
 
     getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {
@@ -264,6 +272,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.updateModel();
         if (!this.multiple) {
             this.close();
+            this.filterValue = this.getLabelValue(this.value);
         }
     }
 
@@ -272,16 +281,21 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.updateModel();
     }
 
+    unSelectLastItem() {
+        this.itemsList.unSelectLastItem();
+        this.updateModel();
+    }
+
     showPlaceholder() {
         return this.placeholder && !this.isValueSet(this.value) && !this.filterValue;
     }
 
     showValue() {
-        return !this.filterValue && this.isValueSet(this.value);
+        return (!this.isFocused || !this.filterValue) && this.isValueSet(this.value);
     }
 
     showClear() {
-        return this.clearable && this.isValueSet(this.value) && !this.isDisabled;
+        return this.clearable && (this.filterValue || this.isValueSet(this.value)) && !this.isDisabled;
     }
 
     showFilter() {
@@ -311,6 +325,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
             this.typeahead.next(this.filterValue);
         } else {
             this.itemsList.filter(this.filterValue, this.bindLabel);
+        }
+
+        if (!this.filterValue && this.clearable) {
+            this.clear();
         }
     }
 
