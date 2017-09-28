@@ -60,6 +60,20 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.value).toEqual(null);
             discardPeriodicTasks();
         }));
+
+        it('should clear previous value when setting new model', fakeAsync(() => {
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            fixture.detectChanges();
+            tick();
+
+            const lastSelection: any = fixture.componentInstance.cities[0];
+            expect(lastSelection.selected).toBeTruthy();
+
+            fixture.componentInstance.selectedCity = null;
+            fixture.detectChanges();
+            tick();
+            expect(lastSelection.selected).toBeFalsy();
+        }));
     });
 
     describe('Model bindings', () => {
