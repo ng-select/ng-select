@@ -7,11 +7,11 @@
             <div class="as-value" *ngIf="showValue()">
                     <span class="as-value-label" role="option" aria-selected="true">
                             <ng-template 
-                                *ngIf="displayTemplateRef" 
-                                [ngTemplateOutlet]="displayTemplateRef.template"
-                                [ngOutletContext]="getDisplayTemplateContext()">
+                                *ngIf="labelTemplate" 
+                                [ngTemplateOutlet]="labelTemplate"
+                                [ngTemplateOutletContext]="getDisplayTemplateContext()">
                             </ng-template>
-                            <span *ngIf="!displayTemplateRef">{{getLabelValue(value)}}</span>
+                            <span *ngIf="!labelTemplate">{{getLabelValue(value)}}</span>
                     </span>
             </div>
         </ng-container>
@@ -55,11 +55,11 @@
              [class.selected]="item.selected"
              [class.marked]="item.marked">
 
-            <span *ngIf="!optionTemplateRef">{{item[bindLabel]}}</span>
+            <span *ngIf="!optionTemplate">{{item[bindLabel]}}</span>
 
-            <ng-template  *ngIf="optionTemplateRef"
-                          [ngTemplateOutlet]="optionTemplateRef.template"
-                          [ngOutletContext]="getOptionTemplateContext(item, index, first, last, even, odd)">
+            <ng-template  *ngIf="optionTemplate"
+                          [ngTemplateOutlet]="optionTemplate"
+                          [ngTemplateOutletContext]="{ item: item, index: index, first: first, last: last, even: even, odd: odd }">
             </ng-template>
         </div>
     </virtual-scroll>

@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
     template: `
         <label>Custom label</label>
         <ng-select [items]="cities" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
-            <ng-template ng-display-tmp let-item="item">
+            <ng-template ng-label-tmp let-item="item">
                 <img height="15" width="15" [src]="item.avatar"/>
                 {{item.name}}
             </ng-template>
@@ -29,7 +29,7 @@ import { Component } from '@angular/core';
 
         <label>Custom label and option</label>
         <ng-select [items]="cities3" [(ngModel)]="selectedCity3" bindLabel="name" bindValue="name">
-            <ng-template ng-display-tmp let-item="item">
+            <ng-template ng-label-tmp let-item="item">
                 <img height="15" width="15" [src]="item.avatar"/>
                 <b>{{item.name}}</b>
             </ng-template>

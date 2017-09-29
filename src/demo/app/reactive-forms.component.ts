@@ -55,7 +55,7 @@ import {HttpClient} from '@angular/common/http';
                            bindValue="thumbnailUrl"
                            placeholder="Select photo"
                            formControlName="photo">
-                    <ng-template ng-display-tmp let-item="item">
+                    <ng-template ng-label-tmp let-item="item">
                         <img height="15" width="15" [src]="item.thumbnailUrl"/>
                         <span>{{item.title}}</span>
                     </ng-template>

@@ -14,12 +14,12 @@ import {
     HostBinding,
     ViewChild,
     ElementRef,
-    ChangeDetectionStrategy,
+    ChangeDetectionStrategy
 } from '@angular/core';
 
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NgOptionDirective, NgDisplayDirective } from './ng-templates.directive';
+import { NgOptionTemplateDirective, NgLabelTemplateDirective } from './ng-templates.directive';
 import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, KeyCode } from './ng-select.types';
 import { ItemsList } from './items-list';
@@ -44,8 +44,9 @@ const NGB_ANG_SELECT_VALUE_ACCESSOR = {
 })
 export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
-    @ContentChild(NgOptionDirective) optionTemplateRef: TemplateRef<any>;
-    @ContentChild(NgDisplayDirective) displayTemplateRef: TemplateRef<any>;
+    @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
+    @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
+    
     @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
     @ViewChild('filterInput') filterInput;
 
@@ -229,18 +230,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     getDisplayTemplateContext() {
-        return this.itemsList.value ? {item: this.itemsList.value} : {item: {}};
-    }
-
-    getOptionTemplateContext(item: any, index: number, first: boolean, last: boolean, even: boolean, odd: boolean) {
-        return {
-            item: item || {},
-            index: index,
-            first: first,
-            last: last,
-            even: even,
-            odd: odd
-        };
+        return this.itemsList.value ? { item: this.itemsList.value } : { item: {} };
     }
 
     toggle(item: NgOption) {
