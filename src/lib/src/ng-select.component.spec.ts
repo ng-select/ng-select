@@ -288,9 +288,11 @@ describe('NgSelectComponent', function () {
         });
 
         it('should mark first item on open', () => {
+            const result = fixture.componentInstance.cities[0];
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(jasmine.objectContaining(result));
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
-            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
+            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(result));
         });
 
         it('select next value on arrow down', () => {
@@ -317,14 +319,13 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[1]));
         }));
 
-        it('select previous value on arrow up', async(() => {
+        it('select previous value on arrow up', fakeAsync(() => {
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[1];
             fixture.detectChanges();
-
-            fixture.whenStable().then(() => {
-                selectOption(fixture, KeyCode.ArrowUp, 1);
-                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
-            });
+            tick();
+            selectOption(fixture, KeyCode.ArrowUp, 1);
+            tick();
+            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
         }));
 
         it('select last value on arrow up when current selected value is first', async(() => {
@@ -533,12 +534,14 @@ describe('NgSelectComponent', function () {
                     bindLabel="name"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
-
+            
+            const result = jasmine.objectContaining(fixture.componentInstance.cities[2]);
             fixture.detectChanges();
             fixture.componentInstance.select.onFilter({ target: { value: 'pab' } });
             tick(200);
+            expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(result)
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
-            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[2]));
+            expect(fixture.componentInstance.select.value).toEqual(result);
         }));
 
         describe('with typeahead', () => {
