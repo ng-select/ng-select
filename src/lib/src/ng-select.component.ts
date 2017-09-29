@@ -46,7 +46,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
     @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
-    
+
     @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
     @ViewChild('filterInput') filterInput;
 
@@ -221,7 +221,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         }
         this.isOpen = false;
         this.clearSearch();
-        this.itemsList.unmarkCurrentItem();
         this.onClose.emit();
     }
 
@@ -239,7 +238,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         }
 
         if (this.multiple && item.selected) {
-            this.unSelect(item);
+            this.unselect(item);
         } else {
             this.select(item);
         }
@@ -257,8 +256,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         }
     }
 
-    unSelect(item: NgOption) {
-        this.itemsList.unSelect(item);
+    unselect(item: NgOption) {
+        this.itemsList.unselect(item);
         this.updateModel();
     }
 

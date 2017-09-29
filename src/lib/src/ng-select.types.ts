@@ -1,5 +1,6 @@
 export interface NgOption {
     [name: string]: any;
+    index?: number;
     selected?: boolean;
     disabled?: boolean;
     marked?: boolean;

@@ -29,7 +29,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
             tick();
 
-            expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[1]);
+            expect(fixture.componentInstance.selectedCity).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[1]));
 
             // clear select
             fixture.componentInstance.select.clear();
@@ -54,7 +54,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
             tick();
 
-            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
+            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
 
             // clear model
             fixture.componentInstance.selectedCity = null;
@@ -105,7 +105,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
             tick();
 
-            const lastSelection: any = fixture.componentInstance.cities[0];
+            const lastSelection: any = fixture.componentInstance.select.value;
             expect(lastSelection.selected).toBeTruthy();
 
             fixture.componentInstance.selectedCity = null;
@@ -140,7 +140,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
             tick();
 
-            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[1]);
+            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[1]));
             discardPeriodicTasks();
         }));
 
@@ -158,7 +158,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
             tick();
 
-            expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[0]);
+            expect(fixture.componentInstance.selectedCity).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
 
             // from model to component
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[1];
@@ -166,7 +166,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
             tick();
 
-            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[1]);
+            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[1]));
             discardPeriodicTasks();
         }));
     });
@@ -185,7 +185,7 @@ describe('NgSelectComponent', function () {
 
                 fixture.detectChanges();
                 tick();
-                expect(fixture.componentInstance.select.value).toEqual({ id: 2, name: 'Kaunas', selected: true });
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining({ id: 2, name: 'Kaunas', selected: true }));
             }));
 
             it('should select by bindLabel when binding to object', fakeAsync(() => {
@@ -199,7 +199,7 @@ describe('NgSelectComponent', function () {
 
                 fixture.detectChanges();
                 tick();
-                expect(fixture.componentInstance.select.value).toEqual({ id: 2, name: 'Kaunas', selected: true });
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining({ id: 2, name: 'Kaunas', selected: true }));
             }));
 
             it('should select object reference', fakeAsync(() => {
@@ -213,7 +213,7 @@ describe('NgSelectComponent', function () {
 
                 fixture.detectChanges();
                 tick();
-                expect(fixture.componentInstance.select.value).toEqual({ id: 2, name: 'Kaunas', selected: true })
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining({ id: 2, name: 'Kaunas', selected: true }));
             }));
 
             it('should select none when there is no items', fakeAsync(() => {
@@ -233,7 +233,9 @@ describe('NgSelectComponent', function () {
         });
 
         describe('multiple', () => {
-            const result = [{ id: 2, name: 'Kaunas', selected: true }, { id: 3, name: 'Pabrade', selected: true }];
+            const result = [
+                jasmine.objectContaining({ id: 2, name: 'Kaunas', selected: true }),
+                jasmine.objectContaining({ id: 3, name: 'Pabrade', selected: true })];
             it('should select by bindValue when primitive type', fakeAsync(() => {
                 const fixture = createTestingModule(
                     NgSelectSelectedSimpleMultipleCmp,
@@ -288,12 +290,12 @@ describe('NgSelectComponent', function () {
         it('should mark first item on open', () => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
-            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
+            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
         });
 
         it('select next value on arrow down', () => {
             selectOption(fixture, KeyCode.ArrowDown, 1);
-            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[1]);
+            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[1]));
         });
 
         it('select first value on arrow down when current selected value is last', async(() => {
@@ -302,7 +304,7 @@ describe('NgSelectComponent', function () {
 
             fixture.whenStable().then(() => {
                 selectOption(fixture, KeyCode.ArrowDown, 1);
-                expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
             });
         }));
 
@@ -312,7 +314,7 @@ describe('NgSelectComponent', function () {
             selectOption(fixture, KeyCode.ArrowDown, 1);
             fixture.detectChanges();
             tick();
-            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[1]);
+            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[1]));
         }));
 
         it('select previous value on arrow up', async(() => {
@@ -321,7 +323,7 @@ describe('NgSelectComponent', function () {
 
             fixture.whenStable().then(() => {
                 selectOption(fixture, KeyCode.ArrowUp, 1);
-                expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
             });
         }));
 
@@ -331,7 +333,7 @@ describe('NgSelectComponent', function () {
 
             fixture.whenStable().then(() => {
                 selectOption(fixture, KeyCode.ArrowUp, 1);
-                expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[2]);
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[2]));
             });
         }));
 
@@ -344,7 +346,7 @@ describe('NgSelectComponent', function () {
         it('should close opened dropdown and select marked value on tab click', () => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
-            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[0]);
+            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
             expect(fixture.componentInstance.select.isOpen).toBeFalsy()
         });
     });
@@ -520,8 +522,8 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
             fixture.componentInstance.select.onFilter({ target: { value: 'vilnius' } });
             tick(200);
-
-            expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual([{ id: 1, name: 'Vilnius', marked: true }]);
+            const result = [jasmine.objectContaining({ id: 1, name: 'Vilnius' })];
+            expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual(result);
         }));
 
         it('should mark first item on filter', fakeAsync(() => {
@@ -536,7 +538,7 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.select.onFilter({ target: { value: 'pab' } });
             tick(200);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
-            expect(fixture.componentInstance.select.value).toEqual(fixture.componentInstance.cities[2])
+            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[2]));
         }));
 
         describe('with typeahead', () => {
@@ -649,7 +651,7 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.select.select(fixture.componentInstance.cities[0]);
 
-            expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(0);
+            expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
         }));
     });
 });
