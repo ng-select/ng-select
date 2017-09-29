@@ -202,7 +202,7 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining({ id: 2, name: 'Kaunas', selected: true }));
             }));
 
-            it('should select object reference', fakeAsync(() => {
+            it('should select by object reference', fakeAsync(() => {
                 const fixture = createTestingModule(
                     NgSelectSelectedObjectByRefCmp,
                     `<ng-select [items]="cities"
@@ -286,6 +286,16 @@ describe('NgSelectComponent', function () {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         });
+
+        it('should open empty dropdown', fakeAsync(() => {
+            fixture.componentInstance.cities = [];
+            fixture.detectChanges();
+            tick();
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            tick();
+            const text = fixture.debugElement.query(By.css('.as-option')).nativeElement.innerHTML;
+            expect(text).toContain('No items found');
+        }));
 
         it('should mark first item on open', () => {
             const result = fixture.componentInstance.cities[0];
@@ -548,7 +558,6 @@ describe('NgSelectComponent', function () {
                         bindLabel="name"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
-                fixture.detectChanges();
             });
 
             it('should push term to custom observable', async(() => {
