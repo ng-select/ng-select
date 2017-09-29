@@ -66,13 +66,17 @@ export class ItemsList {
         this.stepToItem(-1);
     }
 
-    markSelection() {
+    markItem(item: NgOption = null) {
         if (this.filteredItems.length === 0) {
             return;
         }
 
-        const lastSelected = this._selected[this._selected.length - 1];
-        this._markedIndex = lastSelected ? this.filteredItems.indexOf(lastSelected) : 0;
+        item = item || this.lastSelectedItem;
+        if (item) {
+            this._markedIndex = this.filteredItems.indexOf(item);
+        } else {
+            this._markedIndex = 0;
+        }
     }
 
     private getNextItemIndex(steps: number) {
@@ -100,6 +104,10 @@ export class ItemsList {
                 .toUpperCase()
                 .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
         };
+    }
+
+    private get lastSelectedItem() {
+        return this._selected[this._selected.length - 1];
     }
 
     private mapItems(items: NgOption[]) {

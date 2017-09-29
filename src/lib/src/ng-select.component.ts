@@ -210,7 +210,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         }
         this._openClicked = true;
         this.isOpen = true;
-        this.itemsList.markSelection();
+        this.itemsList.markItem();
+        this.scrollToMarked();
         this.focusSearchInput();
         this.onOpen.emit();
     }
@@ -313,6 +314,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.onBlur.emit($event);
     }
 
+    onItemHover(item: NgOption) {
+        this.itemsList.markItem(item);
+    }
+
     private validateWriteValue(value: any) {
         if (value instanceof Object && this.bindValue) {
             throw new Error('Binding object with bindValue is not allowed.')
@@ -321,7 +326,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     private handleItemsChange() {
         this.isLoading = false;
-        this.itemsList.markSelection();
+        this.itemsList.markItem();
     }
 
     private selectWriteValue(value: any) {

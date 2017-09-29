@@ -49,7 +49,7 @@
 
 <div class="as-menu-outer" [ngStyle]="{'visibility': isOpen ? 'visible' : 'hidden'}">
     <virtual-scroll role="listbox" class="as-menu" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
-        <div class="as-option" role="option" (click)="toggle(item)"
+        <div class="as-option" role="option" (click)="toggle(item)" (mouseover)="onItemHover(item)"
              *ngFor="let item of viewPortItems;"
              [class.disabled]="item.disabled"
              [class.selected]="item.selected"

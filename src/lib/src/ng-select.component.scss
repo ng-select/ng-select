@@ -207,11 +207,6 @@ ng-select {
       color: #333;
     }
 
-    &:not(.disabled):hover {
-      background-color: #ebf5ff;
-      color: #333;
-    }
-
     &.disabled {
       color: #cccccc;
       cursor: default;
