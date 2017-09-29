@@ -328,15 +328,10 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
         }));
 
-        it('select last value on arrow up when current selected value is first', async(() => {
-            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
-            fixture.detectChanges();
-
-            fixture.whenStable().then(() => {
-                selectOption(fixture, KeyCode.ArrowUp, 1);
-                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[2]));
-            });
-        }));
+        it('select last value on arrow up', () => {
+            selectOption(fixture, KeyCode.ArrowUp, 1);
+            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[2]));
+        });
 
         it('close opened dropdown on esc click', () => {
             fixture.componentInstance.select.isOpen = true;
