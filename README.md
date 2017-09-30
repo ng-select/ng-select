@@ -50,12 +50,16 @@ The only remaining part is to list the imported module in your application modul
 import {NgSelectModule} from '@ng-select/ng-select';
 
 @NgModule({
-  declarations: [AppComponent, ...],
-  imports: [NgSelectModule, ...],  
+  declarations: [AppComponent],
+  imports: [NgSelectModule],  
   bootstrap: [AppComponent]
 })
 export class AppModule {
 }
+```
+You can also configure global configuration and localization messages by using NgSelectModule.forRoot:
+```js
+NgSelectModule.forRoot({notFoundText: 'Your custom not found text', typeToSearchText: 'Your custom type to search text'})
 ```
 ### SystemJS
 If you are using SystemJS, you should also adjust your configuration to point to the UMD bundle.
@@ -93,6 +97,8 @@ map: {
 | bindValue  | string | `-` | no | Object property to use for selected model. By default binds to whole object. |
 | [clearable] | boolean | `true` | no | Allow to clear selected value. Default `true`|
 | placeholder | string | `-` | no | Placeholder text. |
+| notFoundText | string | `No items found` | no | Set custom text when filter returns empty result |
+| typeToSearchText | string | `Type to search` | no | Set custom text when using Typeahead |
 | [typeahead] | Subject |  `-` | no | Custom autocomplete or filter. |
 
 | Output  | Description |
