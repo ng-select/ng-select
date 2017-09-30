@@ -40,7 +40,7 @@ export class ItemsList {
         item.selected = false;
     }
 
-    unSelectLastItem() {
+    unselectLastItem() {
         if (this._selected.length === 0) {
             return;
         }

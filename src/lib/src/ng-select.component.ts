@@ -139,7 +139,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
                 case KeyCode.Esc:
                     this.close();
                     break;
-                case KeyCode.BackSpace:
+                case KeyCode.Backspace:
                     this.handleBackspace();
                     break;
             }
@@ -264,13 +264,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     select(item: NgOption) {
-        if (item.selected) {
-            return;
+        if (!item.selected) {
+            this.itemsList.select(item);
+            this.updateModel();
         }
 
-        this.itemsList.select(item);
-        this.updateModel();
-        if (!this.multiple) {
+        if (this.single) {
             this.close();
         }
     }
@@ -333,6 +332,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     onItemHover(item: NgOption) {
+        if (item.disabled) {
+            return;
+        }
         this.itemsList.markItem(item);
     }
 
@@ -374,7 +376,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     private focusSearchInput() {
         setTimeout(() => {
-            this.filterInput.nativeElement.focus();
+            this.filterInput.nativeElement.focus(); // TODO: this won't work on mobile
         });
     }
 
@@ -384,7 +386,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     private handleTab($event: KeyboardEvent) {
         if (this.isOpen) {
-            this.toggle(this.itemsList.markedItem);
+            this.select(this.itemsList.markedItem);
+            if (this.multiple) {
+                this.close();
+            }
         }
     }
 
@@ -421,18 +426,14 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     private handleBackspace() {
         if (this.multiple) {
-            this.unSelectLastItem();
+            this.itemsList.unselectLastItem();
+            this.updateModel();
         } else {
             if (this.filterValue) {
                 return;
             }
             this.clear();
         }
-    }
-
-    private unSelectLastItem() {
-        this.itemsList.unSelectLastItem();
-        this.updateModel();
     }
 
     private notifyModelChanged() {
