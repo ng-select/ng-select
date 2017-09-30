@@ -82,6 +82,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     filterValue: string = null;
 
     private _openClicked = false;
+    private _clearClicked = false;
+    private _arrowClicked = false;
     private propagateChange = (_: NgOption) => { };
 
     constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
@@ -174,8 +176,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         if (!this.clearable) {
             return;
         }
+        this._clearClicked = true;
         this.itemsList.clearSelected();
-
         this.clearSearch();
         this.notifyModelChanged();
     }
@@ -206,10 +208,22 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.isDisabled = isDisabled;
     }
 
+    handleArrowClick() {
+        this._arrowClicked = true;
+        if (this.isOpen) {
+            this.close();
+        } else {
+            this.open();
+        }
+    }
+
     open() {
-        if (this.isDisabled || this.isOpen) {
+        if (this.isDisabled || this.isOpen || this._clearClicked) {
+            this._clearClicked = false;
             return;
         }
+
+        this._arrowClicked = false;
         this._openClicked = true;
         this.isOpen = true;
         this.itemsList.markItem();
