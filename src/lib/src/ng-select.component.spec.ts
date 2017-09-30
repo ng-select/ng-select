@@ -366,14 +366,6 @@ describe('NgSelectComponent', function () {
 
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         });
-
-        it('prevent dropdown close if after first open', () => {
-            fixture.componentInstance.select.open();
-
-            document.getElementById('close').click();
-
-            expect(fixture.componentInstance.select.isOpen).toBe(true);
-        });
     });
 
     describe('Custom templates', () => {
@@ -644,7 +636,7 @@ describe('NgSelectComponent', function () {
 
     describe('Clear icon click', () => {
         let fixture: ComponentFixture<NgSelectBasicTestCmp>;
-        let clickIcon = null;
+        let clickIcon: DebugElement = null;
 
         beforeEach(fakeAsync(() => {
             fixture = createTestingModule(
@@ -660,14 +652,14 @@ describe('NgSelectComponent', function () {
         }));
 
         it('should clear model on clear icon click', fakeAsync(() => {
-            clickIcon.triggerEventHandler('click', {});
+            clickIcon.triggerEventHandler('click', {stopPropagation: () => {}});
             tickAndDetectChanges(fixture);
 
             expect(fixture.componentInstance.selectedCity).toBe(null);
         }));
 
         it('should not open dropdown on clear click', fakeAsync(() => {
-            clickIcon.triggerEventHandler('click', {});
+            clickIcon.triggerEventHandler('click', {stopPropagation: () => {}});
             tickAndDetectChanges(fixture);
 
             expect(fixture.componentInstance.select.isOpen).toBe(false);
@@ -676,7 +668,7 @@ describe('NgSelectComponent', function () {
 
     describe('Arrow icon click', () => {
         let fixture: ComponentFixture<NgSelectBasicTestCmp>;
-        let arrowIcon = null;
+        let arrowIcon: DebugElement = null;
 
         beforeEach(fakeAsync(() => {
             fixture = createTestingModule(
@@ -692,18 +684,19 @@ describe('NgSelectComponent', function () {
         }));
 
         it('should toggle dropdown', fakeAsync(() => {
+            const clickArrow = () => arrowIcon.triggerEventHandler('click', {stopPropagation: () => {}});
             // open
-            arrowIcon.triggerEventHandler('click', {});
+            clickArrow();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
 
             // close
-            arrowIcon.triggerEventHandler('click', {});
+            clickArrow();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
 
             // open
-            arrowIcon.triggerEventHandler('click', {});
+            clickArrow();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         }));
