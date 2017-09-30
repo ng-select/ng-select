@@ -19,7 +19,7 @@
         <ng-template #multipleValue>
             <div class="as-value" *ngFor="let item of value">
                 <span class="as-value-label" aria-selected="true">{{getLabelValue(item)}}</span>
-                <span class="as-clear" (click)="unSelect(item)" aria-hidden="true">×</span>
+                <span class="as-clear" (click)="unselect(item)" aria-hidden="true">×</span>
             </div>
         </ng-template>
 
@@ -49,17 +49,17 @@
 
 <div class="as-menu-outer" [ngStyle]="{'visibility': isOpen ? 'visible' : 'hidden'}">
     <virtual-scroll role="listbox" class="as-menu" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
-        <div class="as-option" role="option" (click)="toggle(item)"
-             *ngFor="let item of viewPortItems; let index = index; let first = first; let last = last; let even = even; let odd = odd"
+        <div class="as-option" role="option" (click)="toggle(item)" (mouseover)="onItemHover(item)"
+             *ngFor="let item of viewPortItems;"
              [class.disabled]="item.disabled"
              [class.selected]="item.selected"
-             [class.marked]="item.marked">
+             [class.marked]="item === itemsList.markedItem">
 
             <span *ngIf="!optionTemplate">{{item[bindLabel]}}</span>
 
             <ng-template  *ngIf="optionTemplate"
                           [ngTemplateOutlet]="optionTemplate"
-                          [ngTemplateOutletContext]="{ item: item, index: index, first: first, last: last, even: even, odd: odd }">
+                          [ngTemplateOutletContext]="{ item: item, index: item.index }">
             </ng-template>
         </div>
     </virtual-scroll>
