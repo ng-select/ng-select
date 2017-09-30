@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.1.3"></a>
+## [0.1.3](https://github.com/ng-select/ng-select/compare/v0.1.2...v0.1.3) (2017-09-30)
+
+
+### Bug Fixes
+
+* click issue using custom template closes [#6](https://github.com/ng-select/ng-select/issues/6) ([571319c](https://github.com/ng-select/ng-select/commit/571319c))
+* Virtual scroll scrollTop value calculation ([1b0ed3c](https://github.com/ng-select/ng-select/commit/1b0ed3c))
+* Virtual scroll scrollTop value calculation ([7f991d7](https://github.com/ng-select/ng-select/commit/7f991d7))
+
+
+
 <a name="0.1.2"></a>
 ## [0.1.2](https://github.com/ng-select/ng-select/compare/v0.1.1...v0.1.2) (2017-09-28)
 
