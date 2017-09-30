@@ -37,6 +37,15 @@ export class ItemsList {
         item.selected = false;
     }
 
+    unSelectLastItem() {
+        if (this._selected.length === 0) {
+            return;
+        }
+
+        this._selected[this._selected.length - 1].selected = false;
+        this._selected.splice(this._selected.length - 1, 1);
+    }
+
     clearSelected() {
         this._selected.forEach((item) => {
             item.selected = false;

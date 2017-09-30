@@ -13,5 +13,6 @@ export enum KeyCode {
     Esc = 27,
     Space = 32,
     ArrowUp = 38,
-    ArrowDown = 40
+    ArrowDown = 40,
+    BackSpace = 8
 }
