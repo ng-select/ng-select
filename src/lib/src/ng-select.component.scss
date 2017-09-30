@@ -110,7 +110,6 @@ ng-select {
       background-color: $color-selected;
       border-radius: 2px;
       border: 1px solid #c2e0ff;
-      border: 1px solid rgba(0, 126, 255, 0.24);
       display: inline-block;
       font-size: 0.9em;
       line-height: 1.4;
@@ -120,11 +119,14 @@ ng-select {
 
       .as-clear {
         cursor: pointer;
-        border-bottom-left-radius: 2px;
-        border-top-left-radius: 2px;
-        border-left: 1px solid #c2e0ff;
-        border-left: 1px solid rgba(0, 126, 255, 0.24);
+        border-bottom-right-radius: 2px;
+        border-top-right-radius: 2px;
+        border-right: 1px solid #c2e0ff;
         padding: 1px 5px 3px;
+
+        &:hover {
+          background-color: #d8eafd;
+        }
       }
 
       .as-value-label {

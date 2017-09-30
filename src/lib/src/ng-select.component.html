@@ -18,8 +18,8 @@
 
         <ng-template #multipleValue>
             <div class="as-value" *ngFor="let item of value">
-                <span class="as-value-label" aria-selected="true">{{getLabelValue(item)}}</span>
                 <span class="as-clear" (click)="unselect(item)" aria-hidden="true">×</span>
+                <span class="as-value-label" aria-selected="true">{{getLabelValue(item)}}</span>
             </div>
         </ng-template>
 
@@ -50,7 +50,7 @@
 <div class="as-menu-outer">
     <virtual-scroll role="listbox" class="as-menu" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
         <div class="as-option" role="option" (click)="toggle(item)" (mouseover)="onItemHover(item)"
-             *ngFor="let item of viewPortItems;"
+             *ngFor="let item of viewPortItems"
              [class.disabled]="item.disabled"
              [class.selected]="item.selected"
              [class.marked]="item === itemsList.markedItem">
