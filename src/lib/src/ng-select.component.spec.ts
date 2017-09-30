@@ -366,14 +366,6 @@ describe('NgSelectComponent', function () {
 
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         });
-
-        it('prevent dropdown close if after first open', () => {
-            fixture.componentInstance.select.open();
-
-            document.getElementById('close').click();
-
-            expect(fixture.componentInstance.select.isOpen).toBe(true);
-        });
     });
 
     describe('Custom templates', () => {
@@ -515,7 +507,7 @@ describe('NgSelectComponent', function () {
                     bindLabel="name"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
-            
+
             const result = jasmine.objectContaining(fixture.componentInstance.cities[2]);
             fixture.detectChanges();
             fixture.componentInstance.select.onFilter({ target: { value: 'pab' } });
@@ -639,6 +631,74 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.select.select(fixture.componentInstance.cities[0]);
 
             expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
+        }));
+    });
+
+    describe('Clear icon click', () => {
+        let fixture: ComponentFixture<NgSelectBasicTestCmp>;
+        let clickIcon: DebugElement = null;
+
+        beforeEach(fakeAsync(() => {
+            fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+            clickIcon = fixture.debugElement.query(By.css('.as-clear-zone'));
+        }));
+
+        it('should clear model on clear icon click', fakeAsync(() => {
+            clickIcon.triggerEventHandler('click', {stopPropagation: () => {}});
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.selectedCity).toBe(null);
+        }));
+
+        it('should not open dropdown on clear click', fakeAsync(() => {
+            clickIcon.triggerEventHandler('click', {stopPropagation: () => {}});
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.isOpen).toBe(false);
+        }));
+    });
+
+    describe('Arrow icon click', () => {
+        let fixture: ComponentFixture<NgSelectBasicTestCmp>;
+        let arrowIcon: DebugElement = null;
+
+        beforeEach(fakeAsync(() => {
+            fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+            arrowIcon = fixture.debugElement.query(By.css('.as-arrow-zone'));
+        }));
+
+        it('should toggle dropdown', fakeAsync(() => {
+            const clickArrow = () => arrowIcon.triggerEventHandler('click', {stopPropagation: () => {}});
+            // open
+            clickArrow();
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBe(true);
+
+            // close
+            clickArrow();
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBe(false);
+
+            // open
+            clickArrow();
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBe(true);
         }));
     });
 });
