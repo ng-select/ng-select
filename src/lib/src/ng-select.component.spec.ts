@@ -266,75 +266,95 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
         });
 
-        it('open dropdown on space click', () => {
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            expect(fixture.componentInstance.select.isOpen).toBe(true);
-        });
-
-        it('should open empty dropdown', fakeAsync(() => {
-            fixture.componentInstance.cities = [];
-            tickAndDetectChanges(fixture);
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            tickAndDetectChanges(fixture);
-            const text = fixture.debugElement.query(By.css('.as-option')).nativeElement.innerHTML;
-            expect(text).toContain('No items found');
-        }));
-
-        it('should mark first item on open', () => {
-            const result = fixture.componentInstance.cities[0];
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(jasmine.objectContaining(result));
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
-            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(result));
-        });
-
-        it('select next value on arrow down', () => {
-            selectOption(fixture, KeyCode.ArrowDown, 1);
-            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[1]));
-        });
-
-        it('select first value on arrow down when current selected value is last', async(() => {
-            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[2];
-            fixture.detectChanges();
-
-            fixture.whenStable().then(() => {
-                selectOption(fixture, KeyCode.ArrowDown, 1);
-                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
+        describe('space', () => {
+            it('should open dropdown', () => {
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                expect(fixture.componentInstance.select.isOpen).toBe(true);
             });
-        }));
 
-        it('should skip disabled option and select next one', fakeAsync(() => {
-            const city: any = fixture.componentInstance.cities[0];
-            city.disabled = true;
-            selectOption(fixture, KeyCode.ArrowDown, 1);
-            tickAndDetectChanges(fixture);
-            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[1]));
-        }));
+            it('should open empty dropdown if no items', fakeAsync(() => {
+                fixture.componentInstance.cities = [];
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+                const text = fixture.debugElement.query(By.css('.as-option')).nativeElement.innerHTML;
+                expect(text).toContain('No items found');
+            }));
 
-        it('select previous value on arrow up', fakeAsync(() => {
-            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[1];
-            tickAndDetectChanges(fixture);
-            selectOption(fixture, KeyCode.ArrowUp, 1);
-            tickAndDetectChanges(fixture);
-            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
-        }));
-
-        it('select last value on arrow up', () => {
-            selectOption(fixture, KeyCode.ArrowUp, 1);
-            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[2]));
+            it('should open dropdown and mark first item', () => {
+                const result = fixture.componentInstance.cities[0];
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(jasmine.objectContaining(result));
+            });
         });
 
-        it('close opened dropdown on esc click', () => {
-            fixture.componentInstance.select.isOpen = true;
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Esc);
-            expect(fixture.componentInstance.select.isOpen).toBe(false);
+        describe('arrows', () => {
+            it('should select next value on arrow down', () => {
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[1]));
+            });
+
+            it('should select first value on arrow down when current value is last', fakeAsync(() => {
+                fixture.componentInstance.selectedCity = fixture.componentInstance.cities[2];
+                tickAndDetectChanges(fixture);
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
+            }));
+
+            it('should skip disabled option and select next one', fakeAsync(() => {
+                const city: any = fixture.componentInstance.cities[0];
+                city.disabled = true;
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[1]));
+            }));
+
+            it('should select previous value on arrow up', fakeAsync(() => {
+                fixture.componentInstance.selectedCity = fixture.componentInstance.cities[1];
+                tickAndDetectChanges(fixture);
+                selectOption(fixture, KeyCode.ArrowUp, 1);
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
+            }));
+
+            it('should select last value on arrow up', () => {
+                selectOption(fixture, KeyCode.ArrowUp, 1);
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[2]));
+            });
         });
 
-        it('should close opened dropdown and select marked value on tab click', () => {
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
-            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
-            expect(fixture.componentInstance.select.isOpen).toBeFalsy()
+        describe('esc', () => {
+            it('should close opened dropdown', () => {
+                fixture.componentInstance.select.isOpen = true;
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Esc);
+                expect(fixture.componentInstance.select.isOpen).toBe(false);
+            });
+        });
+
+        describe('tab', () => {
+            it('should close dropdown and select marked value', () => {
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
+                expect(fixture.componentInstance.select.isOpen).toBeFalsy()
+            });
+
+            it('should close dropdown when marked item is already selected', () => {
+                fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
+                expect(fixture.componentInstance.select.isOpen).toBeFalsy()
+            });
+
+            it('should close dropdown and select marked when multiple', () => {
+                fixture.componentInstance.select.multiple = true;
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
+                expect(fixture.componentInstance.select.isOpen).toBeFalsy()
+            });
         });
     });
 
@@ -515,7 +535,7 @@ describe('NgSelectComponent', function () {
                     bindLabel="name"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
-            
+
             const result = jasmine.objectContaining(fixture.componentInstance.cities[2]);
             fixture.detectChanges();
             fixture.componentInstance.select.onFilter({ target: { value: 'pab' } });
@@ -639,6 +659,73 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.select.select(fixture.componentInstance.cities[0]);
 
             expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
+        }));
+    });
+
+    describe('Clear icon click', () => {
+        let fixture: ComponentFixture<NgSelectBasicTestCmp>;
+        let clickIcon = null;
+
+        beforeEach(fakeAsync(() => {
+            fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+            clickIcon = fixture.debugElement.query(By.css('.as-clear-zone'));
+        }));
+
+        it('should clear model on clear icon click', fakeAsync(() => {
+            clickIcon.triggerEventHandler('click', {});
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.selectedCity).toBe(null);
+        }));
+
+        it('should not open dropdown on clear click', fakeAsync(() => {
+            clickIcon.triggerEventHandler('click', {});
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.isOpen).toBe(false);
+        }));
+    });
+
+    describe('Arrow icon click', () => {
+        let fixture: ComponentFixture<NgSelectBasicTestCmp>;
+        let arrowIcon = null;
+
+        beforeEach(fakeAsync(() => {
+            fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+            arrowIcon = fixture.debugElement.query(By.css('.as-arrow-zone'));
+        }));
+
+        it('should toggle dropdown', fakeAsync(() => {
+            // open
+            arrowIcon.triggerEventHandler('click', {});
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBe(true);
+
+            // close
+            arrowIcon.triggerEventHandler('click', {});
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBe(false);
+
+            // open
+            arrowIcon.triggerEventHandler('click', {});
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBe(true);
         }));
     });
 });
