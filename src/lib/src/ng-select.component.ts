@@ -87,13 +87,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     private _openClicked = false;
     private _clearClicked = false;
     private _arrowClicked = false;
-    private propagateChange = (_: NgOption) => { };
+    private propagateChange = (_: NgOption) => {};
 
-    constructor(
-        @Optional() config: NgSelectConfig,
-        private changeDetectorRef: ChangeDetectorRef,
-        private elementRef: ElementRef
-    ) {
+    constructor(@Optional() config: NgSelectConfig,
+                private changeDetectorRef: ChangeDetectorRef,
+                private elementRef: ElementRef) {
         this.mergeConfig(config);
     }
 
