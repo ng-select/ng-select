@@ -236,6 +236,7 @@ Visit https://github.com/ng-select/ng-select/tree/master/src/demo/app for more e
 ## Contributing
 
 Contributions are welcome. You can start by looking at issues with label Help wanted https://github.com/ng-select/ng-select/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22 or creating new Issue with proposal or bug report.
+Note that we are using https://conventionalcommits.org/ commits format.
 
 ## Development
 
@@ -270,6 +271,3 @@ npm run gh-pages
 // after swith to gh-pages branch run
 ./publish-demo.sh
 ```
-
-### Commits
-Follow https://conventionalcommits.org/
