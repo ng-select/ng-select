@@ -94,7 +94,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
                 private renderer: Renderer2
     ) {
         this.mergeConfig(config);
-        this.handleDocumentClick();
     }
 
     @Input()
@@ -115,6 +114,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     ngOnInit() {
+        this.handleDocumentClick();
         this.bindLabel = this.bindLabel || 'label';
     }
 
