@@ -9,8 +9,7 @@ All notable changes to this project will be documented in this file. See [standa
 ### Bug Fixes
 
 * click issue using custom template closes [#6](https://github.com/ng-select/ng-select/issues/6) ([571319c](https://github.com/ng-select/ng-select/commit/571319c))
-* Virtual scroll scrollTop value calculation ([1b0ed3c](https://github.com/ng-select/ng-select/commit/1b0ed3c))
-* Virtual scroll scrollTop value calculation ([7f991d7](https://github.com/ng-select/ng-select/commit/7f991d7))
+* virtual scroll scrollTop value calculation ([1b0ed3c](https://github.com/ng-select/ng-select/commit/1b0ed3c))
 
 
 
