@@ -14,13 +14,14 @@ import {
     HostBinding,
     ViewChild,
     ElementRef,
-    ChangeDetectionStrategy
+    ChangeDetectionStrategy,
+    Optional
 } from '@angular/core';
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgOptionTemplateDirective, NgLabelTemplateDirective } from './ng-templates.directive';
 import { VirtualScrollComponent } from './virtual-scroll.component';
-import { NgOption, KeyCode } from './ng-select.types';
+import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
 
@@ -54,6 +55,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     @Input() bindValue: string;
     @Input() clearable = true;
     @Input() placeholder: string;
+    @Input() notFoundText = 'No items found';
+    @Input() typeToSearchText = 'Type to search';
     @Input() typeahead: Subject<string>;
 
     @Input()
@@ -86,7 +89,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     private _arrowClicked = false;
     private propagateChange = (_: NgOption) => { };
 
-    constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef) {
+    constructor(
+        @Optional() config: NgSelectConfig,
+        private changeDetectorRef: ChangeDetectorRef,
+        private elementRef: ElementRef
+    ) {
+        this.mergeConfig(config);
     }
 
     @Input()
@@ -470,5 +478,13 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
             return !!value && value.length > 0;
         }
         return !!value;
+    }
+
+    private mergeConfig(config: NgSelectConfig) {
+        if (!config) {
+            return;
+        }
+        this.notFoundText = config.notFoundText || this.notFoundText;
+        this.typeToSearchText = config.typeToSearchText || this.typeToSearchText;
     }
 }

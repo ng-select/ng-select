@@ -17,3 +17,8 @@ export enum KeyCode {
     ArrowDown = 40,
     BackSpace = 8
 }
+
+export class NgSelectConfig {
+    notFoundText = '';
+    typeToSearchText = '';
+}

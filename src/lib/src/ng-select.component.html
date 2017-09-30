@@ -66,13 +66,13 @@
 
     <div class="as-menu" *ngIf="showNoItemsFound()">
         <div class="as-option disabled">
-            No items found
+            {{notFoundText}}
         </div>
     </div>
 
     <div class="as-menu" *ngIf="showTypeToSearch()">
         <div class="as-option disabled">
-            Type to search
+            {{typeToSearchText}}
         </div>
     </div>
 </div>
