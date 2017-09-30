@@ -17,7 +17,6 @@ import {
     ChangeDetectionStrategy
 } from '@angular/core';
 
-
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgOptionTemplateDirective, NgLabelTemplateDirective } from './ng-templates.directive';
 import { VirtualScrollComponent } from './virtual-scroll.component';
