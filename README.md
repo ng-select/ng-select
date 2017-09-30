@@ -8,7 +8,7 @@
 [coveralls-url]: https://coveralls.io/github/ng-select/ng-select?branch=master
 
 # Angular ng-select - All in One UI Select, Multiselect and Autocomplete
-See [Demos](https://ng-select.github.io/ng-select) or try in [Plunker](https://plnkr.co/edit/V5tFfNY28fiaLlNwvcWb?p=preview)
+See [Demos](https://ng-select.github.io/ng-select) or try in [Plunker](https://plnkr.co/edit/NaQ27M?p=preview)
 
 Table of contents
 =================
