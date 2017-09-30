@@ -84,9 +84,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     isLoading = false;
     filterValue: string = null;
 
-    private _openClicked = false;
-    private _clearClicked = false;
-    private _arrowClicked = false;
     private propagateChange = (_: NgOption) => {};
 
     constructor(@Optional() config: NgSelectConfig,
@@ -151,12 +148,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     @HostListener('document:click', ['$event'])
     handleDocumentClick($event) {
-        // prevent closing dropdown on first open click
-        if (this._openClicked) {
-            this._openClicked = false;
-            return;
-        }
-
         // prevent close if clicked on select
         if (this.elementRef.nativeElement.contains($event.target)) {
             return;
@@ -178,11 +169,29 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         }
     }
 
+    handleArrowClick($event: Event) {
+        $event.stopPropagation();
+        if (this.isOpen) {
+            this.close();
+        } else {
+            this.open();
+        }
+    }
+
+    handleSelectClick($event: Event) {
+        $event.stopPropagation();
+        this.open();
+    }
+
+    handleClearClick($event: Event) {
+        $event.stopPropagation();
+        this.clear();
+    }
+
     clear() {
         if (!this.clearable) {
             return;
         }
-        this._clearClicked = true;
         this.itemsList.clearSelected();
         this.clearSearch();
         this.notifyModelChanged();
@@ -214,23 +223,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.isDisabled = isDisabled;
     }
 
-    handleArrowClick() {
-        this._arrowClicked = true;
-        if (this.isOpen) {
-            this.close();
-        } else {
-            this.open();
-        }
-    }
-
     open() {
-        if (this.isDisabled || this.isOpen || this._clearClicked) {
-            this._clearClicked = false;
+        if (this.isDisabled || this.isOpen) {
             return;
         }
-
-        this._arrowClicked = false;
-        this._openClicked = true;
         this.isOpen = true;
         this.itemsList.markItem();
         this.scrollToMarked();

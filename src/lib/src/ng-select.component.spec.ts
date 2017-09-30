@@ -356,6 +356,34 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.isOpen).toBeFalsy()
             });
         });
+
+        describe('backspace', () => {
+            it('should remove selected value', fakeAsync(() => {
+                fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
+                expect(fixture.componentInstance.select.value).toBeNull();
+            }));
+
+            it('should not remove selected value if filter is set', fakeAsync(() => {
+                fixture.componentInstance.select.filterValue = 'a';
+                fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
+                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
+            }));
+
+            it('should remove last selected value when multiple', fakeAsync(() => {
+                fixture.componentInstance.select.multiple = true;
+                fixture.componentInstance.cities = [...fixture.componentInstance.cities];
+                tickAndDetectChanges(fixture);
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
+                expect(fixture.componentInstance.select.value).toEqual([jasmine.objectContaining(fixture.componentInstance.cities[1])]);
+            }));
+        });
     });
 
     describe('document:click', () => {
@@ -383,14 +411,6 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.select.isOpen = true;
 
             document.getElementById('select').click();
-
-            expect(fixture.componentInstance.select.isOpen).toBe(true);
-        });
-
-        it('prevent dropdown close if after first open', () => {
-            fixture.componentInstance.select.open();
-
-            document.getElementById('close').click();
 
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         });
@@ -664,7 +684,7 @@ describe('NgSelectComponent', function () {
 
     describe('Clear icon click', () => {
         let fixture: ComponentFixture<NgSelectBasicTestCmp>;
-        let clickIcon = null;
+        let clickIcon: DebugElement = null;
 
         beforeEach(fakeAsync(() => {
             fixture = createTestingModule(
@@ -680,14 +700,14 @@ describe('NgSelectComponent', function () {
         }));
 
         it('should clear model on clear icon click', fakeAsync(() => {
-            clickIcon.triggerEventHandler('click', {});
+            clickIcon.triggerEventHandler('click', { stopPropagation: () => { } });
             tickAndDetectChanges(fixture);
 
             expect(fixture.componentInstance.selectedCity).toBe(null);
         }));
 
         it('should not open dropdown on clear click', fakeAsync(() => {
-            clickIcon.triggerEventHandler('click', {});
+            clickIcon.triggerEventHandler('click', { stopPropagation: () => { } });
             tickAndDetectChanges(fixture);
 
             expect(fixture.componentInstance.select.isOpen).toBe(false);
@@ -696,7 +716,7 @@ describe('NgSelectComponent', function () {
 
     describe('Arrow icon click', () => {
         let fixture: ComponentFixture<NgSelectBasicTestCmp>;
-        let arrowIcon = null;
+        let arrowIcon: DebugElement = null;
 
         beforeEach(fakeAsync(() => {
             fixture = createTestingModule(
@@ -712,18 +732,19 @@ describe('NgSelectComponent', function () {
         }));
 
         it('should toggle dropdown', fakeAsync(() => {
+            const clickArrow = () => arrowIcon.triggerEventHandler('click', { stopPropagation: () => { } });
             // open
-            arrowIcon.triggerEventHandler('click', {});
+            clickArrow();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
 
             // close
-            arrowIcon.triggerEventHandler('click', {});
+            clickArrow();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
 
             // open
-            arrowIcon.triggerEventHandler('click', {});
+            clickArrow();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         }));

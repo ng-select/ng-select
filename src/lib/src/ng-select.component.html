@@ -1,4 +1,4 @@
-<div (click)="open()" class="as-control">
+<div (click)="handleSelectClick($event)" class="as-control">
     <span class="as-multi-value-wrapper">
 
         <span class="as-placeholder" *ngIf="showPlaceholder()">{{placeholder}}</span>
@@ -38,11 +38,11 @@
 
     <spinner class="as-spinner-zone" *ngIf="isLoading"></spinner>
 
-    <span *ngIf="showClear()" (click)="clear()" class="as-clear-zone" title="Clear all" aria-label="Clear all">
+    <span *ngIf="showClear()" (click)="handleClearClick($event)" class="as-clear-zone" title="Clear all" aria-label="Clear all">
         <span class="as-clear" aria-hidden="true">×</span>
     </span>
 
-    <span (click)="handleArrowClick()" class="as-arrow-zone">
+    <span (click)="handleArrowClick($event)" class="as-arrow-zone">
         <span class="as-arrow"></span>
     </span>
 </div>
