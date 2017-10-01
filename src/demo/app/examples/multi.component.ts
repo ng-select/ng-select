@@ -45,7 +45,7 @@ export class SelectMultiComponent {
             this.companies2.push({ id: i, name: c });
         });
 
-        this.selectedCompaniesDisabled = [{ id: 0, name: 'Miškas' }, { id: 1, name: 'Žalias' }]
+        this.selectedCompaniesDisabled = [{ id: 0, name: 'Miškas' }, { id: 1, name: 'Žalias' }];
     }
 
     clearModel() {

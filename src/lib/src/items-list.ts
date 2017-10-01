@@ -8,13 +8,8 @@ export class ItemsList {
 
     private _markedIndex = -1;
     private _selected: NgOption[] = [];
-    private _multiple: boolean;
-
-    constructor(items: NgOption[], multiple: boolean) {
-        this.items = this.mapItems(items);
-        this.filteredItems = [...this.items];
-        this._multiple = multiple;
-    }
+    private _multiple = false;
+    private _pendingValue = null;
 
     get value(): NgOption | NgOption[] {
         if (this._multiple) {
@@ -27,12 +22,42 @@ export class ItemsList {
         return this.filteredItems[this._markedIndex];
     }
 
+    get pendingValue() {
+        return this._pendingValue;
+    }
+
+    set pendingValue(value) {
+        this._pendingValue = value;
+    }
+
+    setItems(items: NgOption[]) {
+        this.items = this.mapItems(items);
+        this.filteredItems = [...this.items];
+    }
+
+    setMultiple(multiple: boolean) {
+        this._multiple = multiple;
+        this._selected = [];
+    }
+
     select(item: NgOption) {
         if (!this._multiple) {
             this.clearSelected();
         }
         this._selected.push(item);
         item.selected = true;
+    }
+
+    findItemIndex(value, bindLabel: string, bindValue: string) {
+        let index = -1;
+        if (bindValue) {
+            index = this.items.findIndex(x => x[bindValue] === value);
+        } else {
+            index = this.items.indexOf(value);
+            index = index > -1 ? index :
+                this.items.findIndex(x => x[bindLabel] === value[bindLabel])
+        }
+        return index;
     }
 
     unselect(item: NgOption) {

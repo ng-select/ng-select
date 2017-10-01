@@ -2,6 +2,7 @@ import {
     Component,
     OnInit,
     OnDestroy,
+    OnChanges,
     forwardRef,
     ChangeDetectorRef,
     Input,
@@ -43,7 +44,7 @@ const NGB_ANG_SELECT_VALUE_ACCESSOR = {
         'role': 'dropdown'
     }
 })
-export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlValueAccessor {
 
     @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
     @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
@@ -80,7 +81,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
 
-    itemsList = new ItemsList([], false);
+    itemsList = new ItemsList();
     viewPortItems: NgOption[] = [];
     isLoading = false;
     filterValue: string = null;
@@ -102,10 +103,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     set items(items: NgOption[]) {
-        this.itemsList = new ItemsList(items || [], this.multiple);
-
+        this.itemsList.setItems(items);
+        if (this.itemsList.pendingValue) {
+            this.writeValue(this.itemsList.pendingValue);
+        }
         if (this.isTypeahead()) {
-            this.handleItemsChange();
+            this.handleTypeaheadItemsChange();
         }
     }
 
@@ -116,6 +119,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     ngOnInit() {
         this.handleDocumentClick();
         this.bindLabel = this.bindLabel || 'label';
+    }
+
+    ngOnChanges(changes) {
+        if (changes.multiple) {
+            this.itemsList.setMultiple(changes.multiple.currentValue);
+        }
     }
 
     ngOnDestroy() {
@@ -181,6 +190,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     writeValue(value: any): void {
+        this.validateWriteValue(value);
         this.itemsList.clearSelected();
         if (value) {
             if (this.multiple) {
@@ -348,28 +358,38 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     private validateWriteValue(value: any) {
-        if (value instanceof Object && this.bindValue) {
-            throw new Error('Binding object with bindValue is not allowed.')
+        if (!value) {
+            return;
+        }
+
+        const validateBinding = (item) => {
+            if (item instanceof Object && this.bindValue) {
+                throw new Error('Binding object with bindValue is not allowed.');
+            }
+        };
+
+        if (this.multiple) {
+            if (!Array.isArray(value)) {
+                throw new Error('Multiple select model should be array.');
+            }
+            value.forEach(item => validateBinding(item));
+        } else {
+            validateBinding(value);
         }
     }
 
-    private handleItemsChange() {
+    private handleTypeaheadItemsChange() {
         this.isLoading = false;
         this.itemsList.markItem();
     }
 
     private selectWriteValue(value: any) {
-        this.validateWriteValue(value);
-        let index = -1;
-        if (this.bindValue) {
-            index = this.itemsList.items.findIndex(x => x[this.bindValue] === value);
-        } else {
-            index = this.itemsList.items.indexOf(value);
-            index = index > -1 ? index :
-                this.itemsList.items.findIndex(x => x[this.bindLabel] === value[this.bindLabel])
-        }
+        let index = this.itemsList.findItemIndex(value, this.bindLabel, this.bindValue);
         if (index > -1) {
             this.itemsList.select(this.itemsList.items[index]);
+        } else {
+            // items are not loaded yet
+            this.itemsList.pendingValue = value;
         }
     }
 
