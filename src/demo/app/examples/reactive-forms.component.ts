@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgOption} from '@ng-select/ng-select';
 import {HttpClient} from '@angular/common/http';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'reactive-forms',
@@ -48,6 +49,7 @@ import {HttpClient} from '@angular/common/http';
                 <small class="form-text text-muted">Albums data from backend using HttpClient.</small>
             </div>
             <hr>
+            
             <div class="form-group">
                 <label for="album">Favorite photo</label>
                 <ng-select [items]="photos"
@@ -67,7 +69,41 @@ import {HttpClient} from '@angular/common/http';
                 <small class="form-text text-muted">5000 items with virtual scroll</small>
                 <br>
                 <button class="btn btn-secondary btn-sm" (click)="selectFirstPhoto()">Select first photo</button>
+                <button class="btn btn-secondary btn-sm" (click)="openModel(content)">Open in model</button>
             </div>
+            
+            <ng-template #content let-c="close" let-d="dismiss">
+                <div class="modal-header">
+                    <h4 class="modal-title">Select in modal</h4>
+                    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="album">Favorite photo</label>
+                        <ng-select [items]="photos"
+                                   (change)="changePhoto($event)"
+                                   bindLabel="title"
+                                   bindValue="thumbnailUrl"
+                                   placeholder="Select photo"
+                                   formControlName="photo">
+                            <ng-template ng-label-tmp let-item="item">
+                                <img height="15" width="15" [src]="item.thumbnailUrl"/>
+                                <span>{{item.title}}</span>
+                            </ng-template>
+                            <ng-template ng-option-tmp let-item="item" let-index="index">
+                                <img height="15" width="15" [src]="item.thumbnailUrl"/>
+                                <span>{{item.title}}</span>
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+                </div>
+            </ng-template>
+
         </form>
 
         <p>Form value: {{ heroForm.value | json }}</p>
@@ -94,7 +130,7 @@ export class ReactiveFormsComponent {
     albums = [];
     photos = [];
 
-    constructor(private fb: FormBuilder, private http: HttpClient) {
+    constructor(private fb: FormBuilder, private http: HttpClient, private modalService: NgbModal) {
     }
 
     ngOnInit() {
@@ -130,16 +166,29 @@ export class ReactiveFormsComponent {
         this.heroForm.get('photo').patchValue(this.photos[0].thumbnailUrl);
     }
 
+    selectFirstAlbum() {
+        this.heroForm.get('album').patchValue(this.albums[0].id);
+    }
+
+    openModel(content) {
+        this.modalService.open(content);
+    }
+
+    changePhoto(photo) {
+        this.heroForm.get('photo').patchValue(photo ? photo.thumbnailUrl : null);
+    }
+
     private loadAlbums() {
         this.http.get<any[]>('https://jsonplaceholder.typicode.com/albums').subscribe(rsp => {
             this.albums = rsp;
+            this.selectFirstAlbum();
         });
     }
 
     private loadPhotos() {
         this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').subscribe(rsp => {
              this.photos = rsp;
-            console.log('loaded photos:', this.photos.length);
+             this.selectFirstPhoto();
         });
     }
 }
