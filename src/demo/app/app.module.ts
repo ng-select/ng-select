@@ -5,15 +5,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
-import { SelectWithTemplatesComponent } from './select-with-templates.component';
-import { SelectBindingsComponent } from './select-bindings.component';
-import { SelectSearchComponent } from './select-search.component';
-import { ReactiveFormsComponent } from './reactive-forms.component';
-import { SelectEventsComponent } from './select-events.component';
-import { SelectMultiComponent } from './select-multi.component';
-import { SelectAutocompleteComponent } from './select-autocomplete.component';
+import { SelectWithTemplatesComponent } from './examples/custom-templates.component';
+import { SelectBindingsComponent } from './examples/bindings.component';
+import { SelectSearchComponent } from './examples/search.component';
+import { ReactiveFormsComponent } from './examples/reactive-forms.component';
+import { SelectEventsComponent } from './examples/events.component';
+import { SelectMultiComponent } from './examples/multi.component';
+import { SelectAutocompleteComponent } from './examples/autocomplete.component';
 
 const appRoutes: Routes = [
     {
@@ -33,11 +34,12 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         BrowserModule,
-        NgSelectModule.forRoot({notFoundText: 'No items found', typeToSearchText: 'Type to search'}),
+        NgSelectModule.forRoot({ notFoundText: 'No items found', typeToSearchText: 'Type to search' }),
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
+        NgbModule.forRoot(),
         RouterModule.forRoot(
             appRoutes,
             {

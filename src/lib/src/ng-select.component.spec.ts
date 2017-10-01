@@ -340,6 +340,14 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.isOpen).toBeFalsy()
             });
 
+            it('should close dropdown when there are no items', fakeAsync(() => {
+                fixture.componentInstance.select.onFilter({ target: { value: 'random stuff' } });
+                tick(200);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+                expect(fixture.componentInstance.select.isOpen).toBeFalsy()
+            }));
+
             it('should close dropdown when marked item is already selected', () => {
                 fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
