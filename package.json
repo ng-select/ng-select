@@ -41,9 +41,9 @@
     "gh-pages": "npm run build-demo && git checkout gh-pages"
   },
   "peerDependencies": {
+    "@angular/common": ">=2.4.10 <5.0.0",
     "@angular/core": ">=2.4.10 <5.0.0",
-    "@angular/forms": ">=2.4.10 <5.0.0",
-    "@angular/common": ">=2.4.10 <5.0.0"
+    "@angular/forms": ">=2.4.10 <5.0.0"
   },
   "devDependencies": {
     "@angular/common": "^4.3.5",
@@ -56,6 +56,7 @@
     "@angular/router": "^4.3.5",
     "@angularclass/hmr": "^1.0.1",
     "@angularclass/hmr-loader": "^3.0.4",
+    "@ng-bootstrap/ng-bootstrap": "^1.0.0-beta.5",
     "@types/jasmine": "^2.5.36",
     "@types/node": "^6.0.87",
     "@types/selenium-webdriver": "2.53.39",
