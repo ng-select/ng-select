@@ -1,4 +1,4 @@
-Please fill below information if issuing bug report. 
+Please fill below information if issuing a bug report. 
 ### Expected behaviour
 Describe how you think it should work
 
