@@ -23,6 +23,7 @@ Table of contents
     * [Custom display and option templates](#custom-display-and-option-templates)
   * [Contributing](#contributing)
   * [Development](#development)
+  * [Credits] (#credits)
 
 ## Features
 - [x] Custom bindings to property or object
@@ -277,3 +278,6 @@ npm run gh-pages
 // after swith to gh-pages branch run
 ./publish-demo.sh
 ```
+
+## Credits
+This component is inspired by https://github.com/JedWatson/react-select and https://github.com/rintoj/angular2-virtual-scroll. Check theirs amazing work and components :)
