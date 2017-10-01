@@ -15,7 +15,8 @@ import {
     ViewChild,
     ElementRef,
     ChangeDetectionStrategy,
-    Optional
+    Optional,
+    Renderer2
 } from '@angular/core';
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -85,10 +86,13 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     filterValue: string = null;
 
     private propagateChange = (_: NgOption) => {};
+    private disposeDocumentClickListener = () => {};
 
     constructor(@Optional() config: NgSelectConfig,
                 private changeDetectorRef: ChangeDetectorRef,
-                private elementRef: ElementRef) {
+                private elementRef: ElementRef,
+                private renderer: Renderer2
+    ) {
         this.mergeConfig(config);
     }
 
@@ -110,11 +114,13 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     ngOnInit() {
+        this.handleDocumentClick();
         this.bindLabel = this.bindLabel || 'label';
     }
 
     ngOnDestroy() {
         this.changeDetectorRef.detach();
+        this.disposeDocumentClickListener();
     }
 
     @HostListener('keydown', ['$event'])
@@ -143,29 +149,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
                     this.handleBackspace();
                     break;
             }
-        }
-    }
-
-    @HostListener('document:click', ['$event'])
-    handleDocumentClick($event) {
-        // prevent close if clicked on select
-        if (this.elementRef.nativeElement.contains($event.target)) {
-            return;
-        }
-
-        // prevent close if clicked on dropdown menu
-        const dropdown = this.getDropdownMenu();
-        if (dropdown && dropdown.contains($event.target)
-        ) {
-            return;
-        }
-
-        if (this.isFocused) {
-            this.onInputBlur($event);
-        }
-
-        if (this.isOpen) {
-            this.close();
         }
     }
 
@@ -336,6 +319,32 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
             return;
         }
         this.itemsList.markItem(item);
+    }
+
+    private handleDocumentClick() {
+        const handler = ($event) => {
+            // prevent close if clicked on select
+            if (this.elementRef.nativeElement.contains($event.target)) {
+                return;
+            }
+
+            // prevent close if clicked on dropdown menu
+            const dropdown = this.getDropdownMenu();
+            if (dropdown && dropdown.contains($event.target)
+            ) {
+                return;
+            }
+
+            if (this.isFocused) {
+                this.onInputBlur($event);
+            }
+
+            if (this.isOpen) {
+                this.close();
+            }
+        };
+
+        this.disposeDocumentClickListener = this.renderer.listen('document', 'click', handler);
     }
 
     private validateWriteValue(value: any) {
