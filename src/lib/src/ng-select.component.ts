@@ -26,6 +26,8 @@ import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
 
 const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
@@ -86,6 +88,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     isLoading = false;
     filterValue: string = null;
 
+    private _items$ = new Subject<NgOption[]>();
+    private _value$ = new Subject();
+    private _itemsSubscription = null;
+
     private propagateChange = (_: NgOption) => {};
     private disposeDocumentClickListener = () => {};
 
@@ -95,6 +101,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
                 private renderer: Renderer2
     ) {
         this.mergeConfig(config);
+        this._itemsSubscription = Observable.combineLatest(this._items$, this._value$).subscribe((res) => {
+            this.setItems(res[0]);
+            this.handleWriteValue(res[1]);
+        });
     }
 
     @Input()
@@ -103,13 +113,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     set items(items: NgOption[]) {
-        this.itemsList.setItems(items);
-        if (this.itemsList.pendingValue) {
-            this.writeValue(this.itemsList.pendingValue);
-        }
-        if (this.isTypeahead()) {
-            this.handleTypeaheadItemsChange();
-        }
+        this._items$.next(items);
     }
 
     get value(): NgOption | NgOption[] {
@@ -130,6 +134,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     ngOnDestroy() {
         this.changeDetectorRef.detach();
         this.disposeDocumentClickListener();
+        this._itemsSubscription.unsubscribe();
     }
 
     @HostListener('keydown', ['$event'])
@@ -190,18 +195,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     writeValue(value: any): void {
-        this.validateWriteValue(value);
-        this.itemsList.clearSelected();
-        if (value) {
-            if (this.multiple) {
-                value.forEach(item => {
-                    this.selectWriteValue(item);
-                });
-            } else {
-                this.selectWriteValue(value);
-            }
-        }
-        this.detectChanges();
+        this._value$.next(value);
     }
 
     registerOnChange(fn: any): void {
@@ -331,6 +325,29 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         this.itemsList.markItem(item);
     }
 
+    private handleWriteValue(value) {
+        this.validateWriteValue(value);
+        this.itemsList.clearSelected();
+        if (value) {
+            if (this.multiple) {
+                value.forEach(item => {
+                    this.selectWriteValue(item);
+                });
+            } else {
+                this.selectWriteValue(value);
+            }
+        }
+        this.detectChanges();
+    }
+
+    private setItems(items) {
+        this.itemsList.setItems(items);
+        if (this.isTypeahead()) {
+            this.isLoading = false;
+            this.itemsList.markItem();
+        }
+    }
+
     private handleDocumentClick() {
         const handler = ($event) => {
             // prevent close if clicked on select
@@ -378,18 +395,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         }
     }
 
-    private handleTypeaheadItemsChange() {
-        this.isLoading = false;
-        this.itemsList.markItem();
-    }
-
     private selectWriteValue(value: any) {
         let index = this.itemsList.findItemIndex(value, this.bindLabel, this.bindValue);
         if (index > -1) {
             this.itemsList.select(this.itemsList.items[index]);
-        } else {
-            // items are not loaded yet
-            this.itemsList.pendingValue = value;
         }
     }
 

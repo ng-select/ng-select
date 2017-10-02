@@ -9,7 +9,6 @@ export class ItemsList {
     private _markedIndex = -1;
     private _selected: NgOption[] = [];
     private _multiple = false;
-    private _pendingValue = null;
 
     get value(): NgOption | NgOption[] {
         if (this._multiple) {
@@ -20,14 +19,6 @@ export class ItemsList {
 
     get markedItem(): NgOption {
         return this.filteredItems[this._markedIndex];
-    }
-
-    get pendingValue() {
-        return this._pendingValue;
-    }
-
-    set pendingValue(value) {
-        this._pendingValue = value;
     }
 
     setItems(items: NgOption[]) {

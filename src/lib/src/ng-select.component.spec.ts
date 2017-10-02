@@ -560,9 +560,10 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            fixture.detectChanges();
+            tick(200);
             fixture.componentInstance.select.onFilter({ target: { value: 'vilnius' } });
             tick(200);
+
             const result = [jasmine.objectContaining({ id: 1, name: 'Vilnius' })];
             expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual(result);
         }));
@@ -575,10 +576,11 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            const result = jasmine.objectContaining(fixture.componentInstance.cities[2]);
-            fixture.detectChanges();
+            tick(200);
             fixture.componentInstance.select.onFilter({ target: { value: 'pab' } });
             tick(200);
+
+            const result = jasmine.objectContaining(fixture.componentInstance.cities[2]);
             expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(result)
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
             expect(fixture.componentInstance.select.value).toEqual(result);
@@ -599,6 +601,9 @@ describe('NgSelectComponent', function () {
                 fixture.componentInstance.customFilter.subscribe(term => {
                     expect(term).toBe('vilnius');
                 });
+
+                tick(200);
+
                 fixture.componentInstance.select.onFilter({ target: { value: 'vilnius' } });
                 tickAndDetectChanges(fixture);
             }));
