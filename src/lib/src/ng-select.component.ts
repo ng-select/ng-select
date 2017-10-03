@@ -28,6 +28,7 @@ import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
+import 'rxjs/operator/withLatestFrom';
 
 const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
@@ -89,8 +90,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     filterValue: string = null;
 
     private _items$ = new Subject<NgOption[]>();
-    private _value$ = new Subject();
-    private _itemsSubscription = null;
+    private _writeValue$ = new Subject<any>();
+    private _checkWriteValue = false;
+    private _writeValueSubscription = null;
 
     private onChange = (_: NgOption) => {};
     private onTouched = () => {};
@@ -102,10 +104,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
                 private renderer: Renderer2
     ) {
         this.mergeConfig(config);
-        this._itemsSubscription = Observable.combineLatest(this._items$, this._value$).subscribe((res) => {
-            this.setItems(res[0]);
-            this.handleWriteValue(res[1]);
-        });
+        this.handleWriteValue();
     }
 
     @Input()
@@ -114,6 +113,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     set items(items: NgOption[]) {
+        this.setItems(items);
         this._items$.next(items);
     }
 
@@ -135,7 +135,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     ngOnDestroy() {
         this.changeDetectorRef.detach();
         this.disposeDocumentClickListener();
-        this._itemsSubscription.unsubscribe();
+        this._writeValueSubscription.unsubscribe();
     }
 
     @HostListener('keydown', ['$event'])
@@ -193,10 +193,14 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         this.itemsList.clearSelected();
         this.clearSearch();
         this.notifyModelChanged();
+        if (this.isTypeahead()) {
+            this.typeahead.next(this.filterValue);
+        }
     }
 
     writeValue(value: any): void {
-        this._value$.next(value);
+        this._checkWriteValue = true;
+        this._writeValue$.next(value);
     }
 
     registerOnChange(fn: any): void {
@@ -252,6 +256,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     select(item: NgOption) {
+        this._checkWriteValue = false;
         if (!item.selected) {
             this.itemsList.select(item);
             this.updateModel();
@@ -329,19 +334,26 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         this.itemsList.markItem(item);
     }
 
-    private handleWriteValue(value) {
-        this.validateWriteValue(value);
-        this.itemsList.clearSelected();
-        if (value) {
-            if (this.multiple) {
-                value.forEach(item => {
-                    this.selectWriteValue(item);
-                });
-            } else {
-                this.selectWriteValue(value);
+    private handleWriteValue() {
+        // combineLatest ensures that write value is always set after latest items are loaded
+        this._writeValueSubscription = Observable.combineLatest(this._items$, this._writeValue$).subscribe((res) => {
+            if (!this._checkWriteValue) {
+                return;
             }
-        }
-        this.detectChanges();
+            const value = res[1];
+            this.validateWriteValue(value);
+            this.itemsList.clearSelected();
+            if (value) {
+                if (this.multiple) {
+                    value.forEach(item => {
+                        this.selectWriteValue(item);
+                    });
+                } else {
+                    this.selectWriteValue(value);
+                }
+            }
+            this.detectChanges();
+        });
     }
 
     private setItems(items) {

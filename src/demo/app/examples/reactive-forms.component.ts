@@ -47,6 +47,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
                     </ng-template>
                 </ng-select>
                 <small class="form-text text-muted">Albums data from backend using HttpClient.</small>
+                <br>
+                <button class="btn btn-secondary btn-sm" (click)="selectFirstAlbum()">Select first album</button>
+                <button class="btn btn-secondary btn-sm" (click)="selectAlbumsRange(0, 10)">Set 0-10 albums</button>
+                <button class="btn btn-secondary btn-sm" (click)="selectAlbumsRange(10, 20)">Set 10-20 albums</button>
             </div>
             <hr>
             
@@ -128,6 +132,7 @@ export class ReactiveFormsComponent {
     ];
 
     albums = [];
+    allAlbums = [];
     photos = [];
 
     constructor(private fb: FormBuilder, private http: HttpClient, private modalService: NgbModal) {
@@ -170,6 +175,11 @@ export class ReactiveFormsComponent {
         this.heroForm.get('album').patchValue(this.albums[0].id);
     }
 
+    selectAlbumsRange(from, to) {
+        this.albums = this.allAlbums.slice(from, to);
+        this.selectFirstAlbum();
+    }
+
     openModel(content) {
         this.modalService.open(content);
     }
@@ -179,15 +189,16 @@ export class ReactiveFormsComponent {
     }
 
     private loadAlbums() {
-        this.http.get<any[]>('https://jsonplaceholder.typicode.com/albums').subscribe(rsp => {
-            this.albums = rsp;
+        this.http.get<any[]>('https://jsonplaceholder.typicode.com/albums').subscribe(albums => {
+            this.allAlbums = albums;
+            this.albums = [...this.allAlbums];
             this.selectFirstAlbum();
         });
     }
 
     private loadPhotos() {
-        this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').subscribe(rsp => {
-             this.photos = rsp;
+        this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').subscribe(photos => {
+             this.photos = photos;
              this.selectFirstPhoto();
         });
     }
