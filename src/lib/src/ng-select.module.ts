@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 
 import { NgSelectComponent } from './ng-select.component';
 import { NgOptionTemplateDirective, NgLabelTemplateDirective } from './ng-templates.directive';
-import { AngSearchFocusDirective } from './ng-search-focus.directive';
 import { VirtualScrollModule } from './virtual-scroll.component';
 import { SpinnerComponent } from './spinner.component';
 import { NgSelectConfig } from './ng-select.types';
@@ -14,7 +13,6 @@ import { NgSelectConfig } from './ng-select.types';
         NgSelectComponent,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
-        AngSearchFocusDirective,
         SpinnerComponent
     ],
     imports: [

@@ -67,12 +67,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     @HostBinding('class.as-multiple') multiple = false;
 
     // output events
-    @Output('blur') onBlur = new EventEmitter();
-    @Output('focus') onFocus = new EventEmitter();
-    @Output('change') onChange = new EventEmitter();
-    @Output('open') onOpen = new EventEmitter();
-    @Output('close') onClose = new EventEmitter();
-    @Output('search') onSearch = new EventEmitter();
+    @Output('blur') blurEvent = new EventEmitter();
+    @Output('focus') focusEvent = new EventEmitter();
+    @Output('change') changeEvent = new EventEmitter();
+    @Output('open') openEvent = new EventEmitter();
+    @Output('close') closeEvent = new EventEmitter();
+    @Output('search') searchEvent = new EventEmitter();
 
     @HostBinding('class.as-single')
     get single() {
@@ -92,7 +92,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     private _value$ = new Subject();
     private _itemsSubscription = null;
 
-    private propagateChange = (_: NgOption) => {};
+    private onChange = (_: NgOption) => {};
+    private onTouched = () => {};
     private disposeDocumentClickListener = () => {};
 
     constructor(@Optional() config: NgSelectConfig,
@@ -199,11 +200,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     registerOnChange(fn: any): void {
-        this.propagateChange = fn;
+        this.onChange = fn;
     }
 
     registerOnTouched(fn: any): void {
-        // TODO: touch event
+        this.onTouched = fn;
     }
 
     setDisabledState(isDisabled: boolean): void {
@@ -218,7 +219,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         this.itemsList.markItem();
         this.scrollToMarked();
         this.focusSearchInput();
-        this.onOpen.emit();
+        this.openEvent.emit();
     }
 
     close() {
@@ -227,7 +228,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         }
         this.isOpen = false;
         this.clearSearch();
-        this.onClose.emit();
+        this.closeEvent.emit();
     }
 
     getLabelValue(value: NgOption) {
@@ -308,14 +309,17 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         }
     }
 
-    onInputFocus($event) {
+    onInputFocus() {
         this.isFocused = true;
-        this.onFocus.emit($event);
+        this.focusEvent.emit(null);
     }
 
-    onInputBlur($event) {
+    onInputBlur() {
         this.isFocused = false;
-        this.onBlur.emit($event);
+        this.blurEvent.emit(null);
+        if (!this.isOpen && !this.isDisabled) {
+            this.onTouched();
+        }
     }
 
     onItemHover(item: NgOption) {
@@ -363,7 +367,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
             }
 
             if (this.isFocused) {
-                this.onInputBlur($event);
+                this.onInputBlur();
             }
 
             if (this.isOpen) {
@@ -477,16 +481,16 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     private notifyModelChanged() {
         const value = this.itemsList.value;
         if (!value) {
-            this.propagateChange(null);
+            this.onChange(null);
         } else if (this.bindValue) {
             const bindValue = Array.isArray(value) ?
                 value.map(x => x[this.bindValue]) :
                 value[this.bindValue];
-            this.propagateChange(bindValue);
+            this.onChange(bindValue);
         } else {
-            this.propagateChange(value);
+            this.onChange(value);
         }
-        this.onChange.emit(value);
+        this.changeEvent.emit(value);
     }
 
     private getDropdownMenu() {
