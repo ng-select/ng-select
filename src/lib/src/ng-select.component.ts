@@ -395,8 +395,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
 
     private handleTab($event: KeyboardEvent) {
         if (this.isOpen) {
-            this.select(this.itemsList.markedItem);
-            if (this.multiple) {
+            const marked = this.itemsList.markedItem;
+            if (marked) {
+                this.select(marked);
+            }
+            
+            if (this.multiple || !marked) {
                 this.close();
             }
         }
