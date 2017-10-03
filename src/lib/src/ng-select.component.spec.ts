@@ -333,13 +333,6 @@ describe('NgSelectComponent', function () {
         });
 
         describe('tab', () => {
-            it('should close dropdown and select marked value', () => {
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
-                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
-                expect(fixture.componentInstance.select.isOpen).toBeFalsy()
-            });
-
             it('should close dropdown when there are no items', fakeAsync(() => {
                 fixture.componentInstance.select.onFilter({ target: { value: 'random stuff' } });
                 tick(200);
@@ -348,21 +341,22 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.isOpen).toBeFalsy()
             }));
 
-            it('should close dropdown when marked item is already selected', () => {
-                fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            it('should close dropdown', () => {
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
-                expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
+                expect(fixture.componentInstance.select.value).toBeNull();
                 expect(fixture.componentInstance.select.isOpen).toBeFalsy()
             });
 
-            it('should close dropdown and select marked when multiple', () => {
-                fixture.componentInstance.select.multiple = true;
+            it('should close dropdown and keep selected value', fakeAsync(() => {
+                fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+                tickAndDetectChanges(fixture);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+                tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[0]));
                 expect(fixture.componentInstance.select.isOpen).toBeFalsy()
-            });
+            }));
         });
 
         describe('backspace', () => {
