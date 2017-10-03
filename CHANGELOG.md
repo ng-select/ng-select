@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.2.2"></a>
+## [0.2.2](https://github.com/ng-select/ng-select/compare/v0.2.1...v0.2.2) (2017-10-03)
+
+
+### Bug Fixes
+
+* **navigation:** close dropdown on tab click fixes [#58](https://github.com/ng-select/ng-select/issues/58) ([#63](https://github.com/ng-select/ng-select/issues/63)) ([e2fa1ed](https://github.com/ng-select/ng-select/commit/e2fa1ed))
+
+
+
 <a name="0.2.1"></a>
 ## [0.2.1](https://github.com/ng-select/ng-select/compare/v0.2.0...v0.2.1) (2017-10-01)
 
