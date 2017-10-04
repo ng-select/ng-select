@@ -1,4 +1,4 @@
-import { NgModule, Optional, SkipSelf, ModuleWithProviders } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -28,18 +28,19 @@ import { NgSelectConfig } from './ng-select.types';
 })
 export class NgSelectModule {
     static forRoot(config: NgSelectConfig): ModuleWithProviders {
-        return {
-            ngModule: NgSelectModule,
-            providers: [
-                {provide: NgSelectConfig, useValue: config}
-            ]
-        };
+        return provideModule(config);
     }
 
-    constructor(@Optional() @SkipSelf() parentModule: NgSelectModule) {
-        if (parentModule) {
-            throw new Error(
-                'NgSelectModule is already loaded. Import it in the AppModule only');
-        }
+    static forChild(config: NgSelectConfig): ModuleWithProviders {
+        return provideModule(config);
     }
+}
+
+function provideModule(config: NgSelectConfig) {
+    return {
+        ngModule: NgSelectModule,
+        providers: [
+            {provide: NgSelectConfig, useValue: config}
+        ]
+    };
 }
