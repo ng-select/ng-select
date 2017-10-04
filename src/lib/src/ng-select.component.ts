@@ -113,7 +113,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     set items(items: NgOption[]) {
-        this.setItems(items);
+        this.setItems(items || []);
         this._items$.next(true);
     }
 
@@ -440,14 +440,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     private handleTab($event: KeyboardEvent) {
         if (this.isOpen) {
-            const marked = this.itemsList.markedItem;
-            if (marked) {
-                this.select(marked);
-            }
-            
-            if (this.multiple || !marked) {
-                this.close();
-            }
+            this.close();
         }
     }
 
