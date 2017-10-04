@@ -2,6 +2,7 @@ import {
     Component,
     OnInit,
     OnDestroy,
+    OnChanges,
     forwardRef,
     ChangeDetectorRef,
     Input,
@@ -25,6 +26,9 @@ import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/operator/withLatestFrom';
 
 const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
@@ -43,7 +47,7 @@ const NGB_ANG_SELECT_VALUE_ACCESSOR = {
         'role': 'dropdown'
     }
 })
-export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlValueAccessor {
 
     @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
     @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
@@ -64,12 +68,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     @HostBinding('class.as-multiple') multiple = false;
 
     // output events
-    @Output('blur') onBlur = new EventEmitter();
-    @Output('focus') onFocus = new EventEmitter();
-    @Output('change') onChange = new EventEmitter();
-    @Output('open') onOpen = new EventEmitter();
-    @Output('close') onClose = new EventEmitter();
-    @Output('search') onSearch = new EventEmitter();
+    @Output('blur') blurEvent = new EventEmitter();
+    @Output('focus') focusEvent = new EventEmitter();
+    @Output('change') changeEvent = new EventEmitter();
+    @Output('open') openEvent = new EventEmitter();
+    @Output('close') closeEvent = new EventEmitter();
+    @Output('search') searchEvent = new EventEmitter();
 
     @HostBinding('class.as-single')
     get single() {
@@ -80,12 +84,18 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
 
-    itemsList = new ItemsList([], false);
+    itemsList = new ItemsList();
     viewPortItems: NgOption[] = [];
     isLoading = false;
     filterValue: string = null;
 
-    private propagateChange = (_: NgOption) => {};
+    private _items$ = new Subject<boolean>();
+    private _writeValue$ = new Subject<NgOption | NgOption[]>();
+    private _checkWriteValue = false;
+    private _writeValueHandler$ = null;
+
+    private onChange = (_: NgOption) => {};
+    private onTouched = () => {};
     private disposeDocumentClickListener = () => {};
 
     constructor(@Optional() config: NgSelectConfig,
@@ -94,6 +104,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
                 private renderer: Renderer2
     ) {
         this.mergeConfig(config);
+        this.handleWriteValue();
     }
 
     @Input()
@@ -102,11 +113,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     set items(items: NgOption[]) {
-        this.itemsList = new ItemsList(items || [], this.multiple);
-
-        if (this.isTypeahead()) {
-            this.handleItemsChange();
-        }
+        this.setItems(items);
+        this._items$.next(true);
     }
 
     get value(): NgOption | NgOption[] {
@@ -118,9 +126,16 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.bindLabel = this.bindLabel || 'label';
     }
 
+    ngOnChanges(changes) {
+        if (changes.multiple) {
+            this.itemsList.setMultiple(changes.multiple.currentValue);
+        }
+    }
+
     ngOnDestroy() {
         this.changeDetectorRef.detach();
         this.disposeDocumentClickListener();
+        this._writeValueHandler$.unsubscribe();
     }
 
     @HostListener('keydown', ['$event'])
@@ -178,28 +193,22 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.itemsList.clearSelected();
         this.clearSearch();
         this.notifyModelChanged();
+        if (this.isTypeahead()) {
+            this.typeahead.next(this.filterValue);
+        }
     }
 
     writeValue(value: any): void {
-        this.itemsList.clearSelected();
-        if (value) {
-            if (this.multiple) {
-                value.forEach(item => {
-                    this.selectWriteValue(item);
-                });
-            } else {
-                this.selectWriteValue(value);
-            }
-        }
-        this.detectChanges();
+        this._checkWriteValue = true;
+        this._writeValue$.next(value);
     }
 
     registerOnChange(fn: any): void {
-        this.propagateChange = fn;
+        this.onChange = fn;
     }
 
     registerOnTouched(fn: any): void {
-        // TODO: touch event
+        this.onTouched = fn;
     }
 
     setDisabledState(isDisabled: boolean): void {
@@ -214,7 +223,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.itemsList.markItem();
         this.scrollToMarked();
         this.focusSearchInput();
-        this.onOpen.emit();
+        this.openEvent.emit();
     }
 
     close() {
@@ -223,7 +232,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         }
         this.isOpen = false;
         this.clearSearch();
-        this.onClose.emit();
+        this.closeEvent.emit();
     }
 
     getLabelValue(value: NgOption) {
@@ -247,6 +256,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     select(item: NgOption) {
+        this._checkWriteValue = false;
         if (!item.selected) {
             this.itemsList.select(item);
             this.updateModel();
@@ -304,14 +314,17 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
         }
     }
 
-    onInputFocus($event) {
+    onInputFocus() {
         this.isFocused = true;
-        this.onFocus.emit($event);
+        this.focusEvent.emit(null);
     }
 
-    onInputBlur($event) {
+    onInputBlur() {
         this.isFocused = false;
-        this.onBlur.emit($event);
+        this.blurEvent.emit(null);
+        if (!this.isOpen && !this.isDisabled) {
+            this.onTouched();
+        }
     }
 
     onItemHover(item: NgOption) {
@@ -319,6 +332,36 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
             return;
         }
         this.itemsList.markItem(item);
+    }
+
+    private handleWriteValue() {
+        // combineLatest ensures that write value is always set after latest items are loaded
+        this._writeValueHandler$ = Observable.combineLatest(this._items$, this._writeValue$).subscribe((result) => {
+            if (!this._checkWriteValue) {
+                return;
+            }
+            const value = result[1];
+            this.validateWriteValue(value);
+            this.itemsList.clearSelected();
+            if (value) {
+                if (this.multiple) {
+                    (<NgOption[]>value).forEach(item => {
+                        this.selectWriteValue(item);
+                    });
+                } else {
+                    this.selectWriteValue(value);
+                }
+            }
+            this.detectChanges();
+        });
+    }
+
+    private setItems(items: NgOption[]) {
+        this.itemsList.setItems(items);
+        if (this.isTypeahead()) {
+            this.isLoading = false;
+            this.itemsList.markItem();
+        }
     }
 
     private handleDocumentClick() {
@@ -336,7 +379,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
             }
 
             if (this.isFocused) {
-                this.onInputBlur($event);
+                this.onInputBlur();
             }
 
             if (this.isOpen) {
@@ -348,28 +391,30 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     private validateWriteValue(value: any) {
-        if (value instanceof Object && this.bindValue) {
-            throw new Error('Binding object with bindValue is not allowed.')
+        if (!value) {
+            return;
         }
-    }
 
-    private handleItemsChange() {
-        this.isLoading = false;
-        this.itemsList.markItem();
+        const validateBinding = (item) => {
+            if (item instanceof Object && this.bindValue) {
+                throw new Error('Binding object with bindValue is not allowed.');
+            }
+        };
+
+        if (this.multiple) {
+            if (!Array.isArray(value)) {
+                throw new Error('Multiple select model should be array.');
+            }
+            value.forEach(item => validateBinding(item));
+        } else {
+            validateBinding(value);
+        }
     }
 
     private selectWriteValue(value: any) {
-        this.validateWriteValue(value);
-        let index = -1;
-        if (this.bindValue) {
-            index = this.itemsList.items.findIndex(x => x[this.bindValue] === value);
-        } else {
-            index = this.itemsList.items.indexOf(value);
-            index = index > -1 ? index :
-                this.itemsList.items.findIndex(x => x[this.bindLabel] === value[this.bindLabel])
-        }
-        if (index > -1) {
-            this.itemsList.select(this.itemsList.items[index]);
+        let item = this.itemsList.findItem(value, this.bindLabel, this.bindValue);
+        if (item) {
+            this.itemsList.select(item);
         }
     }
 
@@ -452,16 +497,16 @@ export class NgSelectComponent implements OnInit, OnDestroy, ControlValueAccesso
     private notifyModelChanged() {
         const value = this.itemsList.value;
         if (!value) {
-            this.propagateChange(null);
+            this.onChange(null);
         } else if (this.bindValue) {
             const bindValue = Array.isArray(value) ?
                 value.map(x => x[this.bindValue]) :
                 value[this.bindValue];
-            this.propagateChange(bindValue);
+            this.onChange(bindValue);
         } else {
-            this.propagateChange(value);
+            this.onChange(value);
         }
-        this.onChange.emit(value);
+        this.changeEvent.emit(value);
     }
 
     private getDropdownMenu() {

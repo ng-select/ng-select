@@ -1,10 +1,9 @@
-import { NgModule, Optional, SkipSelf, ModuleWithProviders } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { NgSelectComponent } from './ng-select.component';
 import { NgOptionTemplateDirective, NgLabelTemplateDirective } from './ng-templates.directive';
-import { AngSearchFocusDirective } from './ng-search-focus.directive';
 import { VirtualScrollModule } from './virtual-scroll.component';
 import { SpinnerComponent } from './spinner.component';
 import { NgSelectConfig } from './ng-select.types';
@@ -14,7 +13,6 @@ import { NgSelectConfig } from './ng-select.types';
         NgSelectComponent,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
-        AngSearchFocusDirective,
         SpinnerComponent
     ],
     imports: [
@@ -30,18 +28,19 @@ import { NgSelectConfig } from './ng-select.types';
 })
 export class NgSelectModule {
     static forRoot(config: NgSelectConfig): ModuleWithProviders {
-        return {
-            ngModule: NgSelectModule,
-            providers: [
-                {provide: NgSelectConfig, useValue: config}
-            ]
-        };
+        return provideModule(config);
     }
 
-    constructor(@Optional() @SkipSelf() parentModule: NgSelectModule) {
-        if (parentModule) {
-            throw new Error(
-                'NgSelectModule is already loaded. Import it in the AppModule only');
-        }
+    static forChild(config: NgSelectConfig): ModuleWithProviders {
+        return provideModule(config);
     }
+}
+
+function provideModule(config: NgSelectConfig) {
+    return {
+        ngModule: NgSelectModule,
+        providers: [
+            {provide: NgSelectConfig, useValue: config}
+        ]
+    };
 }
