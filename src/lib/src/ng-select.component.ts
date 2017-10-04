@@ -89,8 +89,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     isLoading = false;
     filterValue: string = null;
 
-    private _items$ = new Subject<NgOption[]>();
-    private _writeValue$ = new Subject<any>();
+    private _items$ = new Subject<boolean>();
+    private _writeValue$ = new Subject<NgOption | NgOption[]>();
     private _checkWriteValue = false;
     private _writeValueSubscription = null;
 
@@ -114,7 +114,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     set items(items: NgOption[]) {
         this.setItems(items);
-        this._items$.next(items);
+        this._items$.next(true);
     }
 
     get value(): NgOption | NgOption[] {
@@ -336,16 +336,16 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     private handleWriteValue() {
         // combineLatest ensures that write value is always set after latest items are loaded
-        this._writeValueSubscription = Observable.combineLatest(this._items$, this._writeValue$).subscribe((res) => {
+        this._writeValueSubscription = Observable.combineLatest(this._items$, this._writeValue$).subscribe((result) => {
             if (!this._checkWriteValue) {
                 return;
             }
-            const value = res[1];
+            const value = result[1];
             this.validateWriteValue(value);
             this.itemsList.clearSelected();
             if (value) {
                 if (this.multiple) {
-                    value.forEach(item => {
+                    (<NgOption[]>value).forEach(item => {
                         this.selectWriteValue(item);
                     });
                 } else {
@@ -356,7 +356,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         });
     }
 
-    private setItems(items) {
+    private setItems(items: NgOption[]) {
         this.itemsList.setItems(items);
         if (this.isTypeahead()) {
             this.isLoading = false;
