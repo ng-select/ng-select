@@ -46,7 +46,11 @@ export class SelectAutocompleteComponent {
     }
 
     loadGithubUsers(term: string): Observable<any[]> {
-        return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).map(rsp => rsp.items);
+        if (term) {
+            return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).map(rsp => rsp.items);
+        } else {
+            return Observable.of([]);
+        }
     }
 }
 

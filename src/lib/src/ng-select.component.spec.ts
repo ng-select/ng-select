@@ -14,7 +14,7 @@ import { Subject } from 'rxjs/Subject';
 describe('NgSelectComponent', function () {
 
     describe('Model change detection', () => {
-        it('update ngModel on value change', fakeAsync(() => {
+        it('should update ngModel on value change', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,
                 `<ng-select [items]="cities"
@@ -38,7 +38,7 @@ describe('NgSelectComponent', function () {
             discardPeriodicTasks();
         }));
 
-        it('update internal model on ngModel change', fakeAsync(() => {
+        it('should update internal model on ngModel change', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,
                 `<ng-select [items]="cities"
@@ -61,7 +61,7 @@ describe('NgSelectComponent', function () {
             discardPeriodicTasks();
         }));
 
-        it('update internal model after it was toggled with *ngIf', fakeAsync(() => {
+        it('should update internal model after it was toggled with *ngIf', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,
                 `<ng-select *ngIf="visible"
@@ -86,6 +86,24 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
 
             expect(fixture.componentInstance.select.value).toEqual(null);
+        }));
+
+        it('should set items correctly after ngModel set first', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectModelChangesTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            const cities = [{id: 7, name: 'Pailgis'}];
+            fixture.componentInstance.selectedCity = cities[0];
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.cities = cities;
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.value).toEqual(jasmine.objectContaining(cities[0]));
         }));
 
         it('should clear previous value when setting new model', fakeAsync(() => {
@@ -262,6 +280,7 @@ describe('NgSelectComponent', function () {
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
                         bindLabel="name"
+                        [multiple]="multiple"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
         });
@@ -341,7 +360,20 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.isOpen).toBeFalsy()
             }));
 
+<<<<<<< HEAD
             it('should close dropdown', () => {
+=======
+            it('should close dropdown when there are no items', fakeAsync(() => {
+                fixture.componentInstance.select.onFilter({ target: { value: 'random stuff' } });
+                tick(200);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+                expect(fixture.componentInstance.select.isOpen).toBeFalsy()
+            }));
+
+            it('should close dropdown when marked item is already selected', () => {
+                fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+>>>>>>> master
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
                 expect(fixture.componentInstance.select.value).toBeNull();
@@ -376,7 +408,7 @@ describe('NgSelectComponent', function () {
             }));
 
             it('should remove last selected value when multiple', fakeAsync(() => {
-                fixture.componentInstance.select.multiple = true;
+                fixture.componentInstance.multiple = true;
                 fixture.componentInstance.cities = [...fixture.componentInstance.cities];
                 tickAndDetectChanges(fixture);
                 selectOption(fixture, KeyCode.ArrowDown, 1);
@@ -543,9 +575,10 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            fixture.detectChanges();
+            tick(200);
             fixture.componentInstance.select.onFilter({ target: { value: 'vilnius' } });
             tick(200);
+
             const result = [jasmine.objectContaining({ id: 1, name: 'Vilnius' })];
             expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual(result);
         }));
@@ -558,10 +591,11 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            const result = jasmine.objectContaining(fixture.componentInstance.cities[2]);
-            fixture.detectChanges();
+            tick(200);
             fixture.componentInstance.select.onFilter({ target: { value: 'pab' } });
             tick(200);
+
+            const result = jasmine.objectContaining(fixture.componentInstance.cities[2]);
             expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(result)
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
             expect(fixture.componentInstance.select.value).toEqual(result);
@@ -582,6 +616,9 @@ describe('NgSelectComponent', function () {
                 fixture.componentInstance.customFilter.subscribe(term => {
                     expect(term).toBe('vilnius');
                 });
+
+                tick(200);
+
                 fixture.componentInstance.select.onFilter({ target: { value: 'vilnius' } });
                 tickAndDetectChanges(fixture);
             }));
@@ -813,6 +850,7 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
 class NgSelectBasicTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
+    multiple = false;
     cities = [
         { id: 1, name: 'Vilnius' },
         { id: 2, name: 'Kaunas' },
