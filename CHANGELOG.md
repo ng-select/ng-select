@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.2.5"></a>
+## [0.2.5](https://github.com/ng-select/ng-select/compare/v0.2.4...v0.2.5) (2017-10-04)
+
+
+### Bug Fixes
+
+* clear filter value on selected item ([#72](https://github.com/ng-select/ng-select/issues/72)) ([4ebc1cf](https://github.com/ng-select/ng-select/commit/4ebc1cf)), closes [#66](https://github.com/ng-select/ng-select/issues/66)
+
+
+
 <a name="0.2.4"></a>
 ## [0.2.4](https://github.com/ng-select/ng-select/compare/v0.2.3...v0.2.4) (2017-10-04)
 
