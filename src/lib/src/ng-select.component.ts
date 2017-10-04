@@ -259,6 +259,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         this._checkWriteValue = false;
         if (!item.selected) {
             this.itemsList.select(item);
+            this.clearSearch();
             this.updateModel();
         }
 
@@ -476,13 +477,14 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     private handleBackspace() {
+        if (this.filterValue) {
+            return;
+        }
+
         if (this.multiple) {
             this.itemsList.unselectLastItem();
             this.updateModel();
         } else {
-            if (this.filterValue) {
-                return;
-            }
             this.clear();
         }
     }

@@ -588,6 +588,22 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.value).toEqual(result);
         }));
 
+        it('should clear filterValue on selected item', fakeAsync(() => {
+            fixture = createTestingModule(
+                NgSelectFilterTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [(ngModel)]="selectedCity"
+                    [multiple]="true">
+                </ng-select>`);
+
+            fixture.componentInstance.select.filterValue = 'Hey! Whats up!?';
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.filterValue).toBe(null);
+        }));
+
         describe('with typeahead', () => {
             beforeEach(() => {
                 fixture = createTestingModule(

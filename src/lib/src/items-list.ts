@@ -28,7 +28,7 @@ export class ItemsList {
 
     setMultiple(multiple: boolean) {
         this._multiple = multiple;
-        this._selected = [];
+        this.clearSelected();
     }
 
     select(item: NgOption) {

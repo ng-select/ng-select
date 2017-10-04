@@ -10,6 +10,8 @@ import { Observable } from 'rxjs/Observable';
                    notFoundText="No results found"
                    typeToSearchText="Search for github account"
                    bindLabel="login"
+                   [placeholder]="placeholder"
+                   [multiple]="multiple"
                    [typeahead]="typeahead"
                    [(ngModel)]="githubAccount">
 
@@ -18,6 +20,8 @@ import { Observable } from 'rxjs/Observable';
             </ng-template>
 
         </ng-select>
+        <br>
+        <button class="btn btn-secondary btn-sm" (click)="toggleMultiple()">Toggle multiple</button>
         <p>
             Selected github account:
             <span *ngIf="githubAccount">
@@ -31,6 +35,9 @@ export class SelectAutocompleteComponent {
     githubAccount: any;
     items = [];
     typeahead = new EventEmitter<string>();
+    placeholder = 'Type in me. I am single';
+
+    multiple = false;
 
     constructor(private http: HttpClient) {
         this.typeahead
@@ -51,6 +58,11 @@ export class SelectAutocompleteComponent {
         } else {
             return Observable.of([]);
         }
+    }
+
+    toggleMultiple() {
+        this.multiple = !this.multiple;
+        this.placeholder = this.multiple ? 'Type in me. I am multiple.' : 'Type in me. I am single.';
     }
 }
 
