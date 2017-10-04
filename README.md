@@ -23,7 +23,7 @@ Table of contents
     * [Custom display and option templates](#custom-display-and-option-templates)
   * [Contributing](#contributing)
   * [Development](#development)
-  * [Credits] (#credits)
+  * [Credits](#credits)
 
 ## Features
 - [x] Custom bindings to property or object
