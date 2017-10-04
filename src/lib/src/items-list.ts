@@ -39,16 +39,13 @@ export class ItemsList {
         item.selected = true;
     }
 
-    findItemIndex(value, bindLabel: string, bindValue: string) {
-        let index = -1;
+    findItem(value, bindLabel: string, bindValue: string): NgOption {
         if (bindValue) {
-            index = this.items.findIndex(x => x[bindValue] === value);
-        } else {
-            index = this.items.indexOf(value);
-            index = index > -1 ? index :
-                this.items.findIndex(x => x[bindLabel] === value[bindLabel])
+            return this.items.find(x => x[bindValue] === value);
         }
-        return index;
+        const index = this.items.indexOf(value);
+        return index > -1 ? this.items[index] :
+            this.items.find(x => x[bindLabel] === value[bindLabel])
     }
 
     unselect(item: NgOption) {

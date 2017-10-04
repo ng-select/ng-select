@@ -92,7 +92,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     private _items$ = new Subject<boolean>();
     private _writeValue$ = new Subject<NgOption | NgOption[]>();
     private _checkWriteValue = false;
-    private _writeValueSubscription = null;
+    private _writeValueHandler$ = null;
 
     private onChange = (_: NgOption) => {};
     private onTouched = () => {};
@@ -135,7 +135,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     ngOnDestroy() {
         this.changeDetectorRef.detach();
         this.disposeDocumentClickListener();
-        this._writeValueSubscription.unsubscribe();
+        this._writeValueHandler$.unsubscribe();
     }
 
     @HostListener('keydown', ['$event'])
@@ -336,7 +336,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     private handleWriteValue() {
         // combineLatest ensures that write value is always set after latest items are loaded
-        this._writeValueSubscription = Observable.combineLatest(this._items$, this._writeValue$).subscribe((result) => {
+        this._writeValueHandler$ = Observable.combineLatest(this._items$, this._writeValue$).subscribe((result) => {
             if (!this._checkWriteValue) {
                 return;
             }
@@ -412,9 +412,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     private selectWriteValue(value: any) {
-        let index = this.itemsList.findItemIndex(value, this.bindLabel, this.bindValue);
-        if (index > -1) {
-            this.itemsList.select(this.itemsList.items[index]);
+        let item = this.itemsList.findItem(value, this.bindLabel, this.bindValue);
+        if (item) {
+            this.itemsList.select(item);
         }
     }
 
