@@ -65,7 +65,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     @Input() typeahead: Subject<string>;
 
     @Input()
-    @HostBinding('class.as-multiple') multiple = false;
+    @HostBinding('class.ng-multiple') multiple = false;
 
     // output events
     @Output('blur') blurEvent = new EventEmitter();
@@ -75,7 +75,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     @Output('close') closeEvent = new EventEmitter();
     @Output('search') searchEvent = new EventEmitter();
 
-    @HostBinding('class.as-single')
+    @HostBinding('class.ng-single')
     get single() {
         return !this.multiple;
     }
@@ -83,6 +83,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
+    @HostBinding('class.filtered') get filtered() { return !!this.filterValue };
 
     itemsList = new ItemsList();
     viewPortItems: NgOption[] = [];
@@ -94,14 +95,14 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     private _checkWriteValue = false;
     private _writeValueHandler$ = null;
 
-    private onChange = (_: NgOption) => {};
-    private onTouched = () => {};
-    private disposeDocumentClickListener = () => {};
+    private onChange = (_: NgOption) => { };
+    private onTouched = () => { };
+    private disposeDocumentClickListener = () => { };
 
-    constructor(@Optional() config: NgSelectConfig,
-                private changeDetectorRef: ChangeDetectorRef,
-                private elementRef: ElementRef,
-                private renderer: Renderer2
+    constructor( @Optional() config: NgSelectConfig,
+        private changeDetectorRef: ChangeDetectorRef,
+        private elementRef: ElementRef,
+        private renderer: Renderer2
     ) {
         this.mergeConfig(config);
         this.handleWriteValue();
@@ -117,7 +118,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         this._items$.next(true);
     }
 
-    get value(): NgOption | NgOption[] {
+    get value(): NgOption[] {
         return this.itemsList.value;
     }
 
@@ -235,14 +236,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         this.closeEvent.emit();
     }
 
-    getLabelValue(value: NgOption) {
-        return value ? value[this.bindLabel] : '';
-    }
-
-    getDisplayTemplateContext() {
-        return this.itemsList.value ? { item: this.itemsList.value } : { item: {} };
-    }
-
     toggle(item: NgOption) {
         if (!item || item.disabled || this.isDisabled) {
             return;
@@ -275,10 +268,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     showPlaceholder() {
         return this.placeholder && !this.isValueSet(this.value) && !this.filterValue;
-    }
-
-    showValue() {
-        return !this.filterValue && this.isValueSet(this.value);
     }
 
     showClear() {
@@ -490,7 +479,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     private notifyModelChanged() {
-        const value = this.itemsList.value;
+        const value = this.modelValue;
         if (!value) {
             this.onChange(null);
         } else if (this.bindValue) {
@@ -508,7 +497,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         if (!this.isOpen || !this.dropdownList) {
             return null;
         }
-        return <HTMLElement>this.elementRef.nativeElement.querySelector('.as-menu-outer');
+        return <HTMLElement>this.elementRef.nativeElement.querySelector('.ng-menu-outer');
     }
 
     private isTypeahead() {
@@ -521,11 +510,15 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         }
     }
 
-    private isValueSet(value: any): boolean {
+    private get modelValue() {
         if (this.multiple) {
-            return !!value && value.length > 0;
+            return this.value;
         }
-        return !!value;
+        return this.value[0] || null;
+    }
+
+    private isValueSet(value: any): boolean {
+        return !!value && value.length > 0;
     }
 
     private mergeConfig(config: NgSelectConfig) {

@@ -10,11 +10,8 @@ export class ItemsList {
     private _selected: NgOption[] = [];
     private _multiple = false;
 
-    get value(): NgOption | NgOption[] {
-        if (this._multiple) {
-            return this._selected;
-        }
-        return this._selected[0] || null;
+    get value(): NgOption[] {
+        return this._selected;
     }
 
     get markedItem(): NgOption {
