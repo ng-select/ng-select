@@ -74,6 +74,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
                 <br>
                 <button class="btn btn-secondary btn-sm" (click)="selectFirstPhoto()">Select first photo</button>
                 <button class="btn btn-secondary btn-sm" (click)="openModel(content)">Open in model</button>
+                <button class="btn btn-secondary btn-sm" (click)="togglePhotoDisabled()">Toggle disabled</button>
             </div>
             
             <ng-template #content let-c="close" let-d="dismiss">
@@ -186,6 +187,15 @@ export class ReactiveFormsComponent {
 
     changePhoto(photo) {
         this.heroForm.get('photo').patchValue(photo ? photo.thumbnailUrl : null);
+    }
+
+    togglePhotoDisabled() {
+        const photo = this.heroForm.get('photo');
+        if (photo.disabled) {
+            photo.enable();
+        } else {
+            photo.disable();
+        }
     }
 
     private loadAlbums() {
