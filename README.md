@@ -253,14 +253,14 @@ Perform the _clone-to-launch_ steps with these terminal commands.
 ```
 git clone https://github.com/ng-select/ng-select
 cd ng-select
-npm install
-npm run serve-demo
+yarn
+yarn run start
 ```
 ### Testing
 ```
-npm run test
+yarn run test
 or
-npm run test-watch
+yarn run test-watch
 ```
 
 ### Publishing to npm
