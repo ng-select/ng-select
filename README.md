@@ -116,14 +116,14 @@ data types. That means if you do object mutations like:
 this.items.push({id: 1, name: 'New item'})
 ``` 
 
-Component will not detect a change! Instead you need to do:
+Component will not detect a change. Instead you need to do:
 
 ```javascript
 this.items.push({id: 1, name: 'New item'})
 this.items = [...this.items];
 ```
 
-This will cause the table to detect the change and update. Some might have concerns that
+This will cause the component to detect the change and update. Some might have concerns that
 this is a pricey operation, however, it is much more performant than running `ngDoCheck` and
 constantly diffing the array.
 
