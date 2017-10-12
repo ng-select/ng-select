@@ -8,7 +8,7 @@
             </div>
         </ng-template>
 
-        <div class="ng-value" *ngFor="let item of value">
+        <div class="ng-value" *ngFor="let item of selectedItems">
             <ng-template
                 [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
                 [ngTemplateOutletContext]="{ item: item, unselect: unselect.bind(this) }">

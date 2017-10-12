@@ -118,7 +118,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         this._items$.next(true);
     }
 
-    get value(): NgOption[] {
+    get selectedItems(): NgOption[] {
         return this.itemsList.value;
     }
 
@@ -267,11 +267,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     showPlaceholder() {
-        return this.placeholder && !this.isValueSet(this.value) && !this.filterValue;
+        return this.placeholder && !this.isValueSet(this.selectedItems) && !this.filterValue;
     }
 
     showClear() {
-        return this.clearable && (this.isValueSet(this.value) || this.filterValue) && !this.isDisabled;
+        return this.clearable && (this.isValueSet(this.selectedItems) || this.filterValue) && !this.isDisabled;
     }
 
     showFilter() {
@@ -479,7 +479,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     private notifyModelChanged() {
-        const value = this.modelValue;
+        const value = this.value;
         if (!value) {
             this.onChange(null);
         } else if (this.bindValue) {
@@ -510,11 +510,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         }
     }
 
-    private get modelValue() {
+    private get value() {
         if (this.multiple) {
-            return this.value;
+            return this.selectedItems;
         }
-        return this.value[0] || null;
+        return this.selectedItems[0] || null;
     }
 
     private isValueSet(value: any): boolean {
