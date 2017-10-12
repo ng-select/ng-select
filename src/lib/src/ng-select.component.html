@@ -2,9 +2,9 @@
     <div class="ng-value-container">
         <div class="ng-placeholder" *ngIf="showPlaceholder()">{{placeholder}}</div>
         <ng-template #defaultLabelTemplate let-item="item">
-            <div class="ng-value-label default">
-                <span class="ng-clear left" (click)="unselect(item)" aria-hidden="true">×</span>
-                {{item[bindLabel]}}
+            <div class="ng-value-wrapper default">
+                <span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">×</span>
+                <span class="ng-value-label">{{item[bindLabel]}}</span>
             </div>
         </ng-template>
 

@@ -45,6 +45,11 @@ ng-select {
             visibility: visible;
         }
     }
+    &:not(.opened) {
+        .ng-control .ng-value-container .ng-input {
+            opacity: 0;
+        }
+    }
     &.focused {
         &:not(.opened)>.ng-control {
             border-color: #007eff;
@@ -79,7 +84,6 @@ ng-select {
             display: flex;
             flex: 1;
             align-items: center;
-            position: relative;
             padding-left: 10px;
             .ng-placeholder {
                 color: #aaa;
@@ -104,25 +108,23 @@ ng-select {
                 visibility: hidden;
             }
         }
-        &:not(.opened) {
-            .ng-control .ng-value-container .ng-input {
-                visibility: hidden;
-            }
-        }
         .ng-control {
             .ng-value-container {
                 @include wrapt-text;
                 .ng-value {
                     @include wrapt-text;
-                    .ng-value-label {
+                    .ng-value-wrapper {
                         @include wrapt-text;
-                        .ng-clear {
+                        .ng-value-icon {
                             display: none;
                         }
                     }
                 }
                 .ng-input {
                     position: absolute;
+                    left: 0;
+                    padding-left: 10px;
+                    padding-right: 50px;
                     width: 100%;
                 }
             }
@@ -130,10 +132,10 @@ ng-select {
     }
     &.ng-multiple {
         &.disabled {
-            >.ng-control .ng-value-container .ng-value .ng-value-label.default {
+            >.ng-control .ng-value-container .ng-value .ng-value-wrapper.default {
                 background-color: #f9f9f9;
                 border: 1px solid #e3e3e3;
-                .ng-clear {
+                .ng-value-icon {
                     display: none;
                 }
             }
@@ -150,27 +152,29 @@ ng-select {
                     padding-right: 5px;
                     padding-bottom: 5px;
                     white-space: nowrap;
-                    .ng-value-label {
-                        padding: 1px 6px;
+                    .ng-value-wrapper {
+                        display: flex;
                         &.default {
-                            padding: 0 5px;
                             background-color: $color-selected;
                             border-radius: 2px;
                             border: 1px solid #c2e0ff;
-                            .ng-clear {
+                            .ng-value-icon {
+                                &:hover {
+                                    background-color: #d8eafd;
+                                }
                                 &.left {
-                                    padding-right: 5px;
                                     border-right: 1px solid #c2e0ff;
                                 }
                                 &.right {
-                                    padding-left: 5px;
-                                    padding-right: 0;
                                     border-left: 1px solid #c2e0ff;
                                 }
                             }
                         }
-                        .ng-clear {
-                            padding-right: 6px;
+                        .ng-value-label {
+                            padding: 0 5px;
+                        }
+                        .ng-value-icon {
+                            padding: 0 5px;
                             cursor: pointer;
                         }
                     }
@@ -236,10 +240,7 @@ ng-select {
         animation: Select-animation-fadeIn 200ms;
         color: #999;
         cursor: pointer;
-        display: table-cell;
         position: relative;
-        text-align: center;
-        vertical-align: middle;
         width: 17px;
         .ng-clear {
             display: inline-block;
