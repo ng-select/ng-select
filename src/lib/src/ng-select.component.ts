@@ -96,6 +96,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     private _writeValue$ = new Subject<NgOption | NgOption[]>();
     private _checkWriteValue = false;
     private _writeValueHandler$ = null;
+    private _clearEventHandler = null;
 
     private onChange = (_: NgOption) => { };
     private onTouched = () => { };
@@ -140,6 +141,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         this.changeDetectorRef.detach();
         this.disposeDocumentClickListener();
         this._writeValueHandler$.unsubscribe();
+        this._clearEventHandler.unsubscribe();
     }
 
     @HostListener('keydown', ['$event'])
@@ -482,7 +484,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     private handleClearEvent() {
-        this.clearEvent.subscribe(item => {
+        this._clearEventHandler = this.clearEvent.subscribe(item => {
             this.unselect(item);
         });
     }
