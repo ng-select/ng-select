@@ -75,6 +75,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     @Output('close') closeEvent = new EventEmitter();
     @Output('search') searchEvent = new EventEmitter();
 
+    clearEvent = new EventEmitter<NgOption>();
+
     @HostBinding('class.ng-single')
     get single() {
         return !this.multiple;
@@ -106,6 +108,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     ) {
         this.mergeConfig(config);
         this.handleWriteValue();
+        this.handleClearEvent();
     }
 
     @Input()
@@ -476,6 +479,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         } else {
             this.clear();
         }
+    }
+
+    private handleClearEvent() {
+        this.clearEvent.subscribe(item => {
+            this.unselect(item);
+        });
     }
 
     private notifyModelChanged() {

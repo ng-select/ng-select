@@ -35,10 +35,10 @@ import { Observable } from 'rxjs/Observable';
             [multiple]="true"
             [(ngModel)]="selectedUsers">
 
-            <ng-template ng-label-tmp let-item="item" let-unselect="unselect">
+            <ng-template ng-label-tmp let-item="item" let-clearEvent="clearEvent">
                 <div class="ng-value-wrapper default">
                     <span class="ng-value-label"><img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}</span>
-                    <span class="ng-value-icon right" (click)="unselect(item)" aria-hidden="true">×</span>
+                    <span class="ng-value-icon right" (click)="clearEvent.emit(item)" aria-hidden="true">×</span>
                 </div>
             </ng-template>
 

@@ -3,7 +3,7 @@
         <div class="ng-placeholder" *ngIf="showPlaceholder()">{{placeholder}}</div>
         <ng-template #defaultLabelTemplate let-item="item">
             <div class="ng-value-wrapper default">
-                <span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">×</span>
+                <span class="ng-value-icon left" (click)="unselect(item); $event.stopPropagation()" aria-hidden="true">×</span>
                 <span class="ng-value-label">{{item[bindLabel]}}</span>
             </div>
         </ng-template>
@@ -11,7 +11,7 @@
         <div class="ng-value" *ngFor="let item of selectedItems">
             <ng-template
                 [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
-                [ngTemplateOutletContext]="{ item: item, unselect: unselect.bind(this) }">
+                [ngTemplateOutletContext]="{ item: item, clearEvent: clearEvent }">
             </ng-template>
         </div>
 
