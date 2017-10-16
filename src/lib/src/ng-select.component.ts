@@ -96,11 +96,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     private _writeValue$ = new Subject<NgOption | NgOption[]>();
     private _checkWriteValue = false;
     private _writeValueHandler$ = null;
-    private _clearEventHandler = null;
 
     private onChange = (_: NgOption) => { };
     private onTouched = () => { };
     private disposeDocumentClickListener = () => { };
+
+    clearItem = (item) => this.unselect(item);
 
     constructor( @Optional() config: NgSelectConfig,
         private changeDetectorRef: ChangeDetectorRef,
@@ -109,7 +110,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     ) {
         this.mergeConfig(config);
         this.handleWriteValue();
-        this.handleClearEvent();
     }
 
     @Input()
@@ -141,7 +141,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         this.changeDetectorRef.detach();
         this.disposeDocumentClickListener();
         this._writeValueHandler$.unsubscribe();
-        this._clearEventHandler.unsubscribe();
     }
 
     @HostListener('keydown', ['$event'])
@@ -481,12 +480,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         } else {
             this.clear();
         }
-    }
-
-    private handleClearEvent() {
-        this._clearEventHandler = this.clearEvent.subscribe(item => {
-            this.unselect(item);
-        });
     }
 
     private notifyModelChanged() {

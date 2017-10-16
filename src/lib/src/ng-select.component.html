@@ -11,7 +11,7 @@
         <div class="ng-value" *ngFor="let item of selectedItems">
             <ng-template
                 [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
-                [ngTemplateOutletContext]="{ item: item, clearEvent: clearEvent }">
+                [ngTemplateOutletContext]="{ item: item, clear: clearItem }">
             </ng-template>
         </div>
 

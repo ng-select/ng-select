@@ -144,6 +144,7 @@ ng-select {
             .ng-value-container {
                 padding-top: 5px;
                 flex-wrap: wrap;
+                padding-left: 7px;
                 .ng-placeholder {
                     position: absolute;
                 }
@@ -182,9 +183,11 @@ ng-select {
                 .ng-input {
                     flex: 1;
                     padding-bottom: 5px;
+                    padding-left: 3px;
                 }
                 .ng-placeholder {
                     padding-bottom: 5px;
+                    padding-left: 3px;
                 }
             }
         }
