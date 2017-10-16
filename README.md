@@ -88,9 +88,7 @@ map: {
 - [ ] Custom tags
 - [ ] Accessibility
 
-## Examples
-
-### API
+## API
 | Input  | Type | Default | Required | Description |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | [items] | Array<NgOption> | `[]` | yes | Items array |
@@ -110,6 +108,26 @@ map: {
 | (open)  | Fired on select dropdown open |
 | (close)  | Fired on select dropdown close |
 
+# Change Detection
+Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable 
+data types. That means if you do object mutations like:
+
+```javascript
+this.items.push({id: 1, name: 'New item'})
+``` 
+
+Component will not detect a change. Instead you need to do:
+
+```javascript
+this.items.push({id: 1, name: 'New item'})
+this.items = [...this.items];
+```
+
+This will cause the component to detect the change and update. Some might have concerns that
+this is a pricey operation, however, it is much more performant than running `ngDoCheck` and
+constantly diffing the array.
+
+## Examples
 ### Basic example
 This example in [Plunkr](https://plnkr.co/edit/tjxQgDY2Pn8RRPsoVAa0?p=preview)
 
@@ -237,12 +255,12 @@ export class SelectCustomTemplatesComponent {
 ```
 
 ### More demos
-Visit https://github.com/ng-select/ng-select/tree/master/src/demo/app for more examples
+Visit [demos](https://github.com/ng-select/ng-select/tree/master/src/demo/app) for more examples.
 
 
 ## Contributing
 
-Contributions are welcome. You can start by looking at issues with label Help wanted https://github.com/ng-select/ng-select/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22 or creating new Issue with proposal or bug report.
+Contributions are welcome. You can start by looking at [issues](https://github.com/ng-select/ng-select/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) with label *Help wanted*  or creating new Issue with proposal or bug report.
 Note that we are using https://conventionalcommits.org/ commits format.
 
 ## Development
@@ -280,4 +298,4 @@ npm run gh-pages
 ```
 
 ## Credits
-This component is inspired by https://github.com/JedWatson/react-select and https://github.com/rintoj/angular2-virtual-scroll. Check theirs amazing work and components :)
+This component is inspired by [React select](https://github.com/JedWatson/react-select) and [Vitual scroll](https://github.com/rintoj/angular2-virtual-scroll). Check theirs amazing work and components :)

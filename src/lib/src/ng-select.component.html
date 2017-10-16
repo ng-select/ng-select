@@ -1,29 +1,21 @@
-<div (click)="handleSelectClick($event)" class="as-control">
-    <span class="as-multi-value-wrapper">
-
-        <span class="as-placeholder" *ngIf="showPlaceholder()">{{placeholder}}</span>
-
-        <ng-container *ngIf="!multiple;else multipleValue">
-            <div class="as-value" *ngIf="showValue()">
-                    <span class="as-value-label" role="option" aria-selected="true">
-                            <ng-template 
-                                *ngIf="labelTemplate" 
-                                [ngTemplateOutlet]="labelTemplate"
-                                [ngTemplateOutletContext]="getDisplayTemplateContext()">
-                            </ng-template>
-                            <span *ngIf="!labelTemplate">{{getLabelValue(value)}}</span>
-                    </span>
-            </div>
-        </ng-container>
-
-        <ng-template #multipleValue>
-            <div class="as-value" *ngFor="let item of value">
-                <span class="as-clear" (click)="unselect(item)" aria-hidden="true">×</span>
-                <span class="as-value-label" aria-selected="true">{{getLabelValue(item)}}</span>
+<div (click)="handleSelectClick($event)" class="ng-control">
+    <div class="ng-value-container">
+        <div class="ng-placeholder" *ngIf="showPlaceholder()">{{placeholder}}</div>
+        <ng-template #defaultLabelTemplate let-item="item">
+            <div class="ng-value-wrapper default">
+                <span class="ng-value-icon left" (click)="unselect(item); $event.stopPropagation()" aria-hidden="true">×</span>
+                <span class="ng-value-label">{{item[bindLabel]}}</span>
             </div>
         </ng-template>
 
-        <div *ngIf="showFilter()" class="as-input">
+        <div class="ng-value" *ngFor="let item of selectedItems">
+            <ng-template
+                [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
+                [ngTemplateOutletContext]="{ item: item, clear: clearItem }">
+            </ng-template>
+        </div>
+
+        <div *ngIf="showFilter()" class="ng-input">
             <input #filterInput
                    [value]="filterValue"
                    (input)="onFilter($event)"
@@ -34,44 +26,46 @@
                    aria-owns=""
                    aria-haspopup="false">
         </div>
+    </div>
+
+    <spinner class="ng-spinner-zone" *ngIf="isLoading"></spinner>
+
+    <span *ngIf="showClear()" (click)="handleClearClick($event)" class="ng-clear-zone" title="Clear all" aria-label="Clear all">
+        <span class="ng-clear" aria-hidden="true">×</span>
     </span>
 
-    <spinner class="as-spinner-zone" *ngIf="isLoading"></spinner>
-
-    <span *ngIf="showClear()" (click)="handleClearClick($event)" class="as-clear-zone" title="Clear all" aria-label="Clear all">
-        <span class="as-clear" aria-hidden="true">×</span>
-    </span>
-
-    <span (click)="handleArrowClick($event)" class="as-arrow-zone">
-        <span class="as-arrow"></span>
+    <span (click)="handleArrowClick($event)" class="ng-arrow-zone">
+        <span class="ng-arrow"></span>
     </span>
 </div>
 
-<div class="as-menu-outer">
-    <virtual-scroll role="listbox" class="as-menu" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
-        <div class="as-option" role="option" (click)="toggle(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
+<div class="ng-menu-outer">
+    <virtual-scroll role="listbox" class="ng-menu" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
+        <div class="ng-option" role="option" (click)="toggle(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
              *ngFor="let item of viewPortItems"
              [class.disabled]="item.disabled"
              [class.selected]="item.selected"
              [class.marked]="item === itemsList.markedItem">
 
-            <span *ngIf="!optionTemplate">{{item[bindLabel]}}</span>
+            <ng-template #defaultOptionTemplate>
+                <span>{{item[bindLabel]}}</span>
+            </ng-template>
 
-            <ng-template  *ngIf="optionTemplate"
-                          [ngTemplateOutlet]="optionTemplate"
-                          [ngTemplateOutletContext]="{ item: item, index: item.index }">
+            <ng-template
+                [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate"
+                [ngTemplateOutletContext]="{ item: item, index: item.index }">
             </ng-template>
         </div>
     </virtual-scroll>
 
-    <div class="as-menu" *ngIf="showNoItemsFound()">
-        <div class="as-option disabled">
+    <div class="ng-menu" *ngIf="showNoItemsFound()">
+        <div class="ng-option disabled">
             {{notFoundText}}
         </div>
     </div>
 
-    <div class="as-menu" *ngIf="showTypeToSearch()">
-        <div class="as-option disabled">
+    <div class="ng-menu" *ngIf="showTypeToSearch()">
+        <div class="ng-option disabled">
             {{typeToSearchText}}
         </div>
     </div>
