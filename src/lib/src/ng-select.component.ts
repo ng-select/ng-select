@@ -59,6 +59,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     @Input() bindLabel: string;
     @Input() bindValue: string;
     @Input() clearable = true;
+    @Input() tags = false;
+    @Input() addTag: (term) => NgOption;
     @Input() placeholder: string;
     @Input() notFoundText = 'No items found';
     @Input() typeToSearchText = 'Type to search';
@@ -124,6 +126,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     get selectedItems(): NgOption[] {
         return this.itemsList.value;
+    }
+
+    get taggingEnabled() {
+        return this.tags || !!this.addTag;
     }
 
     ngOnInit() {
@@ -268,6 +274,18 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     unselect(item: NgOption) {
         this.itemsList.unselect(item);
         this.updateModel();
+    }
+
+    selectTag() {
+        let tag = {}
+        if (this.addTag) {
+            tag = this.addTag(this.filterValue);
+        } else {
+            tag[this.bindLabel] = this.filterValue;
+        }
+
+        this.itemsList.addTag(tag);
+        this.select(tag);
     }
 
     showPlaceholder() {
@@ -440,7 +458,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     private handleEnter($event: KeyboardEvent) {
         if (this.isOpen) {
-            this.toggle(this.itemsList.markedItem);
+            if (this.itemsList.markedItem) {
+                this.toggle(this.itemsList.markedItem);
+            } else if (this.taggingEnabled) {
+                this.selectTag();
+            }
         }
         $event.preventDefault();
     }
