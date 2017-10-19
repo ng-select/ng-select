@@ -1,7 +1,0 @@
-node_modules
-integration
-coverage
-dist
-out-tsc
-.idea
-.DS_Store
