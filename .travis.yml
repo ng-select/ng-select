@@ -24,7 +24,7 @@ before_install:
 script:
 - yarn run lint
 - yarn run test
-- yarn run-script coveralls
+- npm run-script coveralls
 - yarn run integration
 - yarn run build:demo
 - node_modules/.bin/gh-pages-travis
