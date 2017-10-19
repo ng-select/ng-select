@@ -14,7 +14,7 @@ import { SelectSearchComponent } from './examples/search.component';
 import { ReactiveFormsComponent } from './examples/reactive-forms.component';
 import { SelectEventsComponent } from './examples/events.component';
 import { SelectMultiComponent } from './examples/multi.component';
-import { SelectAutocompleteComponent } from './examples/autocomplete.component';
+import { SelectTagsComponent } from './examples/tags.component';
 
 const appRoutes: Routes = [
     {
@@ -24,8 +24,8 @@ const appRoutes: Routes = [
     },
     { path: 'forms', component: ReactiveFormsComponent, data: { title: 'Reactive forms' } },
     { path: 'bindings', component: SelectBindingsComponent, data: { title: 'Custom bindings' } },
-    { path: 'filter-client', component: SelectSearchComponent },
-    { path: 'filter-server', component: SelectAutocompleteComponent },
+    { path: 'filter', component: SelectSearchComponent },
+    { path: 'tags', component: SelectTagsComponent },
     { path: 'templates', component: SelectWithTemplatesComponent },
     { path: 'multiselect', component: SelectMultiComponent },
     { path: 'events', component: SelectEventsComponent },
@@ -55,7 +55,7 @@ const appRoutes: Routes = [
         ReactiveFormsComponent,
         SelectEventsComponent,
         SelectMultiComponent,
-        SelectAutocompleteComponent
+        SelectTagsComponent
     ],
     bootstrap: [AppComponent]
 })
