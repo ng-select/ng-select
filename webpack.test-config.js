@@ -13,7 +13,7 @@ const autoprefixer = require('autoprefixer');
  * Get npm lifecycle event to identify the environment
  */
 const ENV = process.env.npm_lifecycle_event;
-const isTestWatch = ENV === 'test-watch';
+const isTestWatch = ENV === 'test:watch';
 const isTest = ENV === 'test' || isTestWatch;
 const isProd = ENV === 'build';
 
