@@ -27,9 +27,9 @@
     "clean": "rimraf out-tsc dist/*",
     "prebuild": "npm run clean",
     "build": "node build.js",
-    "build-demo": "rimraf dist && webpack --progress --profile --bail",
+    "build:demo": "rimraf dist && webpack --progress --profile --bail",
     "start": "webpack-dev-server --inline --progress --port 8080",
-    "test-watch": "karma start karma.conf.js --no-single-run --auto-watch",
+    "test:watch": "karma start karma.conf.js --no-single-run --auto-watch",
     "test": "karma start karma.conf.js --single-run",
     "coveralls": "cat ./coverage/lcov/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "preintegration": "npm run clean && npm run build && cd integration && yarn",
@@ -37,8 +37,7 @@
     "integration:jit": "cd integration && npm run e2e",
     "integration:aot": "cd integration && npm run build",
     "lint": "tslint --type-check --project ./src/lib/tsconfig.json",
-    "release": "standard-version",
-    "gh-pages": "npm run build-demo && git checkout gh-pages"
+    "release": "standard-version"
   },
   "peerDependencies": {
     "@angular/common": ">=4.0.0 <5.0.0",
@@ -72,6 +71,7 @@
     "css-loader": "^0.26.1",
     "extract-text-webpack-plugin": "^2.0.0-beta.4",
     "file-loader": "^0.10.0",
+    "gh-pages-travis": "^1.0.4",
     "glob": "^7.1.1",
     "html-loader": "^0.4.0",
     "html-webpack-plugin": "^2.30.1",

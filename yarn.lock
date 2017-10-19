@@ -2447,6 +2447,10 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
+gh-pages-travis@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/gh-pages-travis/-/gh-pages-travis-1.0.4.tgz#b4f918bc6d723fc160d380b0a01167208f8bf8a7"
+
 git-raw-commits@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/git-raw-commits/-/git-raw-commits-1.2.0.tgz#0f3a8bfd99ae0f2d8b9224d58892975e9a52d03c"
