@@ -582,7 +582,7 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
             fixture.whenStable().then(() => {
                 const el = fixture.debugElement.query(By.css('.ng-placeholder'));
-                expect(el).toBeNull();
+                expect(el.nativeElement.hasAttribute('hidden')).toBe(true);
             });
         }));
     });
