@@ -5,7 +5,7 @@ import { Component, EventEmitter } from '@angular/core';
     template: `
     <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
         <a class="navbar-brand" href="#">
-            <img src="angular.png" width="32px" height="32px" />
+            <img src="https://angular.io/assets/images/logos/angular/angular.svg" width="32px" height="32px" />
             @ng-select/ng-select
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
