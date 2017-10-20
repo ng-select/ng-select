@@ -62,12 +62,15 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     @Input() placeholder: string;
     @Input() notFoundText = 'No items found';
     @Input() typeToSearchText = 'Type to search';
-
+    @Input() addTagText = 'Add item';
     @HostBinding('class.typeahead')
     @Input() typeahead: Subject<string>;
 
     @Input()
     @HostBinding('class.ng-multiple') multiple = false;
+
+    @Input()
+    @HostBinding('class.taggable') addTag: boolean | ((term) => NgOption) = false;
 
     // output events
     @Output('blur') blurEvent = new EventEmitter();
@@ -270,6 +273,19 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         this.updateModel();
     }
 
+    selectTag() {
+        let tag = {}
+        
+        if (this.addTag instanceof Function) {
+            tag = this.addTag(this.filterValue);
+        } else {
+            tag[this.bindLabel] = this.filterValue;
+        }
+
+        this.itemsList.addTag(tag);
+        this.select(tag);
+    }
+
     showPlaceholder() {
         return this.placeholder && !this.isValueSet(this.selectedItems) && !this.filterValue;
     }
@@ -440,7 +456,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     private handleEnter($event: KeyboardEvent) {
         if (this.isOpen) {
-            this.toggle(this.itemsList.markedItem);
+            if (this.itemsList.markedItem) {
+                this.toggle(this.itemsList.markedItem);
+            } else if (this.addTag) {
+                this.selectTag();
+            }
         }
         $event.preventDefault();
     }
@@ -531,5 +551,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         }
         this.notFoundText = config.notFoundText || this.notFoundText;
         this.typeToSearchText = config.typeToSearchText || this.typeToSearchText;
+        this.addTagText = config.addTagText || this.addTagText;
     }
 }

@@ -96,7 +96,7 @@ describe('NgSelectComponent', function () {
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            const cities = [{id: 7, name: 'Pailgis'}];
+            const cities = [{ id: 7, name: 'Pailgis' }];
             fixture.componentInstance.selectedCity = cities[0];
             tickAndDetectChanges(fixture);
             fixture.componentInstance.cities = cities;
@@ -519,6 +519,44 @@ describe('NgSelectComponent', function () {
         });
     });
 
+    describe('tagging', () => {
+        it('should select default tag', fakeAsync(() => {
+            let fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [addTag]="true"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.onFilter({ target: { value: 'new tag' } });
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect(fixture.componentInstance.selectedCity.name).toBe('new tag');
+        }));
+
+        it('should select custom tag', fakeAsync(() => {
+            let fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [addTag]="tagFunc"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.onFilter({ target: { value: 'custom tag' } });
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect(<any>fixture.componentInstance.selectedCity).toEqual(jasmine.objectContaining({
+                id: 'custom tag', name: 'custom tag', custom: true
+            }));
+        }));
+    });
+
     describe('Placeholder', () => {
         let fixture: ComponentFixture<NgSelectBasicTestCmp>;
         beforeEach(() => {
@@ -849,6 +887,9 @@ class NgSelectBasicTestCmp {
         { id: 2, name: 'Kaunas' },
         { id: 3, name: 'Pabrade' },
     ];
+    tagFunc(term) {
+        return { id: term, name: term, custom: true }
+    }
 }
 
 @Component({

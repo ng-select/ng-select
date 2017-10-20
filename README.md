@@ -85,7 +85,7 @@ map: {
 - [x] Good base functionality test coverage
 - [x] Multiselect support
 - [x] Autocomplete
-- [ ] Custom tags
+- [x] Custom tags
 - [ ] Accessibility
 
 ## API
@@ -95,6 +95,8 @@ map: {
 | bindLabel  | string | `label` | no | Object property to use for label. Default `label`  |
 | bindValue  | string | `-` | no | Object property to use for selected model. By default binds to whole object. |
 | [clearable] | boolean | `true` | no | Allow to clear selected value. Default `true`|
+| multiple | boolean | `false` | no | Allows to select multiple items. |
+| [addTag] | Function or boolean | `false` | no | Using boolean simply adds tag with value as bindLabel. If you want custom properties add function which returns object. |
 | placeholder | string | `-` | no | Placeholder text. |
 | notFoundText | string | `No items found` | no | Set custom text when filter returns empty result |
 | typeToSearchText | string | `Type to search` | no | Set custom text when using Typeahead |
@@ -108,7 +110,7 @@ map: {
 | (open)  | Fired on select dropdown open |
 | (close)  | Fired on select dropdown close |
 
-# Change Detection
+## Change Detection
 Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable 
 data types. That means if you do object mutations like:
 

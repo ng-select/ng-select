@@ -59,6 +59,12 @@ export class ItemsList {
         this._selected.splice(this._selected.length - 1, 1);
     }
 
+    addTag(item: NgOption) {
+        item.index = this.items.length;
+        this.items.push(item);
+        this.filteredItems.push(item);
+    }
+
     clearSelected() {
         this._selected.forEach((item) => {
             item.selected = false;
