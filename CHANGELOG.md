@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/ng-select/ng-select/compare/v0.2.5...v0.3.0) (2017-10-18)
+
+
+### Features
+
+* **multiselect:** custom label templates ([6a91127](https://github.com/ng-select/ng-select/commit/6a91127)), closes [#73](https://github.com/ng-select/ng-select/issues/73) [#56](https://github.com/ng-select/ng-select/issues/56)
+
+
+
 <a name="0.2.5"></a>
 ## [0.2.5](https://github.com/ng-select/ng-select/compare/v0.2.4...v0.2.5) (2017-10-04)
 

@@ -16,6 +16,8 @@ import { SelectEventsComponent } from './examples/events.component';
 import { SelectMultiComponent } from './examples/multi.component';
 import { SelectTagsComponent } from './examples/tags.component';
 
+import { LayoutHeaderComponent } from './layout/header.component';
+
 const appRoutes: Routes = [
     {
         path: '',
@@ -55,7 +57,8 @@ const appRoutes: Routes = [
         ReactiveFormsComponent,
         SelectEventsComponent,
         SelectMultiComponent,
-        SelectTagsComponent
+        SelectTagsComponent,
+        LayoutHeaderComponent
     ],
     bootstrap: [AppComponent]
 })

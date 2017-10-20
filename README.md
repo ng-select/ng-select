@@ -132,7 +132,7 @@ constantly diffing the array.
 
 ## Examples
 ### Basic example
-This example in [Plunkr](https://plnkr.co/edit/tjxQgDY2Pn8RRPsoVAa0?p=preview)
+This example in [Plunkr](https://plnkr.co/edit/hjZX6W?p=preview)
 
 ```js
 @Component({
@@ -162,7 +162,7 @@ export class CitiesPageComponent {
 
 ### Flexible autocomplete
 
-This example in [Plunkr](https://plnkr.co/edit/sArBdPLJDUy4Da7zBOGJ?p=preview)
+This example in [Plunkr](https://plnkr.co/edit/KFpvA9?p=preview)
 
 In case of autocomplete you can get full control by creating simple `EventEmmiter` and passing it as an input to ng-select. When you type text, ng-select will fire events to EventEmmiter to which you can subscribe and control bunch of things like debounce, http cancellation and so on.
 ```js
@@ -215,7 +215,7 @@ export class SelectAutocompleteComponent {
 ```
 
 ### Custom display and option templates
-This example in [Plunkr](https://plnkr.co/edit/IXZ53DD6jRaIPlei8yVI?p=preview)
+This example in [Plunkr](https://plnkr.co/edit/csZbjH?p=preview)
 
 To customize look of input display or option item you can use `ng-template` with `ng-label-tmp` or `ng-option-tmp` directives applied to it.
 ```js

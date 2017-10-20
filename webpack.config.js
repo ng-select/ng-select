@@ -16,7 +16,7 @@ const { TsConfigPathsPlugin } = require('awesome-typescript-loader');
  * Get npm lifecycle event to identify the environment
  */
 const ENV = process.env.npm_lifecycle_event;
-const isProd = ENV === 'build-demo';
+const isProd = ENV === 'build:demo';
 
 module.exports = function makeWebpackConfig() {
     /**
@@ -101,12 +101,12 @@ module.exports = function makeWebpackConfig() {
             {
                 test: /\.scss$/,
                 include: root('src', 'demo', 'style'),
-                loader: ExtractTextPlugin.extract({fallback: 'style-loader', use: ['css-loader', 'postcss-loader']})
+                loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: ['css-loader', 'postcss-loader'] })
             },
 
 
             // all css required in src/lib files will be merged in js files
-            {test: /\.(scss|sass)$/, exclude: root('src', 'demo', 'style'), loader: 'raw-loader!postcss-loader!sass-loader'},
+            { test: /\.(scss|sass)$/, exclude: root('src', 'demo', 'style'), loader: 'raw-loader!postcss-loader!sass-loader' },
 
             // support for .html as raw text
             // todo: change the loader to something that adds a hash to images
@@ -218,9 +218,14 @@ module.exports = function makeWebpackConfig() {
     config.plugins.push(
         // Copy assets from the public folder
         // Reference: https://github.com/kevlened/copy-webpack-plugin
-        new CopyWebpackPlugin([{
-            from: root('src/demo/assets')
-        }])
+        new CopyWebpackPlugin([
+            {
+                from: root('src/demo/assets')
+            }, 
+            {
+                from: root('package.json')
+            }
+        ])
     );
 
     /**

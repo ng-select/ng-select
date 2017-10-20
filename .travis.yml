@@ -2,30 +2,38 @@ dist: trusty
 sudo: required
 language: node_js
 node_js:
-  - "6"
-
+- '6'
 cache:
   directories:
-    - node_modules
-    - integration/node_modules
+  - node_modules
+  - integration/node_modules
 os:
-  - linux
-
+- linux
 addons:
   apt:
     sources:
-      - google-chrome
+    - google-chrome
     packages:
-      - google-chrome-stable
-
+    - google-chrome-stable
 before_install:
-  # Use a virtual display.
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - export CHROME_BIN=chromium-browser
-
+- openssl aes-256-cbc -K $encrypted_100b62b33cf9_key -iv $encrypted_100b62b33cf9_iv
+  -in travis_rsa.enc -out travis_rsa -d
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+- export CHROME_BIN=chromium-browser
 script:
-  - npm run lint
-  - npm run test
-  - npm run-script coveralls
-  - npm run integration
+- yarn run lint
+- yarn run test
+- npm run-script coveralls
+- yarn run integration
+- yarn run build:demo
+- node_modules/.bin/gh-pages-travis
+
+env:
+  global:
+    - DEPLOY_BRANCH="master"
+    - SOURCE_DIR="dist"
+    - TARGET_BRANCH="gh-pages"
+    - SSH_KEY="travis_rsa"
+    - GIT_NAME="travis"
+    - GIT_EMAIL="andzej.mac@gmail.com"
