@@ -15,16 +15,23 @@ ng-select {
     position: relative;
     display: block;
     @include box-sizing;
+
     div,
     input,
-    span,
-    virtual-scroll {
+    span {
         @include box-sizing;
     }
+
     virtual-scroll {
         display: block;
         height: auto;
+        @include box-sizing;
     }
+
+    [hidden] {
+        display: none;
+    }
+
     &.opened {
         >.ng-control {
             border-bottom-right-radius: 0;
