@@ -41,7 +41,7 @@ export class SelectTagsComponent {
         });
     }
 
-    addTag(name) {
+    addTag = (name) => {
         return { name: name, tag: true };
     }
 }

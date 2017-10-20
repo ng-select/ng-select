@@ -96,7 +96,7 @@ map: {
 | bindValue  | string | `-` | no | Object property to use for selected model. By default binds to whole object. |
 | [clearable] | boolean | `true` | no | Allow to clear selected value. Default `true`|
 | multiple | boolean | `false` | no | Allows to select multiple items. |
-| [addTag] | Function or boolean | `false` | no | Using boolean simply adds tag with value as bindLabel. If you want custom properties add  function which returns object. |
+| [addTag] | Function or boolean | `false` | no | Using boolean simply adds tag with value as bindLabel. If you want custom properties add function which returns object. |
 | placeholder | string | `-` | no | Placeholder text. |
 | notFoundText | string | `No items found` | no | Set custom text when filter returns empty result |
 | typeToSearchText | string | `Type to search` | no | Set custom text when using Typeahead |
