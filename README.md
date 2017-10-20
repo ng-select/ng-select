@@ -33,6 +33,7 @@ Table of contents
 - [x] Correct keyboard events behaviour
 - [x] Multiselect
 - [x] Flexible autocomplete with client/server filtering
+- [x] Custom tags
 
 ## Warning
 Library is under active development and may not work as expected until stable 1.0.0 release.
