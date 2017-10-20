@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.3.1"></a>
+## [0.3.1](https://github.com/ng-select/ng-select/compare/v0.3.0...v0.3.1) (2017-10-20)
+
+
+### Bug Fixes
+
+* add typeahead css class binding on host ([#92](https://github.com/ng-select/ng-select/issues/92)) ([51d7036](https://github.com/ng-select/ng-select/commit/51d7036))
+
+
+
 <a name="0.3.0"></a>
 # [0.3.0](https://github.com/ng-select/ng-select/compare/v0.2.5...v0.3.0) (2017-10-18)
 
