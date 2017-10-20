@@ -100,6 +100,7 @@ map: {
 | placeholder | string | `-` | no | Placeholder text. |
 | notFoundText | string | `No items found` | no | Set custom text when filter returns empty result |
 | typeToSearchText | string | `Type to search` | no | Set custom text when using Typeahead |
+| addTagText | string | `Add item` | no | Set custom text when using tagging |
 | [typeahead] | Subject |  `-` | no | Custom autocomplete or filter. |
 
 | Output  | Description |
@@ -285,7 +286,18 @@ yarn run test-watch
 
 ### Publishing to npm
 ```
-yarn run release
+./prerelease.sh
+```
+Script will pull from master, run command `npm run release` and `npm run build`. 
+After this you need to check if CHANGELOG is correct and run `npm publish --access=public
+` from `dist` folder.
+
+### Deploy demo to gh-pages
+```
+npm run gh-pages
+
+// after swith to gh-pages branch run
+./publish-demo.sh
 ```
 
 ## Credits
