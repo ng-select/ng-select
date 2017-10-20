@@ -236,6 +236,12 @@ ng-select {
             color: #cccccc;
             cursor: default;
         }
+
+        .ng-tag-label {
+            padding-right: 5px;
+            font-size: 80%;
+            font-weight: 400;
+        }
     }
     .ng-clear-zone {
         -webkit-animation: Select-animation-fadeIn 200ms;

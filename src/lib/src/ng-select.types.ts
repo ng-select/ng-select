@@ -21,4 +21,5 @@ export enum KeyCode {
 export class NgSelectConfig {
     notFoundText = '';
     typeToSearchText = '';
+    addTagText = '';
 }

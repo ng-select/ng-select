@@ -62,6 +62,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     @Input() placeholder: string;
     @Input() notFoundText = 'No items found';
     @Input() typeToSearchText = 'Type to search';
+    @Input() addTagText = 'Add item';
     @Input() typeahead: Subject<string>;
 
     @Input()
@@ -551,5 +552,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         }
         this.notFoundText = config.notFoundText || this.notFoundText;
         this.typeToSearchText = config.typeToSearchText || this.typeToSearchText;
+        this.addTagText = config.addTagText || this.addTagText;
     }
 }

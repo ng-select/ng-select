@@ -57,7 +57,7 @@
             </ng-template>
         </div>
         <div class="ng-option marked" role="option" (click)="selectTag()" *ngIf="addTag && itemsList.filteredItems.length === 0">
-            <span>{{filterValue}}</span>
+            <span><span class="ng-tag-label">{{addTagText}}</span>{{filterValue}}</span>
         </div>
     </virtual-scroll>
 
