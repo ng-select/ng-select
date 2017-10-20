@@ -16,6 +16,8 @@ import { SelectEventsComponent } from './examples/events.component';
 import { SelectMultiComponent } from './examples/multi.component';
 import { SelectAutocompleteComponent } from './examples/autocomplete.component';
 
+import { LayoutHeaderComponent } from './layout/header.component';
+
 const appRoutes: Routes = [
     {
         path: '',
@@ -55,7 +57,9 @@ const appRoutes: Routes = [
         ReactiveFormsComponent,
         SelectEventsComponent,
         SelectMultiComponent,
-        SelectAutocompleteComponent
+        SelectAutocompleteComponent,
+
+        LayoutHeaderComponent
     ],
     bootstrap: [AppComponent]
 })
