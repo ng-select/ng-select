@@ -1,6 +1,6 @@
 <div (click)="handleSelectClick($event)" class="ng-control">
     <div class="ng-value-container">
-        <div class="ng-placeholder" *ngIf="showPlaceholder()">{{placeholder}}</div>
+        <div class="ng-placeholder" [hidden]="!showPlaceholder()">{{placeholder}}</div>
         <ng-template #defaultLabelTemplate let-item="item">
             <div class="ng-value-wrapper default">
                 <span class="ng-value-icon left" (click)="unselect(item); $event.stopPropagation()" aria-hidden="true">×</span>

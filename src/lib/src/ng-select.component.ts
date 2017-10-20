@@ -62,6 +62,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     @Input() placeholder: string;
     @Input() notFoundText = 'No items found';
     @Input() typeToSearchText = 'Type to search';
+
+    @HostBinding('class.typeahead')
     @Input() typeahead: Subject<string>;
 
     @Input()
@@ -74,8 +76,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     @Output('open') openEvent = new EventEmitter();
     @Output('close') closeEvent = new EventEmitter();
     @Output('search') searchEvent = new EventEmitter();
-
-    clearEvent = new EventEmitter<NgOption>();
 
     @HostBinding('class.ng-single')
     get single() {
