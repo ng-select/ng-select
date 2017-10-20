@@ -1,6 +1,6 @@
 {
   "name": "@ng-select/ng-select",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Angular native ui select",
   "main": "./bundles/ng-select.umd.js",
   "module": "./ng-select.es5.js",
