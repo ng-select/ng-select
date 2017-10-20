@@ -59,8 +59,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     @Input() bindLabel: string;
     @Input() bindValue: string;
     @Input() clearable = true;
-    @Input() tags = false;
-    @Input() addTag: (term) => NgOption;
     @Input() placeholder: string;
     @Input() notFoundText = 'No items found';
     @Input() typeToSearchText = 'Type to search';
@@ -68,6 +66,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     @Input()
     @HostBinding('class.ng-multiple') multiple = false;
+
+    @Input()
+    @HostBinding('class.taggable') addTag: boolean | ((term) => NgOption) = false;
 
     // output events
     @Output('blur') blurEvent = new EventEmitter();
@@ -126,10 +127,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     get selectedItems(): NgOption[] {
         return this.itemsList.value;
-    }
-
-    get taggingEnabled() {
-        return this.tags || !!this.addTag;
     }
 
     ngOnInit() {
@@ -278,7 +275,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     selectTag() {
         let tag = {}
-        if (this.addTag) {
+        
+        if (this.addTag instanceof Function) {
             tag = this.addTag(this.filterValue);
         } else {
             tag[this.bindLabel] = this.filterValue;
@@ -460,7 +458,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         if (this.isOpen) {
             if (this.itemsList.markedItem) {
                 this.toggle(this.itemsList.markedItem);
-            } else if (this.taggingEnabled) {
+            } else if (this.addTag) {
                 this.selectTag();
             }
         }

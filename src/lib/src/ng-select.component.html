@@ -56,12 +56,12 @@
                 [ngTemplateOutletContext]="{ item: item, index: item.index }">
             </ng-template>
         </div>
-        <div class="ng-option marked" role="option" (click)="selectTag()" *ngIf="taggingEnabled && itemsList.filteredItems.length === 0">
+        <div class="ng-option marked" role="option" (click)="selectTag()" *ngIf="addTag && itemsList.filteredItems.length === 0">
             <span>{{filterValue}}</span>
         </div>
     </virtual-scroll>
 
-    <div class="ng-menu" *ngIf="showNoItemsFound() && !taggingEnabled">
+    <div class="ng-menu" *ngIf="showNoItemsFound() && !addTag">
         <div class="ng-option disabled">
             {{notFoundText}}
         </div>

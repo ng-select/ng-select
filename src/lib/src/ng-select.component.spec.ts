@@ -525,7 +525,7 @@ describe('NgSelectComponent', function () {
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
-                    tags="true"
+                    [addTag]="true"
                     placeholder="select value"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
@@ -542,7 +542,7 @@ describe('NgSelectComponent', function () {
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
-                    [addTag]="addTag"
+                    [addTag]="tagFunc"
                     placeholder="select value"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
@@ -887,7 +887,7 @@ class NgSelectBasicTestCmp {
         { id: 2, name: 'Kaunas' },
         { id: 3, name: 'Pabrade' },
     ];
-    addTag(term) {
+    tagFunc(term) {
         return { id: term, name: term, custom: true }
     }
 }

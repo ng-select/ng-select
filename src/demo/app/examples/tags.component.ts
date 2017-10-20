@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
     template: `
         <label>Default tags</label>
         <ng-select [items]="companies"
-                tags="true"
+                [addTag]="true"
                 bindLabel="name"
                 [(ngModel)]="selectedCompany">
         </ng-select>
