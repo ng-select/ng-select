@@ -42,9 +42,9 @@ module.exports = function makeWebpackConfig() {
        * Reference: http://webpack.github.io/docs/configuration.html#entry
        */
     config.entry = {
-        'app': './src/demo/main.ts', // our angular app,
-        'polyfills': './src/demo/polyfills.ts',
-        'vendor': './src/demo/vendor.ts',
+        'app': './demo/main.ts', // our angular app,
+        'polyfills': './demo/polyfills.ts',
+        'vendor': './demo/vendor.ts',
     };
 
     /**
@@ -67,7 +67,7 @@ module.exports = function makeWebpackConfig() {
         extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html'],
         plugins: [
             new TsConfigPathsPlugin({
-                configFileName: 'src/demo/tsconfig.json',
+                configFileName: './demo/tsconfig.json',
                 compiler: 'typescript'
             })
         ]
@@ -84,7 +84,7 @@ module.exports = function makeWebpackConfig() {
             // Support for .ts files.
             {
                 test: /\.ts$/,
-                loaders: ['awesome-typescript-loader?configFileName=./src/demo/tsconfig.json', 'angular2-template-loader', '@angularclass/hmr-loader'],
+                loaders: ['awesome-typescript-loader?configFileName=./demo/tsconfig.json', 'angular2-template-loader', '@angularclass/hmr-loader'],
                 exclude: [/\.(spec|e2e)\.ts$/, /node_modules\/(?!(ng2-.+))/],
             },
 
@@ -100,13 +100,13 @@ module.exports = function makeWebpackConfig() {
             // all scss files in app demo style will be merged to index.html
             {
                 test: /\.scss$/,
-                include: root('src', 'demo', 'style'),
+                include: root('demo', 'style'),
                 loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: ['css-loader', 'postcss-loader'] })
             },
 
 
             // all css required in src/lib files will be merged in js files
-            { test: /\.(scss|sass)$/, exclude: root('src', 'demo', 'style'), loader: 'raw-loader!postcss-loader!sass-loader' },
+            { test: /\.(scss|sass)$/, exclude: root('demo', 'style'), loader: 'raw-loader!postcss-loader!sass-loader' },
 
             // support for .html as raw text
             // todo: change the loader to something that adds a hash to images
@@ -139,7 +139,7 @@ module.exports = function makeWebpackConfig() {
         new webpack.ContextReplacementPlugin(
             // The (\\|\/) piece accounts for path separators in *nix and Windows
             /angular(\\|\/)core(\\|\/)@angular/,
-            root('./src/demo/') // location of your src
+            root('./demo/') // location of your src
         ),
 
         // Tslint configuration for webpack 2
@@ -186,7 +186,7 @@ module.exports = function makeWebpackConfig() {
         // Inject script and link tags into html files
         // Reference: https://github.com/ampedandwired/html-webpack-plugin
         new HtmlWebpackPlugin({
-            template: './src/demo/index.ejs',
+            template: './demo/index.ejs',
             chunksSortMode: 'dependency',
             basePath: isProd ? '/ng-select' : '/'
         }),
@@ -220,7 +220,7 @@ module.exports = function makeWebpackConfig() {
         // Reference: https://github.com/kevlened/copy-webpack-plugin
         new CopyWebpackPlugin([
             {
-                from: root('src/demo/assets')
+                from: root('demo/assets')
             }, 
             {
                 from: root('package.json')
@@ -234,7 +234,7 @@ module.exports = function makeWebpackConfig() {
      * Reference: http://webpack.github.io/docs/webpack-dev-server.html
      */
     config.devServer = {
-        contentBase: './src/demo',
+        contentBase: './demo',
         historyApiFallback: true,
         quiet: true,
         stats: 'normal' // none (or false), errors-only, minimal, normal (or true) and verbose
