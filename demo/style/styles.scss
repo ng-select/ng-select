@@ -28,30 +28,13 @@ demo-app, layout-header, layout-sidenav {
 .bd-title {
     margin-bottom: 1rem;
     font-weight: 300;
-
-    @include media-breakpoint-up(sm) {
-        font-size: 3rem;
-    }
 }
 
 .bd-sidebar {
     order: 0;
     border-right: 1px solid rgba(0,0,0,.125);
     background-color: #ffffff;
-
-    @include media-breakpoint-up(md) {
-        @supports (position: sticky) {
-            position: sticky;
-            top: 4rem;
-            z-index: 1000;
-            max-height: calc(100vh - 4rem);
-        }
-        border-right: 1px solid rgba(0,0,0,.1);
-    }
-
-    @include media-breakpoint-up(xl) {
-        max-width: 320px;
-    }
+    max-width: 320px;
 }
 
 .bd-main {
