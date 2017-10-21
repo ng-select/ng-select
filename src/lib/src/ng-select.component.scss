@@ -163,6 +163,10 @@ ng-select {
                     .ng-value-wrapper {
                         display: flex;
                         &.default {
+                            &.disabled {
+                                background-color: #f9f9f9;
+                                border: 1px solid #e3e3e3;
+                            }
                             background-color: $color-selected;
                             border-radius: 2px;
                             border: 1px solid #c2e0ff;
@@ -176,6 +180,11 @@ ng-select {
                                 &.right {
                                     border-left: 1px solid #c2e0ff;
                                 }
+                            }
+                        }
+                        &.disabled {
+                            .ng-value-icon {
+                                display: none;
                             }
                         }
                         .ng-value-label {
