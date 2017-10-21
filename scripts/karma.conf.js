@@ -9,7 +9,7 @@ module.exports = function (config) {
   var _config = {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
+    basePath: './',
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -70,13 +70,13 @@ module.exports = function (config) {
   };
 
   if (!isTestWatch) {
-    _config.reporters.push("coverage");
+    _config.reporters.push('coverage');
 
     _config.coverageReporter = {
-      dir: 'coverage/',
+      dir: '../coverage/',
       reporters: [{
         type: 'lcovonly',
-        dir: 'coverage',
+        dir: '../coverage',
         subdir: 'lcov'
       }]
     };

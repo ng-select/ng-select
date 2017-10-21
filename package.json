@@ -1,43 +1,16 @@
 {
-  "name": "@ng-select/ng-select",
-  "version": "0.4.0",
-  "description": "Angular native ui select",
-  "main": "./bundles/ng-select.umd.js",
-  "module": "./ng-select.es5.js",
-  "es2015": "./ng-select.js",
-  "typings": "./ng-select.d.ts",
-  "author": "@ng-select/ng-select",
-  "license": "MIT",
-  "repository": "git@github.com:ng-select/ng-select.git",
   "engines": {
     "node": ">= 6.9.0",
     "npm": ">= 3.0.0"
   },
-  "keywords": [
-    "angular",
-    "select",
-    "ui-select",
-    "dropdown",
-    "multiselect",
-    "autocomplete",
-    "angular2",
-    "angular4"
-  ],
-  "ngPackage": {
-    "src": "src/lib/src",
-    "dest": "dist",
-    "lib": {
-      "entryFile": "index.ts"
-    }
-  },
   "scripts": {
     "clean": "rimraf out-tsc dist/*",
     "prebuild": "npm run clean",
-    "build": "node build.js",
-    "build:demo": "rimraf dist && webpack --progress --profile --bail",
-    "start": "webpack-dev-server --inline --progress --port 8080",
-    "test:watch": "karma start karma.conf.js --no-single-run --auto-watch",
-    "test": "karma start karma.conf.js --single-run",
+    "build": "ng-packagr -p ./src/ng-package.json",
+    "build:demo": "rimraf dist && webpack --config ./scripts/webpack.config.js --progress --profile --bail",
+    "start": "webpack-dev-server --config ./scripts/webpack.config.js --inline --progress --port 8080",
+    "test:watch": "karma start ./scripts/karma.conf.js --no-single-run --auto-watch",
+    "test": "karma start ./scripts/karma.conf.js --single-run",
     "coveralls": "cat ./coverage/lcov/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "preintegration": "npm run clean && npm run build && cd integration && yarn",
     "integration": "npm run integration:aot && npm run integration:jit",
@@ -46,11 +19,6 @@
     "lint": "tslint --type-check --project ./src/tsconfig.json",
     "version": "standard-version",
     "release": "sh ./release.sh"
-  },
-  "peerDependencies": {
-    "@angular/common": ">=4.0.0 <5.0.0",
-    "@angular/core": ">=.0.0 <5.0.0",
-    "@angular/forms": ">=.0.0 <5.0.0"
   },
   "devDependencies": {
     "@angular/common": "^4.4.4",
@@ -72,7 +40,6 @@
     "awesome-typescript-loader": "^3.2.3",
     "camelcase": "^4.0.0",
     "codelyzer": "2.0.0",
-    "concurrently": "3.2.0",
     "copy-webpack-plugin": "^4.0.0",
     "core-js": "^2.5.0",
     "coveralls": "^2.13.1",
@@ -108,11 +75,6 @@
     "reflect-metadata": "^0.1.10",
     "remap-istanbul": "^0.6.4",
     "rimraf": "^2.6.1",
-    "rollup": "^0.41.5",
-    "rollup-plugin-commonjs": "^8.0.2",
-    "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-sourcemaps": "^0.4.1",
-    "rollup-plugin-uglify": "^1.0.1",
     "rxjs": "^5.4.3",
     "sass-loader": "^6.0.1",
     "shelljs": "^0.7.0",
