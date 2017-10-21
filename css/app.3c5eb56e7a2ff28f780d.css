@@ -1,0 +1,84 @@
+body {
+    background-color: #e9ebee;
+}
+
+
+html, body, demo-app {
+    height:100%;
+}
+
+demo-app, layout-header, layout-sidenav {
+    display:block;
+}
+
+.fill {
+    height: 100%;
+}
+
+.card {
+    label {
+        margin-bottom: 5px;
+    }
+
+    p {
+        margin: 10px 0 20px 0;
+    }
+}
+
+.bd-title {
+    margin-bottom: 1rem;
+    font-weight: 300;
+
+    @include media-breakpoint-up(sm) {
+        font-size: 3rem;
+    }
+}
+
+.bd-sidebar {
+    -ms-flex-order: 0;
+        order: 0;
+    border-right: 1px solid rgba(0,0,0,.125);
+    background-color: #ffffff;
+
+    @include media-breakpoint-up(md) {
+        @supports ((position: -webkit-sticky) or (position: sticky)) {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 4rem;
+            z-index: 1000;
+            max-height: calc(100vh - 4rem);
+        }
+        border-right: 1px solid rgba(0,0,0,.1);
+    }
+
+    @include media-breakpoint-up(xl) {
+        max-width: 320px;
+    }
+}
+
+.bd-main {
+    -ms-flex-order: 1;
+        order: 1;
+}
+
+
+.bd-sidebar .nav-link {
+    color: rgba(0,0,0,.65);
+    font-weight: 500;
+    padding: .5rem 0.5rem;
+}
+
+.bd-sidebar .nav-link.active {
+    color: rgba(0,0,0,.85);
+}
+
+.bd-sidebar .nav-link:hover {
+    color: rgba(0,0,0,.85);
+    text-decoration: none;
+}
+
+.bd-sidebar layout-sidenav {
+    margin-top:10px;
+}
+
+/*# sourceMappingURL=app.3c5eb56e7a2ff28f780d.css.map*/
