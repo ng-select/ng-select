@@ -23,6 +23,13 @@
     "angular2",
     "angular4"
   ],
+  "ngPackage": {
+    "src": "src/lib/src",
+    "dest": "dist",
+    "lib": {
+      "entryFile": "index.ts"
+    }
+  },
   "scripts": {
     "clean": "rimraf out-tsc dist/*",
     "prebuild": "npm run clean",
@@ -36,7 +43,7 @@
     "integration": "npm run integration:aot && npm run integration:jit",
     "integration:jit": "cd integration && npm run e2e",
     "integration:aot": "cd integration && npm run build",
-    "lint": "tslint --type-check --project ./src/lib/tsconfig.json",
+    "lint": "tslint --type-check --project ./src/tsconfig.json",
     "version": "standard-version",
     "release": "sh ./release.sh"
   },
@@ -92,6 +99,7 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "2.0.2",
     "lite-server": "^2.2.2",
+    "ng-packagr": "^1.5.0-rc.0",
     "node-sass": "^4.5.3",
     "null-loader": "0.1.1",
     "postcss-loader": "^1.1.0",
