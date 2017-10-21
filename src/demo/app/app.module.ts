@@ -17,6 +17,7 @@ import { SelectMultiComponent } from './examples/multi.component';
 import { SelectTagsComponent } from './examples/tags.component';
 
 import { LayoutHeaderComponent } from './layout/header.component';
+import { LayoutSidenavComponent } from './layout/sidenav-component';
 
 const appRoutes: Routes = [
     {
@@ -24,13 +25,13 @@ const appRoutes: Routes = [
         redirectTo: '/forms',
         pathMatch: 'full'
     },
-    { path: 'forms', component: ReactiveFormsComponent, data: { title: 'Reactive forms' } },
-    { path: 'bindings', component: SelectBindingsComponent, data: { title: 'Custom bindings' } },
-    { path: 'filter', component: SelectSearchComponent },
-    { path: 'tags', component: SelectTagsComponent },
-    { path: 'templates', component: SelectWithTemplatesComponent },
-    { path: 'multiselect', component: SelectMultiComponent },
-    { path: 'events', component: SelectEventsComponent },
+    { path: 'forms', component: ReactiveFormsComponent, data: { title: 'Real life example' } },
+    { path: 'bindings', component: SelectBindingsComponent, data: { title: 'Data bindings' } },
+    { path: 'filter', component: SelectSearchComponent, data: { title: 'Filter and autocomplete'} },
+    { path: 'tags', component: SelectTagsComponent, data: { title: 'Tags'} },
+    { path: 'templates', component: SelectWithTemplatesComponent, data: { title: 'Templates'} },
+    { path: 'multiselect', component: SelectMultiComponent, data: { title: 'Multiselect'} },
+    { path: 'events', component: SelectEventsComponent, data: { title: 'Output events'} },
 ];
 
 @NgModule({
@@ -58,7 +59,8 @@ const appRoutes: Routes = [
         SelectEventsComponent,
         SelectMultiComponent,
         SelectTagsComponent,
-        LayoutHeaderComponent
+        LayoutHeaderComponent,
+        LayoutSidenavComponent
     ],
     bootstrap: [AppComponent]
 })

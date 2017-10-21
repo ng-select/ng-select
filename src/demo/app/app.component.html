@@ -1,42 +1,18 @@
 <layout-header></layout-header>
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <h3 class="title">
-                ng-select component examples
-                <small class="text-muted pull-right">ng-select on <a href="https://github.com/anjmao/ng-select">Github</a></small>
-            </h3>
-
+<div class="container-fluid fill">
+    <div class="row flex-xl-nowrap fill">
+        <div class="col-12 col-md-3 col-xl-2 bd-sidebar fill">
+            <layout-sidenav></layout-sidenav>
+        </div>
+        <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content">
+            <h1 class="bd-title">
+                {{title}}
+            </h1>
             <div class="card">
-                <div class="card-header">
-                    <ul class="nav nav-tabs card-header-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link" routerLink="/forms" routerLinkActive="active">Reactive forms</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" routerLink="/filter" routerLinkActive="active">Filter and autocomplete</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" routerLink="/tags" routerLinkActive="active">Tags</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" routerLink="/multiselect" routerLinkActive="active">Multiselect</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" routerLink="/bindings" routerLinkActive="active">Custom bindings</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" routerLink="/templates" routerLinkActive="active">Custom templates</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" routerLink="/events" routerLinkActive="active">Events</a>
-                        </li>
-                    </ul>
-                </div>
                 <div class="card-body">
                     <router-outlet></router-outlet>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 </div>
