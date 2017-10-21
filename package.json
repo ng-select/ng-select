@@ -1,43 +1,16 @@
 {
-  "name": "@ng-select/ng-select",
-  "version": "0.4.0",
-  "description": "Angular native ui select",
-  "main": "./bundles/ng-select.umd.js",
-  "module": "./ng-select.es5.js",
-  "es2015": "./ng-select.js",
-  "typings": "./ng-select.d.ts",
-  "author": "@ng-select/ng-select",
-  "license": "MIT",
-  "repository": "git@github.com:ng-select/ng-select.git",
   "engines": {
     "node": ">= 6.9.0",
     "npm": ">= 3.0.0"
   },
-  "keywords": [
-    "angular",
-    "select",
-    "ui-select",
-    "dropdown",
-    "multiselect",
-    "autocomplete",
-    "angular2",
-    "angular4"
-  ],
-  "ngPackage": {
-    "src": "src/lib/src",
-    "dest": "dist",
-    "lib": {
-      "entryFile": "index.ts"
-    }
-  },
   "scripts": {
     "clean": "rimraf out-tsc dist/*",
     "prebuild": "npm run clean",
-    "build": "node build.js",
-    "build:demo": "rimraf dist && webpack --progress --profile --bail",
-    "start": "webpack-dev-server --inline --progress --port 8080",
-    "test:watch": "karma start karma.conf.js --no-single-run --auto-watch",
-    "test": "karma start karma.conf.js --single-run",
+    "build": "ng-packagr -p ./src/ng-package.json",
+    "build:demo": "rimraf dist && webpack --config ./scripts/webpack.config.js --progress --profile --bail",
+    "start": "webpack-dev-server --config ./scripts/webpack.config.js --inline --progress --port 8080",
+    "test:watch": "karma start ./scripts/karma.conf.js --no-single-run --auto-watch",
+    "test": "karma start ./scripts/karma.conf.js --single-run",
     "coveralls": "cat ./coverage/lcov/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "preintegration": "npm run clean && npm run build && cd integration && yarn",
     "integration": "npm run integration:aot && npm run integration:jit",
@@ -46,11 +19,6 @@
     "lint": "tslint --type-check --project ./src/tsconfig.json",
     "version": "standard-version",
     "release": "sh ./release.sh"
-  },
-  "peerDependencies": {
-    "@angular/common": ">=4.0.0 <5.0.0",
-    "@angular/core": ">=.0.0 <5.0.0",
-    "@angular/forms": ">=.0.0 <5.0.0"
   },
   "devDependencies": {
     "@angular/common": "^4.4.4",
@@ -61,8 +29,6 @@
     "@angular/platform-browser": "^4.4.4",
     "@angular/platform-browser-dynamic": "^4.4.4",
     "@angular/router": "^4.4.4",
-    "@angularclass/hmr": "^1.0.1",
-    "@angularclass/hmr-loader": "^3.0.4",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-beta.5",
     "@types/jasmine": "^2.5.36",
     "@types/node": "^6.0.87",
@@ -71,13 +37,11 @@
     "autoprefixer": "^6.3.2",
     "awesome-typescript-loader": "^3.2.3",
     "camelcase": "^4.0.0",
-    "codelyzer": "2.0.0",
-    "concurrently": "3.2.0",
     "copy-webpack-plugin": "^4.0.0",
     "core-js": "^2.5.0",
     "coveralls": "^2.13.1",
     "css-loader": "^0.26.1",
-    "extract-text-webpack-plugin": "^2.0.0-beta.4",
+    "extract-text-webpack-plugin": "^3.0.1",
     "file-loader": "^0.10.0",
     "gh-pages-travis": "^1.0.4",
     "glob": "^7.1.1",
@@ -97,10 +61,9 @@
     "karma-mocha-reporter": "^2.0.3",
     "karma-remap-istanbul": "0.2.1",
     "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "2.0.2",
-    "lite-server": "^2.2.2",
+    "karma-webpack": "2.0.5",
     "ng-packagr": "^1.5.0-rc.0",
-    "node-sass": "^4.5.3",
+    "node-sass": "^4.0.0",
     "null-loader": "0.1.1",
     "postcss-loader": "^1.1.0",
     "protractor": "^4.0.10",
@@ -108,14 +71,8 @@
     "reflect-metadata": "^0.1.10",
     "remap-istanbul": "^0.6.4",
     "rimraf": "^2.6.1",
-    "rollup": "^0.41.5",
-    "rollup-plugin-commonjs": "^8.0.2",
-    "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-sourcemaps": "^0.4.1",
-    "rollup-plugin-uglify": "^1.0.1",
     "rxjs": "^5.4.3",
     "sass-loader": "^6.0.1",
-    "shelljs": "^0.7.0",
     "standard-version": "^4.2.0",
     "style-loader": "^0.13.0",
     "ts-helpers": "^1.1.1",
@@ -124,8 +81,8 @@
     "typedoc": "^0.5.1",
     "typescript": "^2.5.1",
     "url-loader": "^0.5.6",
-    "webpack": "2.2.1",
-    "webpack-dev-server": "2.3.0",
+    "webpack": "3.8.1",
+    "webpack-dev-server": "2.9.1",
     "zone.js": "^0.8.16"
   }
 }

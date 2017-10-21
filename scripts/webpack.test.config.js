@@ -1,12 +1,11 @@
 // @ts-check
-// Helper: root() is defined at the bottom
-
 const path = require('path');
 const webpack = require('webpack');
 
 // Webpack Plugins
 const autoprefixer = require('autoprefixer');
 
+const root = path.join.bind(path, path.resolve(__dirname, '..'));
 
 /**
  * Env
@@ -15,39 +14,18 @@ const autoprefixer = require('autoprefixer');
 const ENV = process.env.npm_lifecycle_event;
 const isTestWatch = ENV === 'test:watch';
 const isTest = ENV === 'test' || isTestWatch;
-const isProd = ENV === 'build';
 
 module.exports = function makeWebpackConfig() {
-    /**
-     * Config
-     * Reference: http://webpack.github.io/docs/configuration.html
-     * This is the object where all configuration gets set
-     */
     let config = {};
 
-    /**
-     * Devtool
-     * Reference: http://webpack.github.io/docs/configuration.html#devtool
-     * Type of sourcemap to use per build type
-     */
-    if (isProd) {
-        config.devtool = 'source-map';
-    } else if (isTest) {
+    if (isTest) {
         config.devtool = 'inline-source-map';
     } else {
         config.devtool = 'eval-source-map';
     }
 
-    /**
-     * Output
-     * Reference: http://webpack.github.io/docs/configuration.html#output
-     */
     config.output = {}
 
-    /**
-     * Resolve
-     * Reference: http://webpack.github.io/docs/configuration.html#resolve
-     */
     config.resolve = {
         // only discover files that have those extensions
         extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html']
@@ -59,12 +37,6 @@ module.exports = function makeWebpackConfig() {
         atlOptions = 'inlineSourceMap=true&sourceMap=false';
     }
 
-    /**
-     * Loaders
-     * Reference: http://webpack.github.io/docs/configuration.html#module-loaders
-     * List: http://webpack.github.io/docs/list-of-loaders.html
-     * This handles most of the magic responsible for converting modules
-     */
     config.module = {
         rules: [
             // Support for .ts files.
@@ -90,8 +62,6 @@ module.exports = function makeWebpackConfig() {
                 loader: 'raw-loader!postcss-loader!sass-loader'
             },
 
-            // support for .html as raw text
-            // todo: change the loader to something that adds a hash to images
             {test: /\.html$/, loader: 'raw-loader', exclude: root('src', 'public')}
         ]
     };
@@ -116,14 +86,7 @@ module.exports = function makeWebpackConfig() {
         });
     }
 
-    /**
-     * Plugins
-     * Reference: http://webpack.github.io/docs/configuration.html#plugins
-     * List: http://webpack.github.io/docs/list-of-plugins.html
-     */
     config.plugins = [
-        // Define env constiables to help with builds
-        // Reference: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
         new webpack.DefinePlugin({
             // Environment helpers
             'process.env': {
@@ -138,30 +101,15 @@ module.exports = function makeWebpackConfig() {
             root('./src/') // location of your src
         ),
 
-        // Tslint configuration for webpack 2
         new webpack.LoaderOptionsPlugin({
             options: {
-                /**
-                 * Apply the tslint loader as pre/postLoader
-                 * Reference: https://github.com/wbuchwalter/tslint-loader
-                 */
                 tslint: {
                     emitErrors: false,
                     failOnHint: false
                 },
-                /**
-                 * Sass
-                 * Reference: https://github.com/jtangelder/sass-loader
-                 * Transforms .scss files to .css
-                 */
                 sassLoader: {
                     //includePaths: [path.resolve(__dirname, "node_modules/foundation-sites/scss")]
                 },
-                /**
-                 * PostCSS
-                 * Reference: https://github.com/postcss/autoprefixer-core
-                 * Add vendor prefixes to your css
-                 */
                 postcss: [
                     autoprefixer({
                         browsers: ['last 2 version']
@@ -174,9 +122,3 @@ module.exports = function makeWebpackConfig() {
 
     return config;
 }();
-
-// Helper functions
-function root(args) {
-    args = Array.prototype.slice.call(arguments, 0);
-    return path.join.apply(path, [__dirname].concat(args));
-}

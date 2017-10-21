@@ -28,52 +28,34 @@ demo-app, layout-header, layout-sidenav {
 .bd-title {
     margin-bottom: 1rem;
     font-weight: 300;
-
-    @include media-breakpoint-up(sm) {
-        font-size: 3rem;
-    }
 }
 
 .bd-sidebar {
     order: 0;
     border-right: 1px solid rgba(0,0,0,.125);
     background-color: #ffffff;
+    max-width: 320px;
 
-    @include media-breakpoint-up(md) {
-        @supports (position: sticky) {
-            position: sticky;
-            top: 4rem;
-            z-index: 1000;
-            max-height: calc(100vh - 4rem);
-        }
-        border-right: 1px solid rgba(0,0,0,.1);
+    .nav-link {
+        color: rgba(0,0,0,.65);
+        font-weight: 500;
+        padding: .5rem 0.5rem;
     }
 
-    @include media-breakpoint-up(xl) {
-        max-width: 320px;
+    .nav-link.active {
+        color: rgba(0,0,0,.85);
+    }
+
+    .nav-link:hover {
+        color: rgba(0,0,0,.85);
+        text-decoration: none;
+    }
+
+    layout-sidenav {
+        margin-top:10px;
     }
 }
 
 .bd-main {
     order: 1;
-}
-
-
-.bd-sidebar .nav-link {
-    color: rgba(0,0,0,.65);
-    font-weight: 500;
-    padding: .5rem 0.5rem;
-}
-
-.bd-sidebar .nav-link.active {
-    color: rgba(0,0,0,.85);
-}
-
-.bd-sidebar .nav-link:hover {
-    color: rgba(0,0,0,.85);
-    text-decoration: none;
-}
-
-.bd-sidebar layout-sidenav {
-    margin-top:10px;
 }
