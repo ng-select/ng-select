@@ -35,28 +35,27 @@ demo-app, layout-header, layout-sidenav {
     border-right: 1px solid rgba(0,0,0,.125);
     background-color: #ffffff;
     max-width: 320px;
+
+    .nav-link {
+        color: rgba(0,0,0,.65);
+        font-weight: 500;
+        padding: .5rem 0.5rem;
+    }
+
+    .nav-link.active {
+        color: rgba(0,0,0,.85);
+    }
+
+    .nav-link:hover {
+        color: rgba(0,0,0,.85);
+        text-decoration: none;
+    }
+
+    layout-sidenav {
+        margin-top:10px;
+    }
 }
 
 .bd-main {
     order: 1;
-}
-
-
-.bd-sidebar .nav-link {
-    color: rgba(0,0,0,.65);
-    font-weight: 500;
-    padding: .5rem 0.5rem;
-}
-
-.bd-sidebar .nav-link.active {
-    color: rgba(0,0,0,.85);
-}
-
-.bd-sidebar .nav-link:hover {
-    color: rgba(0,0,0,.85);
-    text-decoration: none;
-}
-
-.bd-sidebar layout-sidenav {
-    margin-top:10px;
 }

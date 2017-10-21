@@ -1,6 +1,6 @@
 var path = require('path');
 
-var webpackConfig = require('./webpack.test-config');
+var webpackConfig = require('./webpack.test.config');
 
 var ENV = process.env.npm_lifecycle_event;
 var isTestWatch = ENV === 'test:watch';
