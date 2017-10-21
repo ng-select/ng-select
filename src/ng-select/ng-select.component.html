@@ -2,7 +2,7 @@
     <div class="ng-value-container">
         <div class="ng-placeholder" [hidden]="!showPlaceholder()">{{placeholder}}</div>
         <ng-template #defaultLabelTemplate let-item="item">
-            <div class="ng-value-wrapper default">
+            <div class="ng-value-wrapper default" [class.disabled]="item.disabled">
                 <span class="ng-value-icon left" (click)="unselect(item); $event.stopPropagation()" aria-hidden="true">×</span>
                 <span class="ng-value-label">{{item[bindLabel]}}</span>
             </div>
