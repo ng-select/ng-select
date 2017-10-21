@@ -70,7 +70,7 @@ module.exports = function makeWebpackConfig() {
             // Support for .ts files.
             {
                 test: /\.ts$/,
-                loaders: ['awesome-typescript-loader?configFileName=./src/lib/tsconfig.json&' + atlOptions, 'angular2-template-loader', '@angularclass/hmr-loader'],
+                loaders: ['awesome-typescript-loader?configFileName=./src/tsconfig.json&' + atlOptions, 'angular2-template-loader'],
                 exclude: [isTest ? /\.(e2e)\.ts$/ : /\.(spec|e2e)\.ts$/, /node_modules\/(?!(ng2-.+))/],
             },
 
@@ -86,7 +86,7 @@ module.exports = function makeWebpackConfig() {
             // scss support
             {
                 test: /\.(scss|sass)$/,
-                exclude: root('src', 'demo', 'style'),
+                exclude: root('demo', 'style'),
                 loader: 'raw-loader!postcss-loader!sass-loader'
             },
 
@@ -135,7 +135,7 @@ module.exports = function makeWebpackConfig() {
         new webpack.ContextReplacementPlugin(
             // The (\\|\/) piece accounts for path separators in *nix and Windows
             /angular(\\|\/)core(\\|\/)@angular/,
-            root('./src/demo/') // location of your src
+            root('./src/') // location of your src
         ),
 
         // Tslint configuration for webpack 2

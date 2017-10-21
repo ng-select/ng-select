@@ -1,13 +1,13 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "",
+    "baseUrl": "tsconfig",
     "module": "commonjs",
     "declaration": false,
     "emitDecoratorMetadata": true,
     "paths": {
       "@ng-select/ng-select": [
-        "../lib"
+        "../../src"
       ]
     }
   },
