@@ -14,6 +14,7 @@ import { Title } from '@angular/platform-browser';
 export class AppComponent {
 
     title: string;
+    version: string = window['ngSelectVersion'];
 
     constructor(private router: Router,
                 private activatedRoute: ActivatedRoute,
@@ -21,6 +22,10 @@ export class AppComponent {
     }
 
     ngOnInit() {
+        this.setTitle();
+    }
+
+    private setTitle() {
         this.router.events
             .filter((event) => event instanceof NavigationEnd)
             .map(() => this.activatedRoute)

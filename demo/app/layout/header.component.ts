@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input} from '@angular/core';
 
 @Component({
     selector: 'layout-header',
@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
         <nav class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar bg-dark">
             <a class="navbar-brand" href="#">
                 <img src="https://angular.io/assets/images/logos/angular/angular.svg" width="32px" height="32px"/>
-                @ng-select/ng-select
+                @ng-select/ng-select@{{version}}
             </a>
             <button class="navbar-toggler"
                     type="button"
@@ -51,6 +51,7 @@ import { Component } from '@angular/core';
     `
 })
 export class LayoutHeaderComponent {
+    @Input() version: string;
 }
 
 

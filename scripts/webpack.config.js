@@ -126,7 +126,8 @@ module.exports = function makeWebpackConfig() {
             new HtmlWebpackPlugin({
                 template: './demo/index.ejs',
                 chunksSortMode: 'dependency',
-                basePath: isProd ? '/ng-select' : '/'
+                basePath: isProd ? '/ng-select' : '/',
+                ngSelectVersion: require(root('./src/package.json')).version
             }),
 
             new ExtractTextPlugin({filename: 'css/[name].[hash].css', disable: !isProd}),
