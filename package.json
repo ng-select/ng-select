@@ -17,7 +17,6 @@
     "integration:jit": "cd integration && npm run e2e",
     "integration:aot": "cd integration && npm run build",
     "lint": "tslint --type-check --project ./src/tsconfig.json",
-    "version": "standard-version",
     "release": "sh ./release.sh"
   },
   "devDependencies": {
