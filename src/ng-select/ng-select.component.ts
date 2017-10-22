@@ -282,7 +282,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
             tag[this.bindLabel] = this.filterValue;
         }
 
-        this.itemsList.addTag(tag);
+        this.itemsList.addItem(tag);
         this.select(tag);
     }
 
@@ -425,6 +425,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         let item = this.itemsList.findItem(value, this.bindLabel, this.bindValue);
         if (item) {
             this.itemsList.select(item);
+        } else {
+            if (!this.bindValue) {
+                this.itemsList.addItem(value);
+                this.itemsList.select(value);
+            }
         }
     }
 
