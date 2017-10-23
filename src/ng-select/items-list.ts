@@ -9,6 +9,8 @@ export class ItemsList {
     private _markedIndex = -1;
     private _selected: NgOption[] = [];
     private _multiple = false;
+    private _bindLabel: string;
+    private _bindValue: string;
 
     get value(): NgOption[] {
         return this._selected;
@@ -28,6 +30,12 @@ export class ItemsList {
         this.clearSelected();
     }
 
+    setBindOptions(bindLabel: string, bindValue: string) {
+        this._bindLabel = bindLabel;
+        this._bindValue = bindValue;
+    }
+
+
     select(item: NgOption) {
         if (!this._multiple) {
             this.clearSelected();
@@ -36,13 +44,16 @@ export class ItemsList {
         item.selected = true;
     }
 
-    findItem(value, bindLabel: string, bindValue: string): NgOption {
-        if (bindValue) {
-            return this.items.find(x => x[bindValue] === value);
+    findItem(value): NgOption {
+        if (!value) {
+            return null;
+        }
+        if (this._bindValue) {
+            return this.items.find(x => x[this._bindValue] === value);
         }
         const index = this.items.indexOf(value);
         return index > -1 ? this.items[index] :
-            this.items.find(x => x[bindLabel] === value[bindLabel])
+            this.items.find(x => x[this._bindLabel] === value[this._bindLabel])
     }
 
     unselect(item: NgOption) {

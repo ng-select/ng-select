@@ -26,7 +26,6 @@ import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/operator/withLatestFrom';
 
@@ -56,7 +55,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     @ViewChild('filterInput') filterInput;
 
     // inputs
-    @Input() bindLabel: string;
+    @Input() items = [];
+    @Input() bindLabel = 'label';
     @Input() bindValue: string;
     @Input() clearable = true;
     @Input() placeholder: string;
@@ -95,10 +95,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     isLoading = false;
     filterValue: string = null;
 
-    private _items$ = new Subject<boolean>();
-    private _writeValue$ = new Subject<NgOption | NgOption[]>();
-    private _checkWriteValue = false;
-    private _writeValueHandler$ = null;
+    private _ngModel = null;
 
     private onChange = (_: NgOption) => { };
     private onTouched = () => { };
@@ -106,44 +103,37 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     clearItem = (item) => this.unselect(item);
 
+    get selectedItems(): NgOption[] {
+        return this.itemsList.value;
+    }
+
     constructor( @Optional() config: NgSelectConfig,
         private changeDetectorRef: ChangeDetectorRef,
         private elementRef: ElementRef,
         private renderer: Renderer2
     ) {
         this.mergeConfig(config);
-        this.handleWriteValue();
-    }
-
-    @Input()
-    get items(): NgOption[] {
-        return this.itemsList.items;
-    }
-
-    set items(items: NgOption[]) {
-        this.setItems(items || []);
-        this._items$.next(true);
-    }
-
-    get selectedItems(): NgOption[] {
-        return this.itemsList.value;
     }
 
     ngOnInit() {
         this.handleDocumentClick();
-        this.bindLabel = this.bindLabel || 'label';
     }
 
     ngOnChanges(changes) {
+        if (changes.bindLabel || changes.bindValue) {
+            this.itemsList.setBindOptions(this.bindLabel, this.bindValue);
+        }
         if (changes.multiple) {
             this.itemsList.setMultiple(changes.multiple.currentValue);
+        }
+        if (changes.items) {
+            this.setItems(changes.items.currentValue || []);
         }
     }
 
     ngOnDestroy() {
         this.changeDetectorRef.detach();
         this.disposeDocumentClickListener();
-        this._writeValueHandler$.unsubscribe();
     }
 
     @HostListener('keydown', ['$event'])
@@ -206,9 +196,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         }
     }
 
-    writeValue(value: any): void {
-        this._checkWriteValue = true;
-        this._writeValue$.next(value);
+    writeValue(value: any | any[]): void {
+        this._ngModel = value;
+        this.validateWriteValue(value);
+        this.itemsList.clearSelected();
+        this.selectWriteValue(value);
+        this.detectChanges();
     }
 
     registerOnChange(fn: any): void {
@@ -256,7 +249,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     select(item: NgOption) {
-        this._checkWriteValue = false;
         if (!item.selected) {
             this.itemsList.select(item);
             this.clearSearch();
@@ -344,30 +336,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         this.itemsList.markItem(item);
     }
 
-    private handleWriteValue() {
-        // combineLatest ensures that write value is always set after latest items are loaded
-        this._writeValueHandler$ = Observable.combineLatest(this._items$, this._writeValue$).subscribe((result) => {
-            if (!this._checkWriteValue) {
-                return;
-            }
-            const value = result[1];
-            this.validateWriteValue(value);
-            this.itemsList.clearSelected();
-            if (value) {
-                if (this.multiple) {
-                    (<NgOption[]>value).forEach(item => {
-                        this.selectWriteValue(item);
-                    });
-                } else {
-                    this.selectWriteValue(value);
-                }
-            }
-            this.detectChanges();
-        });
-    }
-
     private setItems(items: NgOption[]) {
         this.itemsList.setItems(items);
+        this.itemsList.clearSelected();
+        this.selectWriteValue(this._ngModel);
         if (this.isTypeahead()) {
             this.isLoading = false;
             this.itemsList.markItem();
@@ -421,15 +393,29 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         }
     }
 
-    private selectWriteValue(value: any) {
-        let item = this.itemsList.findItem(value, this.bindLabel, this.bindValue);
-        if (item) {
-            this.itemsList.select(item);
-        } else {
-            if (!this.bindValue) {
-                this.itemsList.addItem(value);
-                this.itemsList.select(value);
+    private selectWriteValue(value: any | any[]) {
+        if (!value) {
+            return;
+        }
+
+        const select = (val: any) => {
+            let item = this.itemsList.findItem(val);
+            if (item) {
+                this.itemsList.select(item);
+            } else {
+                if (!this.bindValue) {
+                    this.itemsList.addItem(val);
+                    this.itemsList.select(val);
+                }
             }
+        };
+
+        if (this.multiple) {
+            (<any[]>value).forEach(item => {
+                select(item);
+            });
+        } else {
+            select(value);
         }
     }
 
@@ -508,18 +494,19 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     private notifyModelChanged() {
-        const value = this.value;
-        if (!value) {
-            this.onChange(null);
+        let ngModel = this.value;
+        if (!ngModel) {
+            this.onChange(ngModel);
         } else if (this.bindValue) {
-            const bindValue = Array.isArray(value) ?
-                value.map(x => x[this.bindValue]) :
-                value[this.bindValue];
-            this.onChange(bindValue);
+            ngModel = Array.isArray(ngModel) ?
+                ngModel.map(x => x[this.bindValue]) :
+                ngModel[this.bindValue];
+            this.onChange(ngModel);
         } else {
-            this.onChange(value);
+            this.onChange(ngModel);
         }
-        this.changeEvent.emit(value);
+        this._ngModel = ngModel;
+        this.changeEvent.emit(this.value);
     }
 
     private getDropdownMenu() {

@@ -97,7 +97,7 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             const cities = [{ id: 7, name: 'Pailgis' }];
-            fixture.componentInstance.selectedCity = cities[0];
+            fixture.componentInstance.selectedCity = { id: 7, name: 'Pailgis' };
             tickAndDetectChanges(fixture);
             fixture.componentInstance.cities = cities;
             tickAndDetectChanges(fixture);
