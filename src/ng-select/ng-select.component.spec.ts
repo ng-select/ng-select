@@ -105,6 +105,24 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining(cities[0])]);
         }));
 
+        it('should bind ngModel even if items are empty', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectModelChangesTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.cities = [];
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.selectedCity = { id: 7, name: 'Pailgis' };
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({ id: 7, name: 'Pailgis' })]);
+        }));
+
         it('should clear previous value when setting new model', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,

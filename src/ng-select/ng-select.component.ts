@@ -338,8 +338,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     private setItems(items: NgOption[]) {
         this.itemsList.setItems(items);
-        this.itemsList.clearSelected();
-        this.selectWriteValue(this._ngModel);
+        if (this._ngModel) {
+            this.itemsList.clearSelected();
+            this.selectWriteValue(this._ngModel);
+        }
         if (this.isTypeahead()) {
             this.isLoading = false;
             this.itemsList.markItem();
@@ -431,7 +433,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     private focusSearchInput() {
         setTimeout(() => {
-            this.filterInput.nativeElement.focus(); // TODO: this won't work on mobile
+            this.filterInput.nativeElement.focus();
         });
     }
 
@@ -496,7 +498,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     private notifyModelChanged() {
         let ngModel = this.value;
         if (!ngModel) {
-            this.onChange(ngModel);
+            this.onChange(null);
         } else if (this.bindValue) {
             ngModel = Array.isArray(ngModel) ?
                 ngModel.map(x => x[this.bindValue]) :

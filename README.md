@@ -282,7 +282,7 @@ yarn run start
 ```
 yarn run test
 or
-yarn run test-watch
+yarn run test:watch
 ```
 
 ### Publishing to npm
