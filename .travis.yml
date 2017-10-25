@@ -36,4 +36,4 @@ env:
     - TARGET_BRANCH="gh-pages"
     - SSH_KEY="travis_rsa"
     - GIT_NAME="travis"
-    - GIT_EMAIL="andzej.mac@gmail.com"
+    - GIT_EMAIL="andzej.maciusovic@gmail.com"
