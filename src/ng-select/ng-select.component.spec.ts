@@ -142,6 +142,12 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
 
             expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[1]);
+
+            fixture.componentInstance.select.clear();
+            fixture.componentInstance.cities = [...fixture.componentInstance.cities];
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.selectedCity).toBeNull();
         }));
 
         it('should clear previous value when setting new model', fakeAsync(() => {
