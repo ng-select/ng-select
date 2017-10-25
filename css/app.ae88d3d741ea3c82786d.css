@@ -1,0 +1,43 @@
+body {
+  background-color: #e9ebee; }
+
+html, body, demo-app {
+  height: 100%; }
+
+demo-app, layout-header, layout-sidenav {
+  display: block; }
+
+.fill {
+  height: 100%; }
+
+.card label {
+  margin-bottom: 5px; }
+
+.card p {
+  margin: 10px 0 20px 0; }
+
+.bd-title {
+  margin-bottom: 1rem;
+  font-weight: 300; }
+
+.bd-sidebar {
+  order: 0;
+  border-right: 1px solid rgba(0, 0, 0, 0.125);
+  background-color: #ffffff;
+  max-width: 320px; }
+  .bd-sidebar .nav-link {
+    color: rgba(0, 0, 0, 0.65);
+    font-weight: 500;
+    padding: .5rem 0.5rem; }
+  .bd-sidebar .nav-link.active {
+    color: rgba(0, 0, 0, 0.85); }
+  .bd-sidebar .nav-link:hover {
+    color: rgba(0, 0, 0, 0.85);
+    text-decoration: none; }
+  .bd-sidebar layout-sidenav {
+    margin-top: 10px; }
+
+.bd-main {
+  order: 1; }
+
+/*# sourceMappingURL=app.ae88d3d741ea3c82786d.css.map*/
