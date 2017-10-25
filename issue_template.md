@@ -10,4 +10,4 @@ ng-select version: [INSERT HERE]
 
 browser: [INSERT BROWSER INFO HERE]
 
-reproducable in demo page: [YES/NO]
+reproducible in demo page: [YES/NO]
