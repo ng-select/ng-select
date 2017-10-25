@@ -123,6 +123,27 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({ id: 7, name: 'Pailgis' })]);
         }));
 
+        it('should preserve latest selected value when items are changing', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectModelChangesTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.select.select(fixture.componentInstance.cities[1]);
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.cities = [...fixture.componentInstance.cities];
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[1]);
+        }));
+
         it('should clear previous value when setting new model', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,
