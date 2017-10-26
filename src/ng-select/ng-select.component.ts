@@ -26,10 +26,8 @@ import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/operator/withLatestFrom';
 
-const NGB_ANG_SELECT_VALUE_ACCESSOR = {
+const NG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => NgSelectComponent),
     multi: true
@@ -39,7 +37,7 @@ const NGB_ANG_SELECT_VALUE_ACCESSOR = {
     selector: 'ng-select',
     templateUrl: './ng-select.component.html',
     styleUrls: ['./ng-select.component.scss'],
-    providers: [NGB_ANG_SELECT_VALUE_ACCESSOR],
+    providers: [NG_SELECT_VALUE_ACCESSOR],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
