@@ -398,6 +398,15 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.selectedItems).toEqual(result);
             }));
 
+            it('should not remove selected value when clearable is false', fakeAsync(() => {
+                fixture.componentInstance.select.clearable = false;
+                fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
+                const result = [jasmine.objectContaining(fixture.componentInstance.cities[0])];
+                expect(fixture.componentInstance.select.selectedItems).toEqual(result);
+            }));
+
             it('should remove last selected value when multiple', fakeAsync(() => {
                 fixture.componentInstance.multiple = true;
                 fixture.componentInstance.cities = [...fixture.componentInstance.cities];

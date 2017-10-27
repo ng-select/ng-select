@@ -490,7 +490,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     private handleBackspace() {
-        if (this.filterValue) {
+        if (this.filterValue || !this.clearable) {
             return;
         }
 
