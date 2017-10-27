@@ -21,6 +21,7 @@
                    (input)="onFilter($event)"
                    (focus)="onInputFocus($event)"
                    (blur)="onInputBlur($event)"
+                   (change)="$event.stopPropagation()"
                    role="combobox"
                    aria-expanded="false"
                    aria-owns=""
