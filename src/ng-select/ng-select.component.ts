@@ -287,11 +287,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     showPlaceholder() {
-        return this.placeholder && !this.isValueSet(this.selectedItems) && !this.filterValue;
+        return this.placeholder && !this.isValueSet && !this.filterValue;
     }
 
     showClear() {
-        return this.clearable && (this.isValueSet(this.selectedItems) || this.filterValue) && !this.isDisabled;
+        return this.clearable && (this.isValueSet || this.filterValue) && !this.isDisabled;
     }
 
     showFilter() {
@@ -490,7 +490,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     }
 
     private handleBackspace() {
-        if (this.filterValue || !this.clearable) {
+        if (this.filterValue || !this.clearable || !this.isValueSet) {
             return;
         }
 
@@ -541,8 +541,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         return this.selectedItems[0] || null;
     }
 
-    private isValueSet(value: any): boolean {
-        return !!value && value.length > 0;
+    private get isValueSet() {
+        return this.selectedItems.length > 0;
     }
 
     private mergeConfig(config: NgSelectConfig) {

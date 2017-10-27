@@ -407,6 +407,13 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.selectedItems).toEqual(result);
             }));
 
+            it('should do nothing when there is no selection', fakeAsync(() => {
+                const clear = spyOn(fixture.componentInstance.select, 'clear');
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
+                expect(clear).not.toHaveBeenCalled();
+            }));
+
             it('should remove last selected value when multiple', fakeAsync(() => {
                 fixture.componentInstance.multiple = true;
                 fixture.componentInstance.cities = [...fixture.componentInstance.cities];
