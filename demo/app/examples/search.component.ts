@@ -60,7 +60,10 @@ export class SelectSearchComponent {
     filteredCompanies2 = [];
     selectedCompany: any;
     selectedCompany2?: any;
-    githubAccount: any;
+    githubAccount = {
+        avatar_url: 'https://avatars0.githubusercontent.com/u/3028012?v=4',
+        login: 'anjmao'
+    };
     items = [];
     typeahead = new EventEmitter<string>();
     placeholder = 'Type in me. I am single';
