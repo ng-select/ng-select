@@ -1,5 +1,4 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { NgSelectComponent } from './ng-select.component';
@@ -16,7 +15,6 @@ import { NgSelectConfig } from './ng-select.types';
         SpinnerComponent
     ],
     imports: [
-        FormsModule,
         CommonModule,
         VirtualScrollModule
     ],
