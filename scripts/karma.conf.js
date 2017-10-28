@@ -1,12 +1,10 @@
-var path = require('path');
+const webpackConfig = require('./webpack.test');
 
-var webpackConfig = require('./webpack.test.config');
-
-var ENV = process.env.npm_lifecycle_event;
-var isTestWatch = ENV === 'test:watch';
+const ENV = process.env.npm_lifecycle_event;
+const isTestWatch = ENV === 'test:watch';
 
 module.exports = function (config) {
-  var _config = {
+    const _config = {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: './',

@@ -910,19 +910,7 @@ function triggerKeyDownEvent(element: DebugElement, key: number): void {
 function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixture<T> {
     TestBed.configureTestingModule({
         imports: [FormsModule, NgSelectModule],
-        declarations: [
-            NgSelectBasicTestCmp,
-            NgSelectFilterTestCmp,
-            NgSelectModelChangesTestCmp,
-            NgSelectCustomBindingsTestCmp,
-            NgSelectSelectedSimpleCmp,
-            NgSelectSelectedObjectCmp,
-            NgSelectSelectedObjectByRefCmp,
-            NgSelectSelectedSimpleMultipleCmp,
-            NgSelectSelectedObjectMultipleCmp,
-            NgSelectSelectedEmptyCmp,
-            NgSelectEventsTestCmp
-        ]
+        declarations: [cmp]
     })
         .overrideComponent(cmp, {
             set: {
