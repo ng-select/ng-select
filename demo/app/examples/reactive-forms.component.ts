@@ -9,6 +9,18 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     template: `
         <form [formGroup]="heroForm" novalidate>
             <div class="form-group">
+                <label for="state">Basic select</label>
+                <ng-select formControlName="selectedMinimalCityId">
+                    <ng-option value="city1">
+                        Vilnius <b>1</b>
+                    </ng-option>
+                    <ng-option value="city2">Kaunas 2</ng-option>
+                    <ng-option value="city3">Pasvalys 3</ng-option>
+                </ng-select>
+            </div>
+            <hr>
+            
+            <div class="form-group">
                 <label for="state">Multi select</label>
                 <ng-select *ngIf="isCitiesControlVisible"
                            [items]="cities"
@@ -145,6 +157,7 @@ export class ReactiveFormsComponent {
         this.loadPhotos();
 
         this.heroForm = this.fb.group({
+            selectedMinimalCityId: 'city1',
             selectedCitiesIds: [],
             age: '',
             album: '',

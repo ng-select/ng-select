@@ -22,6 +22,11 @@ ng-select {
         @include box-sizing;
     }
 
+    ng-option{
+        display: block;
+        @include box-sizing;
+    }
+
     virtual-scroll {
         display: block;
         height: auto;

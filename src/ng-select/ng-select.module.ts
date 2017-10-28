@@ -7,10 +7,12 @@ import { NgOptionTemplateDirective, NgLabelTemplateDirective } from './ng-templa
 import { VirtualScrollModule } from './virtual-scroll.component';
 import { SpinnerComponent } from './spinner.component';
 import { NgSelectConfig } from './ng-select.types';
+import { NgOptionComponent } from './ng-option.component';
 
 @NgModule({
     declarations: [
         NgSelectComponent,
+        NgOptionComponent,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
         SpinnerComponent
@@ -22,6 +24,7 @@ import { NgSelectConfig } from './ng-select.types';
     ],
     exports: [
         NgSelectComponent,
+        NgOptionComponent,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective
     ]
