@@ -180,6 +180,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     handleClearClick($event: Event) {
         $event.stopPropagation();
         this.clear();
+        this.focusSearchInput();
     }
 
     clear() {
@@ -190,7 +191,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         this.clearSearch();
         this.notifyModelChanged();
         if (this.isTypeahead()) {
-            this.typeahead.next(this.filterValue);
+            this.typeahead.next(null);
         }
     }
 
@@ -432,6 +433,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
     private focusSearchInput() {
         setTimeout(() => {
             this.filterInput.nativeElement.focus();
+            this.filterInput.nativeElement.select();
         });
     }
 
