@@ -4,7 +4,8 @@
     "baseUrl": "",
     "module": "commonjs",
     "declaration": false,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "noEmitHelpers": true
   },
   "include": [
     "src/**/*"
