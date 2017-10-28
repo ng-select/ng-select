@@ -172,11 +172,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         }
     }
 
-    handleSelectClick($event: Event) {
-        $event.stopPropagation();
-        this.open();
-    }
-
     handleClearClick($event: Event) {
         $event.stopPropagation();
         this.clear();
