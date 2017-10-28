@@ -17,15 +17,13 @@
 
         <div *ngIf="showFilter()" class="ng-input">
             <input #filterInput
+                   type="text"
                    [value]="filterValue"
                    (input)="onFilter($event)"
                    (focus)="onInputFocus($event)"
                    (blur)="onInputBlur($event)"
                    (change)="$event.stopPropagation()"
-                   role="combobox"
-                   aria-expanded="false"
-                   aria-owns=""
-                   aria-haspopup="false">
+                   role="combobox">
         </div>
     </div>
 

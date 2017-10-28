@@ -9,7 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     template: `
         <form [formGroup]="heroForm" novalidate>
             <div class="form-group">
-                <label for="state">Cities</label>
+                <label for="state">Multi select</label>
                 <ng-select *ngIf="isCitiesControlVisible"
                            [items]="cities"
                            bindLabel="name"
@@ -24,7 +24,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
             </div>
             <hr>
             <div class="form-group">
-                <label for="state">Age</label>
+                <label for="state">Single select</label>
                 <ng-select [items]="ages"
                            bindValue="value"
                            placeholder="Select age"
@@ -35,7 +35,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
             </div>
             <hr>
             <div class="form-group">
-                <label for="album">Favorite album</label>
+                <label for="album">Loading async data</label>
                 <ng-select [items]="albums"
                            bindLabel="title"
                            bindValue="id"
@@ -55,7 +55,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
             <hr>
             
             <div class="form-group">
-                <label for="album">Favorite photo</label>
+                <label for="album">Custom templates</label>
                 <ng-select [items]="photos"
                            bindLabel="title"
                            bindValue="thumbnailUrl"
