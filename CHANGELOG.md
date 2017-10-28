@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.4.4"></a>
+## [0.4.4](https://github.com/ng-select/ng-select/compare/v0.4.3...v0.4.4) (2017-10-28)
+
+
+### Bug Fixes
+
+* don't clear selection on backspace when clearable false fixes [#82](https://github.com/ng-select/ng-select/issues/82) ([95505fe](https://github.com/ng-select/ng-select/commit/95505fe))
+* don't fire change event on blur ([582184e](https://github.com/ng-select/ng-select/commit/582184e)), closes [#102](https://github.com/ng-select/ng-select/issues/102)
+* don't fire change event when there is no selected value ([10999cb](https://github.com/ng-select/ng-select/commit/10999cb)), closes [#91](https://github.com/ng-select/ng-select/issues/91)
+
+
+
 <a name="0.4.3"></a>
 ## [0.4.3](https://github.com/ng-select/ng-select/compare/v0.4.2...v0.4.3) (2017-10-27)
 
