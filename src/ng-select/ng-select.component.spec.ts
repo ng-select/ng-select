@@ -500,7 +500,7 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Custom templates', () => {
-        it('display custom header template', async(() => {
+        it('should display custom header template', async(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities" [(ngModel)]="selectedCity">
@@ -519,8 +519,7 @@ describe('NgSelectComponent', function () {
             });
         }));
 
-        it('display custom dropdown option template', async(() => {
-
+        it('should display custom dropdown option template', async(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities" [(ngModel)]="selectedCity">
@@ -535,6 +534,22 @@ describe('NgSelectComponent', function () {
                 const el = fixture.debugElement.query(By.css('.custom-option')).nativeElement;
                 expect(el).not.toBeNull();
             });
+        }));
+
+        it('should create items from ng-option', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [(ngModel)]="selectedCity">
+                    <ng-option [value]="true">Yes</ng-option>
+                    <ng-option [value]="false">No</ng-option>
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+
+            const items = fixture.componentInstance.select.itemsList.items;
+            expect(items.length).toBe(2);
+            expect(items[0]).toEqual(jasmine.objectContaining({label: 'Yes', value: true, index: 0}));
+            expect(items[1]).toEqual(jasmine.objectContaining({label: 'No', value: false, index: 1}));
         }));
     });
 

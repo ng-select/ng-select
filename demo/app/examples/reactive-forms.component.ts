@@ -8,15 +8,29 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     selector: 'reactive-forms',
     template: `
         <form [formGroup]="heroForm" novalidate>
-            <div class="form-group">
-                <label for="state">Basic select</label>
-                <ng-select formControlName="selectedMinimalCityId">
-                    <ng-option value="city1">
-                        Vilnius <b>1</b>
-                    </ng-option>
-                    <ng-option value="city2">Kaunas 2</ng-option>
-                    <ng-option value="city3">Pasvalys 3</ng-option>
-                </ng-select>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="heroId">Basic select</label>
+                    <ng-select formControlName="heroId">
+                        <ng-option value="hero1">
+                            <img src="{{basePath}}/assets/batman.png" width="20px" height="20px" /> Batman
+                        </ng-option>
+                        <ng-option value="hero2">
+                            <img src="{{basePath}}/assets/spidey.png" width="20px" height="20px" /> Spider-Man
+                        </ng-option>
+                        <ng-option value="hero3">
+                            <img src="{{basePath}}/assets/thor.png" width="20px" height="20px" /> Thor
+                        </ng-option>
+                    </ng-select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="yesno">Yes/No</label>
+                    <ng-select formControlName="agree">
+                        <ng-option [value]="true">Yes</ng-option>
+                        <ng-option [value]="false">No</ng-option>
+                    </ng-select>
+                </div>
             </div>
             <hr>
             
@@ -128,6 +142,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ReactiveFormsComponent {
 
+    basePath = window['basePath'] === '/' ? '' : window['basePath'];
     heroForm: FormGroup;
 
     isCitiesControlVisible = true;
@@ -157,7 +172,8 @@ export class ReactiveFormsComponent {
         this.loadPhotos();
 
         this.heroForm = this.fb.group({
-            selectedMinimalCityId: 'city1',
+            heroId: 'hero1',
+            agree: '',
             selectedCitiesIds: [],
             age: '',
             album: '',

@@ -3,7 +3,7 @@ import {
     OnInit,
     OnDestroy,
     OnChanges,
-    AfterContentInit,
+    AfterViewInit,
     forwardRef,
     ChangeDetectorRef,
     Input,
@@ -46,7 +46,7 @@ const NG_SELECT_VALUE_ACCESSOR = {
         'role': 'dropdown'
     }
 })
-export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterContentInit, ControlValueAccessor {
+export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
 
     @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
     @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
@@ -120,7 +120,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterCon
         this.handleDocumentClick();
     }
 
-    ngAfterContentInit() {
+    ngAfterViewInit() {
         if (this.ngOptions.length > 0 && this.items.length === 0) {
             this.setItemsFromNgOptions();
         }
@@ -356,18 +356,23 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterCon
             this.bindValue = 'value';
             this.itemsList.setBindOptions(this.bindLabel, this.bindValue);
         }
-        this.ngOptions.forEach(option => {
-            this.itemsList.addItem({
+
+        const handleNgOptions = (options) => {
+            this.items = options.map(option => ({
                 value: option.value,
                 label: option.elementRef.nativeElement.innerHTML
-            });
-        });
+            }));
+            this.itemsList.setItems(this.items);
 
-        if (this._ngModel) {
-            this.itemsList.clearSelected();
-            this.selectWriteValue(this._ngModel);
-        }
-        this.detectChanges();
+            if (this._ngModel) {
+                this.itemsList.clearSelected();
+                this.selectWriteValue(this._ngModel);
+            }
+            this.detectChanges();
+        };
+
+        this.ngOptions.changes.subscribe(options => handleNgOptions(options));
+        handleNgOptions(this.ngOptions);
     }
 
     private handleDocumentClick() {

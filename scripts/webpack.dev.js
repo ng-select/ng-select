@@ -108,9 +108,6 @@ module.exports = function makeWebpackConfig() {
                         emitErrors: false,
                         failOnHint: false
                     },
-                    sassLoader: {
-                        //includePaths: [path.resolve(__dirname, "node_modules/foundation-sites/scss")]
-                    },
                     postcss: [
                         autoprefixer({
                             browsers: ['last 2 version']
@@ -134,7 +131,7 @@ module.exports = function makeWebpackConfig() {
 
             new CopyWebpackPlugin([
                 {
-                    from: root('./demo/assets')
+                    from: root('./demo/assets'), to: 'assets'
                 }
             ])
         ],
