@@ -47,15 +47,15 @@
   order: 0;
   // background-color: #f5f2f9;
   border-bottom: 1px solid rgba(0, 0, 0, .1);
+  background-color: #ffffff;
+  height: 100%;
 
   @include media-breakpoint-up(md) {
-    @supports (position: sticky) {
-      position: sticky;
-      top: 4rem;
-      z-index: 1000;
-      height: calc(100vh - 4rem);
-    }
     border-right: 1px solid rgba(0, 0, 0, .1);
+  }
+
+  @include media-breakpoint-between(xs, sm) {
+    height: auto;
   }
 
   @include media-breakpoint-up(xl) {
@@ -128,9 +128,9 @@
 // All levels of nav
 .bd-sidebar .nav > li > a {
   display: block;
-  padding: .25rem 1.5rem;
-  font-size: 90%;
   color: rgba(0, 0, 0, .65);
+  font-weight: 500;
+  padding: .5rem 0.5rem;
 }
 
 .bd-sidebar .nav > li > a:hover {
