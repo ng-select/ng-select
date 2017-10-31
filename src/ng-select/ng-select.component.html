@@ -4,7 +4,7 @@
         <ng-template #defaultLabelTemplate let-item="item">
             <div class="ng-value-wrapper default" [class.disabled]="item.disabled">
                 <span class="ng-value-icon left" (click)="unselect(item); $event.stopPropagation()" aria-hidden="true">×</span>
-                <span class="ng-value-label">{{item[bindLabel]}}</span>
+                <span class="ng-value-label" [innerHTML]="item[bindLabel]"></span>
             </div>
         </ng-template>
 
@@ -47,7 +47,7 @@
              [class.marked]="item === itemsList.markedItem">
 
             <ng-template #defaultOptionTemplate>
-                <span class="ng-option-label">{{item[bindLabel]}}</span>
+                <span class="ng-option-label" [innerHTML]="item[bindLabel]"></span>
             </ng-template>
 
             <ng-template
@@ -55,6 +55,7 @@
                 [ngTemplateOutletContext]="{ item: item, index: item.index }">
             </ng-template>
         </div>
+
         <div class="ng-option marked" role="option" (click)="selectTag()" *ngIf="addTag && itemsList.filteredItems.length === 0">
             <span><span class="ng-tag-label">{{addTagText}}</span>{{filterValue}}</span>
         </div>

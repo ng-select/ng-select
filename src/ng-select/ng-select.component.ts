@@ -3,6 +3,7 @@ import {
     OnInit,
     OnDestroy,
     OnChanges,
+    AfterViewInit,
     forwardRef,
     ChangeDetectorRef,
     Input,
@@ -17,7 +18,7 @@ import {
     ElementRef,
     ChangeDetectionStrategy,
     Optional,
-    Renderer2
+    Renderer2, ContentChildren, QueryList
 } from '@angular/core';
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -26,6 +27,7 @@ import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
+import { NgOptionComponent } from './ng-option.component';
 
 const NG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
@@ -44,12 +46,13 @@ const NG_SELECT_VALUE_ACCESSOR = {
         'role': 'dropdown'
     }
 })
-export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlValueAccessor {
+export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
 
     @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
     @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
 
     @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
+    @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
     @ViewChild('filterInput') filterInput;
 
     // inputs
@@ -115,6 +118,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
 
     ngOnInit() {
         this.handleDocumentClick();
+    }
+
+    ngAfterViewInit() {
+        if (this.ngOptions.length > 0 && this.items.length === 0) {
+            this.setItemsFromNgOptions();
+        }
     }
 
     ngOnChanges(changes) {
@@ -342,6 +351,30 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
         }
     }
 
+    private setItemsFromNgOptions() {
+        if (!this.bindValue) {
+            this.bindValue = 'value';
+            this.itemsList.setBindOptions(this.bindLabel, this.bindValue);
+        }
+
+        const handleNgOptions = (options) => {
+            this.items = options.map(option => ({
+                value: option.value,
+                label: option.elementRef.nativeElement.innerHTML
+            }));
+            this.itemsList.setItems(this.items);
+
+            if (this._ngModel) {
+                this.itemsList.clearSelected();
+                this.selectWriteValue(this._ngModel);
+            }
+            this.detectChanges();
+        };
+
+        this.ngOptions.changes.subscribe(options => handleNgOptions(options));
+        handleNgOptions(this.ngOptions);
+    }
+
     private handleDocumentClick() {
         const handler = ($event) => {
             // prevent close if clicked on select
@@ -399,7 +432,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, ControlV
             if (item) {
                 this.itemsList.select(item);
             } else {
-                if (!this.bindValue) {
+                if (val instanceof Object) {
                     this.itemsList.addItem(val);
                     this.itemsList.select(val);
                 }

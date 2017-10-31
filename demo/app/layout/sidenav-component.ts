@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
     template: `
         <ul class="nav flex-column">
             <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/forms">Real life example</a>
+                <a class="nav-link" routerLink="/forms">Reactive forms</a>
             </li>
             <li class="nav-item" routerLinkActive="active">
                 <a class="nav-link" routerLink="/filter">Filter and autocomplete</a>

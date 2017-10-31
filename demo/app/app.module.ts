@@ -25,7 +25,7 @@ const appRoutes: Routes = [
         redirectTo: '/forms',
         pathMatch: 'full'
     },
-    { path: 'forms', component: ReactiveFormsComponent, data: { title: 'Real life example' } },
+    { path: 'forms', component: ReactiveFormsComponent, data: { title: 'Reactive forms' } },
     { path: 'bindings', component: SelectBindingsComponent, data: { title: 'Data bindings' } },
     { path: 'filter', component: SelectSearchComponent, data: { title: 'Filter and autocomplete'} },
     { path: 'tags', component: SelectTagsComponent, data: { title: 'Tags'} },
