@@ -242,6 +242,10 @@ ng-select {
         &.selected {
             background-color: $color-selected;
             color: #333;
+
+            .ng-option-label {
+                font-weight: 600;
+            }
         }
         &.marked {
             background-color: #ebf5ff;
