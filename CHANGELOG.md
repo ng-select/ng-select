@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.5.0"></a>
+# [0.5.0](https://github.com/ng-select/ng-select/compare/v0.4.5...v0.5.0) (2017-10-31)
+
+
+### Bug Fixes
+
+* add selected ng-option label font weight ([#115](https://github.com/ng-select/ng-select/issues/115)) ([1ff9b53](https://github.com/ng-select/ng-select/commit/1ff9b53))
+* remove unnecessary FormsModule. ([#112](https://github.com/ng-select/ng-select/issues/112)) ([4e211cb](https://github.com/ng-select/ng-select/commit/4e211cb))
+
+
+### Features
+
+* ng-option support for simple dropdowns ([#113](https://github.com/ng-select/ng-select/issues/113)) ([6d841ef](https://github.com/ng-select/ng-select/commit/6d841ef))
+
+
+
 <a name="0.4.5"></a>
 ## [0.4.5](https://github.com/ng-select/ng-select/compare/v0.4.4...v0.4.5) (2017-10-28)
 
