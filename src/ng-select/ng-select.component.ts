@@ -64,14 +64,18 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() notFoundText = 'No items found';
     @Input() typeToSearchText = 'Type to search';
     @Input() addTagText = 'Add item';
-    @HostBinding('class.typeahead')
-    @Input() typeahead: Subject<string>;
+
+    @Input()
+    @HostBinding('class.typeahead') typeahead: Subject<string>;
 
     @Input()
     @HostBinding('class.ng-multiple') multiple = false;
 
     @Input()
     @HostBinding('class.taggable') addTag: boolean | ((term) => NgOption) = false;
+
+    @Input()
+    @HostBinding('class.searchable') searchable = true;
 
     // output events
     @Output('blur') blurEvent = new EventEmitter();
@@ -270,7 +274,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     selectTag() {
         let tag = {}
-        
+
         if (this.addTag instanceof Function) {
             tag = this.addTag(this.filterValue);
         } else {
@@ -305,6 +309,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     onFilter($event) {
+        if (!this.searchable) {
+            return;
+        }
+
         if (!this.isOpen) {
             this.open();
         }

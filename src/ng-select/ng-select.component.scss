@@ -15,28 +15,23 @@ ng-select {
     position: relative;
     display: block;
     @include box-sizing;
-
     div,
     input,
     span {
         @include box-sizing;
     }
-
-    ng-option{
+    ng-option {
         display: block;
         @include box-sizing;
     }
-
     virtual-scroll {
         display: block;
         height: auto;
         @include box-sizing;
     }
-
     [hidden] {
         display: none;
     }
-
     &.opened {
         >.ng-control {
             border-bottom-right-radius: 0;
@@ -68,6 +63,11 @@ ng-select {
             background-color: #f9f9f9;
         }
     }
+    &.searchable {
+        .ng-control .ng-value-container .ng-input {
+            opacity: 1;
+        }
+    }
     .ng-control {
         background-color: #fff;
         border-radius: 4px;
@@ -95,6 +95,7 @@ ng-select {
                 color: #aaa;
             }
             .ng-input {
+                opacity: 0;
                 >input {
                     min-width: 5px;
                     box-sizing: content-box;
@@ -242,7 +243,6 @@ ng-select {
         &.selected {
             background-color: $color-selected;
             color: #333;
-
             .ng-option-label {
                 font-weight: 600;
             }
@@ -255,7 +255,6 @@ ng-select {
             color: #cccccc;
             cursor: default;
         }
-
         .ng-tag-label {
             padding-right: 5px;
             font-size: 80%;

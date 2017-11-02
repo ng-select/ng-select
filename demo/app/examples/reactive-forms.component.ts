@@ -12,7 +12,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="heroId">Basic select</label>
-                    <ng-select formControlName="heroId">
+                    <ng-select [searchable]="false" formControlName="heroId">
                         <ng-option value="hero1">
                             <img src="{{basePath}}/assets/batman.png" width="20px" height="20px" /> Batman
                         </ng-option>
@@ -26,7 +26,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
                 </div>
                 <div class="form-group col-md-6">
                     <label for="yesno">Yes/No</label>
-                    <ng-select formControlName="agree">
+                    <ng-select [searchable]="false" formControlName="agree">
                         <ng-option [value]="true">Yes</ng-option>
                         <ng-option [value]="false">No</ng-option>
                     </ng-select>
