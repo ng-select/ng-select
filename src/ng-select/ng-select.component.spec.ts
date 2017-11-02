@@ -682,6 +682,20 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual(result);
         }));
 
+        it('should not filter when searchable false', fakeAsync(() => {
+            fixture = createTestingModule(
+                NgSelectFilterTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [searchable]="false"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.select.onFilter({ target: { value: 'vilnius' } });
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.filterValue).toBe(null);
+        }));
+
         it('should mark first item on filter', fakeAsync(() => {
             fixture = createTestingModule(
                 NgSelectFilterTestCmp,
