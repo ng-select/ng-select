@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.6.0"></a>
+# [0.6.0](https://github.com/ng-select/ng-select/compare/v0.5.0...v0.6.0) (2017-11-03)
+
+
+### Features
+
+* **sarchable:** allow to toggle searchable ([#119](https://github.com/ng-select/ng-select/issues/119)) ([8b164c1](https://github.com/ng-select/ng-select/commit/8b164c1)), closes [#107](https://github.com/ng-select/ng-select/issues/107)
+
+
+
 <a name="0.5.0"></a>
 # [0.5.0](https://github.com/ng-select/ng-select/compare/v0.4.5...v0.5.0) (2017-10-31)
 
