@@ -44,7 +44,7 @@ module.exports = function makeWebpackConfig() {
                 // Support for .ts files.
                 {
                     test: /\.ts$/,
-                    loader: ['awesome-typescript-loader?configFileName=./demo/tsconfig.json', 'angular2-template-loader'],
+                    loader: ['awesome-typescript-loader?configFileName=./demo/tsconfig.json', 'angular2-template-loader', 'ng-snippets-loader'],
                     exclude: [/\.(spec|e2e)\.ts$/, /node_modules\/(?!(ng2-.+))/],
                 },
 
@@ -81,7 +81,7 @@ module.exports = function makeWebpackConfig() {
                 },
 
                 // support for .html as raw text
-                {test: /\.html$/, loader: 'raw-loader', exclude: root('src', 'public')}
+                {test: /\.html$/, loader: ['raw-loader', 'ng-snippets-loader'], exclude: root('src', 'public')}
             ]
         },
         plugins: [

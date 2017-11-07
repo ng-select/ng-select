@@ -9,8 +9,10 @@ interface AngSelectEvent {
 @Component({
     selector: 'select-events',
     template: `
+        <div id="s1"></div>
         <label>Open, close, focus, blur, change events</label>
-        <ng-select [items]="cities"
+        <ng-select snippet="s1"
+                   [items]="cities"
                    [(ngModel)]="selectedCity"
                    bindLabel="name"
                    bindValue="id"
