@@ -20,8 +20,8 @@
     "angular4"
   ],
   "peerDependencies": {
-    "@angular/common": ">=4.0.0 <5.0.0",
-    "@angular/core": ">=.0.0 <5.0.0",
-    "@angular/forms": ">=.0.0 <5.0.0"
+    "@angular/common": ">=4.0.0 <6.0.0",
+    "@angular/core": ">=4.0.0 <6.0.0",
+    "@angular/forms": ">=4.0.0 <6.0.0"
   }
 }
