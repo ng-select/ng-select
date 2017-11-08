@@ -6,12 +6,14 @@ import { Observable } from 'rxjs/Observable';
 @Component({
     template: `
         <label>Select multiple elements</label>
+        ---html,true
         <ng-select
                 [items]="companies"
                 bindLabel="name"
                 [multiple]="true"
                 [(ngModel)]="selectedCompanies">
         </ng-select>
+        ---
         <p>
             Selected value: {{selectedCompanies | json}} <br>
             <button (click)="clearModel()" class="btn btn-secondary btn-sm">Clear model</button>
@@ -19,6 +21,7 @@ import { Observable } from 'rxjs/Observable';
         <hr/>
 
         <label>Disabled multiple elements</label>
+        ---html,true
         <ng-select
                 [items]="companies2"
                 bindLabel="name"
@@ -26,10 +29,12 @@ import { Observable } from 'rxjs/Observable';
                 [disabled]="disable"
                 [(ngModel)]="selectedCompaniesDisabled">
         </ng-select>
+        ---
         <br>
         <button class="btn btn-secondary btn-sm" (click)="disable = !disable">Toggle disabled</button>
         <hr/>
         <label>Custom label templates</label>
+        ---html,true
         <ng-select
             [items]="users"
             [multiple]="true"
@@ -46,6 +51,7 @@ import { Observable } from 'rxjs/Observable';
                 <img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}
             </ng-template>
         </ng-select>
+        ---
     `
 })
 export class SelectMultiComponent {

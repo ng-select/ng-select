@@ -6,23 +6,27 @@ import { Observable } from 'rxjs/Observable';
     selector: 'select-tags',
     template: `
         <label>Default tags</label>
+        ---html,true
         <ng-select [items]="companies"
                 [addTag]="true"
                 bindLabel="name"
                 [(ngModel)]="selectedCompany">
         </ng-select>
+        ---
         <p>
             Selected value: {{selectedCompany | json}}
         </p>
         <hr>
 
         <label>Custom tags</label>
+        ---html,true
         <ng-select [items]="companies"
                 [addTag]="addTag"
                 multiple="true"
                 bindLabel="name"
                 [(ngModel)]="selectedCompanyCustom">
         </ng-select>
+        ---
         <p>
             Selected value: {{selectedCompanyCustom | json}}
         </p>

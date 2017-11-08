@@ -9,6 +9,12 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
     template: `
         <form [formGroup]="heroForm" novalidate>
 
+            ---html
+            <ng-select formControlName="agree">
+                <ng-option [value]="true">Yes</ng-option>
+                <ng-option [value]="false">No</ng-option>
+            </ng-select>
+            ---
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="heroId">Basic select</label>
@@ -36,6 +42,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
             
             <div class="form-group">
                 <label for="state">Multi select</label>
+                ---html,true
                 <ng-select *ngIf="isCitiesControlVisible"
                            [items]="cities"
                            bindLabel="name"
@@ -44,6 +51,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
                            placeholder="Select cities"
                            formControlName="selectedCitiesIds">
                 </ng-select>
+                ---
                 <br>
                 <button (click)="toggleCitiesControl()" class="btn btn-sm btn-secondary">Show/Hide</button>
                 <button (click)="clearCities()" class="btn btn-sm btn-secondary">Clear</button>
@@ -51,11 +59,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
             <hr>
             <div class="form-group">
                 <label for="state">Single select</label>
+                ---html,true
                 <ng-select [items]="ages"
                            bindValue="value"
                            placeholder="Select age"
                            formControlName="age">
                 </ng-select>
+                ---
                 <br>
                 <button class="btn btn-secondary btn-sm" (click)="toggleAgeDisable()">Toggle disabled</button>
             </div>
