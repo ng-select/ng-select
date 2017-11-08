@@ -23,7 +23,7 @@ Table of contents
     * [Custom display and option templates](#custom-display-and-option-templates)
   * [Contributing](#contributing)
   * [Development](#development)
-  * [Credits](#credits)
+  * [Inspiration](#inspiration)
 
 ## Features
 - [x] Custom bindings to property or object
@@ -290,5 +290,5 @@ yarn run test:watch
 
 To release to npm just run `./release.sh`, of course if you have permissions ;)
 
-## Credits
+## Inspiration
 This component is inspired by [React select](https://github.com/JedWatson/react-select) and [Vitual scroll](https://github.com/rintoj/angular2-virtual-scroll). Check theirs amazing work and components :)
