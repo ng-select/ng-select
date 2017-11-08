@@ -12,20 +12,24 @@ import 'rxjs/add/observable/of';
         <h5>Client side</h5>
         <hr>
         <label>Search in label text (default)</label>
+        ---html,true
         <ng-select [items]="companies"
                    bindLabel="name"
                    [(ngModel)]="selectedCompany">
         </ng-select>
+        ---
         <p>
             Selected value: {{selectedCompany | json}}
         </p>
 
         <label>Search using custom filter handler (search for Rooforia)</label>
+        ---html,true
         <ng-select [items]="filteredCompanies2"
                    bindLabel="name"
                    [typeahead]="customFilter"
                    [(ngModel)]="selectedCompany2">
         </ng-select>
+        ---
         <p>
             Selected value: {{selectedCompany2 | json}}
         </p>
@@ -33,6 +37,7 @@ import 'rxjs/add/observable/of';
         <h5>Server side</h5>
         <hr>
         <label>Search with autocomplete in Github accounts</label>
+        ---html,true
         <ng-select [items]="items"
                    notFoundText="No results found"
                    typeToSearchText="Search for github account"
@@ -41,12 +46,11 @@ import 'rxjs/add/observable/of';
                    [multiple]="multiple"
                    [typeahead]="typeahead"
                    [(ngModel)]="githubAccount">
-
             <ng-template ng-option-tmp let-item="item">
                 <img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}
             </ng-template>
-
         </ng-select>
+        ---
         <br>
         <button class="btn btn-secondary btn-sm" (click)="toggleMultiple()">Toggle multiple</button>
         <p>

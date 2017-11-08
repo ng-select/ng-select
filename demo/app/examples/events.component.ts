@@ -11,6 +11,7 @@ interface AngSelectEvent {
     template: `
         <div id="s1"></div>
         <label>Open, close, focus, blur, change events</label>
+        ---html,true
         <ng-select snippet="s1"
                    [items]="cities"
                    [(ngModel)]="selectedCity"
@@ -22,6 +23,7 @@ interface AngSelectEvent {
                    (blur)="onBlur($event)"
                    (change)="onChange($event)">
         </ng-select>
+        ---
 
         <div *ngIf="events.length > 0">
             <br>

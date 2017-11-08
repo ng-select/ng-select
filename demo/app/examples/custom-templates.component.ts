@@ -4,30 +4,35 @@ import { Component } from '@angular/core';
     selector: 'select-with-templates',
     template: `
         <label>Custom label</label>
+        ---html,true
         <ng-select [items]="cities" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
             <ng-template ng-label-tmp let-item="item">
                 <img height="15" width="15" [src]="item.avatar"/>
                 {{item.name}}
             </ng-template>
         </ng-select>
+        ---
         <p>
             Selected city name: {{selectedCity}}
         </p>
         <hr>
 
         <label>Custom option</label>
+        ---html,true
         <ng-select [items]="cities2" [(ngModel)]="selectedCity2" bindLabel="name" bindValue="name">
             <ng-template ng-option-tmp let-item="item" let-index="index">
                 <img height="15" width="15" [src]="item.avatar"/>
                 <b>{{item.name}}</b>
             </ng-template>
         </ng-select>
+        ---
         <p>
             Selected city name: {{selectedCity2}}
         </p>
         <hr>
 
         <label>Custom label and option</label>
+        ---html,true
         <ng-select [items]="cities3" [(ngModel)]="selectedCity3" bindLabel="name" bindValue="name">
             <ng-template ng-label-tmp let-item="item">
                 <img height="15" width="15" [src]="item.avatar"/>
@@ -38,6 +43,7 @@ import { Component } from '@angular/core';
                 <b>{{item.name}}</b>
             </ng-template>
         </ng-select>
+        ---
         <p>
             Selected city name: {{selectedCity3}}
         </p>
