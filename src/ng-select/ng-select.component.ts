@@ -60,6 +60,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() bindLabel = 'label';
     @Input() bindValue: string;
     @Input() clearable = true;
+    @Input() disableVirtualScroll = false;
     @Input() placeholder: string;
     @Input() notFoundText = 'No items found';
     @Input() typeToSearchText = 'Type to search';
@@ -117,7 +118,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         private elementRef: ElementRef,
         private renderer: Renderer2
     ) {
-        this.mergeConfig(config);
+        this.mergeGlobalConfig(config);
     }
 
     ngOnInit() {
@@ -575,12 +576,13 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         return this.selectedItems.length > 0;
     }
 
-    private mergeConfig(config: NgSelectConfig) {
+    private mergeGlobalConfig(config: NgSelectConfig) {
         if (!config) {
             return;
         }
         this.notFoundText = config.notFoundText || this.notFoundText;
         this.typeToSearchText = config.typeToSearchText || this.typeToSearchText;
         this.addTagText = config.addTagText || this.addTagText;
+        this.disableVirtualScroll = config.disableVirtualScroll || this.disableVirtualScroll;
     }
 }

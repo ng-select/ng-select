@@ -18,6 +18,7 @@ import { SelectTagsComponent } from './examples/tags.component';
 
 import { LayoutHeaderComponent } from './layout/header.component';
 import { LayoutSidenavComponent } from './layout/sidenav-component';
+import { VirtualScrollComponent } from './examples/virtual-scroll.component';
 
 const appRoutes: Routes = [
     {
@@ -32,6 +33,7 @@ const appRoutes: Routes = [
     { path: 'templates', component: SelectWithTemplatesComponent, data: { title: 'Templates'} },
     { path: 'multiselect', component: SelectMultiComponent, data: { title: 'Multiselect'} },
     { path: 'events', component: SelectEventsComponent, data: { title: 'Output events'} },
+    { path: 'virtual-scroll', component: VirtualScrollComponent, data: { title: 'Virtual scroll'} },
 ];
 
 @NgModule({
@@ -60,7 +62,8 @@ const appRoutes: Routes = [
         SelectMultiComponent,
         SelectTagsComponent,
         LayoutHeaderComponent,
-        LayoutSidenavComponent
+        LayoutSidenavComponent,
+        VirtualScrollComponent
     ],
     bootstrap: [AppComponent]
 })

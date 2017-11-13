@@ -39,7 +39,7 @@
 </div>
 
 <div class="ng-menu-outer">
-    <virtual-scroll role="listbox" class="ng-menu" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
+    <virtual-scroll role="listbox" class="ng-menu" [disabled]="disableVirtualScroll" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
         <div class="ng-option" role="option" (click)="toggle(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
              *ngFor="let item of viewPortItems"
              [class.disabled]="item.disabled"
