@@ -21,11 +21,6 @@ import {
 
 import { CommonModule } from '@angular/common';
 
-export interface ChangeEvent {
-    start?: number;
-    end?: number;
-}
-
 @Component({
     selector: 'virtual-scroll,[virtualScroll]',
     exportAs: 'virtualScroll',
@@ -83,6 +78,9 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     bufferAmount = 0;
 
+    @Input()
+    disabled = false;
+
     @Output()
     update: EventEmitter<any[]> = new EventEmitter<any[]>();
 
@@ -95,16 +93,16 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     topPadding: number;
     scrollHeight: number;
 
-    private previousStart: number;
-    private previousEnd: number;
-    private startupLoop = true;
-    private disposeScrollListener = () => {};
+    private _previousStart: number;
+    private _previousEnd: number;
+    private _startupLoop = true;
+    private _disposeScrollListener = () => {};
 
     constructor(private element: ElementRef, private zone: NgZone, private renderer: Renderer2) {
     }
 
     get enabled() {
-        return this.items && this.items.length > 20;
+        return !this.disabled && this.items && this.items.length > 20;
     }
 
     handleScroll() {
@@ -115,7 +113,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
             }
             this.refresh();
         };
-        this.disposeScrollListener = this.renderer.listen(this.element.nativeElement, 'scroll', handler);
+        this._disposeScrollListener = this.renderer.listen(this.element.nativeElement, 'scroll', handler);
     }
 
     ngOnInit() {
@@ -125,16 +123,16 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.disposeScrollListener();
+        this._disposeScrollListener();
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.previousStart = undefined;
-        this.previousEnd = undefined;
+        this._previousStart = undefined;
+        this._previousEnd = undefined;
         const items = (changes as any).items || {};
         if ((changes as any).items !== undefined && items.previousValue === undefined ||
             (items.previousValue !== undefined && items.previousValue.length === 0)) {
-            this.startupLoop = true;
+            this._startupLoop = true;
         }
         this.items = items.currentValue;
         this.refresh();
@@ -258,22 +256,22 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         start = Math.max(0, start);
         end += this.bufferAmount;
         end = Math.min(items.length, end);
-        if (start !== this.previousStart || end !== this.previousEnd) {
+        if (start !== this._previousStart || end !== this._previousEnd) {
 
             // update the scroll list
             this.zone.run(() => {
                 this.update.emit(items.slice(start, end));
             });
 
-            this.previousStart = start;
-            this.previousEnd = end;
+            this._previousStart = start;
+            this._previousEnd = end;
 
-            if (this.startupLoop === true) {
+            if (this._startupLoop === true) {
                 this.refresh();
             }
 
-        } else if (this.startupLoop === true) {
-            this.startupLoop = false;
+        } else if (this._startupLoop === true) {
+            this._startupLoop = false;
             this.refresh();
         }
     }

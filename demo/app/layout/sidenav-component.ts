@@ -8,6 +8,9 @@ import { Component } from '@angular/core';
                 <a class="nav-link" routerLink="/forms">Reactive forms</a>
             </li>
             <li class="nav-item" routerLinkActive="active">
+                <a class="nav-link" routerLink="/virtual-scroll">Virtual scroll</a>
+            </li>
+            <li class="nav-item" routerLinkActive="active">
                 <a class="nav-link" routerLink="/filter">Filter and autocomplete</a>
             </li>
             <li class="nav-item" routerLinkActive="active">

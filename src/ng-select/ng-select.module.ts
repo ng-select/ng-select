@@ -28,11 +28,11 @@ import { NgOptionComponent } from './ng-option.component';
     ]
 })
 export class NgSelectModule {
-    static forRoot(config: NgSelectConfig): ModuleWithProviders {
+    static forRoot(config?: NgSelectConfig): ModuleWithProviders {
         return provideModule(config);
     }
 
-    static forChild(config: NgSelectConfig): ModuleWithProviders {
+    static forChild(config?: NgSelectConfig): ModuleWithProviders {
         return provideModule(config);
     }
 }
