@@ -1,6 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { NgSelectComponent } from './ng-select.component';
 import { NgOptionTemplateDirective, NgLabelTemplateDirective } from './ng-templates.directive';
 import { VirtualScrollModule } from './virtual-scroll.component';
