@@ -31,7 +31,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.selectedCity).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[1]));
 
             // clear select
-            fixture.componentInstance.select.clear();
+            fixture.componentInstance.select.clearModel();
             tickAndDetectChanges(fixture);
 
             expect(fixture.componentInstance.selectedCity).toEqual(null);
@@ -143,7 +143,7 @@ describe('NgSelectComponent', function () {
 
             expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[1]);
 
-            fixture.componentInstance.select.clear();
+            fixture.componentInstance.select.clearModel();
             fixture.componentInstance.cities = [...fixture.componentInstance.cities];
             tickAndDetectChanges(fixture);
 
@@ -453,7 +453,7 @@ describe('NgSelectComponent', function () {
             }));
 
             it('should do nothing when there is no selection', fakeAsync(() => {
-                const clear = spyOn(fixture.componentInstance.select, 'clear');
+                const clear = spyOn(fixture.componentInstance.select, 'clearModel');
                 tickAndDetectChanges(fixture);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
                 expect(clear).not.toHaveBeenCalled();

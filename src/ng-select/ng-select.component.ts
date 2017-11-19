@@ -188,23 +188,22 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     handleClearClick($event: Event) {
         $event.stopPropagation();
         if (this.isValueSet) {
-            this.clear();
-        } else {
-            this.clearSearch();
+            this.clearModel();
         }
+        this.clearSearch();
         this.focusSearchInput();
+        if (this.isTypeahead()) {
+            this.typeahead.next(null);
+        }
     }
 
-    clear() {
+    clearModel() {
         if (!this.clearable) {
             return;
         }
         this.itemsList.clearSelected();
-        this.clearSearch();
         this.notifyModelChanged();
-        if (this.isTypeahead()) {
-            this.typeahead.next(null);
-        }
+        
     }
 
     writeValue(value: any | any[]): void {
@@ -531,7 +530,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             this.itemsList.unselectLastItem();
             this.updateModel();
         } else {
-            this.clear();
+            this.clearModel();
         }
     }
 
