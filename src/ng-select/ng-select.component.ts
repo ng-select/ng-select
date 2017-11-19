@@ -203,7 +203,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
         this.itemsList.clearSelected();
         this.notifyModelChanged();
-        
     }
 
     writeValue(value: any | any[]): void {
