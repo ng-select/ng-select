@@ -193,6 +193,21 @@ describe('NgSelectComponent', function () {
             discardPeriodicTasks();
         }));
 
+        it('bind to simple array', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectSimpleCmp,
+                `<ng-select [items]="cities"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.selectedCity).toBe('Vilnius');
+            fixture.componentInstance.selectedCity = 'Kaunas';
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({ label: 'Kaunas' })]);
+        }));
+
         it('bind to object', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
@@ -548,8 +563,8 @@ describe('NgSelectComponent', function () {
 
             const items = fixture.componentInstance.select.itemsList.items;
             expect(items.length).toBe(2);
-            expect(items[0]).toEqual(jasmine.objectContaining({label: 'Yes', value: true, index: 0}));
-            expect(items[1]).toEqual(jasmine.objectContaining({label: 'No', value: false, index: 1}));
+            expect(items[0]).toEqual(jasmine.objectContaining({ label: 'Yes', value: true, index: 0 }));
+            expect(items[1]).toEqual(jasmine.objectContaining({ label: 'No', value: false, index: 1 }));
         }));
     });
 
@@ -981,6 +996,15 @@ class NgSelectSelectedSimpleCmp {
         { id: 2, name: 'Kaunas' },
         { id: 3, name: 'Pabrade' },
     ];
+}
+
+@Component({
+    template: ``
+})
+class NgSelectSimpleCmp {
+    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    cities = ['Vilnius', 'Kaunas', 'Pabrade'];
+    selectedCity;
 }
 
 @Component({
