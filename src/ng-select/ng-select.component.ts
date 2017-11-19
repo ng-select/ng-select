@@ -187,7 +187,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     handleClearClick($event: Event) {
         $event.stopPropagation();
-        this.clear();
+        if (this.isValueSet) {
+            this.clear();
+        } else {
+            this.clearSearch();
+        }
         this.focusSearchInput();
     }
 
