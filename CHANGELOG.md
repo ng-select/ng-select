@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.8.0"></a>
+# [0.8.0](https://github.com/ng-select/ng-select/compare/v0.7.1...v0.8.0) (2017-11-20)
+
+
+### Bug Fixes
+
+* **events:** don't fire change event on search clear ([#130](https://github.com/ng-select/ng-select/issues/130)) ([8bc8b8e](https://github.com/ng-select/ng-select/commit/8bc8b8e)), closes [#126](https://github.com/ng-select/ng-select/issues/126)
+
+
+### Features
+
+* support for simple arrays ([#129](https://github.com/ng-select/ng-select/issues/129)) ([9504ad5](https://github.com/ng-select/ng-select/commit/9504ad5)), closes [#100](https://github.com/ng-select/ng-select/issues/100)
+
+
+
 <a name="0.7.1"></a>
 ## [0.7.1](https://github.com/ng-select/ng-select/compare/v0.7.0...v0.7.1) (2017-11-16)
 
