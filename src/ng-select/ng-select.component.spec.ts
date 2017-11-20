@@ -31,7 +31,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.selectedCity).toEqual(jasmine.objectContaining(fixture.componentInstance.cities[1]));
 
             // clear select
-            fixture.componentInstance.select.clear();
+            fixture.componentInstance.select.clearModel();
             tickAndDetectChanges(fixture);
 
             expect(fixture.componentInstance.selectedCity).toEqual(null);
@@ -143,7 +143,7 @@ describe('NgSelectComponent', function () {
 
             expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[1]);
 
-            fixture.componentInstance.select.clear();
+            fixture.componentInstance.select.clearModel();
             fixture.componentInstance.cities = [...fixture.componentInstance.cities];
             tickAndDetectChanges(fixture);
 
@@ -453,7 +453,7 @@ describe('NgSelectComponent', function () {
             }));
 
             it('should do nothing when there is no selection', fakeAsync(() => {
-                const clear = spyOn(fixture.componentInstance.select, 'clear');
+                const clear = spyOn(fixture.componentInstance.select, 'clearModel');
                 tickAndDetectChanges(fixture);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
                 expect(clear).not.toHaveBeenCalled();
@@ -548,8 +548,8 @@ describe('NgSelectComponent', function () {
 
             const items = fixture.componentInstance.select.itemsList.items;
             expect(items.length).toBe(2);
-            expect(items[0]).toEqual(jasmine.objectContaining({label: 'Yes', value: true, index: 0}));
-            expect(items[1]).toEqual(jasmine.objectContaining({label: 'No', value: false, index: 1}));
+            expect(items[0]).toEqual(jasmine.objectContaining({ label: 'Yes', value: true, index: 0 }));
+            expect(items[1]).toEqual(jasmine.objectContaining({ label: 'No', value: false, index: 1 }));
         }));
     });
 
@@ -843,33 +843,44 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Clear icon click', () => {
-        let fixture: ComponentFixture<NgSelectBasicTestCmp>;
+        let fixture: ComponentFixture<NgSelectEventsTestCmp>;
         let clickIcon: DebugElement = null;
 
         beforeEach(fakeAsync(() => {
             fixture = createTestingModule(
-                NgSelectBasicTestCmp,
+                NgSelectEventsTestCmp,
                 `<ng-select [items]="cities"
+                        (change)="onChange($event)"
                         bindLabel="name"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
 
+            spyOn(fixture.componentInstance, 'onChange');
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             tickAndDetectChanges(fixture);
             clickIcon = fixture.debugElement.query(By.css('.ng-clear-zone'));
         }));
 
-        it('should clear model on clear icon click', fakeAsync(() => {
+        it('should clear model', fakeAsync(() => {
             clickIcon.triggerEventHandler('click', { stopPropagation: () => { } });
             tickAndDetectChanges(fixture);
-
             expect(fixture.componentInstance.selectedCity).toBe(null);
+            expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
         }));
 
-        it('should not open dropdown on clear click', fakeAsync(() => {
+        it('should clear only search text', fakeAsync(() => {
+            fixture.componentInstance.selectedCity = null;
+            fixture.componentInstance.select.filterValue = 'Hey! Whats up!?';
+            tickAndDetectChanges(fixture);
             clickIcon.triggerEventHandler('click', { stopPropagation: () => { } });
             tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(0);
+            expect(fixture.componentInstance.select.filterValue).toBe(null);
+        }));
 
+        it('should not open dropdown', fakeAsync(() => {
+            clickIcon.triggerEventHandler('click', { stopPropagation: () => { } });
+            tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
         }));
     });
