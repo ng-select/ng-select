@@ -8,8 +8,7 @@ import { Observable } from 'rxjs/Observable';
         <label>Select multiple elements</label>
         ---html,true
         <ng-select
-                [items]="companies"
-                bindLabel="name"
+                [items]="companiesNames"
                 [multiple]="true"
                 [(ngModel)]="selectedCompanies">
         </ng-select>
@@ -23,7 +22,7 @@ import { Observable } from 'rxjs/Observable';
         <label>Disabled multiple elements</label>
         ---html,true
         <ng-select
-                [items]="companies2"
+                [items]="companies"
                 bindLabel="name"
                 [multiple]="true"
                 [disabled]="disable"
@@ -58,7 +57,6 @@ export class SelectMultiComponent {
 
     users: any[] = [];
     companies: any[] = [];
-    companies2: any[] = [];
     selectedCompanies: any;
     selectedCompaniesDisabled: any;
     disable = true;
@@ -72,7 +70,6 @@ export class SelectMultiComponent {
     ngOnInit() {
         this.companiesNames.forEach((c, i) => {
             this.companies.push({ id: i, name: c });
-            this.companies2.push({ id: i, name: c });
         });
 
         this.selectedCompaniesDisabled = [{ id: 0, name: 'Miškas' }, { id: 1, name: 'Žalias' }];

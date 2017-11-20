@@ -193,6 +193,21 @@ describe('NgSelectComponent', function () {
             discardPeriodicTasks();
         }));
 
+        it('bind to simple array', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectSimpleCmp,
+                `<ng-select [items]="cities"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.selectedCity).toBe('Vilnius');
+            fixture.componentInstance.selectedCity = 'Kaunas';
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({ label: 'Kaunas' })]);
+        }));
+
         it('bind to object', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
@@ -992,6 +1007,15 @@ class NgSelectSelectedSimpleCmp {
         { id: 2, name: 'Kaunas' },
         { id: 3, name: 'Pabrade' },
     ];
+}
+
+@Component({
+    template: ``
+})
+class NgSelectSimpleCmp {
+    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    cities = ['Vilnius', 'Kaunas', 'Pabrade'];
+    selectedCity;
 }
 
 @Component({
