@@ -9,8 +9,7 @@ export class ItemsList {
     private _markedIndex = -1;
     private _selected: NgOption[] = [];
     private _multiple = false;
-    private _bindLabel: string;
-    private _bindValue: string;
+    private _simple = false;
 
     get value(): NgOption[] {
         return this._selected;
@@ -20,7 +19,8 @@ export class ItemsList {
         return this.filteredItems[this._markedIndex];
     }
 
-    setItems(items: NgOption[]) {
+    setItems(items: NgOption[], simple: boolean = false) {
+        this._simple = simple;
         this.items = this.mapItems(items);
         this.filteredItems = [...this.items];
     }
@@ -30,12 +30,6 @@ export class ItemsList {
         this.clearSelected();
     }
 
-    setBindOptions(bindLabel: string, bindValue: string) {
-        this._bindLabel = bindLabel;
-        this._bindValue = bindValue;
-    }
-
-
     select(item: NgOption) {
         if (!this._multiple) {
             this.clearSelected();
@@ -44,16 +38,16 @@ export class ItemsList {
         item.selected = true;
     }
 
-    findItem(value): NgOption {
+    findItem(value, bindValue: string, bindLabel: string): NgOption {
         if (!value) {
             return null;
         }
-        if (this._bindValue) {
-            return this.items.find(x => x[this._bindValue] === value);
+        if (bindValue) {
+            return this.items.find(x => x[bindValue] === value);
         }
         const index = this.items.indexOf(value);
         return index > -1 ? this.items[index] :
-            this.items.find(x => x[this._bindLabel] === value[this._bindLabel])
+            this.items.find(x => x[bindLabel] === value[bindLabel])
     }
 
     unselect(item: NgOption) {
@@ -148,9 +142,15 @@ export class ItemsList {
 
     private mapItems(items: NgOption[]) {
         return items.map((item, index) => {
+            let option = item;
+            if (this._simple) {
+                option = {};
+                option['label'] = item as any;
+            }
+
             return {
                 index: index,
-                ...item
+                ...option
             };
         })
     }

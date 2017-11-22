@@ -18,6 +18,7 @@ import {
     ElementRef,
     ChangeDetectionStrategy,
     Optional,
+    SimpleChanges,
     Renderer2, ContentChildren, QueryList
 } from '@angular/core';
 
@@ -57,7 +58,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     // inputs
     @Input() items = [];
-    @Input() bindLabel = 'label';
+    @Input() bindLabel: string;
     @Input() bindValue: string;
     @Input() clearable = true;
     @Input() disableVirtualScroll = false;
@@ -102,6 +103,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     filterValue: string = null;
 
     private _ngModel = null;
+    private _simple = false;
+    private _defaultLabel = 'label';
+    private _defaultValue = 'value';
 
     private onChange = (_: NgOption) => { };
     private onTouched = () => { };
@@ -121,25 +125,26 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.mergeGlobalConfig(config);
     }
 
-    ngOnInit() {
-        this.handleDocumentClick();
-    }
-
-    ngAfterViewInit() {
-        if (this.ngOptions.length > 0 && this.items.length === 0) {
-            this.setItemsFromNgOptions();
-        }
-    }
-
-    ngOnChanges(changes) {
-        if (changes.bindLabel || changes.bindValue) {
-            this.itemsList.setBindOptions(this.bindLabel, this.bindValue);
-        }
+    ngOnChanges(changes: SimpleChanges) {
         if (changes.multiple) {
             this.itemsList.setMultiple(changes.multiple.currentValue);
         }
         if (changes.items) {
             this.setItems(changes.items.currentValue || []);
+        }
+    }
+
+    ngOnInit() {
+        this.handleDocumentClick();
+        this.bindLabel = this.bindLabel || this._defaultLabel;
+        if (this._simple) {
+            this.bindValue = this._defaultLabel;
+        }
+    }
+
+    ngAfterViewInit() {
+        if (this.ngOptions.length > 0 && this.items.length === 0) {
+            this.setItemsFromNgOptions();
         }
     }
 
@@ -188,20 +193,22 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     handleClearClick($event: Event) {
         $event.stopPropagation();
-        this.clear();
+        if (this.isValueSet) {
+            this.clearModel();
+        }
+        this.clearSearch();
         this.focusSearchInput();
+        if (this.isTypeahead()) {
+            this.typeahead.next(null);
+        }
     }
 
-    clear() {
+    clearModel() {
         if (!this.clearable) {
             return;
         }
         this.itemsList.clearSelected();
-        this.clearSearch();
         this.notifyModelChanged();
-        if (this.isTypeahead()) {
-            this.typeahead.next(null);
-        }
     }
 
     writeValue(value: any | any[]): void {
@@ -275,7 +282,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     selectTag() {
         let tag = {}
-
         if (this.addTag instanceof Function) {
             tag = this.addTag(this.filterValue);
         } else {
@@ -349,7 +355,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private setItems(items: NgOption[]) {
-        this.itemsList.setItems(items);
+        const firstItem = items[0];
+        this._simple = firstItem && !(firstItem instanceof Object);
+        this.itemsList.setItems(items, this._simple);
         if (this._ngModel) {
             this.itemsList.clearSelected();
             this.selectWriteValue(this._ngModel);
@@ -363,7 +371,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private setItemsFromNgOptions() {
         if (!this.bindValue) {
             this.bindValue = 'value';
-            this.itemsList.setBindOptions(this.bindLabel, this.bindValue);
         }
 
         const handleNgOptions = (options) => {
@@ -437,7 +444,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
 
         const select = (val: any) => {
-            let item = this.itemsList.findItem(val);
+            let item = this.itemsList.findItem(val, this.bindValue, this.bindLabel);
             if (item) {
                 this.itemsList.select(item);
             } else {
@@ -528,7 +535,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             this.itemsList.unselectLastItem();
             this.updateModel();
         } else {
-            this.clear();
+            this.clearModel();
         }
     }
 
