@@ -19,6 +19,7 @@ import { SelectTagsComponent } from './examples/tags.component';
 import { LayoutHeaderComponent } from './layout/header.component';
 import { LayoutSidenavComponent } from './layout/sidenav-component';
 import { VirtualScrollComponent } from './examples/virtual-scroll.component';
+import { DataService } from './shared/data.service';
 
 const appRoutes: Routes = [
     {
@@ -51,6 +52,9 @@ const appRoutes: Routes = [
                 useHash: true
             }
         )
+    ],
+    providers: [
+        DataService
     ],
     declarations: [
         AppComponent,
