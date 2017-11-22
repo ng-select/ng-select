@@ -1,21 +1,27 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NgOption} from '@ng-select/ng-select';
-import {HttpClient} from '@angular/common/http';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgOption } from '@ng-select/ng-select';
+import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'reactive-forms',
     template: `
         <form [formGroup]="heroForm" novalidate>
-
             ---html
-            <ng-select formControlName="agree">
+            <ng-select [searchable]="false" formControlName="agree">
                 <ng-option [value]="true">Yes</ng-option>
                 <ng-option [value]="false">No</ng-option>
             </ng-select>
             ---
             <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="yesno">Not searchable</label>
+                    <ng-select [searchable]="false" formControlName="agree">
+                        <ng-option [value]="true">Yes</ng-option>
+                        <ng-option [value]="false">No</ng-option>
+                    </ng-select>
+                </div>
                 <div class="form-group col-md-6">
                     <label for="heroId">Basic select</label>
                     <ng-select [searchable]="false" formControlName="heroId">
@@ -30,16 +36,22 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
                         </ng-option>
                     </ng-select>
                 </div>
-                <div class="form-group col-md-6">
-                    <label for="yesno">Yes/No</label>
-                    <ng-select [searchable]="false" formControlName="agree">
-                        <ng-option [value]="true">Yes</ng-option>
-                        <ng-option [value]="false">No</ng-option>
-                    </ng-select>
-                </div>
             </div>
             <hr>
-            
+            <div class="form-group">
+                <label for="state">Single select</label>
+                ---html,true
+                <ng-select [items]="ages"
+                        bindValue="value"
+                        placeholder="Select age"
+                        formControlName="age">
+                </ng-select>
+                ---
+                <small class="form-text text-muted">With required validation</small>
+                <br>
+                <button class="btn btn-secondary btn-sm" (click)="toggleAgeDisable()">Toggle disabled</button>
+            </div>
+            <hr>            
             <div class="form-group">
                 <label for="state">Multi select</label>
                 ---html,true
@@ -57,19 +69,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
                 <button (click)="clearCities()" class="btn btn-sm btn-secondary">Clear</button>
             </div>
             <hr>
-            <div class="form-group">
-                <label for="state">Single select</label>
-                ---html,true
-                <ng-select [items]="ages"
-                           bindValue="value"
-                           placeholder="Select age"
-                           formControlName="age">
-                </ng-select>
-                ---
-                <br>
-                <button class="btn btn-secondary btn-sm" (click)="toggleAgeDisable()">Toggle disabled</button>
-            </div>
-            <hr>
+
             <div class="form-group">
                 <label for="album">Loading async data</label>
                 <ng-select [items]="albums"
@@ -157,16 +157,16 @@ export class ReactiveFormsComponent {
 
     isCitiesControlVisible = true;
     cities: NgOption[] = [
-        {id: 1, name: 'Vilnius'},
-        {id: 2, name: 'Kaunas'},
-        {id: 3, name: 'Pavilnys (Disabled)', disabled: true},
-        {id: 4, name: 'Pabradė'},
+        { id: 1, name: 'Vilnius' },
+        { id: 2, name: 'Kaunas' },
+        { id: 3, name: 'Pavilnys (Disabled)', disabled: true },
+        { id: 4, name: 'Pabradė' },
     ];
 
     ages: NgOption[] = [
-        {value: '<18', label: 'Under 18'},
-        {value: '18', label: '18'},
-        {value: '>18', label: 'More than 18'},
+        { value: '<18', label: 'Under 18' },
+        { value: '18', label: '18' },
+        { value: '>18', label: 'More than 18' },
     ];
 
     albums = [];
@@ -185,7 +185,7 @@ export class ReactiveFormsComponent {
             heroId: 'hero1',
             agree: '',
             selectedCitiesIds: [],
-            age: '',
+            age: ['', Validators.required],
             album: '',
             photo: ''
         });
@@ -247,8 +247,8 @@ export class ReactiveFormsComponent {
 
     private loadPhotos() {
         this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').subscribe(photos => {
-             this.photos = photos;
-             this.selectFirstPhoto();
+            this.photos = photos;
+            this.selectFirstPhoto();
         });
     }
 }

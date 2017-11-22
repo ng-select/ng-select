@@ -21,6 +21,7 @@ Table of contents
     * [Basic example](#basic-example)
     * [Flexible autocomplete](#flexible-autocomplete)
     * [Custom display and option templates](#custom-display-and-option-templates)
+    * [Validation state](#validation-state)
   * [Contributing](#contributing)
   * [Development](#development)
   * [Inspiration](#inspiration)
@@ -104,6 +105,7 @@ map: {
 | typeToSearchText | string | `Type to search` | no | Set custom text when using Typeahead |
 | addTagText | string | `Add item` | no | Set custom text when using tagging |
 | [typeahead] | Subject |  `-` | no | Custom autocomplete or filter. |
+| [disableVirtualScroll] | boolean |  false | no | Disable virtual scroll |
 
 | Output  | Description |
 | ------------- | ------------- |
@@ -256,6 +258,16 @@ export class SelectCustomTemplatesComponent {
             this.albums = albums;
         });
     }
+}
+```
+
+### Validation state
+By default when you use reactive forms validators or template driven forms validators css class `ng-invalid` will be applied on ng-select. You can show errors state by having adding this custom css style
+
+```css
+ng-select.ng-invalid.ng-touched .ng-control {
+    border-color: #dc3545;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px #fde6e8;
 }
 ```
 
