@@ -4292,9 +4292,9 @@ ng-packagr@^1.5.0-rc.0:
     uglify-js "^3.0.7"
     vinyl-fs "^2.4.4"
 
-ng-snippets-loader@^0.2.4:
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/ng-snippets-loader/-/ng-snippets-loader-0.2.4.tgz#f54904e70902b2cd15336341a7dd06319d4034fb"
+ng-snippets-loader@^0.2.5:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/ng-snippets-loader/-/ng-snippets-loader-0.2.5.tgz#ec939b268b22b17cccad32b186d30884baffbed3"
   dependencies:
     highlight.js "^9.12.0"
 

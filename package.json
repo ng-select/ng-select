@@ -62,7 +62,7 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "2.0.5",
     "ng-packagr": "^1.5.0-rc.0",
-    "ng-snippets-loader": "^0.2.4",
+    "ng-snippets-loader": "^0.2.5",
     "node-sass": "^4.0.0",
     "null-loader": "0.1.1",
     "postcss-loader": "^1.1.0",
