@@ -40,7 +40,7 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         BrowserModule,
-        NgSelectModule.forRoot({ notFoundText: 'No items found', typeToSearchText: 'Type to search', addTagText: 'Add item' }),
+        NgSelectModule.forRoot(),
         CommonModule,
         FormsModule,
         ReactiveFormsModule,

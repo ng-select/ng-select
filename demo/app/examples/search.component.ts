@@ -6,6 +6,7 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/of';
 import { DataService } from '../shared/data.service';
+import { setTimeout } from 'timers';
 
 @Component({
     selector: 'select-search',
@@ -18,28 +19,29 @@ import { DataService } from '../shared/data.service';
         ---html,true
         <ng-select [items]="clientSideFilterItems"
                    bindLabel="name"
-                   [(ngModel)]="selectedPerson1">
+                   [(ngModel)]="selectedPerson">
         </ng-select>
         ---
         <p>
-            Selected person: {{selectedPerson1 | json}}
+            Selected person: {{selectedPerson | json}}
         </p>
 
         <h5>Custom search</h5>
         <hr>
         <p>Use <b>typeahead</b> Input to subscribe to user term and load items</p>
-        <label>Multi select + Typeahead</label>
+        <label>Multi select + Typeahead + Custom items (tags)</label>
         ---html,true
         <ng-select [items]="serverSideFilterItems"
                    bindLabel="name"
+                   [addTag]="true"
                    [multiple]="true"
                    [typeahead]="peopleTypeahead"
-                   [(ngModel)]="selectedPerson2">
+                   [(ngModel)]="selectedPersons">
         </ng-select>
         ---
 
-        <p>
-            Selected person: {{selectedPerson2 | json}}
+        <p style="margin-bottom:300px">
+            Selected persons: {{selectedPersons | json}}
         </p>
     `
 })
@@ -50,7 +52,9 @@ export class SelectSearchComponent {
 
     serverSideFilterItems = [];
     peopleTypeahead = new EventEmitter<string>();
-    selectedPerson2 = null;
+    selectedPersons = [{
+        name: 'Karyn Wright'
+    }];
 
     constructor(private dataService: DataService) {}
 
@@ -60,7 +64,11 @@ export class SelectSearchComponent {
     }
 
     private loadPeopleForClientSide() {
-        this.dataService.getPeople().subscribe(x => this.clientSideFilterItems = x);
+        this.dataService.getPeople().subscribe(x => {
+            setTimeout(() => {
+                this.clientSideFilterItems = x
+            }, 1000);
+        });
     }
 
     private serverSideFilter() {

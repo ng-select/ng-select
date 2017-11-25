@@ -19,8 +19,9 @@ export enum KeyCode {
 }
 
 export class NgSelectConfig {
-    notFoundText? = '';
-    typeToSearchText? = '';
-    addTagText? = '';
+    notFoundText? = 'No items found';
+    typeToSearchText? = 'Type to search';
+    addTagText? = 'Add item';
+    loadingText? = 'Loading...';
     disableVirtualScroll? = false;
 }

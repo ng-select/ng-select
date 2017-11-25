@@ -63,9 +63,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() clearable = true;
     @Input() disableVirtualScroll = false;
     @Input() placeholder: string;
-    @Input() notFoundText = 'No items found';
-    @Input() typeToSearchText = 'Type to search';
-    @Input() addTagText = 'Add item';
+    @Input() notFoundText;
+    @Input() typeToSearchText;
+    @Input() addTagText;
+    @Input() loadingText;
 
     @Input()
     @HostBinding('class.typeahead') typeahead: Subject<string>;
@@ -198,7 +199,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
         this.clearSearch();
         this.focusSearchInput();
-        if (this.isTypeahead()) {
+        if (this.isTypeahead) {
             this.typeahead.next(null);
         }
     }
@@ -300,19 +301,26 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         return this.clearable && (this.isValueSet || this.filterValue) && !this.isDisabled;
     }
 
+    showAddTag() {
+        return this.addTag &&
+               this.filterValue &&
+               this.itemsList.filteredItems.length === 0 &&
+               !this.isLoading;
+    }
+
     showFilter() {
         return !this.isDisabled;
     }
 
     showNoItemsFound() {
         const empty = this.itemsList.filteredItems.length === 0;
-        return (empty && !this.isTypeahead()) ||
-            (empty && this.isTypeahead() && this.filterValue && !this.isLoading);
+        return (empty && !this.isTypeahead) ||
+            (empty && this.isTypeahead && this.filterValue && !this.isLoading);
     }
 
     showTypeToSearch() {
         const empty = this.itemsList.filteredItems.length === 0;
-        return empty && this.isTypeahead() && !this.filterValue && !this.isLoading;
+        return empty && this.isTypeahead && !this.filterValue && !this.isLoading;
     }
 
     onFilter($event) {
@@ -326,7 +334,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
         this.filterValue = $event.target.value;
 
-        if (this.isTypeahead()) {
+        if (this.isTypeahead) {
             this.isLoading = true;
             this.typeahead.next(this.filterValue);
         } else {
@@ -358,13 +366,14 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         const firstItem = items[0];
         this._simple = firstItem && !(firstItem instanceof Object);
         this.itemsList.setItems(items, this._simple);
-        if (this._ngModel) {
+        if (this._ngModel && items.length > 0) {
             this.itemsList.clearSelected();
             this.selectWriteValue(this._ngModel);
         }
-        if (this.isTypeahead()) {
+
+        if (this.isTypeahead) {
             this.isLoading = false;
-            this.itemsList.markItem();
+            this.itemsList.markItem(this.itemsList.filteredItems[0]);
         }
     }
 
@@ -444,14 +453,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
 
         const select = (val: any) => {
-            let item = this.itemsList.findItem(val, this.bindValue, this.bindLabel);
+            const item = this.itemsList.findItem(val, this.bindValue, this.bindLabel);
             if (item) {
                 this.itemsList.select(item);
-            } else {
-                if (val instanceof Object) {
-                    this.itemsList.addItem(val);
-                    this.itemsList.select(val);
-                }
+            } else if (val instanceof Object) {
+                this.itemsList.addItem(val);
+                this.itemsList.select(val);
             }
         };
 
@@ -562,7 +569,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         return <HTMLElement>this.elementRef.nativeElement.querySelector('.ng-menu-outer');
     }
 
-    private isTypeahead() {
+    private get isTypeahead() {
         return this.typeahead && this.typeahead.observers.length > 0;
     }
 
@@ -585,11 +592,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     private mergeGlobalConfig(config: NgSelectConfig) {
         if (!config) {
-            return;
+            config = new NgSelectConfig();
         }
-        this.notFoundText = config.notFoundText || this.notFoundText;
-        this.typeToSearchText = config.typeToSearchText || this.typeToSearchText;
-        this.addTagText = config.addTagText || this.addTagText;
-        this.disableVirtualScroll = config.disableVirtualScroll || this.disableVirtualScroll;
+        this.notFoundText = this.notFoundText || config.notFoundText;
+        this.typeToSearchText = this.typeToSearchText || config.typeToSearchText;
+        this.addTagText = this.addTagText || config.addTagText;
+        this.loadingText = this.loadingText || config.loadingText;
+        this.disableVirtualScroll = this.disableVirtualScroll || config.disableVirtualScroll;
     }
 }

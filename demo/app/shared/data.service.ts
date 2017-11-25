@@ -19,12 +19,20 @@ export class DataService {
         }
     }
 
+    getAlbums() {
+      return this.http.get<any[]>('https://jsonplaceholder.typicode.com/albums');
+    }
+
+    getPhotos() {
+      return this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos');
+    }
+
     getPeople(term: string = null) {
         let items = getMockPeople();
         if (term) {
             items = items.filter(x => x.name.toLocaleLowerCase().indexOf(term.toLocaleLowerCase()) > -1);
         }
-        return Observable.of(items)
+        return Observable.of(items).delay(500);
     }
 }
 
