@@ -134,7 +134,7 @@ export class ItemsList {
 
     private getDefaultFilterFunc(term, bindLabel: string) {
         return (val: NgOption) => {
-            return searchHelper.stripSpecialChars(val[bindLabel])
+            return searchHelper.stripSpecialChars(val[bindLabel] || '')
                 .toUpperCase()
                 .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
         };
