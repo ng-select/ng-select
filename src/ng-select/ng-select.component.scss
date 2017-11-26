@@ -11,7 +11,8 @@
 }
 
 $color-selected: #f5faff;
-ng-select {
+
+.ng-select {
     position: relative;
     display: block;
     @include box-sizing;
@@ -20,18 +21,11 @@ ng-select {
     span {
         @include box-sizing;
     }
-    ng-option {
-        display: block;
-        @include box-sizing;
-    }
-    virtual-scroll {
-        display: block;
-        height: auto;
-        @include box-sizing;
-    }
+    
     [hidden] {
         display: none;
     }
+
     &.opened {
         >.ng-control {
             border-bottom-right-radius: 0;
@@ -226,6 +220,9 @@ ng-select {
         -webkit-overflow-scrolling: touch;
     }
     .ng-menu {
+        display: block;
+        height: auto;
+        @include box-sizing;
         max-height: 240px;
         overflow-y: auto;
     }

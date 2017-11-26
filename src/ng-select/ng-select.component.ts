@@ -44,7 +44,8 @@ const NG_SELECT_VALUE_ACCESSOR = {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'role': 'dropdown'
+        'role': 'dropdown',
+        'class': 'ng-select'
     }
 })
 export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
