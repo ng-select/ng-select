@@ -1,4 +1,4 @@
-import { Component, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -28,6 +28,7 @@ import { DataService } from '../shared/data.service';
 
         <h5>Custom search</h5>
         <hr>
+
         <p>Use <b>typeahead</b> Input to subscribe to user term and load items</p>
         <label>Multi select + Typeahead + Custom items (tags)</label>
         ---html,true
@@ -56,7 +57,7 @@ export class SelectSearchComponent {
         name: 'Karyn Wright'
     }];
 
-    constructor(private dataService: DataService) {}
+    constructor(private dataService: DataService, private cd: ChangeDetectorRef) {}
 
     ngOnInit() {
         this.loadPeopleForClientSide();
@@ -65,7 +66,7 @@ export class SelectSearchComponent {
 
     private loadPeopleForClientSide() {
         this.dataService.getPeople().subscribe(x => {
-            this.clientSideFilterItems = x
+            this.clientSideFilterItems = x;
         });
     }
 
@@ -75,6 +76,7 @@ export class SelectSearchComponent {
         .debounceTime(200)
         .switchMap(term => this.dataService.getPeople(term))
         .subscribe(x => {
+            this.cd.markForCheck();
             this.serverSideFilterItems = x;
         }, (err) => {
             console.log(err);
