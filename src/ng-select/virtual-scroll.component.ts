@@ -28,17 +28,14 @@ import { CommonModule } from '@angular/common';
         <div *ngIf="enabled" class="total-padding" [style.height]="scrollHeight + 'px'"></div>
         <div #content
              [class.scrollable-content]="enabled"
-             [style.transform]="enabled ? 'translateY(' + topPadding + 'px)' : 'none'"
-             [style.webkitTransform]="enabled ? 'translateY(' + topPadding + 'px)' : 'none'">
+             [style.transform]="transformStyle">
             <ng-content></ng-content>
         </div>
     `,
-    host: {
-        '[style.overflow-y]': 'parentScroll ? \'hidden\' : \'auto\''
-    },
     styles: [`
         :host {
             overflow: hidden;
+            overflow-y: auto;
             position: relative;
             display: block;
             -webkit-overflow-scrolling: touch;
@@ -103,6 +100,10 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
 
     get enabled() {
         return !this.disabled && this.items && this.items.length > 20;
+    }
+
+    get transformStyle() {
+        return this.enabled ? 'translateY(' + this.topPadding + 'px)' : 'none'
     }
 
     handleScroll() {
