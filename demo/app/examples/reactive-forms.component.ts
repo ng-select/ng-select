@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgOption } from '@ng-select/ng-select';
 import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DataService } from '../shared/data.service';
 
 @Component({
     selector: 'reactive-forms',
@@ -173,7 +174,7 @@ export class ReactiveFormsComponent {
     allAlbums = [];
     photos = [];
 
-    constructor(private fb: FormBuilder, private http: HttpClient, private modalService: NgbModal) {
+    constructor(private fb: FormBuilder, private http: HttpClient, private modalService: NgbModal, private dataService: DataService) {
     }
 
     ngOnInit() {
@@ -238,7 +239,7 @@ export class ReactiveFormsComponent {
     }
 
     private loadAlbums() {
-        this.http.get<any[]>('https://jsonplaceholder.typicode.com/albums').subscribe(albums => {
+        this.dataService.getAlbums().subscribe(albums => {
             this.allAlbums = albums;
             this.albums = [...this.allAlbums];
             this.selectFirstAlbum();
@@ -246,7 +247,7 @@ export class ReactiveFormsComponent {
     }
 
     private loadPhotos() {
-        this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').subscribe(photos => {
+        this.dataService.getPhotos().subscribe(photos => {
             this.photos = photos;
             this.selectFirstPhoto();
         });

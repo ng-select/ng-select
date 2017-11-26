@@ -25,7 +25,7 @@ import { Component } from '@angular/core';
             <li class="nav-item" routerLinkActive="active">
                 <a class="nav-link" routerLink="/templates">Templates</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" routerLinkActive="active">
                 <a class="nav-link" routerLink="/events">Output events</a>
             </li>
         </ul>

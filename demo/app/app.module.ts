@@ -19,6 +19,7 @@ import { SelectTagsComponent } from './examples/tags.component';
 import { LayoutHeaderComponent } from './layout/header.component';
 import { LayoutSidenavComponent } from './layout/sidenav-component';
 import { VirtualScrollComponent } from './examples/virtual-scroll.component';
+import { DataService } from './shared/data.service';
 
 const appRoutes: Routes = [
     {
@@ -39,7 +40,7 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         BrowserModule,
-        NgSelectModule.forRoot({ notFoundText: 'No items found', typeToSearchText: 'Type to search', addTagText: 'Add item' }),
+        NgSelectModule.forRoot(),
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
@@ -51,6 +52,9 @@ const appRoutes: Routes = [
                 useHash: true
             }
         )
+    ],
+    providers: [
+        DataService
     ],
     declarations: [
         AppComponent,

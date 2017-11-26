@@ -31,6 +31,9 @@ export class ItemsList {
     }
 
     select(item: NgOption) {
+        if (item.selected) {
+            return;
+        }
         if (!this._multiple) {
             this.clearSelected();
         }

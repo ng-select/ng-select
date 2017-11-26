@@ -56,8 +56,8 @@
             </ng-template>
         </div>
 
-        <div class="ng-option marked" role="option" (click)="selectTag()" *ngIf="addTag && itemsList.filteredItems.length === 0">
-            <span><span class="ng-tag-label">{{addTagText}}</span>{{filterValue}}</span>
+        <div class="ng-option marked" role="option" (click)="selectTag()" *ngIf="showAddTag()">
+            <span><span class="ng-tag-label">{{addTagText}}</span>"{{filterValue}}"</span>
         </div>
     </virtual-scroll>
 
@@ -70,6 +70,12 @@
     <div class="ng-menu" *ngIf="showTypeToSearch()">
         <div class="ng-option disabled">
             {{typeToSearchText}}
+        </div>
+    </div>
+
+    <div class="ng-menu" *ngIf="isLoading && itemsList.filteredItems.length === 0">
+        <div class="ng-option disabled">
+            {{loadingText}}
         </div>
     </div>
 </div>
