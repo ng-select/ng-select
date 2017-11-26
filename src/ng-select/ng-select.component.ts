@@ -231,6 +231,14 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.isDisabled = isDisabled;
     }
 
+    toggle() {
+        if (!this.isOpen) {
+            this.open();
+        } else {
+            this.close();
+        }
+    }
+
     open() {
         if (this.isDisabled || this.isOpen) {
             return;
@@ -251,7 +259,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.closeEvent.emit();
     }
 
-    toggle(item: NgOption) {
+    toggleItem(item: NgOption) {
         if (!item || item.disabled || this.isDisabled) {
             return;
         }
@@ -494,7 +502,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private handleEnter($event: KeyboardEvent) {
         if (this.isOpen) {
             if (this.itemsList.markedItem) {
-                this.toggle(this.itemsList.markedItem);
+                this.toggleItem(this.itemsList.markedItem);
             } else if (this.addTag) {
                 this.selectTag();
             }
