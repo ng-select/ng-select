@@ -58,7 +58,7 @@ export class ItemsList {
         item.selected = false;
     }
 
-    unselectLastItem() {
+    unselectLast() {
         if (this._selected.length === 0) {
             return;
         }
@@ -84,7 +84,6 @@ export class ItemsList {
     filter(term: string, bindLabel: string) {
         const filterFuncVal = this.getDefaultFilterFunc(term, bindLabel);
         this.filteredItems = term ? this.items.filter(val => filterFuncVal(val)) : this.items;
-        this._markedIndex = 0;
     }
 
     clearFilter() {
@@ -99,25 +98,27 @@ export class ItemsList {
         this.stepToItem(-1);
     }
 
-    markItem(item: NgOption = null) {
+    markItem(item: NgOption) {
+        this._markedIndex = this.filteredItems.indexOf(item);
+    }
+
+    markSelectedOrDefault(markDefault) {
         if (this.filteredItems.length === 0) {
             return;
         }
 
-        item = item || this.lastSelectedItem;
-        if (item) {
-            this._markedIndex = this.filteredItems.indexOf(item);
+        if (this.lastSelectedItem) {
+            this._markedIndex = this.filteredItems.indexOf(this.lastSelectedItem);
         } else {
-            this._markedIndex = 0;
+            this._markedIndex = markDefault ? 0 : -1;
         }
     }
 
     private getNextItemIndex(steps: number) {
         if (steps > 0) {
             return (this._markedIndex === this.filteredItems.length - 1) ? 0 : (this._markedIndex + 1);
-        } else {
-            return (this._markedIndex === 0) ? (this.filteredItems.length - 1) : (this._markedIndex - 1);
         }
+        return (this._markedIndex === 0) ? (this.filteredItems.length - 1) : (this._markedIndex - 1);
     }
 
     private stepToItem(steps: number) {
@@ -147,8 +148,9 @@ export class ItemsList {
         return items.map((item, index) => {
             let option = item;
             if (this._simple) {
-                option = {};
-                option['label'] = item as any;
+                option = {
+                    label: item as any
+                };
             }
 
             return {
