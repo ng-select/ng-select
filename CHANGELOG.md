@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.9.0"></a>
+# [0.9.0](https://github.com/ng-select/ng-select/compare/v0.8.0...v0.9.0) (2017-11-26)
+
+
+### Bug Fixes
+
+* add .ng-select host css class ([#139](https://github.com/ng-select/ng-select/issues/139)) ([e386150](https://github.com/ng-select/ng-select/commit/e386150))
+* custom tags insertion on multiselect ([#135](https://github.com/ng-select/ng-select/issues/135)) ([63d9f70](https://github.com/ng-select/ng-select/commit/63d9f70))
+* mark for check when closing dropdown ([#140](https://github.com/ng-select/ng-select/issues/140)) ([78ff661](https://github.com/ng-select/ng-select/commit/78ff661))
+
+
+### Features
+
+* toggle dropdown when searchable is false. ([#137](https://github.com/ng-select/ng-select/issues/137)) ([2477717](https://github.com/ng-select/ng-select/commit/2477717))
+
+
+
 <a name="0.8.0"></a>
 # [0.8.0](https://github.com/ng-select/ng-select/compare/v0.7.1...v0.8.0) (2017-11-20)
 
