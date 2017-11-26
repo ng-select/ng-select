@@ -6,7 +6,6 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/observable/of';
 import { DataService } from '../shared/data.service';
-import { setTimeout } from 'timers';
 
 @Component({
     selector: 'select-search',
@@ -65,9 +64,7 @@ export class SelectSearchComponent {
 
     private loadPeopleForClientSide() {
         this.dataService.getPeople().subscribe(x => {
-            setTimeout(() => {
-                this.clientSideFilterItems = x
-            }, 1000);
+            this.clientSideFilterItems = x
         });
     }
 
