@@ -1,4 +1,3 @@
-// @ts-check
 const path = require('path');
 const webpack = require('webpack');
 
@@ -20,8 +19,7 @@ module.exports = function makeWebpackConfig() {
         devtool: isProd ? 'source-map' : 'eval-source-map',
         entry: {
             'app': './demo/main.ts', // our angular app,
-            'polyfills': './demo/polyfills.ts',
-            'vendor': './demo/vendor.ts',
+            'polyfills': './demo/polyfills.ts'
         },
         output: {
             path: root('dist'),
@@ -97,7 +95,7 @@ module.exports = function makeWebpackConfig() {
             // Workaround needed for angular 2 angular/angular#11580
             new webpack.ContextReplacementPlugin(
                 // The (\\|\/) piece accounts for path separators in *nix and Windows
-                /angular(\\|\/)core(\\|\/)@angular/,
+                /(.+)?angular(\\|\/)core(.+)?/,
                 root('./demo/') // location of your src
             ),
 
@@ -117,7 +115,7 @@ module.exports = function makeWebpackConfig() {
             }),
 
             new CommonsChunkPlugin({
-                names: ['vendor', 'polyfills']
+                names: ['polyfills']
             }),
 
             new HtmlWebpackPlugin({
