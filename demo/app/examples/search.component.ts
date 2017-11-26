@@ -1,4 +1,4 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -8,6 +8,7 @@ import 'rxjs/add/observable/of';
 
 @Component({
     selector: 'select-search',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <h5>Client side</h5>
         <hr>

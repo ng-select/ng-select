@@ -1,6 +1,6 @@
 import '../style/styles.scss';
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
@@ -9,7 +9,8 @@ import { Title } from '@angular/platform-browser';
 
 @Component({
     selector: 'demo-app',
-    templateUrl: './app.component.html'
+    templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
 

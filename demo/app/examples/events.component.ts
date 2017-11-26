@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 
 interface AngSelectEvent {
@@ -8,6 +8,7 @@ interface AngSelectEvent {
 
 @Component({
     selector: 'select-events',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div id="s1"></div>
         <label>Open, close, focus, blur, change events</label>

@@ -1,7 +1,8 @@
-import {Component} from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'select-bindings',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <label>Bind to default <b>label</b>, <b>object</b> bindings</label>
         ---html,true

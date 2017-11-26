@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'select-with-templates',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <label>Custom label</label>
         ---html,true

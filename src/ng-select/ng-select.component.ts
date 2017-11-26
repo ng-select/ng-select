@@ -415,10 +415,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
             if (this.isFocused) {
                 this.onInputBlur();
+                this.changeDetectorRef.markForCheck();
             }
 
             if (this.isOpen) {
                 this.close();
+                this.changeDetectorRef.markForCheck();
             }
         };
 
