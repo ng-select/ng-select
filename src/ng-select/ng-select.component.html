@@ -1,4 +1,4 @@
-<div (click)="open()" class="ng-control">
+<div (click)="searchable ? open() : toggle()" class="ng-control">
     <div class="ng-value-container">
         <div class="ng-placeholder" [hidden]="!showPlaceholder()">{{placeholder}}</div>
         <ng-template #defaultLabelTemplate let-item="item">
@@ -40,7 +40,7 @@
 
 <div class="ng-menu-outer">
     <virtual-scroll role="listbox" class="ng-menu" [disabled]="disableVirtualScroll" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
-        <div class="ng-option" role="option" (click)="toggle(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
+        <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
              *ngFor="let item of viewPortItems"
              [class.disabled]="item.disabled"
              [class.selected]="item.selected"

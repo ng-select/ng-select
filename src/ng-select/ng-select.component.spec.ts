@@ -697,6 +697,27 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual(result);
         }));
 
+        it('should toggle dropdown when searchable false', fakeAsync(() => {
+            fixture = createTestingModule(
+                NgSelectFilterTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [searchable]="false"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+            
+            const selectInput = fixture.debugElement.query(By.css('.ng-control'));
+            // open
+            selectInput.triggerEventHandler('click', { stopPropagation: () => { } });
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBe(true);
+
+            // close
+            selectInput.triggerEventHandler('click', { stopPropagation: () => { } });
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBe(false);
+        }));
+
         it('should not filter when searchable false', fakeAsync(() => {
             fixture = createTestingModule(
                 NgSelectFilterTestCmp,
