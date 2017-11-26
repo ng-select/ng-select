@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'select-tags',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <p>
             By default ng-select enables virtual scroll for more 20 items. You can turn it off by setting disableVirtualScroll to true. 

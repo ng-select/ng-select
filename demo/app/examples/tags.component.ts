@@ -1,9 +1,10 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'select-tags',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <label>Default tags</label>
         ---html,true

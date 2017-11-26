@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { NgOption } from '@ng-select/ng-select';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <label>Select multiple elements</label>
         ---html,true

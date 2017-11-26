@@ -7,6 +7,7 @@ import { DataService } from '../shared/data.service';
 
 @Component({
     selector: 'reactive-forms',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <form [formGroup]="heroForm" novalidate>
             ---html
