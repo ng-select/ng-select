@@ -62,6 +62,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() bindLabel: string;
     @Input() bindValue: string;
     @Input() clearable = true;
+    @Input() markFirst = true;
     @Input() disableVirtualScroll = false;
     @Input() placeholder: string;
     @Input() notFoundText;
@@ -205,6 +206,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
     }
 
+    // TODO: make private 
     clearModel() {
         if (!this.clearable) {
             return;
@@ -246,7 +248,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             return;
         }
         this.isOpen = true;
-        this.itemsList.markItem();
+        this.itemsList.markSelectedOrDefault(this.markFirst);
         this.scrollToMarked();
         this.focusSearchInput();
         this.openEvent.emit();
@@ -348,6 +350,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             this.typeahead.next(this.filterValue);
         } else {
             this.itemsList.filter(this.filterValue, this.bindLabel);
+            this.itemsList.markSelectedOrDefault(this.markFirst);
         }
     }
 
@@ -382,13 +385,13 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
         if (this.isTypeahead) {
             this.isLoading = false;
-            this.itemsList.markItem(this.itemsList.filteredItems[0]);
+            this.itemsList.markSelectedOrDefault(this.markFirst);
         }
     }
 
     private setItemsFromNgOptions() {
         if (!this.bindValue) {
-            this.bindValue = 'value';
+            this.bindValue = this._defaultValue;
         }
 
         const handleNgOptions = (options) => {
@@ -550,7 +553,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
 
         if (this.multiple) {
-            this.itemsList.unselectLastItem();
+            this.itemsList.unselectLast();
             this.updateModel();
         } else {
             this.clearModel();

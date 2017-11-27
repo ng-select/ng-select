@@ -362,6 +362,12 @@ describe('NgSelectComponent', function () {
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(jasmine.objectContaining(result));
             });
+
+            it('should open dropdown without marking first item', () => {
+                fixture.componentInstance.select.markFirst = false;
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(undefined);
+            });
         });
 
         describe('arrows', () => {
@@ -488,7 +494,7 @@ describe('NgSelectComponent', function () {
         });
     });
 
-    describe('document:click', () => {
+    describe('Document:click', () => {
         let fixture: ComponentFixture<NgSelectBasicTestCmp>;
 
         beforeEach(() => {
@@ -610,7 +616,7 @@ describe('NgSelectComponent', function () {
         });
     });
 
-    describe('tagging', () => {
+    describe('Tagging', () => {
         it('should select default tag', fakeAsync(() => {
             let fixture = createTestingModule(
                 NgSelectBasicTestCmp,
@@ -750,6 +756,21 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.selectedItems).toEqual([result]);
         }));
 
+        it('should not mark first item on filter when markFirst disabled', fakeAsync(() => {
+            fixture = createTestingModule(
+                NgSelectFilterTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [markFirst]="false"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            tick(200);
+            fixture.componentInstance.select.onFilter({ target: { value: 'pab' } });
+            tick(200);
+            expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(undefined)
+        }));
+
         it('should clear filterValue on selected item', fakeAsync(() => {
             fixture = createTestingModule(
                 NgSelectFilterTestCmp,
@@ -792,6 +813,16 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
                 expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({ id: 4, name: 'Bukiskes' })])
+            }));
+
+            it('should not mark first item when typeahead results are loaded', fakeAsync(() => {
+                fixture.componentInstance.select.markFirst = false;
+                fixture.componentInstance.customFilter.subscribe();
+                fixture.componentInstance.select.onFilter({ target: { value: 'buk' } });
+                fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+                expect(fixture.componentInstance.select.selectedItems).toEqual([])
             }));
 
             it('should start and stop loading indicator', fakeAsync(() => {
