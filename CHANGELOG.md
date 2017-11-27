@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.10.0"></a>
+# [0.10.0](https://github.com/ng-select/ng-select/compare/v0.9.0...v0.10.0) (2017-11-27)
+
+
+### Features
+
+* allow to configure marking first item ([#145](https://github.com/ng-select/ng-select/issues/145)) ([9cce98a](https://github.com/ng-select/ng-select/commit/9cce98a)), closes [#103](https://github.com/ng-select/ng-select/issues/103)
+
+
+
 <a name="0.9.0"></a>
 # [0.9.0](https://github.com/ng-select/ng-select/compare/v0.8.0...v0.9.0) (2017-11-26)
 
