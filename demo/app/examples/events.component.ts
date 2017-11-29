@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { DataService } from '../shared/data.service';
 
 
 interface AngSelectEvent {
@@ -10,18 +11,20 @@ interface AngSelectEvent {
     selector: 'select-events',
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <div id="s1"></div>
-        <label>Open, close, focus, blur, change events</label>
         ---html,true
-        <ng-select snippet="s1"
-                   [items]="cities"
-                   [(ngModel)]="selectedCity"
+        <ng-select placeholder="Select some items"
+                   [items]="items"
+                   [(ngModel)]="selectedItems"
                    bindLabel="name"
                    bindValue="id"
+                   [multiple]="true"
                    (open)="onOpen()"
                    (close)="onClose()"
                    (focus)="onFocus($event)"
                    (blur)="onBlur($event)"
+                   (clear)="onClear()"
+                   (add)="onAdd($event)"
+                   (remove)="onRemove($event)"
                    (change)="onChange($event)">
         </ng-select>
         ---
@@ -41,14 +44,16 @@ interface AngSelectEvent {
 })
 export class SelectEventsComponent {
 
-    selectedCity: any;
-    cities = [
-        {id: 1, name: 'Vilnius'},
-        {id: 2, name: 'Kaunas'},
-        {id: 3, name: 'Pavilnys', disabled: true}
-    ];
+    selectedItems: any;
+    items = [];
 
     events: AngSelectEvent[] = [];
+
+    constructor(private dataService: DataService) {
+        this.dataService.getPeople().subscribe(items => {
+            this.items = items;
+        });
+    }
 
     onChange($event) {
         this.events.push({name: '(change)', value: $event});
@@ -68,6 +73,18 @@ export class SelectEventsComponent {
 
     onClose() {
         this.events.push({name: '(close)', value: null});
+    }
+
+    onAdd($event) {
+        this.events.push({name: '(add)', value: $event});
+    }
+
+    onRemove($event) {
+        this.events.push({name: '(remove)', value: $event});
+    }
+
+    onClear() {
+        this.events.push({name: '(clear)', value: null});
     }
 }
 

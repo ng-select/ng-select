@@ -89,6 +89,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Output('open') openEvent = new EventEmitter();
     @Output('close') closeEvent = new EventEmitter();
     @Output('search') searchEvent = new EventEmitter();
+    @Output('clear') clearEvent = new EventEmitter();
+    @Output('add') addEvent = new EventEmitter();
+    @Output('remove') removeEvent = new EventEmitter();
 
     @HostBinding('class.ng-single')
     get single() {
@@ -204,6 +207,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (this.isTypeahead) {
             this.typeahead.next(null);
         }
+        this.clearEvent.emit();
     }
 
     // TODO: make private 
@@ -280,6 +284,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             this.itemsList.select(item);
             this.clearSearch();
             this.updateModel();
+            this.addEvent.emit(item);
         }
 
         if (this.single) {
@@ -290,6 +295,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     unselect(item: NgOption) {
         this.itemsList.unselect(item);
         this.updateModel();
+        this.removeEvent.emit(item);
     }
 
     selectTag() {

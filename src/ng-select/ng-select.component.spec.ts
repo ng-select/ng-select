@@ -907,6 +907,61 @@ describe('NgSelectComponent', function () {
 
             expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
         }));
+
+        it('fire add when item is added', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectEventsTestCmp,
+                `<ng-select [items]="cities"
+                            (add)="onAdd($event)"
+                            [multiple]="true"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            spyOn(fixture.componentInstance, 'onAdd');
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.select(fixture.componentInstance.cities[0]);
+
+            expect(fixture.componentInstance.onAdd).toHaveBeenCalledWith(fixture.componentInstance.cities[0]);
+        }));
+
+        it('fire remove when item is removed', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectEventsTestCmp,
+                `<ng-select [items]="cities"
+                            (remove)="onRemove($event)"
+                            [multiple]="true"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            spyOn(fixture.componentInstance, 'onRemove');
+
+            fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.select.unselect(fixture.componentInstance.cities[0]);
+
+            expect(fixture.componentInstance.onRemove).toHaveBeenCalledWith(fixture.componentInstance.cities[0]);
+        }));
+
+        it('fire clear when model is cleared using clear icon', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectEventsTestCmp,
+                `<ng-select [items]="cities"
+                            (clear)="onClear($event)"
+                            [multiple]="true"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            spyOn(fixture.componentInstance, 'onClear');
+
+            fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.handleClearClick(<any>{ stopPropagation: () => { } });
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.onClear).toHaveBeenCalled();
+        }));
     });
 
     describe('Clear icon click', () => {
@@ -1187,6 +1242,7 @@ class NgSelectFilterTestCmp {
 class NgSelectEventsTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
+    selectedCities: Array<{ id: number; name: string }>;
     cities = [
         { id: 1, name: 'Vilnius' },
         { id: 2, name: 'Kaunas' },
@@ -1207,4 +1263,12 @@ class NgSelectEventsTestCmp {
 
     onClose() {
     }
+
+    onAdd() {
+    }
+
+    onRemove() {
+    }
+
+    onClear() {}
 }
