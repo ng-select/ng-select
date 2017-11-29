@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.11.0"></a>
+# [0.11.0](https://github.com/ng-select/ng-select/compare/v0.10.0...v0.11.0) (2017-11-29)
+
+
+### Features
+
+* add add, remove, clear events ([#150](https://github.com/ng-select/ng-select/issues/150)) ([c67c17d](https://github.com/ng-select/ng-select/commit/c67c17d))
+
+
+
 <a name="0.10.0"></a>
 # [0.10.0](https://github.com/ng-select/ng-select/compare/v0.9.0...v0.10.0) (2017-11-27)
 
