@@ -15,6 +15,7 @@ import { ReactiveFormsComponent } from './examples/reactive-forms.component';
 import { SelectEventsComponent } from './examples/events.component';
 import { SelectMultiComponent } from './examples/multi.component';
 import { SelectTagsComponent } from './examples/tags.component';
+import { DropdownPositionsComponent } from './examples/dropdown-positions.component';
 
 import { LayoutHeaderComponent } from './layout/header.component';
 import { LayoutSidenavComponent } from './layout/sidenav-component';
@@ -35,6 +36,7 @@ const appRoutes: Routes = [
     { path: 'multiselect', component: SelectMultiComponent, data: { title: 'Multiselect'} },
     { path: 'events', component: SelectEventsComponent, data: { title: 'Output events'} },
     { path: 'virtual-scroll', component: VirtualScrollComponent, data: { title: 'Virtual scroll'} },
+    { path: 'dropdown-position', component: DropdownPositionsComponent, data: { title: 'Dropdown position'} },
 ];
 
 @NgModule({
@@ -67,6 +69,7 @@ const appRoutes: Routes = [
         SelectTagsComponent,
         LayoutHeaderComponent,
         LayoutSidenavComponent,
+        DropdownPositionsComponent,
         VirtualScrollComponent
     ],
     bootstrap: [AppComponent]

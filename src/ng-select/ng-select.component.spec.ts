@@ -520,6 +520,31 @@ describe('NgSelectComponent', function () {
         });
     });
 
+    describe('Dropdown position', () => {
+        let fixture: ComponentFixture<NgSelectBasicTestCmp>
+
+        beforeEach(() => {
+            fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select id="select"></ng-select>`);
+        });
+
+        it('should be set to `below` by default', () => {
+            const classes = fixture.debugElement.query(By.css('ng-select')).classes;
+            expect(classes.below).toBeTruthy();
+            expect(classes.above).toBeFalsy();
+        });
+
+        it('should allow changing dropdown position', () => {
+            fixture.componentInstance.select.dropdownPosition = 'above';
+            fixture.detectChanges();
+
+            const classes = fixture.debugElement.query(By.css('ng-select')).classes;
+            expect(classes.below).toBeFalsy();
+            expect(classes.above).toBeTruthy();
+        });
+    });
+
     describe('Custom templates', () => {
         it('should display custom header template', async(() => {
             const fixture = createTestingModule(
