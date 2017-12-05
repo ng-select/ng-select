@@ -45,7 +45,9 @@ const NG_SELECT_VALUE_ACCESSOR = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'role': 'dropdown',
-        'class': 'ng-select'
+        'class': 'ng-select',
+        '[class.above]': 'dropdownPosition === "above"',
+        '[class.below]': 'dropdownPosition === "below"',
     }
 })
 export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
@@ -69,6 +71,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() typeToSearchText;
     @Input() addTagText;
     @Input() loadingText;
+    @Input() dropdownPosition: 'below' | 'above' = 'below';
 
     @Input()
     @HostBinding('class.typeahead') typeahead: Subject<string>;
