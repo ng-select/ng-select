@@ -71,6 +71,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() typeToSearchText;
     @Input() addTagText;
     @Input() loadingText;
+    @Input() clearAllText;
     @Input() dropdownPosition: 'below' | 'above' = 'below';
 
     @Input()
@@ -621,6 +622,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.typeToSearchText = this.typeToSearchText || config.typeToSearchText;
         this.addTagText = this.addTagText || config.addTagText;
         this.loadingText = this.loadingText || config.loadingText;
+        this.clearAllText = this.clearAllText || config.clearAllText;
         this.disableVirtualScroll = this.disableVirtualScroll || config.disableVirtualScroll;
     }
 }

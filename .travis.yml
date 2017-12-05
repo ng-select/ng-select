@@ -16,6 +16,7 @@ addons:
     packages:
     - google-chrome-stable
 before_install:
+- if [ $TRAVIS_BRANCH = 'master' ]; openssl aes-256-cbc -K $encrypted_100b62b33cf9_key -iv $encrypted_100b62b33cf9_iv -in travis_rsa.enc -out travis_rsa -d; fi
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
 - export CHROME_BIN=chromium-browser
@@ -25,6 +26,7 @@ script:
 - npm run-script coveralls
 - yarn run integration
 - yarn run build:demo
+- if [ $TRAVIS_BRANCH = 'master' ]; node_modules/.bin/gh-pages-travis; fi
 
 env:
   global:

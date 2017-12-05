@@ -23,5 +23,6 @@ export class NgSelectConfig {
     typeToSearchText? = 'Type to search';
     addTagText? = 'Add item';
     loadingText? = 'Loading...';
+    clearAllText = 'Clear all';
     disableVirtualScroll? = false;
 }

@@ -29,7 +29,7 @@
 
     <spinner class="ng-spinner-zone" *ngIf="isLoading"></spinner>
 
-    <span *ngIf="showClear()" (click)="handleClearClick($event)" class="ng-clear-zone" title="Clear all" aria-label="Clear all">
+    <span *ngIf="showClear()" (click)="handleClearClick($event)" class="ng-clear-zone" title="{{clearAllText}}">
         <span class="ng-clear" aria-hidden="true">×</span>
     </span>
 

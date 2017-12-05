@@ -104,6 +104,7 @@ map: {
 | placeholder | string | `-` | no | Placeholder text. |
 | notFoundText | string | `No items found` | no | Set custom text when filter returns empty result |
 | typeToSearchText | string | `Type to search` | no | Set custom text when using Typeahead |
+| clearAllText | string | `Clear all` | no | Set custom text for clear all icon title |
 | addTagText | string | `Add item` | no | Set custom text when using tagging |
 | [typeahead] | Subject |  `-` | no | Custom autocomplete or filter. |
 | [disableVirtualScroll] | boolean |  false | no | Disable virtual scroll |

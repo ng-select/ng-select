@@ -63,6 +63,7 @@ import { DataService } from '../shared/data.service';
                            bindValue="id"
                            [multiple]="true"
                            placeholder="Select cities"
+                           clearAllText="Clear"
                            formControlName="selectedCitiesIds">
                 </ng-select>
                 ---
