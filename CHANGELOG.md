@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.12.0"></a>
+# [0.12.0](https://github.com/ng-select/ng-select/compare/v0.11.0...v0.12.0) (2017-12-05)
+
+
+### Bug Fixes
+
+* add clear all text Input ([#155](https://github.com/ng-select/ng-select/issues/155)) ([8609fe5](https://github.com/ng-select/ng-select/commit/8609fe5))
+
+
+### Features
+
+* Allow to change dropdown positioning. ([#154](https://github.com/ng-select/ng-select/issues/154)) ([1e4d521](https://github.com/ng-select/ng-select/commit/1e4d521))
+
+
+
 <a name="0.11.0"></a>
 # [0.11.0](https://github.com/ng-select/ng-select/compare/v0.10.0...v0.11.0) (2017-11-29)
 
