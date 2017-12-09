@@ -29,7 +29,7 @@ import { Component } from '@angular/core';
                 <a class="nav-link" routerLink="/events" routerLinkActive="active">Output events</a>
             </li>
             <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/dropdown-position">Dropdown position</a>
+                <a class="nav-link" routerLink="/dropdown-position" routerLinkActive="active">Dropdown position</a>
             </li>
         </ul>
     `
