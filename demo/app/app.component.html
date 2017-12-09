@@ -1,13 +1,21 @@
 <layout-header [version]="version"></layout-header>
-<div class="container-fluid fill">
-    <div class="row flex-xl-nowrap fill">
-        <div class="col-12 col-md-3 col-xl-2 bd-sidebar">
+<div class="container">
+    <div class="row">
+        <div class="d-flex align-items-center col-md-5 py-md-4 pl-md-4">
+            <img height="70px" src="https://angular.io/assets/images/logos/angular/angular.svg" width="70px">
+            <h1 class="">Ng-select</h1>
+        </div>
+    </div>
+</div>
+<div class="container fill">
+    <div class="row">
+        <div class="col-12 col-md-3 col-xl-3 py-md-4 bd-sidebar">
             <layout-sidenav></layout-sidenav>
         </div>
-        <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content">
-            <h1 class="bd-title">
+        <main class="col-12 col-md-9 col-xl-8 py-md-4 pl-md-4 bd-content">
+            <h2 class="bd-title">
                 {{title}}
-            </h1>
+            </h2>
             <div class="card">
                 <div class="card-body">
                     <router-outlet></router-outlet>

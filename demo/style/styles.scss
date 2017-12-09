@@ -3,18 +3,20 @@
 @import "custom";
 @import "sidebar";
 @import "content";
-
 body {
-    background-color: #e9ebee;
+    position: relative;
 }
 
-
-html, body, demo-app {
-    height:100%;
+html,
+body,
+demo-app {
+    height: 100%;
 }
 
-demo-app, layout-header, layout-sidenav {
-    display:block;
+demo-app,
+layout-header,
+layout-sidenav {
+    display: block;
 }
 
 .fill {
@@ -25,7 +27,6 @@ demo-app, layout-header, layout-sidenav {
     label {
         margin-bottom: 5px;
     }
-
     p {
         margin: 10px 0 20px 0;
     }
