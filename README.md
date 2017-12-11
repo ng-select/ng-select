@@ -108,7 +108,7 @@ map: {
 | addTagText | string | `Add item` | no | Set custom text when using tagging |
 | [typeahead] | Subject |  `-` | no | Custom autocomplete or filter. |
 | [disableVirtualScroll] | boolean |  false | no | Disable virtual scroll |
-| [dropdownPosition] | `'below' | 'above'` |  `'below'` | no | Set the dropdown position on open |
+| [dropdownPosition] | `'below' \| 'above'` |  `'below'` | no | Set the dropdown position on open |
 
 | Output  | Description |
 | ------------- | ------------- |
