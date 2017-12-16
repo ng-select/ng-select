@@ -14,10 +14,10 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
             Selected city object: {{selectedCity2 | json}}
         </p>
         <hr>
-        <label>Bind label to custom property</label>
+        <label>Bind label to nested custom property</label>
         ---html,true
-        <ng-select [items]="cities"
-                   bindLabel="name"
+        <ng-select [items]="countries"
+                   bindLabel="description.name"
                    placeholder="Select value"
                    [clearable]="false"
                    [(ngModel)]="selectedCity">
@@ -43,15 +43,21 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 export class SelectBindingsComponent {
 
     defaultBindingsList = [
-        {value: 1, label: 'Vilnius'},
-        {value: 2, label: 'Kaunas'},
-        {value: 3, label: 'Pavilnys', disabled: true}
+        { value: 1, label: 'Vilnius' },
+        { value: 2, label: 'Kaunas' },
+        { value: 3, label: 'Pavilnys', disabled: true }
     ];
 
     cities = [
-        {id: 1, name: 'Vilnius'},
-        {id: 2, name: 'Kaunas'},
-        {id: 3, name: 'Pavilnys', disabled: true}
+        { id: 1, name: 'Vilnius' },
+        { id: 2, name: 'Kaunas' },
+        { id: 3, name: 'Pavilnys', disabled: true }
+    ];
+
+    countries = [
+        { id: 1, description: { name: 'Lithuania' } },
+        { id: 2, description: { name: 'USA' } },
+        { id: 3, description: { name: 'Australia' } }
     ];
 
     selectedCity: any;

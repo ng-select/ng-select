@@ -50,9 +50,9 @@ export class ItemsList {
         if (bindValue) {
             return this.items.find(item => item.value[bindValue] === value);
         }
-        const index = this.items.indexOf(value);
+        const index = this.items.findIndex(x => x.value === value);
         return index > -1 ? this.items[index] :
-            this.items.find(item => item.label === value[this._bindLabel])
+            this.items.find(item => item.label === this.resolveNested(value, this._bindLabel))
     }
 
     unselect(item: NgOption) {
@@ -72,7 +72,7 @@ export class ItemsList {
     addItem(item: any) {
         const option = {
             index: this.items.length,
-            label: item[this._bindLabel],
+            label: this.resolveNested(item, this._bindLabel),
             value: item
         }
         this.items.push(option);
@@ -162,10 +162,26 @@ export class ItemsList {
 
             return {
                 index: index,
-                label: option[this._bindLabel],
+                label: this.resolveNested(option, this._bindLabel),
                 value: option,
                 disabled: !!option.disabled,
             };
         })
+    }
+
+    resolveNested(option: any, key: string): any {
+        if (key.indexOf('.') === -1) {
+            return option[key];
+        } else {
+            let keys: string[] = key.split('.');
+            let value = option;
+            for (let i = 0, len = keys.length; i < len; ++i) {
+                if (value == null) {
+                    return null;
+                }
+                value = value[keys[i]];
+            }
+            return value;
+        }
     }
 }

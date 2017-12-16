@@ -197,7 +197,29 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
                 value: fixture.componentInstance.cities[1]
             })]);
-            discardPeriodicTasks();
+        }));
+
+        it('bind to nested label property', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectCustomBindingsTestCmp,
+                `<ng-select [items]="countries"
+                            bindLabel="description.name"
+                            [(ngModel)]="country">
+                </ng-select>`);
+
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+            fixture.detectChanges();
+            expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
+                label: 'USA',
+                value: fixture.componentInstance.countries[1]
+            })]);
+
+            fixture.componentInstance.country = fixture.componentInstance.countries[0];
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
+                label: 'Lithuania',
+                value: fixture.componentInstance.countries[0]
+            })]);
         }));
 
         it('bind to simple array', fakeAsync(() => {
@@ -1268,11 +1290,16 @@ class NgSelectSelectedObjectByRefCmp {
 class NgSelectCustomBindingsTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCityId: number;
+    country: any;
     cities = [
         { id: 1, name: 'Vilnius' },
         { id: 2, name: 'Kaunas' },
-        { id: 3, name: 'Pabrade' },
-        { id: 4, name: 'Klaipėda' },
+        { id: 3, name: 'Pabrade' }
+    ];
+    countries = [
+        { id: 1, description: { name: 'Lithuania' } },
+        { id: 2, description: { name: 'USA' } },
+        { id: 3, description: { name: 'Australia' } }
     ];
 }
 
