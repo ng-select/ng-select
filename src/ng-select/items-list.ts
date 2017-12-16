@@ -10,6 +10,7 @@ export class ItemsList {
     private _selected: NgOption[] = [];
     private _multiple = false;
     private _simple = false;
+    private _bindLabel: string;
 
     get value(): NgOption[] {
         return this._selected;
@@ -19,8 +20,9 @@ export class ItemsList {
         return this.filteredItems[this._markedIndex];
     }
 
-    setItems(items: NgOption[], simple: boolean = false) {
+    setItems(items: NgOption[], bindLabel: string, simple: boolean = false) {
         this._simple = simple;
+        this._bindLabel = bindLabel;
         this.items = this.mapItems(items);
         this.filteredItems = [...this.items];
     }
@@ -41,16 +43,16 @@ export class ItemsList {
         item.selected = true;
     }
 
-    findItem(value, bindValue: string, bindLabel: string): NgOption {
+    findItem(value, bindValue: string): NgOption {
         if (!value) {
             return null;
         }
         if (bindValue) {
-            return this.items.find(x => x[bindValue] === value);
+            return this.items.find(item => item.value[bindValue] === value);
         }
         const index = this.items.indexOf(value);
         return index > -1 ? this.items[index] :
-            this.items.find(x => x[bindLabel] === value[bindLabel])
+            this.items.find(item => item.label === value[this._bindLabel])
     }
 
     unselect(item: NgOption) {
@@ -67,10 +69,15 @@ export class ItemsList {
         this._selected.splice(this._selected.length - 1, 1);
     }
 
-    addItem(item: NgOption) {
-        item.index = this.items.length;
-        this.items.push(item);
-        this.filteredItems.push(item);
+    addItem(item: any) {
+        const option = {
+            index: this.items.length,
+            label: item[this._bindLabel],
+            value: item
+        }
+        this.items.push(option);
+        this.filteredItems.push(option);
+        return option;
     }
 
     clearSelected() {
@@ -81,8 +88,8 @@ export class ItemsList {
         this._selected = [];
     }
 
-    filter(term: string, bindLabel: string) {
-        const filterFuncVal = this.getDefaultFilterFunc(term, bindLabel);
+    filter(term: string) {
+        const filterFuncVal = this.getDefaultFilterFunc(term);
         this.filteredItems = term ? this.items.filter(val => filterFuncVal(val)) : this.items;
     }
 
@@ -132,9 +139,9 @@ export class ItemsList {
         }
     }
 
-    private getDefaultFilterFunc(term, bindLabel: string) {
-        return (val: NgOption) => {
-            return searchHelper.stripSpecialChars(val[bindLabel] || '')
+    private getDefaultFilterFunc(term) {
+        return (option: NgOption) => {
+            return searchHelper.stripSpecialChars(option.label || '')
                 .toUpperCase()
                 .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
         };
@@ -155,7 +162,9 @@ export class ItemsList {
 
             return {
                 index: index,
-                ...option
+                label: option[this._bindLabel],
+                value: option,
+                disabled: !!option.disabled,
             };
         })
     }
