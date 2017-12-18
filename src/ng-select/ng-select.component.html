@@ -1,17 +1,19 @@
 <div (click)="searchable ? open() : toggle()" class="ng-control">
     <div class="ng-value-container">
         <div class="ng-placeholder" [hidden]="!showPlaceholder()">{{placeholder}}</div>
-        <ng-template #defaultLabelTemplate let-item="item">
-            <div class="ng-value-wrapper default" [class.disabled]="item.disabled">
-                <span class="ng-value-icon left" (click)="unselect(item); $event.stopPropagation()" aria-hidden="true">×</span>
-                <span class="ng-value-label" [innerHTML]="item[bindLabel]"></span>
-            </div>
-        </ng-template>
-
+        
         <div class="ng-value" *ngFor="let item of selectedItems">
+            
+            <ng-template #defaultLabelTemplate>
+                <div class="ng-value-wrapper default" [class.disabled]="item.disabled">
+                    <span class="ng-value-icon left" (click)="unselect(item); $event.stopPropagation()" aria-hidden="true">×</span>
+                    <span class="ng-value-label" [innerHTML]="item.label"></span>
+                </div>
+            </ng-template>
+
             <ng-template
                 [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
-                [ngTemplateOutletContext]="{ item: item, clear: clearItem }">
+                [ngTemplateOutletContext]="{ item: item.value, clear: clearItem }">
             </ng-template>
         </div>
 
@@ -47,12 +49,12 @@
              [class.marked]="item === itemsList.markedItem">
 
             <ng-template #defaultOptionTemplate>
-                <span class="ng-option-label" [innerHTML]="item[bindLabel]"></span>
+                <span class="ng-option-label" [innerHTML]="item.label"></span>
             </ng-template>
 
             <ng-template
                 [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate"
-                [ngTemplateOutletContext]="{ item: item, index: item.index }">
+                [ngTemplateOutletContext]="{ item: item.value, index: item.index }">
             </ng-template>
         </div>
 

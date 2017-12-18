@@ -5,7 +5,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <p>
-            By default the dropdown is displayed below the ng-select. You can change the default position by setting dropdownPosition to above or below.
+            By default the dropdown is displayed below the ng-select. 
+            You can change the default position by setting dropdownPosition to above or below.
         </p>
 
         ---html,true

@@ -14,15 +14,15 @@ describe('ng-select', () => {
   });
 
   it('should open dropdown on click', () => {
-    select.element(by.css('.as-control')).click();
+    select.element(by.css('.ng-control')).click();
 
     expect(select.getAttribute('class')).toMatch('opened');
   });
 
   it('should select value and close dropdown', async () => {
-    select.element(by.css('.as-control')).click();
+    select.element(by.css('.ng-control')).click();
 
-    select.all(by.css('.as-option')).first().click();
+    select.all(by.css('.ng-option')).first().click();
 
     expect(select.getAttribute('class')).not.toMatch('opened');
     const text = await element(by.id('ngModel')).getText();

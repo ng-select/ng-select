@@ -5,7 +5,7 @@ export interface NgOption {
     disabled?: boolean;
     marked?: boolean;
     label?: string;
-    value?: string;
+    value?: string | Object;
 }
 
 export enum KeyCode {
@@ -19,10 +19,10 @@ export enum KeyCode {
 }
 
 export class NgSelectConfig {
-    notFoundText? = 'No items found';
-    typeToSearchText? = 'Type to search';
-    addTagText? = 'Add item';
-    loadingText? = 'Loading...';
+    notFoundText?= 'No items found';
+    typeToSearchText?= 'Type to search';
+    addTagText?= 'Add item';
+    loadingText?= 'Loading...';
     clearAllText = 'Clear all';
-    disableVirtualScroll? = false;
+    disableVirtualScroll?= false;
 }
