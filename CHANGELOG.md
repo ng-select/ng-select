@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.13.0"></a>
+# [0.13.0](https://github.com/ng-select/ng-select/compare/v0.12.0...v0.13.0) (2017-12-18)
+
+
+### Bug Fixes
+
+* separate extraneous properties with object values closes [#165](https://github.com/ng-select/ng-select/issues/165) ([ff8981c](https://github.com/ng-select/ng-select/commit/ff8981c))
+
+
+### Features
+
+* **bindLabel:** support nested expression closes [#159](https://github.com/ng-select/ng-select/issues/159) ([b803744](https://github.com/ng-select/ng-select/commit/b803744))
+
+
+
 <a name="0.12.0"></a>
 # [0.12.0](https://github.com/ng-select/ng-select/compare/v0.11.0...v0.12.0) (2017-12-05)
 
