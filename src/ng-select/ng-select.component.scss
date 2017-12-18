@@ -39,7 +39,7 @@ $color-selected: #f5faff;
                 border-color: transparent transparent #666;
             }
         }
-        &.below {
+        &.bottom {
             .ng-menu-outer {
                 top: 100%;
                 border-bottom-right-radius: 4px;
@@ -52,7 +52,7 @@ $color-selected: #f5faff;
                 border-bottom-left-radius: 0;
             }
         }
-        &.above {
+        &.top {
             .ng-menu-outer {
                 bottom: 100%;
                 border-top-right-radius: 4px;

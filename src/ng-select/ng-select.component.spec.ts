@@ -591,19 +591,19 @@ describe('NgSelectComponent', function () {
                 `<ng-select id="select"></ng-select>`);
         });
 
-        it('should be set to `below` by default', () => {
+        it('should be set to `bottom` by default', () => {
             const classes = fixture.debugElement.query(By.css('ng-select')).classes;
-            expect(classes.below).toBeTruthy();
-            expect(classes.above).toBeFalsy();
+            expect(classes.bottom).toBeTruthy();
+            expect(classes.top).toBeFalsy();
         });
 
         it('should allow changing dropdown position', () => {
-            fixture.componentInstance.select.dropdownPosition = 'above';
+            fixture.componentInstance.select.dropdownPosition = 'top';
             fixture.detectChanges();
 
             const classes = fixture.debugElement.query(By.css('ng-select')).classes;
-            expect(classes.below).toBeFalsy();
-            expect(classes.above).toBeTruthy();
+            expect(classes.bottom).toBeFalsy();
+            expect(classes.top).toBeTruthy();
         });
     });
 

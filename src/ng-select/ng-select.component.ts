@@ -46,8 +46,8 @@ const NG_SELECT_VALUE_ACCESSOR = {
     host: {
         'role': 'dropdown',
         'class': 'ng-select',
-        '[class.above]': 'dropdownPosition === "above"',
-        '[class.below]': 'dropdownPosition === "below"',
+        '[class.top]': 'dropdownPosition === "top"',
+        '[class.bottom]': 'dropdownPosition === "bottom"',
     }
 })
 export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
@@ -56,6 +56,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
 
     @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
+    @ViewChild('dropdownPanel') dropdownPanel: ElementRef;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
     @ViewChild('filterInput') filterInput;
 
@@ -72,7 +73,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() addTagText;
     @Input() loadingText;
     @Input() clearAllText;
-    @Input() dropdownPosition: 'below' | 'above' = 'below';
+    @Input() dropdownPosition: 'bottom' | 'top' = 'bottom';
+    @Input() appendTo;
 
     @Input()
     @HostBinding('class.typeahead') typeahead: Subject<string>;
@@ -154,6 +156,15 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     ngAfterViewInit() {
         if (this.ngOptions.length > 0 && this.items.length === 0) {
             this.setItemsFromNgOptions();
+        }
+
+        if (this.appendTo) {
+            if (this.appendTo === 'body') {
+                document.body.appendChild(this.dropdownPanel.nativeElement);
+            } {
+                // append child
+            }
+                
         }
     }
 
