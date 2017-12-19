@@ -32,7 +32,7 @@ import { Component } from '@angular/core';
                 <a class="nav-link" routerLink="/dropdown-position" routerLinkActive="active">Dropdown position</a>
             </li>
             <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/append-to-child" routerLinkActive="active">Append to child</a>
+                <a class="nav-link" routerLink="/append-to" routerLinkActive="active">Append to</a>
             </li>
         </ul>
     `

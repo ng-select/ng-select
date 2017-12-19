@@ -28,6 +28,9 @@ import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/operator/debounceTime';
 import { NgOptionComponent } from './ng-option.component';
 
 const NG_SELECT_VALUE_ACCESSOR = {
@@ -122,6 +125,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private onChange = (_: NgOption) => { };
     private onTouched = () => { };
     private disposeDocumentClickListener = () => { };
+    private disposeDocumentResizeListener = () => { };
 
     clearItem = (item) => this.unselect(item);
 
@@ -159,30 +163,17 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
 
         if (this.appendTo) {
-            if (this.appendTo === 'body') {
-
-                const el: HTMLElement = this.elementRef.nativeElement;
-
-                const bodyRect = document.body.getBoundingClientRect(),
-                    elemRect = el.getBoundingClientRect(),
-                    offsetTop = elemRect.top - bodyRect.top,
-                    offsetLeft = elemRect.left - bodyRect.left;
-
-                const dropdown: HTMLElement = this.dropdownPanel.nativeElement;
-                dropdown.style.top = offsetTop + elemRect.height + 'px';
-                dropdown.style.left = offsetLeft + 'px';
-                dropdown.style.width = elemRect.width + 'px';
-                document.body.appendChild(dropdown);
-            } {
-                // append child
-            }
-
+            this.handleAppendToChild();
         }
     }
 
     ngOnDestroy() {
         this.changeDetectorRef.detach();
         this.disposeDocumentClickListener();
+        this.disposeDocumentResizeListener();
+        if (this.appendTo) {
+            this.elementRef.nativeElement.appendChild(this.dropdownPanel.nativeElement);
+        }
     }
 
     @HostListener('keydown', ['$event'])
@@ -282,6 +273,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.scrollToMarked();
         this.focusSearchInput();
         this.openEvent.emit();
+        if (this.appendTo) {
+            this.updateDropdownPosition();
+        }
     }
 
     close() {
@@ -469,6 +463,43 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         };
 
         this.disposeDocumentClickListener = this.renderer.listen('document', 'click', handler);
+    }
+
+    private handleDocumentResize() {
+        const handler = ($event) => {
+            if (this.appendTo && this.isOpen) {
+                this.updateDropdownPosition();
+            }
+        };
+
+        this.disposeDocumentResizeListener = this.renderer.listen('window', 'resize', handler);
+    }
+
+    private handleAppendToChild() {
+        this.handleDocumentResize();
+        if (this.appendTo === 'body') {
+            setTimeout(() => {
+                this.updateDropdownPosition();
+                document.body.appendChild(this.dropdownPanel.nativeElement);
+            });
+        } else {
+            setTimeout(() => {
+                const parent: HTMLElement = document.querySelector(this.appendTo);
+                parent.appendChild(this.dropdownPanel.nativeElement);
+            });
+        }
+    }
+
+    private updateDropdownPosition() {
+        const select: HTMLElement = this.elementRef.nativeElement;
+        const dropdownPanel: HTMLElement = this.dropdownPanel.nativeElement;
+        const bodyRect = document.body.getBoundingClientRect();
+        const selectRect = select.getBoundingClientRect();
+        const offsetTop = selectRect.top - bodyRect.top;
+        const offsetLeft = selectRect.left - bodyRect.left;
+        dropdownPanel.style.top = offsetTop + selectRect.height + 'px';
+        dropdownPanel.style.left = offsetLeft + 'px';
+        dropdownPanel.style.width = selectRect.width + 'px';
     }
 
     private validateWriteValue(value: any) {
