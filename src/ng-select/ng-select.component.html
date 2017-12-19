@@ -40,7 +40,7 @@
     </span>
 </div>
 
-<div class="ng-menu-outer" [class.top]="dropdownPosition === 'top'" [ngStyle]="{'visibility': isOpen ? 'visible': 'hidden'}" #dropdownPanel>
+<div class="ng-menu-outer" [class.top]="dropdownPosition === 'top'" [class.bottom]="dropdownPosition === 'bottom'" [ngStyle]="{'visibility': isOpen ? 'visible': 'hidden'}" #dropdownPanel>
     <virtual-scroll role="listbox" class="ng-menu" [disabled]="disableVirtualScroll" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
         <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
              *ngFor="let item of viewPortItems"

@@ -6,7 +6,7 @@ import { DataService } from '../shared/data.service';
     template: `
        <p>By default ng-select appends dropdown to it's child, but you can append dropdown to any element using <b>appendTo</b> input.</p>
 
-       <p>This is how it looks if you place ng-select to container with fixed height and hidden overflow</p>
+       <p>If you place ng-select to container with fixed height and hidden overflow then dropdown will not be fully visible.</p>
         ---html,true
         <div class="overflow-box">
             <ng-select [items]="people | async"

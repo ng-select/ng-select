@@ -478,15 +478,14 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private handleAppendToChild() {
         this.handleDocumentResize();
         if (this.appendTo === 'body') {
-            setTimeout(() => {
-                this.updateDropdownPosition();
-                document.body.appendChild(this.dropdownPanel.nativeElement);
-            });
+            this.updateDropdownPosition();
+            document.body.appendChild(this.dropdownPanel.nativeElement);
         } else {
-            setTimeout(() => {
-                const parent: HTMLElement = document.querySelector(this.appendTo);
-                parent.appendChild(this.dropdownPanel.nativeElement);
-            });
+            const parent: HTMLElement = document.querySelector(this.appendTo);
+            if (!parent) {
+                throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`)
+            }
+            parent.appendChild(this.dropdownPanel.nativeElement);
         }
     }
 
