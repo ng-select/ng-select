@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.14.1"></a>
+## [0.14.1](https://github.com/ng-select/ng-select/compare/v0.14.0...v0.14.1) (2017-12-20)
+
+
+### Bug Fixes
+
+* export missing function for aot ([#171](https://github.com/ng-select/ng-select/issues/171)) ([ffabe34](https://github.com/ng-select/ng-select/commit/ffabe34))
+
+
+
 <a name="0.14.0"></a>
 # [0.14.0](https://github.com/ng-select/ng-select/compare/v0.13.0...v0.14.0) (2017-12-20)
 
