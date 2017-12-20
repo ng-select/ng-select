@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.14.0"></a>
+# [0.14.0](https://github.com/ng-select/ng-select/compare/v0.13.0...v0.14.0) (2017-12-20)
+
+
+### Features
+
+* allow append dropdown to element like body ([#170](https://github.com/ng-select/ng-select/issues/170)) ([d50552f](https://github.com/ng-select/ng-select/commit/d50552f))
+
+
+
 <a name="0.13.0"></a>
 # [0.13.0](https://github.com/ng-select/ng-select/compare/v0.12.0...v0.13.0) (2017-12-18)
 
