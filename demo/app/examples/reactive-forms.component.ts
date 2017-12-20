@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgOption } from '@ng-select/ng-select';
-import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataService } from '../shared/data.service';
 
@@ -176,7 +175,7 @@ export class ReactiveFormsComponent {
     allAlbums = [];
     photos = [];
 
-    constructor(private fb: FormBuilder, private http: HttpClient, private modalService: NgbModal, private dataService: DataService) {
+    constructor(private fb: FormBuilder, private modalService: NgbModal, private dataService: DataService) {
     }
 
     ngOnInit() {

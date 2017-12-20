@@ -136,8 +136,8 @@ module.exports = function makeWebpackConfig() {
         devServer: {
             contentBase: './demo',
             historyApiFallback: true,
-            quiet: true,
-            stats: 'normal' // none (or false), errors-only, minimal, normal (or true) and verbose
+            quiet: false,
+            stats: { colors: true }
         }
     };
 

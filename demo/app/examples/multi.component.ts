@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { NgOption } from '@ng-select/ng-select';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 

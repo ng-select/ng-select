@@ -28,7 +28,6 @@ import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
 import { NgOptionComponent } from './ng-option.component';
@@ -466,7 +465,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private handleDocumentResize() {
-        const handler = ($event) => {
+        const handler = () => {
             if (this.appendTo && this.isOpen) {
                 this.updateDropdownPosition();
             }
@@ -569,7 +568,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.dropdownList.scrollInto(this.itemsList.markedItem);
     }
 
-    private handleTab($event: KeyboardEvent) {
+    private handleTab(_: KeyboardEvent) {
         if (this.isOpen) {
             this.close();
         }

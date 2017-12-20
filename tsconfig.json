@@ -11,6 +11,8 @@
     "suppressImplicitAnyIndexErrors": true,
     "skipLibCheck": true,
     "stripInternal": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "lib": [
       "es2015",
       "dom"
