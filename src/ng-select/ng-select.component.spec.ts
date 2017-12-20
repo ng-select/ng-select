@@ -591,19 +591,19 @@ describe('NgSelectComponent', function () {
                 `<ng-select id="select"></ng-select>`);
         });
 
-        it('should be set to `below` by default', () => {
+        it('should be set to `bottom` by default', () => {
             const classes = fixture.debugElement.query(By.css('ng-select')).classes;
-            expect(classes.below).toBeTruthy();
-            expect(classes.above).toBeFalsy();
+            expect(classes.bottom).toBeTruthy();
+            expect(classes.top).toBeFalsy();
         });
 
         it('should allow changing dropdown position', () => {
-            fixture.componentInstance.select.dropdownPosition = 'above';
+            fixture.componentInstance.select.dropdownPosition = 'top';
             fixture.detectChanges();
 
             const classes = fixture.debugElement.query(By.css('ng-select')).classes;
-            expect(classes.below).toBeFalsy();
-            expect(classes.above).toBeTruthy();
+            expect(classes.bottom).toBeFalsy();
+            expect(classes.top).toBeTruthy();
         });
     });
 
@@ -1140,6 +1140,47 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         }));
     });
+
+    describe('Append to', () => {
+        it('should append dropdown to body', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                        appendTo="body"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.open();
+            tickAndDetectChanges(fixture);
+
+            const dropdown = <HTMLElement>document.querySelector('.ng-select-dropdown-outer');
+            expect(dropdown.parentElement).toBe(document.body);
+            expect(dropdown.style.top).toBe('36px');
+            expect(dropdown.style.left).toBe('0px');
+        }));
+
+        it('should append dropdown to custom selector', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `
+                <div class="container"></div>
+                <ng-select [items]="cities"
+                        appendTo=".container"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.open();
+            tickAndDetectChanges(fixture);
+
+            const dropdown = <HTMLElement>document.querySelector('.container .ng-select-dropdown-outer');
+            expect(dropdown.style.top).toBe('36px');
+            expect(dropdown.style.left).toBe('0px');
+        }));
+    });
 });
 
 function tickAndDetectChanges(fixture) {
@@ -1352,13 +1393,13 @@ class NgSelectEventsTestCmp {
         { id: 3, name: 'Pabrade' },
     ];
 
-    onChange($event) {
+    onChange(_: Event) {
     }
 
-    onFocus($event: Event) {
+    onFocus(_: Event) {
     }
 
-    onBlur($event: Event) {
+    onBlur(_: Event) {
     }
 
     onOpen() {

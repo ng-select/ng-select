@@ -63,6 +63,6 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
 class BasicVirtualScrollTestCmp {
     // numbers range 0 to 99
     viewPortItems = [];
-    items = Array.from({length: 100}, (value, key) => key);
+    items = Array.from({length: 100}, (_, key) => key);
     @ViewChild(VirtualScrollComponent) virtualScroll: VirtualScrollComponent;
 }

@@ -21,6 +21,7 @@ import { LayoutHeaderComponent } from './layout/header.component';
 import { LayoutSidenavComponent } from './layout/sidenav-component';
 import { VirtualScrollComponent } from './examples/virtual-scroll.component';
 import { DataService } from './shared/data.service';
+import { AppendToComponent } from './examples/append-to.component';
 
 const appRoutes: Routes = [
     {
@@ -37,6 +38,7 @@ const appRoutes: Routes = [
     { path: 'events', component: SelectEventsComponent, data: { title: 'Output events'} },
     { path: 'virtual-scroll', component: VirtualScrollComponent, data: { title: 'Virtual scroll'} },
     { path: 'dropdown-position', component: DropdownPositionsComponent, data: { title: 'Dropdown position'} },
+    { path: 'append-to-element', component: AppendToComponent, data: { title: 'Append to element'} },
 ];
 
 @NgModule({
@@ -70,7 +72,8 @@ const appRoutes: Routes = [
         LayoutHeaderComponent,
         LayoutSidenavComponent,
         DropdownPositionsComponent,
-        VirtualScrollComponent
+        VirtualScrollComponent,
+        AppendToComponent
     ],
     bootstrap: [AppComponent]
 })

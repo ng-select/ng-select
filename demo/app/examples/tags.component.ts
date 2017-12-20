@@ -1,6 +1,4 @@
-import { Component, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'select-tags',
