@@ -6,7 +6,6 @@ node_js:
 cache:
   directories:
   - node_modules
-  - integration/node_modules
 os:
 - linux
 addons:
