@@ -1155,7 +1155,7 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.select.open();
             tickAndDetectChanges(fixture);
 
-            const dropdown = <HTMLElement>document.querySelector('.ng-menu-outer');
+            const dropdown = <HTMLElement>document.querySelector('.ng-select-dropdown-outer');
             const dropdownRect = dropdown.getBoundingClientRect();
             expect(dropdown.style.top).toBe('36px');
             expect(dropdown.style.left).toBe('0px');
@@ -1176,7 +1176,7 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.select.open();
             tickAndDetectChanges(fixture);
 
-            const dropdown = <HTMLElement>document.querySelector('.container .ng-menu-outer');
+            const dropdown = <HTMLElement>document.querySelector('.container .ng-select-dropdown-outer');
             const dropdownRect = dropdown.getBoundingClientRect();
             expect(dropdown.style.top).toBe('36px');
             expect(dropdown.style.left).toBe('0px');

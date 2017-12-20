@@ -40,8 +40,8 @@
     </span>
 </div>
 
-<div class="ng-menu-outer" [class.top]="dropdownPosition === 'top'" [class.bottom]="dropdownPosition === 'bottom'" [ngStyle]="{'visibility': isOpen ? 'visible': 'hidden'}" #dropdownPanel>
-    <virtual-scroll role="listbox" class="ng-menu" [disabled]="disableVirtualScroll" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
+<div class="ng-select-dropdown-outer" [class.top]="dropdownPosition === 'top'" [class.bottom]="dropdownPosition === 'bottom'" [ngStyle]="{'visibility': isOpen ? 'visible': 'hidden'}" #dropdownPanel>
+    <virtual-scroll role="listbox" class="ng-select-dropdown" [disabled]="disableVirtualScroll" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
         <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
              *ngFor="let item of viewPortItems"
              [class.disabled]="item.disabled"
@@ -63,19 +63,19 @@
         </div>
     </virtual-scroll>
 
-    <div class="ng-menu" *ngIf="showNoItemsFound() && !addTag">
+    <div class="ng-select-dropdown" *ngIf="showNoItemsFound() && !addTag">
         <div class="ng-option disabled">
             {{notFoundText}}
         </div>
     </div>
 
-    <div class="ng-menu" *ngIf="showTypeToSearch()">
+    <div class="ng-select-dropdown" *ngIf="showTypeToSearch()">
         <div class="ng-option disabled">
             {{typeToSearchText}}
         </div>
     </div>
 
-    <div class="ng-menu" *ngIf="isLoading && itemsList.filteredItems.length === 0">
+    <div class="ng-select-dropdown" *ngIf="isLoading && itemsList.filteredItems.length === 0">
         <div class="ng-option disabled">
             {{loadingText}}
         </div>

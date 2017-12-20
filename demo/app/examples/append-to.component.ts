@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../shared/data.service';
 
 @Component({
-    selector: 'append-to-child',
+    selector: 'append-to',
     template: `
        <p>By default ng-select appends dropdown to it's child, but you can append dropdown to any element using <b>appendTo</b> input.</p>
 

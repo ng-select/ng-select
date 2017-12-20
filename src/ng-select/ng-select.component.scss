@@ -263,7 +263,7 @@ $color-selected: #f5faff;
 }
 
 
-.ng-menu-outer {
+.ng-select-dropdown-outer {
     visibility: hidden;
     background-color: #fff;
     border: 1px solid #ccc;
@@ -291,7 +291,7 @@ $color-selected: #f5faff;
         margin-bottom: -1px;
     }
 
-    .ng-menu {
+    .ng-select-dropdown {
         display: block;
         height: auto;
         @include box-sizing;
