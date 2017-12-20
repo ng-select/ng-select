@@ -14,7 +14,7 @@ import {NgSelectModule} from '@ng-select/ng-select';
     CommonModule,
     FormsModule,
     BrowserModule,
-    NgSelectModule
+    NgSelectModule.forRoot({clearAllText: ''})
   ],
   providers: [],
   bootstrap: [AppComponent]
