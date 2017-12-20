@@ -36,7 +36,7 @@ export class NgSelectModule {
     }
 }
 
-function provideModule(config: NgSelectConfig) {
+export function provideModule(config: NgSelectConfig) {
     return {
         ngModule: NgSelectModule,
         providers: [
