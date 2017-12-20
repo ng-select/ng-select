@@ -1156,7 +1156,7 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
 
             const dropdown = <HTMLElement>document.querySelector('.ng-select-dropdown-outer');
-            const dropdownRect = dropdown.getBoundingClientRect();
+            expect(dropdown.parentElement).toBe(document.body);
             expect(dropdown.style.top).toBe('36px');
             expect(dropdown.style.left).toBe('0px');
         }));
@@ -1177,7 +1177,6 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
 
             const dropdown = <HTMLElement>document.querySelector('.container .ng-select-dropdown-outer');
-            const dropdownRect = dropdown.getBoundingClientRect();
             expect(dropdown.style.top).toBe('36px');
             expect(dropdown.style.left).toBe('0px');
         }));
@@ -1394,13 +1393,13 @@ class NgSelectEventsTestCmp {
         { id: 3, name: 'Pabrade' },
     ];
 
-    onChange($event) {
+    onChange(_: Event) {
     }
 
-    onFocus($event: Event) {
+    onFocus(_: Event) {
     }
 
-    onBlur($event: Event) {
+    onBlur(_: Event) {
     }
 
     onOpen() {

@@ -28,8 +28,6 @@ import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/debounceTime';
 import { NgOptionComponent } from './ng-option.component';
 
 const NG_SELECT_VALUE_ACCESSOR = {
@@ -162,7 +160,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
 
         if (this.appendTo) {
-            this.handleAppendToChild();
+            this.handleAppendTo();
         }
     }
 
@@ -474,7 +472,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.disposeDocumentResizeListener = this.renderer.listen('window', 'resize', handler);
     }
 
-    private handleAppendToChild() {
+    private handleAppendTo() {
         if (this.appendTo === 'body') {
             document.body.appendChild(this.dropdownPanel.nativeElement);
         } else {
