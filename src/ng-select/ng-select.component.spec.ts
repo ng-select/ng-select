@@ -1140,6 +1140,48 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         }));
     });
+
+    describe('Append to', () => {
+        it('should append dropdown to body', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                        appendTo="body"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.open();
+            tickAndDetectChanges(fixture);
+
+            const dropdown = <HTMLElement>document.querySelector('.ng-menu-outer');
+            const dropdownRect = dropdown.getBoundingClientRect();
+            expect(dropdown.style.top).toBe('36px');
+            expect(dropdown.style.left).toBe('0px');
+        }));
+
+        it('should append dropdown to custom selector', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `
+                <div class="container"></div>
+                <ng-select [items]="cities"
+                        appendTo=".container"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.open();
+            tickAndDetectChanges(fixture);
+
+            const dropdown = <HTMLElement>document.querySelector('.container .ng-menu-outer');
+            const dropdownRect = dropdown.getBoundingClientRect();
+            expect(dropdown.style.top).toBe('36px');
+            expect(dropdown.style.left).toBe('0px');
+        }));
+    });
 });
 
 function tickAndDetectChanges(fixture) {

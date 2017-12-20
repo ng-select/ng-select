@@ -38,7 +38,7 @@ const appRoutes: Routes = [
     { path: 'events', component: SelectEventsComponent, data: { title: 'Output events'} },
     { path: 'virtual-scroll', component: VirtualScrollComponent, data: { title: 'Virtual scroll'} },
     { path: 'dropdown-position', component: DropdownPositionsComponent, data: { title: 'Dropdown position'} },
-    { path: 'append-to', component: AppendToComponent, data: { title: 'Append to'} },
+    { path: 'append-to-element', component: AppendToComponent, data: { title: 'Append to element'} },
 ];
 
 @NgModule({

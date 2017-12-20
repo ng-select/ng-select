@@ -476,9 +476,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private handleAppendToChild() {
-        this.handleDocumentResize();
         if (this.appendTo === 'body') {
-            this.updateDropdownPosition();
             document.body.appendChild(this.dropdownPanel.nativeElement);
         } else {
             const parent: HTMLElement = document.querySelector(this.appendTo);
@@ -487,6 +485,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             }
             parent.appendChild(this.dropdownPanel.nativeElement);
         }
+        this.handleDocumentResize();
+        this.updateDropdownPosition();
     }
 
     private updateDropdownPosition() {
@@ -496,7 +496,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         const selectRect = select.getBoundingClientRect();
         const offsetTop = selectRect.top - bodyRect.top;
         const offsetLeft = selectRect.left - bodyRect.left;
-        dropdownPanel.style.top = offsetTop + selectRect.height + 'px';
+        const topDelta = this.dropdownPosition === 'bottom' ? selectRect.height : -dropdownPanel.clientHeight;
+        dropdownPanel.style.top = offsetTop + topDelta + 'px';
+        dropdownPanel.style.bottom = 'auto';
         dropdownPanel.style.left = offsetLeft + 'px';
         dropdownPanel.style.width = selectRect.width + 'px';
     }
