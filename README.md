@@ -35,6 +35,7 @@ Table of contents
 - [x] Multiselect
 - [x] Flexible autocomplete with client/server filtering
 - [x] Custom tags
+- [x] Append to body
 
 ## Warning
 Library is under active development and may not work as expected until stable 1.0.0 release.
@@ -108,7 +109,8 @@ map: {
 | addTagText | string | `Add item` | no | Set custom text when using tagging |
 | [typeahead] | Subject |  `-` | no | Custom autocomplete or filter. |
 | [disableVirtualScroll] | boolean |  false | no | Disable virtual scroll |
-| dropdownPosition | `bottom` | `top` |  `'bottom'` | no | Set the dropdown position on open |
+| dropdownPosition | `bottom`,`top` |  `bottom` | no | Set the dropdown position on open |
+| appendTo | string |  null | no | Append drodown to body or any other element using css selector |
 
 | Output  | Description |
 | ------------- | ------------- |
