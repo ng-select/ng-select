@@ -627,6 +627,23 @@ describe('NgSelectComponent', function () {
             });
         }));
 
+        it('should clear item using value', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [(ngModel)]="city">
+                </ng-select>`);
+
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            fixture.detectChanges();
+            expect(fixture.componentInstance.select.selectedItems.length).toBe(1);
+
+            fixture.componentInstance.select.clearItem(fixture.componentInstance.cities[0])
+            expect(fixture.componentInstance.select.selectedItems.length).toBe(0);
+            tick();
+        }));
+
         it('should display custom dropdown option template', async(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
