@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.14.2"></a>
+## [0.14.2](https://github.com/ng-select/ng-select/compare/v0.14.1...v0.14.2) (2018-01-06)
+
+
+### Bug Fixes
+
+* Styling flaw when using dropdownPosition top ([#173](https://github.com/ng-select/ng-select/issues/173)) ([28d4337](https://github.com/ng-select/ng-select/commit/28d4337))
+* **templates:** unselect item using value fixes [#175](https://github.com/ng-select/ng-select/issues/175) ([6f245de](https://github.com/ng-select/ng-select/commit/6f245de))
+
+
+
 <a name="0.14.1"></a>
 ## [0.14.1](https://github.com/ng-select/ng-select/compare/v0.14.0...v0.14.1) (2017-12-20)
 
