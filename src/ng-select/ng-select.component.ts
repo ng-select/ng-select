@@ -124,7 +124,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private disposeDocumentClickListener = () => { };
     private disposeDocumentResizeListener = () => { };
 
-    clearItem = (item) => this.unselect(item);
+    clearItem = (item) => {
+        const option = this.itemsList.items.find(x => x.value === item);
+        this.unselect(option);
+    };
 
     get selectedItems(): NgOption[] {
         return this.itemsList.value;
