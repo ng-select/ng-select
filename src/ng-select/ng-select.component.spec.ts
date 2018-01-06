@@ -784,6 +784,24 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.selectedCity.name).toBe('new tag');
         }));
 
+        it('should select tag even if there are filtered items that matches search term', fakeAsync(() => {
+            let fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [addTag]="true"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.onFilter('Vil');
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect(fixture.componentInstance.selectedCity.name).toBe('Vil');
+        }));
+
         it('should select custom tag', fakeAsync(() => {
             let fixture = createTestingModule(
                 NgSelectBasicTestCmp,
