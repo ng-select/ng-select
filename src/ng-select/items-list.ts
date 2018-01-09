@@ -52,7 +52,7 @@ export class ItemsList {
         }
         const index = this.items.findIndex(x => x.value === value);
         return index > -1 ? this.items[index] :
-            this.items.find(item => item.label === this.resolveNested(value, this._bindLabel))
+            this.items.find(item => item.label && item.label === this.resolveNested(value, this._bindLabel));
     }
 
     unselect(item: NgOption) {

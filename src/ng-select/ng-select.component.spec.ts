@@ -99,11 +99,28 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.cities = cities;
             tickAndDetectChanges(fixture);
 
-            expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining(
-                {
-                    value: cities[0]
-                }
-            )]);
+            expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
+                value: cities[0]
+            })]);
+        }));
+
+        it('should set items correctly if there is no bindLabel', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectModelChangesTestCmp,
+                `<ng-select 
+                    [items]="cities"
+                    [clearable]="true"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            const cities = [{ id: 7, name: 'Pailgis' }];
+            fixture.componentInstance.selectedCity = { id: 7, name: 'Pailgis' };
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.cities = [{ id: 1, name: 'Vilnius' }, { id: 2, name: 'Kaunas' }];
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.selectedItems[0]).toEqual(jasmine.objectContaining({
+                value: cities[0]
+            }));
         }));
 
         it('should bind ngModel even if items are empty', fakeAsync(() => {
