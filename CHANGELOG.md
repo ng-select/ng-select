@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.14.3"></a>
+## [0.14.3](https://github.com/ng-select/ng-select/compare/v0.14.2...v0.14.3) (2018-01-09)
+
+
+### Bug Fixes
+
+* check if bindLabel exist while searching for selected items ([1835187](https://github.com/ng-select/ng-select/commit/1835187))
+
+
+
 <a name="0.14.2"></a>
 ## [0.14.2](https://github.com/ng-select/ng-select/compare/v0.14.1...v0.14.2) (2018-01-06)
 
