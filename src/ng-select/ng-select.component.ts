@@ -58,7 +58,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
     @ViewChild('dropdownPanel') dropdownPanel: ElementRef;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
-    @ViewChild('filterInput') filterInput;
+    @ViewChild('filterInput') filterInput: ElementRef;
 
     // inputs
     @Input() items = [];
@@ -68,13 +68,13 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() markFirst = true;
     @Input() disableVirtualScroll = false;
     @Input() placeholder: string;
-    @Input() notFoundText;
-    @Input() typeToSearchText;
-    @Input() addTagText;
-    @Input() loadingText;
-    @Input() clearAllText;
+    @Input() notFoundText: string;
+    @Input() typeToSearchText: string;
+    @Input() addTagText: string;
+    @Input() loadingText: string;
+    @Input() clearAllText: string;
     @Input() dropdownPosition: 'bottom' | 'top' = 'bottom';
-    @Input() appendTo;
+    @Input() appendTo: string;
 
     @Input()
     @HostBinding('class.typeahead') typeahead: Subject<string>;
@@ -83,7 +83,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @HostBinding('class.ng-multiple') multiple = false;
 
     @Input()
-    @HostBinding('class.taggable') addTag: boolean | ((term) => NgOption) = false;
+    @HostBinding('class.taggable') addTag: boolean | ((term: string) => NgOption) = false;
 
     @Input()
     @HostBinding('class.searchable') searchable = true;
@@ -124,7 +124,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private disposeDocumentClickListener = () => { };
     private disposeDocumentResizeListener = () => { };
 
-    clearItem = (item) => {
+    clearItem = (item: any) => {
         const option = this.itemsList.items.find(x => x.value === item);
         this.unselect(option);
     };
@@ -360,7 +360,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         return empty && this.isTypeahead && !this.filterValue && !this.isLoading;
     }
 
-    onFilter($event) {
+    onFilter(term: string) {
         if (!this.searchable) {
             return;
         }
@@ -369,7 +369,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             this.open();
         }
 
-        this.filterValue = $event.target.value;
+        this.filterValue = term;
 
         if (this.isTypeahead) {
             this.isLoading = true;
@@ -419,7 +419,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private setItemsFromNgOptions() {
         this.bindLabel = this.bindLabel || this._defaultLabel;
         this.bindValue = this.bindValue || this._defaultValue;
-        const handleNgOptions = (options) => {
+        const handleNgOptions = (options: QueryList<NgOptionComponent>) => {
             this.items = options.map(option => ({
                 value: option.value,
                 label: option.elementRef.nativeElement.innerHTML
@@ -438,7 +438,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private handleDocumentClick() {
-        const handler = ($event) => {
+        const handler = ($event: any) => {
             // prevent close if clicked on select
             if (this.elementRef.nativeElement.contains($event.target)) {
                 return;
@@ -479,7 +479,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (this.appendTo === 'body') {
             document.body.appendChild(this.dropdownPanel.nativeElement);
         } else {
-            const parent: HTMLElement = document.querySelector(this.appendTo);
+            const parent = document.querySelector(this.appendTo);
             if (!parent) {
                 throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`)
             }
@@ -508,7 +508,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             return;
         }
 
-        const validateBinding = (item) => {
+        const validateBinding = (item: any) => {
             if (item instanceof Object && this.bindValue) {
                 throw new Error('Binding object with bindValue is not allowed.');
             }
