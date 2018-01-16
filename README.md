@@ -227,10 +227,10 @@ export class SelectAutocompleteComponent {
 }
 ```
 
-### Custom display and option templates
+### Custom display templates
 This example in [Plunkr](https://plnkr.co/edit/csZbjH?p=preview)
 
-To customize look of input display or option item you can use `ng-template` with `ng-label-tmp` or `ng-option-tmp` directives applied to it.
+To customize look of ng-select you can use `ng-template` with `ng-label-tmp`, `ng-option-tmp`, `ng-header-tmp`, `ng-footer-tmp` directives applied to it.
 ```js
 import {Component, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
@@ -247,12 +247,18 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
                    bindLabel="title"
                    bindValue="id"
                    placeholder="Select album">
+            <ng-template ng-header-tmp>
+               Custom header
+            </ng-template>
             <ng-template ng-label-tmp let-item="item">
                <b>({{item.id}})</b> {{item.title}}
             </ng-template>
             <ng-template ng-option-tmp let-item="item">
                 <div>Title: {{item.title}}</div>
                 <small><b>Id:</b> {{item.id}} | <b>UserId:</b> {{item.userId}}</small>
+            </ng-template>
+            <ng-template ng-footer-tmp>
+               Custom footer
             </ng-template>
         </ng-select>
         <p>Selected album ID: {{selectedAlbumId || 'none'}}</p>

@@ -281,7 +281,6 @@ $color-selected: #f5faff;
     border: 1px solid #ccc;
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
     box-sizing: border-box;
-    max-height: 242px;
     position: absolute;
     width: 100%;
     z-index: 3;
@@ -324,6 +323,7 @@ $color-selected: #f5faff;
         height: auto;
         @include box-sizing;
         max-height: 240px;
+        margin-bottom: 1px;
         overflow-y: auto;
 
         .ng-option {

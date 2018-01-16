@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { NgSelectComponent } from '../../../src/ng-select/ng-select.component';
+import { DataService } from '../shared/data.service';
 
 @Component({
     selector: 'select-with-templates',
@@ -53,23 +53,24 @@ import { NgSelectComponent } from '../../../src/ng-select/ng-select.component';
 
         <label>Custom header and footer</label>
         ---html,true
-        <ng-select #ctx
+        <ng-select
             [multiple]="true"
-            [items]="cities4"
-            [(ngModel)]="selectedCities"
+            [items]="people"
+            [(ngModel)]="selectedPeople"
+            placeholder="Select people"
             bindLabel="name"
             bindValue="name">
             <ng-template ng-header-tmp>
-                <button (click)="selectAll(ctx)" class="btn btn-sm btn-secondary">Select all</button>
-                <button (click)="selectNone(ctx)" class="btn btn-sm btn-secondary">Select none</button>
+                <button (click)="selectAll()" class="btn btn-sm btn-secondary">Select all</button>
+                <button (click)="unselectAll()" class="btn btn-sm btn-secondary">Unselect all</button>
             </ng-template>
             <ng-template ng-footer-tmp>
-                Selected items: {{selectedCities.length}}
+                Selected count: {{selectedPeople.length}}
             </ng-template>
         </ng-select>
         ---
         <p>
-            Selected cities: {{selectedCities}}
+            Selected people: {{selectedPeople}}
         </p>
     `
 })
@@ -88,19 +89,24 @@ export class SelectWithTemplatesComponent {
     selectedCity = this.cities[0].name;
     selectedCity2 = this.cities2[1].name;
     selectedCity3 = this.cities3[2].name;
-    selectedCities = [this.cities3[2].name];
+
+    people = [];
+    selectedPeople = [];
+
+    constructor(private dataService: DataService) {}
 
     ngOnInit() {
+        this.dataService.getPeople().subscribe(x => {
+            this.people = x;
+        });
     }
 
-    selectAll(ctx: NgSelectComponent) {
-        ctx.itemsList.items.forEach(item => ctx.select(item));
-        ctx.detectChanges();
+    selectAll() {
+        this.selectedPeople = this.people.map(x => x.name);
     }
 
-    selectNone(ctx: NgSelectComponent) {
-        ctx.itemsList.items.forEach(item => ctx.unselect(item));
-        ctx.detectChanges();
+    unselectAll() {
+        this.selectedPeople = [];
     }
 }
 
