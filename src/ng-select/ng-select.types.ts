@@ -18,11 +18,11 @@ export enum KeyCode {
     Backspace = 8
 }
 
-export class NgSelectConfig {
-    notFoundText?= 'No items found';
-    typeToSearchText?= 'Type to search';
-    addTagText?= 'Add item';
-    loadingText?= 'Loading...';
-    clearAllText? = 'Clear all';
-    disableVirtualScroll?= false;
+export interface NgSelectConfig {
+    notFoundText?: string;
+    typeToSearchText?: string;
+    addTagText?: string;
+    loadingText?: string;
+    clearAllText?: string;
+    disableVirtualScroll?: boolean;
 }
