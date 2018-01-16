@@ -201,10 +201,12 @@ $color-selected: #f5faff;
                 }
                 .ng-input {
                     flex: 1;
+                    z-index: 2;
                     padding-bottom: 3px;
                     padding-left: 3px;
                 }
                 .ng-placeholder {
+                    z-index: 1;
                     padding-bottom: 5px;
                     padding-left: 3px;
                 }
