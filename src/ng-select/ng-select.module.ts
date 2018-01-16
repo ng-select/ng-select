@@ -1,7 +1,12 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgSelectComponent } from './ng-select.component';
-import { NgOptionTemplateDirective, NgLabelTemplateDirective } from './ng-templates.directive';
+import {
+    NgOptionTemplateDirective,
+    NgLabelTemplateDirective,
+    NgHeaderTemplateDirective,
+    NgFooterTemplateDirective
+} from './ng-templates.directive';
 import { VirtualScrollModule } from './virtual-scroll.component';
 import { SpinnerComponent } from './spinner.component';
 import { NgSelectConfig } from './ng-select.types';
@@ -13,6 +18,8 @@ import { NgOptionComponent } from './ng-option.component';
         NgOptionComponent,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
+        NgHeaderTemplateDirective,
+        NgFooterTemplateDirective,
         SpinnerComponent
     ],
     imports: [
@@ -23,7 +30,9 @@ import { NgOptionComponent } from './ng-option.component';
         NgSelectComponent,
         NgOptionComponent,
         NgOptionTemplateDirective,
-        NgLabelTemplateDirective
+        NgLabelTemplateDirective,
+        NgHeaderTemplateDirective,
+        NgFooterTemplateDirective
     ]
 })
 export class NgSelectModule {
@@ -40,7 +49,7 @@ export function provideModule(config: NgSelectConfig) {
     return {
         ngModule: NgSelectModule,
         providers: [
-            {provide: NgSelectConfig, useValue: config}
+            { provide: NgSelectConfig, useValue: config }
         ]
     };
 }

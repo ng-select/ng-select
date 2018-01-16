@@ -23,7 +23,12 @@ import {
 } from '@angular/core';
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NgOptionTemplateDirective, NgLabelTemplateDirective } from './ng-templates.directive';
+import { 
+    NgOptionTemplateDirective,
+    NgLabelTemplateDirective,
+    NgHeaderTemplateDirective,
+    NgFooterTemplateDirective
+} from './ng-templates.directive';
 import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
@@ -54,6 +59,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
     @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
+    @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerTemplate: TemplateRef<any>;
+    @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;
 
     @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
     @ViewChild('dropdownPanel') dropdownPanel: ElementRef;
@@ -400,6 +407,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.itemsList.markItem(item);
     }
 
+    detectChanges() {
+        if (!(<any>this.changeDetectorRef).destroyed) {
+            this.changeDetectorRef.detectChanges();
+        }
+    }
+
     private setItems(items: NgOption[]) {
         const firstItem = items[0];
         this.bindLabel = this.bindLabel || this._defaultLabel;
@@ -648,12 +661,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     private get isTypeahead() {
         return this.typeahead && this.typeahead.observers.length > 0;
-    }
-
-    private detectChanges() {
-        if (!(<any>this.changeDetectorRef).destroyed) {
-            this.changeDetectorRef.detectChanges();
-        }
     }
 
     private get value() {

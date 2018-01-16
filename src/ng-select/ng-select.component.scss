@@ -262,6 +262,16 @@ $color-selected: #f5faff;
             }
         }
     }
+
+    .ng-dropdown-header {
+        border-bottom: 1px solid #ccc;
+        padding: 5px 7px;
+    }
+
+    .ng-dropdown-footer {
+        border-top: 1px solid #ccc;
+        padding: 5px 7px;
+    }
 }
 
 

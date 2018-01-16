@@ -41,6 +41,9 @@
 </div>
 
 <div class="ng-select-dropdown-outer" [class.top]="dropdownPosition === 'top'" [class.bottom]="dropdownPosition === 'bottom'" [ngStyle]="{'visibility': isOpen ? 'visible': 'hidden'}" #dropdownPanel>
+    <div *ngIf="headerTemplate" class="ng-dropdown-header">
+        <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
+    </div>
     <virtual-scroll role="listbox" class="ng-select-dropdown" [disabled]="disableVirtualScroll" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
         <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
              *ngFor="let item of viewPortItems"
@@ -79,5 +82,9 @@
         <div class="ng-option disabled">
             {{loadingText}}
         </div>
+    </div>
+
+    <div *ngIf="footerTemplate" class="ng-dropdown-footer">
+        <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
     </div>
 </div>

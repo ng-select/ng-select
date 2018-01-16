@@ -11,3 +11,15 @@ export class NgLabelTemplateDirective {
     constructor(public template: TemplateRef<any>) {
     }
 }
+
+@Directive({ selector: '[ng-header-tmp]' })
+export class NgHeaderTemplateDirective {
+    constructor(public template: TemplateRef<any>) {
+    }
+}
+
+@Directive({ selector: '[ng-footer-tmp]' })
+export class NgFooterTemplateDirective {
+    constructor(public template: TemplateRef<any>) {
+    }
+}
