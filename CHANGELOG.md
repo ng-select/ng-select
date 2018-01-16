@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.14.4"></a>
+## [0.14.4](https://github.com/ng-select/ng-select/compare/v0.14.3...v0.14.4) (2018-01-16)
+
+
+### Bug Fixes
+
+* make ng-input z-index bigger to focus on placeholder click ([#190](https://github.com/ng-select/ng-select/issues/190)) ([68d0772](https://github.com/ng-select/ng-select/commit/68d0772))
+
+
+
 <a name="0.14.3"></a>
 ## [0.14.3](https://github.com/ng-select/ng-select/compare/v0.14.2...v0.14.3) (2018-01-09)
 
