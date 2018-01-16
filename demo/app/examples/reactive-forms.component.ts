@@ -107,9 +107,6 @@ import { DataService } from '../shared/data.service';
                         <img height="15" width="15" [src]="item.thumbnailUrl"/>
                         <span>{{item.title}}</span>
                     </ng-template>
-                    <ng-template ng-footer-tmp>
-                        Hello
-                    </ng-template>
                 </ng-select>
                 <small class="form-text text-muted">5000 items with virtual scroll</small>
                 <br>
