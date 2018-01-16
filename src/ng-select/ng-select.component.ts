@@ -61,7 +61,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @ViewChild('filterInput') filterInput: ElementRef;
 
     // inputs
-    @Input() items = [];
+    @Input() items: any[] = [];
     @Input() bindLabel: string;
     @Input() bindValue: string;
     @Input() clearable = true;
@@ -114,7 +114,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     isLoading = false;
     filterValue: string = null;
 
-    private _ngModel = null;
+    private _ngModel: any = null;
     private _simple = false;
     private _defaultLabel = 'label';
     private _defaultValue = 'value';
