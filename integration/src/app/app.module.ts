@@ -4,7 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 
 import {AppComponent} from './app.component';
-import {NgSelectModule} from '@ng-select/ng-select';
+import {NgSelectModule, NG_SELECT_DEFAULT_CONFIG} from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [
@@ -14,9 +14,16 @@ import {NgSelectModule} from '@ng-select/ng-select';
     CommonModule,
     FormsModule,
     BrowserModule,
-    NgSelectModule.forRoot({clearAllText: ''})
+    NgSelectModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: NG_SELECT_DEFAULT_CONFIG,
+      useValue: {
+          notFoundText: 'Custom not found'
+      }
+  }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

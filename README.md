@@ -61,9 +61,16 @@ import {NgSelectModule} from '@ng-select/ng-select';
 export class AppModule {
 }
 ```
-You can also configure global configuration and localization messages by using NgSelectModule.forRoot:
+You can also configure global configuration and localization messages by providing custom NG_SELECT_DEFAULT_CONFIG
 ```js
-NgSelectModule.forRoot({notFoundText: 'Your custom not found text', typeToSearchText: 'Your custom type to search text'})
+    providers: [
+        {
+            provide: NG_SELECT_DEFAULT_CONFIG,
+            useValue: {
+                notFoundText: 'Custom not found'
+            }
+        }
+    ]
 ```
 ### SystemJS
 If you are using SystemJS, you should also adjust your configuration to point to the UMD bundle.

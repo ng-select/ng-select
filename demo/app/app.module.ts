@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
-import { NgSelectModule } from '@ng-select/ng-select';
+import { NgSelectModule, NG_SELECT_DEFAULT_CONFIG } from '@ng-select/ng-select';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
@@ -44,7 +44,7 @@ const appRoutes: Routes = [
 @NgModule({
     imports: [
         BrowserModule,
-        NgSelectModule.forRoot(),
+        NgSelectModule,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
@@ -58,7 +58,13 @@ const appRoutes: Routes = [
         )
     ],
     providers: [
-        DataService
+        DataService,
+        {
+            provide: NG_SELECT_DEFAULT_CONFIG,
+            useValue: {
+                notFoundText: 'Custom not found'
+            }
+        }
     ],
     declarations: [
         AppComponent,

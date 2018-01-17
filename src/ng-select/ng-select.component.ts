@@ -17,9 +17,10 @@ import {
     ViewChild,
     ElementRef,
     ChangeDetectionStrategy,
-    Optional,
+    Inject,
     SimpleChanges,
-    Renderer2, ContentChildren, QueryList
+    Renderer2, ContentChildren, QueryList,
+    InjectionToken
 } from '@angular/core';
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -29,6 +30,8 @@ import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
 import { NgOptionComponent } from './ng-option.component';
+
+export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 
 const NG_SELECT_VALUE_ACCESSOR = {
     provide: NG_VALUE_ACCESSOR,
@@ -133,7 +136,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         return this.itemsList.value;
     }
 
-    constructor( @Optional() config: NgSelectConfig,
+    constructor(@Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private changeDetectorRef: ChangeDetectorRef,
         private elementRef: ElementRef,
         private renderer: Renderer2
@@ -669,9 +672,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private mergeGlobalConfig(config: NgSelectConfig) {
-        if (!config) {
-            config = new NgSelectConfig();
-        }
         this.notFoundText = this.notFoundText || config.notFoundText;
         this.typeToSearchText = this.typeToSearchText || config.typeToSearchText;
         this.addTagText = this.addTagText || config.addTagText;
