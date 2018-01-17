@@ -82,9 +82,9 @@ export class SelectWithTemplatesComponent {
         {id: 3, name: 'Pavilnys', avatar: '//www.gravatar.com/avatar/6acb7abf486516ab7fb0a6efa372042b?d=retro&r=g&s=15'}
     ];
 
-    cities2 = JSON.parse(JSON.stringify(this.cities));
-    cities3 = JSON.parse(JSON.stringify(this.cities));
-    cities4 = JSON.parse(JSON.stringify(this.cities));
+    cities2 = this.cities.slice();
+    cities3 = this.cities.slice();
+    cities4 = this.cities.slice();
 
     selectedCity = this.cities[0].name;
     selectedCity2 = this.cities2[1].name;
@@ -96,8 +96,8 @@ export class SelectWithTemplatesComponent {
     constructor(private dataService: DataService) {}
 
     ngOnInit() {
-        this.dataService.getPeople().subscribe(x => {
-            this.people = x;
+        this.dataService.getPeople().subscribe(items => {
+            this.people = items;
         });
     }
 
