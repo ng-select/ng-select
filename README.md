@@ -20,7 +20,7 @@ Table of contents
     * [API](#api)
     * [Basic example](#basic-example)
     * [Flexible autocomplete](#flexible-autocomplete)
-    * [Custom display and option templates](#custom-display-and-option-templates)
+    * [Custom display templates](#custom-display-templates)
     * [Validation state](#validation-state)
   * [Contributing](#contributing)
   * [Development](#development)
