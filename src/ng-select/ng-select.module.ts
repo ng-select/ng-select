@@ -1,6 +1,6 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgSelectComponent } from './ng-select.component';
+import { NgSelectComponent, NG_SELECT_DEFAULT_CONFIG } from './ng-select.component';
 import {
     NgOptionTemplateDirective,
     NgLabelTemplateDirective,
@@ -9,7 +9,6 @@ import {
 } from './ng-templates.directive';
 import { VirtualScrollModule } from './virtual-scroll.component';
 import { SpinnerComponent } from './spinner.component';
-import { NgSelectConfig } from './ng-select.types';
 import { NgOptionComponent } from './ng-option.component';
 
 @NgModule({
@@ -33,23 +32,20 @@ import { NgOptionComponent } from './ng-option.component';
         NgLabelTemplateDirective,
         NgHeaderTemplateDirective,
         NgFooterTemplateDirective
+        
+    ],
+    providers: [
+        {
+            provide: NG_SELECT_DEFAULT_CONFIG,
+            useValue: {
+                notFoundText: 'No items found',
+                typeToSearchText: 'Type to search',
+                addTagText: 'Add item',
+                loadingText: 'Loading...',
+                clearAllText: 'Clear all',
+                disableVirtualScroll: false
+            }
+        }
     ]
 })
-export class NgSelectModule {
-    static forRoot(config?: NgSelectConfig): ModuleWithProviders {
-        return provideModule(config);
-    }
-
-    static forChild(config?: NgSelectConfig): ModuleWithProviders {
-        return provideModule(config);
-    }
-}
-
-export function provideModule(config: NgSelectConfig) {
-    return {
-        ngModule: NgSelectModule,
-        providers: [
-            { provide: NgSelectConfig, useValue: config }
-        ]
-    };
-}
+export class NgSelectModule { }
