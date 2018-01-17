@@ -43,7 +43,7 @@ export class ItemsList {
         item.selected = true;
     }
 
-    findItem(value, bindValue: string): NgOption {
+    findItem(value: any, bindValue: string): NgOption {
         if (!value) {
             return null;
         }
@@ -109,7 +109,7 @@ export class ItemsList {
         this._markedIndex = this.filteredItems.indexOf(item);
     }
 
-    markSelectedOrDefault(markDefault) {
+    markSelectedOrDefault(markDefault: boolean) {
         if (this.filteredItems.length === 0) {
             return;
         }
@@ -139,7 +139,7 @@ export class ItemsList {
         }
     }
 
-    private getDefaultFilterFunc(term) {
+    private getDefaultFilterFunc(term: string) {
         return (option: NgOption) => {
             return searchHelper.stripSpecialChars(option.label || '')
                 .toUpperCase()

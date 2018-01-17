@@ -21,7 +21,7 @@
             <input #filterInput
                    type="text"
                    [value]="filterValue"
-                   (input)="onFilter($event)"
+                   (input)="onFilter(filterInput.value)"
                    (focus)="onInputFocus($event)"
                    (blur)="onInputBlur($event)"
                    (change)="$event.stopPropagation()"
