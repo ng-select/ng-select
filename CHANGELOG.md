@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.15.0"></a>
+# [0.15.0](https://github.com/ng-select/ng-select/compare/v0.14.4...v0.15.0) (2018-01-17)
+
+
+### Bug Fixes
+
+* add missing types ([#197](https://github.com/ng-select/ng-select/issues/197)) ([5932fec](https://github.com/ng-select/ng-select/commit/5932fec)), closes [#196](https://github.com/ng-select/ng-select/issues/196)
+
+
+### Features
+
+* header and footer templates ([#193](https://github.com/ng-select/ng-select/issues/193)) ([e09eeb5](https://github.com/ng-select/ng-select/commit/e09eeb5))
+* use injection token for module configuration ([#195](https://github.com/ng-select/ng-select/issues/195)) ([f5e99f0](https://github.com/ng-select/ng-select/commit/f5e99f0))
+
+
+
 <a name="0.14.4"></a>
 ## [0.14.4](https://github.com/ng-select/ng-select/compare/v0.14.3...v0.14.4) (2018-01-16)
 
