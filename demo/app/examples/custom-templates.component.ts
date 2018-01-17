@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { DataService } from '../shared/data.service';
 
 @Component({
     selector: 'select-with-templates',
@@ -48,6 +49,29 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         <p>
             Selected city name: {{selectedCity3}}
         </p>
+        <hr>
+
+        <label>Custom header and footer</label>
+        ---html,true
+        <ng-select
+            [multiple]="true"
+            [items]="people"
+            [(ngModel)]="selectedPeople"
+            placeholder="Select people"
+            bindLabel="name"
+            bindValue="name">
+            <ng-template ng-header-tmp>
+                <button (click)="selectAll()" class="btn btn-sm btn-secondary">Select all</button>
+                <button (click)="unselectAll()" class="btn btn-sm btn-secondary">Unselect all</button>
+            </ng-template>
+            <ng-template ng-footer-tmp>
+                Selected count: {{selectedPeople.length}}
+            </ng-template>
+        </ng-select>
+        ---
+        <p>
+            Selected people: {{selectedPeople}}
+        </p>
     `
 })
 export class SelectWithTemplatesComponent {
@@ -58,14 +82,31 @@ export class SelectWithTemplatesComponent {
         {id: 3, name: 'Pavilnys', avatar: '//www.gravatar.com/avatar/6acb7abf486516ab7fb0a6efa372042b?d=retro&r=g&s=15'}
     ];
 
-    cities2 = JSON.parse(JSON.stringify(this.cities));
-    cities3 = JSON.parse(JSON.stringify(this.cities));
+    cities2 = this.cities.slice();
+    cities3 = this.cities.slice();
+    cities4 = this.cities.slice();
 
     selectedCity = this.cities[0].name;
     selectedCity2 = this.cities2[1].name;
     selectedCity3 = this.cities3[2].name;
 
+    people = [];
+    selectedPeople = [];
+
+    constructor(private dataService: DataService) {}
+
     ngOnInit() {
+        this.dataService.getPeople().subscribe(items => {
+            this.people = items;
+        });
+    }
+
+    selectAll() {
+        this.selectedPeople = this.people.map(x => x.name);
+    }
+
+    unselectAll() {
+        this.selectedPeople = [];
     }
 }
 

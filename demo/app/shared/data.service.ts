@@ -39,30 +39,6 @@ export class DataService {
 function getMockPeople() {
     return [
         {
-          'id': '5a15b13c8f0d6aa5fcf0051b',
-          'index': 0,
-          'isActive': false,
-          'picture': 'http://placehold.it/32x32',
-          'age': 29,
-          'name': 'Andžej Maciusovic',
-          'gender': 'male',
-          'company': 'PRISMATIC',
-          'email': 'odomsullivan@prismatic.com',
-          'phone': '+1 (991) 525-2303'
-        },
-        {
-          'id': '5a15b13c1128ce9a9e15691b',
-          'index': 1,
-          'isActive': true,
-          'picture': 'http://placehold.it/32x32',
-          'age': 29,
-          'name': 'Tadeuš Varnas',
-          'gender': 'male',
-          'company': 'QUILITY',
-          'email': 'hessharrison@quility.com',
-          'phone': '+1 (974) 556-3761'
-        },
-        {
           'id': '5a15b13c36e7a7f00cf0d7cb',
           'index': 2,
           'isActive': true,

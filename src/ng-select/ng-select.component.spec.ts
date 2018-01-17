@@ -678,6 +678,29 @@ describe('NgSelectComponent', function () {
             });
         }));
 
+        it('should display custom footer and header template', async(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities" [(ngModel)]="selectedCity">
+                    <ng-template ng-header-tmp>
+                        <span class="header-label">header</span>
+                    </ng-template>
+                    <ng-template ng-footer-tmp>
+                        <span class="footer-label">footer</span>
+                    </ng-template>
+                </ng-select>`);
+
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const header = fixture.debugElement.query(By.css('.header-label')).nativeElement;
+                expect(header.innerHTML).toBe('header');
+
+                const footer = fixture.debugElement.query(By.css('.footer-label')).nativeElement;
+                expect(footer.innerHTML).toBe('footer');
+            });
+        }));
+
         it('should create items from ng-option', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
