@@ -27,11 +27,10 @@ Table of contents
   * [Inspiration](#inspiration)
 
 ## Features
-- [x] Custom bindings to property or object
-- [x] Custom option and label templates
+- [x] Custom model bindings to property or object
+- [x] Custom option, label, header and footer templates
 - [x] Virtual Scroll support with large data sets (>5000 items).
 - [x] Keyboard navigation
-- [x] Correct keyboard events behaviour
 - [x] Multiselect
 - [x] Flexible autocomplete with client/server filtering
 - [x] Custom tags
@@ -96,7 +95,10 @@ map: {
 - [x] Multiselect support
 - [x] Autocomplete
 - [x] Custom tags
+- [ ] Items grouping
+- [ ] Custom themes
 - [ ] Accessibility
+- [ ] Many more
 
 ## API
 | Input  | Type | Default | Required | Description |
