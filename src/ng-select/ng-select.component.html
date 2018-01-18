@@ -20,6 +20,7 @@
         <div *ngIf="showFilter()" class="ng-input">
             <input #filterInput
                    type="text"
+                   [readOnly]="!searchable"
                    [value]="filterValue"
                    (input)="onFilter(filterInput.value)"
                    (focus)="onInputFocus($event)"
