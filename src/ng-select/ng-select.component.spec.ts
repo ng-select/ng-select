@@ -968,6 +968,20 @@ describe('NgSelectComponent', function () {
                     </ng-select>`);
             });
 
+            it('should not show selected city among options if it does not match search term', fakeAsync(() => {
+                fixture.componentInstance.selectedCity = { id: 9, name: 'Copenhagen' };
+                tickAndDetectChanges(fixture);
+
+                fixture.componentInstance.customFilter.subscribe();
+                fixture.componentInstance.select.onFilter('new');
+                fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
+                expect(fixture.componentInstance.select.itemsList.filteredItems[0]).toEqual(jasmine.objectContaining({
+                    value: { id: 4, name: 'New York' }
+                }))
+            }));
+
             it('should push term to custom observable', fakeAsync(() => {
                 fixture.componentInstance.customFilter.subscribe(term => {
                     expect(term).toBe('vilnius');
