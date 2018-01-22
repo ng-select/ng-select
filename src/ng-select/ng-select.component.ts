@@ -429,6 +429,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (this.isTypeahead) {
             this.isLoading = false;
             this.itemsList.markSelectedOrDefault(this.markFirst);
+            // TODO: this probably will not be needed when ngModel won't be added to items array
             if (this.filterValue) {
                 this.itemsList.filter(this.filterValue);
             }
@@ -640,8 +641,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         $event.preventDefault();
     }
 
-    private nextItemIsTag(nextStep: number) {
-        let nextIndex = this.itemsList.markedIndex + nextStep;
+    private nextItemIsTag(nextStep: number): boolean {
+        const nextIndex = this.itemsList.markedIndex + nextStep;
         return this.addTag && this.filterValue
             && this.itemsList.markedItem
             && (nextIndex < 0 || nextIndex === this.itemsList.filteredItems.length)

@@ -150,8 +150,8 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     scrollInto(item: any) {
-        let el: Element = this.element.nativeElement;
-        let index: number = (this.items || []).indexOf(item);
+        const el: Element = this.element.nativeElement;
+        const index: number = (this.items || []).indexOf(item);
         if (index < 0 || index >= (this.items || []).length) {
             return;
         }
@@ -164,7 +164,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     scrollIntoTag() {
-        let el: Element = this.element.nativeElement;
+        const el: Element = this.element.nativeElement;
         const d = this.calculateDimensions();
         el.scrollTop = el.scrollTop + d.childHeight;
         this.refresh();
