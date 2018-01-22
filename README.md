@@ -16,8 +16,10 @@ Table of contents
   * [Features](#features)
   * [Getting started](#getting-started)
   * [Roadmap](#roadmap)
+  * [API](#api)
+  * [Change detection](#change-detection)
+  * [Custom styles](#custom-styles)
   * [Examples](#examples)
-    * [API](#api)
     * [Basic example](#basic-example)
     * [Flexible autocomplete](#flexible-autocomplete)
     * [Custom display templates](#custom-display-templates)
@@ -151,6 +153,25 @@ this.items = [...this.items];
 This will cause the component to detect the change and update. Some might have concerns that
 this is a pricey operation, however, it is much more performant than running `ngDoCheck` and
 constantly diffing the array.
+
+## Custom styles
+If you are not happy with default styles you can easily override them with increased selector specificity. E.g.
+
+```html
+<ng-select class="custom"></ng-select>
+```
+
+```css
+.ng-select.custom {
+    border:0px;
+    min-height: 0px;
+    border-radius: 0;
+}
+.ng-select.custom .ng-control  {            
+    min-height: 0px;
+    border-radius: 0;
+}
+```
 
 ## Examples
 ### Basic example
