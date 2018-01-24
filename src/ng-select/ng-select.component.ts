@@ -543,8 +543,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
     }
 
-    private _selectWriteValue(value: any | any[]) {
-        if (!value) {
+    private _selectWriteValue(ngModel: any | any[]) {
+        if (!ngModel) {
             return;
         }
 
@@ -552,18 +552,17 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             const item = this.itemsList.findItem(val, this.bindValue);
             if (item) {
                 this.itemsList.select(item);
-            } else if (val instanceof Object) {
-                const newItem = this.itemsList.addItem(val);
-                this.itemsList.select(newItem);
+            } else if (!item && val instanceof Object) {
+                this.itemsList.select({value: {...val}});
             }
         };
 
         if (this.multiple) {
-            (<any[]>value).forEach(item => {
+            (<any[]>ngModel).forEach(item => {
                 select(item);
             });
         } else {
-            select(value);
+            select(ngModel);
         }
     }
 
