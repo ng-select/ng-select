@@ -62,7 +62,11 @@ const appRoutes: Routes = [
         {
             provide: NG_SELECT_DEFAULT_CONFIG,
             useValue: {
-                notFoundText: 'Custom not found'
+                notFoundText: 'Items not found',
+                addTagText: 'Add item',
+                typeToSearchText: 'Type to search',
+                loadingText: 'Loading...',
+                clearAllText: 'Clear all'
             }
         }
     ],
