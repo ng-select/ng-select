@@ -145,7 +145,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
         this.zone.runOutsideAngular(() => {
-            requestAnimationFrame(() => this.calculateItems());
+            requestAnimationFrame(() => this._calculateItems());
         });
     }
 
@@ -156,7 +156,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
-        const d = this.calculateDimensions();
+        const d = this._calculateDimensions();
         const buffer = Math.floor(d.viewHeight / d.childHeight) - 1;
         el.scrollTop = (Math.floor(index / d.itemsPerRow) * d.childHeight)
             - (d.childHeight * Math.min(index, buffer));
@@ -165,12 +165,12 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
 
     scrollIntoTag() {
         let el: Element = this.element.nativeElement;
-        const d = this.calculateDimensions();
+        const d = this._calculateDimensions();
         el.scrollTop = el.scrollTop + d.childHeight;
         this.refresh();
     }
 
-    private countItemsPerRow() {
+    private _countItemsPerRow() {
         let offsetTop;
         let itemsPerRow;
         let children = this.contentElementRef.nativeElement.children;
@@ -183,7 +183,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         return itemsPerRow;
     }
 
-    private getElementsOffset(): number {
+    private _getElementsOffset(): number {
         let offsetTop = 0;
         if (this.containerElementRef && this.containerElementRef.nativeElement) {
             offsetTop += this.containerElementRef.nativeElement.offsetTop;
@@ -191,7 +191,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         return offsetTop;
     }
 
-    private calculateDimensions() {
+    private _calculateDimensions() {
         let el: Element = this.element.nativeElement;
         let items = this.items || [];
         let itemCount = items.length;
@@ -212,7 +212,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         let childWidth = this.childWidth || contentDimensions.width;
         let childHeight = this.childHeight || contentDimensions.height;
 
-        let itemsPerRow = Math.max(1, this.countItemsPerRow());
+        let itemsPerRow = Math.max(1, this._countItemsPerRow());
         let itemsPerRowByCalc = Math.max(1, Math.floor(viewWidth / childWidth));
         let itemsPerCol = Math.max(1, Math.floor(viewHeight / childHeight));
         let scrollTop = Math.max(0, el.scrollTop);
@@ -232,13 +232,13 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         };
     }
 
-    private calculateItems() {
+    private _calculateItems() {
         NgZone.assertNotInAngularZone();
         let el = this.element.nativeElement;
 
-        let d = this.calculateDimensions();
+        let d = this._calculateDimensions();
         let items = this.items || [];
-        let offsetTop = this.getElementsOffset();
+        let offsetTop = this._getElementsOffset();
         this.scrollHeight = d.childHeight * d.itemCount / d.itemsPerRow;
         if (el.scrollTop > this.scrollHeight) {
             el.scrollTop = this.scrollHeight + offsetTop;
