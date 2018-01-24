@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <spinner class="ng-spinner-zone" *ngIf="isLoading"></spinner>
+    <spinner class="ng-spinner-zone" *ngIf="loading"></spinner>
 
     <span *ngIf="showClear()" (click)="handleClearClick($event)" class="ng-clear-zone" title="{{clearAllText}}">
         <span class="ng-clear" aria-hidden="true">×</span>
@@ -79,7 +79,7 @@
         </div>
     </div>
 
-    <div class="ng-select-dropdown" *ngIf="isLoading && itemsList.filteredItems.length === 0">
+    <div class="ng-select-dropdown" *ngIf="loading && itemsList.filteredItems.length === 0">
         <div class="ng-option disabled">
             {{loadingText}}
         </div>
