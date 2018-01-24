@@ -784,6 +784,24 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.selectedCity.name).toBe('new tag');
         }));
 
+        it('should select tag even if there are filtered items that matches search term', fakeAsync(() => {
+            let fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [addTag]="true"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.onFilter('Vil');
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect(fixture.componentInstance.selectedCity.name).toBe('Vil');
+        }));
+
         it('should select custom tag', fakeAsync(() => {
             let fixture = createTestingModule(
                 NgSelectBasicTestCmp,
@@ -949,6 +967,20 @@ describe('NgSelectComponent', function () {
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
             });
+
+            it('should not show selected city among options if it does not match search term', fakeAsync(() => {
+                fixture.componentInstance.selectedCity = { id: 9, name: 'Copenhagen' };
+                tickAndDetectChanges(fixture);
+
+                fixture.componentInstance.customFilter.subscribe();
+                fixture.componentInstance.select.onFilter('new');
+                fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
+                expect(fixture.componentInstance.select.itemsList.filteredItems[0]).toEqual(jasmine.objectContaining({
+                    value: { id: 4, name: 'New York' }
+                }))
+            }));
 
             it('should push term to custom observable', fakeAsync(() => {
                 fixture.componentInstance.customFilter.subscribe(term => {

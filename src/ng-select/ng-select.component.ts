@@ -24,7 +24,7 @@ import {
 } from '@angular/core';
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { 
+import {
     NgOptionTemplateDirective,
     NgLabelTemplateDirective,
     NgHeaderTemplateDirective,
@@ -143,7 +143,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         return this.itemsList.value;
     }
 
-    constructor(@Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
+    constructor( @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private changeDetectorRef: ChangeDetectorRef,
         private elementRef: ElementRef,
         private renderer: Renderer2
@@ -329,7 +329,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     selectTag() {
-        let tag = {}
+        let tag = {};
         if (this.addTag instanceof Function) {
             tag = this.addTag(this.filterValue)
         } else {
@@ -351,7 +351,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     showAddTag() {
         return this.addTag &&
             this.filterValue &&
-            this.itemsList.filteredItems.length === 0 &&
+            !this.itemsList.filteredItems.some(x => x.label.toLowerCase() === this.filterValue.toLowerCase()) &&
             !this.isLoading;
     }
 
@@ -374,11 +374,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (!this.searchable) {
             return;
         }
-
-        if (!this.isOpen) {
-            this.open();
-        }
-
+        this.open();
         this.filterValue = term;
 
         if (this.isTypeahead) {
@@ -428,6 +424,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
         if (this.isTypeahead) {
             this.isLoading = false;
+            // TODO: this probably will not be needed when ngModel won't be added to items array
+            if (this.filterValue) {
+                this.itemsList.filter(this.filterValue);
+            }
             this.itemsList.markSelectedOrDefault(this.markFirst);
         }
     }
@@ -611,8 +611,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private handleArrowDown($event: KeyboardEvent) {
-        if (!this.isOpen) {
-            this.open();
+        this.open();
+        if (this.nextItemIsTag(+1)) {
+            this.itemsList.unmarkItem();
+            this.dropdownList.scrollIntoTag();
         } else {
             this.itemsList.markNextItem();
             this.scrollToMarked();
@@ -621,9 +623,25 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private handleArrowUp($event: KeyboardEvent) {
-        this.itemsList.markPreviousItem();
-        this.scrollToMarked();
+        if (!this.isOpen) {
+            return;
+        }
+
+        if (this.nextItemIsTag(-1)) {
+            this.itemsList.unmarkItem();
+            this.dropdownList.scrollIntoTag();
+        } else {
+            this.itemsList.markPreviousItem();
+            this.scrollToMarked();
+        }
         $event.preventDefault();
+    }
+
+    private nextItemIsTag(nextStep: number): boolean {
+        const nextIndex = this.itemsList.markedIndex + nextStep;
+        return this.addTag && this.filterValue
+            && this.itemsList.markedItem
+            && (nextIndex < 0 || nextIndex === this.itemsList.filteredItems.length)
     }
 
     private handleBackspace() {

@@ -81,7 +81,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     @Output()
     update: EventEmitter<any[]> = new EventEmitter<any[]>();
 
-    @ViewChild('content', {read: ElementRef})
+    @ViewChild('content', { read: ElementRef })
     contentElementRef: ElementRef;
 
     @ContentChild('container')
@@ -93,7 +93,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     private _previousStart: number;
     private _previousEnd: number;
     private _startupLoop = true;
-    private _disposeScrollListener = () => {};
+    private _disposeScrollListener = () => { };
 
     constructor(private element: ElementRef, private zone: NgZone, private renderer: Renderer2) {
     }
@@ -150,8 +150,8 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     scrollInto(item: any) {
-        let el: Element = this.element.nativeElement;
-        let index: number = (this.items || []).indexOf(item);
+        const el: Element = this.element.nativeElement;
+        const index: number = (this.items || []).indexOf(item);
         if (index < 0 || index >= (this.items || []).length) {
             return;
         }
@@ -160,6 +160,13 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         const buffer = Math.floor(d.viewHeight / d.childHeight) - 1;
         el.scrollTop = (Math.floor(index / d.itemsPerRow) * d.childHeight)
             - (d.childHeight * Math.min(index, buffer));
+        this.refresh();
+    }
+
+    scrollIntoTag() {
+        const el: Element = this.element.nativeElement;
+        const d = this.calculateDimensions();
+        el.scrollTop = d.childHeight * (d.itemCount + 1);
         this.refresh();
     }
 

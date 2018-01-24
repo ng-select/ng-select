@@ -20,6 +20,10 @@ export class ItemsList {
         return this.filteredItems[this._markedIndex];
     }
 
+    get markedIndex(): number {
+        return this._markedIndex;
+    }
+
     setItems(items: NgOption[], bindLabel: string, simple: boolean = false) {
         this._simple = simple;
         this._bindLabel = bindLabel;
@@ -97,6 +101,10 @@ export class ItemsList {
         this.filteredItems = [...this.items];
     }
 
+    unmarkItem() {
+        this._markedIndex = -1;
+    }
+
     markNextItem() {
         this.stepToItem(+1);
     }
@@ -125,7 +133,7 @@ export class ItemsList {
         if (steps > 0) {
             return (this._markedIndex === this.filteredItems.length - 1) ? 0 : (this._markedIndex + 1);
         }
-        return (this._markedIndex === 0) ? (this.filteredItems.length - 1) : (this._markedIndex - 1);
+        return (this._markedIndex <= 0) ? (this.filteredItems.length - 1) : (this._markedIndex - 1);
     }
 
     private stepToItem(steps: number) {
