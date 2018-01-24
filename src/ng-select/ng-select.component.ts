@@ -374,11 +374,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (!this.searchable) {
             return;
         }
-
-        if (!this.isOpen) {
-            this.open();
-        }
-
+        this.open();
         this.filterValue = term;
 
         if (this._isTypeahead) {
@@ -428,6 +424,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
         if (this._isTypeahead) {
             this.isLoading = false;
+            // TODO: this probably will not be needed when ngModel won't be added to items array
+            if (this.filterValue) {
+                this.itemsList.filter(this.filterValue);
+            }
             this.itemsList.markSelectedOrDefault(this.markFirst);
             if (this.filterValue) {
                 this.itemsList.filter(this.filterValue);
@@ -614,7 +614,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     private _handleArrowDown($event: KeyboardEvent) {
         this.open();
-        if (this._nextItemIsTag(+1)) {
+        if (this.nextItemIsTag(+1)) {
             this.itemsList.unmarkItem();
             this.dropdownList.scrollIntoTag();
         } else {
@@ -629,7 +629,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             return;
         }
 
-        if (this._nextItemIsTag(-1)) {
+        if (this.nextItemIsTag(-1)) {
             this.itemsList.unmarkItem();
             this.dropdownList.scrollIntoTag();
         } else {
@@ -639,8 +639,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         $event.preventDefault();
     }
 
-    private _nextItemIsTag(nextStep: number) {
-        let nextIndex = this.itemsList.markedIndex + nextStep;
+    private nextItemIsTag(nextStep: number): boolean {
+        const nextIndex = this.itemsList.markedIndex + nextStep;
         return this.addTag && this.filterValue
             && this.itemsList.markedItem
             && (nextIndex < 0 || nextIndex === this.itemsList.filteredItems.length)

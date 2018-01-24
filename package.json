@@ -8,6 +8,7 @@
     "prebuild": "npm run clean",
     "build": "ng-packagr -p ./src/ng-package.json",
     "build:demo": "rimraf dist && webpack --config ./scripts/webpack.dev.js --progress --profile --bail",
+    "prestart": "yarn install",
     "start": "webpack-dev-server --config ./scripts/webpack.dev.js --inline --color --progress --port 8080",
     "test:watch": "karma start ./scripts/karma.conf.js --no-single-run --auto-watch",
     "test": "karma start ./scripts/karma.conf.js --single-run",
