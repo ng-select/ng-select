@@ -166,7 +166,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     scrollIntoTag() {
         const el: Element = this.element.nativeElement;
         const d = this.calculateDimensions();
-        el.scrollTop = el.scrollTop + d.childHeight;
+        el.scrollTop = d.childHeight * (d.itemCount + 1);
         this.refresh();
     }
 

@@ -374,11 +374,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (!this.searchable) {
             return;
         }
-
-        if (!this.isOpen) {
-            this.open();
-        }
-
+        this.open();
         this.filterValue = term;
 
         if (this.isTypeahead) {
@@ -428,11 +424,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
         if (this.isTypeahead) {
             this.isLoading = false;
-            this.itemsList.markSelectedOrDefault(this.markFirst);
             // TODO: this probably will not be needed when ngModel won't be added to items array
             if (this.filterValue) {
                 this.itemsList.filter(this.filterValue);
             }
+            this.itemsList.markSelectedOrDefault(this.markFirst);
         }
     }
 
