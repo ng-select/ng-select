@@ -4,16 +4,17 @@ import { DataService } from '../shared/data.service';
 
 @Component({
     selector: 'select-search',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     template: `
         <h5>Default search</h5>
         <hr>
         <p>
-            By default ng-select will search using label text
+            By default ng-select will search using label text. You can also use <b>loading</b> input to set loading state manually.
         </p>
         ---html,true
         <ng-select [items]="people"
                    bindLabel="name"
+                   [loading]="peopleLoading"
                    [(ngModel)]="selectedPerson">
         </ng-select>
         ---
@@ -64,6 +65,8 @@ export class SelectSearchComponent {
         name: 'Karyn Wright'
     }];
 
+    peopleLoading = false;
+
     constructor(private dataService: DataService, private cd: ChangeDetectorRef) { }
 
     ngOnInit() {
@@ -92,9 +95,11 @@ export class SelectSearchComponent {
     }
 
     private loadPeopleForClientSide() {
+        this.peopleLoading = true;
         this.dataService.getPeople().subscribe(x => {
             this.people = x;
             this.peopleFiltered = x;
+            this.peopleLoading = false;
         });
     }
 }

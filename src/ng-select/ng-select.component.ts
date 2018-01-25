@@ -85,6 +85,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() clearAllText: string;
     @Input() dropdownPosition: 'bottom' | 'top' = 'bottom';
     @Input() appendTo: string;
+    @Input() loading = false;
 
     @Input()
     @HostBinding('class.typeahead') typeahead: Subject<string>;
@@ -113,15 +114,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     get single() {
         return !this.multiple;
     }
-    @Output('loadingChange') loadingChange = new EventEmitter<Boolean>();
-    get loading(): boolean {
-        return this.isLoading;
-    }
-    @Input()
-    set loading(value: boolean) {
-        this.isLoading = value;
-        this.loadingChange.next(value);
-    }
 
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
@@ -130,7 +122,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     itemsList = new ItemsList();
     viewPortItems: NgOption[] = [];
-    isLoading = false;
     filterValue: string = null;
 
     private _ngModel: any = null;
