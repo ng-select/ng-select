@@ -1015,10 +1015,10 @@ describe('NgSelectComponent', function () {
             it('should start and stop loading indicator', fakeAsync(() => {
                 fixture.componentInstance.customFilter.subscribe();
                 fixture.componentInstance.select.onFilter('buk');
-                expect(fixture.componentInstance.select.isLoading).toBeTruthy();
+                expect(fixture.componentInstance.select.loading).toBeTruthy();
                 fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];
                 tickAndDetectChanges(fixture);
-                expect(fixture.componentInstance.select.isLoading).toBeFalsy();
+                expect(fixture.componentInstance.select.loading).toBeFalsy();
             }));
         });
     });

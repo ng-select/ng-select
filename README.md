@@ -123,6 +123,7 @@ map: {
 | [disableVirtualScroll] | boolean |  false | no | Disable virtual scroll |
 | dropdownPosition | `bottom`,`top` |  `bottom` | no | Set the dropdown position on open |
 | appendTo | string |  null | no | Append drodown to body or any other element using css selector |
+| loading | boolean |  `-` | no | you can set the loading state from the outside (e.g. async items loading) |
 
 | Output  | Description |
 | ------------- | ------------- |
@@ -134,6 +135,7 @@ map: {
 | (clear)  | Fired on clear icon click |
 | (add)  | Fired when item is selected |
 | (remove)  | Fired when item is removed |
+| (loading)  | Fired when loading state changes |
 
 ## Change Detection
 Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable 

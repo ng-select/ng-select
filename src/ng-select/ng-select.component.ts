@@ -113,6 +113,15 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     get single() {
         return !this.multiple;
     }
+    @Output('loadingChange') loadingChange = new EventEmitter<Boolean>();
+    get loading(): boolean {
+        return this.isLoading;
+    }
+    @Input()
+    set loading(value: boolean) {
+        this.isLoading = value;
+        this.loadingChange.next(value);
+    }
 
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
@@ -352,7 +361,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         return this.addTag &&
             this.filterValue &&
             !this.itemsList.filteredItems.some(x => x.label.toLowerCase() === this.filterValue.toLowerCase()) &&
-            !this.isLoading;
+            !this.loading;
     }
 
     showFilter() {
@@ -362,12 +371,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     showNoItemsFound() {
         const empty = this.itemsList.filteredItems.length === 0;
         return (empty && !this.isTypeahead) ||
-            (empty && this.isTypeahead && this.filterValue && !this.isLoading);
+            (empty && this.isTypeahead && this.filterValue && !this.loading);
     }
 
     showTypeToSearch() {
         const empty = this.itemsList.filteredItems.length === 0;
-        return empty && this.isTypeahead && !this.filterValue && !this.isLoading;
+        return empty && this.isTypeahead && !this.filterValue && !this.loading;
     }
 
     onFilter(term: string) {
@@ -378,7 +387,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.filterValue = term;
 
         if (this.isTypeahead) {
-            this.isLoading = true;
+            this.loading = true;
             this.typeahead.next(this.filterValue);
         } else {
             this.itemsList.filter(this.filterValue);
@@ -423,7 +432,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
 
         if (this.isTypeahead) {
-            this.isLoading = false;
+            this.loading = false;
             // TODO: this probably will not be needed when ngModel won't be added to items array
             if (this.filterValue) {
                 this.itemsList.filter(this.filterValue);
