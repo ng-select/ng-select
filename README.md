@@ -135,7 +135,6 @@ map: {
 | (clear)  | Fired on clear icon click |
 | (add)  | Fired when item is selected |
 | (remove)  | Fired when item is removed |
-| (loading)  | Fired when loading state changes |
 
 ## Change Detection
 Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable 

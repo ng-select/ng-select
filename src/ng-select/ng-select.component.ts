@@ -85,6 +85,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() clearAllText: string;
     @Input() dropdownPosition: 'bottom' | 'top' = 'bottom';
     @Input() appendTo: string;
+    @Input() loading = false;
 
     @Input()
     @HostBinding('class.typeahead') typeahead: Subject<string>;
@@ -113,15 +114,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     get single() {
         return !this.multiple;
     }
-    @Output('loadingChange') loadingChange = new EventEmitter<Boolean>();
-    get loading(): boolean {
-        return this.isLoading;
-    }
-    @Input()
-    set loading(value: boolean) {
-        this.isLoading = value;
-        this.loadingChange.next(value);
-    }
 
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
@@ -130,13 +122,13 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     itemsList = new ItemsList();
     viewPortItems: NgOption[] = [];
-    isLoading = false;
     filterValue: string = null;
 
     private _ngModel: any = null;
     private _simple = false;
     private _defaultLabel = 'label';
     private _defaultValue = 'value';
+    private _typeaheadLoading = false;
 
     private onChange = (_: NgOption) => { };
     private onTouched = () => { };
@@ -148,16 +140,20 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.unselect(option);
     };
 
-    get selectedItems(): NgOption[] {
-        return this.itemsList.value;
-    }
-
     constructor( @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private changeDetectorRef: ChangeDetectorRef,
         private elementRef: ElementRef,
         private renderer: Renderer2
     ) {
         this.mergeGlobalConfig(config);
+    }
+
+    get selectedItems(): NgOption[] {
+        return this.itemsList.value;
+    }
+
+    get isLoading() {
+        return this.loading || this._typeaheadLoading;
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -361,7 +357,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         return this.addTag &&
             this.filterValue &&
             !this.itemsList.filteredItems.some(x => x.label.toLowerCase() === this.filterValue.toLowerCase()) &&
-            !this.loading;
+            !this.isLoading;
     }
 
     showFilter() {
@@ -371,12 +367,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     showNoItemsFound() {
         const empty = this.itemsList.filteredItems.length === 0;
         return (empty && !this.isTypeahead) ||
-            (empty && this.isTypeahead && this.filterValue && !this.loading);
+            (empty && this.isTypeahead && this.filterValue && !this.isLoading);
     }
 
     showTypeToSearch() {
         const empty = this.itemsList.filteredItems.length === 0;
-        return empty && this.isTypeahead && !this.filterValue && !this.loading;
+        return empty && this.isTypeahead && !this.filterValue && !this.isLoading;
     }
 
     onFilter(term: string) {
@@ -387,7 +383,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.filterValue = term;
 
         if (this.isTypeahead) {
-            this.loading = true;
+            this._typeaheadLoading = true;
             this.typeahead.next(this.filterValue);
         } else {
             this.itemsList.filter(this.filterValue);
@@ -432,7 +428,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
 
         if (this.isTypeahead) {
-            this.loading = false;
+            this._typeaheadLoading = false;
             // TODO: this probably will not be needed when ngModel won't be added to items array
             if (this.filterValue) {
                 this.itemsList.filter(this.filterValue);

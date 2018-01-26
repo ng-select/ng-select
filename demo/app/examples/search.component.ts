@@ -4,16 +4,18 @@ import { DataService } from '../shared/data.service';
 
 @Component({
     selector: 'select-search',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     template: `
         <h5>Default search</h5>
         <hr>
         <p>
-            By default ng-select will search using label text
+            By default ng-select will search using label text. You can also use <b>loading</b> input to set 
+            loading state manually if <b>[typeahead]</b> is not used.
         </p>
         ---html,true
         <ng-select [items]="people"
                    bindLabel="name"
+                   [loading]="peopleLoading"
                    [(ngModel)]="selectedPerson">
         </ng-select>
         ---
@@ -35,7 +37,8 @@ import { DataService } from '../shared/data.service';
        
         <h5>Custom server-side search</h5>
         <hr>
-        <p>Use <b>typeahead</b> to subscribe to search term and load async items</p>
+        <p>Use <b>typeahead</b> to subscribe to search term and load async items.
+        Loading state is automatically set when filter value changes.</p>
         <label>Multi select + Typeahead + Custom items (tags)</label>
         ---html,true
         <ng-select [items]="serverSideFilterItems"
@@ -57,12 +60,16 @@ export class SelectSearchComponent {
     people = [];
     peopleFiltered = [];
     serverSideFilterItems = [];
-
+    
     searchTerm = new EventEmitter<string>();
     peopleTypeahead = new EventEmitter<string>();
     selectedPersons = [{
         name: 'Karyn Wright'
     }];
+    selectedPerson: any;
+    selectedCustom: any;
+
+    peopleLoading = false;
 
     constructor(private dataService: DataService, private cd: ChangeDetectorRef) { }
 
@@ -92,9 +99,11 @@ export class SelectSearchComponent {
     }
 
     private loadPeopleForClientSide() {
+        this.peopleLoading = true;
         this.dataService.getPeople().subscribe(x => {
             this.people = x;
             this.peopleFiltered = x;
+            this.peopleLoading = false;
         });
     }
 }

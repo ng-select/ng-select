@@ -10,7 +10,7 @@ import { Title } from '@angular/platform-browser';
 @Component({
     selector: 'demo-app',
     templateUrl: './app.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
 })
 export class AppComponent {
 

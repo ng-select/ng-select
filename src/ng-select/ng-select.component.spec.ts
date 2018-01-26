@@ -976,6 +976,7 @@ describe('NgSelectComponent', function () {
                 fixture.componentInstance.select.onFilter('new');
                 fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
                 tickAndDetectChanges(fixture);
+                console.log(fixture.componentInstance.select.itemsList)
                 expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
                 expect(fixture.componentInstance.select.itemsList.filteredItems[0]).toEqual(jasmine.objectContaining({
                     value: { id: 4, name: 'New York' }
@@ -1015,10 +1016,10 @@ describe('NgSelectComponent', function () {
             it('should start and stop loading indicator', fakeAsync(() => {
                 fixture.componentInstance.customFilter.subscribe();
                 fixture.componentInstance.select.onFilter('buk');
-                expect(fixture.componentInstance.select.loading).toBeTruthy();
+                expect(fixture.componentInstance.select.isLoading).toBeTruthy();
                 fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];
                 tickAndDetectChanges(fixture);
-                expect(fixture.componentInstance.select.loading).toBeFalsy();
+                expect(fixture.componentInstance.select.isLoading).toBeFalsy();
             }));
         });
     });
