@@ -85,6 +85,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() clearAllText: string;
     @Input() dropdownPosition: 'bottom' | 'top' = 'bottom';
     @Input() appendTo: string;
+    @Input() loading = false;
 
     @Input()
     @HostBinding('class.typeahead') typeahead: Subject<string>;
@@ -121,13 +122,13 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     itemsList = new ItemsList();
     viewPortItems: NgOption[] = [];
-    isLoading = false;
     filterValue: string = null;
 
     private _ngModel: any = null;
     private _simple = false;
     private _defaultLabel = 'label';
     private _defaultValue = 'value';
+    private _typeaheadLoading = false;
 
     private _onChange = (_: NgOption) => { };
     private _onTouched = () => { };
@@ -139,16 +140,20 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.unselect(option);
     };
 
-    get selectedItems(): NgOption[] {
-        return this.itemsList.value;
-    }
-
     constructor( @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private changeDetectorRef: ChangeDetectorRef,
         private elementRef: ElementRef,
         private renderer: Renderer2
     ) {
         this._mergeGlobalConfig(config);
+    }
+
+    get selectedItems(): NgOption[] {
+        return this.itemsList.value;
+    }
+
+    get isLoading() {
+        return this.loading || this._typeaheadLoading;
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -378,7 +383,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.filterValue = term;
 
         if (this._isTypeahead) {
-            this.isLoading = true;
+            this._typeaheadLoading = true;
             this.typeahead.next(this.filterValue);
         } else {
             this.itemsList.filter(this.filterValue);
@@ -423,11 +428,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
 
         if (this._isTypeahead) {
-            this.isLoading = false;
-            // TODO: this probably will not be needed when ngModel won't be added to items array
-            if (this.filterValue) {
-                this.itemsList.filter(this.filterValue);
-            }
+            this._typeaheadLoading = false;
             this.itemsList.markSelectedOrDefault(this.markFirst);
             if (this.filterValue) {
                 this.itemsList.filter(this.filterValue);

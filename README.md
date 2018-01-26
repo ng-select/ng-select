@@ -123,6 +123,7 @@ map: {
 | [disableVirtualScroll] | boolean |  false | no | Disable virtual scroll |
 | dropdownPosition | `bottom`,`top` |  `bottom` | no | Set the dropdown position on open |
 | appendTo | string |  null | no | Append drodown to body or any other element using css selector |
+| loading | boolean |  `-` | no | you can set the loading state from the outside (e.g. async items loading) |
 
 | Output  | Description |
 | ------------- | ------------- |

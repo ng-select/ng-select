@@ -976,6 +976,7 @@ describe('NgSelectComponent', function () {
                 fixture.componentInstance.select.onFilter('new');
                 fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
                 tickAndDetectChanges(fixture);
+                console.log(fixture.componentInstance.select.itemsList)
                 expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
                 expect(fixture.componentInstance.select.itemsList.filteredItems[0]).toEqual(jasmine.objectContaining({
                     value: { id: 4, name: 'New York' }

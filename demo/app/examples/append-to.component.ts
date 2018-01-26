@@ -45,6 +45,7 @@ import { DataService } from '../shared/data.service';
 export class AppendToComponent implements OnInit {
 
     people: any = [];
+    selected: any;
     constructor(private dataService: DataService) { }
 
     ngOnInit() { 
