@@ -191,6 +191,27 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
             expect(lastSelection.selected).toBeFalsy();
         }));
+
+        it('should not added selected items to new items list when [items] are changed', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectModelChangesTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [multiple]="true"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCities">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCities = [fixture.componentInstance.cities.slice(0, 2)];
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.cities = [{ id: 1, name: 'New city' }];
+            tickAndDetectChanges(fixture);
+
+            const internalItems = fixture.componentInstance.select.itemsList.items;
+            expect(internalItems.length).toBe(1);
+            expect(internalItems[0].value).toEqual(jasmine.objectContaining({ id: 1, name: 'New city' }));
+        }));
     });
 
     describe('Model bindings', () => {
@@ -976,7 +997,6 @@ describe('NgSelectComponent', function () {
                 fixture.componentInstance.select.onFilter('new');
                 fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
                 tickAndDetectChanges(fixture);
-                console.log(fixture.componentInstance.select.itemsList)
                 expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
                 expect(fixture.componentInstance.select.itemsList.filteredItems[0]).toEqual(jasmine.objectContaining({
                     value: { id: 4, name: 'New York' }
@@ -1443,6 +1463,7 @@ class NgSelectModelChangesTestCmp {
 
     visible = true;
     selectedCity: { id: number; name: string };
+    selectedCities = [];
     cities = [
         { id: 1, name: 'Vilnius' },
         { id: 2, name: 'Kaunas' },
