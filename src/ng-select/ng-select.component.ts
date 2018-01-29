@@ -419,7 +419,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.bindLabel = this.bindLabel || this._defaultLabel;
         this._simple = firstItem && !(firstItem instanceof Object);
         this.itemsList.setItems(items, this.bindLabel, this._simple);
-        if (this._ngModel && items.length > 0) {
+        if (this._isDefined(this._ngModel) && items.length > 0) {
             this.itemsList.clearSelected();
             this._selectWriteValue(this._ngModel);
         }
@@ -440,7 +440,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             }));
             this.itemsList.setItems(this.items, this.bindLabel);
 
-            if (this._ngModel) {
+            if (this._isDefined(this._ngModel)) {
                 this.itemsList.clearSelected();
                 this._selectWriteValue(this._ngModel);
             }
@@ -518,7 +518,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private _validateWriteValue(value: any) {
-        if (!value) {
+        if (!this._isDefined(value)) {
             return;
         }
 
@@ -539,7 +539,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private _selectWriteValue(ngModel: any | any[]) {
-        if (!ngModel) {
+        if (!this._isDefined(ngModel)) {
             return;
         }
 
@@ -660,7 +660,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     private _notifyModelChanged() {
         let ngModel = this._value;
-        if (!ngModel) {
+        if (!this._isDefined(ngModel)) {
             this._onChange(null);
         } else if (this.bindValue) {
             ngModel = Array.isArray(ngModel) ?
@@ -704,5 +704,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.loadingText = this.loadingText || config.loadingText;
         this.clearAllText = this.clearAllText || config.clearAllText;
         this.disableVirtualScroll = this.disableVirtualScroll || config.disableVirtualScroll;
+    }
+
+    private _isDefined(value: any) {
+        return value !== null && value !== undefined;
     }
 }
