@@ -24,10 +24,10 @@ export class ItemsList {
         return this._markedIndex;
     }
 
-    setItems(items: NgOption[], bindLabel: string, simple: boolean = false) {
+    setItems(items: any[], bindLabel: string, simple: boolean = false) {
         this._simple = simple;
         this._bindLabel = bindLabel;
-        this.items = this._mapItems(items);
+        this.items = items.map((item, index) => this.mapItem(item, index));
         this.filteredItems = [...this.items];
     }
 
@@ -145,6 +145,22 @@ export class ItemsList {
         }
     }
 
+    mapItem(item: any, index: number): NgOption {
+        let option = item;
+        if (this._simple) {
+            option = {
+                label: item as any
+            };
+        }
+
+        return {
+            index: index,
+            label: this.resolveNested(option, this._bindLabel),
+            value: {...option},
+            disabled: !!option.disabled,
+        };
+    }
+
     private _getNextItemIndex(steps: number) {
         if (steps > 0) {
             return (this._markedIndex === this.filteredItems.length - 1) ? 0 : (this._markedIndex + 1);
@@ -173,23 +189,5 @@ export class ItemsList {
 
     private get _lastSelectedItem() {
         return this._selected[this._selected.length - 1];
-    }
-
-    private _mapItems(items: NgOption[]) {
-        return items.map((item, index) => {
-            let option = item;
-            if (this._simple) {
-                option = {
-                    label: item as any
-                };
-            }
-
-            return {
-                index: index,
-                label: this.resolveNested(option, this._bindLabel),
-                value: option,
-                disabled: !!option.disabled,
-            };
-        })
     }
 }

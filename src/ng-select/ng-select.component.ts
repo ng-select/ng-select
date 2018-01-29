@@ -417,7 +417,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
     }
 
-    private _setItems(items: NgOption[]) {
+    private _setItems(items: any[]) {
         const firstItem = items[0];
         this.bindLabel = this.bindLabel || this._defaultLabel;
         this._simple = firstItem && !(firstItem instanceof Object);
@@ -554,7 +554,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             if (item) {
                 this.itemsList.select(item);
             } else if (!item && val instanceof Object) {
-                this.itemsList.select({value: {...val}});
+                this.itemsList.select(this.itemsList.mapItem(val, null));
             }
         };
 
