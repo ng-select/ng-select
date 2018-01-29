@@ -9,7 +9,6 @@ export class ItemsList {
     private _markedIndex = -1;
     private _selected: NgOption[] = [];
     private _multiple = false;
-    private _simple = false;
     private _bindLabel: string;
 
     get value(): NgOption[] {
@@ -24,10 +23,9 @@ export class ItemsList {
         return this._markedIndex;
     }
 
-    setItems(items: NgOption[], bindLabel: string, simple: boolean = false) {
-        this._simple = simple;
+    setItems(items: any[], bindLabel: string, simple: boolean = false) {
         this._bindLabel = bindLabel;
-        this.items = this.mapItems(items);
+        this.items = items.map((item, index) => this.mapItem(item, simple, index));
         this.filteredItems = [...this.items];
     }
 
@@ -93,7 +91,7 @@ export class ItemsList {
     }
 
     filter(term: string) {
-        const filterFuncVal = this.getDefaultFilterFunc(term);
+        const filterFuncVal = this._getDefaultFilterFunc(term);
         this.filteredItems = term ? this.items.filter(val => filterFuncVal(val)) : this.items;
     }
 
@@ -106,11 +104,11 @@ export class ItemsList {
     }
 
     markNextItem() {
-        this.stepToItem(+1);
+        this._stepToItem(+1);
     }
 
     markPreviousItem() {
-        this.stepToItem(-1);
+        this._stepToItem(-1);
     }
 
     markItem(item: NgOption) {
@@ -122,59 +120,11 @@ export class ItemsList {
             return;
         }
 
-        if (this.lastSelectedItem) {
-            this._markedIndex = this.filteredItems.indexOf(this.lastSelectedItem);
+        if (this._lastSelectedItem) {
+            this._markedIndex = this.filteredItems.indexOf(this._lastSelectedItem);
         } else {
             this._markedIndex = markDefault ? 0 : -1;
         }
-    }
-
-    private getNextItemIndex(steps: number) {
-        if (steps > 0) {
-            return (this._markedIndex === this.filteredItems.length - 1) ? 0 : (this._markedIndex + 1);
-        }
-        return (this._markedIndex <= 0) ? (this.filteredItems.length - 1) : (this._markedIndex - 1);
-    }
-
-    private stepToItem(steps: number) {
-        if (this.filteredItems.length === 0) {
-            return;
-        }
-
-        this._markedIndex = this.getNextItemIndex(steps);
-        while (this.markedItem.disabled) {
-            this.stepToItem(steps);
-        }
-    }
-
-    private getDefaultFilterFunc(term: string) {
-        return (option: NgOption) => {
-            return searchHelper.stripSpecialChars(option.label || '')
-                .toUpperCase()
-                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
-        };
-    }
-
-    private get lastSelectedItem() {
-        return this._selected[this._selected.length - 1];
-    }
-
-    private mapItems(items: NgOption[]) {
-        return items.map((item, index) => {
-            let option = item;
-            if (this._simple) {
-                option = {
-                    label: item as any
-                };
-            }
-
-            return {
-                index: index,
-                label: this.resolveNested(option, this._bindLabel),
-                value: option,
-                disabled: !!option.disabled,
-            };
-        })
     }
 
     resolveNested(option: any, key: string): any {
@@ -191,5 +141,52 @@ export class ItemsList {
             }
             return value;
         }
+    }
+
+    mapItem(item: any, simple: boolean, index: number): NgOption {
+        let option = item;
+        let label = null;
+        if (simple) {
+            option = item;
+            label = item;
+        } else {
+            label = this.resolveNested(option, this._bindLabel);
+        }
+        return {
+            index: index,
+            label: label,
+            value: option,
+            disabled: option.disabled,
+        };
+    }
+
+    private _getNextItemIndex(steps: number) {
+        if (steps > 0) {
+            return (this._markedIndex === this.filteredItems.length - 1) ? 0 : (this._markedIndex + 1);
+        }
+        return (this._markedIndex <= 0) ? (this.filteredItems.length - 1) : (this._markedIndex - 1);
+    }
+
+    private _stepToItem(steps: number) {
+        if (this.filteredItems.length === 0) {
+            return;
+        }
+
+        this._markedIndex = this._getNextItemIndex(steps);
+        while (this.markedItem.disabled) {
+            this._stepToItem(steps);
+        }
+    }
+
+    private _getDefaultFilterFunc(term: string) {
+        return (option: NgOption) => {
+            return searchHelper.stripSpecialChars(option.label || '')
+                .toUpperCase()
+                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
+        };
+    }
+
+    private get _lastSelectedItem() {
+        return this._selected[this._selected.length - 1];
     }
 }

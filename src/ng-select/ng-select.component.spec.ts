@@ -123,7 +123,7 @@ describe('NgSelectComponent', function () {
             }));
         }));
 
-        it('should bind ngModel even if items are empty', fakeAsync(() => {
+        it('should bind ngModel object even if items are empty', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,
                 `<ng-select [items]="cities"
@@ -140,6 +140,27 @@ describe('NgSelectComponent', function () {
 
             expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
                 value: { id: 7, name: 'Pailgis' },
+                selected: true
+            })]);
+        }));
+
+        it('should bind ngModel simple value even if items are empty', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectSimpleCmp,
+                `<ng-select [items]="cities"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.cities = [];
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.selectedCity = 'Kaunas';
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
+                value: 'Kaunas',
+                label: 'Kaunas',
                 selected: true
             })]);
         }));
@@ -190,6 +211,27 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.selectedCity = null;
             tickAndDetectChanges(fixture);
             expect(lastSelection.selected).toBeFalsy();
+        }));
+
+        it('should not add selected items to new items list when [items] are changed', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectModelChangesTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [multiple]="true"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCities">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCities = [fixture.componentInstance.cities.slice(0, 2)];
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.cities = [{ id: 1, name: 'New city' }];
+            tickAndDetectChanges(fixture);
+
+            const internalItems = fixture.componentInstance.select.itemsList.items;
+            expect(internalItems.length).toBe(1);
+            expect(internalItems[0].value).toEqual(jasmine.objectContaining({ id: 1, name: 'New city' }));
         }));
     });
 
@@ -245,13 +287,14 @@ describe('NgSelectComponent', function () {
                 `<ng-select [items]="cities"
                             [(ngModel)]="selectedCity">
                 </ng-select>`);
-
+            
             selectOption(fixture, KeyCode.ArrowDown, 0);
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.selectedCity).toBe('Vilnius');
             fixture.componentInstance.selectedCity = 'Kaunas';
             tickAndDetectChanges(fixture);
-            expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({ label: 'Kaunas' })]);
+            expect(fixture.componentInstance.select.selectedItems)
+                .toEqual([jasmine.objectContaining({ label: 'Kaunas', value: 'Kaunas' })]);
         }));
 
         it('bind to object', fakeAsync(() => {
@@ -976,7 +1019,6 @@ describe('NgSelectComponent', function () {
                 fixture.componentInstance.select.onFilter('new');
                 fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
                 tickAndDetectChanges(fixture);
-                console.log(fixture.componentInstance.select.itemsList)
                 expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
                 expect(fixture.componentInstance.select.itemsList.filteredItems[0]).toEqual(jasmine.objectContaining({
                     value: { id: 4, name: 'New York' }
@@ -1443,6 +1485,7 @@ class NgSelectModelChangesTestCmp {
 
     visible = true;
     selectedCity: { id: number; name: string };
+    selectedCities = [];
     cities = [
         { id: 1, name: 'Vilnius' },
         { id: 2, name: 'Kaunas' },
