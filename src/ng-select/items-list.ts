@@ -46,9 +46,6 @@ export class ItemsList {
     }
 
     findItem(value: any, bindValue: string): NgOption {
-        if (!value) {
-            return null;
-        }
         if (bindValue) {
             return this.items.find(item => item.value[bindValue] === value);
         }
