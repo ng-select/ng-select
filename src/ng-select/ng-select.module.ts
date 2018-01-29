@@ -32,7 +32,6 @@ import { NgOptionComponent } from './ng-option.component';
         NgLabelTemplateDirective,
         NgHeaderTemplateDirective,
         NgFooterTemplateDirective
-        
     ],
     providers: [
         {

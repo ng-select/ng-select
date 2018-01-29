@@ -22,13 +22,15 @@ import { LayoutSidenavComponent } from './layout/sidenav-component';
 import { VirtualScrollComponent } from './examples/virtual-scroll.component';
 import { DataService } from './shared/data.service';
 import { AppendToComponent } from './examples/append-to.component';
+import { DataSourceComponent } from './examples/data-source.component';
 
 const appRoutes: Routes = [
     {
         path: '',
-        redirectTo: '/forms',
+        redirectTo: '/data-source',
         pathMatch: 'full'
     },
+    { path: 'data-source', component: DataSourceComponent, data: { title: 'Data source' } },
     { path: 'forms', component: ReactiveFormsComponent, data: { title: 'Reactive forms' } },
     { path: 'bindings', component: SelectBindingsComponent, data: { title: 'Data bindings' } },
     { path: 'filter', component: SelectSearchComponent, data: { title: 'Filter and autocomplete'} },
@@ -83,7 +85,8 @@ const appRoutes: Routes = [
         LayoutSidenavComponent,
         DropdownPositionsComponent,
         VirtualScrollComponent,
-        AppendToComponent
+        AppendToComponent,
+        DataSourceComponent
     ],
     bootstrap: [AppComponent]
 })
