@@ -298,6 +298,28 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.selectedItems).toEqual(result);
             }));
 
+            it('should select by bindValue ', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectSelectedSimpleCmp,
+                    `<ng-select [items]="cities"
+                        bindLabel="name"
+                        bindValue="id"
+                        placeholder="select value"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+
+                fixture.componentInstance.cities = [{ id: 0, name: 'Vilnius' }];
+                fixture.componentInstance.selectedCity = 0;
+               
+                tickAndDetectChanges(fixture);
+
+                const result = [jasmine.objectContaining({
+                    value: { id: 0, name: 'Vilnius' },
+                    selected: true
+                })];
+                expect(fixture.componentInstance.select.selectedItems).toEqual(result);
+            }));
+
             it('should select by bindLabel when binding to object', fakeAsync(() => {
                 const fixture = createTestingModule(
                     NgSelectSelectedObjectCmp,
