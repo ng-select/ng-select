@@ -430,9 +430,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (this._isTypeahead) {
             this._typeaheadLoading = false;
             this.itemsList.markSelectedOrDefault(this.markFirst);
-            if (this.filterValue) {
-                this.itemsList.filter(this.filterValue);
-            }
         }
     }
 

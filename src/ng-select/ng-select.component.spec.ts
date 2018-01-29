@@ -192,7 +192,7 @@ describe('NgSelectComponent', function () {
             expect(lastSelection.selected).toBeFalsy();
         }));
 
-        it('should not added selected items to new items list when [items] are changed', fakeAsync(() => {
+        it('should not add selected items to new items list when [items] are changed', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,
                 `<ng-select [items]="cities"

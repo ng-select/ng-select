@@ -7,11 +7,18 @@ import { Observable } from 'rxjs/Observable';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <p>
-            Most common case is showing data from some backend
-            API and with ng-select this is extremely simple when using angular <b> | async</b> pipe
+            Most common case is showing data from backend
+            API and with ng-select this is extremely simple since you can bind directly to 
+            observable when using angular <b> | async</b> pipe
         </p>
+        ---js
+        people$: Observable<Person[]>;
+        ngOnInit() {
+            this.people$ = this.dataService.getPeople();
+        }
+        ---
         ---html,true
-        <ng-select [items]="peopleObservable | async"
+        <ng-select [items]="people$ | async"
                    bindLabel="name"
                    bindValue="id"
                    [(ngModel)]="selectedPersonId">
@@ -21,23 +28,31 @@ import { Observable } from 'rxjs/Observable';
 
         <hr />
         <p>
-            You can also set plain array as  items input
+            You can also set array of objects as items input
         </p>
+        ---js
+        people: Person[] = [];
+        ngOnInit() {
+            this.dataService.getPeople().subscribe(people => {
+                this.people = people
+            });
+        }
+        ---
         ---html,true
         <ng-select [items]="people"
                    bindLabel="name"
                    bindValue="id"
-                   [(ngModel)]="selectedPersonId">
+                   [(ngModel)]="selectedPersonId2">
         </ng-select>
         ---
-        <br />Selected: {{selectedPersonId}}
+        <br />Selected: {{selectedPersonId2}}
 
         <hr />
         <p>
-            While array of objecs is the most common items source you may want to set simple array of strings
+            While array of objecs is the most common items source you may want to set simple array of strings, numbers, booleans
         </p>
         ---js
-        items = ['One', 'Two', 'Three'];
+        items = [true, 'Two', 3];
         ---
         ---html,true
         <ng-select [items]="simpleItems"
@@ -48,9 +63,10 @@ import { Observable } from 'rxjs/Observable';
     `
 })
 export class DataSourceComponent {
-    peopleObservable: Observable<Person[]>;
+    people$: Observable<Person[]>;
     people: Person[] = [];
     selectedPersonId = '5a15b13c36e7a7f00cf0d7cb';
+    selectedPersonId2 = '5a15b13c36e7a7f00cf0d7cb';
 
     selectedSimpleItem = 'Two';
     simpleItems = [];
@@ -58,9 +74,9 @@ export class DataSourceComponent {
     constructor(private dataService: DataService) { }
 
     ngOnInit() {
-        this.peopleObservable = this.dataService.getPeople();
+        this.people$ = this.dataService.getPeople();
         this.dataService.getPeople().subscribe(items => this.people = items);
-        this.simpleItems = ['One', 'Two', 'Three'];
+        this.simpleItems = [true, 'Two', 3];
     }
 }
 

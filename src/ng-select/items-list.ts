@@ -156,7 +156,7 @@ export class ItemsList {
         return {
             index: index,
             label: this.resolveNested(option, this._bindLabel),
-            value: {...option},
+            value: option,
             disabled: !!option.disabled,
         };
     }
