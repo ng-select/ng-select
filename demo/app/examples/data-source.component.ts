@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'select-search',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     template: `
         <p>
             Most common case is showing data from backend
@@ -59,7 +59,7 @@ import { Observable } from 'rxjs/Observable';
                    [(ngModel)]="selectedSimpleItem">
         </ng-select>
         ---
-        <br />Selected: {{selectedSimpleItem}}
+        <br />Selected: {{selectedSimpleItem | json}}
     `
 })
 export class DataSourceComponent {

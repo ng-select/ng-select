@@ -167,9 +167,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     ngOnInit() {
         this._handleDocumentClick();
-        if (this._simple) {
-            this.bindValue = this._defaultLabel;
-        }
     }
 
     ngAfterViewInit() {
@@ -550,8 +547,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             const item = this.itemsList.findItem(val, this.bindValue);
             if (item) {
                 this.itemsList.select(item);
-            } else if (!item && val instanceof Object) {
-                this.itemsList.select(this.itemsList.mapItem(val, null));
+            } else {
+                const isObject = val instanceof Object;
+                const simpleValue = !isObject && !this.bindValue;
+                if (isObject || simpleValue) {
+                    this.itemsList.select(this.itemsList.mapItem(val, simpleValue, null));
+                }
             }
         };
 

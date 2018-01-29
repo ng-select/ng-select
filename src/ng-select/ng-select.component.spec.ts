@@ -123,7 +123,7 @@ describe('NgSelectComponent', function () {
             }));
         }));
 
-        it('should bind ngModel even if items are empty', fakeAsync(() => {
+        it('should bind ngModel object even if items are empty', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,
                 `<ng-select [items]="cities"
@@ -140,6 +140,27 @@ describe('NgSelectComponent', function () {
 
             expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
                 value: { id: 7, name: 'Pailgis' },
+                selected: true
+            })]);
+        }));
+
+        it('should bind ngModel simple value even if items are empty', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectSimpleCmp,
+                `<ng-select [items]="cities"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.cities = [];
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.selectedCity = 'Kaunas';
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
+                value: 'Kaunas',
+                label: 'Kaunas',
                 selected: true
             })]);
         }));
@@ -266,13 +287,14 @@ describe('NgSelectComponent', function () {
                 `<ng-select [items]="cities"
                             [(ngModel)]="selectedCity">
                 </ng-select>`);
-
+            
             selectOption(fixture, KeyCode.ArrowDown, 0);
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.selectedCity).toBe('Vilnius');
             fixture.componentInstance.selectedCity = 'Kaunas';
             tickAndDetectChanges(fixture);
-            expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({ label: 'Kaunas' })]);
+            expect(fixture.componentInstance.select.selectedItems)
+                .toEqual([jasmine.objectContaining({ label: 'Kaunas', value: 'Kaunas' })]);
         }));
 
         it('bind to object', fakeAsync(() => {

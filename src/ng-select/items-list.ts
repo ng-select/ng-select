@@ -9,7 +9,6 @@ export class ItemsList {
     private _markedIndex = -1;
     private _selected: NgOption[] = [];
     private _multiple = false;
-    private _simple = false;
     private _bindLabel: string;
 
     get value(): NgOption[] {
@@ -25,9 +24,8 @@ export class ItemsList {
     }
 
     setItems(items: any[], bindLabel: string, simple: boolean = false) {
-        this._simple = simple;
         this._bindLabel = bindLabel;
-        this.items = items.map((item, index) => this.mapItem(item, index));
+        this.items = items.map((item, index) => this.mapItem(item, simple, index));
         this.filteredItems = [...this.items];
     }
 
@@ -145,19 +143,20 @@ export class ItemsList {
         }
     }
 
-    mapItem(item: any, index: number): NgOption {
+    mapItem(item: any, simple: boolean, index: number): NgOption {
         let option = item;
-        if (this._simple) {
-            option = {
-                label: item as any
-            };
+        let label = null;
+        if (simple) {
+            option = item;
+            label = item;
+        } else {
+            label = this.resolveNested(option, this._bindLabel);
         }
-
         return {
             index: index,
-            label: this.resolveNested(option, this._bindLabel),
+            label: label,
             value: option,
-            disabled: !!option.disabled,
+            disabled: option.disabled,
         };
     }
 
