@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.16.0"></a>
+# [0.16.0](https://github.com/ng-select/ng-select/compare/v0.15.2...v0.16.0) (2018-01-29)
+
+
+### Bug Fixes
+
+* check if value is defined ([#213](https://github.com/ng-select/ng-select/issues/213)) ([926e4d1](https://github.com/ng-select/ng-select/commit/926e4d1)), closes [#211](https://github.com/ng-select/ng-select/issues/211)
+
+
+### Features
+
+* using a getter/setter for isLoading which enables exposing the same and having a change emitter ([#206](https://github.com/ng-select/ng-select/issues/206)) ([cd3dec1](https://github.com/ng-select/ng-select/commit/cd3dec1)), closes [#205](https://github.com/ng-select/ng-select/issues/205)
+
+
+
 <a name="0.15.2"></a>
 ## [0.15.2](https://github.com/ng-select/ng-select/compare/v0.15.1...v0.15.2) (2018-01-18)
 
