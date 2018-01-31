@@ -27,10 +27,10 @@ import { DataSourceComponent } from './examples/data-source.component';
 const appRoutes: Routes = [
     {
         path: '',
-        redirectTo: '/data-source',
+        redirectTo: '/data-sources',
         pathMatch: 'full'
     },
-    { path: 'data-source', component: DataSourceComponent, data: { title: 'Data source' } },
+    { path: 'data-sources', component: DataSourceComponent, data: { title: 'Data sources' } },
     { path: 'forms', component: ReactiveFormsComponent, data: { title: 'Reactive forms' } },
     { path: 'bindings', component: SelectBindingsComponent, data: { title: 'Data bindings' } },
     { path: 'filter', component: SelectSearchComponent, data: { title: 'Filter and autocomplete'} },

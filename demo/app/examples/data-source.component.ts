@@ -49,7 +49,7 @@ import { Observable } from 'rxjs/Observable';
 
         <hr />
         <p>
-            While array of objecs is the most common items source you may want to set simple array of strings, numbers, booleans
+            While array of objects is the most common items source, you may want to set simple array of strings, numbers, booleans
         </p>
         ---js
         items = [true, 'Two', 3];
@@ -60,6 +60,20 @@ import { Observable } from 'rxjs/Observable';
         </ng-select>
         ---
         <br />Selected: {{selectedSimpleItem | json}}
+
+        <hr />
+        <p>
+            If you have simple use case, you can omit items array and bind options directly in html using <b>ng-option</b> component.
+        </p>
+        ---html,true
+        <ng-select [searchable]="false" [(ngModel)]="staticValue">
+            <ng-option [value]="'Volvo'">Volvo</ng-option>
+            <ng-option [value]="'Saab'">Saab</ng-option>
+            <ng-option [value]="'Opel'">Opel</ng-option>
+            <ng-option [value]="'Audi'">Audi</ng-option>
+        </ng-select>
+        ---
+        <br />Selected: {{staticValue | json}}
     `
 })
 export class DataSourceComponent {
