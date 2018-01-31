@@ -39,7 +39,7 @@ Table of contents
 - [x] Append to body
 
 ## Warning
-Library is under active development and may have API breaking changes until stable 1.0.0 release.
+Library is under active development and may have API breaking changes until stable 1.0.0 release or subsequent major versions post 1.0.0.
 
 ## Getting started
 After installing the above dependencies, install `ng-select` via:
