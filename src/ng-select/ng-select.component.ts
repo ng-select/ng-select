@@ -232,13 +232,12 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.clearEvent.emit();
     }
 
-    // TODO: make private 
     clearModel() {
         if (!this.clearable) {
             return;
         }
         this.itemsList.clearSelected();
-        this._notifyModelChanged();
+        this._updateNgModel();
     }
 
     writeValue(value: any | any[]): void {
@@ -309,7 +308,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (!item.selected) {
             this.itemsList.select(item);
             this._clearSearch();
-            this._updateModel();
+            this._updateNgModel();
             this.addEvent.emit(item.value);
         }
 
@@ -320,7 +319,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     unselect(item: NgOption) {
         this.itemsList.unselect(item);
-        this._updateModel();
+        this._updateNgModel();
         this.removeEvent.emit(item);
     }
 
@@ -559,8 +558,22 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
     }
 
-    private _updateModel() {
-        this._notifyModelChanged();
+    private _updateNgModel() {
+        let ngModel = this._value;
+        if (!this._isDefined(ngModel)) {
+            this._onChange(null);
+        } else if (this.bindValue) {
+            if (Array.isArray(ngModel)) {
+                ngModel = ngModel.map(option => this.itemsList.resolveNested(option, this.bindValue))
+            } else {
+                ngModel = this.itemsList.resolveNested(ngModel, this.bindValue);
+            }
+            this._onChange(ngModel);
+        } else {
+            this._onChange(ngModel);
+        }
+        this._ngModel = ngModel;
+        this.changeEvent.emit(this._value);
         this.changeDetectorRef.markForCheck();
     }
 
@@ -646,26 +659,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
         if (this.multiple) {
             this.itemsList.unselectLast();
-            this._updateModel();
+            this._updateNgModel();
         } else {
             this.clearModel();
         }
-    }
-
-    private _notifyModelChanged() {
-        let ngModel = this._value;
-        if (!this._isDefined(ngModel)) {
-            this._onChange(null);
-        } else if (this.bindValue) {
-            ngModel = Array.isArray(ngModel) ?
-                ngModel.map(option => option[this.bindValue]) :
-                ngModel[this.bindValue];
-            this._onChange(ngModel);
-        } else {
-            this._onChange(ngModel);
-        }
-        this._ngModel = ngModel;
-        this.changeEvent.emit(this._value);
     }
 
     private _getDropdownMenu() {
