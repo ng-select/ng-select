@@ -455,6 +455,37 @@ describe('NgSelectComponent', function () {
         });
     });
 
+    describe('Dropdown', () => {
+        it('should close on option select by default', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [(ngModel)]="city">
+                </ng-select>`);
+
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+        }));
+
+        it('should not close on option select when [closeOnSelect]="false"', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [closeOnSelect]="false"
+                            [(ngModel)]="city">
+                </ng-select>`);
+
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+        }));
+    });
+
     describe('Keyboard events', () => {
         let fixture: ComponentFixture<NgSelectBasicTestCmp>;
 

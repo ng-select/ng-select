@@ -1,44 +1,46 @@
 import { NgOption } from './ng-select.types';
 import * as searchHelper from './search-helper';
+import { NgSelectComponent } from './ng-select.component';
 
 export class ItemsList {
 
-    items: NgOption[] = [];
-    filteredItems: NgOption[] = [];
-
+    private _items: NgOption[] = [];
+    private _filteredItems: NgOption[] = [];
     private _markedIndex = -1;
     private _selected: NgOption[] = [];
-    private _multiple = false;
-    private _bindLabel: string;
+
+    constructor(private cmp: NgSelectComponent) {}
+
+    get items(): NgOption[] {
+        return this._items;
+    }
+
+    get filteredItems(): NgOption[] {
+        return this._filteredItems;
+    }
 
     get value(): NgOption[] {
         return this._selected;
     }
 
     get markedItem(): NgOption {
-        return this.filteredItems[this._markedIndex];
+        return this._filteredItems[this._markedIndex];
     }
 
     get markedIndex(): number {
         return this._markedIndex;
     }
 
-    setItems(items: any[], bindLabel: string, simple: boolean = false) {
-        this._bindLabel = bindLabel;
-        this.items = items.map((item, index) => this.mapItem(item, simple, index));
-        this.filteredItems = [...this.items];
-    }
-
-    setMultiple(multiple: boolean) {
-        this._multiple = multiple;
-        this.clearSelected();
+    setItems(items: any[], simple = false) {
+        this._items = items.map((item, index) => this.mapItem(item, simple, index));
+        this._filteredItems = [...this._items];
     }
 
     select(item: NgOption) {
         if (item.selected) {
             return;
         }
-        if (!this._multiple) {
+        if (!this.cmp.multiple) {
             this.clearSelected();
         }
         this._selected.push(item);
@@ -47,11 +49,11 @@ export class ItemsList {
 
     findItem(value: any, bindValue: string): NgOption {
         if (bindValue) {
-            return this.items.find(item => item.value[bindValue] === value);
+            return this._items.find(item => item.value[bindValue] === value);
         }
-        const index = this.items.findIndex(x => x.value === value);
-        return index > -1 ? this.items[index] :
-            this.items.find(item => item.label && item.label === this.resolveNested(value, this._bindLabel));
+        const index = this._items.findIndex(x => x.value === value);
+        return index > -1 ? this._items[index] :
+            this._items.find(item => item.label && item.label === this.resolveNested(value, this.cmp.bindLabel));
     }
 
     unselect(item: NgOption) {
@@ -70,12 +72,12 @@ export class ItemsList {
 
     addItem(item: any) {
         const option = {
-            index: this.items.length,
-            label: this.resolveNested(item, this._bindLabel),
+            index: this._items.length,
+            label: this.resolveNested(item, this.cmp.bindLabel),
             value: item
         }
-        this.items.push(option);
-        this.filteredItems.push(option);
+        this._items.push(option);
+        this._filteredItems.push(option);
         return option;
     }
 
@@ -89,11 +91,11 @@ export class ItemsList {
 
     filter(term: string) {
         const filterFuncVal = this._getDefaultFilterFunc(term);
-        this.filteredItems = term ? this.items.filter(val => filterFuncVal(val)) : this.items;
+        this._filteredItems = term ? this._items.filter(val => filterFuncVal(val)) : this._items;
     }
 
     clearFilter() {
-        this.filteredItems = [...this.items];
+        this._filteredItems = [...this._items];
     }
 
     unmarkItem() {
@@ -109,16 +111,16 @@ export class ItemsList {
     }
 
     markItem(item: NgOption) {
-        this._markedIndex = this.filteredItems.indexOf(item);
+        this._markedIndex = this._filteredItems.indexOf(item);
     }
 
     markSelectedOrDefault(markDefault: boolean) {
-        if (this.filteredItems.length === 0) {
+        if (this._filteredItems.length === 0) {
             return;
         }
 
         if (this._lastSelectedItem) {
-            this._markedIndex = this.filteredItems.indexOf(this._lastSelectedItem);
+            this._markedIndex = this._filteredItems.indexOf(this._lastSelectedItem);
         } else {
             this._markedIndex = markDefault ? 0 : -1;
         }
@@ -147,7 +149,7 @@ export class ItemsList {
             option = item;
             label = item;
         } else {
-            label = this.resolveNested(option, this._bindLabel);
+            label = this.resolveNested(option, this.cmp.bindLabel);
         }
         return {
             index: index,
@@ -159,13 +161,13 @@ export class ItemsList {
 
     private _getNextItemIndex(steps: number) {
         if (steps > 0) {
-            return (this._markedIndex === this.filteredItems.length - 1) ? 0 : (this._markedIndex + 1);
+            return (this._markedIndex === this._filteredItems.length - 1) ? 0 : (this._markedIndex + 1);
         }
-        return (this._markedIndex <= 0) ? (this.filteredItems.length - 1) : (this._markedIndex - 1);
+        return (this._markedIndex <= 0) ? (this._filteredItems.length - 1) : (this._markedIndex - 1);
     }
 
     private _stepToItem(steps: number) {
-        if (this.filteredItems.length === 0) {
+        if (this._filteredItems.length === 0) {
             return;
         }
 

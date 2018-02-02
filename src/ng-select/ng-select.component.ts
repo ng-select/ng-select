@@ -114,7 +114,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @HostBinding('class.disabled') isDisabled = false;
     @HostBinding('class.filtered') get filtered() { return !!this.filterValue };
 
-    itemsList = new ItemsList();
+    itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];
     filterValue: string = null;
 
@@ -152,7 +152,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.multiple) {
-            this.itemsList.setMultiple(changes.multiple.currentValue);
+            this.itemsList.clearSelected();
         }
         if (changes.items) {
             this._setItems(changes.items.currentValue || []);
@@ -412,7 +412,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         const firstItem = items[0];
         this.bindLabel = this.bindLabel || this._defaultLabel;
         this._simple = firstItem && !(firstItem instanceof Object);
-        this.itemsList.setItems(items, this.bindLabel, this._simple);
+        this.itemsList.setItems(items, this._simple);
         if (this._isDefined(this._ngModel) && items.length > 0) {
             this.itemsList.clearSelected();
             this._selectWriteValue(this._ngModel);
@@ -432,7 +432,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
                 value: option.value,
                 label: option.elementRef.nativeElement.innerHTML
             }));
-            this.itemsList.setItems(this.items, this.bindLabel);
+            this.itemsList.setItems(this.items, false);
 
             if (this._isDefined(this._ngModel)) {
                 this.itemsList.clearSelected();
