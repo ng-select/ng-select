@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.17.0"></a>
+# [0.17.0](https://github.com/ng-select/ng-select/compare/v0.16.0...v0.17.0) (2018-02-02)
+
+
+### Bug Fixes
+
+* add touched on dropdown open ([#228](https://github.com/ng-select/ng-select/issues/228)) ([7c5748e](https://github.com/ng-select/ng-select/commit/7c5748e)), closes [#225](https://github.com/ng-select/ng-select/issues/225)
+
+
+### Features
+
+* add support for nested value bindings ([#229](https://github.com/ng-select/ng-select/issues/229)) ([3551917](https://github.com/ng-select/ng-select/commit/3551917)), closes [#219](https://github.com/ng-select/ng-select/issues/219)
+* Close dropdown on select by default ([#226](https://github.com/ng-select/ng-select/issues/226)) ([77d36ca](https://github.com/ng-select/ng-select/commit/77d36ca)), closes [#222](https://github.com/ng-select/ng-select/issues/222)
+
+
+
 <a name="0.16.0"></a>
 # [0.16.0](https://github.com/ng-select/ng-select/compare/v0.15.2...v0.16.0) (2018-01-29)
 
