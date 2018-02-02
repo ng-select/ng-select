@@ -119,7 +119,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     filterValue: string = null;
 
     private _ngModel: any = null;
-    private _simple = false;
     private _defaultLabel = 'label';
     private _defaultValue = 'value';
     private _typeaheadLoading = false;
@@ -411,8 +410,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private _setItems(items: any[]) {
         const firstItem = items[0];
         this.bindLabel = this.bindLabel || this._defaultLabel;
-        this._simple = firstItem && !(firstItem instanceof Object);
-        this.itemsList.setItems(items, this._simple);
+        const simple = firstItem && !(firstItem instanceof Object);
+        this.itemsList.setItems(items, simple);
         if (this._isDefined(this._ngModel) && items.length > 0) {
             this.itemsList.clearSelected();
             this._selectWriteValue(this._ngModel);
