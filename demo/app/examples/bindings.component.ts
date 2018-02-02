@@ -7,19 +7,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         <label>Bind to default <b>label</b>, <b>object</b> bindings</label>
         ---html,true
         <ng-select [items]="defaultBindingsList"
-                   [(ngModel)]="selectedCity2">
-        </ng-select>
-        ---
-        <p>
-            Selected city object: {{selectedCity2 | json}}
-        </p>
-        <hr>
-        <label>Bind label to nested custom property</label>
-        ---html,true
-        <ng-select [items]="countries"
-                   bindLabel="description.name"
-                   placeholder="Select value"
-                   [clearable]="false"
                    [(ngModel)]="selectedCity">
         </ng-select>
         ---
@@ -27,16 +14,29 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
             Selected city object: {{selectedCity | json}}
         </p>
         <hr>
+        <label>Bind label to nested custom property</label>
+        ---html,true
+        <ng-select [items]="countries"
+                   bindLabel="nested.name"
+                   bindValue="nested.countryId"
+                   placeholder="Select value"
+                   [(ngModel)]="selectedCountryId">
+        </ng-select>
+        ---
+        <p>
+            Selected country ID: {{selectedCountryId}}
+        </p>
+        <hr>
         <label>Bind label and model to custom properties</label>
         ---html,true
         <ng-select [items]="cities"
                    bindLabel="name"
                    bindValue="id"
-                   [(ngModel)]="selectedCityId2">
+                   [(ngModel)]="selectedCityId">
         </ng-select>
         ---
         <p>
-            Selected city ID: {{selectedCityId2 | json}}
+            Selected city ID: {{selectedCityId | json}}
         </p>
     `
 })
@@ -55,16 +55,19 @@ export class SelectBindingsComponent {
     ];
 
     countries = [
-        { id: 1, description: { name: 'Lithuania' } },
-        { id: 2, description: { name: 'USA' } },
-        { id: 3, description: { name: 'Australia' } }
+        { id: 1, nested: { countryId: 'L', name: 'Lithuania' } },
+        { id: 2, nested: { countryId: 'U', name: 'USA' } },
+        { id: 3, nested: { countryId: 'A', name: 'Australia' } }
     ];
 
-    selectedCity: any;
-    selectedCity2: number = null;
-    selectedCityId2: number = null;
+    selectedCountryId: string = null;
+    selectedCity = null;
+    selectedCityId: number = null;
 
     ngOnInit() {
+        this.selectedCountryId = this.countries[0].nested.countryId;
+        this.selectedCity = this.defaultBindingsList[0];
+        this.selectedCityId = this.cities[0].id;
     }
 }
 
