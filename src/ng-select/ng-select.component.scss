@@ -11,7 +11,6 @@
 }
 
 $color-selected: #f5faff;
-
 .ng-select {
     position: relative;
     display: block;
@@ -21,11 +20,9 @@ $color-selected: #f5faff;
     span {
         @include box-sizing;
     }
-    
     [hidden] {
         display: none;
     }
-
     &.opened {
         >.ng-control {
             background: #fff;
@@ -39,14 +36,12 @@ $color-selected: #f5faff;
                 border-color: transparent transparent #666;
             }
         }
-
         &.bottom {
             >.ng-control {
                 border-bottom-right-radius: 0;
                 border-bottom-left-radius: 0;
             }
         }
-
         &.top {
             >.ng-control {
                 border-top-right-radius: 0;
@@ -123,11 +118,8 @@ $color-selected: #f5faff;
                 @include wrapt-text;
                 .ng-value {
                     @include wrapt-text;
-                    .ng-value-wrapper {
-                        @include wrapt-text;
-                        .ng-value-icon {
-                            display: none;
-                        }
+                    .ng-value-icon {
+                        display: none;
                     }
                 }
                 .ng-input {
@@ -142,9 +134,12 @@ $color-selected: #f5faff;
     }
     &.ng-multiple {
         &.disabled {
-            >.ng-control .ng-value-container .ng-value .ng-value-wrapper.default {
+            >.ng-control .ng-value-container .ng-value {
                 background-color: #f9f9f9;
                 border: 1px solid #e3e3e3;
+                .ng-value-label {
+                    padding: 2px 5px;
+                }
                 .ng-value-icon {
                     display: none;
                 }
@@ -152,50 +147,41 @@ $color-selected: #f5faff;
         }
         .ng-control {
             .ng-value-container {
-                padding-top: 5px;
                 flex-wrap: wrap;
                 padding-left: 7px;
+                padding-top: 5px;
                 .ng-placeholder {
                     position: absolute;
                 }
                 .ng-value {
                     font-size: 0.9em;
-                    padding-right: 5px;
-                    padding-bottom: 5px;
+                    margin-right: 5px;
+                    margin-bottom: 5px;
                     white-space: nowrap;
-                    .ng-value-wrapper {
-                        display: flex;
-                        &.default {
-                            &.disabled {
-                                background-color: #f9f9f9;
-                                border: 1px solid #e3e3e3;
-                            }
-                            background-color: $color-selected;
-                            border-radius: 2px;
-                            border: 1px solid #c2e0ff;
-                            .ng-value-icon {
-                                &:hover {
-                                    background-color: #d8eafd;
-                                }
-                                &.left {
-                                    border-right: 1px solid #c2e0ff;
-                                }
-                                &.right {
-                                    border-left: 1px solid #c2e0ff;
-                                }
-                            }
-                        }
-                        &.disabled {
-                            .ng-value-icon {
-                                display: none;
-                            }
-                        }
-                        .ng-value-label {
-                            padding: 0 5px;
-                        }
+                    background-color: $color-selected;
+                    border-radius: 2px;
+                    border: 1px solid #c2e0ff;
+                    &.disabled {
+                        background-color: #f9f9f9;
+                        border: 1px solid #e3e3e3;
                         .ng-value-icon {
-                            padding: 0 5px;
-                            cursor: pointer;
+                            display: none;
+                        }
+                    }
+                    .ng-value-label {
+                        padding: 2px 5px 2px 1px;
+                    }
+                    .ng-value-icon {
+                        padding: 2px 5px;
+                        cursor: pointer;
+                        &:hover {
+                            background-color: #d8eafd;
+                        }
+                        &.left {
+                            border-right: 1px solid #c2e0ff;
+                        }
+                        &.right {
+                            border-left: 1px solid #c2e0ff;
                         }
                     }
                 }
@@ -213,7 +199,6 @@ $color-selected: #f5faff;
             }
         }
     }
-    
     .ng-clear-zone {
         -webkit-animation: Select-animation-fadeIn 200ms;
         -o-animation: Select-animation-fadeIn 200ms;
@@ -262,18 +247,15 @@ $color-selected: #f5faff;
             }
         }
     }
-
     .ng-dropdown-header {
         border-bottom: 1px solid #ccc;
         padding: 5px 7px;
     }
-
     .ng-dropdown-footer {
         border-top: 1px solid #ccc;
         padding: 5px 7px;
     }
 }
-
 
 .ng-select-dropdown-outer {
     visibility: hidden;
@@ -285,7 +267,6 @@ $color-selected: #f5faff;
     width: 100%;
     z-index: 3;
     -webkit-overflow-scrolling: touch;
-
     &.bottom {
         top: 100%;
         border-bottom-right-radius: 4px;
@@ -301,7 +282,6 @@ $color-selected: #f5faff;
             }
         }
     }
-
     &.top {
         bottom: 100%;
         border-top-right-radius: 4px;
@@ -317,7 +297,6 @@ $color-selected: #f5faff;
             }
         }
     }
-
     .ng-select-dropdown {
         display: block;
         height: auto;
@@ -325,7 +304,6 @@ $color-selected: #f5faff;
         max-height: 240px;
         margin-bottom: 1px;
         overflow-y: auto;
-
         .ng-option {
             box-sizing: border-box;
             background-color: #fff;
@@ -359,7 +337,4 @@ $color-selected: #f5faff;
             }
         }
     }
-    
 }
-
-
