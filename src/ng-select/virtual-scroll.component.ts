@@ -20,10 +20,10 @@ import {
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
+import { NgOption } from './ng-select.types';
 
 @Component({
-    selector: 'virtual-scroll,[virtualScroll]',
-    exportAs: 'virtualScroll',
+    selector: 'ng-select-virtual-scroll',
     template: `
         <div *ngIf="enabled" class="total-padding" [style.height]="scrollHeight + 'px'"></div>
         <div #content
@@ -57,53 +57,34 @@ import { CommonModule } from '@angular/common';
 })
 export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
 
-    @Input()
-    items: any[] = [];
+    @Input() items: NgOption[] = [];
+    @Input() bufferAmount = 0;
+    @Input() disabled = false;
 
-    @Input()
-    scrollbarWidth: number;
+    @Output() update = new EventEmitter<any[]>();
 
-    @Input()
-    scrollbarHeight: number;
+    @ViewChild('content', { read: ElementRef }) contentElementRef: ElementRef;
+    @ContentChild('container') containerElementRef: ElementRef;
 
-    @Input()
-    childWidth: number;
-
-    @Input()
-    childHeight: number;
-
-    @Input()
-    bufferAmount = 0;
-
-    @Input()
-    disabled = false;
-
-    @Output()
-    update: EventEmitter<any[]> = new EventEmitter<any[]>();
-
-    @ViewChild('content', { read: ElementRef })
-    contentElementRef: ElementRef;
-
-    @ContentChild('container')
-    containerElementRef: ElementRef;
-
-    topPadding: number;
     scrollHeight: number;
 
+    private _topPadding: number;
     private _previousStart: number;
     private _previousEnd: number;
     private _startupLoop = true;
+    // min number of items for virtual scroll to be enabled
+    private _minItems = 40;
     private _disposeScrollListener = () => { };
 
     constructor(private element: ElementRef, private zone: NgZone, private renderer: Renderer2) {
     }
 
     get enabled() {
-        return !this.disabled && this.items && this.items.length > 20;
+        return !this.disabled && this.items && this.items.length > this._minItems;
     }
 
     get transformStyle() {
-        return this.enabled ? 'translateY(' + this.topPadding + 'px)' : 'none'
+        return this.enabled ? 'translateY(' + this._topPadding + 'px)' : 'none'
     }
 
     handleScroll() {
@@ -119,8 +100,6 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnInit() {
         this.handleScroll();
-        this.scrollbarWidth = 0; // this.element.nativeElement.offsetWidth - this.element.nativeElement.clientWidth;
-        this.scrollbarHeight = 0; // this.element.nativeElement.offsetHeight - this.element.nativeElement.clientHeight;
     }
 
     ngOnDestroy() {
@@ -195,22 +174,20 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         let el: Element = this.element.nativeElement;
         let items = this.items || [];
         let itemCount = items.length;
-        let viewWidth = el.clientWidth - this.scrollbarWidth;
-        let viewHeight = el.clientHeight - this.scrollbarHeight;
+        let viewWidth = el.clientWidth;
+        let viewHeight = el.clientHeight;
 
         let contentDimensions;
-        if (this.childWidth === undefined || this.childHeight === undefined) {
-            let content = this.contentElementRef.nativeElement;
-            if (this.containerElementRef && this.containerElementRef.nativeElement) {
-                content = this.containerElementRef.nativeElement;
-            }
-            contentDimensions = content.children[0] ? content.children[0].getBoundingClientRect() : {
-                width: viewWidth,
-                height: viewHeight
-            };
+        let content = this.contentElementRef.nativeElement;
+        if (this.containerElementRef && this.containerElementRef.nativeElement) {
+            content = this.containerElementRef.nativeElement;
         }
-        let childWidth = this.childWidth || contentDimensions.width;
-        let childHeight = this.childHeight || contentDimensions.height;
+        contentDimensions = content.children[0] ? content.children[0].getBoundingClientRect() : {
+            width: viewWidth,
+            height: viewHeight
+        };
+        let childWidth = contentDimensions.width;
+        let childHeight = contentDimensions.height;
 
         let itemsPerRow = Math.max(1, this._countItemsPerRow());
         let itemsPerRowByCalc = Math.max(1, Math.floor(viewWidth / childWidth));
@@ -256,7 +233,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         let maxStart = Math.max(0, maxStartEnd - d.itemsPerCol * d.itemsPerRow - d.itemsPerRow);
         let start = Math.min(maxStart, Math.floor(indexByScrollTop) * d.itemsPerRow);
 
-        this.topPadding = d.childHeight * Math.ceil(start / d.itemsPerRow) - (d.childHeight * Math.min(start, this.bufferAmount));
+        this._topPadding = d.childHeight * Math.ceil(start / d.itemsPerRow) - (d.childHeight * Math.min(start, this.bufferAmount));
 
         start = !isNaN(start) ? start : -1;
         end = !isNaN(end) ? end : -1;

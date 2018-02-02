@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { DataService } from '../shared/data.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -8,25 +8,29 @@ import { Observable } from 'rxjs/Observable';
         <label>Select multiple elements</label>
         ---html,true
         <ng-select
-                [items]="companiesNames"
+                [items]="people$1 | async"
                 [multiple]="true"
-                [(ngModel)]="selectedCompanies">
+                bindLabel="name"
+                [(ngModel)]="selectedPeople1">
         </ng-select>
         ---
-        <p>
-            Selected value: {{selectedCompanies | json}} <br>
+        <div class="mt-3">
+            Selected value: <br />
+            <ul>
+                <li *ngFor="let item of selectedPeople1">{{item.name}}</li>
+            </ul>
             <button (click)="clearModel()" class="btn btn-secondary btn-sm">Clear model</button>
-        </p>
+        </div>
         <hr/>
 
         <label>Disabled multiple elements</label>
         ---html,true
         <ng-select
-                [items]="companies"
+                [items]="people$2 | async"
                 bindLabel="name"
                 [multiple]="true"
                 [disabled]="disable"
-                [(ngModel)]="selectedCompaniesDisabled">
+                [(ngModel)]="selectedPeople2">
         </ng-select>
         ---
         <br>
@@ -35,7 +39,7 @@ import { Observable } from 'rxjs/Observable';
         <label>Custom label templates</label>
         ---html,true
         <ng-select
-            [items]="users"
+            [items]="githubUsers$ | async"
             [multiple]="true"
             [(ngModel)]="selectedUsers">
 
@@ -55,36 +59,33 @@ import { Observable } from 'rxjs/Observable';
 })
 export class SelectMultiComponent {
 
-    users: any[] = [];
-    companies: any[] = [];
-    selectedCompanies: any;
-    selectedCompaniesDisabled: any;
+    people$1: Observable<any[]>;
+    selectedPeople1 = [];
+
+    people$2: Observable<any[]>;
+    selectedPeople2 = [];
     disable = true;
 
-    /* tslint:disable */
-    companiesNames = ['Miškas', 'Žalias', 'Flexigen', 'Rooforia', 'Rooblia', 'Tropoli', 'Eargo', 'Gadtron', 'Elentrix', 'Terragen', 'Medalert', 'Xelegyl', 'Bristo', 'Xylar', 'Imperium', 'Kangle', 'Earwax', 'Zanity', 'Portico', 'Tsunamia', 'Kage', 'Comstar', 'Radiantix', 'Bostonic', 'Geekko', 'Eventex', 'Stockpost', 'Silodyne', 'Enersave', 'Perkle', 'Pyramis', 'Accuprint', 'Papricut', 'Pathways', 'Circum', 'Gology', 'Buzzworks', 'Dancerity', 'Zounds', 'Diginetic', 'Snips', 'Chillium', 'Exotechno', 'Accufarm', 'Vidto', 'Signidyne', 'Escenta', 'Sureplex', 'Quarmony', 'Interfind', 'Exoswitch', 'Mondicil', 'Pyramia', 'Digitalus', 'Earthplex', 'Limozen', 'Twiist', 'Tubalum', 'Securia', 'Uni', 'Biospan', 'Zensus', 'Memora'];
-    /* tslint:enable */
+    githubUsers$: Observable<any[]>;
+    selectedUsers = [];
 
-    constructor(private http: HttpClient) { }
+    constructor(private dataService: DataService) { }
 
     ngOnInit() {
-        this.companiesNames.forEach((c, i) => {
-            this.companies.push({ id: i, name: c });
-        });
+        this.people$1 = this.dataService.getPeople();
+        this.people$2 = this.dataService.getPeople();
+        this.githubUsers$ = this.dataService.getGithubAccounts('anjm');
 
-        this.selectedCompaniesDisabled = [{ id: 0, name: 'Miškas' }, { id: 1, name: 'Žalias' }];
-        this.loadGithubUsers('anjm').subscribe(users => {
-            this.users = users;
-        })
+        this.selectedPeople2 = [
+            { id: '5a15b13c2340978ec3d2c0ea', name: 'Rochelle Estes' },
+            { id: '5a15b13c728cd3f43cc0fe8a', name: 'Marquez Nolan' }
+        ];
     }
 
     clearModel() {
-        this.selectedCompanies = [];
+        this.selectedPeople1 = [];
     }
 
-    loadGithubUsers(term: string): Observable<any[]> {
-        return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).map(rsp => rsp.items);
-    }
 }
 
 

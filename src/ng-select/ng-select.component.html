@@ -45,7 +45,7 @@
     <div *ngIf="headerTemplate" class="ng-dropdown-header">
         <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
     </div>
-    <virtual-scroll role="listbox" class="ng-select-dropdown" [disabled]="disableVirtualScroll" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
+    <ng-select-virtual-scroll class="ng-select-dropdown" [disabled]="disableVirtualScroll" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
         <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
              *ngFor="let item of viewPortItems"
              [class.disabled]="item.disabled"
@@ -65,7 +65,7 @@
         <div class="ng-option" [class.marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag()">
             <span><span class="ng-tag-label">{{addTagText}}</span>"{{filterValue}}"</span>
         </div>
-    </virtual-scroll>
+    </ng-select-virtual-scroll>
 
     <div class="ng-select-dropdown" *ngIf="showNoItemsFound() && !addTag">
         <div class="ng-option disabled">

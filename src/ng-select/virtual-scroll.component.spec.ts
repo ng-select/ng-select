@@ -11,11 +11,11 @@ describe('VirtualScrollComponent', () => {
         const fixture = createTestingModule(
             BasicVirtualScrollTestCmp,
             `<div style="height: 100px; overflow-y: scroll; display: block;">
-                <virtual-scroll style="height: 100px;" [bufferAmount]="10" [items]="items" (update)="viewPortItems = $event">
+                <ng-select-virtual-scroll style="height: 100px;" [bufferAmount]="10" [items]="items" (update)="viewPortItems = $event">
                 <div [attr.class]="'item'+item" style="height: 20px;" *ngFor="let item of viewPortItems">
                     {{item}}
                 </div>
-                </virtual-scroll>
+                </ng-select-virtual-scroll>
              <div>`);
 
         tick(100);
