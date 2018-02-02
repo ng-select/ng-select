@@ -60,16 +60,6 @@ const NG_SELECT_VALUE_ACCESSOR = {
 })
 export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
 
-    @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
-    @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
-    @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerTemplate: TemplateRef<any>;
-    @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;
-
-    @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
-    @ViewChild('dropdownPanel') dropdownPanel: ElementRef;
-    @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
-    @ViewChild('filterInput') filterInput: ElementRef;
-
     // inputs
     @Input() items: any[] = [];
     @Input() bindLabel: string;
@@ -86,18 +76,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() dropdownPosition: 'bottom' | 'top' = 'bottom';
     @Input() appendTo: string;
     @Input() loading = false;
-
-    @Input()
-    @HostBinding('class.typeahead') typeahead: Subject<string>;
-
-    @Input()
-    @HostBinding('class.ng-multiple') multiple = false;
-
-    @Input()
-    @HostBinding('class.taggable') addTag: boolean | ((term: string) => NgOption) = false;
-
-    @Input()
-    @HostBinding('class.searchable') searchable = true;
+    @Input() closeOnSelect = true;
+    @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
+    @Input() @HostBinding('class.ng-multiple') multiple = false;
+    @Input() @HostBinding('class.taggable') addTag: boolean | ((term: string) => NgOption) = false;
+    @Input() @HostBinding('class.searchable') searchable = true;
 
     // output events
     @Output('blur') blurEvent = new EventEmitter();
@@ -109,6 +92,17 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Output('clear') clearEvent = new EventEmitter();
     @Output('add') addEvent = new EventEmitter();
     @Output('remove') removeEvent = new EventEmitter();
+
+    // custom templates
+    @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
+    @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
+    @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerTemplate: TemplateRef<any>;
+    @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;
+
+    @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
+    @ViewChild('dropdownPanel') dropdownPanel: ElementRef;
+    @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
+    @ViewChild('filterInput') filterInput: ElementRef;
 
     @HostBinding('class.ng-single')
     get single() {
@@ -319,7 +313,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             this.addEvent.emit(item.value);
         }
 
-        if (this.single) {
+        if (this.closeOnSelect) {
             this.close();
         }
     }

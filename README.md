@@ -124,6 +124,8 @@ map: {
 | dropdownPosition | `bottom`,`top` |  `bottom` | no | Set the dropdown position on open |
 | appendTo | string |  null | no | Append drodown to body or any other element using css selector |
 | loading | boolean |  `-` | no | you can set the loading state from the outside (e.g. async items loading) |
+| closeOnSelect | boolean |  true | no | whether to close the menu when a value is selected |
+| removeSelected | boolean |  true | no | whether the selected option is removed from the dropdown on multi selects |
 
 | Output  | Description |
 | ------------- | ------------- |
