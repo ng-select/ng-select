@@ -277,6 +277,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.itemsList.markSelectedOrDefault(this.markFirst);
         this._scrollToMarked();
         this._focusSearchInput();
+        this._onTouched();
         this.openEvent.emit();
         if (this.appendTo) {
             this._updateDropdownPosition();
