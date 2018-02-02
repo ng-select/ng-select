@@ -47,9 +47,9 @@ export class ItemsList {
         item.selected = true;
     }
 
-    findItem(value: any, bindValue: string): NgOption {
-        if (bindValue) {
-            return this._items.find(item => item.value[bindValue] === value);
+    findItem(value: any): NgOption {
+        if (this.cmp.bindValue) {
+            return this._items.find(item => item.value[this.cmp.bindValue] === value);
         }
         const index = this._items.findIndex(x => x.value === value);
         return index > -1 ? this._items[index] :

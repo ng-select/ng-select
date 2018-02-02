@@ -538,7 +538,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
 
         const select = (val: any) => {
-            const item = this.itemsList.findItem(val, this.bindValue);
+            const item = this.itemsList.findItem(val);
             if (item) {
                 this.itemsList.select(item);
             } else {
