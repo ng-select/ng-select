@@ -9,7 +9,7 @@ export class ItemsList {
     private _markedIndex = -1;
     private _selected: NgOption[] = [];
 
-    constructor(private cmp: NgSelectComponent) {}
+    constructor(private _ngSelect: NgSelectComponent) {}
 
     get items(): NgOption[] {
         return this._items;
@@ -40,7 +40,7 @@ export class ItemsList {
         if (item.selected) {
             return;
         }
-        if (!this.cmp.multiple) {
+        if (!this._ngSelect.multiple) {
             this.clearSelected();
         }
         this._selected.push(item);
@@ -48,12 +48,12 @@ export class ItemsList {
     }
 
     findItem(value: any): NgOption {
-        if (this.cmp.bindValue) {
-            return this._items.find(item => item.value[this.cmp.bindValue] === value);
+        if (this._ngSelect.bindValue) {
+            return this._items.find(item => item.value[this._ngSelect.bindValue] === value);
         }
         const index = this._items.findIndex(x => x.value === value);
         return index > -1 ? this._items[index] :
-            this._items.find(item => item.label && item.label === this.resolveNested(value, this.cmp.bindLabel));
+            this._items.find(item => item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel));
     }
 
     unselect(item: NgOption) {
@@ -73,7 +73,7 @@ export class ItemsList {
     addItem(item: any) {
         const option = {
             index: this._items.length,
-            label: this.resolveNested(item, this.cmp.bindLabel),
+            label: this.resolveNested(item, this._ngSelect.bindLabel),
             value: item
         }
         this._items.push(option);
@@ -149,7 +149,7 @@ export class ItemsList {
             option = item;
             label = item;
         } else {
-            label = this.resolveNested(option, this.cmp.bindLabel);
+            label = this.resolveNested(option, this._ngSelect.bindLabel);
         }
         return {
             index: index,
