@@ -333,6 +333,10 @@ $color-selected: #f5faff;
             cursor: pointer;
             display: block;
             padding: 8px 10px;
+            .highlighted {
+                font-weight: bold;
+                text-decoration: underline;
+            }
             &.selected {
                 background-color: $color-selected;
                 color: #333;
