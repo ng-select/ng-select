@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.17.1"></a>
+## [0.17.1](https://github.com/ng-select/ng-select/compare/v0.17.0...v0.17.1) (2018-02-04)
+
+
+### Bug Fixes
+
+* setTouched on Select Close instead of Open ([#231](https://github.com/ng-select/ng-select/issues/231)) ([50a2e3c](https://github.com/ng-select/ng-select/commit/50a2e3c)), closes [#225](https://github.com/ng-select/ng-select/issues/225)
+
+
+
 <a name="0.17.0"></a>
 # [0.17.0](https://github.com/ng-select/ng-select/compare/v0.16.0...v0.17.0) (2018-02-02)
 
