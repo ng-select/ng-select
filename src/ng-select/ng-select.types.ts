@@ -5,7 +5,6 @@ export interface NgOption {
     disabled?: boolean;
     marked?: boolean;
     label?: string;
-    highlightedLabel?: string;
     value?: string | Object;
 }
 

@@ -22,9 +22,9 @@ import { DataService } from '../shared/data.service';
         <label>Custom option</label>
         ---html,true
         <ng-select [items]="cities2" [(ngModel)]="selectedCity2" bindLabel="name" bindValue="name">
-            <ng-template ng-option-tmp let-item="item" let-index="index">
+            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
                 <img height="15" width="15" [src]="item.avatar"/>
-                <b>{{item.name}}</b>
+                <b [innerHTML]="item.name"  [ngOptionHighlight]="search"></b>
             </ng-template>
         </ng-select>
         ---
@@ -40,9 +40,9 @@ import { DataService } from '../shared/data.service';
                 <img height="15" width="15" [src]="item.avatar"/>
                 <b>{{item.name}}</b>
             </ng-template>
-            <ng-template ng-option-tmp let-item="item" let-index="index">
+            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
                 <img height="15" width="15" [src]="item.avatar"/>
-                <b>{{item.name}}</b>
+                <b [innerHTML]="item.name" [ngOptionHighlight]="search"></b>
             </ng-template>
         </ng-select>
         ---

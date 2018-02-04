@@ -79,8 +79,8 @@ import { DataService } from '../shared/data.service';
                            bindValue="id"
                            placeholder="Select album"
                            formControlName="album">
-                    <ng-template ng-option-tmp let-item="item">
-                        <div>Title: {{item.title}}</div>
+                    <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                        <div><span>Title: </span><span [innerHTML]="item.title" [ngOptionHighlight]="search"></span></div>
                         <small><b>Id:</b> {{item.id}} | <b>UserId:</b> {{item.userId}}</small>
                     </ng-template>
                 </ng-select>
@@ -101,11 +101,11 @@ import { DataService } from '../shared/data.service';
                            formControlName="photo">
                     <ng-template ng-label-tmp let-item="item">
                         <img height="15" width="15" [src]="item.thumbnailUrl"/>
-                        <span>{{item.title}}</span>
+                        <span >{{item.title}}</span>
                     </ng-template>
-                    <ng-template ng-option-tmp let-item="item" let-index="index">
+                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
                         <img height="15" width="15" [src]="item.thumbnailUrl"/>
-                        <span>{{item.title}}</span>
+                        <span [innerHTML]="item.title" [ngOptionHighlight]="search"></span>
                     </ng-template>
                 </ng-select>
                 <small class="form-text text-muted">5000 items with virtual scroll</small>

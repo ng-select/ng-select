@@ -45,7 +45,6 @@ export class ItemsList {
         }
         this._selected.push(item);
         item.selected = true;
-        this._removeHighlighting();
     }
 
     findItem(value: any): NgOption {
@@ -92,7 +91,6 @@ export class ItemsList {
 
     filter(term: string) {
         const filterFuncVal = this._getDefaultFilterFunc(term);
-        this._removeHighlighting();
         this._filteredItems = term ? this._items.filter(val => filterFuncVal(val)) : this._items;
     }
 
@@ -156,7 +154,6 @@ export class ItemsList {
         return {
             index: index,
             label: label,
-            highlightedLabel: label,
             value: option,
             disabled: option.disabled,
         };
@@ -182,27 +179,10 @@ export class ItemsList {
 
     private _getDefaultFilterFunc(term: string) {
         return (option: NgOption) => {
-            let found: number;
-            found = searchHelper.stripSpecialChars(option.label || '')
+            return searchHelper.stripSpecialChars(option.label ? option.label.toString() : '')
                 .toUpperCase()
-                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase());
-            if (found > -1) {
-                this._highlightLabelWithSearchTerm(option, term, found);
-            }
-            return found > -1;
+                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
         };
-    }
-
-    private _highlightLabelWithSearchTerm(option: NgOption, term: string, indexOfTerm: number) {
-        if (indexOfTerm > -1 && !option.selected && !option.disabled) {
-            option.highlightedLabel = option.label.substring(0, indexOfTerm)
-                + '<span class=\'highlighted\'>' + option.label.substr(indexOfTerm, term.length) + '</span>'
-                + option.label.substring(indexOfTerm + term.length, option.label.length - 1);
-        }
-    }
-
-    private _removeHighlighting() {
-        this._items.forEach(item => item.highlightedLabel = item.label);
     }
 
     private get _lastSelectedItem() {

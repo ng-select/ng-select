@@ -53,12 +53,12 @@
              [class.marked]="item === itemsList.markedItem">
 
             <ng-template #defaultOptionTemplate>
-                <span class="ng-option-label" [innerHTML]="item.highlightedLabel"></span>
+                <span class="ng-option-label" [innerHTML]="item.label"  [ngOptionHighlight]="filterValue"></span>
             </ng-template>
 
             <ng-template
                 [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate"
-                [ngTemplateOutletContext]="{ item: item.value, index: item.index }">
+                [ngTemplateOutletContext]="{ item: item.value, index: item.index, searchTerm: filterValue }">
             </ng-template>
         </div>
 
