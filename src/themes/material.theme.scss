@@ -1,0 +1,146 @@
+.ng-select {
+    padding-bottom: 1.25em;
+    &.disabled {
+        .ng-control {
+            &:after {
+                border-bottom-color: transparent;
+                background-image: linear-gradient(to right, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.42) 33%, transparent 0%);
+                background-size: 4px 1px;
+                background-repeat: repeat-x;
+            }
+            .ng-value-container {
+                .ng-value {
+                    color: rgba(0, 0, 0, 0.38);
+                }
+                .ng-placeholder {
+                    color: rgba(0, 0, 0, 0.38);
+                }
+            }
+        }
+        .ng-arrow-zone {
+            .ng-arrow {
+                color: rgba(0, 0, 0, 0.38);
+            }
+        }
+        .ng-clear-zone {
+            color: rgba(0, 0, 0, 0.38);
+        }
+    }
+    .ng-control {
+        align-items: baseline;
+        &:after {
+            border-bottom: 1px solid rgba(0, 0, 0, .42);
+            content: '';
+            width: 100%;
+            bottom: 0;
+            position: absolute;
+        }
+        .ng-value-container {
+            align-items: baseline;
+            padding: .4375em 0;
+            border-top: .84375em solid transparent;
+            .ng-placeholder {
+                color: rgba(0, 0, 0, .54);
+            }
+            .ng-input {
+                bottom: .4375em;
+            }
+        }
+    }
+    &.ng-multiple {
+        .ng-control {
+            .ng-value-container {
+                .ng-value {
+                    margin-right: 0.4375em;
+                    margin-bottom: 0.4375em;
+                    background-color: #e0e0e0;
+                    border-radius: 2px;
+                    padding: 2px 5px;
+                }
+                .ng-input {
+                    line-height: 1.375em;
+                }
+            }
+        }
+        &.ng-selected {
+            .ng-control {
+                align-items: center;
+                .ng-value-container {
+                    padding-bottom: 0;
+                    padding-top: .1875em;
+                }
+                .ng-clear-zone,
+                .ng-arrow-zone {
+                    border-top: .84375em solid transparent;
+                }
+            }
+        }
+    }
+    .ng-clear-zone {
+        color: rgba(0, 0, 0, 0.54);
+    }
+    .ng-arrow-zone {
+        bottom: 2px;
+        .ng-arrow {
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid;
+            margin: 0 4px;
+            color: rgba(0, 0, 0, .54);
+        }
+    }
+    .ng-spinner-zone {
+        top: 3px;
+    }
+    .ng-dropdown-header {
+        border-bottom: 1px solid rgba(0, 0, 0, .12);
+        padding: 0 16px;
+        line-height: 3em;
+        height: 3em;
+    }
+    .ng-dropdown-footer {
+        border-top: 1px solid rgba(0, 0, 0, .12);
+        padding: 0 16px;
+        line-height: 3em;
+        height: 3em;
+    }
+}
+
+.ng-select-dropdown-outer {
+    background: #fff;
+    &.bottom {
+        top: calc(100% - 1.25em);
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
+    }
+    &.top {
+        bottom: calc(100% - .84375em);
+        box-shadow: 0 -5px 5px -3px rgba(0, 0, 0, .2), 0 -8px 10px 1px rgba(0, 0, 0, .14), 0 -3px 14px 2px rgba(0, 0, 0, .12);
+    }
+    .ng-option {
+        line-height: 3em;
+        height: 3em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 0 16px;
+        text-align: left;
+        text-decoration: none;
+        position: relative;
+        &.marked {
+            background: rgba(0, 0, 0, .04);
+            color: rgba(0, 0, 0, .87);
+        }
+        &.selected {
+            background: rgba(0, 0, 0, .12);
+        }
+        &.disabled {
+            color: rgba(0, 0, 0, 0.38);
+        }
+        .ng-tag-label {
+            padding-right: 5px;
+            font-size: 80%;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.38);
+        }
+    }
+}

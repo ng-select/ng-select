@@ -70,14 +70,20 @@ module.exports = function makeWebpackConfig() {
                         use: "css-loader!sass-loader"
                     })
                 },
+                
+                // all themes will be added to bundle as usable
+                {
+                    test: /(theme)\.scss$/,
+                    loader: 'style-loader/useable!css-loader!postcss-loader!sass-loader'
+                },
 
                 // all css required in ng-select files will be merged in js files
                 {
                     test: /\.(scss|sass)$/,
-                    exclude: root('demo', 'style'),
+                    exclude: [root('demo', 'style'), root('src', 'themes')],
                     loader: 'raw-loader!postcss-loader!sass-loader'
                 },
-
+                
                 // support for .html as raw text
                 {test: /\.html$/, loader: ['raw-loader', 'ng-snippets-loader'], exclude: root('src', 'public')}
             ]

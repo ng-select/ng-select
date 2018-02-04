@@ -18,8 +18,8 @@ export class AppComponent {
     version: string = window['ngSelectVersion'];
 
     constructor(private router: Router,
-                private activatedRoute: ActivatedRoute,
-                private titleService: Title) {
+        private activatedRoute: ActivatedRoute,
+        private titleService: Title) {
     }
 
     ngOnInit() {

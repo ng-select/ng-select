@@ -10,7 +10,6 @@
     text-overflow: ellipsis;
 }
 
-$color-selected: #f5faff;
 .ng-select {
     position: relative;
     display: block;
@@ -23,79 +22,39 @@ $color-selected: #f5faff;
     [hidden] {
         display: none;
     }
-    &.opened {
-        >.ng-control {
-            background: #fff;
-            border-color: #b3b3b3 #ccc #d9d9d9;
-        }
-        >.ng-control .ng-arrow {
-            top: -2px;
-            border-color: transparent transparent #999;
-            border-width: 0 5px 5px;
-            &:hover {
-                border-color: transparent transparent #666;
-            }
-        }
-        &.bottom {
-            >.ng-control {
-                border-bottom-right-radius: 0;
-                border-bottom-left-radius: 0;
-            }
-        }
-        &.top {
-            >.ng-control {
-                border-top-right-radius: 0;
-                border-top-left-radius: 0;
-            }
-        }
-    }
-    &.focused {
-        &:not(.opened)>.ng-control {
-            border-color: #007eff;
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px rgba(0, 126, 255, 0.1);
-        }
-    }
-    &.disabled {
-        pointer-events: none;
-        >.ng-control {
-            background-color: #f9f9f9;
-        }
-    }
     &.searchable {
         .ng-control .ng-value-container .ng-input {
             opacity: 1;
         }
     }
+    &.disabled {
+        .ng-control {
+            .ng-value-container {
+                .ng-placeholder,
+                .ng-value {
+                    user-select: none;
+                    cursor: default;
+                }
+            }
+        }
+        .ng-arrow-zone {
+            cursor: default;
+        }
+    }
     .ng-control {
-        background-color: #fff;
-        border-radius: 4px;
-        border: 1px solid #ccc;
         color: #333;
         cursor: default;
         display: flex;
-        align-items: center;
-        border-spacing: 0;
-        border-collapse: separate;
-        min-height: 36px;
         outline: none;
         overflow: hidden;
         position: relative;
         width: 100%;
-        &:hover {
-            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
-        }
         .ng-value-container {
             display: flex;
             flex: 1;
-            align-items: center;
-            padding-left: 10px;
-            .ng-placeholder {
-                color: #aaa;
-            }
             .ng-input {
                 opacity: 0;
                 >input {
-                    min-width: 5px;
                     box-sizing: content-box;
                     background: none transparent;
                     border: 0 none;
@@ -125,8 +84,6 @@ $color-selected: #f5faff;
                 .ng-input {
                     position: absolute;
                     left: 0;
-                    padding-left: 10px;
-                    padding-right: 50px;
                     width: 100%;
                 }
             }
@@ -135,11 +92,6 @@ $color-selected: #f5faff;
     &.ng-multiple {
         &.disabled {
             >.ng-control .ng-value-container .ng-value {
-                background-color: #f9f9f9;
-                border: 1px solid #e3e3e3;
-                .ng-value-label {
-                    padding: 2px 5px;
-                }
                 .ng-value-icon {
                     display: none;
                 }
@@ -148,62 +100,31 @@ $color-selected: #f5faff;
         .ng-control {
             .ng-value-container {
                 flex-wrap: wrap;
-                padding-left: 7px;
-                padding-top: 5px;
                 .ng-placeholder {
                     position: absolute;
                 }
                 .ng-value {
-                    font-size: 0.9em;
-                    margin-right: 5px;
-                    margin-bottom: 5px;
                     white-space: nowrap;
-                    background-color: $color-selected;
-                    border-radius: 2px;
-                    border: 1px solid #c2e0ff;
                     &.disabled {
-                        background-color: #f9f9f9;
-                        border: 1px solid #e3e3e3;
                         .ng-value-icon {
                             display: none;
                         }
                     }
-                    .ng-value-label {
-                        padding: 2px 5px 2px 1px;
-                    }
                     .ng-value-icon {
-                        padding: 2px 5px;
                         cursor: pointer;
-                        &:hover {
-                            background-color: #d8eafd;
-                        }
-                        &.left {
-                            border-right: 1px solid #c2e0ff;
-                        }
-                        &.right {
-                            border-left: 1px solid #c2e0ff;
-                        }
                     }
                 }
                 .ng-input {
                     flex: 1;
                     z-index: 2;
-                    padding-bottom: 3px;
-                    padding-left: 3px;
                 }
                 .ng-placeholder {
                     z-index: 1;
-                    padding-bottom: 5px;
-                    padding-left: 3px;
                 }
             }
         }
     }
     .ng-clear-zone {
-        -webkit-animation: Select-animation-fadeIn 200ms;
-        -o-animation: Select-animation-fadeIn 200ms;
-        animation: Select-animation-fadeIn 200ms;
-        color: #999;
         cursor: pointer;
         position: relative;
         width: 17px;
@@ -218,122 +139,49 @@ $color-selected: #f5faff;
     }
     .ng-spinner-zone {
         cursor: pointer;
-        display: table-cell;
         position: relative;
         text-align: center;
-        vertical-align: middle;
         width: 25px;
-        padding-right: 5px;
-        padding-top: 5px;
     }
     .ng-arrow-zone {
         cursor: pointer;
-        display: table-cell;
         position: relative;
         text-align: center;
-        vertical-align: middle;
-        width: 25px;
-        padding-right: 5px;
         .ng-arrow {
-            border-color: #999 transparent transparent;
-            border-style: solid;
-            border-width: 5px 5px 2.5px;
             display: inline-block;
             height: 0;
             width: 0;
             position: relative;
-            &:hover {
-                border-top-color: #666;
-            }
         }
-    }
-    .ng-dropdown-header {
-        border-bottom: 1px solid #ccc;
-        padding: 5px 7px;
-    }
-    .ng-dropdown-footer {
-        border-top: 1px solid #ccc;
-        padding: 5px 7px;
     }
 }
 
 .ng-select-dropdown-outer {
     visibility: hidden;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
     box-sizing: border-box;
     position: absolute;
     width: 100%;
     z-index: 3;
     -webkit-overflow-scrolling: touch;
-    &.bottom {
-        top: 100%;
-        border-bottom-right-radius: 4px;
-        border-bottom-left-radius: 4px;
-        border-top-color: #e6e6e6;
-        margin-top: -1px;
-        .ng-select-dropdown {
-            .ng-option {
-                &:last-child {
-                    border-bottom-right-radius: 4px;
-                    border-bottom-left-radius: 4px;
-                }
-            }
-        }
-    }
-    &.top {
-        bottom: 100%;
-        border-top-right-radius: 4px;
-        border-top-left-radius: 4px;
-        border-bottom-color: #e6e6e6;
-        margin-bottom: -1px;
-        .ng-select-dropdown {
-            .ng-option {
-                &:first-child {
-                    border-top-right-radius: 4px;
-                    border-top-left-radius: 4px;
-                }
-            }
-        }
-    }
     .ng-select-dropdown {
         display: block;
         height: auto;
         @include box-sizing;
         max-height: 240px;
-        margin-bottom: 1px;
         overflow-y: auto;
         .ng-option {
             box-sizing: border-box;
-            background-color: #fff;
-            color: #666666;
             cursor: pointer;
             display: block;
-            padding: 8px 10px;
             .highlighted {
                 font-weight: bold;
                 text-decoration: underline;
             }
             &.selected {
-                background-color: $color-selected;
-                color: #333;
-                .ng-option-label {
-                    font-weight: 600;
-                }
-            }
-            &.marked {
-                background-color: #ebf5ff;
                 color: #333;
             }
             &.disabled {
-                color: #cccccc;
                 cursor: default;
-            }
-            .ng-tag-label {
-                padding-right: 5px;
-                font-size: 80%;
-                font-weight: 400;
             }
         }
     }
