@@ -67,7 +67,7 @@
         </div>
     </ng-select-virtual-scroll>
 
-    <div class="ng-select-dropdown" *ngIf="showNoItemsFound() && !addTag">
+    <div class="ng-select-dropdown" *ngIf="showNoItemsFound() && !showAddTag()">
         <div class="ng-option disabled">
             {{notFoundText}}
         </div>
