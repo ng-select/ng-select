@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.17.2"></a>
+## [0.17.2](https://github.com/ng-select/ng-select/compare/v0.17.1...v0.17.2) (2018-02-05)
+
+
+### Bug Fixes
+
+* Not found text is not used for custom tags [#234](https://github.com/ng-select/ng-select/issues/234) ([#235](https://github.com/ng-select/ng-select/issues/235)) ([fbd5f5c](https://github.com/ng-select/ng-select/commit/fbd5f5c))
+
+
+
 <a name="0.17.1"></a>
 ## [0.17.1](https://github.com/ng-select/ng-select/compare/v0.17.0...v0.17.1) (2018-02-04)
 
