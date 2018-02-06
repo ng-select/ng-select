@@ -887,6 +887,45 @@ describe('NgSelectComponent', function () {
         });
     });
 
+    describe('Multiple with max limit of selection', () => {
+        let fixture: ComponentFixture<NgSelectBasicTestCmp>;
+        let arrowIcon: DebugElement = null;
+
+        beforeEach(() => {
+            fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    bindValue="this"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity"
+                    [multiple]="true"
+                    [maxSelectedItems]="2">
+                </ng-select>`);
+            arrowIcon = fixture.debugElement.query(By.css('.ng-arrow-zone'));
+        });
+
+        it('should be able to select only two elements', fakeAsync(() => {
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+            tickAndDetectChanges(fixture);
+            expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(2);
+        }));
+
+        it('should click on arrow be disabled when maximum of items is reached', fakeAsync (() => {
+            const clickArrow = () => arrowIcon.triggerEventHandler('click', { stopPropagation: () => { } });
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+            tickAndDetectChanges(fixture);
+            // open
+            clickArrow();
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBe(false);
+            expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(2);
+        }));
+    });
+
     describe('Tagging', () => {
         it('should select default tag', fakeAsync(() => {
             let fixture = createTestingModule(
