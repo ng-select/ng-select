@@ -10,11 +10,13 @@ import {
 import { VirtualScrollModule } from './virtual-scroll.component';
 import { SpinnerComponent } from './spinner.component';
 import { NgOptionComponent } from './ng-option.component';
+import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
 
 @NgModule({
     declarations: [
         NgSelectComponent,
         NgOptionComponent,
+        NgOptionHighlightDirective,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
         NgHeaderTemplateDirective,
@@ -28,6 +30,7 @@ import { NgOptionComponent } from './ng-option.component';
     exports: [
         NgSelectComponent,
         NgOptionComponent,
+        NgOptionHighlightDirective,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
         NgHeaderTemplateDirective,

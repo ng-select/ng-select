@@ -75,7 +75,7 @@ export class ItemsList {
             index: this._items.length,
             label: this.resolveNested(item, this._ngSelect.bindLabel),
             value: item
-        }
+        };
         this._items.push(option);
         this._filteredItems.push(option);
         return option;
@@ -179,7 +179,7 @@ export class ItemsList {
 
     private _getDefaultFilterFunc(term: string) {
         return (option: NgOption) => {
-            return searchHelper.stripSpecialChars(option.label || '')
+            return searchHelper.stripSpecialChars(option.label ? option.label.toString() : '')
                 .toUpperCase()
                 .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
         };
