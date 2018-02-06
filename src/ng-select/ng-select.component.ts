@@ -73,7 +73,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() addTagText: string;
     @Input() loadingText: string;
     @Input() clearAllText: string;
-    @Input() dropdownPosition: 'bottom' | 'top' = 'bottom';
+    @Input() dropdownPosition: 'bottom' | 'top' | 'auto' = 'bottom';
     @Input() appendTo: string;
     @Input() loading = false;
     @Input() closeOnSelect = true;
@@ -277,6 +277,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this._scrollToMarked();
         this._focusSearchInput();
         this.openEvent.emit();
+        if (this.dropdownPosition === 'auto') {
+            this._autoPositionDropdown();
+        }
         if (this.appendTo) {
             this._updateDropdownPosition();
         }
@@ -508,6 +511,22 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         dropdownPanel.style.bottom = 'auto';
         dropdownPanel.style.left = offsetLeft + 'px';
         dropdownPanel.style.width = selectRect.width + 'px';
+    }
+
+    private _autoPositionDropdown() {
+        const selectRect = this.elementRef.nativeElement.getBoundingClientRect();
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const offsetTop = selectRect.top + window.pageYOffset;
+        const height = selectRect.height;
+        const dropdownHeight = this.dropdownPanel.nativeElement.getBoundingClientRect().height;
+
+        if (offsetTop + height + dropdownHeight > scrollTop + document.documentElement.clientHeight) {
+          this.renderer.addClass(this.dropdownPanel.nativeElement, 'top');
+          this.renderer.addClass(this.elementRef.nativeElement, 'top');
+        } else {
+          this.renderer.addClass(this.dropdownPanel.nativeElement, 'bottom');
+          this.renderer.addClass(this.elementRef.nativeElement, 'bottom');
+        }
     }
 
     private _validateWriteValue(value: any) {
