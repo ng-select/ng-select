@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.18.0"></a>
+# [0.18.0](https://github.com/ng-select/ng-select/compare/v0.17.2...v0.18.0) (2018-02-06)
+
+
+### Features
+
+* highlight search term in labels in dropdown list ([#233](https://github.com/ng-select/ng-select/issues/233)) ([493c349](https://github.com/ng-select/ng-select/commit/493c349)), closes [#152](https://github.com/ng-select/ng-select/issues/152)
+
+
+
 <a name="0.17.2"></a>
 ## [0.17.2](https://github.com/ng-select/ng-select/compare/v0.17.1...v0.17.2) (2018-02-05)
 
