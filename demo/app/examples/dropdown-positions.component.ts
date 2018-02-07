@@ -16,8 +16,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         </ng-select>
         ---
 
-        <hr>
-
+        <br>
+        
         <label>
             <input [(ngModel)]="dropdownPosition" type="radio" [value]="'top'">
             top
@@ -28,6 +28,19 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
             <input [(ngModel)]="dropdownPosition" type="radio" [value]="'bottom'">
             bottom
         </label>
+
+        <hr>
+        <p>
+          Using "Auto" it still defaults to bottom, but if the dropdown would be out of view, 
+          it will automatically change the dropdownPosition to top.
+        </p>
+
+        ---html,true
+        <ng-select [dropdownPosition]="'auto'"
+                   [searchable]="false"
+                   [items]="cities">
+        </ng-select>
+        ---
     `
 })
 export class DropdownPositionsComponent {

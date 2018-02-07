@@ -121,7 +121,7 @@ map: {
 | loadingText | string | `Loading...` | no | Set custom text when for loading items |
 | [typeahead] | Subject |  `-` | no | Custom autocomplete or filter. |
 | [disableVirtualScroll] | boolean |  false | no | Disable virtual scroll |
-| dropdownPosition | `bottom`,`top` |  `bottom` | no | Set the dropdown position on open |
+| dropdownPosition | `bottom`,`top`,`auto` |  `bottom` | no | Set the dropdown position on open |
 | appendTo | string |  null | no | Append drodown to body or any other element using css selector |
 | loading | boolean |  `-` | no | you can set the loading state from the outside (e.g. async items loading) |
 | closeOnSelect | boolean |  true | no | whether to close the menu when a value is selected |

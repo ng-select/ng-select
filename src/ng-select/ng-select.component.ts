@@ -54,8 +54,8 @@ const NG_SELECT_VALUE_ACCESSOR = {
     host: {
         'role': 'dropdown',
         'class': 'ng-select',
-        '[class.top]': 'dropdownPosition === "top"',
-        '[class.bottom]': 'dropdownPosition === "bottom"',
+        '[class.top]': 'currentDropdownPosition === "top"',
+        '[class.bottom]': 'currentDropdownPosition === "bottom"',
     }
 })
 export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
@@ -73,7 +73,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() addTagText: string;
     @Input() loadingText: string;
     @Input() clearAllText: string;
-    @Input() dropdownPosition: 'bottom' | 'top' = 'bottom';
+    @Input() dropdownPosition: 'bottom' | 'top' | 'auto';
     @Input() appendTo: string;
     @Input() loading = false;
     @Input() closeOnSelect = true;
@@ -117,6 +117,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];
     filterValue: string = null;
+    currentDropdownPosition: 'bottom' | 'top' | 'auto' = 'bottom';
 
     private _ngModel: any = null;
     private _defaultLabel = 'label';
@@ -155,6 +156,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
         if (changes.items) {
             this._setItems(changes.items.currentValue || []);
+        }
+        if (changes.dropdownPosition) {
+            this.currentDropdownPosition = changes.dropdownPosition.currentValue;
         }
     }
 
@@ -277,6 +281,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this._scrollToMarked();
         this._focusSearchInput();
         this.openEvent.emit();
+        if (this.dropdownPosition === 'auto') {
+            this._autoPositionDropdown();
+        }
         if (this.appendTo) {
             this._updateDropdownPosition();
         }
@@ -503,11 +510,25 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         const selectRect = select.getBoundingClientRect();
         const offsetTop = selectRect.top - bodyRect.top;
         const offsetLeft = selectRect.left - bodyRect.left;
-        const topDelta = this.dropdownPosition === 'bottom' ? selectRect.height : -dropdownPanel.clientHeight;
+        const topDelta = this.currentDropdownPosition === 'bottom' ? selectRect.height : -dropdownPanel.clientHeight;
         dropdownPanel.style.top = offsetTop + topDelta + 'px';
         dropdownPanel.style.bottom = 'auto';
         dropdownPanel.style.left = offsetLeft + 'px';
         dropdownPanel.style.width = selectRect.width + 'px';
+    }
+
+    private _autoPositionDropdown() {
+        const selectRect = this.elementRef.nativeElement.getBoundingClientRect();
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const offsetTop = selectRect.top + window.pageYOffset;
+        const height = selectRect.height;
+        const dropdownHeight = this.dropdownPanel.nativeElement.getBoundingClientRect().height;
+
+        if (offsetTop + height + dropdownHeight > scrollTop + document.documentElement.clientHeight) {
+            this.currentDropdownPosition = 'top';
+        } else {
+            this.currentDropdownPosition = 'bottom';
+        }
     }
 
     private _validateWriteValue(value: any) {
