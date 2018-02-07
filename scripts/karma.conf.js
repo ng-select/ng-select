@@ -14,10 +14,10 @@ module.exports = function (config) {
     frameworks: ['jasmine'],
 
     // list of files / patterns to load in the browser
-    files: [{
-      pattern: './karma-shim.js',
-      watched: false
-    }],
+    files: [
+      { pattern: './karma-shim.js', watched: false },
+      { pattern: './../src/themes/default.theme.scss', watched: false }
+  ],
 
     // list of files to exclude
     exclude: [],
@@ -25,7 +25,8 @@ module.exports = function (config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      './karma-shim.js': ['webpack', 'sourcemap']
+      './karma-shim.js': ['webpack', 'sourcemap'],
+      '../src/themes/*.scss': ['scss']
     },
 
     webpack: webpackConfig,
