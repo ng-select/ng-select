@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.19.0"></a>
+# [0.19.0](https://github.com/ng-select/ng-select/compare/v0.18.0...v0.19.0) (2018-02-07)
+
+
+### Features
+
+* determine dropdownPosition automatically ([#238](https://github.com/ng-select/ng-select/issues/238)) ([d4404f7](https://github.com/ng-select/ng-select/commit/d4404f7)), closes [#237](https://github.com/ng-select/ng-select/issues/237)
+
+
+
 <a name="0.18.0"></a>
 # [0.18.0](https://github.com/ng-select/ng-select/compare/v0.17.2...v0.18.0) (2018-02-06)
 
