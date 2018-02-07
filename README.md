@@ -65,12 +65,12 @@ export class AppModule {}
 ```
 
 ### Step 3: Include a theme: 
-To allow customization and theming, `ng-select` bundle includes only generic styles that are necessary for correct layout and positioning. Include one of the themes in your application. If you're using the Angular CLI, you can add this to your styles.scss:
+To allow customization and theming, `ng-select` bundle includes only generic styles that are necessary for correct layout and positioning. To get full look of the control, include one of the themes in your application. If you're using the Angular CLI, you can add this to your styles.scss:
 
 ```scss
-@import "~@ng-select/themes/default.theme.css";
+@import "~@ng-select/ng-select/themes/default.theme.css";
 // ... or 
-@import "~@ng-select/themes/material.theme.css";
+@import "~@ng-select/ng-select/themes/material.theme.css";
 
 ```
 
