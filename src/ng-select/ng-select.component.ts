@@ -54,8 +54,8 @@ const NG_SELECT_VALUE_ACCESSOR = {
     host: {
         'role': 'dropdown',
         'class': 'ng-select',
-        '[class.top]': 'dropdownPosition === "top"',
-        '[class.bottom]': 'dropdownPosition === "bottom"',
+        '[class.top]': 'currentDropdownPosition === "top"',
+        '[class.bottom]': 'currentDropdownPosition === "bottom"',
     }
 })
 export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
@@ -117,6 +117,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];
     filterValue: string = null;
+    currentDropdownPosition: 'bottom' | 'top' | 'auto';
 
     private _ngModel: any = null;
     private _defaultLabel = 'label';
@@ -155,6 +156,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
         if (changes.items) {
             this._setItems(changes.items.currentValue || []);
+        }
+        if (changes.dropdownPosition) {
+            this.currentDropdownPosition = changes.dropdownPosition.currentValue;
         }
     }
 
@@ -506,7 +510,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         const selectRect = select.getBoundingClientRect();
         const offsetTop = selectRect.top - bodyRect.top;
         const offsetLeft = selectRect.left - bodyRect.left;
-        const topDelta = this.dropdownPosition === 'bottom' ? selectRect.height : -dropdownPanel.clientHeight;
+        const topDelta = this.currentDropdownPosition === 'bottom' ? selectRect.height : -dropdownPanel.clientHeight;
         dropdownPanel.style.top = offsetTop + topDelta + 'px';
         dropdownPanel.style.bottom = 'auto';
         dropdownPanel.style.left = offsetLeft + 'px';
@@ -521,11 +525,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         const dropdownHeight = this.dropdownPanel.nativeElement.getBoundingClientRect().height;
 
         if (offsetTop + height + dropdownHeight > scrollTop + document.documentElement.clientHeight) {
-          this.renderer.addClass(this.dropdownPanel.nativeElement, 'top');
-          this.renderer.addClass(this.elementRef.nativeElement, 'top');
+            this.currentDropdownPosition = 'top';
         } else {
-          this.renderer.addClass(this.dropdownPanel.nativeElement, 'bottom');
-          this.renderer.addClass(this.elementRef.nativeElement, 'bottom');
+            this.currentDropdownPosition = 'bottom';
         }
     }
 

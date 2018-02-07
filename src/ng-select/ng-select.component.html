@@ -41,7 +41,7 @@
     </span>
 </div>
 
-<div class="ng-select-dropdown-outer" [class.top]="dropdownPosition === 'top'" [class.bottom]="dropdownPosition === 'bottom'" [ngStyle]="{'visibility': isOpen ? 'visible': 'hidden'}" #dropdownPanel>
+<div class="ng-select-dropdown-outer" [class.top]="currentDropdownPosition === 'top'" [class.bottom]="currentDropdownPosition === 'bottom'" [ngStyle]="{'visibility': isOpen ? 'visible': 'hidden'}" #dropdownPanel>
     <div *ngIf="headerTemplate" class="ng-dropdown-header">
         <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
     </div>
