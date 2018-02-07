@@ -73,7 +73,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() addTagText: string;
     @Input() loadingText: string;
     @Input() clearAllText: string;
-    @Input() dropdownPosition: 'bottom' | 'top' | 'auto' = 'bottom';
+    @Input() dropdownPosition: 'bottom' | 'top' | 'auto';
     @Input() appendTo: string;
     @Input() loading = false;
     @Input() closeOnSelect = true;
@@ -117,7 +117,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];
     filterValue: string = null;
-    currentDropdownPosition: 'bottom' | 'top' | 'auto';
+    currentDropdownPosition: 'bottom' | 'top' | 'auto' = 'bottom';
 
     private _ngModel: any = null;
     private _defaultLabel = 'label';

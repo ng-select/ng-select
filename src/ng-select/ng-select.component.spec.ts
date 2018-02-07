@@ -721,22 +721,22 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Dropdown position', () => {
-        let fixture: ComponentFixture<NgSelectBasicTestCmp>
-
-        beforeEach(() => {
-            fixture = createTestingModule(
-                NgSelectBasicTestCmp,
-                `<ng-select id="select"></ng-select>`);
-        });
-
         it('should be set to `bottom` by default', () => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+            `<ng-select id="select"></ng-select>`);
+
             const classes = fixture.debugElement.query(By.css('ng-select')).classes;
             expect(classes.bottom).toBeTruthy();
             expect(classes.top).toBeFalsy();
         });
 
         it('should allow changing dropdown position', () => {
-            fixture.componentInstance.select.dropdownPosition = 'top';
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+              `<ng-select id="select" [dropdownPosition]="dropdownPosition"></ng-select>`);
+
+            fixture.componentInstance.dropdownPosition = 'top';
             fixture.detectChanges();
 
             const classes = fixture.debugElement.query(By.css('ng-select')).classes;
@@ -1442,6 +1442,7 @@ class NgSelectBasicTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
     multiple = false;
+    dropdownPosition = 'bottom';
     cities = [
         { id: 1, name: 'Vilnius' },
         { id: 2, name: 'Kaunas' },
