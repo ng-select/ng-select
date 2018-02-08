@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.20.1"></a>
+## [0.20.1](https://github.com/ng-select/ng-select/compare/v0.20.0...v0.20.1) (2018-02-08)
+
+
+### Bug Fixes
+
+* focus only if filter value is not set ([#244](https://github.com/ng-select/ng-select/issues/244)) ([e264a15](https://github.com/ng-select/ng-select/commit/e264a15)), closes [#242](https://github.com/ng-select/ng-select/issues/242)
+
+
+
 <a name="0.20.0"></a>
 # [0.20.0](https://github.com/ng-select/ng-select/compare/v0.19.0...v0.20.0) (2018-02-08)
 
