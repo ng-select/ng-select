@@ -280,13 +280,15 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.isOpen = true;
         this.itemsList.markSelectedOrDefault(this.markFirst);
         this._scrollToMarked();
-        this._focusSearchInput();
         this.openEvent.emit();
+        if (!this.filterValue) {
+            this._focusSearchInput();
+        }
         if (this.dropdownPosition === 'auto') {
             this._autoPositionDropdown();
         }
         if (this.appendTo) {
-            this._updateDropdownPosition();
+            this._updateAppendedDropdownPosition();
         }
     }
 
@@ -377,8 +379,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (!this.searchable) {
             return;
         }
-        this.open();
         this.filterValue = term;
+        this.open();
 
         if (this._isTypeahead) {
             this._typeaheadLoading = true;
@@ -483,7 +485,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private _handleDocumentResize() {
         const handler = () => {
             if (this.appendTo && this.isOpen) {
-                this._updateDropdownPosition();
+                this._updateAppendedDropdownPosition();
             }
         };
 
@@ -501,10 +503,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             parent.appendChild(this.dropdownPanel.nativeElement);
         }
         this._handleDocumentResize();
-        this._updateDropdownPosition();
+        this._updateAppendedDropdownPosition();
     }
 
-    private _updateDropdownPosition() {
+    private _updateAppendedDropdownPosition() {
         const select: HTMLElement = this.elementRef.nativeElement;
         const dropdownPanel: HTMLElement = this.dropdownPanel.nativeElement;
         const bodyRect = document.body.getBoundingClientRect();
