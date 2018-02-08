@@ -77,6 +77,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() appendTo: string;
     @Input() loading = false;
     @Input() closeOnSelect = true;
+    @Input() maxSelectedItems: number;
     @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-multiple') multiple = false;
     @Input() @HostBinding('class.taggable') addTag: boolean | ((term: string) => NgOption) = false;
@@ -273,7 +274,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     open() {
-        if (this.isDisabled || this.isOpen) {
+        if (this.isDisabled || this.isOpen || this.itemsList.maxItemsSelected()) {
             return;
         }
         this.isOpen = true;

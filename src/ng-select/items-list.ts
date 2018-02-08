@@ -37,7 +37,7 @@ export class ItemsList {
     }
 
     select(item: NgOption) {
-        if (item.selected) {
+        if (item.selected || this.maxItemsSelected()) {
             return;
         }
         if (!this._ngSelect.multiple) {
@@ -45,6 +45,10 @@ export class ItemsList {
         }
         this._selected.push(item);
         item.selected = true;
+    }
+
+    maxItemsSelected(): boolean {
+        return this._ngSelect.multiple && this._ngSelect.maxSelectedItems <= this._selected.length;
     }
 
     findItem(value: any): NgOption {

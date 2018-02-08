@@ -23,14 +23,33 @@ import { DataService } from '../shared/data.service';
         </div>
         <hr/>
 
-        <label>Disabled multiple elements</label>
+        <label>Select multiple elements with a limit number of selections (e.g 3)</label>
         ---html,true
         <ng-select
                 [items]="people$2 | async"
+                [multiple]="true"
+                [maxSelectedItems]="3"
+                bindLabel="name"
+                [(ngModel)]="selectedPeople2">
+        </ng-select>
+        ---
+        <div class="mt-3">
+            Selected value: <br />
+            <ul>
+                <li *ngFor="let item of selectedPeople1">{{item.name}}</li>
+            </ul>
+            <button (click)="clearModel()" class="btn btn-secondary btn-sm">Clear model</button>
+        </div>
+        <hr/>
+
+        <label>Disabled multiple elements</label>
+        ---html,true
+        <ng-select
+                [items]="people$3 | async"
                 bindLabel="name"
                 [multiple]="true"
                 [disabled]="disable"
-                [(ngModel)]="selectedPeople2">
+                [(ngModel)]="selectedPeople3">
         </ng-select>
         ---
         <br>
@@ -64,6 +83,9 @@ export class SelectMultiComponent {
 
     people$2: Observable<any[]>;
     selectedPeople2 = [];
+
+    people$3: Observable<any[]>;
+    selectedPeople3 = [];
     disable = true;
 
     githubUsers$: Observable<any[]>;
@@ -74,16 +96,21 @@ export class SelectMultiComponent {
     ngOnInit() {
         this.people$1 = this.dataService.getPeople();
         this.people$2 = this.dataService.getPeople();
+        this.people$3 = this.dataService.getPeople();
         this.githubUsers$ = this.dataService.getGithubAccounts('anjm');
 
-        this.selectedPeople2 = [
+        this.selectedPeople3 = [
             { id: '5a15b13c2340978ec3d2c0ea', name: 'Rochelle Estes' },
             { id: '5a15b13c728cd3f43cc0fe8a', name: 'Marquez Nolan' }
         ];
     }
 
-    clearModel() {
+    clearModel1() {
         this.selectedPeople1 = [];
+    }
+
+    clearModel2() {
+        this.selectedPeople2 = [];
     }
 
 }
