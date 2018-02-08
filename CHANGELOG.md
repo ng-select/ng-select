@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.20.0"></a>
+# [0.20.0](https://github.com/ng-select/ng-select/compare/v0.19.0...v0.20.0) (2018-02-08)
+
+
+### Features
+
+* allow to set max selected items using multiple ([#239](https://github.com/ng-select/ng-select/issues/239)) ([f500654](https://github.com/ng-select/ng-select/commit/f500654)), closes [#181](https://github.com/ng-select/ng-select/issues/181)
+
+
+
 <a name="0.19.0"></a>
 # [0.19.0](https://github.com/ng-select/ng-select/compare/v0.18.0...v0.19.0) (2018-02-07)
 
