@@ -37,6 +37,12 @@ $color-selected: #f5faff;
             background-color: #f9f9f9;
         }
     }
+    &.ng-selected,
+    &.filtered {
+        .ng-control .ng-value-container .ng-placeholder {
+            display: none;
+        }
+    }
     .ng-control {
         background-color: #fff;
         border-radius: 4px;
@@ -120,6 +126,11 @@ $color-selected: #f5faff;
     }
     .ng-clear-zone {
         color: #999;
+        .ng-clear {
+            &:hover {
+                color: #D0021B;
+            }
+        }
     }
     .ng-spinner-zone {
         padding-right: 5px;
@@ -195,6 +206,9 @@ $color-selected: #f5faff;
             }
             &.marked {
                 background-color: #ebf5ff;
+                color: #333;
+            }
+            &.selected {
                 color: #333;
             }
             &.disabled {

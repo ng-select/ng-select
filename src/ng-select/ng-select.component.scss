@@ -132,9 +132,6 @@
             display: inline-block;
             font-size: 18px;
             line-height: 1;
-            &:hover {
-                color: #D0021B;
-            }
         }
     }
     .ng-spinner-zone {
@@ -176,9 +173,6 @@
             .highlighted {
                 font-weight: bold;
                 text-decoration: underline;
-            }
-            &.selected {
-                color: #333;
             }
             &.disabled {
                 cursor: default;

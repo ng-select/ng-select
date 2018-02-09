@@ -61,7 +61,6 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "karma-mocha-reporter": "^2.0.3",
     "karma-remap-istanbul": "0.2.1",
-    "karma-scss-preprocessor": "^3.0.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "2.0.5",
     "ng-packagr": "^1.5.0-rc.0",

@@ -339,10 +339,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.select(item);
     }
 
-    showPlaceholder() {
-        return !this._hasValue && !this.filterValue;
-    }
-
     showClear() {
         return this.clearable && (this._hasValue || this.filterValue) && !this.isDisabled;
     }

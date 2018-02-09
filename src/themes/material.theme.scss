@@ -1,3 +1,4 @@
+$highlight-color: #3f51b5;
 .ng-select {
     padding-bottom: 1.25em;
     &.disabled {
@@ -17,45 +18,89 @@
                 }
             }
         }
-        .ng-arrow-zone {
-            .ng-arrow {
-                color: rgba(0, 0, 0, 0.38);
-            }
-        }
+        .ng-arrow-zone .ng-arrow,
         .ng-clear-zone {
             color: rgba(0, 0, 0, 0.38);
         }
     }
+    &.focused {
+        .ng-control {
+            &:after {
+                border-color: $highlight-color;
+                border-width: 2px;
+            }
+            .ng-value-container .ng-placeholder {
+                transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
+                color: $highlight-color;
+            }
+            .ng-arrow-zone .ng-arrow {
+                color: $highlight-color;
+            }
+        }
+    }
+    &.ng-selected {
+        .ng-control .ng-value-container .ng-placeholder {
+            transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
+        }
+    }
     .ng-control {
         align-items: baseline;
+        min-height: 51.5px;
         &:after {
             border-bottom: 1px solid rgba(0, 0, 0, .42);
             content: '';
             width: 100%;
             bottom: 0;
             position: absolute;
+            transition: border-color .3s cubic-bezier(.55, 0, .55, .2);
         }
         .ng-value-container {
             align-items: baseline;
             padding: .4375em 0;
             border-top: .84375em solid transparent;
             .ng-placeholder {
+                position: absolute;
                 color: rgba(0, 0, 0, .54);
+                transform-origin: 0 0;
+                transition: transform .4s cubic-bezier(.25, .8, .25, 1), color .4s cubic-bezier(.25, .8, .25, 1), width .4s cubic-bezier(.25, .8, .25, 1);
             }
             .ng-input {
                 bottom: .4375em;
             }
         }
     }
+    &.ng-single {
+        .ng-control .ng-arrow-zone {
+            align-self: flex-end;
+            bottom: 9px;
+        }
+    }
     &.ng-multiple {
+        &.disabled {
+            .ng-control .ng-value-container .ng-value {
+                background-color: rgba(0, 0, 0, .12);
+                color: rgba(0, 0, 0, .26);
+            }
+        }
         .ng-control {
             .ng-value-container {
                 .ng-value {
                     margin-right: 0.4375em;
                     margin-bottom: 0.4375em;
-                    background-color: #e0e0e0;
+                    background-color: $highlight-color;
                     border-radius: 2px;
+                    color: #fff;
                     padding: 2px 5px;
+                    .ng-value-label {
+                        font-size: 14px;
+                        font-weight: 500
+                    }
+                    .ng-value-icon {
+                        color: rgba(255, 255, 255, .54);
+                        &:hover {
+                            color: rgba(255, 255, 255, .87);
+                        }
+                    }
                 }
                 .ng-input {
                     line-height: 1.375em;
@@ -78,6 +123,9 @@
     }
     .ng-clear-zone {
         color: rgba(0, 0, 0, 0.54);
+        &:hover {
+            color: rgba(0, 0, 0, .87);
+        }
     }
     .ng-arrow-zone {
         bottom: 2px;
@@ -116,6 +164,16 @@
         bottom: calc(100% - .84375em);
         box-shadow: 0 -5px 5px -3px rgba(0, 0, 0, .2), 0 -8px 10px 1px rgba(0, 0, 0, .14), 0 -3px 14px 2px rgba(0, 0, 0, .12);
     }
+    &.multiple {
+        .ng-option {
+            &.selected {
+                background: #fff;
+            }
+            &.marked {
+                background: rgba(0, 0, 0, .04);
+            }
+        }
+    }
     .ng-option {
         line-height: 3em;
         height: 3em;
@@ -132,6 +190,7 @@
         }
         &.selected {
             background: rgba(0, 0, 0, .12);
+            color: $highlight-color;
         }
         &.disabled {
             color: rgba(0, 0, 0, 0.38);
