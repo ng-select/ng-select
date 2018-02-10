@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file. See [standa
 <a name="0.20.2"></a>
 ## [0.20.2](https://github.com/ng-select/ng-select/compare/v0.20.1...v0.20.2) (2018-02-10)
 
+### Features
+
+* material theme ([#241](https://github.com/ng-select/ng-select/issues/241)) ([7f346d1](https://github.com/ng-select/ng-select/commit/7f346d1)), closes [#141](https://github.com/ng-select/ng-select/issues/141)
+
 
 ### Bug Fixes
 
