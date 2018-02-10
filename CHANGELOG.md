@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* material theme ([#241](https://github.com/ng-select/ng-select/issues/241)) ([7f346d1](https://github.com/ng-select/ng-select/commit/7f346d1)), closes [#141](https://github.com/ng-select/ng-select/issues/141)
+* material theme ([#241](https://github.com/ng-select/ng-select/issues/241)) ([784bd1a](https://github.com/ng-select/ng-select/commit/7f346d1)), closes [#141](https://github.com/ng-select/ng-select/issues/141)
 
 
 ### Bug Fixes
