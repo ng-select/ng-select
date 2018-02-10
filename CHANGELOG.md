@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.20.2"></a>
+## [0.20.2](https://github.com/ng-select/ng-select/compare/v0.20.1...v0.20.2) (2018-02-10)
+
+
+### Bug Fixes
+
+* **multiselect:** allow to clear item even no items available ([#251](https://github.com/ng-select/ng-select/issues/251)) ([fb7b94b](https://github.com/ng-select/ng-select/commit/fb7b94b)), closes [#247](https://github.com/ng-select/ng-select/issues/247)
+* don't show not found text while loading ([#252](https://github.com/ng-select/ng-select/issues/252)) ([6be231a](https://github.com/ng-select/ng-select/commit/6be231a)), closes [#243](https://github.com/ng-select/ng-select/issues/243)
+
+
+
 <a name="0.20.1"></a>
 ## [0.20.1](https://github.com/ng-select/ng-select/compare/v0.20.0...v0.20.1) (2018-02-08)
 
