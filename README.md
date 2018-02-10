@@ -42,27 +42,41 @@ Table of contents
 Library is under active development and may have API breaking changes until stable 1.0.0 release or subsequent major versions after 1.0.0.
 
 ## Getting started
-After installing the above dependencies, install `ng-select` via:
+### Step 1: Install `ng-select`:
+
+#### NPM
 ```shell
 npm install --save @ng-select/ng-select
 ```
-Once installed you need to import our main module:
-```js
-import {NgSelectModule} from '@ng-select/ng-select';
+#### YARN
+```shell
+yarn add @ng-select/ng-select
 ```
-The only remaining part is to list the imported module in your application module.:
+### Step 2: Import the component module:
 ```js
-import {NgSelectModule} from '@ng-select/ng-select';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [NgSelectModule],  
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
-You can also configure global configuration and localization messages by providing custom NG_SELECT_DEFAULT_CONFIG
+
+### Step 3: Include a theme: 
+To allow customization and theming, `ng-select` bundle includes only generic styles that are necessary for correct layout and positioning. To get full look of the control, include one of the themes in your application. If you're using the Angular CLI, you can add this to your `styles.scss` or include it in `angular-cli.json`.
+
+```scss
+@import "~@ng-select/ng-select/themes/default.theme.css";
+// ... or 
+@import "~@ng-select/ng-select/themes/material.theme.css";
+
+```
+
+
+### Step 4 (Optional): Configuration 
+You can also set global configuration and localization messages by providing custom NG_SELECT_DEFAULT_CONFIG
 ```js
     providers: [
         {
@@ -97,8 +111,8 @@ map: {
 - [x] Multiselect support
 - [x] Autocomplete
 - [x] Custom tags
+- [x] Themes
 - [ ] Items grouping
-- [ ] Custom themes
 - [ ] Accessibility
 - [ ] Many more
 

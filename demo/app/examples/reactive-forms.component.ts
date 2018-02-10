@@ -185,7 +185,7 @@ export class ReactiveFormsComponent {
 
         this.heroForm = this.fb.group({
             heroId: 'hero1',
-            agree: '',
+            agree: null,
             selectedCitiesIds: [],
             age: ['', Validators.required],
             album: '',

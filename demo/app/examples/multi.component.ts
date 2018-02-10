@@ -11,6 +11,7 @@ import { DataService } from '../shared/data.service';
                 [items]="people$1 | async"
                 [multiple]="true"
                 bindLabel="name"
+                placeholder="Select people"
                 [(ngModel)]="selectedPeople1">
         </ng-select>
         ---
@@ -63,10 +64,8 @@ import { DataService } from '../shared/data.service';
             [(ngModel)]="selectedUsers">
 
             <ng-template ng-label-tmp let-item="item" let-clear="clear">
-                <div class="ng-value-wrapper default">
-                    <span class="ng-value-label"><img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}</span>
-                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
-                </div>
+                <span class="ng-value-label"><img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}</span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
             </ng-template>
 
             <ng-template ng-option-tmp let-item="item">

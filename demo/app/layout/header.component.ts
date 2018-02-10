@@ -1,4 +1,6 @@
-import { Component, Input} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+const defaultTheme = require('./../../../src/themes/default.theme.scss');
+const materialTheme = require('./../../../src/themes/material.theme.scss');
 
 @Component({
     selector: 'layout-header',
@@ -18,11 +20,19 @@ import { Component, Input} from '@angular/core';
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <div class="collapse navbar-collapse">
+                <div ngbDropdown class="d-inline-block">
+                    <button class="btn btn-outline-light btn-sm" style="width: 130px;" ngbDropdownToggle>{{theme}}</button>
+                    <div ngbDropdownMenu>
+                        <button (click)="setTheme('Default theme')" class="dropdown-item btn-sm">Default theme</button>
+                        <button (click)="setTheme('Material theme')" class="dropdown-item btn-sm">Material theme</button>
+                    </div>
+                </div>
+
                 <ul class="navbar-nav mr-auto">
                 </ul>
+
                 <form class="form-inline my-2 my-lg-0">
-                    <!-- Place this tag where you want the button to render. -->
                     <a class="github-button"
                        href="https://github.com/ng-select/ng-select"
                        data-icon="octicon-star"
@@ -34,8 +44,24 @@ import { Component, Input} from '@angular/core';
         </nav>
     `
 })
-export class LayoutHeaderComponent {
+export class LayoutHeaderComponent implements OnInit {
+    theme = 'Default theme';
     @Input() version: string;
+
+    ngOnInit() {
+        defaultTheme.use();
+    }
+
+    setTheme(theme) {
+        this.theme = theme;
+        if (this.theme === 'Default theme') {
+            materialTheme.unuse();
+            defaultTheme.use();
+        } else {
+            defaultTheme.unuse();
+            materialTheme.use();
+        }
+    }
 }
 
 

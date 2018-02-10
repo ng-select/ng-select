@@ -6,3 +6,4 @@ out-tsc
 .DS_Store
 travis_rsa
 travis_rsa.pub
+.vscode/**

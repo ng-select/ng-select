@@ -56,6 +56,8 @@ const NG_SELECT_VALUE_ACCESSOR = {
         'class': 'ng-select',
         '[class.top]': 'currentDropdownPosition === "top"',
         '[class.bottom]': 'currentDropdownPosition === "bottom"',
+        '[class.ng-single]': '!this.multiple',
+        '[class.ng-selected]': '_hasValue'
     }
 })
 export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
@@ -104,11 +106,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @ViewChild('dropdownPanel') dropdownPanel: ElementRef;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
     @ViewChild('filterInput') filterInput: ElementRef;
-
-    @HostBinding('class.ng-single')
-    get single() {
-        return !this.multiple;
-    }
 
     @HostBinding('class.opened') isOpen = false;
     @HostBinding('class.focused') isFocused = false;
@@ -226,7 +223,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     handleClearClick($event: Event) {
         $event.stopPropagation();
-        if (this._isValueSet) {
+        if (this._hasValue) {
             this.clearModel();
         }
         this._clearSearch();
@@ -345,12 +342,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.select(item);
     }
 
-    showPlaceholder() {
-        return this.placeholder && !this._isValueSet && !this.filterValue;
-    }
-
     showClear() {
-        return this.clearable && (this._isValueSet || this.filterValue) && !this.isDisabled;
+        return this.clearable && (this._hasValue || this.filterValue) && !this.isDisabled;
     }
 
     showAddTag() {
@@ -677,7 +670,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private _handleBackspace() {
-        if (this.filterValue || !this.clearable || !this._isValueSet) {
+        if (this.filterValue || !this.clearable || !this._hasValue) {
             return;
         }
 
@@ -708,7 +701,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         return selectedItem ? selectedItem.value : null;
     }
 
-    private get _isValueSet() {
+    private get _hasValue() {
         return this.selectedItems.length > 0;
     }
 

@@ -6,8 +6,9 @@
   "scripts": {
     "clean": "rimraf out-tsc dist/*",
     "prebuild": "npm run clean",
-    "build": "ng-packagr -p ./src/ng-package.json",
+    "build": "ng-packagr -p ./src/ng-package.json && npm run build:themes",
     "build:demo": "rimraf dist && webpack --config ./scripts/webpack.dev.js --progress --profile --bail",
+    "build:themes": "node-sass --output-style compressed src/themes/ -o dist/themes",
     "prestart": "yarn install",
     "start": "webpack-dev-server --config ./scripts/webpack.dev.js --inline --color --progress --port 8080",
     "test:watch": "karma start ./scripts/karma.conf.js --no-single-run --auto-watch",
