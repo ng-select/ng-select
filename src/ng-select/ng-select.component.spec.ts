@@ -519,6 +519,7 @@ describe('NgSelectComponent', function () {
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
                         bindLabel="name"
+                        [loading]="citiesLoading"
                         [multiple]="multiple"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
@@ -537,6 +538,17 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 const text = fixture.debugElement.query(By.css('.ng-option')).nativeElement.innerHTML;
                 expect(text).toContain('No items found');
+            }));
+
+            it('should open dropdown with loading message', fakeAsync(() => {
+                fixture.componentInstance.cities = [];
+                fixture.componentInstance.citiesLoading = true;
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+                const options = fixture.debugElement.queryAll(By.css('.ng-option'));
+                expect(options.length).toBe(1);
+                expect(options[0].nativeElement.innerHTML).toContain('Loading...');
             }));
 
             it('should open dropdown and mark first item', () => {
@@ -1473,6 +1485,7 @@ class NgSelectBasicTestCmp {
     selectedCity: { id: number; name: string };
     multiple = false;
     dropdownPosition = 'bottom';
+    citiesLoading = false;
     cities = [
         { id: 1, name: 'Vilnius' },
         { id: 2, name: 'Kaunas' },
