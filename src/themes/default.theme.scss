@@ -37,12 +37,6 @@ $color-selected: #f5faff;
             background-color: #f9f9f9;
         }
     }
-    &.ng-selected,
-    &.filtered {
-        .ng-control .ng-value-container .ng-placeholder {
-            display: none;
-        }
-    }
     .ng-control {
         background-color: #fff;
         border-radius: 4px;

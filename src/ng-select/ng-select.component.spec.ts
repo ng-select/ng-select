@@ -962,15 +962,6 @@ describe('NgSelectComponent', function () {
                 expect(el.innerText).toBe('select value');
             });
         }));
-
-        it('should not be visible when value is selected', async(() => {
-            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
-            fixture.detectChanges();
-            fixture.whenStable().then(() => {
-                const el = fixture.debugElement.query(By.css('.ng-placeholder'));
-                expect(el.nativeElement.hasAttribute('hidden')).toBe(true);
-            });
-        }));
     });
 
     describe('Filter', () => {

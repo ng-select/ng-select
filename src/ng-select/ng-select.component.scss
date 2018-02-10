@@ -41,6 +41,12 @@
             cursor: default;
         }
     }
+    &.ng-selected,
+    &.filtered {
+        .ng-control .ng-value-container .ng-placeholder {
+            display: none;
+        }
+    }
     .ng-control {
         color: #333;
         cursor: default;
