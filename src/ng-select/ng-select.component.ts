@@ -80,7 +80,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() maxSelectedItems: number;
     @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-multiple') multiple = false;
-    @Input() @HostBinding('class.taggable') addTag: boolean | ((term: string) => NgOption) = false;
+    @Input() @HostBinding('class.taggable') addTag: Promise<any> | boolean | ((term: string) => NgOption) = false;
     @Input() @HostBinding('class.searchable') searchable = true;
 
     // output events
@@ -356,7 +356,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
                 const item = this.itemsList.addItem(tag);
                 this.select(item);
             },(err)=>{
-                console.log("Tag rejected: " + JSON.stringigy(err,null,4));
+                console.log("Tag rejected: " + JSON.stringify(err,null,4));
             })
         }
         else{
