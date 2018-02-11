@@ -80,7 +80,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() maxSelectedItems: number;
     @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-multiple') multiple = false;
-    @Input() @HostBinding('class.taggable') addTag: boolean | ((term: string) => NgOption | Promise<any>) = false;
+    @Input() @HostBinding('class.taggable') addTag: boolean | ((term: string) => NgOption) = false;
     @Input() @HostBinding('class.searchable') searchable = true;
 
     // output events
@@ -333,10 +333,14 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.removeEvent.emit(item);
     }
 
+    isPromise(x) {
+        return x && Object.prototype.toString.call(x) === "[object Promise]"
+    }
+
     selectTag() {
         let tag = {};
         let promise = undefined;
-        if(Promise.resolve(this.addTag) == this.addTag){
+        if(isPromise(this.addTag)){
             //Checks if promise - https://stackoverflow.com/a/38339199/3955513
             promise = this.addTag(this.filterValue);
         }
