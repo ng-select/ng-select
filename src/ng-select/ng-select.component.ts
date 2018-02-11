@@ -82,7 +82,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() maxSelectedItems: number;
     @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-multiple') multiple = false;
-    @Input() @HostBinding('class.taggable') addTag: boolean | ((term: string) => NgOption) = false;
+    @Input() @HostBinding('class.taggable') addTag: Promise<any> | boolean | ((term: string) => NgOption) = false;
     @Input() @HostBinding('class.searchable') searchable = true;
 
     // output events
@@ -332,14 +332,34 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     selectTag() {
         let tag = {};
-        if (this.addTag instanceof Function) {
-            tag = this.addTag(this.filterValue)
-        } else {
+        let promise = undefined;
+        if(Promise.resolve(this.addTag) == this.addTag){
+            //Checks if promise - https://stackoverflow.com/a/38339199/3955513
+            promise = this.addTag(this.filterValue);
+        }
+        else if (this.addTag instanceof Function) {
+            var temp = this.addTag(this.filterValue);
+            if(temp == undefined){
+                return;
+            }
+            else{tag = temp;}
+        } 
+        else{
             tag[this.bindLabel] = this.filterValue;
         }
-
-        const item = this.itemsList.addItem(tag);
-        this.select(item);
+        if(promise){
+            promise.then((val)=>{
+                tag = val;
+                const item = this.itemsList.addItem(tag);
+                this.select(item);
+            },(err)=>{
+                console.log("Tag rejected: " + JSON.stringify(err,null,4));
+            })
+        }
+        else{
+            const item = this.itemsList.addItem(tag);
+            this.select(item);
+        }
     }
 
     showClear() {
