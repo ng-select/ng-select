@@ -341,7 +341,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         let tag = {};
         let promise: Promise<any> = undefined;
         if(this.isPromise(this.addTag)){
-            //Checks if promise - https://stackoverflow.com/a/38339199/3955513
             promise = <any>this.addTag(this.filterValue);
         }
         else if (this.addTag instanceof Function) {
