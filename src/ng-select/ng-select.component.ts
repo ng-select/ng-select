@@ -56,8 +56,8 @@ const NG_SELECT_VALUE_ACCESSOR = {
         'class': 'ng-select',
         '[class.top]': 'currentDropdownPosition === "top"',
         '[class.bottom]': 'currentDropdownPosition === "bottom"',
-        '[class.ng-single]': '!this.multiple',
-        '[class.ng-selected]': '_hasValue'
+        '[class.ng-single]': '!multiple',
+        '[class.ng-selected]': 'hasValue'
     }
 })
 export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
@@ -148,6 +148,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         return this.loading || this._typeaheadLoading;
     }
 
+    get hasValue() {
+        return this.selectedItems.length > 0;
+    }
+
     ngOnChanges(changes: SimpleChanges) {
         if (changes.multiple) {
             this.itemsList.clearSelected();
@@ -223,7 +227,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     handleClearClick($event: Event) {
         $event.stopPropagation();
-        if (this._hasValue) {
+        if (this.hasValue) {
             this.clearModel();
         }
         this._clearSearch();
@@ -343,7 +347,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     showClear() {
-        return this.clearable && (this._hasValue || this.filterValue) && !this.isDisabled;
+        return this.clearable && (this.hasValue || this.filterValue) && !this.isDisabled;
     }
 
     showAddTag() {
@@ -670,7 +674,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private _handleBackspace() {
-        if (this.filterValue || !this.clearable || !this._hasValue) {
+        if (this.filterValue || !this.clearable || !this.hasValue) {
             return;
         }
 
@@ -699,10 +703,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
         const selectedItem = this.selectedItems[0];
         return selectedItem ? selectedItem.value : null;
-    }
-
-    private get _hasValue() {
-        return this.selectedItems.length > 0;
     }
 
     private _mergeGlobalConfig(config: NgSelectConfig) {
