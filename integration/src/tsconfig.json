@@ -6,8 +6,15 @@
     "types": [],
     "baseUrl": "",
     "paths": {
-      "@angular/*": ["../node_modules/@angular/*"]
+      "@angular/*": [
+        "../node_modules/@angular/*"
+      ]
     }
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "preserveWhitespaces": false,
+    "strictInjectionParameters": true
   },
   "exclude": [
     "test.ts",
