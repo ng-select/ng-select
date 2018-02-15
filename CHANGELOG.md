@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.20.3"></a>
+## [0.20.3](https://github.com/ng-select/ng-select/compare/v0.20.2...v0.20.3) (2018-02-15)
+
+
+### Bug Fixes
+
+* **template:** fix AOT compile error ([#253](https://github.com/ng-select/ng-select/issues/253)) ([43909b5](https://github.com/ng-select/ng-select/commit/43909b5))
+* aot template issue closes [#264](https://github.com/ng-select/ng-select/issues/264) ([#266](https://github.com/ng-select/ng-select/issues/266)) ([8b85142](https://github.com/ng-select/ng-select/commit/8b85142))
+
+
+
 <a name="0.20.2"></a>
 ## [0.20.2](https://github.com/ng-select/ng-select/compare/v0.20.1...v0.20.2) (2018-02-10)
 
