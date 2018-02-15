@@ -9,11 +9,12 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         <ng-select [items]="accounts"
                 bindLabel="name"
                 groupBy="country"
+                [multiple]="true"
                 [(ngModel)]="selectedAccount">
         </ng-select>
         ---
         <p>
-        Selected: {{selectedAccount | json}}
+            <small>Selected: {{selectedAccount | json}}</small>
         </p>
     `
 })

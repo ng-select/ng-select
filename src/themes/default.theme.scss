@@ -186,6 +186,13 @@ $color-selected: #f5faff;
             }
         }
     }
+
+    &.groupable {
+        .ng-select-dropdown .ng-option {
+            padding-left: 15px;
+        }
+    }
+
     .ng-select-dropdown {
         margin-bottom: 1px;
         
