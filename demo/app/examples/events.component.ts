@@ -15,8 +15,7 @@ interface AngSelectEvent {
         <ng-select placeholder="Select some items"
                    [items]="items"
                    [(ngModel)]="selectedItems"
-                   bindLabel="name"
-                   bindValue="id"
+                   bindLabel="title"
                    [multiple]="true"
                    (open)="onOpen()"
                    (close)="onClose()"
@@ -25,6 +24,7 @@ interface AngSelectEvent {
                    (clear)="onClear()"
                    (add)="onAdd($event)"
                    (remove)="onRemove($event)"
+                   (scrollEnd)="onScrolledToEnd($event)"
                    (change)="onChange($event)">
         </ng-select>
         ---
@@ -50,7 +50,7 @@ export class SelectEventsComponent {
     events: AngSelectEvent[] = [];
 
     constructor(private dataService: DataService) {
-        this.dataService.getPeople().subscribe(items => {
+        this.dataService.getAlbums().subscribe(items => {
             this.items = items;
         });
     }
@@ -85,6 +85,10 @@ export class SelectEventsComponent {
 
     onClear() {
         this.events.push({name: '(clear)', value: null});
+    }
+
+    onScrolledToEnd($event) {
+        this.events.push({name: '(scrollEnd)', value: $event});
     }
 }
 
