@@ -42,8 +42,10 @@
         <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
     </div>
     <ng-select-virtual-scroll class="ng-select-dropdown" [disabled]="disableVirtualScroll" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
-        <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
+        <div role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
              *ngFor="let item of viewPortItems"
+             [class.ng-optgroup]="item.head"
+             [class.ng-option]="!item.head"
              [class.disabled]="item.disabled"
              [class.selected]="item.selected"
              [class.marked]="item === itemsList.markedItem">
@@ -52,8 +54,12 @@
                 <span class="ng-option-label" [innerHTML]="item.label"  [ngOptionHighlight]="filterValue"></span>
             </ng-template>
 
+            <ng-template #optGroupTemplate>
+                <span class="ng-option-label" [innerHTML]="item.label"  [ngOptionHighlight]="filterValue"></span>
+            </ng-template>
+
             <ng-template
-                [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate"
+                [ngTemplateOutlet]="item.head ? optGroupTemplate : (optionTemplate || defaultOptionTemplate)"
                 [ngTemplateOutletContext]="{ item: item.value, index: item.index, searchTerm: filterValue }">
             </ng-template>
         </div>

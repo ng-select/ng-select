@@ -9,7 +9,7 @@ export class ItemsList {
     private _markedIndex = -1;
     private _selected: NgOption[] = [];
 
-    constructor(private _ngSelect: NgSelectComponent) {}
+    constructor(private _ngSelect: NgSelectComponent) { }
 
     get items(): NgOption[] {
         return this._items;
@@ -32,8 +32,41 @@ export class ItemsList {
     }
 
     setItems(items: any[], simple = false) {
-        this._items = items.map((item, index) => this.mapItem(item, simple, index));
+        if (this._ngSelect.groupBy) {
+            const groups = this._groupBy(items, this._ngSelect.groupBy);
+            this._items = this._flatten(groups);
+        } else {
+            this._items = items.map((item, index) => this.mapItem(item, simple, index));
+        }
         this._filteredItems = [...this._items];
+    }
+
+    private _groupBy(items: any, prop: string | Function): { [index: string]: NgOption[] } {
+        const groups = items.reduce((grouped, item) => {
+            const key = prop instanceof Function ? prop.apply(this, [item]) : item[prop];
+            grouped[key] = grouped[key] || [];
+            grouped[key].push(item);
+            return grouped;
+        }, {});
+        return groups;
+    }
+
+    private _flatten(groups: { [index: string]: NgOption[] }) {
+        let i = 0;
+        return Object.keys(groups).reduce((items: NgOption[], key: string) => {
+            const parent: NgOption = { label: key, head: true, index: i };
+            items.push(parent);
+            i++
+            const children = groups[key].map(x => {
+                x = this.mapItem(x, false, i);
+                x.parent = parent;
+                x.head = false;
+                i++;
+                return x;
+            });
+            items.push(...children)
+            return items;
+        }, []);
     }
 
     select(item: NgOption) {

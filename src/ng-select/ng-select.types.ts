@@ -6,6 +6,8 @@ export interface NgOption {
     marked?: boolean;
     label?: string;
     value?: string | Object;
+    parent?: NgOption;
+    head?: boolean;
 }
 
 export enum KeyCode {

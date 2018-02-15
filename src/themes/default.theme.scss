@@ -188,6 +188,12 @@ $color-selected: #f5faff;
     }
     .ng-select-dropdown {
         margin-bottom: 1px;
+        
+        .ng-optgroup {
+            background: #eee;
+            padding: 8px 10px;
+        }
+
         .ng-option {
             background-color: #fff;
             color: #666666;

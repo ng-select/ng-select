@@ -80,6 +80,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() loading = false;
     @Input() closeOnSelect = true;
     @Input() maxSelectedItems: number;
+    @Input() groupBy: string;
     @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-multiple') multiple = false;
     @Input() @HostBinding('class.taggable') addTag: boolean | ((term: string) => NgOption) = false;

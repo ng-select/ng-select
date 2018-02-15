@@ -293,7 +293,7 @@ describe('NgSelectComponent', function () {
             selectOption(fixture, KeyCode.ArrowDown, 1);
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.selectedCountry).toEqual('b');
-            
+
             fixture.componentInstance.selectedCountry = fixture.componentInstance.countries[2].description.id;
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
@@ -312,7 +312,7 @@ describe('NgSelectComponent', function () {
                 `<ng-select [items]="cities"
                             [(ngModel)]="selectedCity">
                 </ng-select>`);
-            
+
             selectOption(fixture, KeyCode.ArrowDown, 0);
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.selectedCity).toBe('Vilnius');
@@ -378,7 +378,7 @@ describe('NgSelectComponent', function () {
 
                 fixture.componentInstance.cities = [{ id: 0, name: 'Vilnius' }];
                 fixture.componentInstance.selectedCity = 0;
-               
+
                 tickAndDetectChanges(fixture);
 
                 const result = [jasmine.objectContaining({
@@ -736,7 +736,7 @@ describe('NgSelectComponent', function () {
         it('should be set to `bottom` by default', () => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
-            `<ng-select id="select"></ng-select>`);
+                `<ng-select id="select"></ng-select>`);
 
             const classes = fixture.debugElement.query(By.css('ng-select')).classes;
             expect(classes.bottom).toBeTruthy();
@@ -746,7 +746,7 @@ describe('NgSelectComponent', function () {
         it('should allow changing dropdown position', () => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
-              `<ng-select id="select" [dropdownPosition]="dropdownPosition"></ng-select>`);
+                `<ng-select id="select" [dropdownPosition]="dropdownPosition"></ng-select>`);
 
             fixture.componentInstance.dropdownPosition = 'top';
             fixture.detectChanges();
@@ -945,7 +945,7 @@ describe('NgSelectComponent', function () {
             expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(2);
         }));
 
-        it('should click on arrow be disabled when maximum of items is reached', fakeAsync (() => {
+        it('should click on arrow be disabled when maximum of items is reached', fakeAsync(() => {
             const clickArrow = () => arrowIcon.triggerEventHandler('click', { stopPropagation: () => { } });
             selectOption(fixture, KeyCode.ArrowDown, 0);
             selectOption(fixture, KeyCode.ArrowDown, 1);
@@ -1453,6 +1453,38 @@ describe('NgSelectComponent', function () {
             expect(dropdown.style.left).toBe('0px');
         }));
     });
+
+    fdescribe('Grouping', () => {
+        it('should group by group key', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            
+            const items = fixture.componentInstance.select.itemsList.items;
+            
+            expect(items.length).toBe(14);
+            expect(items[0].head).toBe(true);
+            expect(items[0].index).toBe(0);
+            expect(items[0].label).toBe('United States');
+
+            expect(items[1].head).toBe(false);
+            expect(items[1].parent).toBe(items[0]);
+
+            expect(items[2].head).toBe(false);
+            expect(items[2].parent).toBe(items[0]);
+
+            expect(items[3].label).toBe('Argentina');
+            expect(items[3].label).toBe('Argentina');
+
+            expect(items[10].label).toBe('Colombia');
+            expect(items[11].parent).toBe(items[10]);
+        }))
+    });
 });
 
 function tickAndDetectChanges(fixture) {
@@ -1690,4 +1722,24 @@ class NgSelectEventsTestCmp {
     }
 
     onClear() { }
+}
+
+@Component({
+    template: ``
+})
+class NgSelectGroupingTestCmp {
+    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    selectedCity = 2;
+    accounts = [
+        { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States' },
+        { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States' },
+        { name: 'Amalie', email: 'amalie@email.com', age: 12, country: 'Argentina' },
+        { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' },
+        { name: 'Adrian', email: 'adrian@email.com', age: 21, country: 'Ecuador' },
+        { name: 'Wladimir', email: 'wladimir@email.com', age: 30, country: 'Ecuador' },
+        { name: 'Natasha', email: 'natasha@email.com', age: 54, country: 'Ecuador' },
+        { name: 'Nicole', email: 'nicole@email.com', age: 43, country: 'Colombia' },
+        { name: 'Michael', email: 'michael@email.com', age: 15, country: 'Colombia' },
+        { name: 'Nicolás', email: 'nicole@email.com', age: 43, country: 'Colombia' }
+    ];
 }
