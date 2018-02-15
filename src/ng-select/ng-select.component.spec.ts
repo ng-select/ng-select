@@ -1454,7 +1454,7 @@ describe('NgSelectComponent', function () {
         }));
     });
 
-    fdescribe('Grouping', () => {
+    describe('Grouping', () => {
         it('should group by group key', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
@@ -1466,7 +1466,7 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
             
             const items = fixture.componentInstance.select.itemsList.items;
-            
+
             expect(items.length).toBe(14);
             expect(items[0].head).toBe(true);
             expect(items[0].index).toBe(0);

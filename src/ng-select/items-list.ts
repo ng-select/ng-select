@@ -41,34 +41,6 @@ export class ItemsList {
         this._filteredItems = [...this._items];
     }
 
-    private _groupBy(items: any, prop: string | Function): { [index: string]: NgOption[] } {
-        const groups = items.reduce((grouped, item) => {
-            const key = prop instanceof Function ? prop.apply(this, [item]) : item[prop];
-            grouped[key] = grouped[key] || [];
-            grouped[key].push(item);
-            return grouped;
-        }, {});
-        return groups;
-    }
-
-    private _flatten(groups: { [index: string]: NgOption[] }) {
-        let i = 0;
-        return Object.keys(groups).reduce((items: NgOption[], key: string) => {
-            const parent: NgOption = { label: key, head: true, index: i };
-            items.push(parent);
-            i++
-            const children = groups[key].map(x => {
-                x = this.mapItem(x, false, i);
-                x.parent = parent;
-                x.head = false;
-                i++;
-                return x;
-            });
-            items.push(...children)
-            return items;
-        }, []);
-    }
-
     select(item: NgOption) {
         if (item.selected || this.maxItemsSelected()) {
             return;
@@ -127,8 +99,19 @@ export class ItemsList {
     }
 
     filter(term: string) {
-        const filterFuncVal = this._getDefaultFilterFunc(term);
-        this._filteredItems = term ? this._items.filter(val => filterFuncVal(val)) : this._items;
+        if (!term) {
+            this._filteredItems = this._items;
+            return;
+        }
+
+        this._filteredItems = [];
+        term = searchHelper.stripSpecialChars(term).toUpperCase();
+        for (let item of this._items) {
+            const label = searchHelper.stripSpecialChars(item.label ? item.label.toString() : '').toUpperCase();
+            if (label.indexOf(term) > -1) {
+                this._filteredItems.push(item);
+            }
+        }
     }
 
     clearFilter() {
@@ -214,15 +197,35 @@ export class ItemsList {
         }
     }
 
-    private _getDefaultFilterFunc(term: string) {
-        return (option: NgOption) => {
-            return searchHelper.stripSpecialChars(option.label ? option.label.toString() : '')
-                .toUpperCase()
-                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
-        };
-    }
-
     private get _lastSelectedItem() {
         return this._selected[this._selected.length - 1];
+    }
+
+    private _groupBy(items: any, prop: string | Function): { [index: string]: NgOption[] } {
+        const groups = items.reduce((grouped, item) => {
+            const key = prop instanceof Function ? prop.apply(this, [item]) : item[prop];
+            grouped[key] = grouped[key] || [];
+            grouped[key].push(item);
+            return grouped;
+        }, {});
+        return groups;
+    }
+
+    private _flatten(groups: { [index: string]: NgOption[] }) {
+        let i = 0;
+        return Object.keys(groups).reduce((items: NgOption[], key: string) => {
+            const parent: NgOption = { label: key, head: true, index: i };
+            items.push(parent);
+            i++
+            const children = groups[key].map(x => {
+                x = this.mapItem(x, false, i);
+                x.parent = parent;
+                x.head = false;
+                i++;
+                return x;
+            });
+            items.push(...children)
+            return items;
+        }, []);
     }
 }
