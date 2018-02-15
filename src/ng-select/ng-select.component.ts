@@ -369,7 +369,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         return empty && this._isTypeahead && !this.filterValue && !this.isLoading;
     }
 
-    onFilter(term: string) {
+    filter(term: string) {
         if (!this.searchable) {
             return;
         }

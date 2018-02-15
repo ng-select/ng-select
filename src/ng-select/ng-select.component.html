@@ -18,7 +18,7 @@
                    type="text"
                    [readOnly]="!searchable"
                    [value]="filterValue"
-                   (input)="onFilter(filterInput.value)"
+                   (input)="filter(filterInput.value)"
                    (focus)="onInputFocus()"
                    (blur)="onInputBlur()"
                    (change)="$event.stopPropagation()"

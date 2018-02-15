@@ -6,6 +6,7 @@ export class ItemsList {
 
     private _items: NgOption[] = [];
     private _filteredItems: NgOption[] = [];
+    private _groups: { [index: string]: NgOption[] };
     private _markedIndex = -1;
     private _selected: NgOption[] = [];
 
@@ -32,11 +33,12 @@ export class ItemsList {
     }
 
     setItems(items: any[], simple = false) {
+        this._items = items.map((item, index) => this.mapItem(item, simple, index));
         if (this._ngSelect.groupBy) {
-            const groups = this._groupBy(items, this._ngSelect.groupBy);
-            this._items = this._flatten(groups);
+            this._groups = this._groupBy(this._items, this._ngSelect.groupBy);
+            this._items = this._flatten(this._groups);
         } else {
-            this._items = items.map((item, index) => this.mapItem(item, simple, index));
+            this._groups = { undefined: this._items };
         }
         this._filteredItems = [...this._items];
     }
@@ -106,10 +108,21 @@ export class ItemsList {
 
         this._filteredItems = [];
         term = searchHelper.stripSpecialChars(term).toUpperCase();
-        for (let item of this._items) {
-            const label = searchHelper.stripSpecialChars(item.label ? item.label.toString() : '').toUpperCase();
-            if (label.indexOf(term) > -1) {
-                this._filteredItems.push(item);
+        for (const key of Object.keys(this._groups)) {
+            const groupItems = [];
+            for (const item of this._groups[key]) {
+                const label = searchHelper.stripSpecialChars(item.label ? item.label.toString() : '').toUpperCase();
+                if (label.indexOf(term) > -1) {
+                    groupItems.push(item);
+                }
+            }
+            if (groupItems.length > 0) {
+                const [last] = groupItems.slice(-1);
+                if (last.parent) {
+                    const head = this._items.find(x => x === last.parent);
+                    this._filteredItems.push(head);
+                }
+                this._filteredItems.push(...groupItems);
             }
         }
     }
@@ -201,9 +214,9 @@ export class ItemsList {
         return this._selected[this._selected.length - 1];
     }
 
-    private _groupBy(items: any, prop: string | Function): { [index: string]: NgOption[] } {
+    private _groupBy(items: NgOption[], prop: string | Function): { [index: string]: NgOption[] } {
         const groups = items.reduce((grouped, item) => {
-            const key = prop instanceof Function ? prop.apply(this, [item]) : item[prop];
+            const key = prop instanceof Function ? prop.apply(this, [item]) : item.value[prop];
             grouped[key] = grouped[key] || [];
             grouped[key].push(item);
             return grouped;
@@ -218,7 +231,6 @@ export class ItemsList {
             items.push(parent);
             i++
             const children = groups[key].map(x => {
-                x = this.mapItem(x, false, i);
                 x.parent = parent;
                 x.head = false;
                 i++;

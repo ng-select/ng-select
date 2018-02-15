@@ -625,7 +625,7 @@ describe('NgSelectComponent', function () {
 
         describe('tab', () => {
             it('should close dropdown when there are no items', fakeAsync(() => {
-                fixture.componentInstance.select.onFilter('random stuff');
+                fixture.componentInstance.select.filter('random stuff');
                 tick(200);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
@@ -970,7 +970,7 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             tickAndDetectChanges(fixture);
-            fixture.componentInstance.select.onFilter('new tag');
+            fixture.componentInstance.select.filter('new tag');
             tickAndDetectChanges(fixture);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
             expect(fixture.componentInstance.selectedCity.name).toBe('new tag');
@@ -987,7 +987,7 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             tickAndDetectChanges(fixture);
-            fixture.componentInstance.select.onFilter('Vil');
+            fixture.componentInstance.select.filter('Vil');
             tickAndDetectChanges(fixture);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
@@ -1005,7 +1005,7 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             tickAndDetectChanges(fixture);
-            fixture.componentInstance.select.onFilter('custom tag');
+            fixture.componentInstance.select.filter('custom tag');
             tickAndDetectChanges(fixture);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
             expect(<any>fixture.componentInstance.selectedCity).toEqual(jasmine.objectContaining({
@@ -1036,9 +1036,8 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Filter', () => {
-        let fixture: ComponentFixture<NgSelectFilterTestCmp>;
         it('should filter using default implementation', fakeAsync(() => {
-            fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -1046,7 +1045,7 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             tick(200);
-            fixture.componentInstance.select.onFilter('vilnius');
+            fixture.componentInstance.select.filter('vilnius');
             tick(200);
 
             const result = [jasmine.objectContaining({
@@ -1056,7 +1055,7 @@ describe('NgSelectComponent', function () {
         }));
 
         it('should toggle dropdown when searchable false', fakeAsync(() => {
-            fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -1077,7 +1076,7 @@ describe('NgSelectComponent', function () {
         }));
 
         it('should not filter when searchable false', fakeAsync(() => {
-            fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -1085,13 +1084,13 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            fixture.componentInstance.select.onFilter('vilnius');
+            fixture.componentInstance.select.filter('vilnius');
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.filterValue).toBe(null);
         }));
 
         it('should mark first item on filter', fakeAsync(() => {
-            fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -1099,7 +1098,7 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             tick(200);
-            fixture.componentInstance.select.onFilter('pab');
+            fixture.componentInstance.select.filter('pab');
             tick(200);
 
             const result = jasmine.objectContaining({
@@ -1111,7 +1110,7 @@ describe('NgSelectComponent', function () {
         }));
 
         it('should not mark first item on filter when markFirst disabled', fakeAsync(() => {
-            fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -1120,13 +1119,13 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             tick(200);
-            fixture.componentInstance.select.onFilter('pab');
+            fixture.componentInstance.select.filter('pab');
             tick(200);
             expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(undefined)
         }));
 
         it('should clear filterValue on selected item', fakeAsync(() => {
-            fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -1140,7 +1139,29 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.filterValue).toBe(null);
         }));
 
+        it('should filter grouped items', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindLabel="name"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.filter('adam');
+            tickAndDetectChanges(fixture);
+
+            const filteredItems = fixture.componentInstance.select.itemsList.filteredItems;
+            expect(filteredItems.length).toBe(2);
+            expect(filteredItems[0].head).toBe(true);
+            expect(filteredItems[0].label).toBe('United States');
+            expect(filteredItems[1].parent).toBe(filteredItems[0]);
+            expect(filteredItems[1].label).toBe('Adam');
+        }));
+
         describe('with typeahead', () => {
+            let fixture
             beforeEach(() => {
                 fixture = createTestingModule(
                     NgSelectFilterTestCmp,
@@ -1156,7 +1177,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
 
                 fixture.componentInstance.customFilter.subscribe();
-                fixture.componentInstance.select.onFilter('new');
+                fixture.componentInstance.select.filter('new');
                 fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
@@ -1170,13 +1191,13 @@ describe('NgSelectComponent', function () {
                     expect(term).toBe('vilnius');
                 });
                 tick(200);
-                fixture.componentInstance.select.onFilter('vilnius');
+                fixture.componentInstance.select.filter('vilnius');
                 tickAndDetectChanges(fixture);
             }));
 
             it('should mark first item when typeahead results are loaded', fakeAsync(() => {
                 fixture.componentInstance.customFilter.subscribe();
-                fixture.componentInstance.select.onFilter('buk');
+                fixture.componentInstance.select.filter('buk');
                 fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];
                 tickAndDetectChanges(fixture);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
@@ -1188,7 +1209,7 @@ describe('NgSelectComponent', function () {
             it('should not mark first item when typeahead results are loaded', fakeAsync(() => {
                 fixture.componentInstance.select.markFirst = false;
                 fixture.componentInstance.customFilter.subscribe();
-                fixture.componentInstance.select.onFilter('buk');
+                fixture.componentInstance.select.filter('buk');
                 fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];
                 tickAndDetectChanges(fixture);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
@@ -1197,7 +1218,7 @@ describe('NgSelectComponent', function () {
 
             it('should start and stop loading indicator', fakeAsync(() => {
                 fixture.componentInstance.customFilter.subscribe();
-                fixture.componentInstance.select.onFilter('buk');
+                fixture.componentInstance.select.filter('buk');
                 expect(fixture.componentInstance.select.isLoading).toBeTruthy();
                 fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];
                 tickAndDetectChanges(fixture);
