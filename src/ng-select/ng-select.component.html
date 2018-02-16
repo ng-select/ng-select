@@ -16,6 +16,7 @@
         <div *ngIf="showFilter()" class="ng-input">
             <input #filterInput
                    type="text"
+                   autocomplete="off"
                    [readOnly]="!searchable"
                    [value]="filterValue"
                    (input)="onFilter(filterInput.value)"
