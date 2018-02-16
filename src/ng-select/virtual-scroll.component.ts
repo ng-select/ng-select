@@ -21,6 +21,10 @@ import {
 
 import { CommonModule } from '@angular/common';
 import { NgOption } from './ng-select.types';
+import { Observable } from 'rxjs/Observable';
+import { throttleTime } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/observable/fromEvent';
 
 @Component({
     selector: 'ng-select-virtual-scroll',
@@ -62,6 +66,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     @Input() disabled = false;
 
     @Output() update = new EventEmitter<any[]>();
+    @Output() disableHover = new EventEmitter<boolean>();
 
     @ViewChild('content', { read: ElementRef }) contentElementRef: ElementRef;
     @ContentChild('container') containerElementRef: ElementRef;
@@ -71,13 +76,14 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     private _topPadding: number;
     private _previousStart: number;
     private _previousEnd: number;
+    private _mouseMoveSub: Subscription;
     private _startupLoop = true;
-    // min number of items for virtual scroll to be enabled
-    private _minItems = 40;
+    private _minItems = 40; // min number of items for virtual scroll to be enabled
     private _disposeScrollListener = () => { };
 
-    constructor(private element: ElementRef, private zone: NgZone, private renderer: Renderer2) {
-    }
+    constructor(private element: ElementRef,
+        private zone: NgZone,
+        private renderer: Renderer2) { }
 
     get enabled() {
         return !this.disabled && this.items && this.items.length > this._minItems;
@@ -87,23 +93,14 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         return this.enabled ? 'translateY(' + this._topPadding + 'px)' : 'none'
     }
 
-    handleScroll() {
-        const handler = () => {
-            if (!this.enabled) {
-                this.update.emit(this.items);
-                return;
-            }
-            this.refresh();
-        };
-        this._disposeScrollListener = this.renderer.listen(this.element.nativeElement, 'scroll', handler);
-    }
-
     ngOnInit() {
-        this.handleScroll();
+        this._handleScroll();
+        this._handleMousemove();
     }
 
     ngOnDestroy() {
         this._disposeScrollListener();
+        this._mouseMoveSub.unsubscribe();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -129,12 +126,12 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     scrollInto(item: any) {
-        const el: Element = this.element.nativeElement;
+        const el: HTMLElement = this.element.nativeElement;
         const index: number = (this.items || []).indexOf(item);
         if (index < 0 || index >= (this.items || []).length) {
             return;
         }
-
+        this.disableHover.emit(true);
         const d = this._calculateDimensions();
         const buffer = Math.floor(d.viewHeight / d.childHeight) - 1;
         el.scrollTop = (Math.floor(index / d.itemsPerRow) * d.childHeight)
@@ -147,6 +144,25 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         const d = this._calculateDimensions();
         el.scrollTop = d.childHeight * (d.itemCount + 1);
         this.refresh();
+    }
+
+    private _handleScroll() {
+        const handler = () => {
+            if (!this.enabled) {
+                this.update.emit(this.items);
+                return;
+            }
+            this.refresh();
+        };
+        this._disposeScrollListener = this.renderer.listen(this.element.nativeElement, 'scroll', handler);
+    }
+
+    private _handleMousemove() {
+        this._mouseMoveSub = Observable.fromEvent(this.element.nativeElement, 'mousemove')
+            .pipe(throttleTime(1000))
+            .subscribe(() => {
+                this.disableHover.emit(false);
+            });
     }
 
     private _countItemsPerRow() {
