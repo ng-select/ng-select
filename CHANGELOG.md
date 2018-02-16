@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.20.4"></a>
+## [0.20.4](https://github.com/ng-select/ng-select/compare/v0.20.3...v0.20.4) (2018-02-16)
+
+
+### Bug Fixes
+
+* disable input autocomplete ([ba931a6](https://github.com/ng-select/ng-select/commit/ba931a6)), closes [#269](https://github.com/ng-select/ng-select/issues/269)
+* IE styling issues ([f94f4e6](https://github.com/ng-select/ng-select/commit/f94f4e6))
+
+
+
 <a name="0.20.3"></a>
 ## [0.20.3](https://github.com/ng-select/ng-select/compare/v0.20.2...v0.20.3) (2018-02-15)
 
