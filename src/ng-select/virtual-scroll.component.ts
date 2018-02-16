@@ -66,7 +66,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     @Input() disabled = false;
 
     @Output() update = new EventEmitter<any[]>();
-    @Output() disableHover = new EventEmitter<boolean>();
+    @Output() scroll = new EventEmitter<boolean>();
 
     @ViewChild('content', { read: ElementRef }) contentElementRef: ElementRef;
     @ContentChild('container') containerElementRef: ElementRef;
@@ -131,7 +131,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         if (index < 0 || index >= (this.items || []).length) {
             return;
         }
-        this.disableHover.emit(true);
+        this.scroll.emit(true);
         const d = this._calculateDimensions();
         const buffer = Math.floor(d.viewHeight / d.childHeight) - 1;
         el.scrollTop = (Math.floor(index / d.itemsPerRow) * d.childHeight)
@@ -161,7 +161,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         this._mouseMoveSub = Observable.fromEvent(this.element.nativeElement, 'mousemove')
             .pipe(throttleTime(1000))
             .subscribe(() => {
-                this.disableHover.emit(false);
+                this.scroll.emit(false);
             });
     }
 
