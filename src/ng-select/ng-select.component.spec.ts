@@ -1012,6 +1012,26 @@ describe('NgSelectComponent', function () {
                 id: 'custom tag', name: 'custom tag', custom: true
             }));
         }));
+
+        it('should select custom tag with promise', fakeAsync(() => {
+            let fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [addTag]="tagFuncPromise"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.onFilter('server side tag');
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            tick();
+            expect(<any>fixture.componentInstance.selectedCity).toEqual(jasmine.objectContaining({
+                id: 5, name: 'server side tag', valid: true
+            }));
+        }));
     });
 
     describe('Placeholder', () => {
@@ -1514,6 +1534,11 @@ class NgSelectBasicTestCmp {
     tagFunc(term) {
         return { id: term, name: term, custom: true }
     }
+    tagFuncPromise(term) {
+        return Promise.resolve({
+            id: 5, name: term, valid: true 
+        });
+    };
 }
 
 @Component({
