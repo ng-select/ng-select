@@ -334,16 +334,39 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.removeEvent.emit(item);
     }
 
+    isPromise(x) {
+        return x && Object.prototype.toString.call(x) === "[object Promise]"
+    }
+
     selectTag() {
         let tag = {};
-        if (this.addTag instanceof Function) {
-            tag = this.addTag(this.filterValue)
-        } else {
+        let promise: Promise<any> = undefined;
+        if(this.isPromise(this.addTag)){
+            promise = <any>this.addTag(this.filterValue);
+        }
+        else if (this.addTag instanceof Function) {
+            var temp = this.addTag(this.filterValue);
+            if(temp == undefined){
+                return;
+            }
+            else{tag = temp;}
+        } 
+        else{
             tag[this.bindLabel] = this.filterValue;
         }
-
-        const item = this.itemsList.addItem(tag);
-        this.select(item);
+        if(promise){
+            promise.then((val)=>{
+                tag = val;
+                const item = this.itemsList.addItem(tag);
+                this.select(item);
+            },(err)=>{
+                console.log("Tag rejected: " + JSON.stringify(err,null,4));
+            })
+        }
+        else{
+            const item = this.itemsList.addItem(tag);
+            this.select(item);
+        }
     }
 
     showClear() {
