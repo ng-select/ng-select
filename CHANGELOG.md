@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.21.0"></a>
+# [0.21.0](https://github.com/ng-select/ng-select/compare/v0.20.4...v0.21.0) (2018-02-19)
+
+
+### Features
+
+* **tags:** support promise while creating new tag ([#273](https://github.com/ng-select/ng-select/issues/273)) ([d0295fa](https://github.com/ng-select/ng-select/commit/d0295fa)), closes [#220](https://github.com/ng-select/ng-select/issues/220)
+* **template:** expose label in ng-label-tmp ([f3cfc7a](https://github.com/ng-select/ng-select/commit/f3cfc7a)), closes [#274](https://github.com/ng-select/ng-select/issues/274)
+
+
+
 <a name="0.20.4"></a>
 ## [0.20.4](https://github.com/ng-select/ng-select/compare/v0.20.3...v0.20.4) (2018-02-16)
 
