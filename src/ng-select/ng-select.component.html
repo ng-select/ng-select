@@ -9,7 +9,7 @@
 
             <ng-template
                 [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
-                [ngTemplateOutletContext]="{ item: item.value, clear: clearItem }">
+                [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
             </ng-template>
         </div>
 
