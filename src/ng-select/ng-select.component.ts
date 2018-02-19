@@ -343,7 +343,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
 
         if (tag instanceof Promise) {
-            tag.then(newTag => this.select(this.itemsList.addItem(newTag)));
+            tag.then(newTag => {
+                if (newTag) {
+                    this.select(this.itemsList.addItem(newTag));
+                }
+            });
         } else if (tag) {
             this.select(this.itemsList.addItem(tag));
         }
