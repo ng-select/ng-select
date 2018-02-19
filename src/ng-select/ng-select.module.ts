@@ -11,11 +11,13 @@ import { VirtualScrollModule } from './virtual-scroll.component';
 import { SpinnerComponent } from './spinner.component';
 import { NgOptionComponent } from './ng-option.component';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
+import { DropdownPanelDirective } from './dropdown-panel.directive';
 
 @NgModule({
     declarations: [
         NgSelectComponent,
         NgOptionComponent,
+        DropdownPanelDirective,
         NgOptionHighlightDirective,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,

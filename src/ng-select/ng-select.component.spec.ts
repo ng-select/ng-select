@@ -481,7 +481,7 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Dropdown', () => {
-        it('should close on option select by default', fakeAsync(() => {
+        fit('should close on option select by default', async(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
@@ -490,9 +490,13 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             selectOption(fixture, KeyCode.ArrowDown, 0);
-            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.isOpen = true;
+            fixture.detectChanges();
 
-            expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+            fixture.whenStable().then(() => {
+                expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+            })
+            
         }));
 
         it('should not close on option select when [closeOnSelect]="false"', fakeAsync(() => {

@@ -20,7 +20,8 @@ import {
     Inject,
     SimpleChanges,
     Renderer2, ContentChildren, QueryList,
-    InjectionToken
+    InjectionToken,
+    NgZone
 } from '@angular/core';
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -35,6 +36,7 @@ import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
 import { NgOptionComponent } from './ng-option.component';
+import { DropdownPanelDirective } from './dropdown-panel.directive';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 
@@ -103,7 +105,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;
 
     @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
-    @ViewChild('dropdownPanel') dropdownPanel: ElementRef;
+    @ViewChild(DropdownPanelDirective) dropdownPanel: ElementRef;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
     @ViewChild('filterInput') filterInput: ElementRef;
 
@@ -125,7 +127,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private _onChange = (_: NgOption) => { };
     private _onTouched = () => { };
     private _disposeDocumentClickListener = () => { };
-    private _disposeDocumentResizeListener = () => { };
 
     clearItem = (item: any) => {
         const option = this.selectedItems.find(x => x.value === item);
@@ -134,8 +135,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     constructor( @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private changeDetectorRef: ChangeDetectorRef,
-        private elementRef: ElementRef,
-        private renderer: Renderer2
+        public elementRef: ElementRef,
+        private renderer: Renderer2,
+        private ngZone: NgZone
     ) {
         this._mergeGlobalConfig(config);
     }
@@ -172,19 +174,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (this.ngOptions.length > 0 && this.items.length === 0) {
             this._setItemsFromNgOptions();
         }
-
-        if (this.appendTo) {
-            this._handleAppendTo();
-        }
     }
 
     ngOnDestroy() {
         this.changeDetectorRef.detach();
         this._disposeDocumentClickListener();
-        this._disposeDocumentResizeListener();
-        if (this.appendTo) {
-            this.elementRef.nativeElement.appendChild(this.dropdownPanel.nativeElement);
-        }
     }
 
     @HostListener('keydown', ['$event'])
@@ -285,12 +279,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (!this.filterValue) {
             this._focusSearchInput();
         }
-        if (this.dropdownPosition === 'auto') {
-            this._autoPositionDropdown();
-        }
-        if (this.appendTo) {
-            this._updateAppendedDropdownPosition();
-        }
     }
 
     close() {
@@ -363,8 +351,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     showNoItemsFound() {
         const empty = this.itemsList.filteredItems.length === 0;
-        return (empty && !this._isTypeahead && !this.loading) ||
-            (empty && this._isTypeahead && this.filterValue && !this.isLoading);
+        return ((empty && !this._isTypeahead && !this.loading) ||
+            (empty && this._isTypeahead && this.filterValue && !this.isLoading)) &&
+            !this.showAddTag();
     }
 
     showTypeToSearch() {
@@ -406,6 +395,10 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             return;
         }
         this.itemsList.markItem(item);
+    }
+
+    onPositionChange($event) {
+        console.log('ev', $event)
     }
 
     detectChanges() {
@@ -477,58 +470,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         };
 
         this._disposeDocumentClickListener = this.renderer.listen('document', 'click', handler);
-    }
-
-    private _handleDocumentResize() {
-        const handler = () => {
-            if (this.appendTo && this.isOpen) {
-                this._updateAppendedDropdownPosition();
-            }
-        };
-
-        this._disposeDocumentResizeListener = this.renderer.listen('window', 'resize', handler);
-    }
-
-    private _handleAppendTo() {
-        if (this.appendTo === 'body') {
-            document.body.appendChild(this.dropdownPanel.nativeElement);
-        } else {
-            const parent = document.querySelector(this.appendTo);
-            if (!parent) {
-                throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`)
-            }
-            parent.appendChild(this.dropdownPanel.nativeElement);
-        }
-        this._handleDocumentResize();
-        this._updateAppendedDropdownPosition();
-    }
-
-    private _updateAppendedDropdownPosition() {
-        const select: HTMLElement = this.elementRef.nativeElement;
-        const dropdownPanel: HTMLElement = this.dropdownPanel.nativeElement;
-        const bodyRect = document.body.getBoundingClientRect();
-        const selectRect = select.getBoundingClientRect();
-        const offsetTop = selectRect.top - bodyRect.top;
-        const offsetLeft = selectRect.left - bodyRect.left;
-        const topDelta = this.currentDropdownPosition === 'bottom' ? selectRect.height : -dropdownPanel.clientHeight;
-        dropdownPanel.style.top = offsetTop + topDelta + 'px';
-        dropdownPanel.style.bottom = 'auto';
-        dropdownPanel.style.left = offsetLeft + 'px';
-        dropdownPanel.style.width = selectRect.width + 'px';
-    }
-
-    private _autoPositionDropdown() {
-        const selectRect = this.elementRef.nativeElement.getBoundingClientRect();
-        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        const offsetTop = selectRect.top + window.pageYOffset;
-        const height = selectRect.height;
-        const dropdownHeight = this.dropdownPanel.nativeElement.getBoundingClientRect().height;
-
-        if (offsetTop + height + dropdownHeight > scrollTop + document.documentElement.clientHeight) {
-            this.currentDropdownPosition = 'top';
-        } else {
-            this.currentDropdownPosition = 'bottom';
-        }
     }
 
     private _validateWriteValue(value: any) {
@@ -604,14 +545,32 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private _focusSearchInput() {
-        setTimeout(() => {
-            this.filterInput.nativeElement.focus();
-            this.filterInput.nativeElement.select();
+        this.ngZone.runOutsideAngular(() => {
+            setTimeout(() => {
+                this.filterInput.nativeElement.focus();
+                this.filterInput.nativeElement.select();
+            });
         });
     }
 
     private _scrollToMarked() {
+        if (!this.dropdownList) {
+            this.ngZone.runOutsideAngular(() => {
+                setTimeout(() => this._scrollToMarked(), 50);
+            })
+            return;
+        }
         this.dropdownList.scrollInto(this.itemsList.markedItem);
+    }
+
+    private _scrollToTag() {
+        if (!this.dropdownList) {
+            this.ngZone.runOutsideAngular(() => {
+                setTimeout(() => this._scrollToTag(), 50);
+            })
+            return;
+        }
+        this.dropdownList.scrollIntoTag();
     }
 
     private _handleTab(_: KeyboardEvent) {
@@ -643,7 +602,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.open();
         if (this.nextItemIsTag(+1)) {
             this.itemsList.unmarkItem();
-            this.dropdownList.scrollIntoTag();
+            this._scrollToTag();
         } else {
             this.itemsList.markNextItem();
             this._scrollToMarked();
@@ -658,7 +617,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
         if (this.nextItemIsTag(-1)) {
             this.itemsList.unmarkItem();
-            this.dropdownList.scrollIntoTag();
+            this._scrollToTag();
         } else {
             this.itemsList.markPreviousItem();
             this._scrollToMarked();

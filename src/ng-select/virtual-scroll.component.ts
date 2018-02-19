@@ -62,6 +62,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     @Input() disabled = false;
 
     @Output() update = new EventEmitter<any[]>();
+    @Output() init = new EventEmitter<any>();
 
     @ViewChild('content', { read: ElementRef }) contentElementRef: ElementRef;
     @ContentChild('container') containerElementRef: ElementRef;
@@ -100,6 +101,10 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnInit() {
         this.handleScroll();
+    }
+
+    ngAfterContentInit() {
+        this.init.emit();
     }
 
     ngOnDestroy() {
