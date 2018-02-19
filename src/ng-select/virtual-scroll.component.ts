@@ -4,27 +4,28 @@
  * Source code https://github.com/rintoj/angular2-virtual-scroll
  */
 
+import { CommonModule } from '@angular/common';
 import {
     Component,
     ContentChild,
     ElementRef,
     EventEmitter,
     Input,
-    NgModule, NgZone,
+    NgModule,
+    NgZone,
     OnChanges,
     OnDestroy,
     OnInit,
-    Output, Renderer2,
+    Output,
+    Renderer2,
     SimpleChanges,
     ViewChild
-} from '@angular/core';
+    } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
+import { fromEvent } from 'rxjs/observable/fromEvent';
 import { NgOption } from './ng-select.types';
-import { Observable } from 'rxjs/Observable';
-import { throttleTime } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/observable/fromEvent';
+import { throttleTime } from 'rxjs/operators';
 
 @Component({
     selector: 'ng-select-virtual-scroll',
@@ -158,7 +159,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _handleMousemove() {
-        this._mouseMoveSub = Observable.fromEvent(this.element.nativeElement, 'mousemove')
+        this._mouseMoveSub = fromEvent(this.element.nativeElement, 'mousemove')
             .pipe(throttleTime(1000))
             .subscribe(() => {
                 this.scroll.emit(false);
