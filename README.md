@@ -119,27 +119,27 @@ map: {
 ## API
 | Input  | Type | Default | Required | Description |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| [items] | Array<NgOption> | `[]` | yes | Items array |
-| bindLabel  | string | `label` | no | Object property to use for label. Default `label`  |
-| bindValue  | string | `-` | no | Object property to use for selected model. By default binds to whole object. |
-| [clearable] | boolean | `true` | no | Allow to clear selected value. Default `true`|
-| [markFirst] | boolean | `true` | no | Marks first item as focused when opening/filtering. Default `true`|
-| [searchable] | boolean | `true` | no | Allow to search for value. Default `true`|
-| multiple | boolean | `false` | no | Allows to select multiple items. |
-| maxSelectedItems | number | none | no | When multiple = true, allows to set a limit number of selection. |
-| [addTag] | Function or boolean | `false` | no | Allows to create custom options. Using boolean simply adds tag with value as bindLabel. If you want custom properties add function which returns object. |
-| placeholder | string | `-` | no | Placeholder text. |
-| notFoundText | string | `No items found` | no | Set custom text when filter returns empty result |
-| typeToSearchText | string | `Type to search` | no | Set custom text when using Typeahead |
-| clearAllText | string | `Clear all` | no | Set custom text for clear all icon title |
-| addTagText | string | `Add item` | no | Set custom text when using tagging |
-| loadingText | string | `Loading...` | no | Set custom text when for loading items |
-| [typeahead] | Subject |  `-` | no | Custom autocomplete or filter. |
-| [disableVirtualScroll] | boolean |  false | no | Disable virtual scroll |
+| [items] | `Array<NgOption>` | `[]` | yes | Items array |
+| bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |
+| bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
+| [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
+| [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. Default `true`|
+| [searchable] | `boolean` | `true` | no | Allow to search for value. Default `true`|
+| multiple | `boolean` | `false` | no | Allows to select multiple items. |
+| maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
+| [addTag] | `boolean | ((term: string) => any | Promise<any>)`  | `false` | no | Allows to create custom options. Using boolean simply adds tag with value as bindLabel. If you want custom properties add function which returns object or Promise. |
+| placeholder | `string` | `-` | no | Placeholder text. |
+| notFoundText | `string` | `No items found` | no | Set custom text when filter returns empty result |
+| typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
+| clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
+| addTagText | `string` | `Add item` | no | Set custom text when using tagging |
+| loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
+| [typeahead] | `Subject` |  `-` | no | Custom autocomplete or filter. |
+| [disableVirtualScroll] | `boolean` |  false | no | Disable virtual scroll |
 | dropdownPosition | `bottom`,`top`,`auto` |  `bottom` | no | Set the dropdown position on open |
-| appendTo | string |  null | no | Append drodown to body or any other element using css selector |
-| loading | boolean |  `-` | no | you can set the loading state from the outside (e.g. async items loading) |
-| closeOnSelect | boolean |  true | no | whether to close the menu when a value is selected |
+| appendTo | `string` |  null | no | Append drodown to body or any other element using css selector |
+| loading | `boolean` |  `-` | no | you can set the loading state from the outside (e.g. async items loading) |
+| closeOnSelect | `boolean` |  true | no | whether to close the menu when a value is selected |
 
 | Output  | Description |
 | ------------- | ------------- |

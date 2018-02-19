@@ -82,7 +82,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() maxSelectedItems: number;
     @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-multiple') multiple = false;
-    @Input() @HostBinding('class.taggable') addTag: boolean | ((term: string) => NgOption) = false;
+    @Input() @HostBinding('class.taggable') addTag: boolean | ((term: string) => any | Promise<any>) = false;
     @Input() @HostBinding('class.searchable') searchable = true;
 
     // output events
@@ -132,7 +132,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.unselect(option);
     };
 
-    constructor( @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
+    constructor(@Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private changeDetectorRef: ChangeDetectorRef,
         private elementRef: ElementRef,
         private renderer: Renderer2
@@ -335,15 +335,19 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     selectTag() {
-        let tag = {};
+        let tag;
         if (this.addTag instanceof Function) {
-            tag = this.addTag(this.filterValue)
+            tag = this.addTag(this.filterValue);
         } else {
-            tag[this.bindLabel] = this.filterValue;
+            tag = { [this.bindLabel]: this.filterValue };
         }
 
-        const item = this.itemsList.addItem(tag);
-        this.select(item);
+        if (tag instanceof Promise) {
+            tag.then(newTag => this.select(this.itemsList.addItem(newTag)))
+                .catch(() => { });
+        } else if (tag) {
+            this.select(this.itemsList.addItem(tag));
+        }
     }
 
     showClear() {
