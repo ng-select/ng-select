@@ -121,6 +121,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private _defaultLabel = 'label';
     private _defaultValue = 'value';
     private _typeaheadLoading = false;
+    private _navigatingWithKeys = false;
 
     private _onChange = (_: NgOption) => { };
     private _onTouched = () => { };
@@ -192,9 +193,11 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (KeyCode[$event.which]) {
             switch ($event.which) {
                 case KeyCode.ArrowDown:
+                    this._navigatingWithKeys = true;
                     this._handleArrowDown($event);
                     break;
                 case KeyCode.ArrowUp:
+                    this._navigatingWithKeys = true;
                     this._handleArrowUp($event);
                     break;
                 case KeyCode.Space:
@@ -406,10 +409,14 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     onItemHover(item: NgOption) {
-        if (item.disabled) {
+        if (item.disabled || this._navigatingWithKeys) {
             return;
         }
         this.itemsList.markItem(item);
+    }
+
+    onMouseMove() {
+        this._navigatingWithKeys = false;
     }
 
     detectChanges() {
