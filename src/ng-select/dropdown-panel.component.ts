@@ -10,8 +10,7 @@ import {
     Output,
     ViewChild,
     SimpleChanges,
-    NgZone,
-    ContentChild
+    NgZone
 } from '@angular/core';
 
 import { NgSelectComponent } from './ng-select.component';
@@ -23,13 +22,19 @@ import { NgOption } from './ng-select.types';
     providers: [VirtualScrollService],
     selector: 'ng-dropdown-panel',
     template: `
-        <div *ngIf="enabled" class="total-padding" [style.height]="scrollHeight + 'px'"></div>
-            <div #content [class.scrollable-content]="enabled" [style.transform]="transformStyle">
-            <ng-content></ng-content>
+        <div>
+            <ng-content selector="[header]"></ng-content>
+            <div #scroll class="ng-select-dropdown scroll-host">
+                <div *ngIf="enabled" class="total-padding" [style.height]="scrollHeight + 'px'"></div>
+                <div #content [class.scrollable-content]="enabled" [style.transform]="transformStyle">
+                    <ng-content selector="[items]"></ng-content>
+                </div>
+            </div>
         </div>
+        
     `,
     styles: [`
-        :host {
+        .scroll-host {
             overflow: hidden;
             overflow-y: auto;
             position: relative;
@@ -59,7 +64,7 @@ export class DropdownPanelComponent implements OnDestroy {
     @Output() init = new EventEmitter<any>();
 
     @ViewChild('content', { read: ElementRef }) contentElementRef: ElementRef;
-    @ContentChild('items', { read: ElementRef }) itemsElementRef: ElementRef;
+    @ViewChild('scroll', { read: ElementRef }) scrollElementRef: ElementRef;
 
     scrollHeight: number;
 
@@ -127,7 +132,7 @@ export class DropdownPanelComponent implements OnDestroy {
             }
             this.refresh();
         };
-        this._disposeScrollListener = this._renderer.listen(this._elementRef.nativeElement, 'scroll', handler);
+        this._disposeScrollListener = this._renderer.listen(this.scrollElementRef.nativeElement, 'scroll', handler);
     }
 
     ngAfterContentInit() {
@@ -146,7 +151,7 @@ export class DropdownPanelComponent implements OnDestroy {
     }
 
     scrollInto(item: any) {
-        const el: Element = this._elementRef.nativeElement;
+        const el: Element = this.scrollElementRef.nativeElement;
         const index: number = (this.items || []).indexOf(item);
         if (index < 0 || index >= (this.items || []).length) {
             return;
@@ -160,7 +165,7 @@ export class DropdownPanelComponent implements OnDestroy {
     }
 
     scrollIntoTag() {
-        const el: Element = this._elementRef.nativeElement;
+        const el: Element = this.scrollElementRef.nativeElement;
         const d = this._calculateDimensions();
         el.scrollTop = d.childHeight * (d.itemCount + 1);
         this.refresh();
@@ -170,7 +175,7 @@ export class DropdownPanelComponent implements OnDestroy {
         NgZone.assertNotInAngularZone();
         let items = this.items || [];
         const d = this._calculateDimensions();
-        const range = this._virtualScrollService.calculateItemsRange(d, this._elementRef, this.bufferAmount);
+        const range = this._virtualScrollService.calculateItemsRange(d, this.scrollElementRef, this.bufferAmount);
         this.scrollHeight = range.scrollHeight;
         this._topPadding = range.topPadding;
 
@@ -195,7 +200,7 @@ export class DropdownPanelComponent implements OnDestroy {
     }
 
     private _calculateDimensions() {
-        return this._virtualScrollService.calculateDimensions(this.items, this.scrollHeight, this._elementRef, this.itemsElementRef)
+        return this._virtualScrollService.calculateDimensions(this.items, this.scrollHeight, this.scrollElementRef, this.contentElementRef)
     }
 
     private _handleDocumentResize() {

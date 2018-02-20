@@ -33,7 +33,7 @@ export class VirtualScrollComponent {
 
     ngOnInit() {
         this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').subscribe(photos => {
-            this.photos = photos;
+            this.photos = photos.slice(0, 100);
         });
     }
 

@@ -45,11 +45,11 @@
     (update)="viewPortItems = $event"
     [ngClass]="{'multiple': multiple, 'top': currentDropdownPosition === 'top', 'bottom': currentDropdownPosition === 'bottom'}">
     
-    <div *ngIf="headerTemplate" class="ng-dropdown-header">
+    <div *ngIf="headerTemplate" class="ng-dropdown-header" header>
         <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
     </div>
 
-    <div #items class="ng-select-dropdown">
+    <ng-container items>
         <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
              *ngFor="let item of viewPortItems"
              [class.disabled]="item.disabled"
@@ -69,7 +69,7 @@
         <div class="ng-option" [class.marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag()">
             <span><span class="ng-tag-label">{{addTagText}}</span>"{{filterValue}}"</span>
         </div>
-    </div>
+    </ng-container>
 
     <div class="ng-select-dropdown" *ngIf="showNoItemsFound()">
         <div class="ng-option disabled">
@@ -89,7 +89,7 @@
         </div>
     </div>
 
-    <div *ngIf="footerTemplate" class="ng-dropdown-footer">
+    <div *ngIf="footerTemplate" class="ng-dropdown-footer" footer>
         <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
     </div>
 </ng-dropdown-panel>
