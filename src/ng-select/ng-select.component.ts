@@ -36,7 +36,7 @@ import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
 import { NgOptionComponent } from './ng-option.component';
-import { DropdownPanelDirective } from './dropdown-panel.directive';
+// import { DropdownPanelComponent } from './dropdown-panel.component';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 
@@ -82,6 +82,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() loading = false;
     @Input() closeOnSelect = true;
     @Input() maxSelectedItems: number;
+    @Input() bufferAmount = 4;
     @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-multiple') multiple = false;
     @Input() @HostBinding('class.taggable') addTag: boolean | ((term: string) => NgOption) = false;
@@ -105,7 +106,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;
 
     @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
-    @ViewChild(DropdownPanelDirective) dropdownPanel: ElementRef;
+    // @ViewChild(DropdownPanelComponent) dropdownPanel: ElementRef;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
     @ViewChild('filterInput') filterInput: ElementRef;
 
