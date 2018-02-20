@@ -10,7 +10,8 @@ import {
     Output,
     ViewChild,
     SimpleChanges,
-    NgZone
+    NgZone,
+    ContentChild
 } from '@angular/core';
 
 import { NgSelectComponent } from './ng-select.component';
@@ -58,6 +59,7 @@ export class DropdownPanelComponent implements OnDestroy {
     @Output() init = new EventEmitter<any>();
 
     @ViewChild('content', { read: ElementRef }) contentElementRef: ElementRef;
+    @ContentChild('items', { read: ElementRef }) itemsElementRef: ElementRef;
 
     scrollHeight: number;
 
@@ -66,7 +68,7 @@ export class DropdownPanelComponent implements OnDestroy {
     private _previousEnd: number;
     private _startupLoop = true;
     // min number of items for virtual scroll to be enabled
-    private _minItems = 1;
+    private _minItems = 40;
     private _disposeScrollListener = () => { };
 
     private _disposeDocumentResizeListener = () => { };
@@ -193,7 +195,7 @@ export class DropdownPanelComponent implements OnDestroy {
     }
 
     private _calculateDimensions() {
-        return this._virtualScrollService.calculateDimensions(this.items, this.scrollHeight, this._elementRef, this.contentElementRef)
+        return this._virtualScrollService.calculateDimensions(this.items, this.scrollHeight, this._elementRef, this.itemsElementRef)
     }
 
     private _handleDocumentResize() {

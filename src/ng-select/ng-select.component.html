@@ -49,7 +49,7 @@
         <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
     </div>
 
-    <div class="ng-select-dropdown">
+    <div #items class="ng-select-dropdown">
         <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
              *ngFor="let item of viewPortItems"
              [class.disabled]="item.disabled"
