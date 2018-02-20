@@ -62,6 +62,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     @Input() disabled = false;
 
     @Output() update = new EventEmitter<any[]>();
+    @Output() scrollEnd = new EventEmitter<{ start?: number; end?: number }>();
 
     @ViewChild('content', { read: ElementRef }) contentElementRef: ElementRef;
     @ContentChild('container') containerElementRef: ElementRef;
@@ -72,6 +73,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     private _previousStart: number;
     private _previousEnd: number;
     private _startupLoop = true;
+    private _endScrollFired = false;
     // min number of items for virtual scroll to be enabled
     private _minItems = 40;
     private _disposeScrollListener = () => { };
@@ -113,6 +115,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         if ((changes as any).items !== undefined && items.previousValue === undefined ||
             (items.previousValue !== undefined && items.previousValue.length === 0)) {
             this._startupLoop = true;
+            this._endScrollFired = false;
         }
         this.items = items.currentValue;
         this.refresh();
@@ -241,6 +244,10 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         start = Math.max(0, start);
         end += this.bufferAmount;
         end = Math.min(items.length, end);
+        if (items.length === end && !this._endScrollFired) {
+            this.scrollEnd.emit({ start, end });
+            this._endScrollFired = true;
+        }
         if (start !== this._previousStart || end !== this._previousEnd) {
 
             // update the scroll list

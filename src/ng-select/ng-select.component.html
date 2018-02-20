@@ -42,7 +42,7 @@
     <div *ngIf="headerTemplate" class="ng-dropdown-header">
         <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
     </div>
-    <ng-select-virtual-scroll class="ng-select-dropdown" [disabled]="disableVirtualScroll" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
+    <ng-select-virtual-scroll class="ng-select-dropdown" [disabled]="disableVirtualScroll" [bufferAmount]="4" [items]="itemsList.filteredItems" (scrollEnd)="scrollEndEvent.emit($event)" (update)="viewPortItems = $event">
         <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
              *ngFor="let item of viewPortItems"
              [class.disabled]="item.disabled"
