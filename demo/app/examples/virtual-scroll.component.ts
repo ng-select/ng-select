@@ -17,6 +17,13 @@ import { HttpClient } from '@angular/common/http';
                    bindValue="thumbnailUrl"
                    placeholder="Select photo"
                    [(ngModel)]="photo">
+
+            <ng-template ng-header-tmp>
+                Header
+            </ng-template>
+            <ng-template ng-footer-tmp>
+                Footer
+            </ng-template>
         </ng-select>
         ---
         <small class="form-text text-muted">5000 items with virtual scroll</small>
@@ -33,7 +40,7 @@ export class VirtualScrollComponent {
 
     ngOnInit() {
         this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').subscribe(photos => {
-            this.photos = photos.slice(0, 100);
+            this.photos = photos;
         });
     }
 

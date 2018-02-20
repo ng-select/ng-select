@@ -41,14 +41,12 @@
     class="ng-select-dropdown-outer"
     [disabled]="disableVirtualScroll"
     [bufferAmount]="bufferAmount"
+    [headerTemplate]="headerTemplate"
+    [footerTemplate]="footerTemplate"
     [items]="itemsList.filteredItems"
     (update)="viewPortItems = $event"
     [ngClass]="{'multiple': multiple, 'top': currentDropdownPosition === 'top', 'bottom': currentDropdownPosition === 'bottom'}">
     
-    <div *ngIf="headerTemplate" class="ng-dropdown-header" header>
-        <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
-    </div>
-
     <ng-container items>
         <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
              *ngFor="let item of viewPortItems"
@@ -89,7 +87,4 @@
         </div>
     </div>
 
-    <div *ngIf="footerTemplate" class="ng-dropdown-footer" footer>
-        <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
-    </div>
 </ng-dropdown-panel>

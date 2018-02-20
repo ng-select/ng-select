@@ -10,7 +10,8 @@ import {
     Output,
     ViewChild,
     SimpleChanges,
-    NgZone
+    NgZone,
+    TemplateRef
 } from '@angular/core';
 
 import { NgSelectComponent } from './ng-select.component';
@@ -22,16 +23,18 @@ import { NgOption } from './ng-select.types';
     providers: [VirtualScrollService],
     selector: 'ng-dropdown-panel',
     template: `
-        <div>
-            <ng-content selector="[header]"></ng-content>
-            <div #scroll class="ng-select-dropdown scroll-host">
-                <div *ngIf="enabled" class="total-padding" [style.height]="scrollHeight + 'px'"></div>
-                <div #content [class.scrollable-content]="enabled" [style.transform]="transformStyle">
-                    <ng-content selector="[items]"></ng-content>
-                </div>
+        <div *ngIf="headerTemplate" class="ng-dropdown-header" ngProjectAs="header" header>
+            <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
+        </div>
+        <div #scroll class="ng-select-dropdown scroll-host">
+            <div *ngIf="enabled" class="total-padding" [style.height]="scrollHeight + 'px'"></div>
+            <div #content [class.scrollable-content]="enabled" [style.transform]="transformStyle">
+                <ng-content></ng-content>
             </div>
         </div>
-        
+        <div *ngIf="footerTemplate" class="ng-dropdown-footer" ngProjectAs="footer" footer>
+            <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
+        </div>
     `,
     styles: [`
         .scroll-host {
@@ -59,6 +62,8 @@ export class DropdownPanelComponent implements OnDestroy {
     @Input() items: NgOption[] = [];
     @Input() bufferAmount = 4;
     @Input() disabled = false;
+    @Input() headerTemplate: TemplateRef<any>;
+    @Input() footerTemplate: TemplateRef<any>;
 
     @Output() update = new EventEmitter<any[]>();
     @Output() init = new EventEmitter<any>();
