@@ -24,8 +24,8 @@ export class NgOptionHighlightDirective implements OnChanges {
         }
         let indexOfTerm: number;
         indexOfTerm = searchHelper.stripSpecialChars(label)
-            .toUpperCase()
-            .indexOf(searchHelper.stripSpecialChars(this.term).toUpperCase());
+            .toLowerCase()
+            .indexOf(searchHelper.stripSpecialChars(this.term).toLowerCase());
         if (indexOfTerm > -1) {
             this._setInnerHtml(
                 label.substring(0, indexOfTerm)
