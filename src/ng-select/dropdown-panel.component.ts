@@ -84,7 +84,6 @@ export class DropdownPanelComponent implements OnDestroy {
     // min number of items for virtual scroll to be enabled
     private _minVsItemsLength = 40;
     private _inputElementRef: ElementRef;
-    private _scrollHeight: number;
     private _previousStart: number;
     private _previousEnd: number;
     private _startupLoop = true;
@@ -166,7 +165,7 @@ export class DropdownPanelComponent implements OnDestroy {
 
         const d = this._calculateDimensions();
         const buffer = Math.floor(d.viewHeight / d.childHeight) - 1;
-        el.scrollTop = (Math.floor(index / d.itemsPerRow) * d.childHeight)
+        el.scrollTop = (Math.floor(index) * d.childHeight)
             - (d.childHeight * Math.min(index, buffer));
         this.refresh();
     }
@@ -193,7 +192,6 @@ export class DropdownPanelComponent implements OnDestroy {
         NgZone.assertNotInAngularZone();
         const d = this._calculateDimensions();
         const range = this._virtualScrollService.calculateItemsRange(d, this.scrollElementRef, this.bufferAmount);
-        this._scrollHeight = range.scrollHeight;
         this._updatePaddingHeight(range.scrollHeight);
         this._updateContentTransform(range.topPadding);
         
@@ -237,7 +235,6 @@ export class DropdownPanelComponent implements OnDestroy {
     private _calculateDimensions() {
         return this._virtualScrollService.calculateDimensions(
             this.items.length,
-            this._scrollHeight,
             this.scrollElementRef,
             this.contentElementRef
         )

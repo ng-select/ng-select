@@ -6,9 +6,7 @@ export interface VirtualItemsDimensions {
     viewHeight: number;
     childWidth: number;
     childHeight: number;
-    itemsPerRow: number;
     itemsPerCol: number;
-    itemsPerRowByCalc: number;
 }
 
 export interface VirtualItemsRange {
@@ -21,30 +19,24 @@ export interface VirtualItemsRange {
 @Injectable()
 export class VirtualScrollService {
 
-    constructor() { }
-
-    calculateItemsRange(dimensions: VirtualItemsDimensions, dropdownRef: ElementRef, bufferAmount: number): VirtualItemsRange {
+    calculateItemsRange(d: VirtualItemsDimensions, dropdownRef: ElementRef, bufferAmount: number): VirtualItemsRange {
         let el = dropdownRef.nativeElement;
-        let d = dimensions;
-        const scrollHeight = d.childHeight * d.itemCount / d.itemsPerRow;
+        const scrollHeight = d.childHeight * d.itemCount;
         if (el.scrollTop > scrollHeight) {
             el.scrollTop = scrollHeight;
         }
 
         let scrollTop = Math.max(0, el.scrollTop);
-        let indexByScrollTop = scrollTop / scrollHeight * d.itemCount / d.itemsPerRow;
-        let end = Math.min(d.itemCount, Math.ceil(indexByScrollTop) * d.itemsPerRow + d.itemsPerRow * (d.itemsPerCol + 1));
+        let indexByScrollTop = scrollTop / scrollHeight * d.itemCount;
+        let end = Math.min(d.itemCount, Math.ceil(indexByScrollTop) + (d.itemsPerCol + 1));
 
         let maxStartEnd = end;
-        const modEnd = end % d.itemsPerRow;
-        if (modEnd) {
-            maxStartEnd = end + d.itemsPerRow - modEnd;
-        }
-        let maxStart = Math.max(0, maxStartEnd - d.itemsPerCol * d.itemsPerRow - d.itemsPerRow);
-        let start = Math.min(maxStart, Math.floor(indexByScrollTop) * d.itemsPerRow);
 
-        const topPadding = d.childHeight * Math.ceil(start / d.itemsPerRow) - (d.childHeight * Math.min(start, bufferAmount));
+        let maxStart = Math.max(0, maxStartEnd - d.itemsPerCol - 1);
+        let start = Math.min(maxStart, Math.floor(indexByScrollTop));
 
+        let topPadding = d.childHeight * Math.ceil(start) - (d.childHeight * Math.min(start, bufferAmount));
+        topPadding = !isNaN(topPadding) ? topPadding : 0;
         start = !isNaN(start) ? start : -1;
         end = !isNaN(end) ? end : -1;
         start -= bufferAmount;
@@ -60,7 +52,7 @@ export class VirtualScrollService {
         }
     }
 
-    calculateDimensions(itemCount: number, scrollHeight: number, dropdownRef: ElementRef, contentRef: ElementRef): VirtualItemsDimensions {
+    calculateDimensions(itemCount: number, dropdownRef: ElementRef, contentRef: ElementRef): VirtualItemsDimensions {
         let el: Element = dropdownRef.nativeElement;
         let viewWidth = el.clientWidth;
         let viewHeight = el.clientHeight;
@@ -74,14 +66,7 @@ export class VirtualScrollService {
         };
         let childWidth = contentDimensions.width;
         let childHeight = contentDimensions.height;
-
-        let itemsPerRow = Math.max(1, this._countItemsPerRow(contentRef));
-        let itemsPerRowByCalc = Math.max(1, Math.floor(viewWidth / childWidth));
         let itemsPerCol = Math.max(1, Math.floor(viewHeight / childHeight));
-        let scrollTop = Math.max(0, el.scrollTop);
-        if (itemsPerCol === 1 && Math.floor(scrollTop / scrollHeight * itemCount) + itemsPerRowByCalc >= itemCount) {
-            itemsPerRow = itemsPerRowByCalc;
-        }
 
         return {
             itemCount: itemCount,
@@ -89,22 +74,7 @@ export class VirtualScrollService {
             viewHeight: viewHeight,
             childWidth: childWidth,
             childHeight: childHeight,
-            itemsPerRow: itemsPerRow,
-            itemsPerCol: itemsPerCol,
-            itemsPerRowByCalc: itemsPerRowByCalc
+            itemsPerCol: itemsPerCol
         };
-    }
-
-    private _countItemsPerRow(contentRef: ElementRef) {
-        let offsetTop;
-        let itemsPerRow;
-        let children = contentRef.nativeElement.children;
-        for (itemsPerRow = 0; itemsPerRow < children.length; itemsPerRow++) {
-            if (offsetTop !== undefined && offsetTop !== children[itemsPerRow].offsetTop) {
-                break;
-            }
-            offsetTop = children[itemsPerRow].offsetTop;
-        }
-        return itemsPerRow;
     }
 }
