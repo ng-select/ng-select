@@ -1065,9 +1065,8 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            tick(200);
             fixture.componentInstance.select.onFilter('vilnius');
-            tick(200);
+            tick();
 
             const result = [jasmine.objectContaining({
                 value: { id: 1, name: 'Vilnius' }
@@ -1118,9 +1117,29 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            tick(200);
             fixture.componentInstance.select.onFilter('pab');
-            tick(200);
+            tick();
+
+            const result = jasmine.objectContaining({
+                value: fixture.componentInstance.cities[2]
+            });
+            expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(result)
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect(fixture.componentInstance.select.selectedItems).toEqual([result]);
+        }));
+
+        it('should mark first item on filter when selected is not among filtered items', fakeAsync(() => {
+            fixture = createTestingModule(
+                NgSelectFilterTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            fixture.detectChanges();
+            fixture.componentInstance.select.onFilter('pab');
+            tick();
 
             const result = jasmine.objectContaining({
                 value: fixture.componentInstance.cities[2]
@@ -1139,9 +1158,8 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            tick(200);
             fixture.componentInstance.select.onFilter('pab');
-            tick(200);
+            tick();
             expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(undefined)
         }));
 
