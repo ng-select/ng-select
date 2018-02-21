@@ -39,13 +39,16 @@
 
 <ng-dropdown-panel *ngIf="isOpen"
     class="ng-select-dropdown-outer"
-    [disabled]="disableVirtualScroll"
+    [vsDisabled]="disableVirtualScroll"
     [bufferAmount]="bufferAmount"
+    [appendTo]="appendTo"
+    [position]="currentDropdownPosition"
     [headerTemplate]="headerTemplate"
     [footerTemplate]="footerTemplate"
     [items]="itemsList.filteredItems"
     (update)="viewPortItems = $event"
-    [ngClass]="{'multiple': multiple, 'top': currentDropdownPosition === 'top', 'bottom': currentDropdownPosition === 'bottom'}">
+    (positionChange)="currentDropdownPosition = $event"
+    [ngClass]="{'multiple': multiple}">
     
     <ng-container items>
         <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"

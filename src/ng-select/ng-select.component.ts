@@ -20,8 +20,7 @@ import {
     Inject,
     SimpleChanges,
     Renderer2, ContentChildren, QueryList,
-    InjectionToken,
-    NgZone
+    InjectionToken
 } from '@angular/core';
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -31,12 +30,11 @@ import {
     NgHeaderTemplateDirective,
     NgFooterTemplateDirective
 } from './ng-templates.directive';
-import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
 import { NgOptionComponent } from './ng-option.component';
-// import { DropdownPanelComponent } from './dropdown-panel.component';
+import { DropdownPanelComponent } from './dropdown-panel.component';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 
@@ -45,6 +43,8 @@ const NG_SELECT_VALUE_ACCESSOR = {
     useExisting: forwardRef(() => NgSelectComponent),
     multi: true
 };
+
+export type DropdownPosition = 'bottom' | 'top' | 'auto';
 
 @Component({
     selector: 'ng-select',
@@ -77,7 +77,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() addTagText: string;
     @Input() loadingText: string;
     @Input() clearAllText: string;
-    @Input() dropdownPosition: 'bottom' | 'top' | 'auto';
+    @Input() dropdownPosition: DropdownPosition;
     @Input() appendTo: string;
     @Input() loading = false;
     @Input() closeOnSelect = true;
@@ -105,8 +105,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerTemplate: TemplateRef<any>;
     @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;
 
-    @ViewChild(VirtualScrollComponent) dropdownList: VirtualScrollComponent;
-    // @ViewChild(DropdownPanelComponent) dropdownPanel: ElementRef;
+    @ViewChild(DropdownPanelComponent) dropdownPanel: DropdownPanelComponent;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
     @ViewChild('filterInput') filterInput: ElementRef;
 
@@ -137,8 +136,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     constructor( @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private changeDetectorRef: ChangeDetectorRef,
         public elementRef: ElementRef,
-        private renderer: Renderer2,
-        private ngZone: NgZone
+        private renderer: Renderer2
     ) {
         this._mergeGlobalConfig(config);
     }
@@ -275,7 +273,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
         this.isOpen = true;
         this.itemsList.markSelectedOrDefault(this.markFirst);
-        this._scrollToMarked();
         this.openEvent.emit();
         if (!this.filterValue) {
             this._focusSearchInput();
@@ -546,32 +543,24 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private _focusSearchInput() {
-        this.ngZone.runOutsideAngular(() => {
-            setTimeout(() => {
-                this.filterInput.nativeElement.focus();
-                this.filterInput.nativeElement.select();
-            });
+        setTimeout(() => {
+            this.filterInput.nativeElement.focus();
+            this.filterInput.nativeElement.select();
         });
     }
 
     private _scrollToMarked() {
-        if (!this.dropdownList) {
-            this.ngZone.runOutsideAngular(() => {
-                setTimeout(() => this._scrollToMarked(), 50);
-            })
+        if (!this.isOpen) {
             return;
         }
-        this.dropdownList.scrollInto(this.itemsList.markedItem);
+        this.dropdownPanel.scrollInto(this.itemsList.markedItem);
     }
 
     private _scrollToTag() {
-        if (!this.dropdownList) {
-            this.ngZone.runOutsideAngular(() => {
-                setTimeout(() => this._scrollToTag(), 50);
-            })
+        if (!this.isOpen) {
             return;
         }
-        this.dropdownList.scrollIntoTag();
+        this.dropdownPanel.scrollIntoTag();
     }
 
     private _handleTab(_: KeyboardEvent) {
@@ -600,7 +589,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private _handleArrowDown($event: KeyboardEvent) {
-        this.open();
         if (this.nextItemIsTag(+1)) {
             this.itemsList.unmarkItem();
             this._scrollToTag();
@@ -608,6 +596,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             this.itemsList.markNextItem();
             this._scrollToMarked();
         }
+        this.open();
         $event.preventDefault();
     }
 
@@ -647,7 +636,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private _getDropdownMenu() {
-        if (!this.isOpen || !this.dropdownList) {
+        if (!this.isOpen || !this.dropdownPanel) {
             return null;
         }
         return <HTMLElement>this.elementRef.nativeElement.querySelector('.ng-menu-outer');

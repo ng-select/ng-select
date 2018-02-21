@@ -1,5 +1,4 @@
 import { Injectable, ElementRef } from '@angular/core';
-import { NgOption } from './ng-select.types';
 
 export interface VirtualItemsDimensions {
     itemCount: number;
@@ -24,7 +23,7 @@ export class VirtualScrollService {
 
     constructor() { }
 
-    calculateItemsRange(dimensions: VirtualItemsDimensions, dropdownRef: ElementRef, bufferAmount: number) {
+    calculateItemsRange(dimensions: VirtualItemsDimensions, dropdownRef: ElementRef, bufferAmount: number): VirtualItemsRange {
         let el = dropdownRef.nativeElement;
         let d = dimensions;
         const scrollHeight = d.childHeight * d.itemCount / d.itemsPerRow;
@@ -61,10 +60,8 @@ export class VirtualScrollService {
         }
     }
 
-    calculateDimensions(items: NgOption[], scrollHeight: number, dropdownRef: ElementRef, contentRef: ElementRef): VirtualItemsDimensions {
+    calculateDimensions(itemCount: number, scrollHeight: number, dropdownRef: ElementRef, contentRef: ElementRef): VirtualItemsDimensions {
         let el: Element = dropdownRef.nativeElement;
-        items = items || [];
-        let itemCount = items.length;
         let viewWidth = el.clientWidth;
         let viewHeight = el.clientHeight;
 

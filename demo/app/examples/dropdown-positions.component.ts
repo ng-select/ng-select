@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'select-bindings',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     template: `
         <p>
             By default the dropdown is displayed below the ng-select. 

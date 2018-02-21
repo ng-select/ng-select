@@ -7,7 +7,6 @@ import {
     NgHeaderTemplateDirective,
     NgFooterTemplateDirective
 } from './ng-templates.directive';
-import { VirtualScrollModule } from './virtual-scroll.component';
 import { SpinnerComponent } from './spinner.component';
 import { NgOptionComponent } from './ng-option.component';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
@@ -26,8 +25,7 @@ import { DropdownPanelComponent } from './dropdown-panel.component';
         SpinnerComponent
     ],
     imports: [
-        CommonModule,
-        VirtualScrollModule
+        CommonModule
     ],
     exports: [
         NgSelectComponent,
