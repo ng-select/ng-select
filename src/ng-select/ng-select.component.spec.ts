@@ -293,7 +293,7 @@ describe('NgSelectComponent', function () {
             selectOption(fixture, KeyCode.ArrowDown, 1);
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.selectedCountry).toEqual('b');
-            
+
             fixture.componentInstance.selectedCountry = fixture.componentInstance.countries[2].description.id;
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
@@ -312,7 +312,7 @@ describe('NgSelectComponent', function () {
                 `<ng-select [items]="cities"
                             [(ngModel)]="selectedCity">
                 </ng-select>`);
-            
+
             selectOption(fixture, KeyCode.ArrowDown, 0);
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.selectedCity).toBe('Vilnius');
@@ -378,7 +378,7 @@ describe('NgSelectComponent', function () {
 
                 fixture.componentInstance.cities = [{ id: 0, name: 'Vilnius' }];
                 fixture.componentInstance.selectedCity = 0;
-               
+
                 tickAndDetectChanges(fixture);
 
                 const result = [jasmine.objectContaining({
@@ -736,7 +736,7 @@ describe('NgSelectComponent', function () {
         it('should be set to `bottom` by default', () => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
-            `<ng-select id="select"></ng-select>`);
+                `<ng-select id="select"></ng-select>`);
 
             const classes = fixture.debugElement.query(By.css('ng-select')).classes;
             expect(classes.bottom).toBeTruthy();
@@ -746,7 +746,7 @@ describe('NgSelectComponent', function () {
         it('should allow changing dropdown position', () => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
-              `<ng-select id="select" [dropdownPosition]="dropdownPosition"></ng-select>`);
+                `<ng-select id="select" [dropdownPosition]="dropdownPosition"></ng-select>`);
 
             fixture.componentInstance.dropdownPosition = 'top';
             fixture.detectChanges();
@@ -867,11 +867,27 @@ describe('NgSelectComponent', function () {
             const items = fixture.componentInstance.select.itemsList.items;
             expect(items.length).toBe(2);
             expect(items[0]).toEqual(jasmine.objectContaining({
-                value: { label: 'Yes', value: true }
+                value: { label: 'Yes', value: true, disabled: false }
             }));
             expect(items[1]).toEqual(jasmine.objectContaining({
-                value: { label: 'No', value: false }
+                value: { label: 'No', value: false, disabled: false }
             }));
+        }));
+
+        it('should update ng-option state', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [(ngModel)]="selectedCity">
+                    <ng-option [disabled]="disabled" [value]="true">Yes</ng-option>
+                    <ng-option [value]="false">No</ng-option>
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            const items = fixture.componentInstance.select.itemsList.items;
+            expect(items[0].disabled).toBeFalsy();
+            fixture.componentInstance.disabled = true;
+            tickAndDetectChanges(fixture);
+            expect(items[0].disabled).toBeTruthy();
         }));
     });
 
@@ -945,7 +961,7 @@ describe('NgSelectComponent', function () {
             expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(2);
         }));
 
-        it('should click on arrow be disabled when maximum of items is reached', fakeAsync (() => {
+        it('should click on arrow be disabled when maximum of items is reached', fakeAsync(() => {
             const clickArrow = () => arrowIcon.triggerEventHandler('click', { stopPropagation: () => { } });
             selectOption(fixture, KeyCode.ArrowDown, 0);
             selectOption(fixture, KeyCode.ArrowDown, 1);
@@ -1524,6 +1540,7 @@ class NgSelectBasicTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
     multiple = false;
+    disabled = false;
     dropdownPosition = 'bottom';
     citiesLoading = false;
     cities = [
@@ -1536,7 +1553,7 @@ class NgSelectBasicTestCmp {
     }
     tagFuncPromise(term) {
         return Promise.resolve({
-            id: 5, name: term, valid: true 
+            id: 5, name: term, valid: true
         });
     };
 }
