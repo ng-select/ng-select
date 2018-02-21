@@ -481,7 +481,7 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Dropdown', () => {
-        fit('should close on option select by default', async(() => {
+        it('should close on option select by default', async(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"

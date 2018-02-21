@@ -7,7 +7,6 @@ import {
     NgHeaderTemplateDirective,
     NgFooterTemplateDirective
 } from './ng-templates.directive';
-import { SpinnerComponent } from './spinner.component';
 import { NgOptionComponent } from './ng-option.component';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
 import { DropdownPanelComponent } from './dropdown-panel.component';
@@ -22,7 +21,6 @@ import { DropdownPanelComponent } from './dropdown-panel.component';
         NgLabelTemplateDirective,
         NgHeaderTemplateDirective,
         NgFooterTemplateDirective,
-        SpinnerComponent
     ],
     imports: [
         CommonModule

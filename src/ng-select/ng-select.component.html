@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <spinner class="ng-spinner-zone" *ngIf="isLoading"></spinner>
+    <div class="ng-spinner-loader" *ngIf="isLoading"></div>
 
     <span *ngIf="showClear()" (click)="handleClearClick($event)" class="ng-clear-zone" title="{{clearAllText}}">
         <span class="ng-clear" aria-hidden="true">×</span>
