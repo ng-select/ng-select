@@ -70,7 +70,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     @Input() bindValue: string;
     @Input() clearable = true;
     @Input() markFirst = true;
-    @Input() disableVirtualScroll = false;
     @Input() placeholder: string;
     @Input() notFoundText: string;
     @Input() typeToSearchText: string;
@@ -660,7 +659,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.addTagText = this.addTagText || config.addTagText;
         this.loadingText = this.loadingText || config.loadingText;
         this.clearAllText = this.clearAllText || config.clearAllText;
-        this.disableVirtualScroll = this.disableVirtualScroll || config.disableVirtualScroll;
     }
 
     private _isDefined(value: any) {

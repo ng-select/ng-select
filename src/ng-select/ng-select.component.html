@@ -39,7 +39,6 @@
 
 <ng-dropdown-panel *ngIf="isOpen"
     class="ng-select-dropdown-outer"
-    [vsDisabled]="disableVirtualScroll"
     [bufferAmount]="bufferAmount"
     [appendTo]="appendTo"
     [position]="currentDropdownPosition"
@@ -50,7 +49,7 @@
     (positionChange)="currentDropdownPosition = $event"
     [ngClass]="{'multiple': multiple}">
     
-    <ng-container items>
+    <ng-container>
         <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
              *ngFor="let item of viewPortItems"
              [class.disabled]="item.disabled"
@@ -72,22 +71,15 @@
         </div>
     </ng-container>
 
-    <div class="ng-select-dropdown" *ngIf="showNoItemsFound()">
-        <div class="ng-option disabled">
-            {{notFoundText}}
-        </div>
+    <div class="ng-option disabled" *ngIf="showNoItemsFound()">
+        {{notFoundText}}
     </div>
 
-    <div class="ng-select-dropdown" *ngIf="showTypeToSearch()">
-        <div class="ng-option disabled">
-            {{typeToSearchText}}
-        </div>
+    <div class="ng-option disabled" *ngIf="showTypeToSearch()">
+        {{typeToSearchText}}
     </div>
 
-    <div class="ng-select-dropdown" *ngIf="isLoading && itemsList.filteredItems.length === 0">
-        <div class="ng-option disabled">
-            {{loadingText}}
-        </div>
+    <div class="ng-option disabled" *ngIf="isLoading && itemsList.filteredItems.length === 0">
+        {{loadingText}}
     </div>
-
 </ng-dropdown-panel>
