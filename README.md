@@ -127,7 +127,7 @@ map: {
 | [searchable] | `boolean` | `true` | no | Allow to search for value. Default `true`|
 | multiple | `boolean` | `false` | no | Allows to select multiple items. |
 | maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
-| [addTag] | `boolean | ((term: string) => any | Promise<any>)`  | `false` | no | Allows to create custom options. Using boolean simply adds tag with value as bindLabel. If you want custom properties add function which returns object or Promise. |
+| [addTag] | `boolean \| ((term: string) => any \| Promise<any>)`  | `false` | no | Allows to create custom options. |
 | placeholder | `string` | `-` | no | Placeholder text. |
 | notFoundText | `string` | `No items found` | no | Set custom text when filter returns empty result |
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
