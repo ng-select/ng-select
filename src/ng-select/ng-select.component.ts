@@ -457,7 +457,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
 
         const handleOptionChange = () => {
-            const changedOrDestroyed = merge(this.options.changes, this._destroy$);
+            const changedOrDestroyed = merge(this.ngOptions.changes, this._destroy$);
             merge(...this.ngOptions.map(option => option.stateChange$))
                 .pipe(takeUntil(changedOrDestroyed))
                 .subscribe(option => {
