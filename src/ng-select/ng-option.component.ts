@@ -20,14 +20,14 @@ export class NgOptionComponent implements OnChanges {
     get disabled() { return this._disabled; }
     set disabled(value: any) { this._disabled = this._isDisabled(value) }
 
-    readonly stateChanges = new Subject<{ value: any, disabled: boolean }>();
+    readonly stateChange$ = new Subject<{ value: any, disabled: boolean }>();
     private _disabled = false;
 
     constructor(public elementRef: ElementRef) { }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.disabled) {
-            this.stateChanges.next({
+            this.stateChange$.next({
                 value: this.value,
                 disabled: this._disabled
             });

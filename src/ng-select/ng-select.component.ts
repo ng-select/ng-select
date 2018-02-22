@@ -124,6 +124,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private _defaultValue = 'value';
     private _typeaheadLoading = false;
 
+    private readonly _destroy$ = new Subject<void>();
     private _onChange = (_: NgOption) => { };
     private _onTouched = () => { };
     private _disposeDocumentClickListener = () => { };
@@ -181,12 +182,13 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     ngOnDestroy() {
-        this.changeDetectorRef.detach();
         this._disposeDocumentClickListener();
         this._disposeDocumentResizeListener();
         if (this.appendTo) {
             this.elementRef.nativeElement.appendChild(this.dropdownPanel.nativeElement);
         }
+        this._destroy$.next();
+        this._destroy$.complete();
     }
 
     @HostListener('keydown', ['$event'])
@@ -455,8 +457,9 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
 
         const handleOptionChange = () => {
-            merge(...this.ngOptions.map(option => option.stateChanges))
-                .pipe(takeUntil(this.ngOptions.changes))
+            const changedOrDestroyed = merge(this.options.changes, this._destroy$);
+            merge(...this.ngOptions.map(option => option.stateChange$))
+                .pipe(takeUntil(changedOrDestroyed))
                 .subscribe(option => {
                     const item = this.itemsList.findItem(option.value);
                     item.disabled = option.disabled;
@@ -464,7 +467,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
                 });
         }
 
-        this.ngOptions.changes.pipe(startWith(this.ngOptions))
+        this.ngOptions.changes
+            .pipe(startWith(this.ngOptions), takeUntil(this._destroy$))
             .subscribe(options => {
                 handleNgOptions(options);
                 handleOptionChange();
