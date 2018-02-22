@@ -1,5 +1,11 @@
-import {Directive, ElementRef, Input, OnChanges, Renderer2} from '@angular/core';
 import * as searchHelper from './search-helper';
+import {
+    Directive,
+    ElementRef,
+    Input,
+    OnChanges,
+    Renderer2
+} from '@angular/core';
 
 @Directive({
     selector: '[ngOptionHighlight]'
@@ -9,21 +15,20 @@ export class NgOptionHighlightDirective implements OnChanges {
     @Input('ngOptionHighlight') term: string;
     @Input('innerHTML') label: any;
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer2) {
-    }
+    constructor(private elementRef: ElementRef, private renderer: Renderer2) { }
 
     ngOnChanges(): void {
         this._highlightLabelWithSearchTerm();
     }
 
     private _highlightLabelWithSearchTerm(): void {
-        let label: string = this.label ? this.label.toString() : '';
+        const label: string = this.label ? this.label.toString() : '';
         if (!label || !this.term) {
             this._setInnerHtml(label);
             return;
         }
-        let indexOfTerm: number;
-        indexOfTerm = searchHelper.stripSpecialChars(label)
+  
+        const indexOfTerm = searchHelper.stripSpecialChars(label)
             .toLowerCase()
             .indexOf(searchHelper.stripSpecialChars(this.term).toLowerCase());
         if (indexOfTerm > -1) {

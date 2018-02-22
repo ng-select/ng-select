@@ -34,6 +34,8 @@ import { VirtualScrollComponent } from './virtual-scroll.component';
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { Subject } from 'rxjs/Subject';
+import { merge } from 'rxjs/observable/merge';
+import { takeUntil, startWith } from 'rxjs/operators';
 import { NgOptionComponent } from './ng-option.component';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
@@ -122,6 +124,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private _defaultValue = 'value';
     private _typeaheadLoading = false;
 
+    private readonly _destroy$ = new Subject<void>();
     private _onChange = (_: NgOption) => { };
     private _onTouched = () => { };
     private _disposeDocumentClickListener = () => { };
@@ -179,12 +182,13 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     ngOnDestroy() {
-        this.changeDetectorRef.detach();
         this._disposeDocumentClickListener();
         this._disposeDocumentResizeListener();
         if (this.appendTo) {
             this.elementRef.nativeElement.appendChild(this.dropdownPanel.nativeElement);
         }
+        this._destroy$.next();
+        this._destroy$.complete();
     }
 
     @HostListener('keydown', ['$event'])
@@ -437,22 +441,38 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private _setItemsFromNgOptions() {
         this.bindLabel = this.bindLabel || this._defaultLabel;
         this.bindValue = this.bindValue || this._defaultValue;
+
         const handleNgOptions = (options: QueryList<NgOptionComponent>) => {
             this.items = options.map(option => ({
                 value: option.value,
-                label: option.elementRef.nativeElement.innerHTML
+                label: option.elementRef.nativeElement.innerHTML,
+                disabled: option.disabled
             }));
             this.itemsList.setItems(this.items, false);
-
             if (this._isDefined(this._ngModel)) {
                 this.itemsList.clearSelected();
                 this._selectWriteValue(this._ngModel);
             }
             this.detectChanges();
-        };
+        }
 
-        this.ngOptions.changes.subscribe(options => handleNgOptions(options));
-        handleNgOptions(this.ngOptions);
+        const handleOptionChange = () => {
+            const changedOrDestroyed = merge(this.ngOptions.changes, this._destroy$);
+            merge(...this.ngOptions.map(option => option.stateChange$))
+                .pipe(takeUntil(changedOrDestroyed))
+                .subscribe(option => {
+                    const item = this.itemsList.findItem(option.value);
+                    item.disabled = option.disabled;
+                    this.changeDetectorRef.markForCheck();
+                });
+        }
+
+        this.ngOptions.changes
+            .pipe(startWith(this.ngOptions), takeUntil(this._destroy$))
+            .subscribe(options => {
+                handleNgOptions(options);
+                handleOptionChange();
+            });
     }
 
     private _handleDocumentClick() {
