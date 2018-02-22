@@ -9,7 +9,7 @@ export class ItemsList {
     private _markedIndex = -1;
     private _selected: NgOption[] = [];
 
-    constructor(private _ngSelect: NgSelectComponent) {}
+    constructor(private _ngSelect: NgSelectComponent) { }
 
     get items(): NgOption[] {
         return this._items;
@@ -123,8 +123,9 @@ export class ItemsList {
             return;
         }
 
-        if (this._lastSelectedItem) {
-            this._markedIndex = this._filteredItems.indexOf(this._lastSelectedItem);
+        const indexOfLastSelected =  this._filteredItems.indexOf(this._lastSelectedItem);
+        if (this._lastSelectedItem && indexOfLastSelected > -1) {
+            this._markedIndex = indexOfLastSelected;
         } else {
             this._markedIndex = markDefault ? 0 : -1;
         }
@@ -184,8 +185,8 @@ export class ItemsList {
     private _getDefaultFilterFunc(term: string) {
         return (option: NgOption) => {
             return searchHelper.stripSpecialChars(option.label ? option.label.toString() : '')
-                .toUpperCase()
-                .indexOf(searchHelper.stripSpecialChars(term).toUpperCase()) > -1;
+                .toLowerCase()
+                .indexOf(searchHelper.stripSpecialChars(term).toLowerCase()) > -1;
         };
     }
 
