@@ -81,7 +81,7 @@ export class DropdownPanelComponent implements OnDestroy {
     @ViewChild('scroll', { read: ElementRef }) scrollElementRef: ElementRef;
     @ViewChild('padding', { read: ElementRef }) paddingElementRef: ElementRef;
 
-    currentPosition: DropdownPosition;
+    currentPosition: DropdownPosition = 'bottom';
 
     private _inputElementRef: ElementRef;
     private _previousStart: number;
@@ -105,20 +105,20 @@ export class DropdownPanelComponent implements OnDestroy {
     }
 
     ngOnInit() {
-        this.handleScroll();
+        this._handleScroll();
         if (this.appendTo) {
             this._handleAppendTo();
         }
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.position) {
+        if (changes.position && changes.position.currentValue) {
             this.currentPosition = changes.position.currentValue;
             if (this.currentPosition === 'auto') {
                 this._autoPositionDropdown();
             }
             if (this.appendTo) {
-                this._updateAppendedDropdownPosition();
+                this._updateDropdownPosition();
             }
         }
 
@@ -133,20 +133,14 @@ export class DropdownPanelComponent implements OnDestroy {
         this._elementRef.nativeElement.remove();
     }
 
-    handleScroll() {
-        this._disposeScrollListener = this._renderer.listen(this.scrollElementRef.nativeElement, 'scroll', () => {
-            this.refresh()
-        });
-    }
-
     refresh() {
         if (IS_TEST) {
             this._calculateItems();
-        } else {
-            this._zone.runOutsideAngular(() => {
-                requestAnimationFrame(() => this._calculateItems());
-            });
+            return;
         }
+        this._zone.runOutsideAngular(() => {
+            requestAnimationFrame(() => this._calculateItems());
+        });
     }
 
     scrollInto(item: any) {
@@ -166,6 +160,12 @@ export class DropdownPanelComponent implements OnDestroy {
         el.scrollTop = d.childHeight * (d.itemsLength + 1);
     }
 
+    private _handleScroll() {
+        this._disposeScrollListener = this._renderer.listen(this.scrollElementRef.nativeElement, 'scroll', () => {
+            this.refresh()
+        });
+    }
+
     private _handleItemsChange(items: { previousValue: NgOption[], currentValue: NgOption[] }) {
         this._previousStart = undefined;
         this._previousEnd = undefined;
@@ -180,11 +180,6 @@ export class DropdownPanelComponent implements OnDestroy {
     private _calculateItems() {
         if (!IS_TEST) {
             NgZone.assertNotInAngularZone();
-        }
-
-        if (this.items.length < this.bufferAmount * 2 + this.items.length) {
-            this.update.emit(this.items.slice());
-            return;
         }
 
         const d = this._calculateDimensions();
@@ -225,7 +220,7 @@ export class DropdownPanelComponent implements OnDestroy {
             return;
         }
         this._disposeDocumentResizeListener = this._renderer.listen('window', 'resize', () => {
-            this._updateAppendedDropdownPosition();
+            this._updateDropdownPosition();
         });
     }
 
@@ -242,12 +237,12 @@ export class DropdownPanelComponent implements OnDestroy {
         if (!parent) {
             throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`)
         }
+        this._updateDropdownPosition();
         parent.appendChild(this._elementRef.nativeElement);
         this._handleDocumentResize();
-        this._updateAppendedDropdownPosition();
     }
 
-    private _updateAppendedDropdownPosition() {
+    private _updateDropdownPosition() {
         const parent = document.querySelector(this.appendTo) || document.body;
         const selectRect: ClientRect = this._inputElementRef.nativeElement.getBoundingClientRect();
         const dropdownPanel: HTMLElement = this._elementRef.nativeElement;
