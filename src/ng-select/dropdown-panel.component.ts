@@ -20,6 +20,7 @@ import { NgOption } from './ng-select.types';
 import { NgSelectComponent, DropdownPosition } from './ng-select.component';
 import { ItemsList } from './items-list';
 
+declare var process: any;
 const IS_TEST = process.env.NODE_ENV === 'TEST';
 
 @Component({
