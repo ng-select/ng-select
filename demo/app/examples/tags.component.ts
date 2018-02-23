@@ -30,12 +30,24 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
             Selected value: {{selectedCompanyCustom | json}}
         </p>
         <hr>
+
+
+        <label>Server side tags</label>
+        ---html,true
+        <ng-select [items]="companies"
+                [addTag]="addTagPromise"
+                multiple="true"
+                bindLabel="name"
+                [loading]="loading"
+                [(ngModel)]="selectedCompanyCustomPromise">
+        </ng-select>
+        ---
     `
 })
 export class SelectTagsComponent {
 
     companies: any[] = [];
-
+    loading = false;
     companiesNames = ['Miškas', 'Žalias', 'Flexigen'];
 
     ngOnInit() {
@@ -44,9 +56,17 @@ export class SelectTagsComponent {
         });
     }
 
-    addTag = (name) => {
+    addTag(name) {
         return { name: name, tag: true };
     }
+
+    addTagPromise(name) {
+        return new Promise((resolve) => {
+            this.loading = true;
+            setTimeout(() => {
+                resolve({ id: 5, name: name, valid: true });
+                this.loading = false;
+            }, 1000);
+        })
+    }
 }
-
-

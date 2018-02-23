@@ -872,11 +872,27 @@ describe('NgSelectComponent', function () {
             const items = fixture.componentInstance.select.itemsList.items;
             expect(items.length).toBe(2);
             expect(items[0]).toEqual(jasmine.objectContaining({
-                value: { label: 'Yes', value: true }
+                value: { label: 'Yes', value: true, disabled: false }
             }));
             expect(items[1]).toEqual(jasmine.objectContaining({
-                value: { label: 'No', value: false }
+                value: { label: 'No', value: false, disabled: false }
             }));
+        }));
+
+        it('should update ng-option state', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [(ngModel)]="selectedCity">
+                    <ng-option [disabled]="disabled" [value]="true">Yes</ng-option>
+                    <ng-option [value]="false">No</ng-option>
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            const items = fixture.componentInstance.select.itemsList.items;
+            expect(items[0].disabled).toBeFalsy();
+            fixture.componentInstance.disabled = true;
+            tickAndDetectChanges(fixture);
+            expect(items[0].disabled).toBeTruthy();
         }));
     });
 
@@ -1017,6 +1033,26 @@ describe('NgSelectComponent', function () {
                 id: 'custom tag', name: 'custom tag', custom: true
             }));
         }));
+
+        it('should select custom tag with promise', fakeAsync(() => {
+            let fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [addTag]="tagFuncPromise"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.onFilter('server side tag');
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            tick();
+            expect(<any>fixture.componentInstance.selectedCity).toEqual(jasmine.objectContaining({
+                id: 5, name: 'server side tag', valid: true
+            }));
+        }));
     });
 
     describe('Placeholder', () => {
@@ -1050,9 +1086,8 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            tick(200);
             fixture.componentInstance.select.onFilter('vilnius');
-            tick(200);
+            tick();
 
             const result = [jasmine.objectContaining({
                 value: { id: 1, name: 'Vilnius' }
@@ -1103,9 +1138,29 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            tick(200);
             fixture.componentInstance.select.onFilter('pab');
-            tick(200);
+            tick();
+
+            const result = jasmine.objectContaining({
+                value: fixture.componentInstance.cities[2]
+            });
+            expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(result)
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect(fixture.componentInstance.select.selectedItems).toEqual([result]);
+        }));
+
+        it('should mark first item on filter when selected is not among filtered items', fakeAsync(() => {
+            fixture = createTestingModule(
+                NgSelectFilterTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            fixture.detectChanges();
+            fixture.componentInstance.select.onFilter('pab');
+            tick();
 
             const result = jasmine.objectContaining({
                 value: fixture.componentInstance.cities[2]
@@ -1124,9 +1179,8 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            tick(200);
             fixture.componentInstance.select.onFilter('pab');
-            tick(200);
+            tick();
             expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(undefined)
         }));
 
@@ -1520,6 +1574,7 @@ class NgSelectBasicTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
     multiple = false;
+    disabled = false;
     dropdownPosition = 'bottom';
     citiesLoading = false;
     cities = [
@@ -1530,6 +1585,11 @@ class NgSelectBasicTestCmp {
     tagFunc(term) {
         return { id: term, name: term, custom: true }
     }
+    tagFuncPromise(term) {
+        return Promise.resolve({
+            id: 5, name: term, valid: true
+        });
+    };
 }
 
 @Component({

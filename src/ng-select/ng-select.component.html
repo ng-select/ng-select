@@ -9,13 +9,14 @@
 
             <ng-template
                 [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
-                [ngTemplateOutletContext]="{ item: item.value, clear: clearItem }">
+                [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
             </ng-template>
         </div>
 
         <div *ngIf="showFilter()" class="ng-input">
             <input #filterInput
                    type="text"
+                   autocomplete="off"
                    [readOnly]="!searchable"
                    [value]="filterValue"
                    (input)="onFilter(filterInput.value)"

@@ -20,7 +20,7 @@ import { DataService } from '../shared/data.service';
             <ul>
                 <li *ngFor="let item of selectedPeople1">{{item.name}}</li>
             </ul>
-            <button (click)="clearModel()" class="btn btn-secondary btn-sm">Clear model</button>
+            <button (click)="clearModel1()" class="btn btn-secondary btn-sm">Clear model</button>
         </div>
         <hr/>
 
@@ -39,7 +39,7 @@ import { DataService } from '../shared/data.service';
             <ul>
                 <li *ngFor="let item of selectedPeople1">{{item.name}}</li>
             </ul>
-            <button (click)="clearModel()" class="btn btn-secondary btn-sm">Clear model</button>
+            <button (click)="clearModel2()" class="btn btn-secondary btn-sm">Clear model</button>
         </div>
         <hr/>
 
