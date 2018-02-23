@@ -1,7 +1,7 @@
-import { Injectable, ElementRef } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 export interface ItemsDimensions {
-    itemCount: number;
+    itemsLength: number;
     viewWidth: number;
     viewHeight: number;
     childWidth: number;
@@ -19,20 +19,18 @@ export interface ItemsRangeResult {
 @Injectable()
 export class VirtualScrollService {
 
-    calculateItems(d: ItemsDimensions, dropdownRef: ElementRef, bufferAmount: number): ItemsRangeResult {
-        let el = dropdownRef.nativeElement;
-        const scrollHeight = d.childHeight * d.itemCount;
-        if (el.scrollTop > scrollHeight) {
-            el.scrollTop = scrollHeight;
+    calculateItems(d: ItemsDimensions, dropdownEl: HTMLElement, bufferAmount: number): ItemsRangeResult {
+        const scrollHeight = d.childHeight * d.itemsLength;
+        if (dropdownEl.scrollTop > scrollHeight) {
+            dropdownEl.scrollTop = scrollHeight;
         }
 
-        let scrollTop = Math.max(0, el.scrollTop);
-        let indexByScrollTop = scrollTop / scrollHeight * d.itemCount;
-        let end = Math.min(d.itemCount, Math.ceil(indexByScrollTop) + (d.itemsPerCol + 1));
+        const scrollTop = Math.max(0, dropdownEl.scrollTop);
+        const indexByScrollTop = scrollTop / scrollHeight * d.itemsLength;
+        let end = Math.min(d.itemsLength, Math.ceil(indexByScrollTop) + (d.itemsPerCol + 1));
 
-        let maxStartEnd = end;
-
-        let maxStart = Math.max(0, maxStartEnd - d.itemsPerCol - 1);
+        const maxStartEnd = end;
+        const maxStart = Math.max(0, maxStartEnd - d.itemsPerCol - 1);
         let start = Math.min(maxStart, Math.floor(indexByScrollTop));
 
         let topPadding = d.childHeight * Math.ceil(start) - (d.childHeight * Math.min(start, bufferAmount));
@@ -42,7 +40,7 @@ export class VirtualScrollService {
         start -= bufferAmount;
         start = Math.max(0, start);
         end += bufferAmount;
-        end = Math.min(d.itemCount, end);
+        end = Math.min(d.itemsLength, end);
 
         return {
             topPadding: topPadding,
@@ -52,24 +50,22 @@ export class VirtualScrollService {
         }
     }
 
-    calculateDimensions(itemCount: number, dropdownRef: ElementRef, contentRef: ElementRef): ItemsDimensions {
-        let el: Element = dropdownRef.nativeElement;
-        let viewWidth = el.clientWidth;
-        let viewHeight = el.clientHeight;
+    calculateDimensions(itemsLength: number, dropdownEl: HTMLElement, contentEl: HTMLElement): ItemsDimensions {
+        const viewWidth = dropdownEl.clientWidth;
+        const viewHeight = dropdownEl.clientHeight;
 
         let contentDimensions;
-        let content = contentRef.nativeElement;
 
-        contentDimensions = content.children[0] ? content.children[0].getBoundingClientRect() : {
+        contentDimensions = contentEl.children[0] ? contentEl.children[0].getBoundingClientRect() : {
             width: viewWidth,
             height: viewHeight
         };
-        let childWidth = contentDimensions.width;
-        let childHeight = contentDimensions.height;
-        let itemsPerCol = Math.max(1, Math.floor(viewHeight / childHeight));
+        const childWidth = contentDimensions.width;
+        const childHeight = contentDimensions.height;
+        const itemsPerCol = Math.max(1, Math.floor(viewHeight / childHeight));
 
         return {
-            itemCount: itemCount,
+            itemsLength: itemsLength,
             viewWidth: viewWidth,
             viewHeight: viewHeight,
             childWidth: childWidth,

@@ -163,7 +163,7 @@ export class DropdownPanelComponent implements OnDestroy {
     scrollIntoTag() {
         const el: Element = this.scrollElementRef.nativeElement;
         const d = this._calculateDimensions();
-        el.scrollTop = d.childHeight * (d.itemCount + 1);
+        el.scrollTop = d.childHeight * (d.itemsLength + 1);
     }
 
     private _handleItemsChange(items: { previousValue: NgOption[], currentValue: NgOption[] }) {
@@ -188,7 +188,7 @@ export class DropdownPanelComponent implements OnDestroy {
         }
 
         const d = this._calculateDimensions();
-        const res = this._virtualScrollService.calculateItems(d, this.scrollElementRef, this.bufferAmount);
+        const res = this._virtualScrollService.calculateItems(d, this.scrollElementRef.nativeElement, this.bufferAmount);
 
         (<HTMLElement>this.paddingElementRef.nativeElement).style.height = `${res.scrollHeight}px`;
         const transform = 'translateY(' + res.topPadding + 'px)';
@@ -215,8 +215,8 @@ export class DropdownPanelComponent implements OnDestroy {
     private _calculateDimensions() {
         return this._virtualScrollService.calculateDimensions(
             this.items.length,
-            this.scrollElementRef,
-            this.contentElementRef
+            this.scrollElementRef.nativeElement,
+            this.contentElementRef.nativeElement
         )
     }
 
@@ -238,25 +238,22 @@ export class DropdownPanelComponent implements OnDestroy {
     }
 
     private _handleAppendTo() {
-        if (this.appendTo === 'body') {
-            document.body.appendChild(this._elementRef.nativeElement);
-        } else {
-            const parent = document.querySelector(this.appendTo);
-            if (!parent) {
-                throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`)
-            }
-            parent.appendChild(this._elementRef.nativeElement);
+        const parent = document.querySelector(this.appendTo);
+        if (!parent) {
+            throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`)
         }
+        parent.appendChild(this._elementRef.nativeElement);
         this._handleDocumentResize();
         this._updateAppendedDropdownPosition();
     }
 
     private _updateAppendedDropdownPosition() {
+        const parent = document.querySelector(this.appendTo) || document.body;
         const selectRect: ClientRect = this._inputElementRef.nativeElement.getBoundingClientRect();
         const dropdownPanel: HTMLElement = this._elementRef.nativeElement;
-        const bodyRect = document.body.getBoundingClientRect();
-        const offsetTop = selectRect.top - bodyRect.top;
-        const offsetLeft = selectRect.left - bodyRect.left;
+        const boundingRect = parent.getBoundingClientRect();
+        const offsetTop = selectRect.top - boundingRect.top;
+        const offsetLeft = selectRect.left - boundingRect.left;
         const topDelta = this.currentPosition === 'bottom' ? selectRect.height : -dropdownPanel.clientHeight;
         dropdownPanel.style.top = offsetTop + topDelta + 'px';
         dropdownPanel.style.bottom = 'auto';
