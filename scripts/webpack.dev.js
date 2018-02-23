@@ -89,15 +89,6 @@ module.exports = function makeWebpackConfig() {
             ]
         },
         plugins: [
-            // Define env constiables to help with builds
-            // Reference: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
-            new webpack.DefinePlugin({
-                // Environment helpers
-                'process.env': {
-                    ENV: JSON.stringify(ENV)
-                }
-            }),
-
             // Workaround needed for angular 2 angular/angular#11580
             new webpack.ContextReplacementPlugin(
                 // The (\\|\/) piece accounts for path separators in *nix and Windows

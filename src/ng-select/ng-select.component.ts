@@ -1,3 +1,5 @@
+import { Subject } from 'rxjs/Subject';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     Component,
     OnInit,
@@ -23,34 +25,30 @@ import {
     InjectionToken
 } from '@angular/core';
 
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     NgOptionTemplateDirective,
     NgLabelTemplateDirective,
     NgHeaderTemplateDirective,
     NgFooterTemplateDirective
 } from './ng-templates.directive';
+
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
-import { Subject } from 'rxjs/Subject';
 import { NgOptionComponent } from './ng-option.component';
 import { DropdownPanelComponent } from './dropdown-panel.component';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
-
-const NG_SELECT_VALUE_ACCESSOR = {
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => NgSelectComponent),
-    multi: true
-};
-
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
 
 @Component({
     selector: 'ng-select',
     templateUrl: './ng-select.component.html',
     styleUrls: ['./ng-select.component.scss'],
-    providers: [NG_SELECT_VALUE_ACCESSOR],
+    providers: [{
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => NgSelectComponent),
+        multi: true
+    }],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -132,7 +130,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this.unselect(option);
     };
 
-    constructor( @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
+    constructor(@Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private changeDetectorRef: ChangeDetectorRef,
         public elementRef: ElementRef,
         private renderer: Renderer2
@@ -549,14 +547,14 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     private _scrollToMarked() {
-        if (!this.isOpen) {
+        if (!this.isOpen || !this.dropdownPanel) {
             return;
         }
         this.dropdownPanel.scrollInto(this.itemsList.markedItem);
     }
 
     private _scrollToTag() {
-        if (!this.isOpen) {
+        if (!this.isOpen || !this.dropdownPanel) {
             return;
         }
         this.dropdownPanel.scrollIntoTag();

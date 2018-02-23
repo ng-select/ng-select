@@ -1,6 +1,6 @@
 import { Injectable, ElementRef } from '@angular/core';
 
-export interface VirtualItemsDimensions {
+export interface ItemsDimensions {
     itemCount: number;
     viewWidth: number;
     viewHeight: number;
@@ -9,7 +9,7 @@ export interface VirtualItemsDimensions {
     itemsPerCol: number;
 }
 
-export interface VirtualItemsRange {
+export interface ItemsRangeResult {
     scrollHeight: number;
     topPadding: number;
     start: number;
@@ -19,7 +19,7 @@ export interface VirtualItemsRange {
 @Injectable()
 export class VirtualScrollService {
 
-    calculateItemsRange(d: VirtualItemsDimensions, dropdownRef: ElementRef, bufferAmount: number): VirtualItemsRange {
+    calculateItems(d: ItemsDimensions, dropdownRef: ElementRef, bufferAmount: number): ItemsRangeResult {
         let el = dropdownRef.nativeElement;
         const scrollHeight = d.childHeight * d.itemCount;
         if (el.scrollTop > scrollHeight) {
@@ -52,7 +52,7 @@ export class VirtualScrollService {
         }
     }
 
-    calculateDimensions(itemCount: number, dropdownRef: ElementRef, contentRef: ElementRef): VirtualItemsDimensions {
+    calculateDimensions(itemCount: number, dropdownRef: ElementRef, contentRef: ElementRef): ItemsDimensions {
         let el: Element = dropdownRef.nativeElement;
         let viewWidth = el.clientWidth;
         let viewHeight = el.clientHeight;

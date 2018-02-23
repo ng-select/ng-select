@@ -11,7 +11,8 @@ import {
     NgZone,
     TemplateRef,
     forwardRef,
-    Inject
+    Inject,
+    ViewEncapsulation
 } from '@angular/core';
 
 import { VirtualScrollService } from './virtual-scroll.service';
@@ -19,9 +20,11 @@ import { NgOption } from './ng-select.types';
 import { NgSelectComponent, DropdownPosition } from './ng-select.component';
 import { ItemsList } from './items-list';
 
+const IS_TEST = process.env.NODE_ENV === 'TEST';
 
 @Component({
     providers: [VirtualScrollService],
+    encapsulation: ViewEncapsulation.None,
     selector: 'ng-dropdown-panel',
     template: `
         <div *ngIf="headerTemplate" class="ng-dropdown-header" ngProjectAs="header" header>
@@ -99,7 +102,7 @@ export class DropdownPanelComponent implements OnDestroy {
     ) {
         this._inputElementRef = _ngSelect.elementRef;
         this._itemsList = _ngSelect.itemsList;
-     }
+    }
 
     ngOnInit() {
         this.handleScroll();
@@ -118,7 +121,7 @@ export class DropdownPanelComponent implements OnDestroy {
                 this._updateAppendedDropdownPosition();
             }
         }
-        
+
         if (changes.items) {
             this._handleItemsChange(changes.items);
         }
@@ -137,9 +140,13 @@ export class DropdownPanelComponent implements OnDestroy {
     }
 
     refresh() {
-        this._zone.runOutsideAngular(() => {
-            requestAnimationFrame(() => this._calculateItems());
-        });
+        if (IS_TEST) {
+            this._calculateItems();
+        } else {
+            this._zone.runOutsideAngular(() => {
+                requestAnimationFrame(() => this._calculateItems());
+            });
+        }
     }
 
     scrollInto(item: any) {
@@ -159,7 +166,7 @@ export class DropdownPanelComponent implements OnDestroy {
         el.scrollTop = d.childHeight * (d.itemCount + 1);
     }
 
-    private _handleItemsChange(items: { previousValue: NgOption[], currentValue: NgOption[]}) {
+    private _handleItemsChange(items: { previousValue: NgOption[], currentValue: NgOption[] }) {
         this._previousStart = undefined;
         this._previousEnd = undefined;
         if (items !== undefined && items.previousValue === undefined ||
@@ -171,23 +178,29 @@ export class DropdownPanelComponent implements OnDestroy {
     }
 
     private _calculateItems() {
-        NgZone.assertNotInAngularZone();
+        if (!IS_TEST) {
+            NgZone.assertNotInAngularZone();
+        }
+
+        if (this.items.length < this.bufferAmount * 2 + this.items.length) {
+            this.update.emit(this.items.slice());
+            return;
+        }
+
         const d = this._calculateDimensions();
-        const range = this._virtualScrollService.calculateItemsRange(d, this.scrollElementRef, this.bufferAmount);
-        
-        (<HTMLElement>this.paddingElementRef.nativeElement).style.height = `${range.scrollHeight}px`;
-        const transform = 'translateY(' + range.topPadding + 'px)';
+        const res = this._virtualScrollService.calculateItems(d, this.scrollElementRef, this.bufferAmount);
+
+        (<HTMLElement>this.paddingElementRef.nativeElement).style.height = `${res.scrollHeight}px`;
+        const transform = 'translateY(' + res.topPadding + 'px)';
         (<HTMLElement>this.contentElementRef.nativeElement).style.transform = transform;
 
-        if (range.start !== this._previousStart || range.end !== this._previousEnd) {
-
-            // update the scroll list
+        if (res.start !== this._previousStart || res.end !== this._previousEnd) {
             this._zone.run(() => {
-                this.update.emit(this.items.slice(range.start, range.end));
+                this.update.emit(this.items.slice(res.start, res.end));
             });
 
-            this._previousStart = range.start;
-            this._previousEnd = range.end;
+            this._previousStart = res.start;
+            this._previousEnd = res.end;
 
             if (this._startupLoop === true) {
                 this.refresh();
@@ -208,13 +221,12 @@ export class DropdownPanelComponent implements OnDestroy {
     }
 
     private _handleDocumentResize() {
-        const handler = () => {
-            if (this.appendTo) {
-                this._updateAppendedDropdownPosition();
-            }
-        };
-
-        this._disposeDocumentResizeListener = this._renderer.listen('window', 'resize', handler);
+        if (!this.appendTo) {
+            return;
+        }
+        this._disposeDocumentResizeListener = this._renderer.listen('window', 'resize', () => {
+            this._updateAppendedDropdownPosition();
+        });
     }
 
     private _scrollToMarked() {
