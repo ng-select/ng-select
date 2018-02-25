@@ -3,13 +3,23 @@ import {
 } from '@angular/core/testing';
 
 import { By } from '@angular/platform-browser';
-import { DebugElement, Component, ViewChild, Type, ChangeDetectionStrategy, ErrorHandler } from '@angular/core';
+import {
+    DebugElement,
+    Component,
+    ViewChild,
+    Type,
+    ChangeDetectionStrategy,
+    ErrorHandler,
+    Injectable,
+    NgZone
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { NgSelectModule } from './ng-select.module';
 import { NgSelectComponent } from './ng-select.component';
 import { KeyCode, NgOption } from './ng-select.types';
 import { Subject } from 'rxjs/Subject';
+import { WindowService } from './window.service';
 
 describe('NgSelectComponent', function () {
 
@@ -1547,12 +1557,38 @@ class TestsErrorHandler {
     }
 }
 
+@Injectable()
+class MockNgZone extends NgZone {
+    constructor() {
+        super({ enableLongStackTrace: true });
+    }
+
+    run(fn: Function): any {
+        return fn();
+    }
+    
+    runOutsideAngular(fn: Function): any {
+        return fn();
+    }
+}
+
+@Injectable()
+class MockNgWindow extends WindowService {
+    requestAnimationFrame(fn: Function): any {
+        return fn();
+    }
+}
+
+let mockZone: MockNgZone;
+
 function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixture<T> {
     TestBed.configureTestingModule({
         imports: [FormsModule, NgSelectModule],
         declarations: [cmp],
         providers: [
-            { provide: ErrorHandler, useClass: TestsErrorHandler }
+            { provide: ErrorHandler, useClass: TestsErrorHandler },
+            { provide: NgZone, useFactory: () => mockZone = new MockNgZone() },
+            { provide: WindowService, useFactory: () => new MockNgWindow() }
         ]
     })
         .overrideComponent(cmp, {

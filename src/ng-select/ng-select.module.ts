@@ -10,6 +10,7 @@ import {
 import { NgOptionComponent } from './ng-option.component';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
+import { WindowService } from './window.service';
 
 @NgModule({
     declarations: [
@@ -35,6 +36,7 @@ import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
         NgFooterTemplateDirective
     ],
     providers: [
+        WindowService,
         {
             provide: NG_SELECT_DEFAULT_CONFIG,
             useValue: {
