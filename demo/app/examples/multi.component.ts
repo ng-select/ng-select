@@ -61,6 +61,7 @@ import { DataService } from '../shared/data.service';
         <ng-select
             [items]="githubUsers$ | async"
             [multiple]="true"
+            bindLabel="login"
             [(ngModel)]="selectedUsers">
 
             <ng-template ng-label-tmp let-item="item" let-clear="clear">
