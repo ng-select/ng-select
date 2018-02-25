@@ -76,6 +76,7 @@ export class DropdownPanelComponent implements OnDestroy {
     @Input() footerTemplate: TemplateRef<any>;
 
     @Output() update = new EventEmitter<any[]>();
+    @Output() scrollToEnd = new EventEmitter<{ start: number; end: number }>();
     @Output() positionChange = new EventEmitter();
 
     @ViewChild('content', { read: ElementRef }) contentElementRef: ElementRef;
@@ -89,6 +90,7 @@ export class DropdownPanelComponent implements OnDestroy {
     private _previousEnd: number;
     private _startupLoop = true;
     private _scrolledToMarked = false;
+    private _scrollToEndFired = false;
     private _itemsList: ItemsList;
     private _disposeScrollListener = () => { };
 
@@ -168,6 +170,7 @@ export class DropdownPanelComponent implements OnDestroy {
     }
 
     private _handleItemsChange(items: { previousValue: NgOption[], currentValue: NgOption[] }) {
+        this._scrollToEndFired = false;
         this._previousStart = undefined;
         this._previousEnd = undefined;
         if (items !== undefined && items.previousValue === undefined ||
@@ -193,10 +196,15 @@ export class DropdownPanelComponent implements OnDestroy {
         if (res.start !== this._previousStart || res.end !== this._previousEnd) {
             this._zone.run(() => {
                 this.update.emit(this.items.slice(res.start, res.end));
-            });
 
-            this._previousStart = res.start;
-            this._previousEnd = res.end;
+                if (res.end === this.items.length && !this._scrollToEndFired) {
+                    this._scrollToEndFired = true;
+                    this.scrollToEnd.emit({ start: res.start, end: res.end });
+                }
+
+                this._previousStart = res.start;
+                this._previousEnd = res.end;
+            });
 
             if (this._startupLoop === true) {
                 this.refresh();

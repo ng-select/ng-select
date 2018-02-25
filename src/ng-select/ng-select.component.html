@@ -48,6 +48,7 @@
     [items]="itemsList.filteredItems"
     (update)="viewPortItems = $event"
     (positionChange)="currentDropdownPosition = $event"
+    (scrollToEnd)="scrollToEnd.emit($event)"
     [ngClass]="{'multiple': multiple}">
     
     <ng-container>
