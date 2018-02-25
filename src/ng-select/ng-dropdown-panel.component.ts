@@ -22,9 +22,7 @@ import { ItemsList } from './items-list';
 import { WindowService } from './window.service';
 
 @Component({
-    providers: [
-        VirtualScrollService
-    ],
+    providers: [VirtualScrollService],
     encapsulation: ViewEncapsulation.None,
     selector: 'ng-dropdown-panel',
     template: `

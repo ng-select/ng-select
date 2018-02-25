@@ -1579,15 +1579,13 @@ class MockNgWindow extends WindowService {
     }
 }
 
-let mockZone: MockNgZone;
-
 function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixture<T> {
     TestBed.configureTestingModule({
         imports: [FormsModule, NgSelectModule],
         declarations: [cmp],
         providers: [
             { provide: ErrorHandler, useClass: TestsErrorHandler },
-            { provide: NgZone, useFactory: () => mockZone = new MockNgZone() },
+            { provide: NgZone, useFactory: () =>  new MockNgZone() },
             { provide: WindowService, useFactory: () => new MockNgWindow() }
         ]
     })
