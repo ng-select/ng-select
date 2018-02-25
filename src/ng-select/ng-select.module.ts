@@ -14,9 +14,9 @@ import { WindowService } from './window.service';
 
 @NgModule({
     declarations: [
-        NgSelectComponent,
-        NgOptionComponent,
         NgDropdownPanelComponent,
+        NgOptionComponent,
+        NgSelectComponent,
         NgOptionHighlightDirective,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,

@@ -13,6 +13,7 @@ import {
     forwardRef,
     Inject,
     ViewEncapsulation,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 
 import { VirtualScrollService } from './virtual-scroll.service';
@@ -23,6 +24,7 @@ import { WindowService } from './window.service';
 
 @Component({
     providers: [VirtualScrollService],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     selector: 'ng-dropdown-panel',
     template: `
@@ -122,6 +124,9 @@ export class NgDropdownPanelComponent implements OnDestroy {
     }
 
     scrollInto(item: any) {
+        if (!item) {
+            return;
+        }
         const index: number = (this.items || []).indexOf(item);
         if (index < 0 || index >= (this.items || []).length) {
             return;
@@ -160,7 +165,7 @@ export class NgDropdownPanelComponent implements OnDestroy {
         NgZone.assertNotInAngularZone();
 
         const d = this._calculateDimensions();
-        const res = this._virtualScrollService.calculateItems(d, this.scrollElementRef.nativeElement, this.bufferAmount);
+        const res = this._virtualScrollService.calculateItems(d, this.scrollElementRef.nativeElement, this.bufferAmount || 0);
 
         (<HTMLElement>this.paddingElementRef.nativeElement).style.height = `${res.scrollHeight}px`;
         const transform = 'translateY(' + res.topPadding + 'px)';
