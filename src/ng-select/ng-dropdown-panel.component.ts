@@ -29,7 +29,7 @@ import { WindowService } from './window.service';
         <div *ngIf="headerTemplate" class="ng-dropdown-header" ngProjectAs="header" header>
             <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
         </div>
-        <div #scroll class="ng-select-dropdown scroll-host">
+        <div #scroll class="ng-dropdown-panel-items scroll-host">
             <div #padding class="total-padding"></div>
             <div #content [class.scrollable-content]="items.length > 0">
                 <ng-content></ng-content>
@@ -39,26 +39,7 @@ import { WindowService } from './window.service';
             <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
         </div>
     `,
-    styles: [`
-        .scroll-host {
-            overflow: hidden;
-            overflow-y: auto;
-            position: relative;
-            display: block;
-            -webkit-overflow-scrolling: touch;
-        }
-        .scrollable-content {
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
-        .total-padding {
-            width: 1px;
-            opacity: 0;
-        }
-    `],
+    styleUrls: ['./ng-dropdown-panel.component.scss'],
     host: {
         '[class.top]': 'currentPosition === "top"',
         '[class.bottom]': 'currentPosition === "bottom"',

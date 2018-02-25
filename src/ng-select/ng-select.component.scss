@@ -197,29 +197,3 @@
     }
 }
 
-.ng-select-dropdown-outer {
-    box-sizing: border-box;
-    position: absolute;
-    width: 100%;
-    z-index: 3;
-    -webkit-overflow-scrolling: touch;
-    .ng-select-dropdown {
-        display: block;
-        height: auto;
-        @include box-sizing;
-        max-height: 240px;
-        overflow-y: auto;
-        .ng-option {
-            box-sizing: border-box;
-            cursor: pointer;
-            display: block;
-            .highlighted {
-                font-weight: bold;
-                text-decoration: underline;
-            }
-            &.disabled {
-                cursor: default;
-            }
-        }
-    }
-}

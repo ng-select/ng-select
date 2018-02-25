@@ -1,0 +1,47 @@
+.ng-dropdown-panel {
+    box-sizing: border-box;
+    position: absolute;
+    width: 100%;
+    z-index: 3;
+    -webkit-overflow-scrolling: touch;
+    .ng-dropdown-panel-items {
+        display: block;
+        height: auto;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        max-height: 240px;
+        overflow-y: auto;
+        .ng-option {
+            box-sizing: border-box;
+            cursor: pointer;
+            display: block;
+            .highlighted {
+                font-weight: bold;
+                text-decoration: underline;
+            }
+            &.disabled {
+                cursor: default;
+            }
+        }
+    }
+
+    .scroll-host {
+        overflow: hidden;
+        overflow-y: auto;
+        position: relative;
+        display: block;
+        -webkit-overflow-scrolling: touch;
+    }
+    .scrollable-content {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+    .total-padding {
+        width: 1px;
+        opacity: 0;
+    }
+}
