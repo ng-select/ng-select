@@ -52,7 +52,7 @@ import { DataService } from '../shared/data.service';
                 <br>
                 <button class="btn btn-secondary btn-sm" (click)="toggleAgeDisable()">Toggle disabled</button>
             </div>
-            <hr>            
+            <hr>
             <div class="form-group">
                 <label for="state">Multi select</label>
                 ---html,true
@@ -91,7 +91,7 @@ import { DataService } from '../shared/data.service';
                 <button class="btn btn-secondary btn-sm" (click)="selectAlbumsRange(10, 20)">Set 10-20 albums</button>
             </div>
             <hr>
-            
+
             <div class="form-group">
                 <label for="album">Custom templates</label>
                 <ng-select [items]="photos"
@@ -111,10 +111,10 @@ import { DataService } from '../shared/data.service';
                 <small class="form-text text-muted">5000 items with virtual scroll</small>
                 <br>
                 <button class="btn btn-secondary btn-sm" (click)="selectFirstPhoto()">Select first photo</button>
-                <button class="btn btn-secondary btn-sm" (click)="openModel(content)">Open in model</button>
+                <button class="btn btn-secondary btn-sm" (click)="openModal(content)">Open in modal</button>
                 <button class="btn btn-secondary btn-sm" (click)="togglePhotoDisabled()">Toggle disabled</button>
             </div>
-            
+
             <ng-template #content let-c="close" let-d="dismiss">
                 <div class="modal-header">
                     <h4 class="modal-title">Select in modal</h4>
@@ -222,7 +222,7 @@ export class ReactiveFormsComponent {
         this.selectFirstAlbum();
     }
 
-    openModel(content) {
+    openModal(content) {
         this.modalService.open(content);
     }
 
