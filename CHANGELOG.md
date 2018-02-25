@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.22.0"></a>
+# [0.22.0](https://github.com/ng-select/ng-select/compare/v0.21.0...v0.22.0) (2018-02-25)
+
+
+### Bug Fixes
+
+* mark first item when selected is not among options ([#281](https://github.com/ng-select/ng-select/issues/281)) ([8a23b71](https://github.com/ng-select/ng-select/commit/8a23b71)), closes [#278](https://github.com/ng-select/ng-select/issues/278)
+
+
+### Features
+
+* **ng-option:** support for disabled attribute ([#280](https://github.com/ng-select/ng-select/issues/280)) ([a5e2d16](https://github.com/ng-select/ng-select/commit/a5e2d16)), closes [#236](https://github.com/ng-select/ng-select/issues/236)
+
+
+
 <a name="0.21.0"></a>
 # [0.21.0](https://github.com/ng-select/ng-select/compare/v0.20.4...v0.21.0) (2018-02-19)
 
