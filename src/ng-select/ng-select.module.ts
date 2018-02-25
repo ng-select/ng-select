@@ -9,13 +9,13 @@ import {
 } from './ng-templates.directive';
 import { NgOptionComponent } from './ng-option.component';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
-import { DropdownPanelComponent } from './dropdown-panel.component';
+import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 
 @NgModule({
     declarations: [
         NgSelectComponent,
         NgOptionComponent,
-        DropdownPanelComponent,
+        NgDropdownPanelComponent,
         NgOptionHighlightDirective,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,

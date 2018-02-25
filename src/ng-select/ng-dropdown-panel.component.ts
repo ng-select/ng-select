@@ -66,7 +66,7 @@ const IS_TEST = process.env.NODE_ENV === 'TEST';
         '[class.bottom]': 'currentPosition === "bottom"',
     }
 })
-export class DropdownPanelComponent implements OnDestroy {
+export class NgDropdownPanelComponent implements OnDestroy {
 
     @Input() items: NgOption[] = [];
     @Input() position: DropdownPosition;
