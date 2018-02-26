@@ -1447,6 +1447,17 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
         }));
+
+        it('clear button should not appear if select is disabled', fakeAsync(() => {            
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.select.setDisabledState(true);            
+            tickAndDetectChanges(fixture);
+            
+            const el = fixture.debugElement.query(By.css('.ng-clear-zone'));
+            expect(el).toBeNull();
+        }));
     });
 
     describe('Arrow icon click', () => {
