@@ -11,6 +11,7 @@ import { NgOptionComponent } from './ng-option.component';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { WindowService } from './window.service';
+import { VirtualScrollService } from './virtual-scroll.service';
 
 @NgModule({
     declarations: [
@@ -37,6 +38,7 @@ import { WindowService } from './window.service';
     ],
     providers: [
         WindowService,
+        VirtualScrollService,
         {
             provide: NG_SELECT_DEFAULT_CONFIG,
             useValue: {

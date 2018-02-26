@@ -16,14 +16,13 @@ import {
     ChangeDetectionStrategy,
 } from '@angular/core';
 
-import { VirtualScrollService } from './virtual-scroll.service';
 import { NgOption } from './ng-select.types';
 import { NgSelectComponent, DropdownPosition } from './ng-select.component';
 import { ItemsList } from './items-list';
 import { WindowService } from './window.service';
+import { VirtualScrollService } from './virtual-scroll.service';
 
 @Component({
-    providers: [VirtualScrollService],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     selector: 'ng-dropdown-panel',
