@@ -118,6 +118,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     viewPortItems: NgOption[] = [];
     filterValue: string = null;
     currentDropdownPosition: 'bottom' | 'top' | 'auto' = 'bottom';
+    hoverDisabled = false;
 
     private _ngModel: any = null;
     private _defaultLabel = 'label';
@@ -410,7 +411,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     onItemHover(item: NgOption) {
-        if (item.disabled) {
+        if (item.disabled || this.hoverDisabled) {
             return;
         }
         this.itemsList.markItem(item);
@@ -484,8 +485,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
             // prevent close if clicked on dropdown menu
             const dropdown = this._getDropdownMenu();
-            if (dropdown && dropdown.contains($event.target)
-            ) {
+            if (dropdown && dropdown.contains($event.target)) {
                 return;
             }
 
