@@ -268,6 +268,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     setDisabledState(isDisabled: boolean): void {
         this.isDisabled = isDisabled;
+        this.detectChanges();
     }
 
     toggle() {
