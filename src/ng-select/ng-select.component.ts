@@ -4,7 +4,6 @@ import { takeUntil, startWith } from 'rxjs/operators';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     Component,
-    OnInit,
     OnDestroy,
     OnChanges,
     AfterViewInit,
@@ -62,7 +61,7 @@ export type DropdownPosition = 'bottom' | 'top' | 'auto';
         '[class.ng-selected]': 'hasValue'
     }
 })
-export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
+export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
 
     // inputs
     @Input() items: any[] = [];
@@ -164,10 +163,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (changes.dropdownPosition) {
             this.currentDropdownPosition = changes.dropdownPosition.currentValue;
         }
-    }
-
-    ngOnInit() {
-        this._handleDocumentClick();
     }
 
     ngAfterViewInit() {
@@ -279,6 +274,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (!this.filterValue) {
             this.focusSearchInput();
         }
+        this._handleDocumentClick();
     }
 
     close() {
@@ -289,6 +285,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         this._clearSearch();
         this._onTouched();
         this.closeEvent.emit();
+        this._disposeDocumentClickListener();
     }
 
     toggleItem(item: NgOption) {
@@ -474,8 +471,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
             // prevent close if clicked on dropdown menu
             const dropdown = this._getDropdownMenu();
-            if (dropdown && dropdown.contains($event.target)
-            ) {
+            if (dropdown && dropdown.contains($event.target)) {
                 return;
             }
 
@@ -655,7 +651,8 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         if (!this.isOpen || !this.dropdownPanel) {
             return null;
         }
-        return <HTMLElement>this.elementRef.nativeElement.querySelector('.ng-menu-outer');
+        const parent = this.appendTo ? document : <HTMLElement>this.elementRef.nativeElement;
+        return parent.querySelector('.ng-select-dropdown-outer');
     }
 
     private get _isTypeahead() {
