@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {NgOptionHighlightDirective} from './ng-option-highlight.directive';
-import {By} from '@angular/platform-browser';
+import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NgOptionHighlightDirective } from './ng-option-highlight.directive';
+import { By } from '@angular/platform-browser';
 
 @Component({
     template: `
@@ -24,7 +24,7 @@ describe('NgOptionHighlightDirective', function () {
             .createComponent(TestComponent);
 
         fixture.detectChanges();
-});
+    });
 
     it('should have two elements with highlight directive', () => {
         let highlightDirectives = fixture.debugElement.queryAll(By.directive(NgOptionHighlightDirective));
