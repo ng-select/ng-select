@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.23.0"></a>
+# [0.23.0](https://github.com/ng-select/ng-select/compare/v0.22.0...v0.23.0) (2018-02-26)
+
+
+### Features
+
+* destroy dropdown panel on close ([#286](https://github.com/ng-select/ng-select/issues/286)) ([14e1da5](https://github.com/ng-select/ng-select/commit/14e1da5))
+
+
+
 <a name="0.22.0"></a>
 # [0.22.0](https://github.com/ng-select/ng-select/compare/v0.21.0...v0.22.0) (2018-02-25)
 
