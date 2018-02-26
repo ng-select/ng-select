@@ -40,6 +40,7 @@
 
 <ng-dropdown-panel *ngIf="isOpen"
     class="ng-dropdown-panel"
+    [virtualScroll]="virtualScroll"
     [bufferAmount]="bufferAmount"
     [appendTo]="appendTo"
     [position]="dropdownPosition"

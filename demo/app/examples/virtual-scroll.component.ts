@@ -11,6 +11,8 @@ import { HttpClient } from '@angular/common/http';
         </p>
         ---html,true
         <ng-select [items]="photosBuffer"
+                   [virtualScroll]="true"
+                   [loading]="loading"
                    bindLabel="title"
                    bindValue="thumbnailUrl"
                    placeholder="Select photo"
@@ -30,6 +32,7 @@ export class VirtualScrollComponent {
     photos = [];
     photosBuffer = [];
     bufferSize = 50;
+    loading = false;
 
     constructor(private http: HttpClient) {}
 
@@ -40,11 +43,14 @@ export class VirtualScrollComponent {
         });
     }
 
-    fetchMore($event: {start: number; end: number}) {
+    fetchMore() {
         const len = this.photosBuffer.length;
-        if ($event.end === len) {
-            const more = this.photos.slice(len, this.bufferSize + len);
+        const more = this.photos.slice(len, this.bufferSize + len);
+        this.loading = true;
+        // using timeout here to simulate backend API delay
+        setTimeout(() => {
+            this.loading = false;
             this.photosBuffer = this.photosBuffer.concat(more);
-        }
+        }, 200)
     }
 }

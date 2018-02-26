@@ -78,6 +78,7 @@ import { DataService } from '../shared/data.service';
                            bindLabel="title"
                            bindValue="id"
                            placeholder="Select album"
+                           [virtualScroll]="true"
                            formControlName="album">
                     <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
                         <div><span>Title: </span><span [innerHTML]="item.title" [ngOptionHighlight]="search"></span></div>
@@ -98,6 +99,7 @@ import { DataService } from '../shared/data.service';
                            bindLabel="title"
                            bindValue="thumbnailUrl"
                            placeholder="Select photo"
+                           [virtualScroll]="true"
                            formControlName="photo">
                     <ng-template ng-label-tmp let-item="item">
                         <img height="15" width="15" [src]="item.thumbnailUrl"/>
@@ -130,6 +132,7 @@ import { DataService } from '../shared/data.service';
                                    bindLabel="title"
                                    bindValue="thumbnailUrl"
                                    placeholder="Select photo"
+                                   [virtualScroll]="true"
                                    formControlName="photo">
                             <ng-template ng-label-tmp let-item="item">
                                 <img height="15" width="15" [src]="item.thumbnailUrl"/>

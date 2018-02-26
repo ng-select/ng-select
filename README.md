@@ -119,36 +119,37 @@ map: {
 ## API
 | Input  | Type | Default | Required | Description |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| [items] | `Array<NgOption>` | `[]` | yes | Items array |
-| bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |
-| bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
-| [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
-| [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. Default `true`|
-| [searchable] | `boolean` | `true` | no | Allow to search for value. Default `true`|
-| multiple | `boolean` | `false` | no | Allows to select multiple items. |
-| maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
-| [addTag] | `boolean \| ((term: string) => any \| Promise<any>)`  | `false` | no | Allows to create custom options. |
-| placeholder | `string` | `-` | no | Placeholder text. |
-| notFoundText | `string` | `No items found` | no | Set custom text when filter returns empty result |
-| typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
-| clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
+| [addTag] | `boolean | ((term: string) => any | Promise<any>)`  | `false` | no | Allows to create custom options. |
 | addTagText | `string` | `Add item` | no | Set custom text when using tagging |
-| loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
-| [typeahead] | `Subject` |  `-` | no | Custom autocomplete or filter. |
-| dropdownPosition | `bottom`,`top`,`auto` |  `bottom` | no | Set the dropdown position on open |
 | appendTo | `string` |  null | no | Append drodown to body or any other element using css selector |
-| loading | `boolean` |  `-` | no | you can set the loading state from the outside (e.g. async items loading) |
-| closeOnSelect | `boolean` |  true | no | whether to close the menu when a value is selected |
+| bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
+| bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |
+| closeOnSelect | `boolean` |  true | no | Whether to close the menu when a value is selected |
+| [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
+| clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
+| dropdownPosition | `bottom`,`top`,`auto` |  `bottom` | no | Set the dropdown position on open |
+| [items] | `Array<NgOption>` | `[]` | yes | Items array |
+| loading | `boolean` |  `-` | no | You can set the loading state from the outside (e.g. async items loading) |
+| loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
+| [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. Default `true`|
+| maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
+| multiple | `boolean` | `false` | no | Allows to select multiple items. |
+| notFoundText | `string` | `No items found` | no | Set custom text when filter returns empty result |
+| placeholder | `string` | `-` | no | Placeholder text. |
+| [searchable] | `boolean` | `true` | no | Allow to search for value. Default `true`|
+| [typeahead] | `Subject` |  `-` | no | Custom autocomplete or filter. |
+| typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
+| [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
 
 | Output  | Description |
 | ------------- | ------------- |
-| (focus)  | Fired on select focus |
+| (add)  | Fired when item is selected |
 | (blur)  | Fired on select blur |
 | (change)  | Fired on selected value change |
-| (open)  | Fired on select dropdown open |
 | (close)  | Fired on select dropdown close |
 | (clear)  | Fired on clear icon click |
-| (add)  | Fired when item is selected |
+| (focus)  | Fired on select focus |
+| (open)  | Fired on select dropdown open |
 | (remove)  | Fired when item is removed |
 | (scrollToEnd)  | Fired when scrolled to the end of items. Can be used for loading more items in chunks. |
 
