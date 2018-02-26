@@ -7,25 +7,25 @@ import {
     NgHeaderTemplateDirective,
     NgFooterTemplateDirective
 } from './ng-templates.directive';
-import { VirtualScrollModule } from './virtual-scroll.component';
-import { SpinnerComponent } from './spinner.component';
 import { NgOptionComponent } from './ng-option.component';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
+import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
+import { WindowService } from './window.service';
+import { VirtualScrollService } from './virtual-scroll.service';
 
 @NgModule({
     declarations: [
-        NgSelectComponent,
+        NgDropdownPanelComponent,
         NgOptionComponent,
+        NgSelectComponent,
         NgOptionHighlightDirective,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
         NgHeaderTemplateDirective,
         NgFooterTemplateDirective,
-        SpinnerComponent
     ],
     imports: [
-        CommonModule,
-        VirtualScrollModule
+        CommonModule
     ],
     exports: [
         NgSelectComponent,
@@ -37,6 +37,8 @@ import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
         NgFooterTemplateDirective
     ],
     providers: [
+        WindowService,
+        VirtualScrollService,
         {
             provide: NG_SELECT_DEFAULT_CONFIG,
             useValue: {

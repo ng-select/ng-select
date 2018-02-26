@@ -3,13 +3,24 @@ import {
 } from '@angular/core/testing';
 
 import { By } from '@angular/platform-browser';
-import { DebugElement, Component, ViewChild, Type, ChangeDetectionStrategy } from '@angular/core';
+import {
+    DebugElement,
+    Component,
+    ViewChild,
+    Type,
+    ChangeDetectionStrategy,
+    ErrorHandler,
+    NgZone
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { NgSelectModule } from './ng-select.module';
 import { NgSelectComponent } from './ng-select.component';
 import { KeyCode, NgOption } from './ng-select.types';
 import { Subject } from 'rxjs/Subject';
+import { WindowService } from './window.service';
+import { TestsErrorHandler } from '../testing/helpers';
+import { MockNgZone, MockNgWindow } from '../testing/mocks';
 
 describe('NgSelectComponent', function () {
 
@@ -481,7 +492,7 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Dropdown', () => {
-        it('should close on option select by default', fakeAsync(() => {
+        it('should close on option select by default', async(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
@@ -490,9 +501,12 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             selectOption(fixture, KeyCode.ArrowDown, 0);
-            tickAndDetectChanges(fixture);
+            fixture.detectChanges();
 
-            expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+            fixture.whenStable().then(() => {
+                expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+            })
+
         }));
 
         it('should not close on option select when [closeOnSelect]="false"', fakeAsync(() => {
@@ -823,6 +837,7 @@ describe('NgSelectComponent', function () {
                     </ng-template>
                 </ng-select>`);
 
+            fixture.componentInstance.select.open();
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
@@ -843,6 +858,7 @@ describe('NgSelectComponent', function () {
                     </ng-template>
                 </ng-select>`);
 
+            fixture.componentInstance.select.open();
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
@@ -1188,6 +1204,8 @@ describe('NgSelectComponent', function () {
                     [multiple]="true">
                 </ng-select>`);
 
+            tickAndDetectChanges(fixture);
+
             fixture.componentInstance.select.filterValue = 'Hey! Whats up!?';
             selectOption(fixture, KeyCode.ArrowDown, 1);
             tickAndDetectChanges(fixture);
@@ -1468,7 +1486,7 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Append to', () => {
-        it('should append dropdown to body', fakeAsync(() => {
+        it('should append dropdown to body', async(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
@@ -1476,18 +1494,18 @@ describe('NgSelectComponent', function () {
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-
-            tickAndDetectChanges(fixture);
             fixture.componentInstance.select.open();
-            tickAndDetectChanges(fixture);
+            fixture.detectChanges();
 
-            const dropdown = <HTMLElement>document.querySelector('.ng-select-dropdown-outer');
-            expect(dropdown.parentElement).toBe(document.body);
-            expect(dropdown.style.top).toBe('18px');
-            expect(dropdown.style.left).toBe('0px');
+            fixture.whenStable().then(() => {
+                const dropdown = <HTMLElement>document.querySelector('.ng-dropdown-panel');
+                expect(dropdown.parentElement).toBe(document.body);
+                expect(dropdown.style.top).toBe('18px');
+                expect(dropdown.style.left).toBe('0px');
+            })
         }));
 
-        it('should append dropdown to custom selector', fakeAsync(() => {
+        it('should append dropdown to custom selector', async(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `
@@ -1497,14 +1515,14 @@ describe('NgSelectComponent', function () {
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-
-            tickAndDetectChanges(fixture);
             fixture.componentInstance.select.open();
-            tickAndDetectChanges(fixture);
+            fixture.detectChanges();
 
-            const dropdown = <HTMLElement>document.querySelector('.container .ng-select-dropdown-outer');
-            expect(dropdown.style.top).toBe('18px');
-            expect(dropdown.style.left).toBe('0px');
+            fixture.whenStable().then(() => {
+                const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
+                expect(dropdown.style.top).toBe('18px');
+                expect(dropdown.style.left).toBe('0px');
+            });
         }));
     });
 });
@@ -1537,7 +1555,12 @@ function triggerKeyDownEvent(element: DebugElement, key: number): void {
 function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixture<T> {
     TestBed.configureTestingModule({
         imports: [FormsModule, NgSelectModule],
-        declarations: [cmp]
+        declarations: [cmp],
+        providers: [
+            { provide: ErrorHandler, useClass: TestsErrorHandler },
+            { provide: NgZone, useFactory: () =>  new MockNgZone() },
+            { provide: WindowService, useFactory: () => new MockNgWindow() }
+        ]
     })
         .overrideComponent(cmp, {
             set: {

@@ -35,7 +35,7 @@ module.exports = function makeWebpackConfig() {
                 loader: 'raw-loader!sass-loader'
             },
 
-            {test: /\.html$/, loader: 'raw-loader', exclude: root('src', 'public')}
+            { test: /\.html$/, loader: 'raw-loader', exclude: root('src', 'public') }
         ]
     };
 
@@ -46,7 +46,7 @@ module.exports = function makeWebpackConfig() {
             enforce: 'post',
             include: path.resolve('src'),
             loader: 'istanbul-instrumenter-loader',
-            exclude: [/\.spec\.ts$/, /\.e2e\.ts$/, /node_modules/, /search-helper\.ts$/]
+            exclude: [/\.spec\.ts$/, /\.e2e\.ts$/, /node_modules/, /search-helper\.ts$/, /testing/]
         });
     }
 
@@ -57,6 +57,12 @@ module.exports = function makeWebpackConfig() {
     });
 
     config.plugins = [
+        new webpack.DefinePlugin({
+            'process.env': {
+                'NODE_ENV': JSON.stringify('TEST')
+            },
+        }),
+
         // Workaround needed for angular 2 angular/angular#11580
         new webpack.ContextReplacementPlugin(
             // The (\\|\/) piece accounts for path separators in *nix and Windows
