@@ -720,29 +720,47 @@ describe('NgSelectComponent', function () {
         });
     });
 
-    describe('Document:click', () => {
+    describe('Outside click', () => {
         let fixture: ComponentFixture<NgSelectBasicTestCmp>;
 
         beforeEach(() => {
             fixture = createTestingModule(
                 NgSelectBasicTestCmp,
-                `<button id="close">close</button>
-                <ng-select id="select" [items]="cities"
-                        bindLabel="name"
-                        [(ngModel)]="selectedCity">
+            `   <ng-select id="select" [items]="cities"
+                    bindLabel="name"
+                    multiple="true"
+                    [closeOnSelect]="false"
+                    appendTo="body"
+                    [(ngModel)]="selectedCity">
                 </ng-select>`);
         });
 
         it('close dropdown if opened and clicked outside dropdown container', () => {
-            fixture.componentInstance.select.isOpen = true;
-            document.getElementById('close').click();
-            expect(fixture.componentInstance.select.isOpen).toBe(false);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+            fixture.whenStable().then(() => {
+                (document.querySelector('.ng-overlay') as HTMLElement).click();
+                expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+            });
         });
 
         it('prevent dropdown close if clicked on select', () => {
-            fixture.componentInstance.select.isOpen = true;
-            document.getElementById('select').click();
-            expect(fixture.componentInstance.select.isOpen).toBe(true);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+            fixture.whenStable().then(() => {
+                document.getElementById('select').click();
+                expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+            });
+        });
+
+        it('should not close dropdown when closeOnSelect is false and in body', () => {
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+            fixture.whenStable().then(() => {
+                (document.querySelector('.ng-option.marked') as HTMLElement).click();
+                fixture.detectChanges();
+                expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+            });
         });
     });
 
@@ -1564,7 +1582,7 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
         declarations: [cmp],
         providers: [
             { provide: ErrorHandler, useClass: TestsErrorHandler },
-            { provide: NgZone, useFactory: () =>  new MockNgZone() },
+            { provide: NgZone, useFactory: () => new MockNgZone() },
             { provide: WindowService, useFactory: () => new MockNgWindow() }
         ]
     })

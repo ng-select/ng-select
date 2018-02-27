@@ -38,6 +38,10 @@
     </span>
 </div>
 
+<div class="ng-overlay-container" *ngIf="isOpen">
+    <div class="ng-overlay" (click)="isOpen = false" ></div>
+</div>
+
 <ng-dropdown-panel *ngIf="isOpen"
     class="ng-dropdown-panel"
     [bufferAmount]="bufferAmount"
@@ -53,10 +57,10 @@
     
     <ng-container>
         <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
-             *ngFor="let item of viewPortItems"
-             [class.disabled]="item.disabled"
-             [class.selected]="item.selected"
-             [class.marked]="item === itemsList.markedItem">
+                *ngFor="let item of viewPortItems"
+                [class.disabled]="item.disabled"
+                [class.selected]="item.selected"
+                [class.marked]="item === itemsList.markedItem">
 
             <ng-template #defaultOptionTemplate>
                 <span class="ng-option-label" [innerHTML]="item.label"  [ngOptionHighlight]="filterValue"></span>

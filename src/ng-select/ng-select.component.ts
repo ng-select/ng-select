@@ -4,7 +4,6 @@ import { takeUntil, startWith } from 'rxjs/operators';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     Component,
-    OnInit,
     OnDestroy,
     OnChanges,
     AfterViewInit,
@@ -23,7 +22,8 @@ import {
     ChangeDetectionStrategy,
     Inject,
     SimpleChanges,
-    Renderer2, ContentChildren, QueryList,
+    ContentChildren,
+    QueryList,
     InjectionToken
 } from '@angular/core';
 
@@ -62,7 +62,7 @@ export type DropdownPosition = 'bottom' | 'top' | 'auto';
         '[class.ng-selected]': 'hasValue'
     }
 })
-export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
+export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
 
     // inputs
     @Input() items: any[] = [];
@@ -127,7 +127,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     private readonly _destroy$ = new Subject<void>();
     private _onChange = (_: NgOption) => { };
     private _onTouched = () => { };
-    private _disposeDocumentClickListener = () => { };
 
     clearItem = (item: any) => {
         const option = this.selectedItems.find(x => x.value === item);
@@ -136,8 +135,7 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
 
     constructor(@Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private changeDetectorRef: ChangeDetectorRef,
-        public elementRef: ElementRef,
-        private renderer: Renderer2
+        public elementRef: ElementRef
     ) {
         this._mergeGlobalConfig(config);
     }
@@ -166,10 +164,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         }
     }
 
-    ngOnInit() {
-        this._handleDocumentClick();
-    }
-
     ngAfterViewInit() {
         if (this.ngOptions.length > 0 && this.items.length === 0) {
             this._setItemsFromNgOptions();
@@ -177,7 +171,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
     }
 
     ngOnDestroy() {
-        this._disposeDocumentClickListener();
         this._destroy$.next();
         this._destroy$.complete();
     }
@@ -466,34 +459,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
             });
     }
 
-    private _handleDocumentClick() {
-        const handler = ($event: any) => {
-            // prevent close if clicked on select
-            if (this.elementRef.nativeElement.contains($event.target)) {
-                return;
-            }
-
-            // prevent close if clicked on dropdown menu
-            const dropdown = this._getDropdownMenu();
-            if (dropdown && dropdown.contains($event.target)
-            ) {
-                return;
-            }
-
-            if (this.isFocused) {
-                this.onInputBlur();
-                this.changeDetectorRef.markForCheck();
-            }
-
-            if (this.isOpen) {
-                this.close();
-                this.changeDetectorRef.markForCheck();
-            }
-        };
-
-        this._disposeDocumentClickListener = this.renderer.listen('document', 'click', handler);
-    }
-
     private _validateWriteValue(value: any) {
         if (!this._isDefined(value)) {
             return;
@@ -650,13 +615,6 @@ export class NgSelectComponent implements OnInit, OnDestroy, OnChanges, AfterVie
         } else {
             this.clearModel();
         }
-    }
-
-    private _getDropdownMenu() {
-        if (!this.isOpen || !this.dropdownPanel) {
-            return null;
-        }
-        return <HTMLElement>this.elementRef.nativeElement.querySelector('.ng-menu-outer');
     }
 
     private get _isTypeahead() {

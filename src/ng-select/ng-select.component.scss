@@ -27,6 +27,9 @@
             opacity: 1;
         }
     }
+    &.opened .ng-control {
+        z-index: 1001;
+    }
     &.disabled {
         .ng-control {
             .ng-value-container {
@@ -140,7 +143,6 @@
             line-height: 1;
         }
     }
-
     .ng-spinner-loader {
         border-radius: 50%;
         width: 17px;
@@ -155,13 +157,11 @@
         border-left: 2px solid #424242;
         transform: translateZ(0);
         animation: load8 0.8s infinite linear;
-        
         &:after {
             border-radius: 50%;
             width: 17px;
             height: 17px;
         }
-
         @-webkit-keyframes load8 {
             0% {
                 -webkit-transform: rotate(0deg);
@@ -183,7 +183,6 @@
             }
         }
     }
-
     .ng-arrow-zone {
         cursor: pointer;
         position: relative;
@@ -195,5 +194,23 @@
             position: relative;
         }
     }
+    .ng-overlay-container {
+        pointer-events: none;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        z-index: 1000;
+        .ng-overlay {
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            opacity: 0;
+            position: absolute;
+            pointer-events: auto;
+            z-index: 1000;
+        }
+    }
 }
-
