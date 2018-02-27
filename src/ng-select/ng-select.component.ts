@@ -22,7 +22,8 @@ import {
     ChangeDetectionStrategy,
     Inject,
     SimpleChanges,
-    Renderer2, ContentChildren, QueryList,
+    ContentChildren,
+    QueryList,
     InjectionToken
 } from '@angular/core';
 
@@ -126,7 +127,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private readonly _destroy$ = new Subject<void>();
     private _onChange = (_: NgOption) => { };
     private _onTouched = () => { };
-    private _disposeDocumentClickListener = () => { };
 
     clearItem = (item: any) => {
         const option = this.selectedItems.find(x => x.value === item);
@@ -135,8 +135,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     constructor(@Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private changeDetectorRef: ChangeDetectorRef,
-        public elementRef: ElementRef,
-        private renderer: Renderer2
+        public elementRef: ElementRef
     ) {
         this._mergeGlobalConfig(config);
     }
@@ -172,7 +171,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     ngOnDestroy() {
-        this._disposeDocumentClickListener();
         this._destroy$.next();
         this._destroy$.complete();
     }
@@ -274,7 +272,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this.filterValue) {
             this.focusSearchInput();
         }
-        this._handleDocumentClick();
     }
 
     close() {
@@ -285,7 +282,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this._clearSearch();
         this._onTouched();
         this.closeEvent.emit();
-        this._disposeDocumentClickListener();
     }
 
     toggleItem(item: NgOption) {
@@ -462,33 +458,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             });
     }
 
-    private _handleDocumentClick() {
-        const handler = ($event: any) => {
-            // prevent close if clicked on select
-            if (this.elementRef.nativeElement.contains($event.target)) {
-                return;
-            }
-
-            // prevent close if clicked on dropdown menu
-            const dropdown = this._getDropdownMenu();
-            if (dropdown && dropdown.contains($event.target)) {
-                return;
-            }
-
-            if (this.isFocused) {
-                this.onInputBlur();
-                this.changeDetectorRef.markForCheck();
-            }
-
-            if (this.isOpen) {
-                this.close();
-                this.changeDetectorRef.markForCheck();
-            }
-        };
-
-        this._disposeDocumentClickListener = this.renderer.listen('document', 'click', handler);
-    }
-
     private _validateWriteValue(value: any) {
         if (!this._isDefined(value)) {
             return;
@@ -645,14 +614,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         } else {
             this.clearModel();
         }
-    }
-
-    private _getDropdownMenu() {
-        if (!this.isOpen || !this.dropdownPanel) {
-            return null;
-        }
-        const parent = this.appendTo ? document : <HTMLElement>this.elementRef.nativeElement;
-        return parent.querySelector('.ng-select-dropdown-outer');
     }
 
     private get _isTypeahead() {
