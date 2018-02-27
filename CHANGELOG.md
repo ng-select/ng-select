@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.23.1"></a>
+## [0.23.1](https://github.com/ng-select/ng-select/compare/v0.23.0...v0.23.1) (2018-02-27)
+
+
+### Bug Fixes
+
+* close dropdown on outside click ([#296](https://github.com/ng-select/ng-select/issues/296)) ([66a0a8c](https://github.com/ng-select/ng-select/commit/66a0a8c)), closes [#289](https://github.com/ng-select/ng-select/issues/289) [#270](https://github.com/ng-select/ng-select/issues/270)
+* hide clear button on disable ([#295](https://github.com/ng-select/ng-select/issues/295)) ([a85c53f](https://github.com/ng-select/ng-select/commit/a85c53f))
+
+
+
 <a name="0.23.0"></a>
 # [0.23.0](https://github.com/ng-select/ng-select/compare/v0.22.0...v0.23.0) (2018-02-26)
 

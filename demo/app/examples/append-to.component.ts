@@ -24,7 +24,9 @@ import { DataService } from '../shared/data.service';
                 bindLabel="company"
                 placeholder="Select item"
                 appendTo="body"
-                [(ngModel)]="selected">
+                multiple="true"
+                [closeOnSelect]="false"
+                [(ngModel)]="selected2">
             </ng-select>
         </div>
         ---
@@ -46,6 +48,7 @@ export class AppendToComponent implements OnInit {
 
     people: any = [];
     selected: any;
+    selected2: any;
     constructor(private dataService: DataService) { }
 
     ngOnInit() { 

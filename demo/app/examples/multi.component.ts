@@ -10,6 +10,7 @@ import { DataService } from '../shared/data.service';
         <ng-select
                 [items]="people$1 | async"
                 [multiple]="true"
+                [closeOnSelect]="false"
                 bindLabel="name"
                 placeholder="Select people"
                 [(ngModel)]="selectedPeople1">
