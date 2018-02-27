@@ -126,18 +126,25 @@ export class NgDropdownPanelComponent implements OnDestroy {
         });
     }
 
-    scrollInto(item: any) {
+    scrollInto(item: NgOption) {
         if (!item) {
             return;
         }
-        const index: number = (this.items || []).indexOf(item);
-        if (index < 0 || index >= (this.items || []).length) {
+        const index = this.items.indexOf(item);
+        if (index < 0 || index >= this.items.length) {
             return;
         }
+        
+        const d = this._calculateDimensions(this.isVirtualScrollActive ? 0 : index);
         const scrollEl: Element = this.scrollElementRef.nativeElement;
-        const d = this._calculateDimensions();
         const buffer = Math.floor(d.viewHeight / d.childHeight) - 1;
-        scrollEl.scrollTop = (Math.floor(index) * d.childHeight) - (d.childHeight * Math.min(index, buffer));
+        if (this.isVirtualScrollActive) {
+            scrollEl.scrollTop = (index * d.childHeight) - (d.childHeight * Math.min(index, buffer));
+        } else {
+            const contentEl: HTMLElement = this.contentElementRef.nativeElement;
+            const childrenHeightSum = Array.from(contentEl.children).slice(0, index).reduce((c, n) => c + n.clientHeight, 0);
+            scrollEl.scrollTop = childrenHeightSum - (d.childHeight * Math.min(index, buffer));
+        }
     }
 
     scrollIntoTag() {
@@ -168,9 +175,10 @@ export class NgDropdownPanelComponent implements OnDestroy {
     private _updateItems(): void {
         NgZone.assertNotInAngularZone();
 
-        if (!this.virtualScroll || this.items.length === 0) {
+        if (!this.isVirtualScrollActive) {
             this._zone.run(() => {
                 this.update.emit(this.items.slice());
+                this._scrollToMarked();
             });
             return;
         }
@@ -220,9 +228,10 @@ export class NgDropdownPanelComponent implements OnDestroy {
         }
     }
 
-    private _calculateDimensions() {
+    private _calculateDimensions(index = 0) {
         return this._virtualScrollService.calculateDimensions(
             this.items.length,
+            index,
             this.scrollElementRef.nativeElement,
             this.contentElementRef.nativeElement
         )
@@ -242,6 +251,7 @@ export class NgDropdownPanelComponent implements OnDestroy {
             return;
         }
         this._isScrolledToMarked = true;
+
         this.scrollInto(this._itemsList.markedItem)
     }
 

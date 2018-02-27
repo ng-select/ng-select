@@ -23,8 +23,21 @@ import { DataService } from '../shared/data.service';
         ---html,true
         <ng-select [items]="cities2" [(ngModel)]="selectedCity2" bindLabel="name" bindValue="name">
             <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                <img height="15" width="15" [src]="item.avatar"/>
-                <b [innerHTML]="item.name"  [ngOptionHighlight]="search"></b>
+                <div *ngIf="item.name === 'Kaunas'">{{item.name}}</div>
+                <div class="card" *ngIf="item.name !== 'Kaunas'">
+                    <div class="card-body">
+                        <h5 class="card-title" [innerHTML]="item.name" [ngOptionHighlight]="search"></h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                        <p class="card-text">
+                            <img height="15" width="15" [src]="item.avatar"/>
+                            Some quick example text to build
+                        </p>
+                        <div *ngIf="item.name === 'Pavilnys'">
+                            <a href="#" class="card-link">Card link</a>
+                            <a href="#" class="card-link">Another link</a>
+                        </div>
+                    </div>
+                </div>
             </ng-template>
         </ng-select>
         ---
@@ -79,7 +92,8 @@ export class SelectWithTemplatesComponent {
     cities = [
         {id: 1, name: 'Vilnius', avatar: '//www.gravatar.com/avatar/b0d8c6e5ea589e6fc3d3e08afb1873bb?d=retro&r=g&s=30 2x'},
         {id: 2, name: 'Kaunas', avatar: '//www.gravatar.com/avatar/ddac2aa63ce82315b513be9dc93336e5?d=retro&r=g&s=15'},
-        {id: 3, name: 'Pavilnys', avatar: '//www.gravatar.com/avatar/6acb7abf486516ab7fb0a6efa372042b?d=retro&r=g&s=15'}
+        {id: 3, name: 'Pavilnys', avatar: '//www.gravatar.com/avatar/6acb7abf486516ab7fb0a6efa372042b?d=retro&r=g&s=15'},
+        {id: 4, name: 'Siauliai', avatar: '//www.gravatar.com/avatar/b0d8c6e5ea589e6fc3d3e08afb1873bb?d=retro&r=g&s=30 2x'},
     ];
 
     cities2 = this.cities.slice();

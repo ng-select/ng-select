@@ -21,7 +21,7 @@ describe('VirtualScrollService', () => {
 
         const itemsLength = 100;
         const buffer = 4;
-        const d = service.calculateDimensions(itemsLength, dropdown, content);
+        const d = service.calculateDimensions(itemsLength, 0, dropdown, content);
         const res = service.calculateItems(d, dropdown, buffer);
 
         expect(res).toEqual({
@@ -43,14 +43,16 @@ describe('VirtualScrollService', () => {
         document.body.appendChild(content);
 
         const itemsLength = 100;
-        const res = service.calculateDimensions(itemsLength, dropdown, content);
+        const res = service.calculateDimensions(itemsLength, 0, dropdown, content);
 
         expect(res).toEqual({
             itemsLength: itemsLength,
             viewWidth: 120,
             viewHeight: 100,
+            viewTop: 0,
             childWidth: 120,
             childHeight: 25,
+            childTop: 0,
             itemsPerCol: 4
         })
     }));

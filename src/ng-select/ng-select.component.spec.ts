@@ -491,7 +491,55 @@ describe('NgSelectComponent', function () {
         });
     });
 
-    describe('Dropdown', () => {
+    describe('Dropdown panel', () => {
+        fit('should set and render items in dropdown panel', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [(ngModel)]="city">
+                </ng-select>`);
+
+            fixture.componentInstance.select.isOpen = true;
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.dropdownPanel.items.length).toBe(3);
+            let options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+            expect(options.length).toBe(3);
+            expect(options[0].innerText).toBe('Vilnius');
+            expect(options[1].innerText).toBe('Kaunas');
+            expect(options[2].innerText).toBe('Pabrade');
+    
+            fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({id: i, name: String.fromCharCode(97 + i)}));
+            tickAndDetectChanges(fixture);
+            options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+            expect(options.length).toBe(30);
+            expect(options[0].innerText).toBe('a');
+        }));
+
+        fit('should scroll to item and do not change scroll position when scrolled to visible item', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [(ngModel)]="city">
+                </ng-select>`);
+            const cmp = fixture.componentInstance;
+            const el: HTMLElement = fixture.debugElement.nativeElement;
+
+            cmp.select.isOpen = true;
+            tickAndDetectChanges(fixture);
+
+            cmp.cities = Array.from(Array(30).keys()).map((_, i) => ({id: i, name: String.fromCharCode(97 + i)}));
+            tickAndDetectChanges(fixture);
+
+            cmp.select.dropdownPanel.scrollInto(cmp.select.itemsList.items[1]);
+            tickAndDetectChanges(fixture);
+
+            const panelItems = el.querySelector('.ng-dropdown-panel-items');
+            expect(panelItems.scrollTop).toBe(0);
+        }));
+
         it('should close on option select by default', async(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
