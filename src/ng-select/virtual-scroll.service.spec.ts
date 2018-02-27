@@ -1,5 +1,4 @@
 import { TestBed, inject } from '@angular/core/testing';
-
 import { VirtualScrollService } from './virtual-scroll.service';
 
 describe('VirtualScrollService', () => {
@@ -49,10 +48,8 @@ describe('VirtualScrollService', () => {
             itemsLength: itemsLength,
             viewWidth: 120,
             viewHeight: 100,
-            viewTop: 0,
             childWidth: 120,
             childHeight: 25,
-            childTop: 0,
             itemsPerCol: 4
         })
     }));

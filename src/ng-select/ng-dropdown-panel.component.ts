@@ -31,7 +31,7 @@ import { VirtualScrollService } from './virtual-scroll.service';
             <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
         </div>
         <div #scroll class="ng-dropdown-panel-items scroll-host">
-            <div *ngIf="isVirtualScrollActive" #padding class="total-padding"></div>
+            <div #padding [class.total-padding]="isVirtualScrollActive"></div>
             <div #content [class.scrollable-content]="isVirtualScrollActive">
                 <ng-content></ng-content>
             </div>
@@ -142,8 +142,8 @@ export class NgDropdownPanelComponent implements OnDestroy {
             scrollEl.scrollTop = (index * d.childHeight) - (d.childHeight * Math.min(index, buffer));
         } else {
             const contentEl: HTMLElement = this.contentElementRef.nativeElement;
-            const childrenHeightSum = Array.from(contentEl.children).slice(0, index).reduce((c, n) => c + n.clientHeight, 0);
-            scrollEl.scrollTop = childrenHeightSum - (d.childHeight * Math.min(index, buffer));
+            const childrenHeight = Array.from(contentEl.children).slice(0, index).reduce((c, n) => c + n.clientHeight, 0);
+            scrollEl.scrollTop = childrenHeight - (d.childHeight * Math.min(index, buffer));
         }
     }
 
