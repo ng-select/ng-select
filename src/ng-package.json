@@ -1,6 +1,0 @@
-{
-  "dest": "../dist",
-  "lib": {
-    "entryFile": "index.ts"
-  }
-}
