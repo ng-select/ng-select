@@ -1,4 +1,5 @@
 {
+  "$schema": "../node_modules/ng-packagr/package.schema.json",
   "name": "@ng-select/ng-select",
   "version": "0.23.1",
   "description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
@@ -23,5 +24,12 @@
     "@angular/common": ">=4.0.0 <6.0.0",
     "@angular/core": ">=4.0.0 <6.0.0",
     "@angular/forms": ">=4.0.0 <6.0.0"
+  },
+  "ngPackage": {
+    "lib": {
+      "flatModuleFile": "ng-select",
+      "entryFile": "index.ts"
+    },
+    "dest": "../dist"
   }
 }
