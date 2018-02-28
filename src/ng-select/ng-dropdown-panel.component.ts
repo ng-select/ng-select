@@ -31,8 +31,8 @@ import { VirtualScrollService } from './virtual-scroll.service';
             <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
         </div>
         <div #scroll class="ng-dropdown-panel-items scroll-host">
-            <div #padding class="total-padding"></div>
-            <div #content [class.scrollable-content]="items.length > 0">
+            <div #padding [class.total-padding]="virtualScroll"></div>
+            <div #content [class.scrollable-content]="virtualScroll && items.length > 0">
                 <ng-content></ng-content>
             </div>
         </div>
@@ -52,6 +52,7 @@ export class NgDropdownPanelComponent implements OnDestroy {
     @Input() position: DropdownPosition;
     @Input() appendTo: string;
     @Input() bufferAmount = 4;
+    @Input() virtualScroll = false;
     @Input() headerTemplate: TemplateRef<any>;
     @Input() footerTemplate: TemplateRef<any>;
 
@@ -69,7 +70,7 @@ export class NgDropdownPanelComponent implements OnDestroy {
     private _previousStart: number;
     private _previousEnd: number;
     private _startupLoop = true;
-    private _scrolledToMarked = false;
+    private _isScrolledToMarked = false;
     private _scrollToEndFired = false;
     private _itemsList: ItemsList;
     private _disposeScrollListener = () => { };
@@ -117,22 +118,29 @@ export class NgDropdownPanelComponent implements OnDestroy {
 
     refresh() {
         this._zone.runOutsideAngular(() => {
-            this._window.requestAnimationFrame(() => this._calculateItems());
+            this._window.requestAnimationFrame(() => this._updateItems());
         });
     }
 
-    scrollInto(item: any) {
+    scrollInto(item: NgOption) {
         if (!item) {
             return;
         }
-        const index: number = (this.items || []).indexOf(item);
-        if (index < 0 || index >= (this.items || []).length) {
+        const index = this.items.indexOf(item);
+        if (index < 0 || index >= this.items.length) {
             return;
         }
+        
+        const d = this._calculateDimensions(this.virtualScroll ? 0 : index);
         const scrollEl: Element = this.scrollElementRef.nativeElement;
-        const d = this._calculateDimensions();
         const buffer = Math.floor(d.viewHeight / d.childHeight) - 1;
-        scrollEl.scrollTop = (Math.floor(index) * d.childHeight) - (d.childHeight * Math.min(index, buffer));
+        if (this.virtualScroll) {
+            scrollEl.scrollTop = (index * d.childHeight) - (d.childHeight * Math.min(index, buffer));
+        } else {
+            const contentEl: HTMLElement = this.contentElementRef.nativeElement;
+            const childrenHeight = Array.from(contentEl.children).slice(0, index).reduce((c, n) => c + n.clientHeight, 0);
+            scrollEl.scrollTop = childrenHeight - (d.childHeight * Math.min(index, buffer));
+        }
     }
 
     scrollIntoTag() {
@@ -143,7 +151,8 @@ export class NgDropdownPanelComponent implements OnDestroy {
 
     private _handleScroll() {
         this._disposeScrollListener = this._renderer.listen(this.scrollElementRef.nativeElement, 'scroll', () => {
-            this.refresh()
+            this.refresh();
+            this._fireScrollToEnd();
         });
     }
 
@@ -159,42 +168,66 @@ export class NgDropdownPanelComponent implements OnDestroy {
         this.refresh();
     }
 
-    private _calculateItems() {
+    private _updateItems(): void {
         NgZone.assertNotInAngularZone();
 
-        const d = this._calculateDimensions();
-        const res = this._virtualScrollService.calculateItems(d, this.scrollElementRef.nativeElement, this.bufferAmount || 0);
-
-        (<HTMLElement>this.paddingElementRef.nativeElement).style.height = `${res.scrollHeight}px`;
-        const transform = 'translateY(' + res.topPadding + 'px)';
-        (<HTMLElement>this.contentElementRef.nativeElement).style.transform = transform;
-
-        if (res.start !== this._previousStart || res.end !== this._previousEnd) {
+        if (!this.virtualScroll) {
             this._zone.run(() => {
-                this.update.emit(this.items.slice(res.start, res.end));
+                this.update.emit(this.items.slice());
+                this._scrollToMarked();
+            });
+            return;
+        }
 
-                if (res.end === this.items.length && !this._scrollToEndFired) {
-                    this._scrollToEndFired = true;
-                    this.scrollToEnd.emit({ start: res.start, end: res.end });
-                }
+        const loop = () => {
+            const d = this._calculateDimensions();
+            const res = this._virtualScrollService.calculateItems(d, this.scrollElementRef.nativeElement, this.bufferAmount || 0);
 
+            (<HTMLElement>this.paddingElementRef.nativeElement).style.height = `${res.scrollHeight}px`;
+            const transform = 'translateY(' + res.topPadding + 'px)';
+            (<HTMLElement>this.contentElementRef.nativeElement).style.transform = transform;
+
+            if (res.start !== this._previousStart || res.end !== this._previousEnd) {
+                this._zone.run(() => {
+                    this.update.emit(this.items.slice(res.start, res.end));
+                });
                 this._previousStart = res.start;
                 this._previousEnd = res.end;
-            });
 
-            if (this._startupLoop === true) {
-                this.refresh();
+                if (this._startupLoop === true) {
+                    loop()
+                }
+
+            } else if (this._startupLoop === true) {
+                this._startupLoop = false;
+                this._scrollToMarked();
+                return
             }
+        };
 
-        } else if (this._startupLoop === true) {
-            this._startupLoop = false;
-            this._scrollToMarked();
+        loop();
+    }
+
+    private _fireScrollToEnd() {
+        if (this._scrollToEndFired) {
+            return;
+        }
+        const scroll: HTMLElement = this.scrollElementRef.nativeElement;
+        const panel: HTMLElement = this._elementRef.nativeElement;
+        const padding: HTMLElement = this.virtualScroll ?
+            this.paddingElementRef.nativeElement :
+            this.contentElementRef.nativeElement;
+
+        if (scroll.scrollTop + panel.clientHeight > padding.clientHeight) {
+            this.scrollToEnd.emit();
+            this._scrollToEndFired = true;
         }
     }
 
-    private _calculateDimensions() {
+    private _calculateDimensions(index = 0) {
         return this._virtualScrollService.calculateDimensions(
             this.items.length,
+            index,
             this.scrollElementRef.nativeElement,
             this.contentElementRef.nativeElement
         )
@@ -210,10 +243,11 @@ export class NgDropdownPanelComponent implements OnDestroy {
     }
 
     private _scrollToMarked() {
-        if (this._scrolledToMarked) {
+        if (this._isScrolledToMarked) {
             return;
         }
-        this._scrolledToMarked = true;
+        this._isScrolledToMarked = true;
+
         this.scrollInto(this._itemsList.markedItem)
     }
 

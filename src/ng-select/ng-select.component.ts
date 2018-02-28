@@ -82,6 +82,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() closeOnSelect = true;
     @Input() maxSelectedItems: number;
     @Input() bufferAmount = 4;
+    @Input() virtualScroll = false;
     @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-multiple') multiple = false;
     @Input() @HostBinding('class.taggable') addTag: boolean | ((term: string) => any | Promise<any>) = false;
@@ -117,7 +118,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];
     filterValue: string = null;
-    currentDropdownPosition: 'bottom' | 'top' | 'auto' = 'bottom';
+    currentDropdownPosition: DropdownPosition = 'bottom';
 
     private _ngModel: any = null;
     private _defaultLabel = 'label';
@@ -273,6 +274,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this.filterValue) {
             this.focusSearchInput();
         }
+        this.detectChanges();
     }
 
     close() {
@@ -283,6 +285,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this._clearSearch();
         this._onTouched();
         this.closeEvent.emit();
+        this.detectChanges();
     }
 
     toggleItem(item: NgOption) {

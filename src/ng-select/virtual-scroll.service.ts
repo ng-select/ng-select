@@ -50,27 +50,22 @@ export class VirtualScrollService {
         }
     }
 
-    calculateDimensions(itemsLength: number, dropdownEl: HTMLElement, contentEl: HTMLElement): ItemsDimensions {
-        const viewWidth = dropdownEl.clientWidth;
-        const viewHeight = dropdownEl.clientHeight;
-
-        let contentDimensions;
-
-        contentDimensions = contentEl.children[0] ? contentEl.children[0].getBoundingClientRect() : {
-            width: viewWidth,
-            height: viewHeight
+    calculateDimensions(itemsLength: number, index: number, panelEl: HTMLElement, contentEl: HTMLElement): ItemsDimensions {
+        const panelRect = panelEl.getBoundingClientRect();
+        const itemRect = contentEl.children[index] ? contentEl.children[index].getBoundingClientRect() : {
+            width: panelRect.width,
+            height: panelRect.height,
+            top: 0,
         };
-        const childWidth = contentDimensions.width;
-        const childHeight = contentDimensions.height;
-        const itemsPerCol = Math.max(1, Math.floor(viewHeight / childHeight));
+        const itemsPerCol = Math.max(1, Math.floor(panelRect.height / itemRect.height));
 
         return {
             itemsLength: itemsLength,
-            viewWidth: viewWidth,
-            viewHeight: viewHeight,
-            childWidth: childWidth,
-            childHeight: childHeight,
-            itemsPerCol: itemsPerCol
+            viewWidth: panelRect.width,
+            viewHeight: panelRect.height,
+            childWidth: itemRect.width,
+            childHeight: itemRect.height,
+            itemsPerCol: itemsPerCol,
         };
     }
 }

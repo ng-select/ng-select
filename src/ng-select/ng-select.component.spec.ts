@@ -491,7 +491,104 @@ describe('NgSelectComponent', function () {
         });
     });
 
-    describe('Dropdown', () => {
+    describe('Dropdown panel', () => {
+        it('should set and render items in dropdown panel', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [(ngModel)]="city">
+                </ng-select>`);
+
+            fixture.componentInstance.select.isOpen = true;
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.dropdownPanel.items.length).toBe(3);
+            let options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+            expect(options.length).toBe(3);
+            expect(options[0].innerText).toBe('Vilnius');
+            expect(options[1].innerText).toBe('Kaunas');
+            expect(options[2].innerText).toBe('Pabrade');
+
+            fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
+            tickAndDetectChanges(fixture);
+            options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+            expect(options.length).toBe(30);
+            expect(options[0].innerText).toBe('a');
+        }));
+
+        it('should set and render items in dropdown panel with virtual scroll', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [virtualScroll]="true"
+                            [(ngModel)]="city">
+                </ng-select>`);
+
+            fixture.componentInstance.select.isOpen = true;
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.dropdownPanel.items.length).toBe(3);
+            let options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+            expect(options.length).toBe(3);
+            expect(options[0].innerText).toBe('Vilnius');
+            expect(options[1].innerText).toBe('Kaunas');
+            expect(options[2].innerText).toBe('Pabrade');
+
+            fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
+            tickAndDetectChanges(fixture);
+            options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+            expect(options.length).toBe(6);
+            expect(options[0].innerText).toBe('a');
+        }));
+
+        it('should scroll to item and do not change scroll position when scrolled to visible item', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [(ngModel)]="city">
+                </ng-select>`);
+            const cmp = fixture.componentInstance;
+            const el: HTMLElement = fixture.debugElement.nativeElement;
+
+            cmp.select.isOpen = true;
+            tickAndDetectChanges(fixture);
+
+            cmp.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
+            tickAndDetectChanges(fixture);
+
+            cmp.select.dropdownPanel.scrollInto(cmp.select.itemsList.items[1]);
+            tickAndDetectChanges(fixture);
+
+            const panelItems = el.querySelector('.ng-dropdown-panel-items');
+            expect(panelItems.scrollTop).toBe(0);
+        }));
+
+        it('should scroll to item and change scroll position when scrolled to not visible visible item', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [(ngModel)]="city">
+                </ng-select>`);
+            const cmp = fixture.componentInstance;
+            const el: HTMLElement = fixture.debugElement.nativeElement;
+
+            cmp.select.isOpen = true;
+            tickAndDetectChanges(fixture);
+
+            cmp.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
+            tickAndDetectChanges(fixture);
+
+            cmp.select.dropdownPanel.scrollInto(cmp.select.itemsList.items[15]);
+            tickAndDetectChanges(fixture);
+
+            const panelItems = el.querySelector('.ng-dropdown-panel-items');
+            expect(panelItems.scrollTop).toBe(54);
+        }));
+
         it('should close on option select by default', async(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
@@ -726,7 +823,7 @@ describe('NgSelectComponent', function () {
         beforeEach(() => {
             fixture = createTestingModule(
                 NgSelectBasicTestCmp,
-            `   <ng-select id="select" [items]="cities"
+                `   <ng-select id="select" [items]="cities"
                     bindLabel="name"
                     multiple="true"
                     [closeOnSelect]="false"
@@ -765,7 +862,7 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Dropdown position', () => {
-        it('should be set to `bottom` by default', () => {
+        it('should be set to `bottom` by default', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select id="select"></ng-select>`);
@@ -773,20 +870,40 @@ describe('NgSelectComponent', function () {
             const classes = fixture.debugElement.query(By.css('ng-select')).classes;
             expect(classes.bottom).toBeTruthy();
             expect(classes.top).toBeFalsy();
-        });
+        }));
 
-        it('should allow changing dropdown position', () => {
+        it('should allow changing dropdown position to top', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select id="select" [dropdownPosition]="dropdownPosition"></ng-select>`);
 
             fixture.componentInstance.dropdownPosition = 'top';
-            fixture.detectChanges();
+            tickAndDetectChanges(fixture);
+            
+            fixture.componentInstance.select.open();
+            tickAndDetectChanges(fixture);
+
 
             const classes = fixture.debugElement.query(By.css('ng-select')).classes;
             expect(classes.bottom).toBeFalsy();
             expect(classes.top).toBeTruthy();
-        });
+        }));
+
+        it('should allow changing dropdown position to auto', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select id="select" [dropdownPosition]="dropdownPosition"></ng-select>`);
+
+            fixture.componentInstance.dropdownPosition = 'auto';
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.select.open();
+            tickAndDetectChanges(fixture);
+
+            const classes = fixture.debugElement.query(By.css('ng-select')).classes;
+            expect(classes.bottom).toBeTruthy()
+            expect(classes.top).toBeFalsy();
+        }));
     });
 
     describe('Custom templates', () => {
@@ -1466,8 +1583,8 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.isOpen).toBe(false);
         }));
 
-        it('clear button should not appear if select is disabled', fakeAsync(() => {            
-            fixture.componentInstance.select.setDisabledState(true);            
+        it('clear button should not appear if select is disabled', fakeAsync(() => {
+            fixture.componentInstance.select.setDisabledState(true);
             const el = fixture.debugElement.query(By.css('.ng-clear-zone'));
             expect(el).toBeNull();
         }));
@@ -1797,4 +1914,6 @@ class NgSelectEventsTestCmp {
     }
 
     onClear() { }
+
+    onScrollToEnd() {}
 }

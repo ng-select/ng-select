@@ -1,5 +1,4 @@
 import { TestBed, inject } from '@angular/core/testing';
-
 import { VirtualScrollService } from './virtual-scroll.service';
 
 describe('VirtualScrollService', () => {
@@ -21,7 +20,7 @@ describe('VirtualScrollService', () => {
 
         const itemsLength = 100;
         const buffer = 4;
-        const d = service.calculateDimensions(itemsLength, dropdown, content);
+        const d = service.calculateDimensions(itemsLength, 0, dropdown, content);
         const res = service.calculateItems(d, dropdown, buffer);
 
         expect(res).toEqual({
@@ -43,7 +42,7 @@ describe('VirtualScrollService', () => {
         document.body.appendChild(content);
 
         const itemsLength = 100;
-        const res = service.calculateDimensions(itemsLength, dropdown, content);
+        const res = service.calculateDimensions(itemsLength, 0, dropdown, content);
 
         expect(res).toEqual({
             itemsLength: itemsLength,

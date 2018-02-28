@@ -137,6 +137,7 @@
         cursor: pointer;
         position: relative;
         width: 17px;
+        user-select: none;
         .ng-clear {
             display: inline-block;
             font-size: 18px;
@@ -187,6 +188,7 @@
         cursor: pointer;
         position: relative;
         text-align: center;
+        user-select: none;
         .ng-arrow {
             display: inline-block;
             height: 0;
