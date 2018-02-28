@@ -39,7 +39,7 @@
 </div>
 
 <div class="ng-overlay-container" *ngIf="isOpen">
-    <div class="ng-overlay" (click)="isOpen = false" ></div>
+    <div class="ng-overlay" (click)="close()" ></div>
 </div>
 
 <ng-dropdown-panel *ngIf="isOpen"
