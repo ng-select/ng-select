@@ -31,8 +31,8 @@ import { VirtualScrollService } from './virtual-scroll.service';
             <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
         </div>
         <div #scroll class="ng-dropdown-panel-items scroll-host">
-            <div #padding [class.total-padding]="isVirtualScrollActive"></div>
-            <div #content [class.scrollable-content]="isVirtualScrollActive">
+            <div #padding [class.total-padding]="virtualScroll"></div>
+            <div #content [class.scrollable-content]="virtualScroll && items.length > 0">
                 <ng-content></ng-content>
             </div>
         </div>
@@ -65,9 +65,6 @@ export class NgDropdownPanelComponent implements OnDestroy {
     @ViewChild('padding', { read: ElementRef }) paddingElementRef: ElementRef;
 
     currentPosition: DropdownPosition = 'bottom';
-    get isVirtualScrollActive() {
-        return this.virtualScroll && this.items.length > 0;
-    }
 
     private _selectElementRef: ElementRef;
     private _previousStart: number;
@@ -134,10 +131,10 @@ export class NgDropdownPanelComponent implements OnDestroy {
             return;
         }
         
-        const d = this._calculateDimensions(this.isVirtualScrollActive ? 0 : index);
+        const d = this._calculateDimensions(this.virtualScroll ? 0 : index);
         const scrollEl: Element = this.scrollElementRef.nativeElement;
         const buffer = Math.floor(d.viewHeight / d.childHeight) - 1;
-        if (this.isVirtualScrollActive) {
+        if (this.virtualScroll) {
             scrollEl.scrollTop = (index * d.childHeight) - (d.childHeight * Math.min(index, buffer));
         } else {
             const contentEl: HTMLElement = this.contentElementRef.nativeElement;
@@ -174,7 +171,7 @@ export class NgDropdownPanelComponent implements OnDestroy {
     private _updateItems(): void {
         NgZone.assertNotInAngularZone();
 
-        if (!this.isVirtualScrollActive) {
+        if (!this.virtualScroll) {
             this._zone.run(() => {
                 this.update.emit(this.items.slice());
                 this._scrollToMarked();
@@ -217,7 +214,7 @@ export class NgDropdownPanelComponent implements OnDestroy {
         }
         const scroll: HTMLElement = this.scrollElementRef.nativeElement;
         const panel: HTMLElement = this._elementRef.nativeElement;
-        const padding: HTMLElement = this.isVirtualScrollActive ?
+        const padding: HTMLElement = this.virtualScroll ?
             this.paddingElementRef.nativeElement :
             this.contentElementRef.nativeElement;
 
