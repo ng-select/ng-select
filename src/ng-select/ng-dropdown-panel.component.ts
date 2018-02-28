@@ -113,7 +113,6 @@ export class NgDropdownPanelComponent implements OnDestroy {
     ngOnDestroy() {
         this._disposeDocumentResizeListener();
         this._disposeScrollListener();
-        this._elementRef.nativeElement.remove();
     }
 
     refresh() {
