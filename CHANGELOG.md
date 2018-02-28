@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.23.2"></a>
+## [0.23.2](https://github.com/ng-select/ng-select/compare/v0.23.1...v0.23.2) (2018-02-28)
+
+
+### Bug Fixes
+
+* bundle size ([#304](https://github.com/ng-select/ng-select/issues/304)) ([fc5c58a](https://github.com/ng-select/ng-select/commit/fc5c58a)), closes [#300](https://github.com/ng-select/ng-select/issues/300)
+
+
+
 <a name="0.23.1"></a>
 ## [0.23.1](https://github.com/ng-select/ng-select/compare/v0.23.0...v0.23.1) (2018-02-27)
 
