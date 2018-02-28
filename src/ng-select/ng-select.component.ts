@@ -118,7 +118,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];
     filterValue: string = null;
-    currentDropdownPosition: 'bottom' | 'top' | 'auto' = 'bottom';
+    currentDropdownPosition: DropdownPosition = 'bottom';
 
     private _ngModel: any = null;
     private _defaultLabel = 'label';
@@ -274,6 +274,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this.filterValue) {
             this.focusSearchInput();
         }
+        this.detectChanges();
     }
 
     close() {
@@ -284,6 +285,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this._clearSearch();
         this._onTouched();
         this.closeEvent.emit();
+        this.detectChanges();
     }
 
     toggleItem(item: NgOption) {
