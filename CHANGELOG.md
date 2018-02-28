@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.24.0"></a>
+# [0.24.0](https://github.com/ng-select/ng-select/compare/v0.23.3...v0.24.0) (2018-02-28)
+
+
+### Features
+
+* disable virtual scroll by default ([#299](https://github.com/ng-select/ng-select/issues/299)) ([ea6b636](https://github.com/ng-select/ng-select/commit/ea6b636))
+
+
+
 <a name="0.23.3"></a>
 ## [0.23.3](https://github.com/ng-select/ng-select/compare/v0.23.2...v0.23.3) (2018-02-28)
 
