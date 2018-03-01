@@ -446,6 +446,34 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.select.selectedItems).toEqual([]);
             }));
+
+            it('should select by bindValue when items are not loaded and typeahead is used', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectSelectedTypeaheadWithBindValueMultipleCmp,
+                    `<ng-select [items]="cities"
+                        bindLabel="name"
+                        bindValue="id"
+                        [multiple]="true"
+                        [typeahead]="filter"
+                        placeholder="select value"
+                        [(ngModel)]="selectedCities">
+                    </ng-select>`);
+
+                fixture.componentInstance.selectedCities = [1, 2];
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.selectedItems).toEqual([
+                    jasmine.objectContaining({ label: 1, value: { id: 1, name: 1 } }),
+                    jasmine.objectContaining({ label: 2, value: { id: 2, name: 2 } })
+                ]);
+
+                fixture.componentInstance.cities = [
+                    { id: 1, name: 'Vilnius' },
+                    { id: 2, name: 'Kaunas' },
+                    { id: 3, name: 'Pabrade' },
+                ];
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.selectedCities).toEqual([1, 2]);
+            }));
         });
 
         describe('multiple', () => {
@@ -879,7 +907,7 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.dropdownPosition = 'top';
             tickAndDetectChanges(fixture);
-            
+
             fixture.componentInstance.select.open();
             tickAndDetectChanges(fixture);
 
@@ -1787,6 +1815,20 @@ class NgSelectSelectedSimpleMultipleCmp {
 @Component({
     template: ``
 })
+class NgSelectSelectedTypeaheadWithBindValueMultipleCmp {
+    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    selectedCities = [];
+    filter = new Subject<string>();
+    cities = [];
+
+    ngOnInit() {
+        this.filter.subscribe();
+    }
+}
+
+@Component({
+    template: ``
+})
 class NgSelectSelectedObjectMultipleCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity = [{ id: 2, name: 'Kaunas' }, { id: 3, name: 'Pabrade' }];
@@ -1915,5 +1957,5 @@ class NgSelectEventsTestCmp {
 
     onClear() { }
 
-    onScrollToEnd() {}
+    onScrollToEnd() { }
 }

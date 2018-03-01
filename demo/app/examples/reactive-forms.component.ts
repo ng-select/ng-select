@@ -4,6 +4,7 @@ import { NgOption } from '@ng-select/ng-select';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataService } from '../shared/data.service';
 import { NgSelectComponent } from '../../../src/ng-select/ng-select.component';
+import { delay } from 'rxjs/operators';
 
 @Component({
     selector: 'reactive-forms',
@@ -256,7 +257,7 @@ export class ReactiveFormsComponent {
     }
 
     private loadAlbums() {
-        this.dataService.getAlbums().subscribe(albums => {
+        this.dataService.getAlbums().pipe(delay(500)).subscribe(albums => {
             this.allAlbums = albums;
             this.albums = [...this.allAlbums];
             this.selectFirstAlbum();

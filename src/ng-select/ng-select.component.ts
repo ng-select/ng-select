@@ -489,7 +489,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         const select = (val: any) => {
-            const item = this.itemsList.findItem(val);
+            let item = this.itemsList.findItem(val);
             if (item) {
                 this.itemsList.select(item);
             } else {
@@ -497,6 +497,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 const simpleValue = !isObject && !this.bindValue;
                 if (isObject || simpleValue) {
                     this.itemsList.select(this.itemsList.mapItem(val, simpleValue, null));
+                } else if (!isObject && this.bindValue && this._isTypeahead) {
+                    item = {};
+                    item[this.bindValue] = val;
+                    item[this.bindLabel] = val;
+                    this.itemsList.select(this.itemsList.mapItem(item, false, null));
                 }
             }
         };
