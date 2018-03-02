@@ -6,6 +6,12 @@ export class NgOptionTemplateDirective {
     }
 }
 
+@Directive({ selector: '[ng-optgroup-tmp]' })
+export class NgOptgroupTemplateDirective {
+    constructor(public template: TemplateRef<any>) {
+    }
+}
+
 @Directive({ selector: '[ng-label-tmp]' })
 export class NgLabelTemplateDirective {
     constructor(public template: TemplateRef<any>) {

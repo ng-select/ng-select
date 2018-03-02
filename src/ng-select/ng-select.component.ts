@@ -31,7 +31,8 @@ import {
     NgOptionTemplateDirective,
     NgLabelTemplateDirective,
     NgHeaderTemplateDirective,
-    NgFooterTemplateDirective
+    NgFooterTemplateDirective,
+    NgOptgroupTemplateDirective
 } from './ng-templates.directive';
 
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
@@ -103,6 +104,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     // custom templates
     @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
+    @ContentChild(NgOptgroupTemplateDirective, { read: TemplateRef }) optgroupTemplate: TemplateRef<any>;
     @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
     @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerTemplate: TemplateRef<any>;
     @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;

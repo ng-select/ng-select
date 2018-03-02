@@ -60,11 +60,11 @@ export class ItemsList {
 
     findItem(value: any): NgOption {
         if (this._ngSelect.bindValue) {
-            return this._items.find(item => !item.head && this.resolveNested(item.value, this._ngSelect.bindValue) === value);
+            return this._items.find(item => !item.hasChildren && this.resolveNested(item.value, this._ngSelect.bindValue) === value);
         }
         const index = this._items.findIndex(x => x.value === value);
         return index > -1 ? this._items[index] :
-            this._items.find(item => !item.head && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel));
+            this._items.find(item => !item.hasChildren && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel));
     }
 
     unselect(item: NgOption) {
@@ -229,15 +229,18 @@ export class ItemsList {
         return Object.keys(groups).reduce((items: NgOption[], key: string) => {
             const parent: NgOption = { 
                 label: key,
-                head: true,
+                hasChildren: true,
                 index: i,
                 disabled: true
             };
+            parent.value = {};
+            parent.value[this._ngSelect.groupBy] = key;
             items.push(parent);
             i++
+
             const children = groups[key].map(x => {
                 x.parent = parent;
-                x.head = false;
+                x.hasChildren = false;
                 i++;
                 return x;
             });

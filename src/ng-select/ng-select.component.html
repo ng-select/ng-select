@@ -61,8 +61,8 @@
                 *ngFor="let item of viewPortItems"
                 [class.disabled]="item.disabled"
                 [class.selected]="item.selected"
-                [class.ng-optgroup]="item.head"
-                [class.ng-option]="!item.head"
+                [class.ng-optgroup]="item.hasChildren"
+                [class.ng-option]="!item.hasChildren"
                 [class.ng-option-child]="!!item.parent"
                 [class.marked]="item === itemsList.markedItem">
 
@@ -70,12 +70,12 @@
                 <span class="ng-option-label" [innerHTML]="item.label"  [ngOptionHighlight]="filterValue"></span>
             </ng-template>
 
-            <ng-template #optGroupTemplate>
+            <ng-template #defaultOptGroupTemplate>
                 <span class="ng-option-label" [innerHTML]="item.label"  [ngOptionHighlight]="filterValue"></span>
             </ng-template>
 
             <ng-template
-                [ngTemplateOutlet]="item.head ? optGroupTemplate : (optionTemplate || defaultOptionTemplate)"
+                [ngTemplateOutlet]="item.hasChildren ? (optgroupTemplate || defaultOptGroupTemplate) : (optionTemplate || defaultOptionTemplate)"
                 [ngTemplateOutletContext]="{ item: item.value, index: item.index, searchTerm: filterValue }">
             </ng-template>
         </div>

@@ -1364,7 +1364,7 @@ describe('NgSelectComponent', function () {
 
             const filteredItems = fixture.componentInstance.select.itemsList.filteredItems;
             expect(filteredItems.length).toBe(2);
-            expect(filteredItems[0].head).toBe(true);
+            expect(filteredItems[0].hasChildren).toBe(true);
             expect(filteredItems[0].label).toBe('United States');
             expect(filteredItems[1].parent).toBe(filteredItems[0]);
             expect(filteredItems[1].label).toBe('Adam');
@@ -1691,7 +1691,7 @@ describe('NgSelectComponent', function () {
         }));
     });
 
-    fdescribe('Grouping', () => {
+    describe('Grouping', () => {
         it('should group by group key', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
@@ -1705,14 +1705,16 @@ describe('NgSelectComponent', function () {
             const items = fixture.componentInstance.select.itemsList.items;
 
             expect(items.length).toBe(14);
-            expect(items[0].head).toBe(true);
+            expect(items[0].hasChildren).toBe(true);
             expect(items[0].index).toBe(0);
             expect(items[0].label).toBe('United States');
+            expect(items[0].disabled).toBeTruthy();
+            expect(items[0].value).toEqual({ country: 'United States' });
 
-            expect(items[1].head).toBe(false);
+            expect(items[1].hasChildren).toBe(false);
             expect(items[1].parent).toBe(items[0]);
 
-            expect(items[2].head).toBe(false);
+            expect(items[2].hasChildren).toBe(false);
             expect(items[2].parent).toBe(items[0]);
 
             expect(items[3].label).toBe('Argentina');
