@@ -1692,7 +1692,7 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Grouping', () => {
-        it('should group by group key', fakeAsync(() => {
+        fit('should group by group key', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
                 `<ng-select [items]="accounts"

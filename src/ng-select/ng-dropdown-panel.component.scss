@@ -1,3 +1,9 @@
+@mixin wrapt-text() {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .ng-dropdown-panel {
     box-sizing: border-box;
     position: absolute;
@@ -12,10 +18,17 @@
         box-sizing: border-box;
         max-height: 240px;
         overflow-y: auto;
+
+        .ng-optgroup {
+            @include wrapt-text();
+        }
+        
         .ng-option {
             box-sizing: border-box;
             cursor: pointer;
             display: block;
+            @include wrapt-text();
+
             .highlighted {
                 font-weight: bold;
                 text-decoration: underline;

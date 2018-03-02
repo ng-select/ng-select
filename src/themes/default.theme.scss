@@ -195,14 +195,17 @@ $color-selected: #f5faff;
         margin-bottom: 1px;
         
         .ng-optgroup {
-            background: #eee;
-            padding: 8px 10px;
+            user-select: none;
+            cursor: default;
+            padding: 6px 10px;
+            color: rgba(0,0,0,.54);
         }
 
         .ng-option {
             background-color: #fff;
-            color: #666666;
+            color: rgba(0,0,0,.87);
             padding: 8px 10px;
+
             &.selected {
                 background-color: $color-selected;
                 .ng-option-label {
@@ -219,6 +222,10 @@ $color-selected: #f5faff;
             &.disabled {
                 color: #cccccc;
             }
+            &.ng-option-child {
+                padding-left: 18px;
+            }
+
             .ng-tag-label {
                 padding-right: 5px;
                 font-size: 80%;

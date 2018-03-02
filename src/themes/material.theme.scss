@@ -187,32 +187,49 @@ $highlight-color: #3f51b5;
             }
         }
     }
-    .ng-option {
-        line-height: 3em;
-        height: 3em;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding: 0 16px;
-        text-align: left;
-        text-decoration: none;
-        position: relative;
-        &.marked {
-            background: rgba(0, 0, 0, .04);
-            color: rgba(0, 0, 0, .87);
+
+    .ng-dropdown-panel-items {
+        .ng-optgroup {
+            user-select: none;
+            cursor: default;
+            padding: 6px 10px;
+            color: rgba(0,0,0,.54);
         }
-        &.selected {
-            background: rgba(0, 0, 0, .12);
-            color: $highlight-color;
-        }
-        &.disabled {
-            color: rgba(0, 0, 0, 0.38);
-        }
-        .ng-tag-label {
-            padding-right: 5px;
-            font-size: 80%;
-            font-weight: 400;
-            color: rgba(0, 0, 0, 0.38);
+
+        .ng-option {
+            line-height: 3em;
+            height: 3em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 16px;
+            text-align: left;
+            text-decoration: none;
+            position: relative;
+            color: rgba(0,0,0,.87);
+            
+            &.marked {
+                background: rgba(0, 0, 0, .04);
+                color: rgba(0, 0, 0, .87);
+            }
+            &.selected {
+                background: rgba(0, 0, 0, .12);
+                color: $highlight-color;
+            }
+            &.disabled {
+                color: rgba(0, 0, 0, 0.38);
+            }
+            &.ng-option-child {
+                padding-left: 18px;
+            }
+
+            .ng-tag-label {
+                padding-right: 5px;
+                font-size: 80%;
+                font-weight: 400;
+                color: rgba(0, 0, 0, 0.38);
+            }
         }
     }
+    
 }

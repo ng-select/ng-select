@@ -63,6 +63,7 @@
                 [class.selected]="item.selected"
                 [class.ng-optgroup]="item.head"
                 [class.ng-option]="!item.head"
+                [class.ng-option-child]="!!item.parent"
                 [class.marked]="item === itemsList.markedItem">
 
             <ng-template #defaultOptionTemplate>
