@@ -10,6 +10,7 @@ import { DataService } from '../shared/data.service';
         <ng-select
                 [items]="people$1 | async"
                 [multiple]="true"
+                [closeOnSelect]="false"
                 bindLabel="name"
                 placeholder="Select people"
                 [(ngModel)]="selectedPeople1">
@@ -20,7 +21,7 @@ import { DataService } from '../shared/data.service';
             <ul>
                 <li *ngFor="let item of selectedPeople1">{{item.name}}</li>
             </ul>
-            <button (click)="clearModel()" class="btn btn-secondary btn-sm">Clear model</button>
+            <button (click)="clearModel1()" class="btn btn-secondary btn-sm">Clear model</button>
         </div>
         <hr/>
 
@@ -39,7 +40,7 @@ import { DataService } from '../shared/data.service';
             <ul>
                 <li *ngFor="let item of selectedPeople1">{{item.name}}</li>
             </ul>
-            <button (click)="clearModel()" class="btn btn-secondary btn-sm">Clear model</button>
+            <button (click)="clearModel2()" class="btn btn-secondary btn-sm">Clear model</button>
         </div>
         <hr/>
 
@@ -61,6 +62,7 @@ import { DataService } from '../shared/data.service';
         <ng-select
             [items]="githubUsers$ | async"
             [multiple]="true"
+            bindLabel="login"
             [(ngModel)]="selectedUsers">
 
             <ng-template ng-label-tmp let-item="item" let-clear="clear">

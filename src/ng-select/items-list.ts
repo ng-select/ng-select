@@ -147,13 +147,13 @@ export class ItemsList {
         this._markedIndex = this._filteredItems.indexOf(item);
     }
 
-    markSelectedOrDefault(markDefault: boolean) {
+    markSelectedOrDefault(markDefault?: boolean) {
         if (this._filteredItems.length === 0) {
             return;
         }
-
-        if (this._lastSelectedItem) {
-            this._markedIndex = this._filteredItems.indexOf(this._lastSelectedItem);
+        const indexOfLastSelected =  this._filteredItems.indexOf(this._lastSelectedItem);
+        if (this._lastSelectedItem && indexOfLastSelected > -1) {
+            this._markedIndex = indexOfLastSelected;
         } else {
             this._markedIndex = markDefault ? 0 : -1;
         }

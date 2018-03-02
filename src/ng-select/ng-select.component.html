@@ -9,13 +9,14 @@
 
             <ng-template
                 [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
-                [ngTemplateOutletContext]="{ item: item.value, clear: clearItem }">
+                [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
             </ng-template>
         </div>
 
         <div *ngIf="showFilter()" class="ng-input">
             <input #filterInput
                    type="text"
+                   autocomplete="off"
                    [readOnly]="!searchable"
                    [value]="filterValue"
                    (input)="filter(filterInput.value)"
@@ -26,7 +27,7 @@
         </div>
     </div>
 
-    <spinner class="ng-spinner-zone" *ngIf="isLoading"></spinner>
+    <div class="ng-spinner-loader" *ngIf="isLoading"></div>
 
     <span *ngIf="showClear()" (click)="handleClearClick($event)" class="ng-clear-zone" title="{{clearAllText}}">
         <span class="ng-clear" aria-hidden="true">×</span>
@@ -37,18 +38,32 @@
     </span>
 </div>
 
-<div class="ng-select-dropdown-outer" [class.groupable]="groupBy" [class.multiple]="multiple" [class.top]="currentDropdownPosition === 'top'" [class.bottom]="currentDropdownPosition === 'bottom'" [ngStyle]="{'visibility': isOpen ? 'visible': 'hidden'}" #dropdownPanel>
-    <div *ngIf="headerTemplate" class="ng-dropdown-header">
-        <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
-    </div>
-    <ng-select-virtual-scroll class="ng-select-dropdown" [disabled]="disableVirtualScroll" [bufferAmount]="4" [items]="itemsList.filteredItems" (update)="viewPortItems = $event">
-        <div role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
-             *ngFor="let item of viewPortItems"
-             [class.ng-optgroup]="item.head"
-             [class.ng-option]="!item.head"
-             [class.disabled]="item.disabled"
-             [class.selected]="item.selected"
-             [class.marked]="item === itemsList.markedItem">
+<div class="ng-overlay-container" *ngIf="isOpen">
+    <div class="ng-overlay" (click)="close()" ></div>
+</div>
+
+<ng-dropdown-panel *ngIf="isOpen"
+    class="ng-dropdown-panel"
+    [virtualScroll]="virtualScroll"
+    [bufferAmount]="bufferAmount"
+    [appendTo]="appendTo"
+    [position]="dropdownPosition"
+    [headerTemplate]="headerTemplate"
+    [footerTemplate]="footerTemplate"
+    [items]="itemsList.filteredItems"
+    (update)="viewPortItems = $event"
+    (positionChange)="currentDropdownPosition = $event"
+    (scrollToEnd)="scrollToEnd.emit($event)"
+    [ngClass]="{'multiple': multiple}">
+    
+    <ng-container>
+        <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
+                *ngFor="let item of viewPortItems"
+                [class.disabled]="item.disabled"
+                [class.selected]="item.selected"
+                [class.ng-optgroup]="item.head"
+                [class.ng-option]="!item.head"
+                [class.marked]="item === itemsList.markedItem">
 
             <ng-template #defaultOptionTemplate>
                 <span class="ng-option-label" [innerHTML]="item.label"  [ngOptionHighlight]="filterValue"></span>
@@ -67,27 +82,17 @@
         <div class="ng-option" [class.marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag()">
             <span><span class="ng-tag-label">{{addTagText}}</span>"{{filterValue}}"</span>
         </div>
-    </ng-select-virtual-scroll>
+    </ng-container>
 
-    <div class="ng-select-dropdown" *ngIf="showNoItemsFound() && !showAddTag()">
-        <div class="ng-option disabled">
-            {{notFoundText}}
-        </div>
+    <div class="ng-option disabled" *ngIf="showNoItemsFound()">
+        {{notFoundText}}
     </div>
 
-    <div class="ng-select-dropdown" *ngIf="showTypeToSearch()">
-        <div class="ng-option disabled">
-            {{typeToSearchText}}
-        </div>
+    <div class="ng-option disabled" *ngIf="showTypeToSearch()">
+        {{typeToSearchText}}
     </div>
 
-    <div class="ng-select-dropdown" *ngIf="isLoading && itemsList.filteredItems.length === 0">
-        <div class="ng-option disabled">
-            {{loadingText}}
-        </div>
+    <div class="ng-option disabled" *ngIf="isLoading && itemsList.filteredItems.length === 0">
+        {{loadingText}}
     </div>
-
-    <div *ngIf="footerTemplate" class="ng-dropdown-footer">
-        <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
-    </div>
-</div>
+</ng-dropdown-panel>

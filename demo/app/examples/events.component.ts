@@ -24,6 +24,7 @@ interface AngSelectEvent {
                    (blur)="onBlur($event)"
                    (clear)="onClear()"
                    (add)="onAdd($event)"
+                   (scrollToEnd)="onScrollToEnd($event)"
                    (remove)="onRemove($event)"
                    (change)="onChange($event)">
         </ng-select>
@@ -85,6 +86,10 @@ export class SelectEventsComponent {
 
     onClear() {
         this.events.push({name: '(clear)', value: null});
+    }
+
+    onScrollToEnd($event) {
+        this.events.push({name: '(scrollToEnd)', value: $event});
     }
 }
 

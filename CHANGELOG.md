@@ -2,6 +2,105 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.24.0"></a>
+# [0.24.0](https://github.com/ng-select/ng-select/compare/v0.23.3...v0.24.0) (2018-02-28)
+
+
+### Features
+
+* disable virtual scroll by default ([#299](https://github.com/ng-select/ng-select/issues/299)) ([ea6b636](https://github.com/ng-select/ng-select/commit/ea6b636))
+
+
+
+<a name="0.23.3"></a>
+## [0.23.3](https://github.com/ng-select/ng-select/compare/v0.23.2...v0.23.3) (2018-02-28)
+
+
+### Bug Fixes
+
+* remove uneeded node removal logic ([#305](https://github.com/ng-select/ng-select/issues/305)) ([1a254ef](https://github.com/ng-select/ng-select/commit/1a254ef)), closes [#303](https://github.com/ng-select/ng-select/issues/303)
+
+
+
+<a name="0.23.2"></a>
+## [0.23.2](https://github.com/ng-select/ng-select/compare/v0.23.1...v0.23.2) (2018-02-28)
+
+
+### Bug Fixes
+
+* bundle size ([#304](https://github.com/ng-select/ng-select/issues/304)) ([fc5c58a](https://github.com/ng-select/ng-select/commit/fc5c58a)), closes [#300](https://github.com/ng-select/ng-select/issues/300)
+
+
+
+<a name="0.23.1"></a>
+## [0.23.1](https://github.com/ng-select/ng-select/compare/v0.23.0...v0.23.1) (2018-02-27)
+
+
+### Bug Fixes
+
+* close dropdown on outside click ([#296](https://github.com/ng-select/ng-select/issues/296)) ([66a0a8c](https://github.com/ng-select/ng-select/commit/66a0a8c)), closes [#289](https://github.com/ng-select/ng-select/issues/289) [#270](https://github.com/ng-select/ng-select/issues/270)
+* hide clear button on disable ([#295](https://github.com/ng-select/ng-select/issues/295)) ([a85c53f](https://github.com/ng-select/ng-select/commit/a85c53f))
+
+
+
+<a name="0.23.0"></a>
+# [0.23.0](https://github.com/ng-select/ng-select/compare/v0.22.0...v0.23.0) (2018-02-26)
+
+
+### Features
+
+* destroy dropdown panel on close ([#286](https://github.com/ng-select/ng-select/issues/286)) ([14e1da5](https://github.com/ng-select/ng-select/commit/14e1da5))
+
+
+
+<a name="0.22.0"></a>
+# [0.22.0](https://github.com/ng-select/ng-select/compare/v0.21.0...v0.22.0) (2018-02-25)
+
+
+### Bug Fixes
+
+* mark first item when selected is not among options ([#281](https://github.com/ng-select/ng-select/issues/281)) ([8a23b71](https://github.com/ng-select/ng-select/commit/8a23b71)), closes [#278](https://github.com/ng-select/ng-select/issues/278)
+
+
+### Features
+
+* **ng-option:** support for disabled attribute ([#280](https://github.com/ng-select/ng-select/issues/280)) ([a5e2d16](https://github.com/ng-select/ng-select/commit/a5e2d16)), closes [#236](https://github.com/ng-select/ng-select/issues/236)
+
+
+
+<a name="0.21.0"></a>
+# [0.21.0](https://github.com/ng-select/ng-select/compare/v0.20.4...v0.21.0) (2018-02-19)
+
+
+### Features
+
+* **tags:** support promise while creating new tag ([#273](https://github.com/ng-select/ng-select/issues/273)) ([d0295fa](https://github.com/ng-select/ng-select/commit/d0295fa)), closes [#220](https://github.com/ng-select/ng-select/issues/220)
+* **template:** expose label in ng-label-tmp ([f3cfc7a](https://github.com/ng-select/ng-select/commit/f3cfc7a)), closes [#274](https://github.com/ng-select/ng-select/issues/274)
+
+
+
+<a name="0.20.4"></a>
+## [0.20.4](https://github.com/ng-select/ng-select/compare/v0.20.3...v0.20.4) (2018-02-16)
+
+
+### Bug Fixes
+
+* disable input autocomplete ([ba931a6](https://github.com/ng-select/ng-select/commit/ba931a6)), closes [#269](https://github.com/ng-select/ng-select/issues/269)
+* IE styling issues ([f94f4e6](https://github.com/ng-select/ng-select/commit/f94f4e6))
+
+
+
+<a name="0.20.3"></a>
+## [0.20.3](https://github.com/ng-select/ng-select/compare/v0.20.2...v0.20.3) (2018-02-15)
+
+
+### Bug Fixes
+
+* **template:** fix AOT compile error ([#253](https://github.com/ng-select/ng-select/issues/253)) ([43909b5](https://github.com/ng-select/ng-select/commit/43909b5))
+* aot template issue closes [#264](https://github.com/ng-select/ng-select/issues/264) ([#266](https://github.com/ng-select/ng-select/issues/266)) ([8b85142](https://github.com/ng-select/ng-select/commit/8b85142))
+
+
+
 <a name="0.20.2"></a>
 ## [0.20.2](https://github.com/ng-select/ng-select/compare/v0.20.1...v0.20.2) (2018-02-10)
 

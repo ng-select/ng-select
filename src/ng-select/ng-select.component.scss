@@ -27,6 +27,9 @@
             opacity: 1;
         }
     }
+    &.opened .ng-control {
+        z-index: 1001;
+    }
     &.disabled {
         .ng-control {
             .ng-value-container {
@@ -134,22 +137,58 @@
         cursor: pointer;
         position: relative;
         width: 17px;
+        user-select: none;
         .ng-clear {
             display: inline-block;
             font-size: 18px;
             line-height: 1;
         }
     }
-    .ng-spinner-zone {
-        cursor: pointer;
+    .ng-spinner-loader {
+        border-radius: 50%;
+        width: 17px;
+        height: 17px;
+        margin-right: 5px;
+        font-size: 10px;
         position: relative;
-        text-align: center;
-        width: 25px;
+        text-indent: -9999em;
+        border-top: 2px solid rgba(66, 66, 66, 0.2);
+        border-right: 2px solid rgba(66, 66, 66, 0.2);
+        border-bottom: 2px solid rgba(66, 66, 66, 0.2);
+        border-left: 2px solid #424242;
+        transform: translateZ(0);
+        animation: load8 0.8s infinite linear;
+        &:after {
+            border-radius: 50%;
+            width: 17px;
+            height: 17px;
+        }
+        @-webkit-keyframes load8 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes load8 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
     }
     .ng-arrow-zone {
         cursor: pointer;
         position: relative;
         text-align: center;
+        user-select: none;
         .ng-arrow {
             display: inline-block;
             height: 0;
@@ -157,32 +196,23 @@
             position: relative;
         }
     }
-}
-
-.ng-select-dropdown-outer {
-    visibility: hidden;
-    box-sizing: border-box;
-    position: absolute;
-    width: 100%;
-    z-index: 3;
-    -webkit-overflow-scrolling: touch;
-    .ng-select-dropdown {
-        display: block;
-        height: auto;
-        @include box-sizing;
-        max-height: 240px;
-        overflow-y: auto;
-        .ng-option {
-            box-sizing: border-box;
-            cursor: pointer;
-            display: block;
-            .highlighted {
-                font-weight: bold;
-                text-decoration: underline;
-            }
-            &.disabled {
-                cursor: default;
-            }
+    .ng-overlay-container {
+        pointer-events: none;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        z-index: 1000;
+        .ng-overlay {
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            opacity: 0;
+            position: absolute;
+            pointer-events: auto;
+            z-index: 1000;
         }
     }
 }

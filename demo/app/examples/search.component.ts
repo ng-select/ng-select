@@ -29,6 +29,7 @@ import { DataService } from '../shared/data.service';
         <ng-select [items]="peopleFiltered"
                    bindLabel="name"
                    [typeahead]="searchTerm"
+                   (close)="peopleFiltered = people"
                    [(ngModel)]="selectedCustom">
         </ng-select>
         ---

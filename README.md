@@ -119,38 +119,39 @@ map: {
 ## API
 | Input  | Type | Default | Required | Description |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| [items] | Array<NgOption> | `[]` | yes | Items array |
-| bindLabel  | string | `label` | no | Object property to use for label. Default `label`  |
-| bindValue  | string | `-` | no | Object property to use for selected model. By default binds to whole object. |
-| [clearable] | boolean | `true` | no | Allow to clear selected value. Default `true`|
-| [markFirst] | boolean | `true` | no | Marks first item as focused when opening/filtering. Default `true`|
-| [searchable] | boolean | `true` | no | Allow to search for value. Default `true`|
-| multiple | boolean | `false` | no | Allows to select multiple items. |
-| maxSelectedItems | number | none | no | When multiple = true, allows to set a limit number of selection. |
-| [addTag] | Function or boolean | `false` | no | Allows to create custom options. Using boolean simply adds tag with value as bindLabel. If you want custom properties add function which returns object. |
-| placeholder | string | `-` | no | Placeholder text. |
-| notFoundText | string | `No items found` | no | Set custom text when filter returns empty result |
-| typeToSearchText | string | `Type to search` | no | Set custom text when using Typeahead |
-| clearAllText | string | `Clear all` | no | Set custom text for clear all icon title |
-| addTagText | string | `Add item` | no | Set custom text when using tagging |
-| loadingText | string | `Loading...` | no | Set custom text when for loading items |
-| [typeahead] | Subject |  `-` | no | Custom autocomplete or filter. |
-| [disableVirtualScroll] | boolean |  false | no | Disable virtual scroll |
+| [addTag] | `boolean | ((term: string) => any | Promise<any>)`  | `false` | no | Allows to create custom options. |
+| addTagText | `string` | `Add item` | no | Set custom text when using tagging |
+| appendTo | `string` |  null | no | Append drodown to body or any other element using css selector |
+| bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
+| bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |
+| closeOnSelect | `boolean` |  true | no | Whether to close the menu when a value is selected |
+| [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
+| clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
 | dropdownPosition | `bottom`,`top`,`auto` |  `bottom` | no | Set the dropdown position on open |
-| appendTo | string |  null | no | Append drodown to body or any other element using css selector |
-| loading | boolean |  `-` | no | you can set the loading state from the outside (e.g. async items loading) |
-| closeOnSelect | boolean |  true | no | whether to close the menu when a value is selected |
+| [items] | `Array<NgOption>` | `[]` | yes | Items array |
+| loading | `boolean` |  `-` | no | You can set the loading state from the outside (e.g. async items loading) |
+| loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
+| [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. Default `true`|
+| maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
+| multiple | `boolean` | `false` | no | Allows to select multiple items. |
+| notFoundText | `string` | `No items found` | no | Set custom text when filter returns empty result |
+| placeholder | `string` | `-` | no | Placeholder text. |
+| [searchable] | `boolean` | `true` | no | Allow to search for value. Default `true`|
+| [typeahead] | `Subject` |  `-` | no | Custom autocomplete or filter. |
+| typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
+| [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
 
 | Output  | Description |
 | ------------- | ------------- |
-| (focus)  | Fired on select focus |
+| (add)  | Fired when item is selected |
 | (blur)  | Fired on select blur |
 | (change)  | Fired on selected value change |
-| (open)  | Fired on select dropdown open |
 | (close)  | Fired on select dropdown close |
 | (clear)  | Fired on clear icon click |
-| (add)  | Fired when item is selected |
+| (focus)  | Fired on select focus |
+| (open)  | Fired on select dropdown open |
 | (remove)  | Fired when item is removed |
+| (scrollToEnd)  | Fired when scrolled to the end of items. Can be used for loading more items in chunks. |
 
 ## Change Detection
 Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable 
@@ -226,6 +227,13 @@ This example in [Plunkr](https://plnkr.co/edit/KFpvA9?p=preview)
 
 In case of autocomplete you can get full control by creating simple `EventEmmiter` and passing it as an input to ng-select. When you type text, ng-select will fire events to EventEmmiter to which you can subscribe and control bunch of things like debounce, http cancellation and so on.
 ```js
+import { Component, ChangeDetectionStrategy, EventEmitter } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import { catchError, map, debounceTime, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
+import { ChangeDetectorRef } from '@angular/core';
+
 @Component({
     selector: 'select-autocomplete',
     template: `
@@ -251,25 +259,29 @@ export class SelectAutocompleteComponent {
 
     githubAccount: any;
     items = [];
-    
-    // event emmiter is just RxJs Subject
     typeahead = new EventEmitter<string>();
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private cd: ChangeDetectorRef) {
         this.typeahead
-            .distinctUntilChanged()
-            .debounceTime(200)
-            .switchMap(term => this.loadGithubUsers(term))
+            .pipe(
+                debounceTime(200),
+                switchMap(term => this.loadGithubUsers(term))
+            )
             .subscribe(items => {
                 this.items = items;
+                this.cd.markForCheck();
             }, (err) => {
-                console.log(err);
+                console.log('error', err);
                 this.items = [];
+                this.cd.markForCheck();
             });
     }
 
     loadGithubUsers(term: string): Observable<any[]> {
-        return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).map(rsp => rsp.items);
+        return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).pipe(
+            catchError(() => of(({items: []}))),
+            map(rsp => rsp.items),
+        );
     }
 }
 ```

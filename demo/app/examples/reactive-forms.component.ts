@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgOption } from '@ng-select/ng-select';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataService } from '../shared/data.service';
+import { NgSelectComponent } from '../../../src/ng-select/ng-select.component';
 
 @Component({
     selector: 'reactive-forms',
@@ -52,7 +53,7 @@ import { DataService } from '../shared/data.service';
                 <br>
                 <button class="btn btn-secondary btn-sm" (click)="toggleAgeDisable()">Toggle disabled</button>
             </div>
-            <hr>            
+            <hr>
             <div class="form-group">
                 <label for="state">Multi select</label>
                 ---html,true
@@ -75,9 +76,12 @@ import { DataService } from '../shared/data.service';
             <div class="form-group">
                 <label for="album">Loading async data</label>
                 <ng-select [items]="albums"
+                           #select
                            bindLabel="title"
+                           dropdownPosition="auto"
                            bindValue="id"
                            placeholder="Select album"
+                           [virtualScroll]="true"
                            formControlName="album">
                     <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
                         <div><span>Title: </span><span [innerHTML]="item.title" [ngOptionHighlight]="search"></span></div>
@@ -89,15 +93,18 @@ import { DataService } from '../shared/data.service';
                 <button class="btn btn-secondary btn-sm" (click)="selectFirstAlbum()">Select first album</button>
                 <button class="btn btn-secondary btn-sm" (click)="selectAlbumsRange(0, 10)">Set 0-10 albums</button>
                 <button class="btn btn-secondary btn-sm" (click)="selectAlbumsRange(10, 20)">Set 10-20 albums</button>
+                <button (click)="openSelect(select)" class="btn btn-sm btn-secondary">Open</button>
+                <button (click)="closeSelect(select)" class="btn btn-sm btn-secondary">Close</button>
             </div>
             <hr>
-            
+
             <div class="form-group">
                 <label for="album">Custom templates</label>
                 <ng-select [items]="photos"
                            bindLabel="title"
                            bindValue="thumbnailUrl"
                            placeholder="Select photo"
+                           [virtualScroll]="true"
                            formControlName="photo">
                     <ng-template ng-label-tmp let-item="item">
                         <img height="15" width="15" [src]="item.thumbnailUrl"/>
@@ -111,10 +118,10 @@ import { DataService } from '../shared/data.service';
                 <small class="form-text text-muted">5000 items with virtual scroll</small>
                 <br>
                 <button class="btn btn-secondary btn-sm" (click)="selectFirstPhoto()">Select first photo</button>
-                <button class="btn btn-secondary btn-sm" (click)="openModel(content)">Open in model</button>
+                <button class="btn btn-secondary btn-sm" (click)="openModal(content)">Open in modal</button>
                 <button class="btn btn-secondary btn-sm" (click)="togglePhotoDisabled()">Toggle disabled</button>
             </div>
-            
+
             <ng-template #content let-c="close" let-d="dismiss">
                 <div class="modal-header">
                     <h4 class="modal-title">Select in modal</h4>
@@ -130,6 +137,7 @@ import { DataService } from '../shared/data.service';
                                    bindLabel="title"
                                    bindValue="thumbnailUrl"
                                    placeholder="Select photo"
+                                   [virtualScroll]="true"
                                    formControlName="photo">
                             <ng-template ng-label-tmp let-item="item">
                                 <img height="15" width="15" [src]="item.thumbnailUrl"/>
@@ -193,6 +201,14 @@ export class ReactiveFormsComponent {
         });
     }
 
+    openSelect(select: NgSelectComponent) {
+        select.open();
+    }
+
+    closeSelect(select: NgSelectComponent) {
+        select.close();
+    }
+
     toggleAgeDisable() {
         if (this.heroForm.controls.age.disabled) {
             this.heroForm.controls.age.enable();
@@ -222,7 +238,7 @@ export class ReactiveFormsComponent {
         this.selectFirstAlbum();
     }
 
-    openModel(content) {
+    openModal(content) {
         this.modalService.open(content);
     }
 
