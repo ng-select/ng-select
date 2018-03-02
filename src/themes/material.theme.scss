@@ -38,13 +38,13 @@ $highlight-color: #3f51b5;
             }
         }
     }
-    &.ng-selected,
+    &.ng-has-value,
     &.filtered {
         .ng-control .ng-value-container .ng-placeholder {
             display: initial;
         }
     }
-    &.ng-selected,
+    &.ng-has-value,
     &.opened {
         .ng-control .ng-value-container .ng-placeholder {
             transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
@@ -120,7 +120,7 @@ $highlight-color: #3f51b5;
                 }
             }
         }
-        &.ng-selected {
+        &.ng-has-value {
             .ng-control {
                 align-items: center;
                 .ng-value-container {
