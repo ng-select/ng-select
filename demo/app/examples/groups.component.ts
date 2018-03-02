@@ -8,7 +8,9 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         ---html,true
         <ng-select [items]="accounts"
                 bindLabel="name"
+                bindValue="name"
                 groupBy="country"
+                [addTag]="true"
                 [multiple]="true"
                 [(ngModel)]="selectedAccount">
         </ng-select>
@@ -19,7 +21,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
     `
 })
 export class SelectGroupsComponent {
-    selectedAccount = null;
+    selectedAccount = ['Samantha'];
     accounts = [
         { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States' },
         { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States' },

@@ -879,7 +879,7 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.dropdownPosition = 'top';
             tickAndDetectChanges(fixture);
-            
+
             fixture.componentInstance.select.open();
             tickAndDetectChanges(fixture);
 
@@ -1691,8 +1691,8 @@ describe('NgSelectComponent', function () {
         }));
     });
 
-    describe('Grouping', () => {
-        fit('should group by group key', fakeAsync(() => {
+    fdescribe('Grouping', () => {
+        it('should group by group key', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
                 `<ng-select [items]="accounts"
@@ -1701,7 +1701,7 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             tickAndDetectChanges(fixture);
-            
+
             const items = fixture.componentInstance.select.itemsList.items;
 
             expect(items.length).toBe(14);
@@ -1720,7 +1720,25 @@ describe('NgSelectComponent', function () {
 
             expect(items[10].label).toBe('Colombia');
             expect(items[11].parent).toBe(items[10]);
-        }))
+        }));
+
+        it('should not mark optgroup item as marked', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindValue="name"
+                        [(ngModel)]="selectedAccountName">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+
+            const select = fixture.componentInstance.select;
+            expect(select.itemsList.markedItem).toBeUndefined();
+
+            select.onItemHover(select.itemsList.items[0]);
+            expect(select.itemsList.markedItem).toBeUndefined();
+        }));
     });
 });
 
@@ -1971,7 +1989,7 @@ class NgSelectEventsTestCmp {
 
     onClear() { }
 
-    onScrollToEnd() {}
+    onScrollToEnd() { }
 }
 
 @Component({
@@ -1979,7 +1997,7 @@ class NgSelectEventsTestCmp {
 })
 class NgSelectGroupingTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
-    selectedCity = 2;
+    selectedAccountName = 'Adam';
     accounts = [
         { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States' },
         { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States' },
@@ -1992,4 +2010,30 @@ class NgSelectGroupingTestCmp {
         { name: 'Michael', email: 'michael@email.com', age: 15, country: 'Colombia' },
         { name: 'Nicolás', email: 'nicole@email.com', age: 43, country: 'Colombia' }
     ];
+
+    // TODO: support this case
+    groupedAccounts = [
+        {
+            country: 'United States',
+            accounts: [
+                { name: 'Adam', email: 'adam@email.com', age: 12 },
+                { name: 'Samantha', email: 'samantha@email.com', age: 30 },
+            ]
+        },
+        {
+            country: 'Argentina',
+            accounts: [
+                { name: 'Amalie', email: 'amalie@email.com', age: 12 },
+                { name: 'Estefanía', email: 'estefania@email.com', age: 21 },
+            ]
+        },
+        {
+            country: 'Ecuador',
+            accounts: [
+                { name: 'Adrian', email: 'adrian@email.com', age: 21 },
+                { name: 'Wladimir', email: 'wladimir@email.com', age: 30 },
+                { name: 'Natasha', email: 'natasha@email.com', age: 54 },
+            ]
+        }
+    ]
 }
