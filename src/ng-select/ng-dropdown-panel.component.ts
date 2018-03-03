@@ -218,7 +218,7 @@ export class NgDropdownPanelComponent implements OnDestroy {
             this.paddingElementRef.nativeElement :
             this.contentElementRef.nativeElement;
 
-        if (scroll.scrollTop + panel.clientHeight > padding.clientHeight) {
+        if (scroll.scrollTop + panel.clientHeight >= padding.clientHeight) {
             this.scrollToEnd.emit();
             this._scrollToEndFired = true;
         }
