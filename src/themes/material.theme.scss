@@ -192,8 +192,10 @@ $highlight-color: #3f51b5;
         .ng-optgroup {
             user-select: none;
             cursor: default;
-            padding: 6px 10px;
             color: rgba(0,0,0,.54);
+            line-height: 3em;
+            height: 3em;
+            padding: 0 16px;
         }
 
         .ng-option {
@@ -220,7 +222,7 @@ $highlight-color: #3f51b5;
                 color: rgba(0, 0, 0, 0.38);
             }
             &.ng-option-child {
-                padding-left: 18px;
+                padding-left: 32px;
             }
 
             .ng-tag-label {

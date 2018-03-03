@@ -197,7 +197,7 @@ $color-selected: #f5faff;
         .ng-optgroup {
             user-select: none;
             cursor: default;
-            padding: 6px 10px;
+            padding: 8px 10px;
             color: rgba(0,0,0,.54);
         }
 
@@ -223,7 +223,7 @@ $color-selected: #f5faff;
                 color: #cccccc;
             }
             &.ng-option-child {
-                padding-left: 18px;
+                padding-left: 22px;
             }
 
             .ng-tag-label {

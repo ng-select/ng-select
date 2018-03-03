@@ -107,22 +107,23 @@ export class ItemsList {
         }
 
         this._filteredItems = [];
-        term = searchHelper.stripSpecialChars(term).toUpperCase();
+        term = searchHelper.stripSpecialChars(term).toLocaleLowerCase();
+
         for (const key of Object.keys(this._groups)) {
-            const groupItems = [];
+            const matchedItems = [];
             for (const item of this._groups[key]) {
-                const label = searchHelper.stripSpecialChars(item.label ? item.label.toString() : '').toUpperCase();
+                const label = searchHelper.stripSpecialChars(item.label).toLocaleLowerCase();
                 if (label.indexOf(term) > -1) {
-                    groupItems.push(item);
+                    matchedItems.push(item);
                 }
             }
-            if (groupItems.length > 0) {
-                const [last] = groupItems.slice(-1);
+            if (matchedItems.length > 0) {
+                const [last] = matchedItems.slice(-1);
                 if (last.parent) {
                     const head = this._items.find(x => x === last.parent);
                     this._filteredItems.push(head);
                 }
-                this._filteredItems.push(...groupItems);
+                this._filteredItems.push(...matchedItems);
             }
         }
     }
@@ -151,7 +152,7 @@ export class ItemsList {
         if (this._filteredItems.length === 0) {
             return;
         }
-        const indexOfLastSelected =  this._filteredItems.indexOf(this._lastSelectedItem);
+        const indexOfLastSelected = this._filteredItems.indexOf(this._lastSelectedItem);
         if (this._lastSelectedItem && indexOfLastSelected > -1) {
             this._markedIndex = indexOfLastSelected;
         } else {
@@ -186,7 +187,7 @@ export class ItemsList {
         }
         return {
             index: index,
-            label: label,
+            label: label || '',
             value: option,
             disabled: option.disabled,
         };
@@ -214,9 +215,9 @@ export class ItemsList {
         return this._selected[this._selected.length - 1];
     }
 
-    private _groupBy(items: NgOption[], prop: string | Function): { [index: string]: NgOption[] } {
+    private _groupBy(items: NgOption[], prop: string): { [index: string]: NgOption[] } {
         const groups = items.reduce((grouped, item) => {
-            const key = prop instanceof Function ? prop.apply(this, [item]) : item.value[prop];
+            const key = item.value[prop];
             grouped[key] = grouped[key] || [];
             grouped[key].push(item);
             return grouped;
@@ -227,7 +228,7 @@ export class ItemsList {
     private _flatten(groups: { [index: string]: NgOption[] }) {
         let i = 0;
         return Object.keys(groups).reduce((items: NgOption[], key: string) => {
-            const parent: NgOption = { 
+            const parent: NgOption = {
                 label: key,
                 hasChildren: true,
                 index: i,

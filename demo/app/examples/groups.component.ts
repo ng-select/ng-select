@@ -25,7 +25,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
                 bindLabel="name"
                 bindValue="name"
                 groupBy="country"
-                [addTag]="true"
                 [multiple]="true"
                 [(ngModel)]="selectedAccount">
         </ng-select>

@@ -1741,6 +1741,28 @@ describe('NgSelectComponent', function () {
             select.onItemHover(select.itemsList.items[0]);
             expect(select.itemsList.markedItem).toBeUndefined();
         }));
+
+        it('should filter grouped items', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindLabel="name"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            const select = fixture.componentInstance.select;
+            select.filter('aDaM');
+
+            const filteredItems = select.itemsList.filteredItems;
+            expect(filteredItems.length).toBe(2);
+            expect(filteredItems[0].hasChildren).toBeTruthy();
+            expect(filteredItems[1].parent).toBe(filteredItems[0]);
+
+            select.filter('not in list');
+            expect(select.itemsList.filteredItems.length).toBe(0);
+        }));
     });
 });
 
