@@ -59,8 +59,6 @@ export type DropdownPosition = 'bottom' | 'top' | 'auto';
         '[class.top]': 'currentDropdownPosition === "top"',
         '[class.bottom]': 'currentDropdownPosition === "bottom"',
         '[class.ng-single]': '!multiple',
-        // This host binding is not working. Check if this is a bug in angular.
-        // '[class.ng-has-value]': 'hasValue',
     }
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
@@ -125,7 +123,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _defaultLabel = 'label';
     private _defaultValue = 'value';
     private _typeaheadLoading = false;
-    private _hasValueCssClass = 'ng-has-value';
 
     private readonly _destroy$ = new Subject<void>();
     private _onChange = (_: NgOption) => { };
@@ -220,7 +217,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         $event.stopPropagation();
         if (this.hasValue) {
             this.clearModel();
-            this._removeHasValueCssClass();
         }
         this._clearSearch();
         this.focusSearchInput();
@@ -244,11 +240,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.itemsList.clearSelected();
         this._selectWriteValue(value);
         this.detectChanges();
-        if (this._isDefined(value)) {
-            this._addHasValueCssClass();
-        } else {
-            this._removeHasValueCssClass();
-        }
     }
 
     registerOnChange(fn: any): void {
@@ -319,7 +310,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (this.closeOnSelect) {
             this.close();
         }
-        this._addHasValueCssClass();
     }
 
     unselect(item: NgOption) {
@@ -651,19 +641,5 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     private _isDefined(value: any) {
         return value !== null && value !== undefined;
-    }
-
-    private _removeHasValueCssClass() {
-        const el: HTMLElement = this.elementRef.nativeElement;
-        if (el.classList.contains(this._hasValueCssClass)) {
-            el.classList.remove(this._hasValueCssClass);
-        }
-    }
-
-    private _addHasValueCssClass() {
-        const el: HTMLElement = this.elementRef.nativeElement;
-        if (this._ngModel && !el.classList.contains(this._hasValueCssClass)) {
-            el.classList.add(this._hasValueCssClass);
-        }
     }
 }

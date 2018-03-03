@@ -393,14 +393,18 @@ describe('NgSelectComponent', function () {
                 const select = fixture.componentInstance.select;
                 const selectEl: HTMLElement = select.elementRef.nativeElement;
                 // tslint:disable-next-line:max-line-length
-                const classes = ['ng-select', 'bottom', 'ng-single', 'searchable', 'ng-untouched', 'ng-pristine', 'ng-valid', 'ng-has-value'];
+                const classes = ['ng-select', 'bottom', 'ng-single', 'searchable', 'ng-untouched', 'ng-pristine', 'ng-valid'];
                 for (const c of classes) {
                     expect(selectEl.classList.contains(c)).toBeTruthy(`expected to contain "${c}" class`);
                 }
+                let control = selectEl.querySelector('.ng-control');
+                expect(control.classList.contains('ng-has-value')).toBeTruthy();
+
 
                 fixture.componentInstance.selectedCity = null;
                 tickAndDetectChanges(fixture);
-                expect(selectEl.classList.contains('ng-has-value')).toBeFalsy();
+                control = selectEl.querySelector('.ng-control');
+                expect(control.classList.contains('ng-has-value')).toBeFalsy();
             }));
 
             it('should select by bindValue ', fakeAsync(() => {
@@ -1245,7 +1249,7 @@ describe('NgSelectComponent', function () {
                 const selectEl: HTMLElement = fixture.componentInstance.select.elementRef.nativeElement;
                 const placeholder: any = selectEl.querySelector('.ng-placeholder');
                 expect(placeholder.innerText).toBe('select value');
-                expect(selectEl.classList.contains('ng-has-value')).toBeFalsy();
+                expect(getComputedStyle(placeholder).display).toBe('block');
             });
         }));
 
@@ -1254,19 +1258,21 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             tickAndDetectChanges(fixture);
             const selectEl: HTMLElement = select.elementRef.nativeElement;
-            expect(selectEl.classList.contains('ng-has-value')).toBeTruthy();
+            const placeholder = selectEl.querySelector('.ng-placeholder')
+            expect(getComputedStyle(placeholder).display).toBe('none');
 
             select.handleClearClick(<any>{ stopPropagation: () => { } });
             tickAndDetectChanges(fixture);
 
-            expect(selectEl.classList.contains('ng-has-value')).toBeFalsy();
+            expect(getComputedStyle(placeholder).display).toBe('block');
         }));
 
         it('should not be visible when value was selected', fakeAsync(() => {
             tickAndDetectChanges(fixture);
             const selectEl: HTMLElement = fixture.componentInstance.select.elementRef.nativeElement;
+            const placeholder = selectEl.querySelector('.ng-placeholder')
             selectOption(fixture, KeyCode.ArrowDown, 2);
-            expect(selectEl.classList.contains('ng-has-value')).toBeTruthy();
+            expect(getComputedStyle(placeholder).display).toBe('none');
         }));
     });
 
