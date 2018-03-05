@@ -374,7 +374,37 @@ describe('NgSelectComponent', function () {
                     value: { id: 2, name: 'Kaunas' },
                     selected: true
                 })];
-                expect(fixture.componentInstance.select.selectedItems).toEqual(result);
+                const select = fixture.componentInstance.select;
+                expect(select.selectedItems).toEqual(result);
+            }));
+
+            it('should apply host css classes', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectSelectedSimpleCmp,
+                    `<ng-select [items]="cities"
+                        bindLabel="name"
+                        bindValue="id"
+                        placeholder="select value"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+
+                tickAndDetectChanges(fixture);
+
+                const select = fixture.componentInstance.select;
+                const selectEl: HTMLElement = select.elementRef.nativeElement;
+                // tslint:disable-next-line:max-line-length
+                const classes = ['ng-select', 'bottom', 'ng-single', 'searchable', 'ng-untouched', 'ng-pristine', 'ng-valid'];
+                for (const c of classes) {
+                    expect(selectEl.classList.contains(c)).toBeTruthy(`expected to contain "${c}" class`);
+                }
+                let control = selectEl.querySelector('.ng-control');
+                expect(control.classList.contains('ng-has-value')).toBeTruthy();
+
+
+                fixture.componentInstance.selectedCity = null;
+                tickAndDetectChanges(fixture);
+                control = selectEl.querySelector('.ng-control');
+                expect(control.classList.contains('ng-has-value')).toBeFalsy();
             }));
 
             it('should select by bindValue ', fakeAsync(() => {
@@ -879,7 +909,7 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.dropdownPosition = 'top';
             tickAndDetectChanges(fixture);
-            
+
             fixture.componentInstance.select.open();
             tickAndDetectChanges(fixture);
 
@@ -1216,9 +1246,33 @@ describe('NgSelectComponent', function () {
         it('should be visible when no value selected', async(() => {
             fixture.detectChanges();
             fixture.whenStable().then(() => {
-                const el = fixture.debugElement.query(By.css('.ng-placeholder')).nativeElement;
-                expect(el.innerText).toBe('select value');
+                const selectEl: HTMLElement = fixture.componentInstance.select.elementRef.nativeElement;
+                const placeholder: any = selectEl.querySelector('.ng-placeholder');
+                expect(placeholder.innerText).toBe('select value');
+                expect(getComputedStyle(placeholder).display).toBe('block');
             });
+        }));
+
+        it('should be visible when value was cleared', fakeAsync(() => {
+            const select = fixture.componentInstance.select;
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+            const selectEl: HTMLElement = select.elementRef.nativeElement;
+            const placeholder = selectEl.querySelector('.ng-placeholder')
+            expect(getComputedStyle(placeholder).display).toBe('none');
+
+            select.handleClearClick(<any>{ stopPropagation: () => { } });
+            tickAndDetectChanges(fixture);
+
+            expect(getComputedStyle(placeholder).display).toBe('block');
+        }));
+
+        it('should not be visible when value was selected', fakeAsync(() => {
+            tickAndDetectChanges(fixture);
+            const selectEl: HTMLElement = fixture.componentInstance.select.elementRef.nativeElement;
+            const placeholder = selectEl.querySelector('.ng-placeholder')
+            selectOption(fixture, KeyCode.ArrowDown, 2);
+            expect(getComputedStyle(placeholder).display).toBe('none');
         }));
     });
 
@@ -1915,5 +1969,5 @@ class NgSelectEventsTestCmp {
 
     onClear() { }
 
-    onScrollToEnd() {}
+    onScrollToEnd() { }
 }

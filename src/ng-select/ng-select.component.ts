@@ -59,7 +59,6 @@ export type DropdownPosition = 'bottom' | 'top' | 'auto';
         '[class.top]': 'currentDropdownPosition === "top"',
         '[class.bottom]': 'currentDropdownPosition === "bottom"',
         '[class.ng-single]': '!multiple',
-        '[class.ng-selected]': 'hasValue'
     }
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
@@ -134,8 +133,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.unselect(option);
     };
 
-    constructor(@Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
-        private changeDetectorRef: ChangeDetectorRef,
+    constructor( @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
+        private _cd: ChangeDetectorRef,
         public elementRef: ElementRef
     ) {
         this._mergeGlobalConfig(config);
@@ -399,8 +398,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     detectChanges() {
-        if (!(<any>this.changeDetectorRef).destroyed) {
-            this.changeDetectorRef.detectChanges();
+        if (!(<any>this._cd).destroyed) {
+            this._cd.detectChanges();
         }
     }
 
@@ -450,7 +449,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 .subscribe(option => {
                     const item = this.itemsList.findItem(option.value);
                     item.disabled = option.disabled;
-                    this.changeDetectorRef.markForCheck();
+                    this._cd.markForCheck();
                 });
         }
 
@@ -526,7 +525,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
         this._ngModel = ngModel;
         this.changeEvent.emit(this._value);
-        this.changeDetectorRef.markForCheck();
+        this._cd.markForCheck();
     }
 
     private _clearSearch() {
