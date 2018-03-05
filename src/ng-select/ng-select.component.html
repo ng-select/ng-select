@@ -1,4 +1,4 @@
-<div (click)="searchable ? open() : toggle()" class="ng-control">
+<div (click)="searchable ? open() : toggle()" [class.ng-has-value]="hasValue" class="ng-control">
     <div class="ng-value-container">
         <div class="ng-placeholder">{{placeholder}}</div>
         <div [class.disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems">

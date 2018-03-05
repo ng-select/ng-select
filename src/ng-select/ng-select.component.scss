@@ -44,9 +44,9 @@
             cursor: default;
         }
     }
-    &.ng-selected,
+    .ng-has-value,
     &.filtered {
-        .ng-control .ng-value-container .ng-placeholder {
+        .ng-placeholder {
             display: none;
         }
     }

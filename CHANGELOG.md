@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.24.1"></a>
+## [0.24.1](https://github.com/ng-select/ng-select/compare/v0.24.0...v0.24.1) (2018-03-03)
+
+
+### Bug Fixes
+
+* **scrollToEnd:** fire when scroll equal to clientHeight. ([#318](https://github.com/ng-select/ng-select/issues/318)) ([c516440](https://github.com/ng-select/ng-select/commit/c516440))
+
+
+
 <a name="0.24.0"></a>
 # [0.24.0](https://github.com/ng-select/ng-select/compare/v0.23.3...v0.24.0) (2018-02-28)
 
