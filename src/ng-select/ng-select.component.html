@@ -19,7 +19,7 @@
                    autocomplete="off"
                    [readOnly]="!searchable"
                    [value]="filterValue"
-                   (input)="onFilter(filterInput.value)"
+                   (input)="filter(filterInput.value)"
                    (focus)="onInputFocus()"
                    (blur)="onInputBlur()"
                    (change)="$event.stopPropagation()"
@@ -61,14 +61,21 @@
                 *ngFor="let item of viewPortItems"
                 [class.disabled]="item.disabled"
                 [class.selected]="item.selected"
+                [class.ng-optgroup]="item.hasChildren"
+                [class.ng-option]="!item.hasChildren"
+                [class.ng-option-child]="!!item.parent"
                 [class.marked]="item === itemsList.markedItem">
 
             <ng-template #defaultOptionTemplate>
                 <span class="ng-option-label" [innerHTML]="item.label"  [ngOptionHighlight]="filterValue"></span>
             </ng-template>
 
+            <ng-template #defaultOptGroupTemplate>
+                <span class="ng-option-label" [innerHTML]="item.label"  [ngOptionHighlight]="filterValue"></span>
+            </ng-template>
+
             <ng-template
-                [ngTemplateOutlet]="optionTemplate || defaultOptionTemplate"
+                [ngTemplateOutlet]="item.hasChildren ? (optgroupTemplate || defaultOptGroupTemplate) : (optionTemplate || defaultOptionTemplate)"
                 [ngTemplateOutletContext]="{ item: item.value, index: item.index, searchTerm: filterValue }">
             </ng-template>
         </div>

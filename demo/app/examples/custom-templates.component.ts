@@ -46,15 +46,18 @@ import { DataService } from '../shared/data.service';
         </p>
         <hr>
 
-        <label>Custom label and option</label>
+        <label>Custom label and option and optgroup</label>
         ---html,true
-        <ng-select [items]="cities3" [(ngModel)]="selectedCity3" bindLabel="name" bindValue="name">
+        <ng-select [items]="cities3" groupBy="avatar" [(ngModel)]="selectedCity3" bindLabel="name" bindValue="name">
             <ng-template ng-label-tmp let-item="item">
                 <img height="15" width="15" [src]="item.avatar"/>
                 <b>{{item.name}}</b>
             </ng-template>
-            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+            <ng-template ng-optgroup-tmp let-item="item" let-index="index">
                 <img height="15" width="15" [src]="item.avatar"/>
+                <b [innerHTML]="item.name"></b>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
                 <b [innerHTML]="item.name" [ngOptionHighlight]="search"></b>
             </ng-template>
         </ng-select>

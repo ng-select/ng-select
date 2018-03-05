@@ -6,6 +6,7 @@ export class ItemsList {
 
     private _items: NgOption[] = [];
     private _filteredItems: NgOption[] = [];
+    private _groups: { [index: string]: NgOption[] };
     private _markedIndex = -1;
     private _selected: NgOption[] = [];
 
@@ -33,6 +34,12 @@ export class ItemsList {
 
     setItems(items: any[], simple = false) {
         this._items = items.map((item, index) => this.mapItem(item, simple, index));
+        if (this._ngSelect.groupBy) {
+            this._groups = this._groupBy(this._items, this._ngSelect.groupBy);
+            this._items = this._flatten(this._groups);
+        } else {
+            this._groups = { undefined: this._items };
+        }
         this._filteredItems = [...this._items];
     }
 
@@ -53,11 +60,11 @@ export class ItemsList {
 
     findItem(value: any): NgOption {
         if (this._ngSelect.bindValue) {
-            return this._items.find(item => this.resolveNested(item.value, this._ngSelect.bindValue) === value);
+            return this._items.find(item => !item.hasChildren && this.resolveNested(item.value, this._ngSelect.bindValue) === value);
         }
         const index = this._items.findIndex(x => x.value === value);
         return index > -1 ? this._items[index] :
-            this._items.find(item => item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel));
+            this._items.find(item => !item.hasChildren && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel));
     }
 
     unselect(item: NgOption) {
@@ -94,8 +101,31 @@ export class ItemsList {
     }
 
     filter(term: string) {
-        const filterFuncVal = this._getDefaultFilterFunc(term);
-        this._filteredItems = term ? this._items.filter(val => filterFuncVal(val)) : this._items;
+        if (!term) {
+            this._filteredItems = this._items;
+            return;
+        }
+
+        this._filteredItems = [];
+        term = searchHelper.stripSpecialChars(term).toLocaleLowerCase();
+
+        for (const key of Object.keys(this._groups)) {
+            const matchedItems = [];
+            for (const item of this._groups[key]) {
+                const label = searchHelper.stripSpecialChars(item.label).toLocaleLowerCase();
+                if (label.indexOf(term) > -1) {
+                    matchedItems.push(item);
+                }
+            }
+            if (matchedItems.length > 0) {
+                const [last] = matchedItems.slice(-1);
+                if (last.parent) {
+                    const head = this._items.find(x => x === last.parent);
+                    this._filteredItems.push(head);
+                }
+                this._filteredItems.push(...matchedItems);
+            }
+        }
     }
 
     clearFilter() {
@@ -122,7 +152,7 @@ export class ItemsList {
         if (this._filteredItems.length === 0) {
             return;
         }
-        const indexOfLastSelected =  this._filteredItems.indexOf(this._lastSelectedItem);
+        const indexOfLastSelected = this._filteredItems.indexOf(this._lastSelectedItem);
         if (this._lastSelectedItem && indexOfLastSelected > -1) {
             this._markedIndex = indexOfLastSelected;
         } else {
@@ -157,7 +187,7 @@ export class ItemsList {
         }
         return {
             index: index,
-            label: label,
+            label: label || '',
             value: option,
             disabled: option.disabled,
         };
@@ -181,15 +211,42 @@ export class ItemsList {
         }
     }
 
-    private _getDefaultFilterFunc(term: string) {
-        return (option: NgOption) => {
-            return searchHelper.stripSpecialChars(option.label ? option.label.toString() : '')
-                .toLowerCase()
-                .indexOf(searchHelper.stripSpecialChars(term).toLowerCase()) > -1;
-        };
-    }
-
     private get _lastSelectedItem() {
         return this._selected[this._selected.length - 1];
+    }
+
+    private _groupBy(items: NgOption[], prop: string): { [index: string]: NgOption[] } {
+        const groups = items.reduce((grouped, item) => {
+            const key = item.value[prop];
+            grouped[key] = grouped[key] || [];
+            grouped[key].push(item);
+            return grouped;
+        }, {});
+        return groups;
+    }
+
+    private _flatten(groups: { [index: string]: NgOption[] }) {
+        let i = 0;
+        return Object.keys(groups).reduce((items: NgOption[], key: string) => {
+            const parent: NgOption = {
+                label: key,
+                hasChildren: true,
+                index: i,
+                disabled: true
+            };
+            parent.value = {};
+            parent.value[this._ngSelect.groupBy] = key;
+            items.push(parent);
+            i++
+
+            const children = groups[key].map(x => {
+                x.parent = parent;
+                x.hasChildren = false;
+                i++;
+                return x;
+            });
+            items.push(...children)
+            return items;
+        }, []);
     }
 }

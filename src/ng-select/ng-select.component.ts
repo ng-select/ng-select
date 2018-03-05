@@ -31,7 +31,8 @@ import {
     NgOptionTemplateDirective,
     NgLabelTemplateDirective,
     NgHeaderTemplateDirective,
-    NgFooterTemplateDirective
+    NgFooterTemplateDirective,
+    NgOptgroupTemplateDirective
 } from './ng-templates.directive';
 
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
@@ -80,6 +81,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() loading = false;
     @Input() closeOnSelect = true;
     @Input() maxSelectedItems: number;
+    @Input() groupBy: string;
     @Input() bufferAmount = 4;
     @Input() virtualScroll = false;
     @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
@@ -101,6 +103,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     // custom templates
     @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
+    @ContentChild(NgOptgroupTemplateDirective, { read: TemplateRef }) optgroupTemplate: TemplateRef<any>;
     @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
     @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerTemplate: TemplateRef<any>;
     @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;
@@ -361,7 +364,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         return empty && this._isTypeahead && !this.filterValue && !this.isLoading;
     }
 
-    onFilter(term: string) {
+    filter(term: string) {
         if (!this.searchable) {
             return;
         }
