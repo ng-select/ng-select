@@ -23,8 +23,9 @@ import { VirtualScrollComponent } from './examples/virtual-scroll.component';
 import { DataService } from './shared/data.service';
 import { AppendToComponent } from './examples/append-to.component';
 import { DataSourceComponent } from './examples/data-source.component';
+import { SelectGroupsComponent } from './examples/groups.component';
 
-const appRoutes: Routes = [
+export const appRoutes: Routes = [
     {
         path: '',
         redirectTo: '/data-sources',
@@ -41,6 +42,7 @@ const appRoutes: Routes = [
     { path: 'virtual-scroll', component: VirtualScrollComponent, data: { title: 'Virtual scroll'} },
     { path: 'dropdown-position', component: DropdownPositionsComponent, data: { title: 'Dropdown position'} },
     { path: 'append-to-element', component: AppendToComponent, data: { title: 'Append to element'} },
+    { path: 'grouping', component: SelectGroupsComponent, data: { title: 'Grouping'} },
 ];
 
 @NgModule({
@@ -86,7 +88,8 @@ const appRoutes: Routes = [
         DropdownPositionsComponent,
         VirtualScrollComponent,
         AppendToComponent,
-        DataSourceComponent
+        DataSourceComponent,
+        SelectGroupsComponent
     ],
     bootstrap: [AppComponent]
 })

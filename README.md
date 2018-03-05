@@ -227,6 +227,13 @@ This example in [Plunkr](https://plnkr.co/edit/KFpvA9?p=preview)
 
 In case of autocomplete you can get full control by creating simple `EventEmmiter` and passing it as an input to ng-select. When you type text, ng-select will fire events to EventEmmiter to which you can subscribe and control bunch of things like debounce, http cancellation and so on.
 ```js
+import { Component, ChangeDetectionStrategy, EventEmitter } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import { catchError, map, debounceTime, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
+import { ChangeDetectorRef } from '@angular/core';
+
 @Component({
     selector: 'select-autocomplete',
     template: `
@@ -252,25 +259,29 @@ export class SelectAutocompleteComponent {
 
     githubAccount: any;
     items = [];
-    
-    // event emmiter is just RxJs Subject
     typeahead = new EventEmitter<string>();
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private cd: ChangeDetectorRef) {
         this.typeahead
-            .distinctUntilChanged()
-            .debounceTime(200)
-            .switchMap(term => this.loadGithubUsers(term))
+            .pipe(
+                debounceTime(200),
+                switchMap(term => this.loadGithubUsers(term))
+            )
             .subscribe(items => {
                 this.items = items;
+                this.cd.markForCheck();
             }, (err) => {
-                console.log(err);
+                console.log('error', err);
                 this.items = [];
+                this.cd.markForCheck();
             });
     }
 
     loadGithubUsers(term: string): Observable<any[]> {
-        return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).map(rsp => rsp.items);
+        return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).pipe(
+            catchError(() => of(({items: []}))),
+            map(rsp => rsp.items),
+        );
     }
 }
 ```

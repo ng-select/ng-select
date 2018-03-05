@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.25.0"></a>
+# [0.25.0](https://github.com/ng-select/ng-select/compare/v0.24.1...v0.25.0) (2018-03-05)
+
+
+### Bug Fixes
+
+* hide placeholder when value is selected ([#314](https://github.com/ng-select/ng-select/issues/314)) ([a497f05](https://github.com/ng-select/ng-select/commit/a497f05)), closes [#297](https://github.com/ng-select/ng-select/issues/297)
+
+
+### Features
+
+* group by ([#317](https://github.com/ng-select/ng-select/issues/317)) ([53e4819](https://github.com/ng-select/ng-select/commit/53e4819)), closes [#263](https://github.com/ng-select/ng-select/issues/263)
+
+
+
+<a name="0.24.1"></a>
+## [0.24.1](https://github.com/ng-select/ng-select/compare/v0.24.0...v0.24.1) (2018-03-03)
+
+
+### Bug Fixes
+
+* **scrollToEnd:** fire when scroll equal to clientHeight. ([#318](https://github.com/ng-select/ng-select/issues/318)) ([c516440](https://github.com/ng-select/ng-select/commit/c516440))
+
+
+
 <a name="0.24.0"></a>
 # [0.24.0](https://github.com/ng-select/ng-select/compare/v0.23.3...v0.24.0) (2018-02-28)
 

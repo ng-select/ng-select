@@ -1,46 +1,26 @@
 import { Component } from '@angular/core';
+import { appRoutes } from '../app.module';
 
 @Component({
     selector: 'layout-sidenav',
     template: `
         <ul class="nav nav-pills flex-column">
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/data-sources" routerLinkActive="active">Data sources</a>
-            </li>
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/forms" routerLinkActive="active">Reactive forms</a>
-            </li>
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/virtual-scroll" routerLinkActive="active">Virtual scroll</a>
-            </li>
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/filter" routerLinkActive="active">Filter and autocomplete</a>
-            </li>
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/tags" routerLinkActive="active">Tags</a>
-            </li>
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/multiselect" routerLinkActive="active">Multiselect</a>
-            </li>
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/bindings" routerLinkActive="active">Data bindings</a>
-            </li>
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/templates" routerLinkActive="active">Templates</a>
-            </li>
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/events" routerLinkActive="active">Output events</a>
-            </li>
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/dropdown-position" routerLinkActive="active">Dropdown position</a>
-            </li>
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/append-to-element" routerLinkActive="active">Append to element</a>
+            <li class="nav-item" routerLinkActive="active" *ngFor="let route of routes">
+                <a class="nav-link" routerLink="{{route.url}}" routerLinkActive="active">{{route.title}}</a>
             </li>
         </ul>
     `
 })
 export class LayoutSidenavComponent {
+    routes = [];
+
+    constructor() {
+        this.routes = appRoutes.filter(route => route.component)
+            .map(route => ({
+                title: route.data.title,
+                url: `/${route.path}`
+            }));
+    }
 }
 
 

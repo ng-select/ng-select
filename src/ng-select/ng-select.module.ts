@@ -5,7 +5,8 @@ import {
     NgOptionTemplateDirective,
     NgLabelTemplateDirective,
     NgHeaderTemplateDirective,
-    NgFooterTemplateDirective
+    NgFooterTemplateDirective,
+    NgOptgroupTemplateDirective
 } from './ng-templates.directive';
 import { NgOptionComponent } from './ng-option.component';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
@@ -19,6 +20,7 @@ import { VirtualScrollService } from './virtual-scroll.service';
         NgOptionComponent,
         NgSelectComponent,
         NgOptionHighlightDirective,
+        NgOptgroupTemplateDirective,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
         NgHeaderTemplateDirective,
@@ -31,6 +33,7 @@ import { VirtualScrollService } from './virtual-scroll.service';
         NgSelectComponent,
         NgOptionComponent,
         NgOptionHighlightDirective,
+        NgOptgroupTemplateDirective,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
         NgHeaderTemplateDirective,

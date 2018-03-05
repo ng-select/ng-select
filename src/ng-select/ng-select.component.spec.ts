@@ -374,7 +374,37 @@ describe('NgSelectComponent', function () {
                     value: { id: 2, name: 'Kaunas' },
                     selected: true
                 })];
-                expect(fixture.componentInstance.select.selectedItems).toEqual(result);
+                const select = fixture.componentInstance.select;
+                expect(select.selectedItems).toEqual(result);
+            }));
+
+            it('should apply host css classes', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectSelectedSimpleCmp,
+                    `<ng-select [items]="cities"
+                        bindLabel="name"
+                        bindValue="id"
+                        placeholder="select value"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+
+                tickAndDetectChanges(fixture);
+
+                const select = fixture.componentInstance.select;
+                const selectEl: HTMLElement = select.elementRef.nativeElement;
+                // tslint:disable-next-line:max-line-length
+                const classes = ['ng-select', 'bottom', 'ng-single', 'searchable', 'ng-untouched', 'ng-pristine', 'ng-valid'];
+                for (const c of classes) {
+                    expect(selectEl.classList.contains(c)).toBeTruthy(`expected to contain "${c}" class`);
+                }
+                let control = selectEl.querySelector('.ng-control');
+                expect(control.classList.contains('ng-has-value')).toBeTruthy();
+
+
+                fixture.componentInstance.selectedCity = null;
+                tickAndDetectChanges(fixture);
+                control = selectEl.querySelector('.ng-control');
+                expect(control.classList.contains('ng-has-value')).toBeFalsy();
             }));
 
             it('should select by bindValue ', fakeAsync(() => {
@@ -764,7 +794,7 @@ describe('NgSelectComponent', function () {
 
         describe('tab', () => {
             it('should close dropdown when there are no items', fakeAsync(() => {
-                fixture.componentInstance.select.onFilter('random stuff');
+                fixture.componentInstance.select.filter('random stuff');
                 tick(200);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
@@ -1165,7 +1195,7 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             tickAndDetectChanges(fixture);
-            fixture.componentInstance.select.onFilter('new tag');
+            fixture.componentInstance.select.filter('new tag');
             tickAndDetectChanges(fixture);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
             expect(fixture.componentInstance.selectedCity.name).toBe('new tag');
@@ -1182,7 +1212,7 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             tickAndDetectChanges(fixture);
-            fixture.componentInstance.select.onFilter('Vil');
+            fixture.componentInstance.select.filter('Vil');
             tickAndDetectChanges(fixture);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
@@ -1200,7 +1230,7 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             tickAndDetectChanges(fixture);
-            fixture.componentInstance.select.onFilter('custom tag');
+            fixture.componentInstance.select.filter('custom tag');
             tickAndDetectChanges(fixture);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
             expect(<any>fixture.componentInstance.selectedCity).toEqual(jasmine.objectContaining({
@@ -1219,7 +1249,7 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             tickAndDetectChanges(fixture);
-            fixture.componentInstance.select.onFilter('server side tag');
+            fixture.componentInstance.select.filter('server side tag');
             tickAndDetectChanges(fixture);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
             tick();
@@ -1244,24 +1274,48 @@ describe('NgSelectComponent', function () {
         it('should be visible when no value selected', async(() => {
             fixture.detectChanges();
             fixture.whenStable().then(() => {
-                const el = fixture.debugElement.query(By.css('.ng-placeholder')).nativeElement;
-                expect(el.innerText).toBe('select value');
+                const selectEl: HTMLElement = fixture.componentInstance.select.elementRef.nativeElement;
+                const placeholder: any = selectEl.querySelector('.ng-placeholder');
+                expect(placeholder.innerText).toBe('select value');
+                expect(getComputedStyle(placeholder).display).toBe('block');
             });
+        }));
+
+        it('should be visible when value was cleared', fakeAsync(() => {
+            const select = fixture.componentInstance.select;
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+            const selectEl: HTMLElement = select.elementRef.nativeElement;
+            const placeholder = selectEl.querySelector('.ng-placeholder')
+            expect(getComputedStyle(placeholder).display).toBe('none');
+
+            select.handleClearClick(<any>{ stopPropagation: () => { } });
+            tickAndDetectChanges(fixture);
+
+            expect(getComputedStyle(placeholder).display).toBe('block');
+        }));
+
+        it('should not be visible when value was selected', fakeAsync(() => {
+            tickAndDetectChanges(fixture);
+            const selectEl: HTMLElement = fixture.componentInstance.select.elementRef.nativeElement;
+            const placeholder = selectEl.querySelector('.ng-placeholder')
+            selectOption(fixture, KeyCode.ArrowDown, 2);
+            expect(getComputedStyle(placeholder).display).toBe('none');
         }));
     });
 
     describe('Filter', () => {
-        let fixture: ComponentFixture<NgSelectFilterTestCmp>;
         it('should filter using default implementation', fakeAsync(() => {
-            fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            fixture.componentInstance.select.onFilter('vilnius');
-            tick();
+            tick(200);
+            fixture.componentInstance.select.filter('vilnius');
+            tick(200);
 
             const result = [jasmine.objectContaining({
                 value: { id: 1, name: 'Vilnius' }
@@ -1270,7 +1324,7 @@ describe('NgSelectComponent', function () {
         }));
 
         it('should toggle dropdown when searchable false', fakeAsync(() => {
-            fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -1291,7 +1345,7 @@ describe('NgSelectComponent', function () {
         }));
 
         it('should not filter when searchable false', fakeAsync(() => {
-            fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -1299,21 +1353,22 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            fixture.componentInstance.select.onFilter('vilnius');
+            fixture.componentInstance.select.filter('vilnius');
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.filterValue).toBe(null);
         }));
 
         it('should mark first item on filter', fakeAsync(() => {
-            fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            fixture.componentInstance.select.onFilter('pab');
-            tick();
+            tick(200);
+            fixture.componentInstance.select.filter('pab');
+            tick(200);
 
             const result = jasmine.objectContaining({
                 value: fixture.componentInstance.cities[2]
@@ -1324,7 +1379,7 @@ describe('NgSelectComponent', function () {
         }));
 
         it('should mark first item on filter when selected is not among filtered items', fakeAsync(() => {
-            fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -1333,7 +1388,7 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             fixture.detectChanges();
-            fixture.componentInstance.select.onFilter('pab');
+            fixture.componentInstance.select.filter('pab');
             tick();
 
             const result = jasmine.objectContaining({
@@ -1345,7 +1400,7 @@ describe('NgSelectComponent', function () {
         }));
 
         it('should not mark first item on filter when markFirst disabled', fakeAsync(() => {
-            fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -1353,13 +1408,14 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            fixture.componentInstance.select.onFilter('pab');
+            tick(200);
+            fixture.componentInstance.select.filter('pab');
             tick();
             expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(undefined)
         }));
 
         it('should clear filterValue on selected item', fakeAsync(() => {
-            fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectFilterTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -1375,7 +1431,29 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.filterValue).toBe(null);
         }));
 
+        it('should filter grouped items', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindLabel="name"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.filter('adam');
+            tickAndDetectChanges(fixture);
+
+            const filteredItems = fixture.componentInstance.select.itemsList.filteredItems;
+            expect(filteredItems.length).toBe(2);
+            expect(filteredItems[0].hasChildren).toBe(true);
+            expect(filteredItems[0].label).toBe('United States');
+            expect(filteredItems[1].parent).toBe(filteredItems[0]);
+            expect(filteredItems[1].label).toBe('Adam');
+        }));
+
         describe('with typeahead', () => {
+            let fixture
             beforeEach(() => {
                 fixture = createTestingModule(
                     NgSelectFilterTestCmp,
@@ -1391,7 +1469,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
 
                 fixture.componentInstance.customFilter.subscribe();
-                fixture.componentInstance.select.onFilter('new');
+                fixture.componentInstance.select.filter('new');
                 fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
@@ -1405,13 +1483,13 @@ describe('NgSelectComponent', function () {
                     expect(term).toBe('vilnius');
                 });
                 tick(200);
-                fixture.componentInstance.select.onFilter('vilnius');
+                fixture.componentInstance.select.filter('vilnius');
                 tickAndDetectChanges(fixture);
             }));
 
             it('should mark first item when typeahead results are loaded', fakeAsync(() => {
                 fixture.componentInstance.customFilter.subscribe();
-                fixture.componentInstance.select.onFilter('buk');
+                fixture.componentInstance.select.filter('buk');
                 fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];
                 tickAndDetectChanges(fixture);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
@@ -1423,7 +1501,7 @@ describe('NgSelectComponent', function () {
             it('should not mark first item when typeahead results are loaded', fakeAsync(() => {
                 fixture.componentInstance.select.markFirst = false;
                 fixture.componentInstance.customFilter.subscribe();
-                fixture.componentInstance.select.onFilter('buk');
+                fixture.componentInstance.select.filter('buk');
                 fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];
                 tickAndDetectChanges(fixture);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
@@ -1432,7 +1510,7 @@ describe('NgSelectComponent', function () {
 
             it('should start and stop loading indicator', fakeAsync(() => {
                 fixture.componentInstance.customFilter.subscribe();
-                fixture.componentInstance.select.onFilter('buk');
+                fixture.componentInstance.select.filter('buk');
                 expect(fixture.componentInstance.select.isLoading).toBeTruthy();
                 fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];
                 tickAndDetectChanges(fixture);
@@ -1692,6 +1770,80 @@ describe('NgSelectComponent', function () {
                 expect(dropdown.style.top).toBe('18px');
                 expect(dropdown.style.left).toBe('0px');
             });
+        }));
+    });
+
+    describe('Grouping', () => {
+        it('should group by group key', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+
+            const items = fixture.componentInstance.select.itemsList.items;
+
+            expect(items.length).toBe(14);
+            expect(items[0].hasChildren).toBe(true);
+            expect(items[0].index).toBe(0);
+            expect(items[0].label).toBe('United States');
+            expect(items[0].disabled).toBeTruthy();
+            expect(items[0].value).toEqual({ country: 'United States' });
+
+            expect(items[1].hasChildren).toBe(false);
+            expect(items[1].parent).toBe(items[0]);
+
+            expect(items[2].hasChildren).toBe(false);
+            expect(items[2].parent).toBe(items[0]);
+
+            expect(items[3].label).toBe('Argentina');
+            expect(items[3].label).toBe('Argentina');
+
+            expect(items[10].label).toBe('Colombia');
+            expect(items[11].parent).toBe(items[10]);
+        }));
+
+        it('should not mark optgroup item as marked', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindValue="name"
+                        [(ngModel)]="selectedAccountName">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+
+            const select = fixture.componentInstance.select;
+            expect(select.itemsList.markedItem).toBeUndefined();
+
+            select.onItemHover(select.itemsList.items[0]);
+            expect(select.itemsList.markedItem).toBeUndefined();
+        }));
+
+        it('should filter grouped items', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindLabel="name"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            const select = fixture.componentInstance.select;
+            select.filter('aDaM');
+
+            const filteredItems = select.itemsList.filteredItems;
+            expect(filteredItems.length).toBe(2);
+            expect(filteredItems[0].hasChildren).toBeTruthy();
+            expect(filteredItems[1].parent).toBe(filteredItems[0]);
+
+            select.filter('not in list');
+            expect(select.itemsList.filteredItems.length).toBe(0);
         }));
     });
 });
@@ -1958,4 +2110,50 @@ class NgSelectEventsTestCmp {
     onClear() { }
 
     onScrollToEnd() { }
+}
+
+@Component({
+    template: ``
+})
+class NgSelectGroupingTestCmp {
+    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    selectedAccountName = 'Adam';
+    accounts = [
+        { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States' },
+        { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States' },
+        { name: 'Amalie', email: 'amalie@email.com', age: 12, country: 'Argentina' },
+        { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' },
+        { name: 'Adrian', email: 'adrian@email.com', age: 21, country: 'Ecuador' },
+        { name: 'Wladimir', email: 'wladimir@email.com', age: 30, country: 'Ecuador' },
+        { name: 'Natasha', email: 'natasha@email.com', age: 54, country: 'Ecuador' },
+        { name: 'Nicole', email: 'nicole@email.com', age: 43, country: 'Colombia' },
+        { name: 'Michael', email: 'michael@email.com', age: 15, country: 'Colombia' },
+        { name: 'Nicolás', email: 'nicole@email.com', age: 43, country: 'Colombia' }
+    ];
+
+    // TODO: support this case
+    groupedAccounts = [
+        {
+            country: 'United States',
+            accounts: [
+                { name: 'Adam', email: 'adam@email.com', age: 12 },
+                { name: 'Samantha', email: 'samantha@email.com', age: 30 },
+            ]
+        },
+        {
+            country: 'Argentina',
+            accounts: [
+                { name: 'Amalie', email: 'amalie@email.com', age: 12 },
+                { name: 'Estefanía', email: 'estefania@email.com', age: 21 },
+            ]
+        },
+        {
+            country: 'Ecuador',
+            accounts: [
+                { name: 'Adrian', email: 'adrian@email.com', age: 21 },
+                { name: 'Wladimir', email: 'wladimir@email.com', age: 30 },
+                { name: 'Natasha', email: 'natasha@email.com', age: 54 },
+            ]
+        }
+    ]
 }
