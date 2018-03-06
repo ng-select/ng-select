@@ -24,7 +24,7 @@ import { MockNgZone, MockNgWindow } from '../testing/mocks';
 
 describe('NgSelectComponent', function () {
 
-    describe('Model change detection', () => {
+    describe('Model bindings', () => {
         it('should update ngModel on value change', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,
@@ -95,7 +95,31 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.selectedItems).toEqual([]);
         }));
 
-        it('should set items correctly after ngModel set first', fakeAsync(() => {
+        it('should set items correctly after ngModel set first when bindValue is used', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectModelChangesTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        bindValue="id"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCityId">
+                </ng-select>`);
+
+            fixture.componentInstance.cities = [];
+            fixture.componentInstance.selectedCityId = 7;
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.cities = [{ id: 7, name: 'Pailgis' }];
+            tickAndDetectChanges(fixture);
+
+            const select = fixture.componentInstance.select;
+            expect(select.selectedItems[0]).toBe(select.itemsList.items[0]);
+            expect(select.selectedItems).toEqual([jasmine.objectContaining({
+                value: { id: 7, name: 'Pailgis' }
+            })]);
+        }));
+
+        it('should set items correctly after ngModel set first when bindValue is not used', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,
                 `<ng-select [items]="cities"
@@ -104,15 +128,79 @@ describe('NgSelectComponent', function () {
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            const cities = [{ id: 7, name: 'Pailgis' }];
+            fixture.componentInstance.cities = [];
             fixture.componentInstance.selectedCity = { id: 7, name: 'Pailgis' };
             tickAndDetectChanges(fixture);
-            fixture.componentInstance.cities = cities;
+
+            fixture.componentInstance.cities = [{ id: 7, name: 'Pailgis' }];
             tickAndDetectChanges(fixture);
 
-            expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
-                value: cities[0]
+            const select = fixture.componentInstance.select;
+            expect(select.selectedItems[0]).toBe(select.itemsList.items[0]);
+            expect(select.selectedItems).toEqual([jasmine.objectContaining({
+                value: { id: 7, name: 'Pailgis' }
             })]);
+        }));
+
+        it('should set items correctly after ngModel set first when typeahead and single select is used', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectSelectedTypeaheadWithBindValueMultipleCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [typeahead]="filter"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            const select = fixture.componentInstance.select;
+            fixture.componentInstance.selectedCity = { id: 1, name: 'Vilnius' };
+            tickAndDetectChanges(fixture);
+            expect(select.selectedItems).toEqual([
+                jasmine.objectContaining({ label: 'Vilnius', value: { id: 1, name: 'Vilnius' } })
+            ]);
+
+            fixture.componentInstance.cities = [
+                { id: 1, name: 'Vilnius' },
+                { id: 2, name: 'Kaunas' },
+                { id: 3, name: 'Pabrade' },
+            ];
+            tickAndDetectChanges(fixture);
+            const vilnius = select.itemsList.items[0];
+            expect(select.selectedItems[0]).toBe(select.itemsList.items[0]);
+            expect(vilnius.selected).toBeTruthy();
+        }));
+
+        it('should set items correctly after ngModel set first when typeahead and multiselect is used', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectSelectedTypeaheadWithBindValueMultipleCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [multiple]="true"
+                    [typeahead]="filter"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCities">
+                </ng-select>`);
+
+            const select = fixture.componentInstance.select;
+            fixture.componentInstance.selectedCities = [{ id: 1, name: 'Vilnius' }, { id: 2, name: 'Kaunas' }];
+            tickAndDetectChanges(fixture);
+            expect(select.selectedItems).toEqual([
+                jasmine.objectContaining({ label: 'Vilnius', value: { id: 1, name: 'Vilnius' } }),
+                jasmine.objectContaining({ label: 'Kaunas', value: { id: 2, name: 'Kaunas' } })
+            ]);
+
+            fixture.componentInstance.cities = [
+                { id: 1, name: 'Vilnius' },
+                { id: 2, name: 'Kaunas' },
+                { id: 3, name: 'Pabrade' },
+            ];
+            tickAndDetectChanges(fixture);
+            const vilnius = select.itemsList.items[0];
+            const kaunas = select.itemsList.items[1];
+            expect(select.selectedItems[0]).toBe(vilnius);
+            expect(vilnius.selected).toBeTruthy();
+            expect(select.selectedItems[1]).toBe(kaunas);
+            expect(kaunas.selected).toBeTruthy();
         }));
 
         it('should set items correctly if there is no bindLabel', fakeAsync(() => {
@@ -244,9 +332,7 @@ describe('NgSelectComponent', function () {
             expect(internalItems.length).toBe(1);
             expect(internalItems[0].value).toEqual(jasmine.objectContaining({ id: 1, name: 'New city' }));
         }));
-    });
 
-    describe('Model bindings', () => {
         it('bind to custom object properties', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectCustomBindingsTestCmp,
@@ -355,197 +441,188 @@ describe('NgSelectComponent', function () {
             })]);
             discardPeriodicTasks();
         }));
-    });
 
-    describe('Pre-selected model', () => {
-        describe('single', () => {
-            it('should select by bindValue when primitive type', fakeAsync(() => {
-                const fixture = createTestingModule(
-                    NgSelectSelectedSimpleCmp,
-                    `<ng-select [items]="cities"
-                        bindLabel="name"
-                        bindValue="id"
-                        placeholder="select value"
-                        [(ngModel)]="selectedCity">
-                    </ng-select>`);
+        describe('Pre-selected model', () => {
+            describe('single', () => {
+                it('should select by bindValue when primitive type', fakeAsync(() => {
+                    const fixture = createTestingModule(
+                        NgSelectSelectedSimpleCmp,
+                        `<ng-select [items]="cities"
+                            bindLabel="name"
+                            bindValue="id"
+                            placeholder="select value"
+                            [(ngModel)]="selectedCity">
+                        </ng-select>`);
 
-                tickAndDetectChanges(fixture);
-                const result = [jasmine.objectContaining({
-                    value: { id: 2, name: 'Kaunas' },
-                    selected: true
-                })];
-                const select = fixture.componentInstance.select;
-                expect(select.selectedItems).toEqual(result);
-            }));
+                    tickAndDetectChanges(fixture);
+                    const result = [jasmine.objectContaining({
+                        value: { id: 2, name: 'Kaunas' },
+                        selected: true
+                    })];
+                    const select = fixture.componentInstance.select;
+                    expect(select.selectedItems).toEqual(result);
+                }));
 
-            it('should apply host css classes', fakeAsync(() => {
-                const fixture = createTestingModule(
-                    NgSelectSelectedSimpleCmp,
-                    `<ng-select [items]="cities"
-                        bindLabel="name"
-                        bindValue="id"
-                        placeholder="select value"
-                        [(ngModel)]="selectedCity">
-                    </ng-select>`);
+                it('should apply host css classes', fakeAsync(() => {
+                    const fixture = createTestingModule(
+                        NgSelectSelectedSimpleCmp,
+                        `<ng-select [items]="cities"
+                            bindLabel="name"
+                            bindValue="id"
+                            placeholder="select value"
+                            [(ngModel)]="selectedCity">
+                        </ng-select>`);
 
-                tickAndDetectChanges(fixture);
+                    tickAndDetectChanges(fixture);
 
-                const select = fixture.componentInstance.select;
-                const selectEl: HTMLElement = select.elementRef.nativeElement;
-                // tslint:disable-next-line:max-line-length
-                const classes = ['ng-select', 'bottom', 'ng-single', 'searchable', 'ng-untouched', 'ng-pristine', 'ng-valid'];
-                for (const c of classes) {
-                    expect(selectEl.classList.contains(c)).toBeTruthy(`expected to contain "${c}" class`);
-                }
-                let control = selectEl.querySelector('.ng-control');
-                expect(control.classList.contains('ng-has-value')).toBeTruthy();
+                    const select = fixture.componentInstance.select;
+                    const selectEl: HTMLElement = select.elementRef.nativeElement;
+                    // tslint:disable-next-line:max-line-length
+                    const classes = ['ng-select', 'bottom', 'ng-single', 'searchable', 'ng-untouched', 'ng-pristine', 'ng-valid'];
+                    for (const c of classes) {
+                        expect(selectEl.classList.contains(c)).toBeTruthy(`expected to contain "${c}" class`);
+                    }
+                    let control = selectEl.querySelector('.ng-control');
+                    expect(control.classList.contains('ng-has-value')).toBeTruthy();
 
 
-                fixture.componentInstance.selectedCity = null;
-                tickAndDetectChanges(fixture);
-                control = selectEl.querySelector('.ng-control');
-                expect(control.classList.contains('ng-has-value')).toBeFalsy();
-            }));
+                    fixture.componentInstance.selectedCity = null;
+                    tickAndDetectChanges(fixture);
+                    control = selectEl.querySelector('.ng-control');
+                    expect(control.classList.contains('ng-has-value')).toBeFalsy();
+                }));
 
-            it('should select by bindValue ', fakeAsync(() => {
-                const fixture = createTestingModule(
-                    NgSelectSelectedSimpleCmp,
-                    `<ng-select [items]="cities"
-                        bindLabel="name"
-                        bindValue="id"
-                        placeholder="select value"
-                        [(ngModel)]="selectedCity">
-                    </ng-select>`);
+                it('should select by bindValue ', fakeAsync(() => {
+                    const fixture = createTestingModule(
+                        NgSelectSelectedSimpleCmp,
+                        `<ng-select [items]="cities"
+                            bindLabel="name"
+                            bindValue="id"
+                            placeholder="select value"
+                            [(ngModel)]="selectedCity">
+                        </ng-select>`);
 
-                fixture.componentInstance.cities = [{ id: 0, name: 'Vilnius' }];
-                fixture.componentInstance.selectedCity = 0;
+                    fixture.componentInstance.cities = [{ id: 0, name: 'Vilnius' }];
+                    fixture.componentInstance.selectedCity = 0;
 
-                tickAndDetectChanges(fixture);
+                    tickAndDetectChanges(fixture);
 
-                const result = [jasmine.objectContaining({
-                    value: { id: 0, name: 'Vilnius' },
-                    selected: true
-                })];
-                expect(fixture.componentInstance.select.selectedItems).toEqual(result);
-            }));
+                    const result = [jasmine.objectContaining({
+                        value: { id: 0, name: 'Vilnius' },
+                        selected: true
+                    })];
+                    expect(fixture.componentInstance.select.selectedItems).toEqual(result);
+                }));
 
-            it('should select by bindLabel when binding to object', fakeAsync(() => {
-                const fixture = createTestingModule(
-                    NgSelectSelectedObjectCmp,
-                    `<ng-select [items]="cities"
-                        bindLabel="name"
-                        placeholder="select value"
-                        [(ngModel)]="selectedCity">
-                    </ng-select>`);
+                it('should select by bindLabel when binding to object', fakeAsync(() => {
+                    const fixture = createTestingModule(
+                        NgSelectSelectedObjectCmp,
+                        `<ng-select [items]="cities"
+                            bindLabel="name"
+                            placeholder="select value"
+                            [(ngModel)]="selectedCity">
+                        </ng-select>`);
 
-                tickAndDetectChanges(fixture);
-                const result = [jasmine.objectContaining({
-                    value: { id: 2, name: 'Kaunas' },
-                    selected: true
-                })];
-                expect(fixture.componentInstance.select.selectedItems).toEqual(result);
-            }));
+                    tickAndDetectChanges(fixture);
+                    const result = [jasmine.objectContaining({
+                        value: { id: 2, name: 'Kaunas' },
+                        selected: true
+                    })];
+                    expect(fixture.componentInstance.select.selectedItems).toEqual(result);
+                }));
 
-            it('should select by object reference', fakeAsync(() => {
-                const fixture = createTestingModule(
-                    NgSelectSelectedObjectByRefCmp,
-                    `<ng-select [items]="cities"
-                        bindLabel="name"
-                        placeholder="select value"
-                        [(ngModel)]="selectedCity">
-                    </ng-select>`);
+                it('should select by object reference', fakeAsync(() => {
+                    const fixture = createTestingModule(
+                        NgSelectSelectedObjectByRefCmp,
+                        `<ng-select [items]="cities"
+                            bindLabel="name"
+                            placeholder="select value"
+                            [(ngModel)]="selectedCity">
+                        </ng-select>`);
 
-                tickAndDetectChanges(fixture);
-                const result = [jasmine.objectContaining({
-                    value: { id: 2, name: 'Kaunas' },
-                    selected: true
-                })];
-                expect(fixture.componentInstance.select.selectedItems).toEqual(result);
-            }));
+                    tickAndDetectChanges(fixture);
+                    const result = [jasmine.objectContaining({
+                        value: { id: 2, name: 'Kaunas' },
+                        selected: true
+                    })];
+                    expect(fixture.componentInstance.select.selectedItems).toEqual(result);
+                }));
 
-            it('should select none when there is no items', fakeAsync(() => {
-                const fixture = createTestingModule(
-                    NgSelectSelectedEmptyCmp,
-                    `<ng-select [items]="cities"
-                        bindLabel="name"
-                        bindValue="id"
-                        placeholder="select value"
-                        [(ngModel)]="selectedCity">
-                    </ng-select>`);
+                it('should select selected when there is no items', fakeAsync(() => {
+                    const fixture = createTestingModule(
+                        NgSelectSelectedEmptyCmp,
+                        `<ng-select [items]="cities"
+                            bindLabel="name"
+                            bindValue="id"
+                            placeholder="select value"
+                            [(ngModel)]="selectedCity">
+                        </ng-select>`);
 
-                tickAndDetectChanges(fixture);
-                expect(fixture.componentInstance.select.selectedItems).toEqual([]);
-            }));
+                    tickAndDetectChanges(fixture);
+                    const selected = fixture.componentInstance.select.selectedItems[0];
+                    expect(selected.label).toEqual('');
+                    expect(selected.value).toEqual({name: null, id: 2});
+                }));
 
-            it('should select by bindValue when items are not loaded and typeahead is used', fakeAsync(() => {
-                const fixture = createTestingModule(
-                    NgSelectSelectedTypeaheadWithBindValueMultipleCmp,
-                    `<ng-select [items]="cities"
-                        bindLabel="name"
-                        bindValue="id"
-                        [multiple]="true"
-                        [typeahead]="filter"
-                        placeholder="select value"
-                        [(ngModel)]="selectedCities">
-                    </ng-select>`);
+                it('should select none when there is no items and typeahead is used', fakeAsync(() => {
+                    const fixture = createTestingModule(
+                        NgSelectSelectedEmptyCmp,
+                        `<ng-select [items]="cities"
+                            bindLabel="name"
+                            bindValue="id"
+                            [typeahead]="filter"
+                            placeholder="select value"
+                            [(ngModel)]="selectedCity">
+                        </ng-select>`);
 
-                fixture.componentInstance.selectedCities = [1, 2];
-                tickAndDetectChanges(fixture);
-                expect(fixture.componentInstance.select.selectedItems).toEqual([
-                    jasmine.objectContaining({ label: 1, value: { id: 1, name: 1 } }),
-                    jasmine.objectContaining({ label: 2, value: { id: 2, name: 2 } })
-                ]);
+                    fixture.componentInstance.filter.subscribe();
+                    tickAndDetectChanges(fixture);
 
-                fixture.componentInstance.cities = [
-                    { id: 1, name: 'Vilnius' },
-                    { id: 2, name: 'Kaunas' },
-                    { id: 3, name: 'Pabrade' },
-                ];
-                tickAndDetectChanges(fixture);
-                expect(fixture.componentInstance.selectedCities).toEqual([1, 2]);
-            }));
-        });
+                    expect(fixture.componentInstance.select.hasValue).toBeFalsy();
+                }));
+            });
 
-        describe('multiple', () => {
-            const result = [
-                jasmine.objectContaining({
-                    value: { id: 2, name: 'Kaunas' },
-                    selected: true
-                }),
-                jasmine.objectContaining({
-                    value: { id: 3, name: 'Pabrade' },
-                    selected: true
-                })];
+            describe('multiple', () => {
+                const result = [
+                    jasmine.objectContaining({
+                        value: { id: 2, name: 'Kaunas' },
+                        selected: true
+                    }),
+                    jasmine.objectContaining({
+                        value: { id: 3, name: 'Pabrade' },
+                        selected: true
+                    })];
 
-            it('should select by bindValue when primitive type', fakeAsync(() => {
-                const fixture = createTestingModule(
-                    NgSelectSelectedSimpleMultipleCmp,
-                    `<ng-select [items]="cities"
-                        bindLabel="name"
-                        bindValue="id"
-                        multiple="true"
-                        placeholder="select value"
-                        [(ngModel)]="selectedCity">
-                    </ng-select>`);
+                it('should select by bindValue when primitive type', fakeAsync(() => {
+                    const fixture = createTestingModule(
+                        NgSelectSelectedSimpleMultipleCmp,
+                        `<ng-select [items]="cities"
+                            bindLabel="name"
+                            bindValue="id"
+                            multiple="true"
+                            placeholder="select value"
+                            [(ngModel)]="selectedCity">
+                        </ng-select>`);
 
-                tickAndDetectChanges(fixture);
+                    tickAndDetectChanges(fixture);
 
-                expect(fixture.componentInstance.select.selectedItems).toEqual(result)
-            }));
+                    expect(fixture.componentInstance.select.selectedItems).toEqual(result)
+                }));
 
-            it('should select by bindLabel when binding to object', fakeAsync(() => {
-                const fixture = createTestingModule(
-                    NgSelectSelectedObjectMultipleCmp,
-                    `<ng-select [items]="cities"
-                        bindLabel="name"
-                        multiple="true"
-                        placeholder="select value"
-                        [(ngModel)]="selectedCity">
-                    </ng-select>`);
+                it('should select by bindLabel when binding to object', fakeAsync(() => {
+                    const fixture = createTestingModule(
+                        NgSelectSelectedObjectMultipleCmp,
+                        `<ng-select [items]="cities"
+                            bindLabel="name"
+                            multiple="true"
+                            placeholder="select value"
+                            [(ngModel)]="selectedCity">
+                        </ng-select>`);
 
-                tickAndDetectChanges(fixture);
-                expect(fixture.componentInstance.select.selectedItems).toEqual(result);
-            }));
+                    tickAndDetectChanges(fixture);
+                    expect(fixture.componentInstance.select.selectedItems).toEqual(result);
+                }));
+            });
         });
     });
 
@@ -557,11 +634,11 @@ describe('NgSelectComponent', function () {
                             bindLabel="name"
                             [(ngModel)]="city">
                 </ng-select>`);
+            
+            const select = fixture.componentInstance.select;
+            select.open();
 
-            fixture.componentInstance.select.isOpen = true;
-            tickAndDetectChanges(fixture);
-
-            expect(fixture.componentInstance.select.dropdownPanel.items.length).toBe(3);
+            expect(select.dropdownPanel.items.length).toBe(3);
             let options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
             expect(options.length).toBe(3);
             expect(options[0].innerText).toBe('Vilnius');
@@ -583,9 +660,9 @@ describe('NgSelectComponent', function () {
                             [virtualScroll]="true"
                             [(ngModel)]="city">
                 </ng-select>`);
-
-            fixture.componentInstance.select.isOpen = true;
-            tickAndDetectChanges(fixture);
+            
+            const select = fixture.componentInstance.select;
+            select.open();
 
             expect(fixture.componentInstance.select.dropdownPanel.items.length).toBe(3);
             let options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
@@ -611,7 +688,7 @@ describe('NgSelectComponent', function () {
             const cmp = fixture.componentInstance;
             const el: HTMLElement = fixture.debugElement.nativeElement;
 
-            cmp.select.isOpen = true;
+            cmp.select.open();
             tickAndDetectChanges(fixture);
 
             cmp.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
@@ -634,7 +711,7 @@ describe('NgSelectComponent', function () {
             const cmp = fixture.componentInstance;
             const el: HTMLElement = fixture.debugElement.nativeElement;
 
-            cmp.select.isOpen = true;
+            cmp.select.open();
             tickAndDetectChanges(fixture);
 
             cmp.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
@@ -1949,6 +2026,7 @@ class NgSelectSelectedEmptyCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity = 2;
     cities = [];
+    filter = new Subject<string>();
 }
 
 @Component({
@@ -1970,6 +2048,7 @@ class NgSelectSelectedSimpleMultipleCmp {
 class NgSelectSelectedTypeaheadWithBindValueMultipleCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCities = [];
+    selectedCity: any;
     filter = new Subject<string>();
     cities = [];
 
@@ -2045,6 +2124,7 @@ class NgSelectModelChangesTestCmp {
 
     visible = true;
     selectedCity: { id: number; name: string };
+    selectedCityId: number;
     selectedCities = [];
     cities = [
         { id: 1, name: 'Vilnius' },

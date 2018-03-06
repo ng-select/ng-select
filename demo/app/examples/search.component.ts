@@ -44,7 +44,6 @@ import { DataService } from '../shared/data.service';
         ---html,true
         <ng-select [items]="serverSideFilterItems"
                    bindLabel="name"
-                   bindValue="name"
                    [addTag]="true"
                    [multiple]="true"
                    [typeahead]="peopleTypeahead"
@@ -65,7 +64,7 @@ export class SelectSearchComponent {
     
     searchTerm = new EventEmitter<string>();
     peopleTypeahead = new EventEmitter<string>();
-    selectedPersons = ['Karyn Wright', 'Other'];
+    selectedPersons = [{name: 'Karyn Wright'}, {name: 'Other'}];
     selectedPerson: any;
     selectedCustom: any;
 

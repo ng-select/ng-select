@@ -122,7 +122,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     filterValue: string = null;
     currentDropdownPosition: DropdownPosition = 'bottom';
 
-    private _ngModel: any = null;
     private _defaultLabel = 'label';
     private _defaultValue = 'value';
     private _typeaheadLoading = false;
@@ -238,10 +237,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     writeValue(value: any | any[]): void {
-        this._ngModel = value;
+        if (value === undefined) {
+            return;
+        }
         this._validateWriteValue(value);
-        this.itemsList.clearSelected();
-        this._selectWriteValue(value);
+        this._handleWriteValue(value);
         this.detectChanges();
     }
 
@@ -416,9 +416,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.bindLabel = this.bindLabel || this._defaultLabel;
         const simple = firstItem && !(firstItem instanceof Object);
         this.itemsList.setItems(items, simple);
-        if (this._isDefined(this._ngModel) && items.length > 0) {
-            this.itemsList.clearSelected();
-            this._selectWriteValue(this._ngModel);
+        if (items.length > 0 && this.hasValue) {
+            this._updateSelectedItems();
         }
 
         if (this._isTypeahead) {
@@ -438,9 +437,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 disabled: option.disabled
             }));
             this.itemsList.setItems(this.items, false);
-            if (this._isDefined(this._ngModel)) {
-                this.itemsList.clearSelected();
-                this._selectWriteValue(this._ngModel);
+            if (this.hasValue) {
+                this._updateSelectedItems();
             }
             this.detectChanges();
         }
@@ -485,8 +483,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
     }
 
-    private _selectWriteValue(ngModel: any | any[]) {
-        if (!this._isDefined(ngModel)) {
+    private _handleWriteValue(ngModel: any | any[]) {
+        const isEmptyArray = ngModel && Array.isArray(ngModel) && ngModel.length === 0;
+        if (ngModel === null || isEmptyArray) {
+            this.itemsList.clearSelected();
             return;
         }
 
@@ -497,12 +497,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             } else {
                 const isObject = val instanceof Object;
                 const simpleValue = !isObject && !this.bindValue;
-                if (isObject || simpleValue) {
+                if ((isObject || simpleValue)) {
                     this.itemsList.select(this.itemsList.mapItem(val, simpleValue, null));
-                } else if (!isObject && this.bindValue && this._isTypeahead) {
+                } else if (this.bindValue && !this._isTypeahead) {
                     item = {};
+                    item[this.bindLabel] = null;
                     item[this.bindValue] = val;
-                    item[this.bindLabel] = val;
                     this.itemsList.select(this.itemsList.mapItem(item, false, null));
                 }
             }
@@ -515,6 +515,19 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         } else {
             select(ngModel);
         }
+
+        this._updateSelectedItems();
+    }
+
+    private _updateSelectedItems() {
+        this.selectedItems.forEach((s, i) => {
+            const val = this.bindValue ? s.value[this.bindValue] : s.value;
+            const item = this.itemsList.findItem(val);
+            if (item && s !== item) {
+                item.selected = true;
+                this.itemsList.updateSelectedItem(item, i);
+            }
+        });
     }
 
     private _updateNgModel() {
@@ -531,7 +544,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         } else {
             this._onChange(ngModel);
         }
-        this._ngModel = ngModel;
         this.changeEvent.emit(this._value);
         this._cd.markForCheck();
     }

@@ -193,6 +193,10 @@ export class ItemsList {
         };
     }
 
+    updateSelectedItem(item: NgOption, index: number) {
+        this._selected[index] = item;
+    }
+
     private _getNextItemIndex(steps: number) {
         if (steps > 0) {
             return (this._markedIndex === this._filteredItems.length - 1) ? 0 : (this._markedIndex + 1);
