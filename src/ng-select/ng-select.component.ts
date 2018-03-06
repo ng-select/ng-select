@@ -121,6 +121,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     viewPortItems: NgOption[] = [];
     filterValue: string = null;
     currentDropdownPosition: DropdownPosition = 'bottom';
+    simple: boolean;
 
     private _ngModel: any = null;
     private _defaultLabel = 'label';
@@ -136,7 +137,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.unselect(option);
     };
 
-    constructor( @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
+    constructor(@Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private _cd: ChangeDetectorRef,
         public elementRef: ElementRef
     ) {
@@ -326,7 +327,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (this.addTag instanceof Function) {
             tag = this.addTag(this.filterValue);
         } else {
-            tag = { [this.bindLabel]: this.filterValue };
+            tag = this.simple ? this.filterValue : { [this.bindLabel]: this.filterValue };
         }
 
         if (tag instanceof Promise) {
@@ -414,8 +415,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _setItems(items: any[]) {
         const firstItem = items[0];
         this.bindLabel = this.bindLabel || this._defaultLabel;
-        const simple = firstItem && !(firstItem instanceof Object);
-        this.itemsList.setItems(items, simple);
+        this.simple = firstItem && !(firstItem instanceof Object);
+        this.itemsList.setItems(items);
         if (this._isDefined(this._ngModel) && items.length > 0) {
             this.itemsList.clearSelected();
             this._selectWriteValue(this._ngModel);
@@ -437,7 +438,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 label: option.elementRef.nativeElement.innerHTML,
                 disabled: option.disabled
             }));
-            this.itemsList.setItems(this.items, false);
+            this.itemsList.setItems(this.items);
             if (this._isDefined(this._ngModel)) {
                 this.itemsList.clearSelected();
                 this._selectWriteValue(this._ngModel);
@@ -498,7 +499,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 const isObject = val instanceof Object;
                 const simpleValue = !isObject && !this.bindValue;
                 if (isObject || simpleValue) {
-                    this.itemsList.select(this.itemsList.mapItem(val, simpleValue, null));
+                    this.itemsList.select(this.itemsList.mapItem(val, null));
                 }
             }
         };

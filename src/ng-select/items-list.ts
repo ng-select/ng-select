@@ -32,8 +32,8 @@ export class ItemsList {
         return this._markedIndex;
     }
 
-    setItems(items: any[], simple = false) {
-        this._items = items.map((item, index) => this.mapItem(item, simple, index));
+    setItems(items: any[]) {
+        this._items = items.map((item, index) => this.mapItem(item, index));
         if (this._ngSelect.groupBy) {
             this._groups = this._groupBy(this._items, this._ngSelect.groupBy);
             this._items = this._flatten(this._groups);
@@ -82,11 +82,7 @@ export class ItemsList {
     }
 
     addItem(item: any) {
-        const option = {
-            index: this._items.length,
-            label: this.resolveNested(item, this._ngSelect.bindLabel),
-            value: item
-        };
+        const option = this.mapItem(item, this._items.length);
         this._items.push(option);
         this._filteredItems.push(option);
         return option;
@@ -176,15 +172,9 @@ export class ItemsList {
         }
     }
 
-    mapItem(item: any, simple: boolean, index: number): NgOption {
-        let option = item;
-        let label = null;
-        if (simple) {
-            option = item;
-            label = item;
-        } else {
-            label = this.resolveNested(option, this._ngSelect.bindLabel);
-        }
+    mapItem(item: any, index: number): NgOption {
+        const option = item;
+        const label = this._ngSelect.simple ? item : this.resolveNested(option, this._ngSelect.bindLabel);
         return {
             index: index,
             label: label || '',
