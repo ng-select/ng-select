@@ -165,7 +165,6 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.cities = [];
             tickAndDetectChanges(fixture);
-
             fixture.componentInstance.selectedCity = 'Kaunas';
             tickAndDetectChanges(fixture);
 
@@ -1171,6 +1170,22 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
             expect(fixture.componentInstance.selectedCity.name).toBe('new tag');
+        }));
+
+        it('should add tag as string', fakeAsync(() => {
+            let fixture = createTestingModule(
+                NgSelectSimpleCmp,
+                `<ng-select [items]="cities"
+                    [addTag]="true"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.filter('Copenhagen');
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect(fixture.componentInstance.selectedCity).toBe('Copenhagen');
         }));
 
         it('should select tag even if there are filtered items that matches search term', fakeAsync(() => {
