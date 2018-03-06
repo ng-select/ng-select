@@ -157,7 +157,7 @@ export class ItemsList {
     }
 
     resolveNested(option: any, key: string): any {
-        if (!(option instanceof Object)) {
+        if (!(typeof option === 'object')) {
             return option;
         }
         if (key.indexOf('.') === -1) {
