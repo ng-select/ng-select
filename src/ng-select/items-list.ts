@@ -157,6 +157,9 @@ export class ItemsList {
     }
 
     resolveNested(option: any, key: string): any {
+        if (!(option instanceof Object)) {
+            return option;
+        }
         if (key.indexOf('.') === -1) {
             return option[key];
         } else {
@@ -173,13 +176,12 @@ export class ItemsList {
     }
 
     mapItem(item: any, index: number): NgOption {
-        const option = item;
-        const label = this._ngSelect.simple ? item : this.resolveNested(option, this._ngSelect.bindLabel);
+        const label = this.resolveNested(item, this._ngSelect.bindLabel);
         return {
             index: index,
             label: label || '',
-            value: option,
-            disabled: option.disabled,
+            value: item,
+            disabled: item.disabled,
         };
     }
 

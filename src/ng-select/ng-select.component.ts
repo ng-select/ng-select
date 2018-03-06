@@ -121,12 +121,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     viewPortItems: NgOption[] = [];
     filterValue: string = null;
     currentDropdownPosition: DropdownPosition = 'bottom';
-    simple: boolean;
 
     private _ngModel: any = null;
     private _defaultLabel = 'label';
     private _defaultValue = 'value';
     private _typeaheadLoading = false;
+    private _simple: boolean;
 
     private readonly _destroy$ = new Subject<void>();
     private _onChange = (_: NgOption) => { };
@@ -327,7 +327,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (this.addTag instanceof Function) {
             tag = this.addTag(this.filterValue);
         } else {
-            tag = this.simple ? this.filterValue : { [this.bindLabel]: this.filterValue };
+            tag = this._simple ? this.filterValue : { [this.bindLabel]: this.filterValue };
         }
 
         if (tag instanceof Promise) {
@@ -415,7 +415,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _setItems(items: any[]) {
         const firstItem = items[0];
         this.bindLabel = this.bindLabel || this._defaultLabel;
-        this.simple = firstItem && !(firstItem instanceof Object);
+        this._simple = firstItem && !(firstItem instanceof Object);
         this.itemsList.setItems(items);
         if (this._isDefined(this._ngModel) && items.length > 0) {
             this.itemsList.clearSelected();

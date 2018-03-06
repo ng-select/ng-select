@@ -165,7 +165,6 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.cities = [];
             tickAndDetectChanges(fixture);
-            fixture.componentInstance.select.simple = true;
             fixture.componentInstance.selectedCity = 'Kaunas';
             tickAndDetectChanges(fixture);
 
