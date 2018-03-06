@@ -37,6 +37,7 @@ Table of contents
 - [x] Flexible autocomplete with client/server filtering
 - [x] Custom tags
 - [x] Append to body
+- [x] Group items
 
 ## Warning
 Library is under active development and may have API breaking changes until stable 1.0.0 release or subsequent major versions after 1.0.0.
@@ -112,7 +113,7 @@ map: {
 - [x] Autocomplete
 - [x] Custom tags
 - [x] Themes
-- [ ] Items grouping
+- [x] Items grouping
 - [ ] Accessibility
 - [ ] Many more
 
@@ -128,6 +129,7 @@ map: {
 | [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
 | clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
 | dropdownPosition | `bottom`,`top`,`auto` |  `bottom` | no | Set the dropdown position on open |
+| [groupBy] | `string` | null | no | Allow to group items by key |
 | [items] | `Array<NgOption>` | `[]` | yes | Items array |
 | loading | `boolean` |  `-` | no | You can set the loading state from the outside (e.g. async items loading) |
 | loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
