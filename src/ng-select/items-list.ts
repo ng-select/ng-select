@@ -1,6 +1,7 @@
 import { NgOption } from './ng-select.types';
 import * as searchHelper from './search-helper';
 import { NgSelectComponent } from './ng-select.component';
+import { isObject } from './utils';
 
 export class ItemsList {
 
@@ -157,7 +158,7 @@ export class ItemsList {
     }
 
     resolveNested(option: any, key: string): any {
-        if (!(typeof option === 'object')) {
+        if (!isObject(option)) {
             return option;
         }
         if (key.indexOf('.') === -1) {
