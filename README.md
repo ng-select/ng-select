@@ -120,7 +120,7 @@ map: {
 ## API
 | Input  | Type | Default | Required | Description |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| [addTag] | `boolean | ((term: string) => any | Promise<any>)`  | `false` | no | Allows to create custom options. |
+| [addTag] | `boolean \| ((term: string) => any \| Promise<any>)`  | `false` | no | Allows to create custom options. |
 | addTagText | `string` | `Add item` | no | Set custom text when using tagging |
 | appendTo | `string` |  null | no | Append drodown to body or any other element using css selector |
 | bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
