@@ -87,7 +87,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() groupBy: string;
     @Input() bufferAmount = 4;
     @Input() virtualScroll = false;
-    @Input() allowSelectGroup = false;
+    @Input() selectableGroup = false;
     @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-multiple') multiple = false;
     @Input() @HostBinding('class.taggable') addTag: boolean | AddTagFn = false;

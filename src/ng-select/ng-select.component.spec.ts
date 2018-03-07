@@ -1921,14 +1921,14 @@ describe('NgSelectComponent', function () {
             expect(select.itemsList.filteredItems.length).toBe(0);
         }));
 
-        it('should allow select optgroup items when [allowSelectGroup]="true"', fakeAsync(() => {
+        it('should allow select optgroup items when [selectableGroup]="true"', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
                 `<ng-select [items]="accounts"
                         groupBy="country"
                         bindLabel="name"
                         bindValue="email"
-                        [allowSelectGroup]="true"
+                        [selectableGroup]="true"
                         [(ngModel)]="selectedAccount">
                 </ng-select>`);
 

@@ -28,7 +28,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         <ng-select [items]="accounts2"
                 bindLabel="name"
                 groupBy="country"
-                [allowSelectGroup]="true"
+                [selectableGroup]="true"
                 [(ngModel)]="selectedAccount2">
         </ng-select>
         ---
