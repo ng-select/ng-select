@@ -562,23 +562,6 @@ describe('NgSelectComponent', function () {
                     expect(selected.label).toEqual('');
                     expect(selected.value).toEqual({name: null, id: 2});
                 }));
-
-                it('should select none when there is no items and typeahead is used', fakeAsync(() => {
-                    const fixture = createTestingModule(
-                        NgSelectSelectedEmptyCmp,
-                        `<ng-select [items]="cities"
-                            bindLabel="name"
-                            bindValue="id"
-                            [typeahead]="filter"
-                            placeholder="select value"
-                            [(ngModel)]="selectedCity">
-                        </ng-select>`);
-
-                    fixture.componentInstance.filter.subscribe();
-                    tickAndDetectChanges(fixture);
-
-                    expect(fixture.componentInstance.select.hasValue).toBeFalsy();
-                }));
             });
 
             describe('multiple', () => {
@@ -1937,6 +1920,25 @@ describe('NgSelectComponent', function () {
             select.filter('not in list');
             expect(select.itemsList.filteredItems.length).toBe(0);
         }));
+
+        it('should allow select optgroup items when [allowSelectGroup]="true"', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindLabel="name"
+                        bindValue="email"
+                        [allowSelectGroup]="true"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            expect(fixture.componentInstance.selectedAccount).toBe('United States');
+
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+            expect(fixture.componentInstance.selectedAccount).toBe('adam@email.com');
+        }));
     });
 });
 
@@ -1945,9 +1947,9 @@ function tickAndDetectChanges(fixture) {
     tick();
 }
 
-function selectOption(fixture, key: KeyCode, steps: number) {
+function selectOption(fixture, key: KeyCode, index: number) {
     triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space); // open
-    for (let i = 0; i < steps; i++) {
+    for (let i = 0; i < index; i++) {
         triggerKeyDownEvent(getNgSelectElement(fixture), key);
     }
     triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter); // select
@@ -2213,6 +2215,7 @@ class NgSelectEventsTestCmp {
 class NgSelectGroupingTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedAccountName = 'Adam';
+    selectedAccount = null;
     accounts = [
         { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States' },
         { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States' },

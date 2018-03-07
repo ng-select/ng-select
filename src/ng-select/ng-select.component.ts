@@ -87,6 +87,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() groupBy: string;
     @Input() bufferAmount = 4;
     @Input() virtualScroll = false;
+    @Input() allowSelectGroup = false;
     @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-multiple') multiple = false;
     @Input() @HostBinding('class.taggable') addTag: boolean | AddTagFn = false;
@@ -503,10 +504,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 const isPrimitive = !isValObject && !this.bindValue;
                 if ((isValObject || isPrimitive)) {
                     this.itemsList.select(this.itemsList.mapItem(val, null));
-                } else if (this.bindValue && !this._isTypeahead) {
-                    item = {};
-                    item[this.bindLabel] = null;
-                    item[this.bindValue] = val;
+                } else if (this.bindValue) {
+                    item = {
+                        [this.bindLabel]: null,
+                        [this.bindValue]: val
+                    };
                     this.itemsList.select(this.itemsList.mapItem(item, null));
                 }
             }
@@ -519,8 +521,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         } else {
             select(ngModel);
         }
-
-        this._updateSelectedItems();
     }
 
     private _updateSelectedItems() {
@@ -535,20 +535,29 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _updateNgModel() {
-        let ngModel = this._value;
-        if (!isDefined(ngModel)) {
-            this._onChange(null);
-        } else if (this.bindValue) {
-            if (Array.isArray(ngModel)) {
-                ngModel = ngModel.map(option => this.itemsList.resolveNested(option, this.bindValue))
+        const values = [];
+        for (const item of this.selectedItems) {
+            if (this.bindValue) {
+                let resolvedValue = null;
+                if (item.hasChildren) {
+                    resolvedValue = item.value[this.groupBy];
+                } else {
+                    resolvedValue = this.itemsList.resolveNested(item.value, this.bindValue);
+                }
+                values.push(resolvedValue);
             } else {
-                ngModel = this.itemsList.resolveNested(ngModel, this.bindValue);
+                values.push(item.value);
             }
-            this._onChange(ngModel);
-        } else {
-            this._onChange(ngModel);
         }
-        this.changeEvent.emit(this._value);
+
+        let ngModel = null;
+        if (this.multiple) {
+            ngModel = values;
+        } else if (isDefined(values[0])) {
+            ngModel = values[0];
+        }
+        this._onChange(ngModel);
+        this.changeEvent.emit(ngModel);
         this._cd.markForCheck();
     }
 
@@ -645,14 +654,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     private get _isTypeahead() {
         return this.typeahead && this.typeahead.observers.length > 0;
-    }
-
-    private get _value() {
-        if (this.multiple) {
-            return this.selectedItems.map(option => option.value);
-        }
-        const selectedItem = this.selectedItems[0];
-        return selectedItem ? selectedItem.value : null;
     }
 
     private _mergeGlobalConfig(config: NgSelectConfig) {

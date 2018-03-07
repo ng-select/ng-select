@@ -229,7 +229,7 @@ export class ItemsList {
                 label: key,
                 hasChildren: true,
                 index: i,
-                disabled: true
+                disabled: !this._ngSelect.allowSelectGroup
             };
             parent.value = {};
             parent.value[this._ngSelect.groupBy] = key;
