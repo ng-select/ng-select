@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.26.0"></a>
+# [0.26.0](https://github.com/ng-select/ng-select/compare/v0.25.0...v0.26.0) (2018-03-07)
+
+
+### Bug Fixes
+
+* **tag:** tag should be same type as items ([#322](https://github.com/ng-select/ng-select/issues/322)) ([25a3245](https://github.com/ng-select/ng-select/commit/25a3245)), closes [#315](https://github.com/ng-select/ng-select/issues/315)
+
+
+### Features
+
+* selectable group ([#325](https://github.com/ng-select/ng-select/issues/325)) ([32455b8](https://github.com/ng-select/ng-select/commit/32455b8)), closes [#282](https://github.com/ng-select/ng-select/issues/282)
+
+
+
 <a name="0.25.0"></a>
 # [0.25.0](https://github.com/ng-select/ng-select/compare/v0.24.1...v0.25.0) (2018-03-05)
 
