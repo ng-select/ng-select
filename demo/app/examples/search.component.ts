@@ -64,9 +64,7 @@ export class SelectSearchComponent {
     
     searchTerm = new EventEmitter<string>();
     peopleTypeahead = new EventEmitter<string>();
-    selectedPersons = [{
-        name: 'Karyn Wright'
-    }];
+    selectedPersons = [{name: 'Karyn Wright'}, {name: 'Other'}];
     selectedPerson: any;
     selectedCustom: any;
 

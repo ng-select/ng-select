@@ -24,7 +24,7 @@ import {
     SimpleChanges,
     ContentChildren,
     QueryList,
-    InjectionToken
+    InjectionToken,
 } from '@angular/core';
 
 import {
@@ -39,9 +39,12 @@ import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { NgOptionComponent } from './ng-option.component';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
+import { isDefined, isFunction, isPromise } from './utils';
+import { isObject } from 'util';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
+export type AddTagFn = ((term: string) => any | Promise<any>);
 
 @Component({
     selector: 'ng-select',
@@ -86,7 +89,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() virtualScroll = false;
     @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-multiple') multiple = false;
-    @Input() @HostBinding('class.taggable') addTag: boolean | ((term: string) => any | Promise<any>) = false;
+    @Input() @HostBinding('class.taggable') addTag: boolean | AddTagFn = false;
     @Input() @HostBinding('class.searchable') searchable = true;
 
     // output events
@@ -122,7 +125,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     filterValue: string = null;
     currentDropdownPosition: DropdownPosition = 'bottom';
 
-    private _ngModel: any = null;
     private _defaultLabel = 'label';
     private _defaultValue = 'value';
     private _typeaheadLoading = false;
@@ -239,10 +241,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     writeValue(value: any | any[]): void {
-        this._ngModel = value;
+        if (value === undefined) {
+            return;
+        }
         this._validateWriteValue(value);
-        this.itemsList.clearSelected();
-        this._selectWriteValue(value);
+        this._handleWriteValue(value);
         this.detectChanges();
     }
 
@@ -324,13 +327,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     selectTag() {
         let tag;
-        if (this.addTag instanceof Function) {
-            tag = this.addTag(this.filterValue);
+        if (isFunction(this.addTag)) {
+            tag = (<AddTagFn>this.addTag)(this.filterValue);
         } else {
             tag = this._primitive ? this.filterValue : { [this.bindLabel]: this.filterValue };
         }
 
-        if (tag instanceof Promise) {
+        if (isPromise(tag)) {
             tag.then(item => this.select(this.itemsList.addItem(item)))
                 .catch(() => { });
         } else if (tag) {
@@ -415,11 +418,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _setItems(items: any[]) {
         const firstItem = items[0];
         this.bindLabel = this.bindLabel || this._defaultLabel;
-        this._primitive = firstItem && !(firstItem instanceof Object);
+        this._primitive = !isObject(firstItem);
         this.itemsList.setItems(items);
-        if (this._isDefined(this._ngModel) && items.length > 0) {
-            this.itemsList.clearSelected();
-            this._selectWriteValue(this._ngModel);
+        if (items.length > 0 && this.hasValue) {
+            this._updateSelectedItems();
         }
 
         if (this._isTypeahead) {
@@ -439,9 +441,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 disabled: option.disabled
             }));
             this.itemsList.setItems(this.items);
-            if (this._isDefined(this._ngModel)) {
-                this.itemsList.clearSelected();
-                this._selectWriteValue(this._ngModel);
+            if (this.hasValue) {
+                this._updateSelectedItems();
             }
             this.detectChanges();
         }
@@ -466,12 +467,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _validateWriteValue(value: any) {
-        if (!this._isDefined(value)) {
+        if (!isDefined(value)) {
             return;
         }
 
         const validateBinding = (item: any) => {
-            if (item instanceof Object && this.bindValue) {
+            if (isObject(item) && this.bindValue) {
                 throw new Error('Binding object with bindValue is not allowed.');
             }
         };
@@ -486,20 +487,27 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
     }
 
-    private _selectWriteValue(ngModel: any | any[]) {
-        if (!this._isDefined(ngModel)) {
+    private _handleWriteValue(ngModel: any | any[]) {
+        const isEmptyArray = ngModel && Array.isArray(ngModel) && ngModel.length === 0;
+        if (ngModel === null || isEmptyArray) {
+            this.itemsList.clearSelected();
             return;
         }
 
         const select = (val: any) => {
-            const item = this.itemsList.findItem(val);
+            let item = this.itemsList.findItem(val);
             if (item) {
                 this.itemsList.select(item);
             } else {
-                const isObject = val instanceof Object;
-                const simpleValue = !isObject && !this.bindValue;
-                if (isObject || simpleValue) {
+                const isValObject = isObject(val)
+                const isPrimitive = !isValObject && !this.bindValue;
+                if ((isValObject || isPrimitive)) {
                     this.itemsList.select(this.itemsList.mapItem(val, null));
+                } else if (this.bindValue && !this._isTypeahead) {
+                    item = {};
+                    item[this.bindLabel] = null;
+                    item[this.bindValue] = val;
+                    this.itemsList.select(this.itemsList.mapItem(item, null));
                 }
             }
         };
@@ -511,11 +519,24 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         } else {
             select(ngModel);
         }
+
+        this._updateSelectedItems();
+    }
+
+    private _updateSelectedItems() {
+        this.selectedItems.forEach((s, i) => {
+            const val = this.bindValue ? s.value[this.bindValue] : s.value;
+            const item = this.itemsList.findItem(val);
+            if (item && s !== item) {
+                item.selected = true;
+                this.itemsList.updateSelectedItem(item, i);
+            }
+        });
     }
 
     private _updateNgModel() {
         let ngModel = this._value;
-        if (!this._isDefined(ngModel)) {
+        if (!isDefined(ngModel)) {
             this._onChange(null);
         } else if (this.bindValue) {
             if (Array.isArray(ngModel)) {
@@ -527,7 +548,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         } else {
             this._onChange(ngModel);
         }
-        this._ngModel = ngModel;
         this.changeEvent.emit(this._value);
         this._cd.markForCheck();
     }
@@ -641,9 +661,5 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.addTagText = this.addTagText || config.addTagText;
         this.loadingText = this.loadingText || config.loadingText;
         this.clearAllText = this.clearAllText || config.clearAllText;
-    }
-
-    private _isDefined(value: any) {
-        return value !== null && value !== undefined;
     }
 }
