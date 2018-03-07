@@ -191,10 +191,21 @@ $highlight-color: #3f51b5;
         .ng-optgroup {
             user-select: none;
             cursor: default;
-            color: rgba(0,0,0,.54);
             line-height: 3em;
             height: 3em;
             padding: 0 16px;
+            
+            &.marked {
+                background: rgba(0, 0, 0, .04);
+                color: rgba(0, 0, 0, .87);
+            }
+            &.disabled {
+                color: rgba(0,0,0,.54);
+            }
+            &.selected {
+                background: rgba(0, 0, 0, .12);
+                color: $highlight-color;
+            }
         }
 
         .ng-option {

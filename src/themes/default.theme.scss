@@ -198,7 +198,18 @@ $color-selected: #f5faff;
             user-select: none;
             cursor: default;
             padding: 8px 10px;
-            color: rgba(0,0,0,.54);
+            &.disabled {
+                color: rgba(0,0,0,.54);
+            }
+            &.marked {
+                background-color: #ebf5ff;
+                color: #333;
+            }
+            &.selected {
+                color: #333;
+                background-color: $color-selected;
+                font-weight: 600;
+            }
         }
 
         .ng-option {
@@ -207,6 +218,7 @@ $color-selected: #f5faff;
             padding: 8px 10px;
 
             &.selected {
+                color: #333;
                 background-color: $color-selected;
                 .ng-option-label {
                     font-weight: 600;
@@ -214,9 +226,6 @@ $color-selected: #f5faff;
             }
             &.marked {
                 background-color: #ebf5ff;
-                color: #333;
-            }
-            &.selected {
                 color: #333;
             }
             &.disabled {
