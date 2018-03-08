@@ -24,6 +24,23 @@ import { MockNgZone, MockNgWindow } from '../testing/mocks';
 
 describe('NgSelectComponent', function () {
 
+    describe('init', () => {
+        it('should map items correctly', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectSelectedSimpleCmp,
+                `<ng-select [searchable]="false"
+                                [clearable]="false"
+                                [items]="[0, 30, 60, 90, 120, 180, 240]"
+                                [(ngModel)]="selectedCity">
+                    </ng-select>`);
+
+            fixture.componentInstance.selectedCity = 0;
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.selectedCity).toEqual(0);
+            expect(fixture.componentInstance.select.itemsList.items[0].label).toEqual('0');
+        }));
+    });
+
     describe('Model bindings', () => {
         it('should update ngModel on value change', fakeAsync(() => {
             const fixture = createTestingModule(
@@ -560,7 +577,7 @@ describe('NgSelectComponent', function () {
                     tickAndDetectChanges(fixture);
                     const selected = fixture.componentInstance.select.selectedItems[0];
                     expect(selected.label).toEqual('');
-                    expect(selected.value).toEqual({name: null, id: 2});
+                    expect(selected.value).toEqual({ name: null, id: 2 });
                 }));
             });
 
@@ -616,7 +633,7 @@ describe('NgSelectComponent', function () {
                             bindLabel="name"
                             [(ngModel)]="city">
                 </ng-select>`);
-            
+
             const select = fixture.componentInstance.select;
             select.open();
 
@@ -642,7 +659,7 @@ describe('NgSelectComponent', function () {
                             [virtualScroll]="true"
                             [(ngModel)]="city">
                 </ng-select>`);
-            
+
             const select = fixture.componentInstance.select;
             select.open();
 
