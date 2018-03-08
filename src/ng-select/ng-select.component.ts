@@ -535,7 +535,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _updateNgModel() {
-        const values = [];
+        const model = [];
         for (const item of this.selectedItems) {
             if (this.bindValue) {
                 let resolvedValue = null;
@@ -544,20 +544,20 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 } else {
                     resolvedValue = this.itemsList.resolveNested(item.value, this.bindValue);
                 }
-                values.push(resolvedValue);
+                model.push(resolvedValue);
             } else {
-                values.push(item.value);
+                model.push(item.value);
             }
         }
 
-        let ngModel = null;
         if (this.multiple) {
-            ngModel = values;
-        } else if (isDefined(values[0])) {
-            ngModel = values[0];
+            this._onChange(model);
+            this.changeEvent.emit(this.selectedItems.map(x => x.value));
+        } else {
+            this._onChange(isDefined(model[0]) ? model[0] : null);
+            this.changeEvent.emit(this.selectedItems[0] && this.selectedItems[0].value);
         }
-        this._onChange(ngModel);
-        this.changeEvent.emit(ngModel);
+        
         this._cd.markForCheck();
     }
 

@@ -1651,18 +1651,23 @@ describe('NgSelectComponent', function () {
             const fixture = createTestingModule(
                 NgSelectEventsTestCmp,
                 `<ng-select [items]="cities"
-                            (change)="onChange()"
-                            [(ngModel)]="selectedCity">
+                            bindValue="id"
+                            bindLabel="name"
+                            (change)="onChange($event)"
+                            [(ngModel)]="selectedCityId">
                 </ng-select>`);
 
             spyOn(fixture.componentInstance, 'onChange');
 
-            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            fixture.componentInstance.selectedCityId = fixture.componentInstance.cities[1].id;
+            tickAndDetectChanges(fixture);
+            
+            const select = fixture.componentInstance.select;
+            select.select(select.itemsList.items[0]);
             tickAndDetectChanges(fixture);
 
-            fixture.componentInstance.select.select(fixture.componentInstance.cities[1]);
-
-            expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
+            expect(fixture.componentInstance.onChange).toHaveBeenCalledWith(select.selectedItems[0].value);
+            expect(fixture.componentInstance.selectedCityId).toBe(0);
         }));
 
         it('do not fire change when item not changed', fakeAsync(() => {
@@ -2193,8 +2198,10 @@ class NgSelectFilterTestCmp {
 class NgSelectEventsTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
+    selectedCityId: number
     selectedCities: Array<{ id: number; name: string }>;
     cities = [
+        { id: 0, name: 'All' },
         { id: 1, name: 'Vilnius' },
         { id: 2, name: 'Kaunas' },
         { id: 3, name: 'Pabrade' },
