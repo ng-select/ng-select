@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.26.1"></a>
+## [0.26.1](https://github.com/ng-select/ng-select/compare/v0.26.0...v0.26.1) (2018-03-08)
+
+
+### Bug Fixes
+
+* label formatting ([#327](https://github.com/ng-select/ng-select/issues/327)) ([6584eb1](https://github.com/ng-select/ng-select/commit/6584eb1)), closes [#326](https://github.com/ng-select/ng-select/issues/326)
+* update change event to fire object ([#328](https://github.com/ng-select/ng-select/issues/328)) ([1898ca4](https://github.com/ng-select/ng-select/commit/1898ca4))
+
+
+
 <a name="0.26.0"></a>
 # [0.26.0](https://github.com/ng-select/ng-select/compare/v0.25.0...v0.26.0) (2018-03-07)
 
