@@ -1651,18 +1651,21 @@ describe('NgSelectComponent', function () {
             const fixture = createTestingModule(
                 NgSelectEventsTestCmp,
                 `<ng-select [items]="cities"
-                            (change)="onChange()"
+                            bindValue="id"
+                            bindLabel="name"
+                            (change)="onChange($event)"
                             [(ngModel)]="selectedCity">
                 </ng-select>`);
 
             spyOn(fixture.componentInstance, 'onChange');
 
-            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            fixture.componentInstance.selectedCity = <any>fixture.componentInstance.cities[0].id;
             tickAndDetectChanges(fixture);
+            
+            const select = fixture.componentInstance.select;
+            select.select(select.itemsList.items[1]);
 
-            fixture.componentInstance.select.select(fixture.componentInstance.cities[1]);
-
-            expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
+            expect(fixture.componentInstance.onChange).toHaveBeenCalledWith(select.selectedItems[0].value);
         }));
 
         it('do not fire change when item not changed', fakeAsync(() => {
