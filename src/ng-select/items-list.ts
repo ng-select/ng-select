@@ -1,7 +1,7 @@
 import { NgOption } from './ng-select.types';
 import * as searchHelper from './search-helper';
 import { NgSelectComponent } from './ng-select.component';
-import { isObject } from './utils';
+import { isObject, isDefined } from './utils';
 
 export class ItemsList {
 
@@ -180,7 +180,7 @@ export class ItemsList {
         const label = this.resolveNested(item, this._ngSelect.bindLabel);
         return {
             index: index,
-            label: label || '',
+            label: isDefined(label) ? label.toString() : '',
             value: item,
             disabled: item.disabled,
         };
