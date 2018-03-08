@@ -554,7 +554,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this._onChange(model);
             this.changeEvent.emit(this.selectedItems.map(x => x.value));
         } else {
-            this._onChange(model[0] || null);
+            this._onChange(isDefined(model[0]) ? model[0] : null);
             this.changeEvent.emit(this.selectedItems[0] && this.selectedItems[0].value);
         }
         
