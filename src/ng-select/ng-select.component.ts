@@ -39,8 +39,7 @@ import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { ItemsList } from './items-list';
 import { NgOptionComponent } from './ng-option.component';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
-import { isDefined, isFunction, isPromise } from './utils';
-import { isObject } from 'util';
+import { isDefined, isFunction, isPromise, isObject } from './value-utils';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
