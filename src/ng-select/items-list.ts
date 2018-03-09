@@ -1,7 +1,7 @@
 import { NgOption } from './ng-select.types';
 import * as searchHelper from './search-helper';
 import { NgSelectComponent } from './ng-select.component';
-import { isObject, isDefined } from './utils';
+import { isObject, isDefined } from './value-utils';
 
 export class ItemsList {
 
