@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.26.2"></a>
+## [0.26.2](https://github.com/ng-select/ng-select/compare/v0.26.1...v0.26.2) (2018-03-09)
+
+
+### Bug Fixes
+
+* remove nodejs import ([#334](https://github.com/ng-select/ng-select/issues/334)) ([2f633f0](https://github.com/ng-select/ng-select/commit/2f633f0)), closes [#333](https://github.com/ng-select/ng-select/issues/333) [#331](https://github.com/ng-select/ng-select/issues/331)
+
+
+
 <a name="0.26.1"></a>
 ## [0.26.1](https://github.com/ng-select/ng-select/compare/v0.26.0...v0.26.1) (2018-03-08)
 
