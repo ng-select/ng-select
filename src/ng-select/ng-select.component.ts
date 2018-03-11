@@ -32,7 +32,10 @@ import {
     NgLabelTemplateDirective,
     NgHeaderTemplateDirective,
     NgFooterTemplateDirective,
-    NgOptgroupTemplateDirective
+    NgOptgroupTemplateDirective,
+    NgNotFoundTemplateDirective,
+    NgTypeToSearchTemplateDirective,
+    NgLoadingTextTemplateDirective
 } from './ng-templates.directive';
 
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
@@ -110,6 +113,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
     @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerTemplate: TemplateRef<any>;
     @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;
+    @ContentChild(NgNotFoundTemplateDirective, { read: TemplateRef }) notFoundTemplate: TemplateRef<any>;
+    @ContentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef }) typeToSearchTemplate: TemplateRef<any>;
+    @ContentChild(NgLoadingTextTemplateDirective, { read: TemplateRef }) loadingTextTemplate: TemplateRef<any>;
 
     @ViewChild(forwardRef(() => NgDropdownPanelComponent)) dropdownPanel: NgDropdownPanelComponent;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
