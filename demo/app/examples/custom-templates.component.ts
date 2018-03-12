@@ -92,8 +92,8 @@ import { DataService } from '../shared/data.service';
 
         <label>Custom search</label>
         ---html,true
-        <ng-select [items]="cities" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
-            <ng-template ng-header-tmp let-api="api">
+        <ng-select #api [items]="cities" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
+            <ng-template ng-header-tmp>
                 <input style="width: 100%" type="text" (input)="api.filter($event.target.value)" />
             </ng-template>
         </ng-select>

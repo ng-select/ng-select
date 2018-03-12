@@ -9,7 +9,7 @@
 
             <ng-template
                 [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
-                [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label, api: api }">
+                [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
             </ng-template>
         </div>
 
@@ -76,7 +76,7 @@
 
             <ng-template
                 [ngTemplateOutlet]="item.hasChildren ? (optgroupTemplate || defaultOptGroupTemplate) : (optionTemplate || defaultOptionTemplate)"
-                [ngTemplateOutletContext]="{ item: item.value, index: item.index, searchTerm: filterValue, api: api }">
+                [ngTemplateOutletContext]="{ item: item.value, index: item.index, searchTerm: filterValue }">
             </ng-template>
         </div>
 
