@@ -1984,8 +1984,8 @@ function getNgSelectElement(fixture: ComponentFixture<any>): DebugElement {
 function triggerKeyDownEvent(element: DebugElement, key: number): void {
     element.triggerEventHandler('keydown', {
         which: key,
-        preventDefault: () => {
-        }
+        preventDefault: () => {},
+        stopPropagation: () => {}
     });
 }
 

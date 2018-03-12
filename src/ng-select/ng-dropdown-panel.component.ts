@@ -28,7 +28,7 @@ import { VirtualScrollService } from './virtual-scroll.service';
     selector: 'ng-dropdown-panel',
     template: `
         <div *ngIf="headerTemplate" class="ng-dropdown-header" ngProjectAs="header" header>
-            <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
+            <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ api: api }"></ng-container>
         </div>
         <div #scroll class="ng-dropdown-panel-items scroll-host">
             <div #padding [class.total-padding]="virtualScroll"></div>
@@ -37,7 +37,7 @@ import { VirtualScrollService } from './virtual-scroll.service';
             </div>
         </div>
         <div *ngIf="footerTemplate" class="ng-dropdown-footer" ngProjectAs="footer" footer>
-            <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
+            <ng-container [ngTemplateOutlet]="footerTemplate" [ngTemplateOutletContext]="{ api: api }"></ng-container>
         </div>
     `,
     styleUrls: ['./ng-dropdown-panel.component.scss'],
@@ -65,6 +65,7 @@ export class NgDropdownPanelComponent implements OnDestroy {
     @ViewChild('padding', { read: ElementRef }) paddingElementRef: ElementRef;
 
     currentPosition: DropdownPosition = 'bottom';
+    api = null;
 
     private _selectElementRef: ElementRef;
     private _previousStart: number;
@@ -86,6 +87,7 @@ export class NgDropdownPanelComponent implements OnDestroy {
     ) {
         this._selectElementRef = _ngSelect.elementRef;
         this._itemsList = _ngSelect.itemsList;
+        this.api = _ngSelect.api;
     }
 
     ngOnInit() {
