@@ -130,7 +130,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         close: this.close.bind(this),
         filter: this.filter.bind(this),
         select: this.select.bind(this),
-        unselect: this.select.bind(this)
+        unselect: this.unselect.bind(this)
     };
 
     private _defaultLabel = 'label';
