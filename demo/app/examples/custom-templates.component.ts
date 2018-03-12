@@ -89,7 +89,7 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
         ---
         <p>
             Selected people: {{selectedPeople}}
-        </p>
+        </p
 
         <label>Custom not found ,  type to search and loading </label>
         ---html,true
@@ -124,6 +124,16 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
             Selected people: {{selectedPeople}}
         </p>
 
+        <hr />
+
+        <label>Custom search</label>
+        ---html,true
+        <ng-select [items]="cities" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
+            <ng-template ng-header-tmp let-api="api">
+                <input style="width: 100%" type="text" (input)="api.filter($event.target.value)" />
+            </ng-template>
+        </ng-select>
+        ---
     `
 })
 export class SelectWithTemplatesComponent {

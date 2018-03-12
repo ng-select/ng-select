@@ -131,6 +131,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     filterValue: string = null;
     currentDropdownPosition: DropdownPosition = 'bottom';
 
+    api = {
+        open: this.open.bind(this),
+        close: this.close.bind(this),
+        filter: this.filter.bind(this),
+        select: this.select.bind(this),
+        unselect: this.unselect.bind(this)
+    };
+
     private _defaultLabel = 'label';
     private _defaultValue = 'value';
     private _typeaheadLoading = false;
@@ -600,6 +608,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             }
         }
         $event.preventDefault();
+        $event.stopPropagation();
     }
 
     private _handleSpace($event: KeyboardEvent) {
