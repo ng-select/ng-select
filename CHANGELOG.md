@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.27.0"></a>
+# [0.27.0](https://github.com/ng-select/ng-select/compare/v0.26.2...v0.27.0) (2018-03-12)
+
+
+### Bug Fixes
+
+* wrong method for api unselect ([531fd1b](https://github.com/ng-select/ng-select/commit/531fd1b))
+
+
+### Features
+
+* expose api for custom templates ([#342](https://github.com/ng-select/ng-select/issues/342)) ([f6d94fa](https://github.com/ng-select/ng-select/commit/f6d94fa)), closes [#339](https://github.com/ng-select/ng-select/issues/339)
+
+
+
 <a name="0.26.2"></a>
 ## [0.26.2](https://github.com/ng-select/ng-select/compare/v0.26.1...v0.26.2) (2018-03-09)
 
