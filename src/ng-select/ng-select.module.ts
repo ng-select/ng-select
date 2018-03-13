@@ -9,7 +9,8 @@ import {
     NgOptgroupTemplateDirective,
     NgNotFoundTemplateDirective,
     NgTypeToSearchTemplateDirective,
-    NgLoadingTextTemplateDirective
+    NgLoadingTextTemplateDirective,
+    NgMultiLabelTemplateDirective
 } from './ng-templates.directive';
 import { NgOptionComponent } from './ng-option.component';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
@@ -26,6 +27,7 @@ import { VirtualScrollService } from './virtual-scroll.service';
         NgOptgroupTemplateDirective,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
+        NgMultiLabelTemplateDirective,
         NgHeaderTemplateDirective,
         NgFooterTemplateDirective,
         NgNotFoundTemplateDirective,
@@ -42,6 +44,7 @@ import { VirtualScrollService } from './virtual-scroll.service';
         NgOptgroupTemplateDirective,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
+        NgMultiLabelTemplateDirective,
         NgHeaderTemplateDirective,
         NgFooterTemplateDirective,
         NgNotFoundTemplateDirective,

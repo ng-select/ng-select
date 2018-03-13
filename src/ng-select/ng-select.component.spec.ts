@@ -1139,6 +1139,22 @@ describe('NgSelectComponent', function () {
             });
         }));
 
+        it('should display custom multiple label template', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities" [multiple]="true" [(ngModel)]="selectedCities">
+                    <ng-template ng-multi-label-tmp let-items="items">
+                        <div class="custom-multi-label">selected {{items.length}}</div>
+                    </ng-template>
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
+            tickAndDetectChanges(fixture);
+
+            const el = fixture.debugElement.query(By.css('.custom-multi-label')).nativeElement;
+            expect(el.innerHTML).toBe('selected 1');
+        }));
+
         it('should display custom footer and header template', async(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
@@ -1163,7 +1179,6 @@ describe('NgSelectComponent', function () {
             });
         }));
 
-
         it('should display custom loading and no data found template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectFilterTestCmp,
@@ -1183,8 +1198,6 @@ describe('NgSelectComponent', function () {
                     </ng-template>
                 </ng-select>`);
 
-            
-
             fixture.whenStable().then(() => {
                 fixture.componentInstance.cities = [];
                 fixture.componentInstance.citiesLoading = true;
@@ -1200,8 +1213,7 @@ describe('NgSelectComponent', function () {
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 tickAndDetectChanges(fixture);
                 const notFoundOptions = fixture.debugElement.queryAll(By.css('.custom-notfound'));
-                expect(notFoundOptions.length).toBe(1);
-                
+                expect(notFoundOptions.length).toBe(1); 
             });
         }));
 
@@ -1219,8 +1231,6 @@ describe('NgSelectComponent', function () {
                    
                 </ng-select>`);
 
-            
-
             fixture.whenStable().then(() => {
                 fixture.componentInstance.cities = [];
                 fixture.componentInstance.select.open();
@@ -1230,9 +1240,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 const loadingOption = fixture.debugElement.queryAll(By.css('.custom-typeforsearch'));
                 expect(loadingOption.length).toBe(1);
-                
             });
-
         }));
 
         it('should create items from ng-option', fakeAsync(() => {
@@ -2113,6 +2121,7 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
 class NgSelectBasicTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
+    selectedCities: { id: number; name: string }[];
     multiple = false;
     disabled = false;
     dropdownPosition = 'bottom';

@@ -35,7 +35,8 @@ import {
     NgOptgroupTemplateDirective,
     NgNotFoundTemplateDirective,
     NgTypeToSearchTemplateDirective,
-    NgLoadingTextTemplateDirective
+    NgLoadingTextTemplateDirective,
+    NgMultiLabelTemplateDirective
 } from './ng-templates.directive';
 
 import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
@@ -111,6 +112,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
     @ContentChild(NgOptgroupTemplateDirective, { read: TemplateRef }) optgroupTemplate: TemplateRef<any>;
     @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
+    @ContentChild(NgMultiLabelTemplateDirective, { read: TemplateRef }) multiLabelTemplate: TemplateRef<any>;
     @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerTemplate: TemplateRef<any>;
     @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;
     @ContentChild(NgNotFoundTemplateDirective, { read: TemplateRef }) notFoundTemplate: TemplateRef<any>;

@@ -58,7 +58,7 @@ import { DataService } from '../shared/data.service';
         <br>
         <button class="btn btn-secondary btn-sm" (click)="disable = !disable">Toggle disabled</button>
         <hr/>
-        <label>Custom label templates</label>
+        <label>Custom template for each selected item</label>
         ---html,true
         <ng-select
             [items]="githubUsers$ | async"
@@ -73,6 +73,25 @@ import { DataService } from '../shared/data.service';
 
             <ng-template ng-option-tmp let-item="item">
                 <img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}
+            </ng-template>
+        </ng-select>
+        ---
+        <hr/>
+
+        <label>Custom template for all selected items</label>
+        ---html,true
+        <ng-select
+            #api
+            [items]="githubUsers$ | async"
+            [multiple]="true"
+            bindLabel="login"
+            placeholder="Select items"
+            [(ngModel)]="selectedUsers">
+            <ng-template ng-multi-label-tmp let-item="item" let-items="items">
+                <div class="ng-value">
+                    <span class="ng-value-icon left" (click)="api.clearModel(); $event.stopPropagation()" aria-hidden="true">×</span>
+                    <span class="ng-value-label">Selected {{items.length}} items</span>
+                </div>
             </ng-template>
         </ng-select>
         ---

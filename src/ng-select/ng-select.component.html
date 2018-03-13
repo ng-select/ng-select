@@ -1,17 +1,25 @@
 <div (click)="searchable ? open() : toggle()" [class.ng-has-value]="hasValue" class="ng-control">
     <div class="ng-value-container">
         <div class="ng-placeholder">{{placeholder}}</div>
-        <div [class.disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems">
-            <ng-template #defaultLabelTemplate>
-                <span class="ng-value-icon left" (click)="unselect(item); $event.stopPropagation()" aria-hidden="true">×</span>
-                <span class="ng-value-label" [innerHTML]="item.label"></span>
-            </ng-template>
 
-            <ng-template
-                [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
-                [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
-            </ng-template>
-        </div>
+        <ng-container *ngIf="!multiLabelTemplate && selectedItems.length > 0">
+            <div [class.disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems">
+                <ng-template #defaultLabelTemplate>
+                    <span class="ng-value-icon left" (click)="unselect(item); $event.stopPropagation()" aria-hidden="true">×</span>
+                    <span class="ng-value-label" [innerHTML]="item.label"></span>
+                </ng-template>
+    
+                <ng-template
+                    [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
+                    [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
+                </ng-template>
+            </div>
+        </ng-container>
+
+        <ng-template *ngIf="multiLabelTemplate && selectedItems.length > 0"
+                [ngTemplateOutlet]="multiLabelTemplate"
+                [ngTemplateOutletContext]="{ items: selectedItems }">
+        </ng-template>
 
         <div *ngIf="showFilter()" class="ng-input">
             <input #filterInput
