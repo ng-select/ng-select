@@ -247,10 +247,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     writeValue(value: any | any[]): void {
+        this.itemsList.clearSelected();
         if (value === undefined) {
             return;
         }
-        this.itemsList.clearSelected();
         this._validateWriteValue(value);
         this._handleWriteValue(value);
         this.detectChanges();
