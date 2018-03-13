@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.28.1"></a>
+## [0.28.1](https://github.com/ng-select/ng-select/compare/v0.28.0...v0.28.1) (2018-03-13)
+
+
+### Bug Fixes
+
+* always clear selected value on writeValue ([#349](https://github.com/ng-select/ng-select/issues/349)) ([8edea5a](https://github.com/ng-select/ng-select/commit/8edea5a))
+
+
+
 <a name="0.28.0"></a>
 # [0.28.0](https://github.com/ng-select/ng-select/compare/v0.27.1...v0.28.0) (2018-03-13)
 
