@@ -22,6 +22,7 @@ import { DataService } from '../shared/data.service';
                 <li *ngFor="let item of selectedPeople1">{{item.name}}</li>
             </ul>
             <button (click)="clearModel1()" class="btn btn-secondary btn-sm">Clear model</button>
+            <button (click)="changeModel1()" class="btn btn-secondary btn-sm">Change model</button>
         </div>
         <hr/>
 
@@ -108,6 +109,10 @@ export class SelectMultiComponent {
 
     clearModel1() {
         this.selectedPeople1 = [];
+    }
+
+    changeModel1() {
+        this.selectedPeople1 = [{ name: 'New person' }];
     }
 
     clearModel2() {

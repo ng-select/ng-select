@@ -250,6 +250,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (value === undefined) {
             return;
         }
+        this.itemsList.clearSelected();
         this._validateWriteValue(value);
         this._handleWriteValue(value);
         this.detectChanges();
@@ -496,7 +497,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _handleWriteValue(ngModel: any | any[]) {
         const isEmptyArray = ngModel && Array.isArray(ngModel) && ngModel.length === 0;
         if (ngModel === null || isEmptyArray) {
-            this.itemsList.clearSelected();
             return;
         }
 

@@ -308,7 +308,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.selectedCity).toBeNull();
         }));
 
-        it('should clear previous value when setting new model', fakeAsync(() => {
+        it('should clear previous single select value when setting new model', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectModelChangesTestCmp,
                 `<ng-select [items]="cities"
@@ -319,13 +319,37 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             tickAndDetectChanges(fixture);
-
+            
             const lastSelection: any = fixture.componentInstance.select.selectedItems[0];
             expect(lastSelection.selected).toBeTruthy();
 
             fixture.componentInstance.selectedCity = null;
             tickAndDetectChanges(fixture);
             expect(lastSelection.selected).toBeFalsy();
+        }));
+
+        it('should clear previous multiple select value when setting new model', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectModelChangesTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [multiple]="true"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCities">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
+            tickAndDetectChanges(fixture);
+            const select = fixture.componentInstance.select;
+            expect(select.selectedItems.length).toBe(1);
+
+            fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[1]];
+            tickAndDetectChanges(fixture);
+            expect(select.selectedItems.length).toBe(1);
+
+            fixture.componentInstance.selectedCities = [];
+            tickAndDetectChanges(fixture);
+            expect(select.selectedItems.length).toBe(0);
         }));
 
         it('should not add selected items to new items list when [items] are changed', fakeAsync(() => {
