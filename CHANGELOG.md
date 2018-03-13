@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.28.0"></a>
+# [0.28.0](https://github.com/ng-select/ng-select/compare/v0.27.1...v0.28.0) (2018-03-13)
+
+
+### Bug Fixes
+
+* clear previous model then setting new programatically ([#346](https://github.com/ng-select/ng-select/issues/346)) ([3311f8c](https://github.com/ng-select/ng-select/commit/3311f8c)), closes [#343](https://github.com/ng-select/ng-select/issues/343)
+* demo custom templates ([32c4b25](https://github.com/ng-select/ng-select/commit/32c4b25))
+
+
+### Features
+
+* **template:** loading, not found, type to search state template options. ([#341](https://github.com/ng-select/ng-select/issues/341)) ([acdf5c2](https://github.com/ng-select/ng-select/commit/acdf5c2)), closes [#217](https://github.com/ng-select/ng-select/issues/217) [#201](https://github.com/ng-select/ng-select/issues/201)
+
+
+
 <a name="0.27.1"></a>
 ## [0.27.1](https://github.com/ng-select/ng-select/compare/v0.27.0...v0.27.1) (2018-03-12)
 
