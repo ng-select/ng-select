@@ -89,9 +89,9 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
         ---
         <p>
             Selected people: {{selectedPeople}}
-        </p
+        </p>
 
-        <label>Custom not found ,  type to search and loading </label>
+        <label>Custom not found, type to search and loading </label>
         ---html,true
         <ng-select
             [multiple]="true"
@@ -107,15 +107,13 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
                 </div>
             </ng-template>
             <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
-
                 <div class="ng-option disabled">
                     No data found for "{{searchTerm}}"
                 </div>
             </ng-template>
             <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
-
                 <div class="ng-option disabled">
-                    Fetching Data for "{{searchTerm}}"
+                    Fetching data for "{{searchTerm}}"
                 </div>
             </ng-template>
         </ng-select>

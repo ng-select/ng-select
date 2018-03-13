@@ -92,7 +92,7 @@
     
         <ng-template
             [ngTemplateOutlet]="notFoundTemplate || defaultNotfoundTemplate"
-            [ngTemplateOutletContext]="{searchTerm: filterValue }">
+            [ngTemplateOutletContext]="{ searchTerm: filterValue }">
         </ng-template>
     </ng-container>
 
@@ -102,19 +102,18 @@
         </ng-template>
     
         <ng-template
-            [ngTemplateOutlet]="typeToSearchTemplate || defaultTypeToSearchTemplate"
-            [ngTemplateOutletContext]="{ searchTerm: filterValue }">
+            [ngTemplateOutlet]="typeToSearchTemplate || defaultTypeToSearchTemplate">
         </ng-template>
     </ng-container>
    
     <ng-container *ngIf="isLoading && itemsList.filteredItems.length === 0">
         <ng-template #defaultLoadingTextTemplate>
-            <div class="ng-option disabled" [innerHTML]="loadingText" ></div>
+            <div class="ng-option disabled" [innerHTML]="loadingText"></div>
         </ng-template>
     
         <ng-template
             [ngTemplateOutlet]="loadingTextTemplate || defaultLoadingTextTemplate"
-            [ngTemplateOutletContext]="{ isearchTerm: filterValue  }">
+            [ngTemplateOutletContext]="{ searchTerm: filterValue  }">
         </ng-template>
     </ng-container>
 
