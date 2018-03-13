@@ -1139,6 +1139,78 @@ describe('NgSelectComponent', function () {
             });
         }));
 
+
+        it('should display custom loading and no data found template', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectFilterTestCmp,
+                `<ng-select [items]="cities" 
+                            [loading]="citiesLoading"
+                            [(ngModel)]="selectedCity">
+                    
+                    <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+                        <div class="custom-notfound">
+                            No data found for "{{searchTerm}}"
+                        </div>
+                    </ng-template>
+                    <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+                        <div class="custom-loading">
+                            Fetching Data for "{{searchTerm}}"
+                        </div>
+                    </ng-template>
+                </ng-select>`);
+
+            
+
+            fixture.whenStable().then(() => {
+                fixture.componentInstance.cities = [];
+                fixture.componentInstance.citiesLoading = true;
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+                const loadingOption = fixture.debugElement.queryAll(By.css('.custom-loading'));
+                expect(loadingOption.length).toBe(1);
+                
+
+                fixture.componentInstance.citiesLoading = false;
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+                const notFoundOptions = fixture.debugElement.queryAll(By.css('.custom-notfound'));
+                expect(notFoundOptions.length).toBe(1);
+                
+            });
+        }));
+
+        it('should display custom type for search template', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectFilterTestCmp,
+                `<ng-select [items]="cities" 
+                            [typeahead]="customFilter" 
+                            [(ngModel)]="selectedCity">
+                    <ng-template ng-typetosearch-tmp>
+                        <div class="custom-typeforsearch">
+                            Start typing...
+                        </div>
+                    </ng-template>
+                   
+                </ng-select>`);
+
+            
+
+            fixture.whenStable().then(() => {
+                fixture.componentInstance.cities = [];
+                fixture.componentInstance.select.open();
+                fixture.componentInstance.customFilter.subscribe();
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+                const loadingOption = fixture.debugElement.queryAll(By.css('.custom-typeforsearch'));
+                expect(loadingOption.length).toBe(1);
+                
+            });
+
+        }));
+
         it('should create items from ng-option', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
@@ -2182,6 +2254,7 @@ class NgSelectModelChangesTestCmp {
 })
 class NgSelectFilterTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    citiesLoading = false;
     selectedCity: { id: number; name: string };
     cities = [
         { id: 1, name: 'Vilnius' },

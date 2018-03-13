@@ -6,7 +6,10 @@ import {
     NgLabelTemplateDirective,
     NgHeaderTemplateDirective,
     NgFooterTemplateDirective,
-    NgOptgroupTemplateDirective
+    NgOptgroupTemplateDirective,
+    NgNotFoundTemplateDirective,
+    NgTypeToSearchTemplateDirective,
+    NgLoadingTextTemplateDirective
 } from './ng-templates.directive';
 import { NgOptionComponent } from './ng-option.component';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
@@ -25,6 +28,9 @@ import { VirtualScrollService } from './virtual-scroll.service';
         NgLabelTemplateDirective,
         NgHeaderTemplateDirective,
         NgFooterTemplateDirective,
+        NgNotFoundTemplateDirective,
+        NgTypeToSearchTemplateDirective,
+        NgLoadingTextTemplateDirective
     ],
     imports: [
         CommonModule
@@ -37,7 +43,10 @@ import { VirtualScrollService } from './virtual-scroll.service';
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
         NgHeaderTemplateDirective,
-        NgFooterTemplateDirective
+        NgFooterTemplateDirective,
+        NgNotFoundTemplateDirective,
+        NgTypeToSearchTemplateDirective,
+        NgLoadingTextTemplateDirective
     ],
     providers: [
         WindowService,

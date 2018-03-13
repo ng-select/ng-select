@@ -1,5 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { DataService } from '../shared/data.service';
+import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
+
 
 @Component({
     selector: 'select-with-templates',
@@ -87,7 +89,41 @@ import { DataService } from '../shared/data.service';
         ---
         <p>
             Selected people: {{selectedPeople}}
+        </p
+
+        <label>Custom not found ,  type to search and loading </label>
+        ---html,true
+        <ng-select
+            [multiple]="true"
+            [items]="serverSideFilterItems"
+            [(ngModel)]="selectedPeople"
+            placeholder="Select people"
+            bindLabel="name"
+            bindValue="name"
+            [typeahead]="peopleTypeahead">
+            <ng-template ng-typetosearch-tmp>
+                <div class="ng-option disabled">
+                    Start typing...
+                </div>
+            </ng-template>
+            <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+
+                <div class="ng-option disabled">
+                    No data found for "{{searchTerm}}"
+                </div>
+            </ng-template>
+            <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+
+                <div class="ng-option disabled">
+                    Fetching Data for "{{searchTerm}}"
+                </div>
+            </ng-template>
+        </ng-select>
+        ---
+        <p>
+            Selected people: {{selectedPeople}}
         </p>
+
         <hr />
 
         <label>Custom search</label>
@@ -119,13 +155,17 @@ export class SelectWithTemplatesComponent {
 
     people = [];
     selectedPeople = [];
+    serverSideFilterItems = [];
 
-    constructor(private dataService: DataService) {}
+    peopleTypeahead = new EventEmitter<string>();
+
+    constructor(private dataService: DataService, private cd: ChangeDetectorRef) {}
 
     ngOnInit() {
         this.dataService.getPeople().subscribe(items => {
             this.people = items;
         });
+        this.serverSideSearch();
     }
 
     selectAll() {
@@ -134,6 +174,20 @@ export class SelectWithTemplatesComponent {
 
     unselectAll() {
         this.selectedPeople = [];
+    }
+
+    private serverSideSearch() {
+        this.peopleTypeahead.pipe(
+            distinctUntilChanged(),
+            debounceTime(300),
+            switchMap(term => this.dataService.getPeople(term))
+        ).subscribe(x => {
+            this.cd.markForCheck();
+            this.serverSideFilterItems = x;
+        }, (err) => {
+            console.log(err);
+            this.serverSideFilterItems = [];
+        });
     }
 }
 

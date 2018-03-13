@@ -85,15 +85,37 @@
         </div>
     </ng-container>
 
-    <div class="ng-option disabled" *ngIf="showNoItemsFound()">
-        {{notFoundText}}
-    </div>
+    <ng-container *ngIf="showNoItemsFound()">
+        <ng-template #defaultNotfoundTemplate>
+            <div class="ng-option disabled" [innerHTML]="notFoundText" *ngIf="showNoItemsFound()"></div>
+        </ng-template>
+    
+        <ng-template
+            [ngTemplateOutlet]="notFoundTemplate || defaultNotfoundTemplate"
+            [ngTemplateOutletContext]="{searchTerm: filterValue }">
+        </ng-template>
+    </ng-container>
 
-    <div class="ng-option disabled" *ngIf="showTypeToSearch()">
-        {{typeToSearchText}}
-    </div>
+    <ng-container *ngIf="showTypeToSearch()">
+        <ng-template #defaultTypeToSearchTemplate>
+            <div class="ng-option disabled" [innerHTML]="typeToSearchText"></div>
+        </ng-template>
+    
+        <ng-template
+            [ngTemplateOutlet]="typeToSearchTemplate || defaultTypeToSearchTemplate"
+            [ngTemplateOutletContext]="{ searchTerm: filterValue }">
+        </ng-template>
+    </ng-container>
+   
+    <ng-container *ngIf="isLoading && itemsList.filteredItems.length === 0">
+        <ng-template #defaultLoadingTextTemplate>
+            <div class="ng-option disabled" [innerHTML]="loadingText" ></div>
+        </ng-template>
+    
+        <ng-template
+            [ngTemplateOutlet]="loadingTextTemplate || defaultLoadingTextTemplate"
+            [ngTemplateOutletContext]="{ isearchTerm: filterValue  }">
+        </ng-template>
+    </ng-container>
 
-    <div class="ng-option disabled" *ngIf="isLoading && itemsList.filteredItems.length === 0">
-        {{loadingText}}
-    </div>
 </ng-dropdown-panel>

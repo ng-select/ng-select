@@ -29,3 +29,23 @@ export class NgFooterTemplateDirective {
     constructor(public template: TemplateRef<any>) {
     }
 }
+
+@Directive({ selector: '[ng-notfound-tmp]' })
+export class NgNotFoundTemplateDirective {
+    constructor(public template: TemplateRef<any>) {
+    }
+}
+
+
+@Directive({ selector: '[ng-typetosearch-tmp]' })
+export class NgTypeToSearchTemplateDirective {
+    constructor(public template: TemplateRef<any>) {
+    }
+}
+
+
+@Directive({ selector: '[ng-loadingtext-tmp]' })
+export class NgLoadingTextTemplateDirective {
+    constructor(public template: TemplateRef<any>) {
+    }
+}
