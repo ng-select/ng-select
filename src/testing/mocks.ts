@@ -22,3 +22,10 @@ export class MockNgWindow extends WindowService {
         return fn();
     }
 }
+
+@Injectable()
+export class MockConsole {
+    warn() {
+
+    }
+}
