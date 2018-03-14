@@ -16,6 +16,7 @@ export class AppComponent {
 
     title: string;
     version: string = window['ngSelectVersion'];
+    exampleSourceUrl: string;
 
     constructor(private router: Router,
         private activatedRoute: ActivatedRoute,
@@ -41,6 +42,7 @@ export class AppComponent {
             .subscribe((event) => {
                 this.title = event['title'];
                 this.titleService.setTitle(this.title);
+                this.exampleSourceUrl = `https://github.com/ng-select/ng-select/tree/master/demo/app/examples/${event['fileName']}`;
             });
     }
 
