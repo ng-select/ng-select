@@ -31,18 +31,20 @@ export const appRoutes: Routes = [
         redirectTo: '/data-sources',
         pathMatch: 'full'
     },
-    { path: 'data-sources', component: DataSourceComponent, data: { title: 'Data sources' } },
-    { path: 'forms', component: ReactiveFormsComponent, data: { title: 'Reactive forms' } },
-    { path: 'bindings', component: SelectBindingsComponent, data: { title: 'Data bindings' } },
-    { path: 'filter', component: SelectSearchComponent, data: { title: 'Filter and autocomplete'} },
-    { path: 'tags', component: SelectTagsComponent, data: { title: 'Tags'} },
-    { path: 'templates', component: SelectWithTemplatesComponent, data: { title: 'Templates'} },
-    { path: 'multiselect', component: SelectMultiComponent, data: { title: 'Multiselect'} },
-    { path: 'events', component: SelectEventsComponent, data: { title: 'Output events'} },
-    { path: 'virtual-scroll', component: VirtualScrollComponent, data: { title: 'Virtual scroll'} },
-    { path: 'dropdown-position', component: DropdownPositionsComponent, data: { title: 'Dropdown position'} },
-    { path: 'append-to-element', component: AppendToComponent, data: { title: 'Append to element'} },
-    { path: 'grouping', component: SelectGroupsComponent, data: { title: 'Grouping'} },
+    { path: 'data-sources', component: DataSourceComponent, data: { title: 'Data sources', fileName: 'data-source.component.ts' } },
+    { path: 'forms', component: ReactiveFormsComponent, data: { title: 'Reactive forms', fileName: 'reactive-forms.component.ts' } },
+    { path: 'bindings', component: SelectBindingsComponent, data: { title: 'Data bindings', fileName: 'bindings.component.ts' } },
+    { path: 'filter', component: SelectSearchComponent, data: { title: 'Filter and autocomplete', fileName: 'search.component.ts' } },
+    { path: 'tags', component: SelectTagsComponent, data: { title: 'Tags', fileName: 'tags.component.ts' } },
+    { path: 'templates', component: SelectWithTemplatesComponent, data: { title: 'Templates', fileName: 'custom-templates.component.ts' } },
+    { path: 'multiselect', component: SelectMultiComponent, data: { title: 'Multiselect', fileName: 'multi.component.ts' } },
+    { path: 'events', component: SelectEventsComponent, data: { title: 'Output events', fileName: 'events.component.ts' } },
+    // tslint:disable-next-line:max-line-length
+    { path: 'virtual-scroll', component: VirtualScrollComponent, data: { title: 'Virtual scroll', fileName: 'virtual-scroll.component.ts' } },
+    { path: 'dropdown-position', component: DropdownPositionsComponent, data: { title: 'Dropdown position', fileName: 'dropdown-positions.component.ts' } },
+    // tslint:disable-next-line:max-line-length
+    { path: 'append-to-element', component: AppendToComponent, data: { title: 'Append to element', fileName: 'append-to.component.ts' } },
+    { path: 'grouping', component: SelectGroupsComponent, data: { title: 'Grouping', fileName: 'groups.component.ts' } },
 ];
 
 @NgModule({
