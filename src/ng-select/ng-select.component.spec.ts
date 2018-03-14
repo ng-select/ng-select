@@ -20,7 +20,8 @@ import { KeyCode, NgOption } from './ng-select.types';
 import { Subject } from 'rxjs/Subject';
 import { WindowService } from './window.service';
 import { TestsErrorHandler } from '../testing/helpers';
-import { MockNgZone, MockNgWindow } from '../testing/mocks';
+import { MockNgZone, MockNgWindow, MockConsole } from '../testing/mocks';
+import { ConsoleService } from './console.service';
 
 describe('NgSelectComponent', function () {
 
@@ -482,6 +483,44 @@ describe('NgSelectComponent', function () {
             discardPeriodicTasks();
         }));
 
+        it('should not set internal model when single select ngModel is not valid', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [multiple]="false"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            const invalidValues = [undefined, null];
+
+            for (let v of invalidValues) {
+                fixture.componentInstance.selectedCity = <any>v;
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.selectedItems.length).toBe(0);
+            }
+        }));
+
+        it('should not set internal model when multiselect ngModel is not valid', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [multiple]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            const invalidValues = [{}, '', undefined, 0, 1, 'false', 'true', false];
+
+            for (let v of invalidValues) {
+                fixture.componentInstance.selectedCity = <any>v;
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.selectedItems.length).toBe(0);
+            }
+        }));
+
         describe('Pre-selected model', () => {
             describe('single', () => {
                 it('should select by bindValue when primitive type', fakeAsync(() => {
@@ -514,22 +553,21 @@ describe('NgSelectComponent', function () {
                         </ng-select>`);
 
                     tickAndDetectChanges(fixture);
+                    tickAndDetectChanges(fixture);
 
-                    const select = fixture.componentInstance.select;
-                    const selectEl: HTMLElement = select.elementRef.nativeElement;
-                    // tslint:disable-next-line:max-line-length
                     const classes = ['ng-select', 'bottom', 'ng-single', 'searchable', 'ng-untouched', 'ng-pristine', 'ng-valid'];
+                    const selectEl = fixture.nativeElement.querySelector('ng-select');
                     for (const c of classes) {
                         expect(selectEl.classList.contains(c)).toBeTruthy(`expected to contain "${c}" class`);
                     }
-                    let control = selectEl.querySelector('.ng-control');
-                    expect(control.classList.contains('ng-has-value')).toBeTruthy();
-
+                    let hasValueEl = fixture.nativeElement.querySelector('.ng-has-value');
+                    expect(hasValueEl).not.toBeNull();
 
                     fixture.componentInstance.selectedCity = null;
                     tickAndDetectChanges(fixture);
-                    control = selectEl.querySelector('.ng-control');
-                    expect(control.classList.contains('ng-has-value')).toBeFalsy();
+                    tickAndDetectChanges(fixture);
+                    hasValueEl = fixture.nativeElement.querySelector('.ng-has-value');
+                    expect(hasValueEl).toBeNull();
                 }));
 
                 it('should select by bindValue ', fakeAsync(() => {
@@ -1065,7 +1103,7 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Custom templates', () => {
-        it('should display custom header template', async(() => {
+        it('should display custom header template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities" [(ngModel)]="selectedCity">
@@ -1075,13 +1113,12 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
-            fixture.detectChanges();
+            tickAndDetectChanges(fixture);
+            tickAndDetectChanges(fixture);
 
-            fixture.whenStable().then(() => {
-                const el = fixture.debugElement.query(By.css('.custom-header'));
-                expect(el).not.toBeNull();
-                expect(el.nativeElement).not.toBeNull();
-            });
+            const el = fixture.debugElement.query(By.css('.custom-header'));
+            expect(el).not.toBeNull();
+            expect(el.nativeElement).not.toBeNull();
         }));
 
         it('should clear item using value', fakeAsync(() => {
@@ -1149,6 +1186,7 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
+            tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
 
             const el = fixture.debugElement.query(By.css('.custom-multi-label')).nativeElement;
@@ -1481,11 +1519,13 @@ describe('NgSelectComponent', function () {
             const select = fixture.componentInstance.select;
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             tickAndDetectChanges(fixture);
+            tickAndDetectChanges(fixture);
             const selectEl: HTMLElement = select.elementRef.nativeElement;
             const placeholder = selectEl.querySelector('.ng-placeholder')
             expect(getComputedStyle(placeholder).display).toBe('none');
 
             select.handleClearClick(<any>{ stopPropagation: () => { } });
+            tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
 
             expect(getComputedStyle(placeholder).display).toBe('block');
@@ -1876,11 +1916,13 @@ describe('NgSelectComponent', function () {
                 `<ng-select [items]="cities"
                         (change)="onChange($event)"
                         bindLabel="name"
+                        [disabled]="disabled"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
 
             spyOn(fixture.componentInstance, 'onChange');
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
             clickIcon = fixture.debugElement.query(By.css('.ng-clear-zone'));
         }));
@@ -1909,7 +1951,9 @@ describe('NgSelectComponent', function () {
         }));
 
         it('clear button should not appear if select is disabled', fakeAsync(() => {
-            fixture.componentInstance.select.setDisabledState(true);
+            fixture.componentInstance.disabled = true;
+            tickAndDetectChanges(fixture);
+            tickAndDetectChanges(fixture);
             const el = fixture.debugElement.query(By.css('.ng-clear-zone'));
             expect(el).toBeNull();
         }));
@@ -2118,7 +2162,8 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
         providers: [
             { provide: ErrorHandler, useClass: TestsErrorHandler },
             { provide: NgZone, useFactory: () => new MockNgZone() },
-            { provide: WindowService, useFactory: () => new MockNgWindow() }
+            { provide: WindowService, useFactory: () => new MockNgWindow() },
+            { provide: ConsoleService, useFactory: () => new MockConsole() }
         ]
     })
         .overrideComponent(cmp, {
@@ -2322,7 +2367,8 @@ class NgSelectFilterTestCmp {
 class NgSelectEventsTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedCity: { id: number; name: string };
-    selectedCityId: number
+    selectedCityId: number;
+    disabled: boolean;
     selectedCities: Array<{ id: number; name: string }>;
     cities = [
         { id: 0, name: 'All' },

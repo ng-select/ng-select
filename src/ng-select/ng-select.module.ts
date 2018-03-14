@@ -17,6 +17,7 @@ import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { WindowService } from './window.service';
 import { VirtualScrollService } from './virtual-scroll.service';
+import { ConsoleService } from './console.service';
 
 @NgModule({
     declarations: [
@@ -52,6 +53,7 @@ import { VirtualScrollService } from './virtual-scroll.service';
         NgLoadingTextTemplateDirective
     ],
     providers: [
+        ConsoleService,
         WindowService,
         VirtualScrollService,
         {

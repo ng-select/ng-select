@@ -44,6 +44,7 @@ import { ItemsList } from './items-list';
 import { NgOptionComponent } from './ng-option.component';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { isDefined, isFunction, isPromise, isObject } from './value-utils';
+import { ConsoleService } from './console.service';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
@@ -147,8 +148,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.unselect(option);
     };
 
-    constructor(@Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
+    constructor( @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private _cd: ChangeDetectorRef,
+        private _console: ConsoleService,
         public elementRef: ElementRef
     ) {
         this._mergeGlobalConfig(config);
@@ -254,12 +256,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     writeValue(value: any | any[]): void {
         this.itemsList.clearSelected();
-        if (value === undefined) {
-            return;
-        }
-        this._validateWriteValue(value);
         this._handleWriteValue(value);
-        this.detectChanges();
+        this._cd.markForCheck();
     }
 
     registerOnChange(fn: any): void {
@@ -272,7 +270,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     setDisabledState(isDisabled: boolean): void {
         this.isDisabled = isDisabled;
-        this.detectChanges();
+        this._cd.markForCheck();
     }
 
     toggle() {
@@ -479,32 +477,37 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             });
     }
 
-    private _validateWriteValue(value: any) {
-        if (!isDefined(value)) {
-            return;
+    private _isValidWriteValue(value: any): boolean {
+        if (!isDefined(value) ||
+            (this.multiple && value === '') ||
+            Array.isArray(value) && value.length === 0
+        ) {
+            return false;
         }
 
-        const validateBinding = (item: any) => {
+        const validateBinding = (item: any): boolean => {
             if (isObject(item) && this.bindValue) {
-                throw new Error('Binding object with bindValue is not allowed.');
+                this._console.warn(`Binding object(${JSON.stringify(item)}) with bindValue is not allowed.`);
+                return false;
             }
+            return true;
         };
 
         if (this.multiple) {
             if (!Array.isArray(value)) {
-                throw new Error('Multiple select model should be array.');
+                this._console.warn('Multiple select ngModel should be array.');
+                return false;
             }
-            value.forEach(item => validateBinding(item));
+            return value.every(item => validateBinding(item));
         } else {
-            validateBinding(value);
+            return validateBinding(value);
         }
     }
 
     private _handleWriteValue(ngModel: any | any[]) {
-        const isEmptyArray = ngModel && Array.isArray(ngModel) && ngModel.length === 0;
-        if (ngModel === null || isEmptyArray) {
-            return;
-        }
+        if (!this._isValidWriteValue(ngModel)) {
+            return
+        };
 
         const select = (val: any) => {
             let item = this.itemsList.findItem(val);
@@ -568,7 +571,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this._onChange(isDefined(model[0]) ? model[0] : null);
             this.changeEvent.emit(this.selectedItems[0] && this.selectedItems[0].value);
         }
-        
+
         this._cd.markForCheck();
     }
 
