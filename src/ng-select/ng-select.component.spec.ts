@@ -319,7 +319,7 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             tickAndDetectChanges(fixture);
-            
+
             const lastSelection: any = fixture.componentInstance.select.selectedItems[0];
             expect(lastSelection.selected).toBeTruthy();
 
@@ -1206,14 +1206,14 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 const loadingOption = fixture.debugElement.queryAll(By.css('.custom-loading'));
                 expect(loadingOption.length).toBe(1);
-                
+
 
                 fixture.componentInstance.citiesLoading = false;
                 tickAndDetectChanges(fixture);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 tickAndDetectChanges(fixture);
                 const notFoundOptions = fixture.debugElement.queryAll(By.css('.custom-notfound'));
-                expect(notFoundOptions.length).toBe(1); 
+                expect(notFoundOptions.length).toBe(1);
             });
         }));
 
@@ -1627,6 +1627,24 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.filterValue).toBe(null);
         }));
 
+        it('should not reset items when selecting option', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectFilterTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [(ngModel)]="selectedCity"
+                    [multiple]="true">
+                </ng-select>`);
+
+            const clearFilter = spyOn(fixture.componentInstance.select.itemsList, 'clearFilter');
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.select.filterValue = null;
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+            tickAndDetectChanges(fixture);
+            expect(clearFilter).not.toHaveBeenCalled();
+        }));
+
         it('should filter grouped items', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
@@ -1765,7 +1783,7 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.selectedCityId = fixture.componentInstance.cities[1].id;
             tickAndDetectChanges(fixture);
-            
+
             const select = fixture.componentInstance.select;
             select.select(select.itemsList.items[0]);
             tickAndDetectChanges(fixture);
@@ -2088,8 +2106,8 @@ function getNgSelectElement(fixture: ComponentFixture<any>): DebugElement {
 function triggerKeyDownEvent(element: DebugElement, key: number): void {
     element.triggerEventHandler('keydown', {
         which: key,
-        preventDefault: () => {},
-        stopPropagation: () => {}
+        preventDefault: () => { },
+        stopPropagation: () => { }
     });
 }
 
