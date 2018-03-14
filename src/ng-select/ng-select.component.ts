@@ -573,6 +573,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _clearSearch() {
+        if (!this.filterValue) {
+            return;
+        }
+
         this.filterValue = null;
         this.itemsList.clearFilter();
     }
