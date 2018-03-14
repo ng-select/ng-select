@@ -482,6 +482,52 @@ describe('NgSelectComponent', function () {
             discardPeriodicTasks();
         }));
 
+        it('should throw validation error when multiselect ngModel is not array (except empty string)', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [multiple]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCity = <any>{};
+
+            expect(() => tickAndDetectChanges(fixture)).toThrowError();
+        }));
+
+        it('should not throw validation error when multiselect ngModel is empty string', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [multiple]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCity = <any>'';
+
+            expect(() => tickAndDetectChanges(fixture)).not.toThrowError();
+        }));
+
+        it('should throw validation error when ngModel is object and bindValue is used', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectBasicTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        bindValue="id"
+                        [clearable]="true"
+                        [multiple]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCity = <any>{};
+
+            expect(() => tickAndDetectChanges(fixture)).toThrowError();
+        }));
+
         describe('Pre-selected model', () => {
             describe('single', () => {
                 it('should select by bindValue when primitive type', fakeAsync(() => {
