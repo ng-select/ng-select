@@ -16,9 +16,9 @@
             </div>
         </ng-container>
 
-        <ng-template *ngIf="multiLabelTemplate && selectedItems.length > 0"
+        <ng-template *ngIf="multiLabelTemplate && selectedValues.length > 0"
                 [ngTemplateOutlet]="multiLabelTemplate"
-                [ngTemplateOutletContext]="{ items: selectedItems }">
+                [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
         </ng-template>
 
         <div *ngIf="showFilter()" class="ng-input">

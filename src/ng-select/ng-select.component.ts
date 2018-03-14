@@ -158,6 +158,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         return this.itemsList.value;
     }
 
+    get selectedValues() {
+        return this.selectedItems.map(x => x.value);
+    }
+
     get isLoading() {
         return this.loading || this._typeaheadLoading;
     }
