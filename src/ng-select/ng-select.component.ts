@@ -87,6 +87,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() appendTo: string;
     @Input() loading = false;
     @Input() closeOnSelect = true;
+    @Input() showSelected = true;
     @Input() maxSelectedItems: number;
     @Input() groupBy: string;
     @Input() bufferAmount = 4;
@@ -148,7 +149,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.unselect(option);
     };
 
-    constructor( @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
+    constructor(@Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private _cd: ChangeDetectorRef,
         private _console: ConsoleService,
         public elementRef: ElementRef
@@ -282,7 +283,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     open() {
-        if (this.isDisabled || this.isOpen || this.itemsList.maxItemsSelected()) {
+        if (this.isDisabled || this.isOpen || this.itemsList.maxItemsSelected || this.itemsList.allItemsSelected) {
             return;
         }
         this.isOpen = true;
@@ -325,7 +326,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.addEvent.emit(item.value);
         }
 
-        if (this.closeOnSelect) {
+        if (this.closeOnSelect || this.itemsList.allItemsSelected) {
             this.close();
         }
     }
@@ -432,7 +433,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this._primitive = !isObject(firstItem);
         this.itemsList.setItems(items);
         if (items.length > 0 && this.hasValue) {
-            this._updateSelectedItems();
+            this.itemsList.mapSelectedItems();
         }
 
         if (this._isTypeahead) {
@@ -453,7 +454,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             }));
             this.itemsList.setItems(this.items);
             if (this.hasValue) {
-                this._updateSelectedItems();
+                this.itemsList.mapSelectedItems();
             }
             this.detectChanges();
         }
@@ -537,16 +538,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
     }
 
-    private _updateSelectedItems() {
-        this.selectedItems.forEach((s, i) => {
-            const val = this.bindValue ? s.value[this.bindValue] : s.value;
-            const item = this.itemsList.findItem(val);
-            if (item && s !== item) {
-                item.selected = true;
-                this.itemsList.updateSelectedItem(item, i);
-            }
-        });
-    }
+    
 
     private _updateNgModel() {
         const model = [];
@@ -581,7 +573,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         this.filterValue = null;
-        this.itemsList.clearFilter();
+        this.itemsList.resetItems();
     }
 
     private _scrollToMarked() {

@@ -1676,13 +1676,13 @@ describe('NgSelectComponent', function () {
                     [multiple]="true">
                 </ng-select>`);
 
-            const clearFilter = spyOn(fixture.componentInstance.select.itemsList, 'clearFilter');
+            const resetItems = spyOn(fixture.componentInstance.select.itemsList, 'resetItems');
             tickAndDetectChanges(fixture);
 
             fixture.componentInstance.select.filterValue = null;
             selectOption(fixture, KeyCode.ArrowDown, 1);
             tickAndDetectChanges(fixture);
-            expect(clearFilter).not.toHaveBeenCalled();
+            expect(resetItems).not.toHaveBeenCalled();
         }));
 
         it('should filter grouped items', fakeAsync(() => {

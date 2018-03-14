@@ -26,6 +26,20 @@ import { DataService } from '../shared/data.service';
         </div>
         <hr/>
 
+        <label>Hide selected elements</label>
+        ---html,true
+        <ng-select
+                [items]="people$1 | async"
+                [multiple]="true"
+                [closeOnSelect]="false"
+                [showSelected]="false"
+                bindLabel="name"
+                placeholder="Select people"
+                [(ngModel)]="selectedPeople4">
+        </ng-select>
+        ---
+        <hr/>
+
         <label>Select multiple elements with a limit number of selections (e.g 3)</label>
         ---html,true
         <ng-select
@@ -109,6 +123,7 @@ export class SelectMultiComponent {
 
     people$3: Observable<any[]>;
     selectedPeople3 = [];
+    selectedPeople4 = [];
     disable = true;
 
     githubUsers$: Observable<any[]>;
