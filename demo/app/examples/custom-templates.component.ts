@@ -48,7 +48,7 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
         </p>
         <hr>
 
-        <label>Custom label and option and optgroup</label>
+        <label>Custom label option and optgroup</label>
         ---html,true
         <ng-select [items]="cities3" groupBy="avatar" [(ngModel)]="selectedCity3" bindLabel="name" bindValue="name">
             <ng-template ng-label-tmp let-item="item">
@@ -56,8 +56,7 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
                 <b>{{item.name}}</b>
             </ng-template>
             <ng-template ng-optgroup-tmp let-item="item" let-index="index">
-                <img height="15" width="15" [src]="item.avatar"/>
-                <b [innerHTML]="item.name"></b>
+                City group logo <img height="15" width="15" [src]="item.avatar"/>
             </ng-template>
             <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
                 <b [innerHTML]="item.name" [ngOptionHighlight]="search"></b>

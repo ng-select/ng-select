@@ -18,6 +18,12 @@ export class NgLabelTemplateDirective {
     }
 }
 
+@Directive({ selector: '[ng-multi-label-tmp]' })
+export class NgMultiLabelTemplateDirective {
+    constructor(public template: TemplateRef<any>) {
+    }
+}
+
 @Directive({ selector: '[ng-header-tmp]' })
 export class NgHeaderTemplateDirective {
     constructor(public template: TemplateRef<any>) {
@@ -36,13 +42,11 @@ export class NgNotFoundTemplateDirective {
     }
 }
 
-
 @Directive({ selector: '[ng-typetosearch-tmp]' })
 export class NgTypeToSearchTemplateDirective {
     constructor(public template: TemplateRef<any>) {
     }
 }
-
 
 @Directive({ selector: '[ng-loadingtext-tmp]' })
 export class NgLoadingTextTemplateDirective {

@@ -58,13 +58,13 @@ import { DataService } from '../shared/data.service';
         <br>
         <button class="btn btn-secondary btn-sm" (click)="disable = !disable">Toggle disabled</button>
         <hr/>
-        <label>Custom label templates</label>
+        <label>Custom template for each selected item</label>
         ---html,true
         <ng-select
             [items]="githubUsers$ | async"
             [multiple]="true"
             bindLabel="login"
-            [(ngModel)]="selectedUsers">
+            [(ngModel)]="selectedUsers1">
 
             <ng-template ng-label-tmp let-item="item" let-clear="clear">
                 <span class="ng-value-label"><img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}</span>
@@ -73,6 +73,27 @@ import { DataService } from '../shared/data.service';
 
             <ng-template ng-option-tmp let-item="item">
                 <img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}
+            </ng-template>
+        </ng-select>
+        ---
+        <hr/>
+
+        <label>Custom template for all selected items</label>
+        ---html,true
+        <ng-select
+            [items]="githubUsers$ | async"
+            [multiple]="true"
+            bindLabel="login"
+            placeholder="Select items"
+            [(ngModel)]="selectedUsers2">
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of (items ? items.slice(0,2): [])">
+                    <span class="ng-value-label"><img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2" >
+                    <span class="ng-value-label">{{items.length - 2}} more...</span>
+                </div>
             </ng-template>
         </ng-select>
         ---
@@ -91,7 +112,8 @@ export class SelectMultiComponent {
     disable = true;
 
     githubUsers$: Observable<any[]>;
-    selectedUsers = [];
+    selectedUsers1 = [];
+    selectedUsers2 = [];
 
     constructor(private dataService: DataService) { }
 
