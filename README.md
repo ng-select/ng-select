@@ -138,7 +138,7 @@ map: {
 | loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
 | [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. Default `true`|
 | maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
-| showSelected | `boolean` | `true` | no | When multiple = true, allows to set a hide selected items. |
+| hideSelected | `boolean` | `false` | no | Allows to hide selected items. |
 | multiple | `boolean` | `false` | no | Allows to select multiple items. |
 | notFoundText | `string` | `No items found` | no | Set custom text when filter returns empty result |
 | placeholder | `string` | `-` | no | Placeholder text. |

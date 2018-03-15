@@ -1320,6 +1320,7 @@ describe('NgSelectComponent', function () {
 
     describe('Multiple', () => {
         let fixture: ComponentFixture<NgSelectBasicTestCmp>;
+        let select: NgSelectComponent;
         beforeEach(() => {
             fixture = createTestingModule(
                 NgSelectBasicTestCmp,
@@ -1389,33 +1390,34 @@ describe('NgSelectComponent', function () {
 
         describe('show selected', () => {
             beforeEach(() => {
-                fixture.componentInstance.select.showSelected = false;
-                fixture.componentInstance.select.closeOnSelect = false;
+                select = fixture.componentInstance.select;
+                select.hideSelected = true;
+                select.closeOnSelect = false;
             });
 
             it('should close dropdown when all items are selected', fakeAsync(() => {
                 selectOption(fixture, KeyCode.ArrowDown, 1);
                 selectOption(fixture, KeyCode.ArrowDown, 1);
                 selectOption(fixture, KeyCode.ArrowDown, 1);
-                expect(fixture.componentInstance.select.selectedItems.length).toBe(3);
-                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(0);
-                expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+                expect(select.selectedItems.length).toBe(3);
+                expect(select.itemsList.filteredItems.length).toBe(0);
+                expect(select.isOpen).toBeFalsy();
             }));
 
             it('should not open dropdown when all items are selected', fakeAsync(() => {
                 fixture.componentInstance.selectedCities = [...fixture.componentInstance.cities];
                 tickAndDetectChanges(fixture);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-                expect(fixture.componentInstance.select.selectedItems.length).toBe(3);
-                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(0);
-                expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+                expect(select.selectedItems.length).toBe(3);
+                expect(select.itemsList.filteredItems.length).toBe(0);
+                expect(select.isOpen).toBeFalsy();
             }));
 
             it('should remove selected item from items list', fakeAsync(() => {
                 fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
                 tickAndDetectChanges(fixture);
-                expect(fixture.componentInstance.select.selectedItems.length).toBe(1);
-                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(2);
+                expect(select.selectedItems.length).toBe(1);
+                expect(select.itemsList.filteredItems.length).toBe(2);
             }));
 
             it('should put unselected item back to list', fakeAsync(() => {
@@ -1430,34 +1432,34 @@ describe('NgSelectComponent', function () {
             it('should keep same ordering while unselecting', fakeAsync(() => {
                 fixture.componentInstance.selectedCities = [...fixture.componentInstance.cities.reverse()];
                 tickAndDetectChanges(fixture);
-                fixture.componentInstance.select.unselect(fixture.componentInstance.select.selectedItems[0])
-                fixture.componentInstance.select.unselect(fixture.componentInstance.select.selectedItems[0])
-                fixture.componentInstance.select.unselect(fixture.componentInstance.select.selectedItems[0])
-                expect(fixture.componentInstance.select.selectedItems.length).toBe(0);
-                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(3);
-                expect(fixture.componentInstance.select.itemsList.filteredItems[0].label).toBe('Vilnius');
-                expect(fixture.componentInstance.select.itemsList.filteredItems[1].label).toBe('Kaunas');
-                expect(fixture.componentInstance.select.itemsList.filteredItems[2].label).toBe('Pabrade');
+                select.unselect(select.selectedItems[0])
+                select.unselect(select.selectedItems[0])
+                select.unselect(select.selectedItems[0])
+                expect(select.selectedItems.length).toBe(0);
+                expect(select.itemsList.filteredItems.length).toBe(3);
+                expect(select.itemsList.filteredItems[0].label).toBe('Vilnius');
+                expect(select.itemsList.filteredItems[1].label).toBe('Kaunas');
+                expect(select.itemsList.filteredItems[2].label).toBe('Pabrade');
             }));
 
             it('should reset list while clearing all selected items', fakeAsync(() => {
                 fixture.componentInstance.selectedCities = [...fixture.componentInstance.cities];
                 tickAndDetectChanges(fixture);
-                fixture.componentInstance.select.handleClearClick(<any>{ stopPropagation: () => { } });
-                expect(fixture.componentInstance.select.selectedItems.length).toBe(0);
-                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(3);
+                select.handleClearClick(<any>{ stopPropagation: () => { } });
+                expect(select.selectedItems.length).toBe(0);
+                expect(select.itemsList.filteredItems.length).toBe(3);
             }));
 
             it('should skip selected items while filtering', fakeAsync(() => {
                 fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
                 tickAndDetectChanges(fixture);
-                fixture.componentInstance.select.filter('s');
+                select.filter('s');
                 tickAndDetectChanges(fixture);
-                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
-                expect(fixture.componentInstance.select.itemsList.filteredItems[0].label).toBe('Kaunas');
-                fixture.componentInstance.select.filter('');
+                expect(select.itemsList.filteredItems.length).toBe(1);
+                expect(select.itemsList.filteredItems[0].label).toBe('Kaunas');
+                select.filter('');
                 tickAndDetectChanges(fixture);
-                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(2);
+                expect(select.itemsList.filteredItems.length).toBe(2);
             }));
         });
     });

@@ -87,7 +87,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() appendTo: string;
     @Input() loading = false;
     @Input() closeOnSelect = true;
-    @Input() showSelected = true;
+    @Input() hideSelected = false;
     @Input() maxSelectedItems: number;
     @Input() groupBy: string;
     @Input() bufferAmount = 4;
@@ -283,7 +283,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     open() {
-        if (this.isDisabled || this.isOpen || this.itemsList.maxItemsSelected || this.itemsList.allItemsSelected) {
+        if (this.isDisabled || this.isOpen || this.itemsList.maxItemsSelected || this.itemsList.noItemsToSelect) {
             return;
         }
         this.isOpen = true;
@@ -326,7 +326,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.addEvent.emit(item.value);
         }
 
-        if (this.closeOnSelect || this.itemsList.allItemsSelected) {
+        if (this.closeOnSelect || this.itemsList.noItemsToSelect) {
             this.close();
         }
     }
