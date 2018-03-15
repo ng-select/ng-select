@@ -153,7 +153,7 @@ export class ItemsList {
         if (this._lastSelectedItem && indexOfLastSelected > -1) {
             this._markedIndex = indexOfLastSelected;
         } else {
-            this._markedIndex = markDefault ? 0 : -1;
+            this._markedIndex = markDefault ? this.filteredItems.findIndex(x => !x.disabled) : -1;
         }
     }
 
