@@ -26,6 +26,20 @@ import { DataService } from '../shared/data.service';
         </div>
         <hr/>
 
+        <label>Hide selected elements</label>
+        ---html,true
+        <ng-select
+                [items]="people$1 | async"
+                [multiple]="true"
+                [closeOnSelect]="false"
+                [hideSelected]="true"
+                bindLabel="name"
+                placeholder="Select people"
+                [(ngModel)]="selectedPeople4">
+        </ng-select>
+        ---
+        <hr/>
+
         <label>Select multiple elements with a limit number of selections (e.g 3)</label>
         ---html,true
         <ng-select
@@ -68,7 +82,7 @@ import { DataService } from '../shared/data.service';
 
             <ng-template ng-label-tmp let-item="item" let-clear="clear">
                 <span class="ng-value-label"><img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}</span>
-                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                <span class="ng-value-icon right" (click)="clear(item); $event.stopPropagation()" aria-hidden="true">×</span>
             </ng-template>
 
             <ng-template ng-option-tmp let-item="item">
@@ -89,7 +103,7 @@ import { DataService } from '../shared/data.service';
             <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
                 <div class="ng-value" *ngFor="let item of (items ? items.slice(0,2): [])">
                     <span class="ng-value-label"><img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}</span>
-                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                    <span class="ng-value-icon right" (click)="clear(item); $event.stopPropagation()" aria-hidden="true">×</span>
                 </div>
                 <div class="ng-value" *ngIf="items.length > 2" >
                     <span class="ng-value-label">{{items.length - 2}} more...</span>
@@ -109,6 +123,7 @@ export class SelectMultiComponent {
 
     people$3: Observable<any[]>;
     selectedPeople3 = [];
+    selectedPeople4 = [];
     disable = true;
 
     githubUsers$: Observable<any[]>;
