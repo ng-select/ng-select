@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.29.1"></a>
+## [0.29.1](https://github.com/ng-select/ng-select/compare/v0.29.0...v0.29.1) (2018-03-15)
+
+
+### Bug Fixes
+
+* don't reset items while selecting ([68b3726](https://github.com/ng-select/ng-select/commit/68b3726))
+* skip writeValue handling if value is empty ([#351](https://github.com/ng-select/ng-select/issues/351)) ([9d5811e](https://github.com/ng-select/ng-select/commit/9d5811e)), closes [#348](https://github.com/ng-select/ng-select/issues/348)
+
+
+
 <a name="0.29.0"></a>
 # [0.29.0](https://github.com/ng-select/ng-select/compare/v0.28.1...v0.29.0) (2018-03-14)
 
