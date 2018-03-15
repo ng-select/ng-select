@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.30.0"></a>
+# [0.30.0](https://github.com/ng-select/ng-select/compare/v0.29.1...v0.30.0) (2018-03-15)
+
+
+### Bug Fixes
+
+* don't mark disabled while opening ([#360](https://github.com/ng-select/ng-select/issues/360)) ([b5998f6](https://github.com/ng-select/ng-select/commit/b5998f6)), closes [#330](https://github.com/ng-select/ng-select/issues/330)
+
+
+### Features
+
+* allow to hide selected items ([#359](https://github.com/ng-select/ng-select/issues/359)) ([6a9016d](https://github.com/ng-select/ng-select/commit/6a9016d)), closes [#164](https://github.com/ng-select/ng-select/issues/164)
+
+
+
 <a name="0.29.1"></a>
 ## [0.29.1](https://github.com/ng-select/ng-select/compare/v0.29.0...v0.29.1) (2018-03-15)
 
