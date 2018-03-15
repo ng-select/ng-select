@@ -1325,9 +1325,8 @@ describe('NgSelectComponent', function () {
                 NgSelectBasicTestCmp,
                 `<ng-select [items]="cities"
                     bindLabel="name"
-                    bindValue="this"
                     placeholder="select value"
-                    [(ngModel)]="selectedCity"
+                    [(ngModel)]="selectedCities"
                     [multiple]="true">
                 </ng-select>`);
         });
@@ -1360,45 +1359,107 @@ describe('NgSelectComponent', function () {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
             expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(1);
         });
-    });
 
-    describe('Multiple with max limit of selection', () => {
-        let fixture: ComponentFixture<NgSelectBasicTestCmp>;
-        let arrowIcon: DebugElement = null;
+        describe('max selected items', () => {
+            let arrowIcon: DebugElement = null;
+            beforeEach(() => {
+                fixture.componentInstance.select.maxSelectedItems = 2;
+                arrowIcon = fixture.debugElement.query(By.css('.ng-arrow-zone'));
+            });
 
-        beforeEach(() => {
-            fixture = createTestingModule(
-                NgSelectBasicTestCmp,
-                `<ng-select [items]="cities"
-                    bindLabel="name"
-                    bindValue="this"
-                    placeholder="select value"
-                    [(ngModel)]="selectedCity"
-                    [multiple]="true"
-                    [maxSelectedItems]="2">
-                </ng-select>`);
-            arrowIcon = fixture.debugElement.query(By.css('.ng-arrow-zone'));
+            it('should be able to select only two elements', fakeAsync(() => {
+                selectOption(fixture, KeyCode.ArrowDown, 0);
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                tickAndDetectChanges(fixture);
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(2);
+            }));
+
+            it('should not open dropdown when maximum of items is reached', fakeAsync(() => {
+                const clickArrow = () => arrowIcon.triggerEventHandler('click', { stopPropagation: () => { } });
+                selectOption(fixture, KeyCode.ArrowDown, 0);
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                tickAndDetectChanges(fixture);
+                clickArrow();
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.isOpen).toBe(false);
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(2);
+            }));
         });
 
-        it('should be able to select only two elements', fakeAsync(() => {
-            selectOption(fixture, KeyCode.ArrowDown, 0);
-            selectOption(fixture, KeyCode.ArrowDown, 1);
-            selectOption(fixture, KeyCode.ArrowDown, 1);
-            tickAndDetectChanges(fixture);
-            expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(2);
-        }));
+        describe('show selected', () => {
+            beforeEach(() => {
+                fixture.componentInstance.select.showSelected = false;
+                fixture.componentInstance.select.closeOnSelect = false;
+            });
 
-        it('should click on arrow be disabled when maximum of items is reached', fakeAsync(() => {
-            const clickArrow = () => arrowIcon.triggerEventHandler('click', { stopPropagation: () => { } });
-            selectOption(fixture, KeyCode.ArrowDown, 0);
-            selectOption(fixture, KeyCode.ArrowDown, 1);
-            tickAndDetectChanges(fixture);
-            // open
-            clickArrow();
-            tickAndDetectChanges(fixture);
-            expect(fixture.componentInstance.select.isOpen).toBe(false);
-            expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(2);
-        }));
+            it('should close dropdown when all items are selected', fakeAsync(() => {
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                expect(fixture.componentInstance.select.selectedItems.length).toBe(3);
+                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(0);
+                expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+            }));
+
+            it('should not open dropdown when all items are selected', fakeAsync(() => {
+                fixture.componentInstance.selectedCities = [...fixture.componentInstance.cities];
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                expect(fixture.componentInstance.select.selectedItems.length).toBe(3);
+                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(0);
+                expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+            }));
+
+            it('should remove selected item from items list', fakeAsync(() => {
+                fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.selectedItems.length).toBe(1);
+                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(2);
+            }));
+
+            it('should put unselected item back to list', fakeAsync(() => {
+                fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
+                expect(fixture.componentInstance.select.selectedItems.length).toBe(0);
+                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(3);
+            }));
+
+            it('should keep same ordering while unselecting', fakeAsync(() => {
+                fixture.componentInstance.selectedCities = [...fixture.componentInstance.cities.reverse()];
+                tickAndDetectChanges(fixture);
+                fixture.componentInstance.select.unselect(fixture.componentInstance.select.selectedItems[0])
+                fixture.componentInstance.select.unselect(fixture.componentInstance.select.selectedItems[0])
+                fixture.componentInstance.select.unselect(fixture.componentInstance.select.selectedItems[0])
+                expect(fixture.componentInstance.select.selectedItems.length).toBe(0);
+                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(3);
+                expect(fixture.componentInstance.select.itemsList.filteredItems[0].label).toBe('Vilnius');
+                expect(fixture.componentInstance.select.itemsList.filteredItems[1].label).toBe('Kaunas');
+                expect(fixture.componentInstance.select.itemsList.filteredItems[2].label).toBe('Pabrade');
+            }));
+
+            it('should reset list while clearing all selected items', fakeAsync(() => {
+                fixture.componentInstance.selectedCities = [...fixture.componentInstance.cities];
+                tickAndDetectChanges(fixture);
+                fixture.componentInstance.select.handleClearClick(<any>{ stopPropagation: () => { } });
+                expect(fixture.componentInstance.select.selectedItems.length).toBe(0);
+                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(3);
+            }));
+
+            it('should skip selected items while filtering', fakeAsync(() => {
+                fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
+                tickAndDetectChanges(fixture);
+                fixture.componentInstance.select.filter('s');
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
+                expect(fixture.componentInstance.select.itemsList.filteredItems[0].label).toBe('Kaunas');
+                fixture.componentInstance.select.filter('');
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(2);
+            }));
+        });
     });
 
     describe('Tagging', () => {
