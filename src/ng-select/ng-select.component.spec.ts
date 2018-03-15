@@ -864,6 +864,15 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(jasmine.objectContaining(result));
             });
 
+            it('should open dropdown and mark first not disabled item', fakeAsync(() => {
+                fixture.componentInstance.cities[0].disabled = true;
+                fixture.componentInstance.cities = [...fixture.componentInstance.cities];
+                tickAndDetectChanges(fixture);
+                const result = { value: fixture.componentInstance.cities[1] };
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(jasmine.objectContaining(result));
+            }));
+
             it('should open dropdown without marking first item', () => {
                 fixture.componentInstance.select.markFirst = false;
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
@@ -2189,8 +2198,8 @@ class NgSelectBasicTestCmp {
     disabled = false;
     dropdownPosition = 'bottom';
     citiesLoading = false;
-    cities = [
-        { id: 1, name: 'Vilnius' },
+    cities: any[]  = [
+        { id: 1, name: 'Vilnius', disabled: false },
         { id: 2, name: 'Kaunas' },
         { id: 3, name: 'Pabrade' },
     ];
