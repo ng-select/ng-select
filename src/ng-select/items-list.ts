@@ -172,7 +172,7 @@ export class ItemsList {
         if (this._filteredItems.length === 0) {
             return;
         }
-        const indexOfLastSelected = this._filteredItems.indexOf(this._lastSelectedItem);
+        const indexOfLastSelected = this._hideSelected ? -1 : this._filteredItems.indexOf(this._lastSelectedItem);
         if (this._lastSelectedItem && indexOfLastSelected > -1) {
             this._markedIndex = indexOfLastSelected;
         } else {
