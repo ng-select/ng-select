@@ -232,12 +232,12 @@ export class ItemsList {
     }
 
     private _stepToItem(steps: number) {
-        if (this._filteredItems.length === 0) {
+        if (this._filteredItems.length === 0 || this._filteredItems.every(x => x.disabled)) {
             return;
         }
 
         this._markedIndex = this._getNextItemIndex(steps);
-        while (this.markedItem.disabled) {
+        if (this.markedItem.disabled) {
             this._stepToItem(steps);
         }
     }
