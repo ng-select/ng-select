@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.30.1"></a>
+## [0.30.1](https://github.com/ng-select/ng-select/compare/v0.30.0...v0.30.1) (2018-03-19)
+
+
+### Bug Fixes
+
+* break loop while marking items ([#363](https://github.com/ng-select/ng-select/issues/363)) ([9888981](https://github.com/ng-select/ng-select/commit/9888981)), closes [#361](https://github.com/ng-select/ng-select/issues/361)
+* remove appended dropdown node ([#366](https://github.com/ng-select/ng-select/issues/366)) ([81bfcab](https://github.com/ng-select/ng-select/commit/81bfcab))
+
+
+
 <a name="0.30.0"></a>
 # [0.30.0](https://github.com/ng-select/ng-select/compare/v0.29.1...v0.30.0) (2018-03-15)
 
