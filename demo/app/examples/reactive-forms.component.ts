@@ -138,6 +138,7 @@ import { delay } from 'rxjs/operators';
                                    bindLabel="title"
                                    bindValue="thumbnailUrl"
                                    placeholder="Select photo"
+                                   appendTo="body"
                                    [virtualScroll]="true"
                                    formControlName="photo">
                             <ng-template ng-label-tmp let-item="item">
