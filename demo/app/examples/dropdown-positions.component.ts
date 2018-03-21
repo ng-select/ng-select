@@ -5,38 +5,20 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
     changeDetection: ChangeDetectionStrategy.Default,
     template: `
         <p>
-            By default the dropdown is displayed below the ng-select. 
-            You can change the default position by setting dropdownPosition to top or bottom.
+            By default the dropdown position is set to auto and will be shown above if there is not space placing it at the bottom.
         </p>
 
         ---html,true
-        <ng-select [dropdownPosition]="dropdownPosition" 
-                   [searchable]="false"
-                   [items]="cities">
+        <ng-select [items]="cities">
         </ng-select>
         ---
-
-        <br>
-        
-        <label>
-            <input [(ngModel)]="dropdownPosition" type="radio" [value]="'top'">
-            top
-        </label>
-        <br>
-
-        <label>
-            <input [(ngModel)]="dropdownPosition" type="radio" [value]="'bottom'">
-            bottom
-        </label>
-
         <hr>
         <p>
-          Using "Auto" it still defaults to bottom, but if the dropdown would be out of view, 
-          it will automatically change the dropdownPosition to top.
+          You can change force position to always to bottom or top by setting <b>dropdownPosition</b>
         </p>
 
         ---html,true
-        <ng-select [dropdownPosition]="'auto'"
+        <ng-select [dropdownPosition]="'top'"
                    [searchable]="false"
                    [items]="cities">
         </ng-select>
