@@ -248,8 +248,8 @@ export class ItemsList {
 
     private _groupBy(items: NgOption[], prop: string): { [index: string]: NgOption[] } {
         const groups = items.reduce((grouped, item) => {
-            const key=prop.split('.').reduce(
-                function(accumulator, current) {
+            const key = prop.split('.').reduce(
+                function (accumulator, current) {
                     return accumulator[current];
                 }, item.value);
             grouped[key] = grouped[key] || [];
