@@ -14,6 +14,9 @@ import {
     Inject,
     ViewEncapsulation,
     ChangeDetectionStrategy,
+    AfterContentInit,
+    OnInit,
+    OnChanges
 } from '@angular/core';
 
 import { NgOption } from './ng-select.types';
@@ -42,7 +45,7 @@ import { VirtualScrollService } from './virtual-scroll.service';
     `,
     styleUrls: ['./ng-dropdown-panel.component.scss']
 })
-export class NgDropdownPanelComponent implements OnDestroy {
+export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, AfterContentInit {
 
     @Input() items: NgOption[] = [];
     @Input() position: DropdownPosition = 'auto';
@@ -84,7 +87,6 @@ export class NgDropdownPanelComponent implements OnDestroy {
 
     ngOnInit() {
         this._handleScroll();
-        this._calculateDropdownPosition();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -101,10 +103,22 @@ export class NgDropdownPanelComponent implements OnDestroy {
         }
     }
 
-    refresh() {
+    ngAfterContentInit() {
         this._zone.runOutsideAngular(() => {
-            this._window.requestAnimationFrame(() => this._updateItems());
+            this._whenContentReady().then(() => {
+                this._handleDropdownPosition();
+            });
         });
+    }
+
+    refresh(): Promise<void> {
+        return new Promise((resolve) => {
+            this._zone.runOutsideAngular(() => {
+                this._window.requestAnimationFrame(() => {
+                    this._updateItems().then(resolve);
+                });
+            });
+        })
     }
 
     scrollInto(item: NgOption) {
@@ -150,10 +164,14 @@ export class NgDropdownPanelComponent implements OnDestroy {
             this._startupLoop = true;
         }
         this.items = items.currentValue || [];
-        this.refresh();
+        this.refresh().then(() => {
+            if (this.appendTo && this._currentPosition === 'top') {
+                this._updateAppendedDropdownPosition();
+            }
+        });
     }
 
-    private _updateItems(): void {
+    private _updateItems(): Promise<void> {
         NgZone.assertNotInAngularZone();
 
         if (!this.virtualScroll) {
@@ -161,10 +179,10 @@ export class NgDropdownPanelComponent implements OnDestroy {
                 this.update.emit(this.items.slice());
                 this._scrollToMarked();
             });
-            return;
+            return Promise.resolve();
         }
 
-        const loop = () => {
+        const loop = (resolve) => {
             const d = this._calculateDimensions();
             const res = this._virtualScrollService.calculateItems(d, this.scrollElementRef.nativeElement, this.bufferAmount || 0);
 
@@ -180,17 +198,16 @@ export class NgDropdownPanelComponent implements OnDestroy {
                 this._previousEnd = res.end;
 
                 if (this._startupLoop === true) {
-                    loop()
+                    loop(resolve)
                 }
 
             } else if (this._startupLoop === true) {
                 this._startupLoop = false;
                 this._scrollToMarked();
-                return
+                resolve();
             }
         };
-
-        loop();
+        return new Promise((resolve) => loop(resolve))
     }
 
     private _fireScrollToEnd() {
@@ -223,7 +240,7 @@ export class NgDropdownPanelComponent implements OnDestroy {
             return;
         }
         this._disposeDocumentResizeListener = this._renderer.listen('window', 'resize', () => {
-            this._updateDropdownPosition();
+            this._updateAppendedDropdownPosition();
         });
     }
 
@@ -236,78 +253,85 @@ export class NgDropdownPanelComponent implements OnDestroy {
         this.scrollInto(this._itemsList.markedItem)
     }
 
-    private _calculateDropdownPosition() {
+    private _handleDropdownPosition() {
         if (this.appendTo) {
-            const parent = document.querySelector(this.appendTo);
-            if (!parent) {
-                throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`)
-            }
-
-            parent.appendChild(this._elementRef.nativeElement);
+            this._appendDropdown();
             this._handleDocumentResize();
         }
-        this._autoPositionDropdown();
-        // this._updateDropdownPosition();
+
+        const dropdownEl: HTMLElement = this._elementRef.nativeElement;
+        this._currentPosition = this._calculateCurrentPosition(dropdownEl);
+        const selectEl: HTMLElement = this._selectElementRef.nativeElement;
+        if (this._currentPosition === 'top') {
+            dropdownEl.classList.add('top');
+            dropdownEl.classList.remove('bottom');
+            selectEl.classList.add('top');
+            selectEl.classList.remove('bottom');
+        } else {
+            dropdownEl.classList.add('bottom');
+            dropdownEl.classList.remove('top');
+            selectEl.classList.add('bottom');
+            selectEl.classList.remove('top');
+        }
+
+        if (this.appendTo) {
+            this._updateAppendedDropdownPosition();
+        }
+
+        dropdownEl.style.opacity = '1';
     }
 
-    private _updateDropdownPosition() {
+    private _calculateCurrentPosition(dropdownEl: HTMLElement) {
+        if (this.position !== 'auto') {
+            return this.position;
+        }
+        const selectRect: ClientRect = this._selectElementRef.nativeElement.getBoundingClientRect();
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const offsetTop = selectRect.top + window.pageYOffset;
+        const height = selectRect.height;
+        const dropdownHeight = dropdownEl.getBoundingClientRect().height;
+        if (offsetTop + height + dropdownHeight > scrollTop + document.documentElement.clientHeight) {
+            return 'top';
+        } else {
+            return 'bottom';
+        }
+    }
+
+    private _appendDropdown() {
+        const parent = document.querySelector(this.appendTo);
+        if (!parent) {
+            throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`)
+        }
+        parent.appendChild(this._elementRef.nativeElement);
+    }
+
+    private _updateAppendedDropdownPosition() {
         const parent = document.querySelector(this.appendTo) || document.body;
         const selectRect: ClientRect = this._selectElementRef.nativeElement.getBoundingClientRect();
         const dropdownPanel: HTMLElement = this._elementRef.nativeElement;
         const boundingRect = parent.getBoundingClientRect();
         const offsetTop = selectRect.top - boundingRect.top;
         const offsetLeft = selectRect.left - boundingRect.left;
-        const topDelta = this.position === 'bottom' ? selectRect.height : -dropdownPanel.clientHeight;
+        const topDelta = this._currentPosition === 'bottom' ? selectRect.height : -dropdownPanel.clientHeight;
         dropdownPanel.style.top = offsetTop + topDelta + 'px';
         dropdownPanel.style.bottom = 'auto';
         dropdownPanel.style.left = offsetLeft + 'px';
         dropdownPanel.style.width = selectRect.width + 'px';
     }
 
-    private _autoPositionDropdown() {
-        const dropdownEl: HTMLElement = this._elementRef.nativeElement;
-        if (!this._isDropdownRendered(dropdownEl)) {
-            this._zone.runOutsideAngular(() => {
-                setTimeout(() => {
-                    this._autoPositionDropdown();
-                });
-            });
-            return;
-        }
-
-        if (this.position === 'auto') {
-            const selectRect: ClientRect = this._selectElementRef.nativeElement.getBoundingClientRect();
-            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-            const offsetTop = selectRect.top + window.pageYOffset;
-            const height = selectRect.height;
-            const dropdownHeight = dropdownEl.getBoundingClientRect().height;
-            if (offsetTop + height + dropdownHeight > scrollTop + document.documentElement.clientHeight) {
-                this._currentPosition = 'top';
-            }
-        } else {
-            this._currentPosition = this.position;
-        }
-
-        if (this._currentPosition === 'top') {
-            // TODO: calculate and set
-            this._currentPosition = 'top';
-            dropdownEl.classList.add('top');
-            dropdownEl.classList.remove('bottom');
-        } else {
-            // TODO: calculate and set
-            this._currentPosition = 'bottom';
-            dropdownEl.classList.add('bottom');
-            dropdownEl.classList.remove('top');
-        }
-        dropdownEl.style.opacity = '1';
-    }
-
-    private _isDropdownRendered(dropdownEl: HTMLElement): boolean {
+    private _whenContentReady(): Promise<void> {
         if (this.items.length === 0) {
-            return true;
+            return Promise.resolve();
         }
-        const ngOption = dropdownEl.querySelector('.ng-option');
-        return !!ngOption;
-
+        const dropdownEl: HTMLElement = this._elementRef.nativeElement;
+        const ready = (resolve) => {
+            const ngOption = dropdownEl.querySelector('.ng-option');
+            if (ngOption) {
+                resolve();
+                return;
+            }
+            setTimeout(() => ready(resolve));
+        };
+        return new Promise((resolve) => ready(resolve))
     }
 }

@@ -64,8 +64,6 @@ export type AddTagFn = ((term: string) => any | Promise<any>);
     host: {
         'role': 'dropdown',
         'class': 'ng-select',
-        '[class.top]': 'currentDropdownPosition === "top"',
-        '[class.bottom]': 'currentDropdownPosition === "bottom"',
         '[class.ng-single]': '!multiple',
     }
 })
