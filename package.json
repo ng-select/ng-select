@@ -4,9 +4,9 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "clean": "rimraf out-tsc dist/*",
-    "prebuild": "npm run clean",
-    "build": "ng-packagr -p ./src/package.json && npm run build:themes",
+    "clean": "rimraf out-tsc dist/* integration/node_modules/@ng-select",
+    "prebuild": "yarn clean",
+    "build": "ng-packagr -p ./src/package.json && yarn build:themes",
     "build:demo": "rimraf dist && webpack --config ./scripts/webpack.dev.js --progress --profile --bail",
     "build:themes": "node-sass --output-style compressed src/themes/ -o dist/themes",
     "prestart": "yarn install",
@@ -14,10 +14,7 @@
     "test:watch": "karma start ./scripts/karma.conf.js --no-single-run --auto-watch",
     "test": "karma start ./scripts/karma.conf.js --single-run",
     "coveralls": "cat ./coverage/lcov/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "preintegration": "npm run clean && npm run build && cd integration && yarn",
-    "integration": "npm run integration:aot && npm run integration:jit",
-    "integration:jit": "cd integration && npm run e2e",
-    "integration:aot": "cd integration && npm run build",
+    "integration": "./integration_test.sh",
     "lint": "tslint --type-check --project ./src/tsconfig.json",
     "release": "sh ./release.sh"
   },
