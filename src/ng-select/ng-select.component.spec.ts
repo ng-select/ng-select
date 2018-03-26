@@ -2160,6 +2160,23 @@ describe('NgSelectComponent', function () {
             expect(items[11].parent).toBe(items[10]);
         }));
 
+        it('should group by group fn', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        [groupBy]="groupByFn"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+
+            const items = fixture.componentInstance.select.itemsList.items;
+
+            expect(items.length).toBe(12);
+            expect(items[0].hasChildren).toBe(true);
+            expect(items[6].hasChildren).toBe(true);
+        }));
+
         it('should not mark optgroup item as marked', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
@@ -2307,17 +2324,18 @@ class NgSelectGroupingTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     selectedAccountName = 'Adam';
     selectedAccount = null;
+    groupByFn = (item) => item.child.name;
     accounts = [
-        { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States' },
-        { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States' },
-        { name: 'Amalie', email: 'amalie@email.com', age: 12, country: 'Argentina' },
-        { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' },
-        { name: 'Adrian', email: 'adrian@email.com', age: 21, country: 'Ecuador' },
-        { name: 'Wladimir', email: 'wladimir@email.com', age: 30, country: 'Ecuador' },
-        { name: 'Natasha', email: 'natasha@email.com', age: 54, country: 'Ecuador' },
-        { name: 'Nicole', email: 'nicole@email.com', age: 43, country: 'Colombia' },
-        { name: 'Michael', email: 'michael@email.com', age: 15, country: 'Colombia' },
-        { name: 'Nicolás', email: 'nicole@email.com', age: 43, country: 'Colombia' }
+        { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { name: 'c1' } },
+        { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States',  child: { name: 'c1' } },
+        { name: 'Amalie', email: 'amalie@email.com', age: 12, country: 'Argentina', child: { name: 'c1' } },
+        { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina', child: { name: 'c1' } },
+        { name: 'Adrian', email: 'adrian@email.com', age: 21, country: 'Ecuador', child: { name: 'c1' } },
+        { name: 'Wladimir', email: 'wladimir@email.com', age: 30, country: 'Ecuador', child: { name: 'c2' } },
+        { name: 'Natasha', email: 'natasha@email.com', age: 54, country: 'Ecuador', child: { name: 'c2' } },
+        { name: 'Nicole', email: 'nicole@email.com', age: 43, country: 'Colombia', child: { name: 'c2' } },
+        { name: 'Michael', email: 'michael@email.com', age: 15, country: 'Colombia', child: { name: 'c2' } },
+        { name: 'Nicolás', email: 'nicole@email.com', age: 43, country: 'Colombia', child: { name: 'c2' } }
     ];
 
     // TODO: support this case
