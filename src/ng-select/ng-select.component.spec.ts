@@ -1122,63 +1122,6 @@ describe('NgSelectComponent', function () {
             expect(panelClasses.contains('top')).toBeTruthy();
         }));
 
-        it('should autoposition dropdown to top when to space at the bottom', fakeAsync(() => {
-            const fixture = createTestingModule(
-                NgSelectTestCmp,
-                `<ng-select style="position: absolute; bottom: 0; width: 100px;" [items]="cities"></ng-select>`);
-
-            const root: HTMLElement = document.querySelector('.ng-select').parentElement;
-            root.style.position = 'relative';
-            root.style.height = '100%';
-            document.body.style.height = '100%';
-            const htmlRoot: HTMLElement = document.querySelector('html');
-            htmlRoot.style.height = '100%';
-
-            const select = fixture.componentInstance.select;
-            select.open();
-            tickAndDetectChanges(fixture);
-
-            const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
-            const panelClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-dropdown-panel').classList;
-            expect(select.dropdownPosition).toBe('auto');
-            expect(selectClasses.contains('bottom')).toBeFalsy();
-            expect(panelClasses.contains('bottom')).toBeFalsy();
-            expect(selectClasses.contains('top')).toBeTruthy();
-            expect(panelClasses.contains('top')).toBeTruthy();
-        }));
-
-        it('should autoposition virtual scroll dropdown to top when to space at the bottom', fakeAsync(() => {
-            const fixture = createTestingModule(
-                NgSelectTestCmp,
-                `<ng-select 
-                    bindLabel="name"
-                    bindValue="id"
-                    [virtualScroll]="true" 
-                    style="position: absolute; bottom: 0; width: 100px;" 
-                    [items]="cities"></ng-select>`);
-
-            const root: HTMLElement = document.querySelector('.ng-select').parentElement;
-            root.style.position = 'relative';
-            root.style.height = '100%';
-            document.body.style.height = '100%';
-            const htmlRoot: HTMLElement = document.querySelector('html');
-            htmlRoot.style.height = '100%';
-
-            fixture.componentInstance.cities = Array.from(Array(100), (_, i) => ({ id: i, name: 'city' }));
-            tickAndDetectChanges(fixture);
-            const select = fixture.componentInstance.select;
-            select.open();
-            tickAndDetectChanges(fixture);
-
-            const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
-            const panelClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-dropdown-panel').classList;
-            expect(select.dropdownPosition).toBe('auto');
-            expect(selectClasses.contains('bottom')).toBeFalsy();
-            expect(panelClasses.contains('bottom')).toBeFalsy();
-            expect(selectClasses.contains('top')).toBeTruthy();
-            expect(panelClasses.contains('top')).toBeTruthy();
-        }));
-
         it('should autoposition appended to body dropdown to bottom', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
