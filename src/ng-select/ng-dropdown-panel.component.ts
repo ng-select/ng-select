@@ -104,10 +104,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     }
 
     ngAfterContentInit() {
-        this._zone.runOutsideAngular(() => {
-            this._whenContentReady().then(() => {
-                this._handleDropdownPosition();
-            });
+        this._whenContentReady().then(() => {
+            this._handleDropdownPosition();
         });
     }
 
@@ -330,7 +328,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
                 resolve();
                 return;
             }
-            setTimeout(() => ready(resolve));
+            this._zone.runOutsideAngular(() => { 
+                setTimeout(() => ready(resolve), 5);
+            });
         };
         return new Promise((resolve) => ready(resolve))
     }
