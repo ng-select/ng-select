@@ -959,20 +959,6 @@ describe('NgSelectComponent', function () {
         });
 
         describe('tab', () => {
-            it('should close dropdown when there are no items', fakeAsync(() => {
-                select.filter('random stuff');
-                tick(200);
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
-                expect(select.isOpen).toBeFalsy()
-            }));
-
-            it('should close dropdown', () => {
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
-                expect(select.selectedItems).toEqual([]);
-                expect(select.isOpen).toBeFalsy()
-            });
 
             it('should close dropdown and keep selected value', fakeAsync(() => {
                 fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
@@ -1525,6 +1511,22 @@ describe('NgSelectComponent', function () {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
             expect(fixture.componentInstance.selectedCity).toBe(<any>'Copenhagen');
         }));
+        
+        it('should add tag as string when tab pressed', fakeAsync(() => {
+            let fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="citiesNames"
+                    [addTag]="true"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.filter('Copenhagen');
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+            expect(fixture.componentInstance.selectedCity).toBe(<any>'Copenhagen');
+        }));
 
         it('should select tag even if there are filtered items that matches search term', fakeAsync(() => {
             let fixture = createTestingModule(
@@ -1702,6 +1704,26 @@ describe('NgSelectComponent', function () {
             });
             expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(result)
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect(fixture.componentInstance.select.selectedItems).toEqual([result]);
+        }));
+        
+        it('should mark first item on filter when tab', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            tick(200);
+            fixture.componentInstance.select.filter('pab');
+            tick(200);
+
+            const result = jasmine.objectContaining({
+                value: fixture.componentInstance.cities[2]
+            });
+            expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(result)
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
             expect(fixture.componentInstance.select.selectedItems).toEqual([result]);
         }));
 
