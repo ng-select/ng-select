@@ -25,6 +25,9 @@ import { ItemsList } from './items-list';
 import { WindowService } from './window.service';
 import { VirtualScrollService } from './virtual-scroll.service';
 
+const TOP_CSS_CLASS = 'top';
+const BOTTOM_CSS_CLASS = 'bottom';
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -261,15 +264,15 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         this._currentPosition = this._calculateCurrentPosition(dropdownEl);
         const selectEl: HTMLElement = this._selectElementRef.nativeElement;
         if (this._currentPosition === 'top') {
-            dropdownEl.classList.add('top');
-            dropdownEl.classList.remove('bottom');
-            selectEl.classList.add('top');
-            selectEl.classList.remove('bottom');
+            dropdownEl.classList.add(TOP_CSS_CLASS);
+            dropdownEl.classList.remove(BOTTOM_CSS_CLASS);
+            selectEl.classList.add(TOP_CSS_CLASS);
+            selectEl.classList.remove(BOTTOM_CSS_CLASS);
         } else {
-            dropdownEl.classList.add('bottom');
-            dropdownEl.classList.remove('top');
-            selectEl.classList.add('bottom');
-            selectEl.classList.remove('top');
+            dropdownEl.classList.add(BOTTOM_CSS_CLASS);
+            dropdownEl.classList.remove(TOP_CSS_CLASS);
+            selectEl.classList.add(BOTTOM_CSS_CLASS);
+            selectEl.classList.remove(TOP_CSS_CLASS);
         }
 
         if (this.appendTo) {
