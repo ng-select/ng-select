@@ -246,9 +246,10 @@ export class ItemsList {
         return this._selected[this._selected.length - 1];
     }
 
-    private _groupBy(items: NgOption[], prop: string): { [index: string]: NgOption[] } {
+    private _groupBy(items: NgOption[], prop: string | Function): { [index: string]: NgOption[] } {
+        const isPropFn = prop instanceof Function;
         const groups = items.reduce((grouped, item) => {
-            const key = item.value[prop];
+            const key = isPropFn ? (<Function>prop).apply(this, [item.value]) : item.value[<string>prop];
             grouped[key] = grouped[key] || [];
             grouped[key].push(item);
             return grouped;

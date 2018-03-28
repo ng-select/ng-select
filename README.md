@@ -131,7 +131,7 @@ map: {
 | [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
 | clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
 | dropdownPosition | `bottom`,`top`,`auto` |  `auto` | no | Set the dropdown position on open |
-| [groupBy] | `string` | null | no | Allow to group items by key |
+| [groupBy] | `string` \| `Function` | null | no | Allow to group items by key or function expression |
 | [selectableGroup] | `boolean` | false | no | Allow to select group when groupBy is used |
 | [items] | `Array<NgOption>` | `[]` | yes | Items array |
 | loading | `boolean` |  `-` | no | You can set the loading state from the outside (e.g. async items loading) |
