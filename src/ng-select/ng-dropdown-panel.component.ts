@@ -264,15 +264,15 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         this._currentPosition = this._calculateCurrentPosition(dropdownEl);
         const selectEl: HTMLElement = this._selectElementRef.nativeElement;
         if (this._currentPosition === 'top') {
-            dropdownEl.classList.add(TOP_CSS_CLASS);
-            dropdownEl.classList.remove(BOTTOM_CSS_CLASS);
-            selectEl.classList.add(TOP_CSS_CLASS);
-            selectEl.classList.remove(BOTTOM_CSS_CLASS);
+            this._renderer.addClass(dropdownEl, TOP_CSS_CLASS)
+            this._renderer.removeClass(dropdownEl, BOTTOM_CSS_CLASS)
+            this._renderer.addClass(selectEl, TOP_CSS_CLASS)
+            this._renderer.removeClass(selectEl, BOTTOM_CSS_CLASS)
         } else {
-            dropdownEl.classList.add(BOTTOM_CSS_CLASS);
-            dropdownEl.classList.remove(TOP_CSS_CLASS);
-            selectEl.classList.add(BOTTOM_CSS_CLASS);
-            selectEl.classList.remove(TOP_CSS_CLASS);
+            this._renderer.addClass(dropdownEl, BOTTOM_CSS_CLASS)
+            this._renderer.removeClass(dropdownEl, TOP_CSS_CLASS)
+            this._renderer.addClass(selectEl, BOTTOM_CSS_CLASS)
+            this._renderer.removeClass(selectEl, TOP_CSS_CLASS)
         }
 
         if (this.appendTo) {
