@@ -592,7 +592,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     private _handleTab(_: KeyboardEvent) {
         if (this.isOpen) {
-            this.close();
+            this.toggleItem(this.itemsList.markedItem);
         }
     }
 
