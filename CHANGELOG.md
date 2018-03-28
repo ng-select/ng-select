@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.31.1"></a>
+## [0.31.1](https://github.com/ng-select/ng-select/compare/v0.31.0...v0.31.1) (2018-03-27)
+
+
+### Bug Fixes
+
+* incorrect border on multiple default theme ([#354](https://github.com/ng-select/ng-select/issues/354)) ([#386](https://github.com/ng-select/ng-select/issues/386)) ([8bcfe56](https://github.com/ng-select/ng-select/commit/8bcfe56))
+
+
+
 <a name="0.31.0"></a>
 # [0.31.0](https://github.com/ng-select/ng-select/compare/v0.30.1...v0.31.0) (2018-03-27)
 
