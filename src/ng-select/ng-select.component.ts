@@ -93,6 +93,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() bufferAmount = 4;
     @Input() virtualScroll = false;
     @Input() selectableGroup = false;
+    @Input() selectOnBlur = false;
     @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-multiple') multiple = false;
     @Input() @HostBinding('class.taggable') addTag: boolean | AddTagFn = false;
@@ -592,6 +593,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     private _handleTab(_: KeyboardEvent) {
         if (this.isOpen) {
+            if (this.selectOnBlur && this.itemsList.markedItem) {
+                this.select(this.itemsList.markedItem);
+            }
             this.close();
         }
     }
