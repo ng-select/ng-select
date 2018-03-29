@@ -143,6 +143,7 @@ map: {
 | notFoundText | `string` | `No items found` | no | Set custom text when filter returns empty result |
 | placeholder | `string` | `-` | no | Placeholder text. |
 | [searchable] | `boolean` | `true` | no | Allow to search for value. Default `true`|
+| [selectOnBlur] | `boolean` | `false` | no | Select highlighted value on blur (e.g. when tabbing out of field) |
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or filter. |
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |

@@ -836,6 +836,7 @@ describe('NgSelectComponent', function () {
                         bindLabel="name"
                         [loading]="citiesLoading"
                         [multiple]="multiple"
+                        [selectOnBlur]="selectOnBlur"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
             select = fixture.componentInstance.select;
@@ -982,6 +983,21 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 const result = [jasmine.objectContaining({
                     value: fixture.componentInstance.cities[0]
+                })];
+                expect(select.selectedItems).toEqual(result);
+                expect(select.isOpen).toBeFalsy()
+            }));
+
+            it('should select highlighted value when selectOnBlur is set', fakeAsync(() => {
+                fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+                fixture.componentInstance.selectOnBlur = true;
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+                tickAndDetectChanges(fixture);
+                const result = [jasmine.objectContaining({
+                    value: fixture.componentInstance.cities[1]
                 })];
                 expect(select.selectedItems).toEqual(result);
                 expect(select.isOpen).toBeFalsy()
