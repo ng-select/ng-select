@@ -76,7 +76,7 @@ $color-selected: #f5faff;
                 background-color: #f9f9f9;
                 border: 1px solid #e3e3e3;
                 .ng-value-label {
-                    padding: 2px 5px;
+                    padding: 0px 5px;
                 }
             }
         }
@@ -97,11 +97,11 @@ $color-selected: #f5faff;
                     }
                     .ng-value-label {
                         display: inline-block;
-                        padding: 2px 5px 2px 1px;
+                        padding: 0px 5px 0px 1px;
                     }
                     .ng-value-icon {
                         display: inline-block;
-                        padding: 3px 5px;
+                        padding: 0px 5px;
                         &:hover {
                             background-color: #d8eafd;
                         }

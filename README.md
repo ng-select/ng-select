@@ -130,7 +130,7 @@ map: {
 | closeOnSelect | `boolean` |  true | no | Whether to close the menu when a value is selected |
 | [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
 | clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
-| dropdownPosition | `bottom`,`top`,`auto` |  `bottom` | no | Set the dropdown position on open |
+| dropdownPosition | `bottom`,`top`,`auto` |  `auto` | no | Set the dropdown position on open |
 | [groupBy] | `string` \| `Function` | null | no | Allow to group items by key or function expression |
 | [selectableGroup] | `boolean` | false | no | Allow to select group when groupBy is used |
 | [items] | `Array<NgOption>` | `[]` | yes | Items array |

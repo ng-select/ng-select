@@ -7,6 +7,7 @@
 .ng-dropdown-panel {
     box-sizing: border-box;
     position: absolute;
+    opacity: 0;
     width: 100%;
     z-index: 1050;
     -webkit-overflow-scrolling: touch;

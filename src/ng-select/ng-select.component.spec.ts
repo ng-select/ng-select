@@ -531,7 +531,7 @@ describe('NgSelectComponent', function () {
                             placeholder="select value"
                             [(ngModel)]="selectedCityId">
                         </ng-select>`);
-                    
+
                     fixture.componentInstance.selectedCityId = 2;
                     tickAndDetectChanges(fixture);
                     const result = [jasmine.objectContaining({
@@ -551,12 +551,12 @@ describe('NgSelectComponent', function () {
                             placeholder="select value"
                             [(ngModel)]="selectedCityId">
                         </ng-select>`);
-                    
+
                     fixture.componentInstance.selectedCityId = 2;
                     tickAndDetectChanges(fixture);
                     tickAndDetectChanges(fixture);
 
-                    const classes = ['ng-select', 'bottom', 'ng-single', 'searchable', 'ng-untouched', 'ng-pristine', 'ng-valid'];
+                    const classes = ['ng-select', 'ng-single', 'searchable', 'ng-untouched', 'ng-pristine', 'ng-valid'];
                     const selectEl = fixture.nativeElement.querySelector('ng-select');
                     for (const c of classes) {
                         expect(selectEl.classList.contains(c)).toBeTruthy(`expected to contain "${c}" class`);
@@ -619,7 +619,7 @@ describe('NgSelectComponent', function () {
                             placeholder="select value"
                             [(ngModel)]="selectedCity">
                         </ng-select>`);
-                    
+
                     fixture.componentInstance.selectedCity = fixture.componentInstance.cities[1];
                     tickAndDetectChanges(fixture);
                     const result = [jasmine.objectContaining({
@@ -1086,47 +1086,58 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Dropdown position', () => {
-        it('should be set to `bottom` by default', fakeAsync(() => {
+        it('should autoposition dropdown to bottom by default', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select id="select"></ng-select>`);
+                `<ng-select [items]="cities"></ng-select>`);
 
-            const classes = fixture.debugElement.query(By.css('ng-select')).classes;
-            expect(classes.bottom).toBeTruthy();
-            expect(classes.top).toBeFalsy();
+            const select = fixture.componentInstance.select;
+            select.open();
+            tickAndDetectChanges(fixture);
+
+            const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
+            const panelClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-dropdown-panel').classList;
+            expect(select.dropdownPosition).toBe('auto');
+            expect(selectClasses.contains('bottom')).toBeTruthy();
+            expect(panelClasses.contains('bottom')).toBeTruthy();
+            expect(selectClasses.contains('top')).toBeFalsy();
+            expect(panelClasses.contains('top')).toBeFalsy();
         }));
 
-        it('should allow changing dropdown position to top', fakeAsync(() => {
+        it('should autoposition dropdown to top if position input is set', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select id="select" [dropdownPosition]="dropdownPosition"></ng-select>`);
+                `<ng-select dropdownPosition="top" [items]="cities"></ng-select>`);
 
-            fixture.componentInstance.dropdownPosition = 'top';
+            const select = fixture.componentInstance.select;
+            select.open();
             tickAndDetectChanges(fixture);
 
-            fixture.componentInstance.select.open();
-            tickAndDetectChanges(fixture);
-
-
-            const classes = fixture.debugElement.query(By.css('ng-select')).classes;
-            expect(classes.bottom).toBeFalsy();
-            expect(classes.top).toBeTruthy();
+            const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
+            const panelClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-dropdown-panel').classList;
+            expect(select.dropdownPosition).toBe('top');
+            expect(selectClasses.contains('bottom')).toBeFalsy();
+            expect(panelClasses.contains('bottom')).toBeFalsy();
+            expect(selectClasses.contains('top')).toBeTruthy();
+            expect(panelClasses.contains('top')).toBeTruthy();
         }));
 
-        it('should allow changing dropdown position to auto', fakeAsync(() => {
+        it('should autoposition appended to body dropdown to bottom', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select id="select" [dropdownPosition]="dropdownPosition"></ng-select>`);
+                `<ng-select [items]="cities" appendTo="body"></ng-select>`);
 
-            fixture.componentInstance.dropdownPosition = 'auto';
+            const select = fixture.componentInstance.select;
+            select.open();
             tickAndDetectChanges(fixture);
 
-            fixture.componentInstance.select.open();
-            tickAndDetectChanges(fixture);
-
-            const classes = fixture.debugElement.query(By.css('ng-select')).classes;
-            expect(classes.bottom).toBeTruthy()
-            expect(classes.top).toBeFalsy();
+            const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
+            const panelClasses = document.querySelector('.ng-dropdown-panel').classList;
+            expect(select.dropdownPosition).toBe('auto');
+            expect(selectClasses.contains('bottom')).toBeTruthy();
+            expect(panelClasses.contains('bottom')).toBeTruthy();
+            expect(selectClasses.contains('top')).toBeFalsy();
+            expect(panelClasses.contains('top')).toBeFalsy();
         }));
     });
 
@@ -2306,13 +2317,13 @@ class NgSelectTestCmp {
         this.visible = !this.visible;
     }
 
-    onChange(_: Event) {}
-    onFocus(_: Event) {}
-    onBlur(_: Event) {}
-    onOpen() {}
-    onClose() {}
-    onAdd() {}
-    onRemove() {}
+    onChange(_: Event) { }
+    onFocus(_: Event) { }
+    onBlur(_: Event) { }
+    onOpen() { }
+    onClose() { }
+    onAdd() { }
+    onRemove() { }
     onClear() { }
     onScrollToEnd() { }
 }

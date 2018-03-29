@@ -64,8 +64,6 @@ export type AddTagFn = ((term: string) => any | Promise<any>);
     host: {
         'role': 'dropdown',
         'class': 'ng-select',
-        '[class.top]': 'currentDropdownPosition === "top"',
-        '[class.bottom]': 'currentDropdownPosition === "bottom"',
         '[class.ng-single]': '!multiple',
     }
 })
@@ -83,7 +81,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() addTagText: string;
     @Input() loadingText: string;
     @Input() clearAllText: string;
-    @Input() dropdownPosition: DropdownPosition;
+    @Input() dropdownPosition: DropdownPosition = 'auto';
     @Input() appendTo: string;
     @Input() loading = false;
     @Input() closeOnSelect = true;
@@ -133,7 +131,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];
     filterValue: string = null;
-    currentDropdownPosition: DropdownPosition = 'bottom';
 
     private _defaultLabel = 'label';
     private _defaultValue = 'value';
@@ -179,9 +176,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
         if (changes.items) {
             this._setItems(changes.items.currentValue || []);
-        }
-        if (changes.dropdownPosition) {
-            this.currentDropdownPosition = changes.dropdownPosition.currentValue;
         }
     }
 
