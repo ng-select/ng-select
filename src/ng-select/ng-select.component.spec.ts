@@ -635,6 +635,7 @@ describe('NgSelectComponent', function () {
                         `<ng-select [items]="cities"
                             bindLabel="name"
                             placeholder="select value"
+                            [compareWith]="compareWith"
                             [(ngModel)]="selectedCity">
                         </ng-select>`);
 
@@ -642,7 +643,6 @@ describe('NgSelectComponent', function () {
                     const city = { name: 'Vilnius', id: 7, district: 'Ozo parkas' };
                     fixture.componentInstance.cities.push(city);
                     fixture.componentInstance.cities = [...fixture.componentInstance.cities];
-                    fixture.componentInstance.select.compareWith = (a, b) => a.name === b.name && a.district === b.district;
                     fixture.componentInstance.selectedCity = { name: 'Vilnius', district: 'Ozo parkas' } as any;
 
                     tickAndDetectChanges(fixture);
@@ -2366,6 +2366,8 @@ class NgSelectTestCmp {
             id: 5, name: term, valid: true
         });
     }
+
+    compareWith = (a, b) => a.name === b.name && a.district === b.district;
 
     toggleVisible() {
         this.visible = !this.visible;

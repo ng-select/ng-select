@@ -49,7 +49,7 @@ import { ConsoleService } from './console.service';
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
 export type AddTagFn = ((term: string) => any | Promise<any>);
-export type CompareWithFn = (o1: any, o2: any) => boolean;
+export type CompareWithFn = (a: any, b: any) => boolean;
 
 @Component({
     selector: 'ng-select',
@@ -149,7 +149,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _primitive: boolean;
 
     private readonly _destroy$ = new Subject<void>();
-    private _compareWith = (o1: any, o2: any) => o1 === o2;
+    private _compareWith = (a: any, b: any) => a === b;
     private _onChange = (_: NgOption) => { };
     private _onTouched = () => { };
 
