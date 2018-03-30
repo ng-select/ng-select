@@ -835,6 +835,7 @@ describe('NgSelectComponent', function () {
                 `<ng-select [items]="cities"
                         bindLabel="name"
                         [loading]="citiesLoading"
+                        [selectOnTab]="selectOnTab"
                         [multiple]="multiple"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
@@ -967,12 +968,14 @@ describe('NgSelectComponent', function () {
                 expect(select.isOpen).toBeFalsy()
             }));
 
-            it('should close dropdown', () => {
+            it('should close dropdown when [selectOnTab]="false"', fakeAsync(() => {
+                fixture.componentInstance.selectOnTab = false;
+                tickAndDetectChanges(fixture);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
                 expect(select.selectedItems).toEqual([]);
-                expect(select.isOpen).toBeFalsy()
-            });
+                expect(select.isOpen).toBeFalsy();
+            }));
 
             it('should close dropdown and keep selected value', fakeAsync(() => {
                 fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
@@ -985,6 +988,19 @@ describe('NgSelectComponent', function () {
                 })];
                 expect(select.selectedItems).toEqual(result);
                 expect(select.isOpen).toBeFalsy()
+            }));
+
+            it('should mark first item on filter when tab', fakeAsync(() => {
+                tick(200);
+                fixture.componentInstance.select.filter('pab');
+                tick(200);
+
+                const result = jasmine.objectContaining({
+                    value: fixture.componentInstance.cities[2]
+                });
+                expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(result)
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+                expect(fixture.componentInstance.select.selectedItems).toEqual([result]);
             }));
         });
 
@@ -1534,6 +1550,22 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.select.filter('Copenhagen');
             tickAndDetectChanges(fixture);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect(fixture.componentInstance.selectedCity).toBe(<any>'Copenhagen');
+        }));
+
+        it('should add tag as string when tab pressed', fakeAsync(() => {
+            let fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="citiesNames"
+                    [addTag]="true"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.filter('Copenhagen');
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
             expect(fixture.componentInstance.selectedCity).toBe(<any>'Copenhagen');
         }));
 
@@ -2283,6 +2315,7 @@ class NgSelectTestCmp {
     dropdownPosition = 'bottom';
     visible = true;
     filter = new Subject<string>();
+    selectOnTab = true;
 
     citiesLoading = false;
     selectedCityId: number;
@@ -2338,7 +2371,7 @@ class NgSelectGroupingTestCmp {
     groupByFn = (item) => item.child.name;
     accounts = [
         { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { name: 'c1' } },
-        { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States',  child: { name: 'c1' } },
+        { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States', child: { name: 'c1' } },
         { name: 'Amalie', email: 'amalie@email.com', age: 12, country: 'Argentina', child: { name: 'c1' } },
         { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina', child: { name: 'c1' } },
         { name: 'Adrian', email: 'adrian@email.com', age: 21, country: 'Ecuador', child: { name: 'c1' } },
