@@ -45,6 +45,7 @@ import { delay } from 'rxjs/operators';
                 <label for="state">Single select</label>
                 ---html,true
                 <ng-select [items]="ages"
+                        [selectOnTab]="true"
                         bindValue="value"
                         placeholder="Select age"
                         formControlName="age">

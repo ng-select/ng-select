@@ -87,7 +87,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() loading = false;
     @Input() closeOnSelect = true;
     @Input() hideSelected = false;
-    @Input() selectOnTab = true;
+    @Input() selectOnTab = false;
     @Input() maxSelectedItems: number;
     @Input() groupBy: string;
     @Input() bufferAmount = 4;

@@ -1578,6 +1578,7 @@ describe('NgSelectComponent', function () {
                 NgSelectTestCmp,
                 `<ng-select [items]="citiesNames"
                     [addTag]="true"
+                    [selectOnTab]="true"
                     placeholder="select value"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
