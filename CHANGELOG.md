@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.33.0"></a>
+# [0.33.0](https://github.com/ng-select/ng-select/compare/v0.32.0...v0.33.0) (2018-03-30)
+
+
+### Features
+
+* allow to select on tab ([#397](https://github.com/ng-select/ng-select/issues/397)) ([8830eb6](https://github.com/ng-select/ng-select/commit/8830eb6)), closes [#370](https://github.com/ng-select/ng-select/issues/370)
+
+
+
 <a name="0.32.0"></a>
 # [0.32.0](https://github.com/ng-select/ng-select/compare/v0.31.1...v0.32.0) (2018-03-29)
 
