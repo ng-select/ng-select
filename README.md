@@ -130,10 +130,11 @@ map: {
 | closeOnSelect | `boolean` |  true | no | Whether to close the menu when a value is selected |
 | [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
 | clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
-| dropdownPosition | `bottom`,`top`,`auto` |  `auto` | no | Set the dropdown position on open |
+| dropdownPosition | `bottom` \| `top` \| `auto` |  `auto` | no | Set the dropdown position on open |
 | [groupBy] | `string` \| `Function` | null | no | Allow to group items by key or function expression |
 | [selectableGroup] | `boolean` | false | no | Allow to select group when groupBy is used |
 | [items] | `Array<NgOption>` | `[]` | yes | Items array |
+| [compareWith] | `(a: any, b: any) => boolean` | `(a, b) => a === b` | no | A function to compare the option values with the selected values |
 | loading | `boolean` |  `-` | no | You can set the loading state from the outside (e.g. async items loading) |
 | loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
 | [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. Default `true`|

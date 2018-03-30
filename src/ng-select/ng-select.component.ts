@@ -49,6 +49,7 @@ import { ConsoleService } from './console.service';
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
 export type AddTagFn = ((term: string) => any | Promise<any>);
+export type CompareWithFn = (a: any, b: any) => boolean;
 
 @Component({
     selector: 'ng-select',
@@ -97,6 +98,15 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() @HostBinding('class.taggable') addTag: boolean | AddTagFn = false;
     @Input() @HostBinding('class.searchable') searchable = true;
 
+    @Input()
+    get compareWith() { return this._compareWith; }
+    set compareWith(fn: CompareWithFn) {
+        if (!isFunction(fn)) {
+            throw Error('`compareWith` must be a function.');
+        }
+        this._compareWith = fn;
+    }
+
     // output events
     @Output('blur') blurEvent = new EventEmitter();
     @Output('focus') focusEvent = new EventEmitter();
@@ -139,6 +149,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _primitive: boolean;
 
     private readonly _destroy$ = new Subject<void>();
+    private _compareWith = (a: any, b: any) => a === b;
     private _onChange = (_: NgOption) => { };
     private _onTouched = () => { };
 
@@ -533,7 +544,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
     }
 
-    
+
 
     private _updateNgModel() {
         const model = [];

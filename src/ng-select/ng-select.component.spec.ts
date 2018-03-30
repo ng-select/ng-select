@@ -629,6 +629,26 @@ describe('NgSelectComponent', function () {
                     expect(fixture.componentInstance.select.selectedItems).toEqual(result);
                 }));
 
+                it('should select by compareWith function', fakeAsync(() => {
+                    const fixture = createTestingModule(
+                        NgSelectTestCmp,
+                        `<ng-select [items]="cities"
+                            bindLabel="name"
+                            placeholder="select value"
+                            [compareWith]="compareWith"
+                            [(ngModel)]="selectedCity">
+                        </ng-select>`);
+
+
+                    const city = { name: 'Vilnius', id: 7, district: 'Ozo parkas' };
+                    fixture.componentInstance.cities.push(city);
+                    fixture.componentInstance.cities = [...fixture.componentInstance.cities];
+                    fixture.componentInstance.selectedCity = { name: 'Vilnius', district: 'Ozo parkas' } as any;
+
+                    tickAndDetectChanges(fixture);
+                    expect(fixture.componentInstance.select.selectedItems[0].value).toEqual(city);
+                }));
+
                 it('should select selected when there is no items', fakeAsync(() => {
                     const fixture = createTestingModule(
                         NgSelectTestCmp,
@@ -2317,6 +2337,7 @@ class NgSelectTestCmp {
     filter = new Subject<string>();
     selectOnTab = true;
 
+
     citiesLoading = false;
     selectedCityId: number;
     selectedCityIds: number[];
@@ -2345,6 +2366,8 @@ class NgSelectTestCmp {
             id: 5, name: term, valid: true
         });
     }
+
+    compareWith = (a, b) => a.name === b.name && a.district === b.district;
 
     toggleVisible() {
         this.visible = !this.visible;
