@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.34.0"></a>
+# [0.34.0](https://github.com/ng-select/ng-select/compare/v0.33.0...v0.34.0) (2018-03-30)
+
+
+### Features
+
+* support compareWith ([#398](https://github.com/ng-select/ng-select/issues/398)) ([d195ccc](https://github.com/ng-select/ng-select/commit/d195ccc))
+
+
+
 <a name="0.33.0"></a>
 # [0.33.0](https://github.com/ng-select/ng-select/compare/v0.32.0...v0.33.0) (2018-03-30)
 
