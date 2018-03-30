@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.34.1"></a>
+## [0.34.1](https://github.com/ng-select/ng-select/compare/v0.34.0...v0.34.1) (2018-03-30)
+
+
+### Bug Fixes
+
+* remove default compareWith ([ec56c64](https://github.com/ng-select/ng-select/commit/ec56c64))
+
+
+
 <a name="0.34.0"></a>
 # [0.34.0](https://github.com/ng-select/ng-select/compare/v0.33.0...v0.34.0) (2018-03-30)
 
