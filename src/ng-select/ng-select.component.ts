@@ -86,6 +86,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() loading = false;
     @Input() closeOnSelect = true;
     @Input() hideSelected = false;
+    @Input() selectOnTab = true;
     @Input() maxSelectedItems: number;
     @Input() groupBy: string;
     @Input() bufferAmount = 4;
@@ -584,8 +585,21 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.dropdownPanel.scrollIntoTag();
     }
 
-    private _handleTab(_: KeyboardEvent) {
-        if (this.isOpen) {
+    private _handleTab($event: KeyboardEvent) {
+        if (!this.isOpen) {
+            return;
+        }
+        if (this.selectOnTab) {
+            if (this.itemsList.markedItem) {
+                this.toggleItem(this.itemsList.markedItem);
+                $event.preventDefault();
+            } else if (this.showAddTag()) {
+                this.selectTag();
+                $event.preventDefault();
+            } else {
+                this.close();
+            }
+        } else {
             this.close();
         }
     }
