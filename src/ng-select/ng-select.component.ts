@@ -147,9 +147,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _defaultValue = 'value';
     private _typeaheadLoading = false;
     private _primitive: boolean;
+    private _compareWith: CompareWithFn;
 
     private readonly _destroy$ = new Subject<void>();
-    private _compareWith = (a: any, b: any) => a === b;
     private _onChange = (_: NgOption) => { };
     private _onTouched = () => { };
 

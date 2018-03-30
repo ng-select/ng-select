@@ -187,7 +187,7 @@ describe('NgSelectComponent', function () {
             expect(vilnius.selected).toBeTruthy();
         }));
 
-        it('should set items correctly after ngModel set first when typeahead and multiselect is used', fakeAsync(() => {
+        it('should set items correctly after ngModel set first when typeahead and multi-select is used', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -2367,7 +2367,9 @@ class NgSelectTestCmp {
         });
     }
 
-    compareWith = (a, b) => a.name === b.name && a.district === b.district;
+    compareWith(a, b) {
+        return a.name === b.name && a.district === b.district
+    }
 
     toggleVisible() {
         this.visible = !this.visible;

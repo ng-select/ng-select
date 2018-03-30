@@ -69,13 +69,14 @@ export class ItemsList {
 
     findItem(value: any): NgOption {
         if (this._ngSelect.bindValue) {
-            return this._items.find(item => !item.hasChildren &&
-                this._ngSelect.compareWith(this.resolveNested(item.value, this._ngSelect.bindValue), value));
+            return this._items.find(item => !item.hasChildren && this.resolveNested(item.value, this._ngSelect.bindValue) === value);
         }
-        const index = this._items.findIndex(x => this._ngSelect.compareWith(x.value, value));
-        return index > -1 ?
-            this._items[index] :
-            this._items.find(item => !item.hasChildren && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel));
+        const option = this._items.find(x => x.value === value);
+        const findBy = this._ngSelect.compareWith ?
+            (item: NgOption) => this._ngSelect.compareWith(item.value, value) :
+            (item: NgOption) => !item.hasChildren && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel);
+
+        return option || this._items.find(item => findBy(item));
     }
 
     unselect(item: NgOption) {
