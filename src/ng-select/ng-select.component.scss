@@ -70,6 +70,9 @@
                     outline: none;
                     cursor: default;
                     width: 100%;
+                    &::-ms-clear {
+                        display: none;
+                    }
                 }
             }
         }
