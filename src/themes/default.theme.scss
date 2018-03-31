@@ -40,6 +40,9 @@ $color-selected: #f5faff;
             background-color: #f9f9f9;
         }
     }
+    .ng-has-value .ng-placeholder {
+        display: none;
+    }
     .ng-control {
         background-color: #fff;
         border-radius: 4px;
@@ -195,13 +198,12 @@ $color-selected: #f5faff;
     }
     .ng-dropdown-panel-items {
         margin-bottom: 1px;
-        
         .ng-optgroup {
             user-select: none;
             cursor: default;
             padding: 8px 10px;
             &.disabled {
-                color: rgba(0,0,0,.54);
+                color: rgba(0, 0, 0, .54);
             }
             &.marked {
                 background-color: #ebf5ff;
@@ -213,12 +215,10 @@ $color-selected: #f5faff;
                 font-weight: 600;
             }
         }
-
         .ng-option {
             background-color: #fff;
-            color: rgba(0,0,0,.87);
+            color: rgba(0, 0, 0, .87);
             padding: 8px 10px;
-
             &.selected {
                 color: #333;
                 background-color: $color-selected;
@@ -236,7 +236,6 @@ $color-selected: #f5faff;
             &.ng-option-child {
                 padding-left: 22px;
             }
-
             .ng-tag-label {
                 padding-right: 5px;
                 font-size: 80%;

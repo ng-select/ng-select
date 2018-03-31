@@ -198,7 +198,7 @@ export class ReactiveFormsComponent {
             heroId: 'hero1',
             agree: null,
             selectedCitiesIds: [],
-            age: ['', Validators.required],
+            age: [null, Validators.required],
             album: '',
             photo: ''
         });
