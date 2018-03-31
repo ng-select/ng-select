@@ -1676,22 +1676,24 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
             const selectEl: HTMLElement = select.elementRef.nativeElement;
-            const placeholder = selectEl.querySelector('.ng-placeholder')
-            expect(getComputedStyle(placeholder).display).toBe('none');
+            const ngControl = selectEl.querySelector('.ng-control')
+            const placeholder: any = selectEl.querySelector('.ng-placeholder');
+            expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
 
             select.handleClearClick(<any>{ stopPropagation: () => { } });
             tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
 
+            expect(ngControl.classList.contains('ng-has-value')).toBeFalsy();
             expect(getComputedStyle(placeholder).display).toBe('block');
         }));
 
-        it('should not be visible when value was selected', fakeAsync(() => {
+        it('should contain .ng-has-value when value was selected', fakeAsync(() => {
             tickAndDetectChanges(fixture);
             const selectEl: HTMLElement = fixture.componentInstance.select.elementRef.nativeElement;
-            const placeholder = selectEl.querySelector('.ng-placeholder')
+            const ngControl = selectEl.querySelector('.ng-control')
             selectOption(fixture, KeyCode.ArrowDown, 2);
-            expect(getComputedStyle(placeholder).display).toBe('none');
+            expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
         }));
     });
 
