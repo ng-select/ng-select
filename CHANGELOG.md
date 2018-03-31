@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.34.3"></a>
+## [0.34.3](https://github.com/ng-select/ng-select/compare/v0.34.2...v0.34.3) (2018-03-31)
+
+
+### Bug Fixes
+
+* hide IE input clear icon ([8138c73](https://github.com/ng-select/ng-select/commit/8138c73)), closes [#401](https://github.com/ng-select/ng-select/issues/401)
+* keep placeholder visible in material theme ([1e16f98](https://github.com/ng-select/ng-select/commit/1e16f98)), closes [#358](https://github.com/ng-select/ng-select/issues/358)
+* use correct aria role ([e55b674](https://github.com/ng-select/ng-select/commit/e55b674)), closes [#403](https://github.com/ng-select/ng-select/issues/403)
+
+
+
 <a name="0.34.2"></a>
 ## [0.34.2](https://github.com/ng-select/ng-select/compare/v0.34.1...v0.34.2) (2018-03-30)
 
