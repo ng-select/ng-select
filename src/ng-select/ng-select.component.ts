@@ -63,7 +63,7 @@ export type CompareWithFn = (a: any, b: any) => boolean;
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'role': 'dropdown',
+        'role': 'listbox',
         'class': 'ng-select',
         '[class.ng-single]': '!multiple',
     }
