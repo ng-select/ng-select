@@ -1,6 +1,7 @@
 import { Component, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
-import { DataService } from '../shared/data.service';
+import { DataService, Person } from '../shared/data.service';
+
 
 @Component({
     selector: 'select-search',
@@ -21,16 +22,20 @@ import { DataService } from '../shared/data.service';
         ---
         <br/>
 
-        <h5>Search across multiple fields</h5>
+        <h5>Search across multiple fields using <b>[searchFn]</b></h5>
         <hr>
         <p>Use <b>typeahead</b> to get search term and filter on custom fields. Type <b>female</b> to see only females.</p>
 
         ---html,true
         <ng-select [items]="peopleFiltered"
                    bindLabel="name"
-                   [typeahead]="searchTerm"
+                   [searchFn]="customSearchFn"
                    (close)="peopleFiltered = people"
                    [(ngModel)]="selectedCustom">
+                <ng-template ng-option-tmp let-item="item">
+                    {{item.name}} <br />
+                    <small>{{item.gender}}</small>
+                </ng-template>
         </ng-select>
         ---
         <br/>
@@ -58,15 +63,14 @@ import { DataService } from '../shared/data.service';
 })
 export class SelectSearchComponent {
 
-    people = [];
+    people: Person[] = [];
     peopleFiltered = [];
     serverSideFilterItems = [];
     
-    searchTerm = new EventEmitter<string>();
     peopleTypeahead = new EventEmitter<string>();
-    selectedPersons = [{name: 'Karyn Wright'}, {name: 'Other'}];
-    selectedPerson: any;
-    selectedCustom: any;
+    selectedPersons: Person[] = <any>[{name: 'Karyn Wright'}, {name: 'Other'}];
+    selectedPerson: Person;
+    selectedCustom: Person;
 
     peopleLoading = false;
 
@@ -75,12 +79,11 @@ export class SelectSearchComponent {
     ngOnInit() {
         this.loadPeopleForClientSide();
         this.serverSideSearch();
-        this.searchTerm.subscribe(term => this.customSearch(term));
     }
 
-    private customSearch(searchTerm) {
-        const term = searchTerm.toUpperCase();
-        this.peopleFiltered = this.people.filter(item => item.name.toUpperCase().indexOf(term) > -1 || item.gender.toUpperCase() === term)
+    customSearchFn(term: string, item: Person) {
+        term = term.toLocaleLowerCase();
+        return item.name.toLocaleLowerCase().indexOf(term) > -1 || item.gender.toLocaleLowerCase() === term;
     }
 
     private serverSideSearch() {

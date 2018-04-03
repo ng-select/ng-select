@@ -122,16 +122,17 @@ export class ItemsList {
         }
 
         this._filteredItems = [];
-        term = searchHelper.stripSpecialChars(term).toLocaleLowerCase();
+        term = this._ngSelect.searchFn ? term : searchHelper.stripSpecialChars(term).toLocaleLowerCase();
+        const match = this._ngSelect.searchFn || this._defaultSearchFn;
 
         for (const key of Object.keys(this._groups)) {
             const matchedItems = [];
             for (const item of this._groups[key]) {
-                const label = searchHelper.stripSpecialChars(item.label).toLocaleLowerCase();
                 if (this._ngSelect.hideSelected && this._selected.indexOf(item) > -1) {
                     continue;
                 }
-                if (label.indexOf(term) > -1) {
+                const searchItem = this._ngSelect.searchFn ? item.value : item;
+                if (match(term, searchItem)) {
                     matchedItems.push(item);
                 }
             }
@@ -225,6 +226,11 @@ export class ItemsList {
         if (this._ngSelect.hideSelected) {
             this._filteredItems = this.filteredItems.filter(x => this._selected.indexOf(x) === -1);
         }
+    }
+
+    private _defaultSearchFn(search: string, opt: NgOption) {
+        const label = searchHelper.stripSpecialChars(opt.label).toLocaleLowerCase();
+        return label.indexOf(search) > -1
     }
 
     private _getNextItemIndex(steps: number) {
