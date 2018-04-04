@@ -27,9 +27,7 @@
     "@angular/platform-browser": "^5.0.3",
     "@angular/platform-browser-dynamic": "^5.0.3",
     "@angular/router": "^5.0.3",
-    "tsickle": ">=0.25.5",
-    "tslib": "^1.7.1",
-    "@ng-bootstrap/ng-bootstrap": "^1.0.0-beta.5",
+    "@ng-bootstrap/ng-bootstrap": "^1.1.0",
     "@types/jasmine": "^2.5.36",
     "@types/node": "^6.0.87",
     "@types/selenium-webdriver": "2.53.39",
@@ -50,6 +48,7 @@
     "istanbul-instrumenter-loader": "^0.2.0",
     "jasmine-core": "^2.7.0",
     "jasmine-spec-reporter": "^3.2.0",
+    "jquery": "^3.3.1",
     "json-loader": "^0.5.7",
     "karma": "^1.5.0",
     "karma-chrome-launcher": "^2.0.0",
@@ -66,6 +65,7 @@
     "ng-snippets-loader": "^0.2.5",
     "node-sass": "^4.0.0",
     "null-loader": "0.1.1",
+    "popper.js": "^1.14.2",
     "postcss-loader": "^1.1.0",
     "protractor": "^4.0.10",
     "raw-loader": "0.5.1",
@@ -77,6 +77,8 @@
     "standard-version": "^4.2.0",
     "style-loader": "^0.13.0",
     "ts-helpers": "^1.1.1",
+    "tsickle": ">=0.25.5",
+    "tslib": "^1.7.1",
     "tslint": "^5.6.0",
     "tslint-loader": "^3.5.3",
     "typedoc": "^0.5.1",
@@ -87,6 +89,6 @@
     "zone.js": "^0.8.16"
   },
   "dependencies": {
-    "bootstrap": "4.0.0-beta.2"
+    "bootstrap": "^4.0.0"
   }
 }

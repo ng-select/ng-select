@@ -144,6 +144,7 @@ map: {
 | notFoundText | `string` | `No items found` | no | Set custom text when filter returns empty result |
 | placeholder | `string` | `-` | no | Placeholder text. |
 | [searchable] | `boolean` | `true` | no | Allow to search for value. Default `true`|
+| [searchFn] | `(term: string, item: any) => boolean` | `null` | no | Allow to search by custom search function expression |
 | [selectOnTab] | `boolean` | `false` | no | Select marked dropdown item using tab. Default `false`|
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or filter. |
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |

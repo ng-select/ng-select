@@ -1716,6 +1716,32 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual(result);
         }));
 
+        it('should filter using custom searchFn', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [searchFn]="searchFn"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+            
+            fixture.componentInstance.searchFn = (term: string, item: any) => {
+                return item.name.indexOf(term) > -1 || item.id === 2;
+            };
+            const select = fixture.componentInstance.select;
+            tickAndDetectChanges(fixture);
+            select.filter('Vilnius');
+            tick(200);
+
+            expect(select.itemsList.filteredItems.length).toEqual(2);
+            expect(select.itemsList.filteredItems[0]).toEqual(jasmine.objectContaining({
+                value: { id: 1, name: 'Vilnius' }
+            }));
+            expect(select.itemsList.filteredItems[1]).toEqual(jasmine.objectContaining({
+                value: { id: 2, name: 'Kaunas' }
+            }));
+        }));
+
         it('should toggle dropdown when searchable false', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
@@ -2338,8 +2364,8 @@ class NgSelectTestCmp {
     dropdownPosition = 'bottom';
     visible = true;
     filter = new Subject<string>();
+    searchFn: (term: string, item: any) => boolean = null;
     selectOnTab = true;
-
 
     citiesLoading = false;
     selectedCityId: number;
