@@ -24,7 +24,7 @@ import { ConsoleService } from './console.service';
 
 describe('NgSelectComponent', function () {
 
-    describe('init', () => {
+    describe('Init', () => {
         it('should map items correctly', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
