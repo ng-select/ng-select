@@ -1753,12 +1753,12 @@ describe('NgSelectComponent', function () {
 
             const selectInput = fixture.debugElement.query(By.css('.ng-control'));
             // open
-            selectInput.triggerEventHandler('click', { stopPropagation: () => { } });
+            selectInput.triggerEventHandler('mousedown', { stopPropagation: () => { } });
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
 
             // close
-            selectInput.triggerEventHandler('click', { stopPropagation: () => { } });
+            selectInput.triggerEventHandler('mousedown', { stopPropagation: () => { } });
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
         }));
