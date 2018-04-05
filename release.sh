@@ -1,14 +1,17 @@
 #!/bin/bash
 git pull
+# update changelog
 cd ./src
 node ../node_modules/standard-version/bin/cli.js --infile ../CHANGELOG.md
 cd ..
+
+# build lib
 yarn run build
 
-read -p "Check changelog and press enter to push tags" tags
+# push tags
 git push --follow-tags origin master
 
-read -p "One more thing. Press enter to release to npm" npm
+# push to npm
 cp README.md ./dist
 cd ./dist
 yarn publish --access=public
