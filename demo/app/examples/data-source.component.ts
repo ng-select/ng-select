@@ -68,14 +68,12 @@ import { Observable } from 'rxjs/Observable';
         <button type="button" class="btn btn-secondary btn-sm" (click)="disable = !disable">Toggle disabled</button>
         <hr/>
         ---html,true
-        <ng-select [searchable]="false" [(ngModel)]="staticValue">
-            <ng-option value="Volvo">Volvo</ng-option>
-            <ng-option [disabled]="disable" value="Saab">Saab</ng-option>
-            <ng-option value="Opel">Opel</ng-option>
-            <ng-option value="Audi">Audi</ng-option>
+        <ng-select [searchable]="false" [(ngModel)]="selectedCarId">
+            <ng-option *ngFor="let car of cars" [value]="car.id" [disabled]="car.disabled" >{{car.name}}</ng-option>
+            <ng-option [value]="'custom'">Custom</ng-option>
         </ng-select>
         ---
-        <br />Selected: {{staticValue | json}}
+        <br />Selected car ID: {{selectedCarId | json}}
     `
 })
 export class DataSourceComponent {
@@ -87,6 +85,14 @@ export class DataSourceComponent {
     selectedSimpleItem = 'Two';
     simpleItems = [];
     disable = true;
+
+    selectedCarId = 3;
+    cars = [
+        { id: 1, name: 'Volvo' },
+        { id: 2, name: 'Saab', disabled: true },
+        { id: 3, name: 'Opel' },
+        { id: 4, name: 'Audi' },
+    ]
 
     constructor(private dataService: DataService) { }
 
