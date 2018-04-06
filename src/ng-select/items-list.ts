@@ -3,11 +3,13 @@ import * as searchHelper from './search-helper';
 import { NgSelectComponent } from './ng-select.component';
 import { isObject, isDefined } from './value-utils';
 
+type OptionGroups = Map<string, NgOption[]>;
+
 export class ItemsList {
 
     private _items: NgOption[] = [];
     private _filteredItems: NgOption[] = [];
-    private _groups: { [index: string]: NgOption[] };
+    private _groups: OptionGroups;
     private _markedIndex = -1;
     private _selected: NgOption[] = [];
 
@@ -47,7 +49,8 @@ export class ItemsList {
             this._groups = this._groupBy(this._items, this._ngSelect.groupBy);
             this._items = this._flatten(this._groups);
         } else {
-            this._groups = { undefined: this._items };
+            this._groups = new Map();
+            this._groups.set(undefined, this._items)
         }
         this._filteredItems = [...this._items];
     }
@@ -125,9 +128,9 @@ export class ItemsList {
         term = this._ngSelect.searchFn ? term : searchHelper.stripSpecialChars(term).toLocaleLowerCase();
         const match = this._ngSelect.searchFn || this._defaultSearchFn;
 
-        for (const key of Object.keys(this._groups)) {
+        for (const key of Array.from(this._groups.keys())) {
             const matchedItems = [];
-            for (const item of this._groups[key]) {
+            for (const item of this._groups.get(key)) {
                 if (this._ngSelect.hideSelected && this._selected.indexOf(item) > -1) {
                     continue;
                 }
@@ -255,20 +258,25 @@ export class ItemsList {
         return this._selected[this._selected.length - 1];
     }
 
-    private _groupBy(items: NgOption[], prop: string | Function): { [index: string]: NgOption[] } {
+    private _groupBy(items: NgOption[], prop: string | Function): OptionGroups {
         const isPropFn = prop instanceof Function;
         const groups = items.reduce((grouped, item) => {
             const key = isPropFn ? (<Function>prop).apply(this, [item.value]) : item.value[<string>prop];
-            grouped[key] = grouped[key] || [];
-            grouped[key].push(item);
+            const group = grouped.get(key);
+            if (group) {
+                group.push(item);
+            } else {
+                grouped.set(key, [item]);
+            }
             return grouped;
-        }, {});
+        }, new Map<string, NgOption[]>());
         return groups;
     }
 
-    private _flatten(groups: { [index: string]: NgOption[] }) {
+    private _flatten(groups: OptionGroups) {
         let i = 0;
-        return Object.keys(groups).reduce((items: NgOption[], key: string) => {
+
+        return Array.from(groups.keys()).reduce((items: NgOption[], key: string) => {
             const parent: NgOption = {
                 label: key,
                 hasChildren: true,
@@ -278,9 +286,9 @@ export class ItemsList {
             parent.value = {};
             parent.value[this._ngSelect.groupBy] = key;
             items.push(parent);
-            i++
+            i++;
 
-            const children = groups[key].map(x => {
+            const children = groups.get(key).map(x => {
                 x.parent = parent;
                 x.hasChildren = false;
                 i++;

@@ -1897,6 +1897,7 @@ describe('NgSelectComponent', function () {
                     `<ng-select [items]="cities"
                         [typeahead]="filter"
                         bindLabel="name"
+                        [hideSelected]="hideSelected"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
             });
@@ -1952,6 +1953,16 @@ describe('NgSelectComponent', function () {
                 fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.select.isLoading).toBeFalsy();
+            }));
+
+            it('should open dropdown when hideSelected=true and no items to select', fakeAsync(() => {
+                fixture.componentInstance.hideSelected = true;
+                fixture.componentInstance.cities = [];
+                fixture.componentInstance.selectedCity = null;
+                tickAndDetectChanges(fixture);
+                fixture.componentInstance.filter.subscribe();
+                fixture.componentInstance.select.open();
+                expect(fixture.componentInstance.select.isOpen).toBeTruthy();
             }));
         });
     });
@@ -2366,6 +2377,7 @@ class NgSelectTestCmp {
     filter = new Subject<string>();
     searchFn: (term: string, item: any) => boolean = null;
     selectOnTab = true;
+    hideSelected = false;
 
     citiesLoading = false;
     selectedCityId: number;

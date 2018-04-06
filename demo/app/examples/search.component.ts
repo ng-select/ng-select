@@ -51,6 +51,7 @@ import { DataService, Person } from '../shared/data.service';
                    bindLabel="name"
                    [addTag]="true"
                    [multiple]="true"
+                   [hideSelected]="true"
                    [typeahead]="peopleTypeahead"
                    [(ngModel)]="selectedPersons">
         </ng-select>
