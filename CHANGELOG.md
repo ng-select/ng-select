@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.35.1"></a>
+## [0.35.1](https://github.com/ng-select/ng-select/compare/v0.35.0...v0.35.1) (2018-04-06)
+
+
+### Bug Fixes
+
+* show  type to search on typeahead ([#416](https://github.com/ng-select/ng-select/issues/416)) ([ed1b3d6](https://github.com/ng-select/ng-select/commit/ed1b3d6)), closes [#405](https://github.com/ng-select/ng-select/issues/405)
+* use Map to preserve groups order ([#419](https://github.com/ng-select/ng-select/issues/419)) ([aff8468](https://github.com/ng-select/ng-select/commit/aff8468))
+
+
+
 <a name="0.35.0"></a>
 # [0.35.0](https://github.com/ng-select/ng-select/compare/v0.34.3...v0.35.0) (2018-04-04)
 
