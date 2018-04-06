@@ -263,10 +263,11 @@ export class ItemsList {
         const groups = items.reduce((grouped, item) => {
             const key = isPropFn ? (<Function>prop).apply(this, [item.value]) : item.value[<string>prop];
             const group = grouped.get(key);
-            if (!group) {
-                grouped.set(key, []);
+            if (group) {
+                group.push(item);
+            } else {
+                grouped.set(key, [item]);
             }
-            grouped.get(key).push(item);
             return grouped;
         }, new Map<string, NgOption[]>());
         return groups;
