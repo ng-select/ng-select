@@ -2171,7 +2171,7 @@ describe('NgSelectComponent', function () {
         }));
 
         it('should toggle dropdown', fakeAsync(() => {
-            const clickArrow = () => arrowIcon.triggerEventHandler('click', { stopPropagation: () => { } });
+            const clickArrow = () => arrowIcon.triggerEventHandler('mousedown', { stopPropagation: () => { } });
             // open
             clickArrow();
             tickAndDetectChanges(fixture);
