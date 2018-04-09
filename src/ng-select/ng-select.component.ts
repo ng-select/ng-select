@@ -45,7 +45,7 @@ import { NgOptionComponent } from './ng-option.component';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { isDefined, isFunction, isPromise, isObject } from './value-utils';
 import { ConsoleService } from './console.service';
-import { Id } from './id';
+import { newId } from './id';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
@@ -154,7 +154,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private readonly _destroy$ = new Subject<void>();
     private _onChange = (_: NgOption) => { };
     private _onTouched = () => { };
-    dropdownId = Id.newId();
+    dropdownId = newId();
     selectedItemId = 0;
     clearItem = (item: any) => {
         const option = this.selectedItems.find(x => x.value === item);
