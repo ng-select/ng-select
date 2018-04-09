@@ -55,13 +55,14 @@ npm install --save @ng-select/ng-select
 ```shell
 yarn add @ng-select/ng-select
 ```
-### Step 2: Import the component module:
+### Step 2: Import the NgSelectModule and angular FormsModule module:
 ```js
 import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [NgSelectModule],  
+  imports: [NgSelectModule, FormsModule],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
