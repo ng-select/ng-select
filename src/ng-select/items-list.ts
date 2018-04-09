@@ -2,7 +2,7 @@ import { NgOption } from './ng-select.types';
 import * as searchHelper from './search-helper';
 import { NgSelectComponent } from './ng-select.component';
 import { isObject, isDefined } from './value-utils';
-import {Guid} from './guid';
+import {Id} from './id';
 
 type OptionGroups = Map<string, NgOption[]>;
 
@@ -214,7 +214,7 @@ export class ItemsList {
             label: isDefined(label) ? label.toString() : '',
             value: item,
             disabled: item.disabled,
-            htmlId: Guid.newGuid()
+            htmlId: Id.newId()
         };
     }
 
@@ -284,7 +284,7 @@ export class ItemsList {
                 hasChildren: true,
                 index: i,
                 disabled: !this._ngSelect.selectableGroup,
-                htmlId: Guid.newGuid()
+                htmlId: Id.newId()
             };
             parent.value = {};
             parent.value[this._ngSelect.groupBy] = key;
