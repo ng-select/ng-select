@@ -31,7 +31,10 @@
                    (focus)="onInputFocus()"
                    (blur)="onInputBlur()"
                    (change)="$event.stopPropagation()"
-                   role="combobox">
+                   role="combobox"
+                   [attr.aria-expanded]="isOpen"
+                   [attr.aria-owns]="isOpen ? dropdownId : null"
+                   [attr.aria-activedescendant]="isOpen ? itemsList.markedItem.htmlId : null">
         </div>
     </div>
 
@@ -61,17 +64,19 @@
     [items]="itemsList.filteredItems"
     (update)="viewPortItems = $event"
     (scrollToEnd)="scrollToEnd.emit($event)"
-    [ngClass]="{'multiple': multiple}">
+    [ngClass]="{'multiple': multiple}"
+    [id]="dropdownId">
     
     <ng-container>
-        <div class="ng-option" role="option" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
+        <div class="ng-option" [attr.role]="item.hasChildren ? 'group' : 'option'" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
                 *ngFor="let item of viewPortItems"
                 [class.disabled]="item.disabled"
                 [class.selected]="item.selected"
                 [class.ng-optgroup]="item.hasChildren"
                 [class.ng-option]="!item.hasChildren"
                 [class.ng-option-child]="!!item.parent"
-                [class.marked]="item === itemsList.markedItem">
+                [class.marked]="item === itemsList.markedItem"
+                id="{{item.htmlId || null}}">
 
             <ng-template #defaultOptionTemplate>
                 <span class="ng-option-label" [innerHTML]="item.label"  [ngOptionHighlight]="filterValue"></span>
