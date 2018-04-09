@@ -149,7 +149,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _typeaheadLoading = false;
     private _primitive: boolean;
     private _compareWith: CompareWithFn;
-    private _skipFocus = false;
 
     private readonly _destroy$ = new Subject<void>();
     private _onChange = (_: NgOption) => { };
@@ -297,7 +296,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this._isTypeahead && (this.itemsList.noItemsToSelect)) {
             return;
         }
-        this._skipFocus = true;
         this.isOpen = true;
         this.itemsList.markSelectedOrDefault(this.markFirst);
         this.openEvent.emit();
@@ -409,10 +407,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     onInputFocus() {
-        if (!this._skipFocus) {
-            this.isFocused = true;
-        }
-        this._skipFocus = false;
+        this.isFocused = true;
         this.focusEvent.emit(null);
     }
 
