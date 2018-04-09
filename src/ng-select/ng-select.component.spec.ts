@@ -24,7 +24,7 @@ import { ConsoleService } from './console.service';
 
 describe('NgSelectComponent', function () {
 
-    describe('init', () => {
+    describe('Init', () => {
         it('should map items correctly', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
@@ -1753,12 +1753,12 @@ describe('NgSelectComponent', function () {
 
             const selectInput = fixture.debugElement.query(By.css('.ng-control'));
             // open
-            selectInput.triggerEventHandler('click', { stopPropagation: () => { } });
+            selectInput.triggerEventHandler('mousedown', { stopPropagation: () => { } });
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
 
             // close
-            selectInput.triggerEventHandler('click', { stopPropagation: () => { } });
+            selectInput.triggerEventHandler('mousedown', { stopPropagation: () => { } });
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
         }));
@@ -2171,7 +2171,7 @@ describe('NgSelectComponent', function () {
         }));
 
         it('should toggle dropdown', fakeAsync(() => {
-            const clickArrow = () => arrowIcon.triggerEventHandler('click', { stopPropagation: () => { } });
+            const clickArrow = () => arrowIcon.triggerEventHandler('mousedown', { stopPropagation: () => { } });
             // open
             clickArrow();
             tickAndDetectChanges(fixture);
