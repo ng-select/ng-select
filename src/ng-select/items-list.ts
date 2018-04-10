@@ -125,8 +125,8 @@ export class ItemsList {
             const length = term.length;
 
             return items.sort((a, b) => {
-                const aName = a.name;
-                const bName = b.name;
+                const aName = a[this._ngSelect.bindLabel] || a.value[this._ngSelect.bindLabel];
+                const bName = b[this._ngSelect.bindLabel] || b.value[this._ngSelect.bindLabel];
 
                 const x = aName.toLowerCase().slice(0, length);
                 const y = bName.toLowerCase().slice(0, length);
