@@ -1724,7 +1724,7 @@ describe('NgSelectComponent', function () {
                     [searchFn]="searchFn"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
-            
+
             fixture.componentInstance.searchFn = (term: string, item: any) => {
                 return item.name.indexOf(term) > -1 || item.id === 2;
             };
@@ -1965,6 +1965,84 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.isOpen).toBeTruthy();
             }));
         });
+    });
+
+    describe('aria', () => {
+        let fixture: ComponentFixture<NgSelectTestCmp>;
+        let select: NgSelectComponent;
+        let input: HTMLInputElement;
+
+        beforeEach(fakeAsync(() => {
+            fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        (change)="onChange($event)" 
+                        bindLabel="name">
+                </ng-select>`);
+            select = fixture.componentInstance.select;
+            input = fixture.debugElement.query(By.css('input')).nativeElement;
+        }));
+
+        it('should set aria-activedescendant absent at start', fakeAsync(() => {
+            expect(input.hasAttribute('aria-activedescendant'))
+                .toBe(false);
+        }));
+
+        it('should set aria-owns absent at start', fakeAsync(() => {
+            expect(input.hasAttribute('aria-owns'))
+                .toBe(false);
+        }));
+
+        it('should set aria-owns be set to dropdownId on open', fakeAsync(() => {
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            tickAndDetectChanges(fixture);
+
+            expect(input.getAttribute('aria-owns'))
+                .toBe(select.dropdownId);
+        }));
+
+        it('should set aria-activedecendant equal to chosen item on open', fakeAsync(() => {
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            tickAndDetectChanges(fixture);
+            expect(input.getAttribute('aria-activedescendant'))
+                .toBe(select.itemsList.markedItem.htmlId);
+        }));
+
+        it('should set aria-activedecendant equal to chosen item on arrow down', fakeAsync(() => {
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
+            tickAndDetectChanges(fixture);
+            expect(input.getAttribute('aria-activedescendant'))
+                .toBe(select.itemsList.markedItem.htmlId);
+        }));
+
+        it('should set aria-activedecendant equal to chosen item on arrow up', fakeAsync(() => {
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowUp);
+            tickAndDetectChanges(fixture);
+            expect(input.getAttribute('aria-activedescendant'))
+                .toBe(select.itemsList.markedItem.htmlId);
+        }));
+
+        it('should set aria-activedescendant absent on dropdown close', fakeAsync(() => {
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            tickAndDetectChanges(fixture);
+            expect(input.hasAttribute('aria-activedescendant'))
+                .toBe(false);
+        }));
+
+        it('should set aria-owns  absent on dropdown close', fakeAsync(() => {
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            tickAndDetectChanges(fixture);
+            expect(input.hasAttribute('aria-owns'))
+                .toBe(false);
+        }));
     });
 
     describe('Output events', () => {
