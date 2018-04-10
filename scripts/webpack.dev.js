@@ -3,7 +3,6 @@ const webpack = require('webpack');
 
 // Webpack Plugins
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
-const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -18,7 +17,7 @@ module.exports = function makeWebpackConfig() {
     let config = {
         devtool: isProd ? 'source-map' : 'eval-source-map',
         entry: {
-            'app': './demo/main.ts', // our angular app,
+            'app': './demo/main.ts',
             'polyfills': './demo/polyfills.ts'
         },
         output: {
@@ -28,7 +27,6 @@ module.exports = function makeWebpackConfig() {
             chunkFilename: isProd ? '[id].[hash].chunk.js' : '[id].chunk.js'
         },
         resolve: {
-            // only discover files that have those extensions
             extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html'],
             plugins: [
                 new TsConfigPathsPlugin({
@@ -39,7 +37,6 @@ module.exports = function makeWebpackConfig() {
         },
         module: {
             rules: [
-                // Support for .ts files.
                 {
                     test: /\.ts$/,
                     loader: ['awesome-typescript-loader?configFileName=./demo/tsconfig.json', 'angular2-template-loader', 'ng-snippets-loader'],
@@ -58,9 +55,6 @@ module.exports = function makeWebpackConfig() {
                     loader: 'file-loader?name=fonts/[name].[hash].[ext]?'
                 },
 
-                // Support for *.json files.
-                {test: /\.json$/, loader: 'json-loader'},
-
                 // all scss files in app demo style will be merged to index.html
                 {
                     test: /\.scss$/,
@@ -74,14 +68,14 @@ module.exports = function makeWebpackConfig() {
                 // all themes will be added to bundle as usable
                 {
                     test: /(theme)\.scss$/,
-                    loader: 'style-loader/useable!css-loader!postcss-loader!sass-loader'
+                    loader: 'style-loader/useable!css-loader!sass-loader'
                 },
 
                 // all css required in ng-select files will be merged in js files
                 {
                     test: /\.(scss|sass)$/,
                     exclude: [root('demo', 'style'), root('src', 'themes')],
-                    loader: 'raw-loader!postcss-loader!sass-loader'
+                    loader: 'raw-loader!sass-loader'
                 },
                 
                 // support for .html as raw text
@@ -102,12 +96,7 @@ module.exports = function makeWebpackConfig() {
                     tslint: {
                         emitErrors: false,
                         failOnHint: false
-                    },
-                    postcss: [
-                        autoprefixer({
-                            browsers: ['last 2 version']
-                        })
-                    ]
+                    }
                 }
             }),
 
