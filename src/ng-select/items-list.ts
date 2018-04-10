@@ -1,8 +1,8 @@
-import { NgOption } from './ng-select.types';
+import {NgOption} from './ng-select.types';
 import * as searchHelper from './search-helper';
-import { NgSelectComponent } from './ng-select.component';
-import { isObject, isDefined } from './value-utils';
-import { newId } from './id';
+import {NgSelectComponent} from './ng-select.component';
+import {isObject, isDefined} from './value-utils';
+import {newId} from './id';
 
 type OptionGroups = Map<string, NgOption[]>;
 
@@ -14,7 +14,8 @@ export class ItemsList {
     private _markedIndex = -1;
     private _selected: NgOption[] = [];
 
-    constructor(private _ngSelect: NgSelectComponent) { }
+    constructor(private _ngSelect: NgSelectComponent) {
+    }
 
     get items(): NgOption[] {
         return this._items;
@@ -119,6 +120,24 @@ export class ItemsList {
         }
     }
 
+    sortItems(items: NgOption[], term: string): NgOption[] {
+        if (items.length && term) {
+            const length = term.length;
+
+            return items.sort((a, b) => {
+                const aName = a[this._ngSelect.bindLabel] || a.value[this._ngSelect.bindLabel];
+                const bName = b[this._ngSelect.bindLabel] || b.value[this._ngSelect.bindLabel];
+
+                const x = aName.toLowerCase().slice(0, length);
+                const y = bName.toLowerCase().slice(0, length);
+
+                return term === x ? term === y ? aName < bName ? -1 : 1 : -1 : term === y ? 1 : aName < bName ? -1 : 1;
+            });
+        } else {
+            return items;
+        }
+    }
+
     filter(term: string) {
         if (!term) {
             this.resetItems();
@@ -131,6 +150,7 @@ export class ItemsList {
 
         for (const key of Array.from(this._groups.keys())) {
             const matchedItems = [];
+
             for (const item of this._groups.get(key)) {
                 if (this._ngSelect.hideSelected && this._selected.indexOf(item) > -1) {
                     continue;
@@ -140,15 +160,19 @@ export class ItemsList {
                     matchedItems.push(item);
                 }
             }
+
             if (matchedItems.length > 0) {
                 const [last] = matchedItems.slice(-1);
                 if (last.parent) {
                     const head = this._items.find(x => x === last.parent);
                     this._filteredItems.push(head);
                 }
+
                 this._filteredItems.push(...matchedItems);
             }
         }
+
+        this._filteredItems = this.sortItems(this._filteredItems, term);
     }
 
     resetItems() {
