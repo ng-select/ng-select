@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.36.0"></a>
+# [0.36.0](https://github.com/ng-select/ng-select/compare/v0.35.2...v0.36.0) (2018-04-10)
+
+
+### Features
+
+* adding basic support for Narrators on Dropdown ([#433](https://github.com/ng-select/ng-select/issues/433)) ([30201c0](https://github.com/ng-select/ng-select/commit/30201c0)), closes [#216](https://github.com/ng-select/ng-select/issues/216)
+
+
+
 <a name="0.35.2"></a>
 ## [0.35.2](https://github.com/ng-select/ng-select/compare/v0.35.1...v0.35.2) (2018-04-09)
 
