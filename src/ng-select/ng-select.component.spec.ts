@@ -2026,15 +2026,6 @@ describe('NgSelectComponent', function () {
                 .toBe(select.itemsList.markedItem.htmlId);
         }));
 
-        it('should set aria-activedecendant equal to chosen item on arrow up', fakeAsync(() => {
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            tickAndDetectChanges(fixture);
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowUp);
-            tickAndDetectChanges(fixture);
-            expect(input.getAttribute('aria-activedescendant'))
-                .toBe(select.itemsList.markedItem.htmlId);
-        }));
-
         it('should set aria-activedescendant absent on dropdown close', fakeAsync(() => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             tickAndDetectChanges(fixture);
