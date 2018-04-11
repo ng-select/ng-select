@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.36.1"></a>
+## [0.36.1](https://github.com/ng-select/ng-select/compare/v0.36.0...v0.36.1) (2018-04-11)
+
+
+### Bug Fixes
+
+* disable term highlighting by default ([2b84190](https://github.com/ng-select/ng-select/commit/2b84190))
+* sanitize options ([1fbfd24](https://github.com/ng-select/ng-select/commit/1fbfd24))
+
+
+
 <a name="0.36.0"></a>
 # [0.36.0](https://github.com/ng-select/ng-select/compare/v0.35.2...v0.36.0) (2018-04-10)
 
