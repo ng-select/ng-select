@@ -377,10 +377,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             !this.isLoading;
     }
 
-    showFilter() {
-        return !this.isDisabled;
-    }
-
     showNoItemsFound() {
         const empty = this.itemsList.filteredItems.length === 0;
         return ((empty && !this._isTypeahead && !this.loading) ||
@@ -436,6 +432,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     focusSearchInput() {
+        if (!this.filterInput) {
+            return;
+        }
         this.filterInput.nativeElement.focus();
         this.filterInput.nativeElement.select();
     }

@@ -1772,9 +1772,12 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            fixture.componentInstance.select.filter('vilnius');
+            const select = fixture.componentInstance.select;
+            select.filter('vilnius');
             tickAndDetectChanges(fixture);
-            expect(fixture.componentInstance.select.filterValue).toBe(null);
+            const filterInput = select.elementRef.nativeElement.querySelector('input');
+            expect(select.filterValue).toBeNull();
+            expect(filterInput).toBeNull();
         }));
 
         it('should mark first item on filter', fakeAsync(() => {
