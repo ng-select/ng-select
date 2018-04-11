@@ -5,8 +5,8 @@ import { By } from '@angular/platform-browser';
 
 @Component({
     template: `
-        <span id="test1" [innerHtml]="'My text is highlighted'" [ngOptionHighlight]="term"></span>
-        <span id="test2" [innerHtml]="'My text is not highlighted'" [ngOptionHighlight]="term"></span>
+        <span id="test1" [ngOptionHighlight]="term">My text is highlighted</span>
+        <span id="test2" [ngOptionHighlight]="term">My text is not highlighted</span>
     `
 })
 class TestComponent {

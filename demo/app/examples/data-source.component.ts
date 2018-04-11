@@ -71,7 +71,6 @@ import { Observable } from 'rxjs/Observable';
         <ng-select [searchable]="false" [(ngModel)]="selectedCarId">
             <ng-option *ngFor="let car of cars" [value]="car.id" [disabled]="car.disabled" >{{car.name}}</ng-option>
             <ng-option [value]="'custom'">Custom</ng-option>
-            <ng-option [value]="'html'"><b>BMW</b></ng-option>
         </ng-select>
         ---
         <br />Selected car ID: {{selectedCarId | json}}

@@ -144,6 +144,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];
     filterValue: string = null;
+    dropdownId = newId();
+    selectedItemId = 0;
 
     private _defaultLabel = 'label';
     private _defaultValue = 'value';
@@ -154,8 +156,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private readonly _destroy$ = new Subject<void>();
     private _onChange = (_: NgOption) => { };
     private _onTouched = () => { };
-    dropdownId = newId();
-    selectedItemId = 0;
+    
     clearItem = (item: any) => {
         const option = this.selectedItems.find(x => x.value === item);
         this.unselect(option);
