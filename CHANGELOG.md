@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.36.2"></a>
+## [0.36.2](https://github.com/ng-select/ng-select/compare/v0.36.1...v0.36.2) (2018-04-11)
+
+
+### Bug Fixes
+
+* use interpolation instead of innerHTML ([79d555a](https://github.com/ng-select/ng-select/commit/79d555a))
+
+
+
 <a name="0.36.1"></a>
 ## [0.36.1](https://github.com/ng-select/ng-select/compare/v0.36.0...v0.36.1) (2018-04-11)
 
