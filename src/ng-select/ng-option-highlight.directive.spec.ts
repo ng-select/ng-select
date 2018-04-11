@@ -5,47 +5,44 @@ import { By } from '@angular/platform-browser';
 
 @Component({
     template: `
-        <span id="test1" [innerHTML]="'My text is highlighted'" [ngOptionHighlight]="'is high'"></span>
-        <span id="test2" [innerHTML]="'My text is not highlighted'" [ngOptionHighlight]="'test'"></span>
-        <span id="test3" [innerHTML]="'My text is rich'"></span>
+        <span id="test1" [innerHtml]="'My text is highlighted'" [ngOptionHighlight]="term"></span>
+        <span id="test2" [innerHtml]="'My text is not highlighted'" [ngOptionHighlight]="term"></span>
     `
 })
 class TestComponent {
+    term: string;
 }
 
-describe('NgOptionHighlightDirective', function () {
+describe('NgOptionHighlightDirective', () => {
 
     let fixture: ComponentFixture<TestComponent>;
 
     beforeEach(() => {
         fixture = TestBed.configureTestingModule({
             declarations: [NgOptionHighlightDirective, TestComponent]
-        })
-            .createComponent(TestComponent);
+        }).createComponent(TestComponent);
 
         fixture.detectChanges();
     });
 
     it('should have two elements with highlight directive', () => {
-        let highlightDirectives = fixture.debugElement.queryAll(By.directive(NgOptionHighlightDirective));
+        const highlightDirectives = fixture.debugElement.queryAll(By.directive(NgOptionHighlightDirective));
         expect(highlightDirectives.length).toBe(2);
     });
 
     it('should have one element with highlighted text when term matching', () => {
-        let span1 = fixture.debugElement.query(By.css('#test1'));
-        expect(span1.nativeElement.querySelector('.highlighted').innerHTML).toBe('is high');
-        expect(span1.nativeElement.textContent).toBe('My text is highlighted');
+        const span = fixture.debugElement.query(By.css('#test1'));
+        fixture.componentInstance.term = 'is high';
+        fixture.detectChanges();
+        expect(span.nativeElement.querySelector('.highlighted').innerHTML).toBe('is high');
+        expect(span.nativeElement.textContent).toBe('My text is highlighted');
     });
 
     it('should have one element with no highlighted text when term not matching', () => {
-        let span2 = fixture.debugElement.query(By.css('#test2'));
-        expect(span2.nativeElement.querySelector('.highlighted')).toBeNull();
-        expect(span2.nativeElement.innerHTML).toBe('My text is not highlighted');
-    });
-
-    it('should have one element with no highlighted text when no highlight directive', () => {
-        let span3 = fixture.debugElement.query(By.css('#test3'));
-        expect(span3.nativeElement.querySelector('.highlighted')).toBeNull();
-        expect(span3.nativeElement.innerHTML).toBe('My text is rich');
+        const span = fixture.debugElement.query(By.css('#test2'));
+        fixture.componentInstance.term = 'non matching';
+        fixture.detectChanges();
+        expect(span.nativeElement.querySelector('.highlighted')).toBeNull();
+        expect(span.nativeElement.innerHTML).toBe('My text is not highlighted');
     });
 });

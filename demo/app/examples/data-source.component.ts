@@ -65,12 +65,13 @@ import { Observable } from 'rxjs/Observable';
         <p>
             If you have simple use case, you can omit items array and bind options directly in html using <b>ng-option</b> component.
         </p>
-        <button type="button" class="btn btn-secondary btn-sm" (click)="disable = !disable">Toggle disabled</button>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="toggleDisabled()">Toggle disabled</button>
         <hr/>
         ---html,true
         <ng-select [searchable]="false" [(ngModel)]="selectedCarId">
             <ng-option *ngFor="let car of cars" [value]="car.id" [disabled]="car.disabled" >{{car.name}}</ng-option>
             <ng-option [value]="'custom'">Custom</ng-option>
+            <ng-option [value]="'html'"><b>BMW</b></ng-option>
         </ng-select>
         ---
         <br />Selected car ID: {{selectedCarId | json}}
@@ -100,6 +101,11 @@ export class DataSourceComponent {
         this.people$ = this.dataService.getPeople();
         this.dataService.getPeople().subscribe(items => this.people = items);
         this.simpleItems = [true, 'Two', 3];
+    }
+
+    toggleDisabled() {
+        const car: any = this.cars[1];
+        car.disabled = !car.disabled;
     }
 }
 

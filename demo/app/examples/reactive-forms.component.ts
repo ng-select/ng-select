@@ -86,7 +86,7 @@ import { delay } from 'rxjs/operators';
                            [virtualScroll]="true"
                            formControlName="album">
                     <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
-                        <div><span>Title: </span><span [innerHTML]="item.title" [ngOptionHighlight]="search"></span></div>
+                        <div><span>Title: </span><span [ngOptionHighlight]="search">{{item.title}}</span></div>
                         <small><b>Id:</b> {{item.id}} | <b>UserId:</b> {{item.userId}}</small>
                     </ng-template>
                 </ng-select>
@@ -114,7 +114,7 @@ import { delay } from 'rxjs/operators';
                     </ng-template>
                     <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
                         <img height="15" width="15" [src]="item.thumbnailUrl"/>
-                        <span [innerHTML]="item.title" [ngOptionHighlight]="search"></span>
+                        <span [ngOptionHighlight]="search">{{item.title}}</span>
                     </ng-template>
                 </ng-select>
                 <small class="form-text text-muted">5000 items with virtual scroll</small>
