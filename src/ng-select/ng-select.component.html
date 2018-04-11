@@ -6,7 +6,7 @@
             <div [class.disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems">
                 <ng-template #defaultLabelTemplate>
                     <span class="ng-value-icon left" (click)="unselect(item); $event.stopPropagation()" aria-hidden="true">×</span>
-                    <span class="ng-value-label" [innerHTML]="item.label"></span>
+                    <span class="ng-value-label" [innerHtml]="item.label"></span>
                 </ng-template>
     
                 <ng-template
@@ -79,11 +79,11 @@
                 id="{{item?.htmlId || null}}">
 
             <ng-template #defaultOptionTemplate>
-                <span class="ng-option-label" [innerHTML]="item.label"  [ngOptionHighlight]="filterValue"></span>
+                <span class="ng-option-label" [innerHtml]="item.label" [ngOptionHighlight]="filterValue"></span>
             </ng-template>
 
             <ng-template #defaultOptGroupTemplate>
-                <span class="ng-option-label" [innerHTML]="item.label"  [ngOptionHighlight]="filterValue"></span>
+                <span class="ng-option-label" [innerHtml]="item.label" [ngOptionHighlight]="filterValue"></span>
             </ng-template>
 
             <ng-template
@@ -98,19 +98,19 @@
     </ng-container>
 
     <ng-container *ngIf="showNoItemsFound()">
-        <ng-template #defaultNotfoundTemplate>
-            <div class="ng-option disabled" [innerHTML]="notFoundText" *ngIf="showNoItemsFound()"></div>
+        <ng-template #defaultNotFoundTemplate>
+            <div class="ng-option disabled">{{notFoundText}}</div>
         </ng-template>
     
         <ng-template
-            [ngTemplateOutlet]="notFoundTemplate || defaultNotfoundTemplate"
+            [ngTemplateOutlet]="notFoundTemplate || defaultNotFoundTemplate"
             [ngTemplateOutletContext]="{ searchTerm: filterValue }">
         </ng-template>
     </ng-container>
 
     <ng-container *ngIf="showTypeToSearch()">
         <ng-template #defaultTypeToSearchTemplate>
-            <div class="ng-option disabled" [innerHTML]="typeToSearchText"></div>
+            <div class="ng-option disabled">{{typeToSearchText}}</div>
         </ng-template>
     
         <ng-template
@@ -120,7 +120,7 @@
    
     <ng-container *ngIf="isLoading && itemsList.filteredItems.length === 0">
         <ng-template #defaultLoadingTextTemplate>
-            <div class="ng-option disabled" [innerHTML]="loadingText"></div>
+            <div class="ng-option disabled">{{loadingText}}</div>
         </ng-template>
     
         <ng-template

@@ -28,7 +28,7 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
                 <div *ngIf="item.name === 'Kaunas'">{{item.name}}</div>
                 <div class="card" *ngIf="item.name !== 'Kaunas'">
                     <div class="card-body">
-                        <h5 class="card-title" [innerHTML]="item.name" [ngOptionHighlight]="search"></h5>
+                        <h5 class="card-title" [ngOptionHighlight]="search">{{item.name}}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
                         <p class="card-text">
                             <img height="15" width="15" [src]="item.avatar"/>
@@ -59,7 +59,7 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
                 City group logo <img height="15" width="15" [src]="item.avatar"/>
             </ng-template>
             <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                <b [innerHTML]="item.name" [ngOptionHighlight]="search"></b>
+                <b [ngOptionHighlight]="search">{{item.name}}</b>
             </ng-template>
         </ng-select>
         ---
