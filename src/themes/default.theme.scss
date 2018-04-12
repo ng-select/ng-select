@@ -60,7 +60,7 @@ $color-selected: #f5faff;
             }
         }
     }
-    &.ng-single {
+    &.ng-select-single {
         .ng-control {
             height: 36px;
             .ng-value-container {
@@ -73,7 +73,7 @@ $color-selected: #f5faff;
             }
         }
     }
-    &.ng-multiple {
+    &.ng-select-multiple {
         &.ng-select-disabled {
             >.ng-control .ng-value-container .ng-value {
                 background-color: #f9f9f9;
