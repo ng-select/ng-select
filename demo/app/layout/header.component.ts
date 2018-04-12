@@ -35,10 +35,10 @@ const materialTheme = require('./../../../src/themes/material.theme.scss');
                 <form class="form-inline my-2 my-lg-0">
                     <a class="github-button"
                        href="https://github.com/ng-select/ng-select"
-                       data-icon="octicon-star"
+                       data-icon="mark-github"
                        data-size="large"
                        data-show-count="true"
-                       aria-label="Star ng-select/ng-select on GitHub">Star</a>
+                       aria-label="Visit ng-select/ng-select on GitHub">Github</a>
                 </form>
             </div>
         </nav>

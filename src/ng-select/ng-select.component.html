@@ -23,6 +23,7 @@
 
         <div *ngIf="!isDisabled" class="ng-input">
             <div *ngIf="!searchable"
+                #filterInput
                 tabindex="0"
                 (focus)="onInputFocus()"
                 (blur)="onInputBlur()"

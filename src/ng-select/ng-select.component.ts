@@ -250,7 +250,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.clearModel();
         }
         this._clearSearch();
-        this.focusSearchInput();
+        this.focus();
         if (this._isTypeahead) {
             this.typeahead.next(null);
         }
@@ -303,7 +303,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.itemsList.markSelectedOrDefault(this.markFirst);
         this.openEvent.emit();
         if (!this.filterValue) {
-            this.focusSearchInput();
+            this.focus();
         }
         this.detectChanges();
     }
@@ -342,6 +342,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (this.closeOnSelect || this.itemsList.noItemsToSelect) {
             this.close();
         }
+    }
+
+    focus() {
+        if (!this.filterInput) {
+            return;
+        }
+        this.filterInput.nativeElement.focus();
     }
 
     unselect(item: NgOption) {
@@ -429,14 +436,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!(<any>this._cd).destroyed) {
             this._cd.detectChanges();
         }
-    }
-
-    focusSearchInput() {
-        if (!this.filterInput) {
-            return;
-        }
-        this.filterInput.nativeElement.focus();
-        this.filterInput.nativeElement.select();
     }
 
     private _setItems(items: any[]) {

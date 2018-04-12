@@ -20,10 +20,12 @@ import { delay } from 'rxjs/operators';
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="yesno">Not searchable</label>
-                    <ng-select [searchable]="false" formControlName="agree">
+                    <ng-select #agreeSelect [searchable]="false" formControlName="agree">
                         <ng-option [value]="true">Yes</ng-option>
                         <ng-option [value]="false">No</ng-option>
                     </ng-select>
+                    <br />
+                    <button (click)="agreeSelect.focus()" class="btn btn-sm btn-secondary">Focus select</button>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="heroId">Basic select</label>
@@ -44,7 +46,7 @@ import { delay } from 'rxjs/operators';
             <div class="form-group">
                 <label for="state">Single select</label>
                 ---html,true
-                <ng-select [items]="ages"
+                <ng-select #agesSelect [items]="ages"
                         [selectOnTab]="true"
                         bindValue="value"
                         placeholder="Select age"
@@ -54,6 +56,7 @@ import { delay } from 'rxjs/operators';
                 <small class="form-text text-muted">With required validation</small>
                 <br>
                 <button class="btn btn-secondary btn-sm" (click)="toggleAgeDisable()">Toggle disabled</button>
+                <button (click)="agesSelect.focus()" class="btn btn-sm btn-secondary">Focus select</button>
             </div>
             <hr>
             <div class="form-group">
