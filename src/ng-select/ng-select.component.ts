@@ -66,7 +66,7 @@ export type CompareWithFn = (a: any, b: any) => boolean;
     host: {
         'role': 'listbox',
         'class': 'ng-select',
-        '[class.ng-single]': '!multiple',
+        '[class.ng-select-single]': '!multiple',
     }
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
@@ -95,10 +95,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() virtualScroll = false;
     @Input() selectableGroup = false;
     @Input() searchFn = null;
-    @Input() @HostBinding('class.typeahead') typeahead: Subject<string>;
-    @Input() @HostBinding('class.ng-multiple') multiple = false;
-    @Input() @HostBinding('class.taggable') addTag: boolean | AddTagFn = false;
-    @Input() @HostBinding('class.searchable') searchable = true;
+    @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
+    @Input() @HostBinding('class.ng-select-multiple') multiple = false;
+    @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
+    @Input() @HostBinding('class.ng-select-searchable') searchable = true;
 
     @Input()
     get compareWith() { return this._compareWith; }
@@ -136,10 +136,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
     @ViewChild('filterInput') filterInput: ElementRef;
 
-    @HostBinding('class.opened') isOpen = false;
-    @HostBinding('class.focused') isFocused = false;
-    @HostBinding('class.disabled') isDisabled = false;
-    @HostBinding('class.filtered') get filtered() { return !!this.filterValue };
+    @HostBinding('class.ng-select-opened') isOpen = false;
+    @HostBinding('class.ng-select-focused') isFocused = false;
+    @HostBinding('class.ng-select-disabled') isDisabled = false;
+    @HostBinding('class.ng-select-filtered') get filtered() { return !!this.filterValue };
 
     itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];

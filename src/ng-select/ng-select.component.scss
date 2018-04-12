@@ -22,16 +22,16 @@
     [hidden] {
         display: none;
     }
-    &.searchable {
-        .ng-control .ng-value-container .ng-input {
+    &.ng-select-searchable {
+        .ng-select-container .ng-value-container .ng-input {
             opacity: 1;
         }
     }
-    &.opened .ng-control {
+    &.ng-select-opened .ng-select-container {
         z-index: 1001;
     }
-    &.disabled {
-        .ng-control {
+    &.ng-select-disabled {
+        .ng-select-container {
             .ng-value-container {
                 .ng-placeholder,
                 .ng-value {
@@ -40,16 +40,16 @@
                 }
             }
         }
-        .ng-arrow-zone {
+        .ng-arrow-wrapper {
             cursor: default;
         }
     }
-    &.filtered {
+    &.ng-select-filtered {
         .ng-placeholder {
             display: none;
         }
     }
-    .ng-control {
+    .ng-select-container {
         color: #333;
         cursor: default;
         display: flex;
@@ -77,13 +77,13 @@
             }
         }
     }
-    &.ng-single {
-        &.filtered {
-            .ng-control .ng-value-container .ng-value {
+    &.ng-select-single {
+        &.ng-select-filtered {
+            .ng-select-container .ng-value-container .ng-value {
                 visibility: hidden;
             }
         }
-        .ng-control {
+        .ng-select-container {
             .ng-value-container {
                 @include wrapt-text;
                 .ng-value {
@@ -100,15 +100,15 @@
             }
         }
     }
-    &.ng-multiple {
-        &.disabled {
-            >.ng-control .ng-value-container .ng-value {
+    &.ng-select-multiple {
+        &.ng-select-disabled {
+            >.ng-select-container .ng-value-container .ng-value {
                 .ng-value-icon {
                     display: none;
                 }
             }
         }
-        .ng-control {
+        .ng-select-container {
             .ng-value-container {
                 flex-wrap: wrap;
                 .ng-placeholder {
@@ -135,7 +135,7 @@
             }
         }
     }
-    .ng-clear-zone {
+    .ng-clear-wrapper {
         cursor: pointer;
         position: relative;
         width: 17px;
@@ -186,7 +186,7 @@
             }
         }
     }
-    .ng-arrow-zone {
+    .ng-arrow-wrapper {
         cursor: pointer;
         position: relative;
         text-align: center;

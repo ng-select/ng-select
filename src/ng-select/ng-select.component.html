@@ -1,4 +1,4 @@
-<div (mousedown)="searchable ? open() : toggle()" [class.ng-has-value]="hasValue" class="ng-control">
+<div (mousedown)="searchable ? open() : toggle()" [class.ng-has-value]="hasValue" class="ng-select-container">
     <div class="ng-value-container">
         <div class="ng-placeholder">{{placeholder}}</div>
 
@@ -50,11 +50,11 @@
 
     <div class="ng-spinner-loader" *ngIf="isLoading"></div>
 
-    <span *ngIf="showClear()" (click)="handleClearClick($event)" class="ng-clear-zone" title="{{clearAllText}}">
+    <span *ngIf="showClear()" (click)="handleClearClick($event)" class="ng-clear-wrapper" title="{{clearAllText}}">
         <span class="ng-clear" aria-hidden="true">×</span>
     </span>
 
-    <span (mousedown)="handleArrowClick($event)" class="ng-arrow-zone">
+    <span (mousedown)="handleArrowClick($event)" class="ng-arrow-wrapper">
         <span class="ng-arrow"></span>
     </span>
 </div>
@@ -80,12 +80,12 @@
     <ng-container>
         <div class="ng-option" [attr.role]="item.hasChildren ? 'group' : 'option'" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
                 *ngFor="let item of viewPortItems"
-                [class.disabled]="item.disabled"
-                [class.selected]="item.selected"
+                [class.ng-option-disabled]="item.disabled"
+                [class.ng-option-selected]="item.selected"
                 [class.ng-optgroup]="item.hasChildren"
                 [class.ng-option]="!item.hasChildren"
                 [class.ng-option-child]="!!item.parent"
-                [class.marked]="item === itemsList.markedItem"
+                [class.ng-option-marked]="item === itemsList.markedItem"
                 id="{{item?.htmlId || null}}">
 
             <ng-template #defaultOptionTemplate>
@@ -105,7 +105,7 @@
 
     <ng-container *ngIf="showNoItemsFound()">
         <ng-template #defaultNotFoundTemplate>
-            <div class="ng-option disabled">{{notFoundText}}</div>
+            <div class="ng-option ng-option-disabled">{{notFoundText}}</div>
         </ng-template>
     
         <ng-template
@@ -116,7 +116,7 @@
 
     <ng-container *ngIf="showTypeToSearch()">
         <ng-template #defaultTypeToSearchTemplate>
-            <div class="ng-option disabled">{{typeToSearchText}}</div>
+            <div class="ng-option ng-option-disabled">{{typeToSearchText}}</div>
         </ng-template>
     
         <ng-template
@@ -126,7 +126,7 @@
    
     <ng-container *ngIf="isLoading && itemsList.filteredItems.length === 0">
         <ng-template #defaultLoadingTextTemplate>
-            <div class="ng-option disabled">{{loadingText}}</div>
+            <div class="ng-option ng-option-disabled">{{loadingText}}</div>
         </ng-template>
     
         <ng-template

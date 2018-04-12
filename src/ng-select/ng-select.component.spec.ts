@@ -556,7 +556,7 @@ describe('NgSelectComponent', function () {
                     tickAndDetectChanges(fixture);
                     tickAndDetectChanges(fixture);
 
-                    const classes = ['ng-select', 'ng-single', 'searchable', 'ng-untouched', 'ng-pristine', 'ng-valid'];
+                    const classes = ['ng-select', 'ng-select-single', 'ng-select-searchable'];
                     const selectEl = fixture.nativeElement.querySelector('ng-select');
                     for (const c of classes) {
                         expect(selectEl.classList.contains(c)).toBeTruthy(`expected to contain "${c}" class`);
@@ -1114,7 +1114,7 @@ describe('NgSelectComponent', function () {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
             fixture.whenStable().then(() => {
-                (document.querySelector('.ng-option.marked') as HTMLElement).click();
+                (document.querySelector('.ng-option.ng-option-marked') as HTMLElement).click();
                 fixture.detectChanges();
                 expect(fixture.componentInstance.select.isOpen).toBeTruthy();
             });
@@ -1134,10 +1134,10 @@ describe('NgSelectComponent', function () {
             const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
             const panelClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-dropdown-panel').classList;
             expect(select.dropdownPosition).toBe('auto');
-            expect(selectClasses.contains('bottom')).toBeTruthy();
-            expect(panelClasses.contains('bottom')).toBeTruthy();
-            expect(selectClasses.contains('top')).toBeFalsy();
-            expect(panelClasses.contains('top')).toBeFalsy();
+            expect(selectClasses.contains('ng-select-bottom')).toBeTruthy();
+            expect(panelClasses.contains('ng-select-bottom')).toBeTruthy();
+            expect(selectClasses.contains('ng-select-top')).toBeFalsy();
+            expect(panelClasses.contains('ng-select-top')).toBeFalsy();
         }));
 
         it('should autoposition dropdown to top if position input is set', fakeAsync(() => {
@@ -1152,10 +1152,10 @@ describe('NgSelectComponent', function () {
             const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
             const panelClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-dropdown-panel').classList;
             expect(select.dropdownPosition).toBe('top');
-            expect(selectClasses.contains('bottom')).toBeFalsy();
-            expect(panelClasses.contains('bottom')).toBeFalsy();
-            expect(selectClasses.contains('top')).toBeTruthy();
-            expect(panelClasses.contains('top')).toBeTruthy();
+            expect(selectClasses.contains('ng-select-bottom')).toBeFalsy();
+            expect(panelClasses.contains('ng-select-bottom')).toBeFalsy();
+            expect(selectClasses.contains('ng-select-top')).toBeTruthy();
+            expect(panelClasses.contains('ng-select-top')).toBeTruthy();
         }));
 
         it('should autoposition appended to body dropdown to bottom', fakeAsync(() => {
@@ -1170,10 +1170,10 @@ describe('NgSelectComponent', function () {
             const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
             const panelClasses = document.querySelector('.ng-dropdown-panel').classList;
             expect(select.dropdownPosition).toBe('auto');
-            expect(selectClasses.contains('bottom')).toBeTruthy();
-            expect(panelClasses.contains('bottom')).toBeTruthy();
-            expect(selectClasses.contains('top')).toBeFalsy();
-            expect(panelClasses.contains('top')).toBeFalsy();
+            expect(selectClasses.contains('ng-select-bottom')).toBeTruthy();
+            expect(panelClasses.contains('ng-select-bottom')).toBeTruthy();
+            expect(selectClasses.contains('ng-select-top')).toBeFalsy();
+            expect(panelClasses.contains('ng-select-top')).toBeFalsy();
         }));
     });
 
@@ -1440,7 +1440,7 @@ describe('NgSelectComponent', function () {
             let arrowIcon: DebugElement = null;
             beforeEach(() => {
                 fixture.componentInstance.select.maxSelectedItems = 2;
-                arrowIcon = fixture.debugElement.query(By.css('.ng-arrow-zone'));
+                arrowIcon = fixture.debugElement.query(By.css('.ng-arrow-wrapper'));
             });
 
             it('should be able to select only two elements', fakeAsync(() => {
@@ -1676,7 +1676,7 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
             const selectEl: HTMLElement = select.elementRef.nativeElement;
-            const ngControl = selectEl.querySelector('.ng-control')
+            const ngControl = selectEl.querySelector('.ng-select-container')
             const placeholder: any = selectEl.querySelector('.ng-placeholder');
             expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
 
@@ -1691,7 +1691,7 @@ describe('NgSelectComponent', function () {
         it('should contain .ng-has-value when value was selected', fakeAsync(() => {
             tickAndDetectChanges(fixture);
             const selectEl: HTMLElement = fixture.componentInstance.select.elementRef.nativeElement;
-            const ngControl = selectEl.querySelector('.ng-control')
+            const ngControl = selectEl.querySelector('.ng-select-container')
             selectOption(fixture, KeyCode.ArrowDown, 2);
             expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
         }));
@@ -1751,7 +1751,7 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            const selectInput = fixture.debugElement.query(By.css('.ng-control'));
+            const selectInput = fixture.debugElement.query(By.css('.ng-select-container'));
             // open
             selectInput.triggerEventHandler('mousedown', { stopPropagation: () => { } });
             tickAndDetectChanges(fixture);
@@ -2199,7 +2199,7 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
-            clickIcon = fixture.debugElement.query(By.css('.ng-clear-zone'));
+            clickIcon = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
         }));
 
         it('should clear model', fakeAsync(() => {
@@ -2229,7 +2229,7 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.disabled = true;
             tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
-            const el = fixture.debugElement.query(By.css('.ng-clear-zone'));
+            const el = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
             expect(el).toBeNull();
         }));
     });
@@ -2248,7 +2248,7 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             tickAndDetectChanges(fixture);
-            arrowIcon = fixture.debugElement.query(By.css('.ng-arrow-zone'));
+            arrowIcon = fixture.debugElement.query(By.css('.ng-arrow-wrapper'));
         }));
 
         it('should toggle dropdown', fakeAsync(() => {
