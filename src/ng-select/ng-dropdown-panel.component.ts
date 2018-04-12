@@ -25,8 +25,8 @@ import { ItemsList } from './items-list';
 import { WindowService } from './window.service';
 import { VirtualScrollService } from './virtual-scroll.service';
 
-const TOP_CSS_CLASS = 'top';
-const BOTTOM_CSS_CLASS = 'bottom';
+const TOP_CSS_CLASS = 'ng-select-top';
+const BOTTOM_CSS_CLASS = 'ng-select-bottom';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
