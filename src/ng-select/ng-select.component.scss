@@ -27,7 +27,7 @@
             opacity: 1;
         }
     }
-    &.opened .ng-control {
+    &.ng-select-opened .ng-control {
         z-index: 1001;
     }
     &.disabled {

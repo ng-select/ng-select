@@ -45,7 +45,7 @@ $highlight-color: #3f51b5;
         }
     }
     .ng-has-value,
-    &.opened {
+    &.ng-select-opened {
         .ng-placeholder {
             transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
         }
