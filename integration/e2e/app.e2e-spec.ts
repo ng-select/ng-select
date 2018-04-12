@@ -14,13 +14,13 @@ describe('ng-select', () => {
   });
 
   it('should open dropdown on click', () => {
-    select.element(by.css('.ng-control')).click();
+    select.element(by.css('.ng-select-container')).click();
 
     expect(select.getAttribute('class')).toMatch('ng-select-opened');
   });
 
   it('should select value and close dropdown', async () => {
-    select.element(by.css('.ng-control')).click();
+    select.element(by.css('.ng-select-container')).click();
 
     select.all(by.css('.ng-option')).first().click();
 

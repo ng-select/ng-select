@@ -23,15 +23,15 @@
         display: none;
     }
     &.ng-select-searchable {
-        .ng-control .ng-value-container .ng-input {
+        .ng-select-container .ng-value-container .ng-input {
             opacity: 1;
         }
     }
-    &.ng-select-opened .ng-control {
+    &.ng-select-opened .ng-select-container {
         z-index: 1001;
     }
     &.ng-select-disabled {
-        .ng-control {
+        .ng-select-container {
             .ng-value-container {
                 .ng-placeholder,
                 .ng-value {
@@ -49,7 +49,7 @@
             display: none;
         }
     }
-    .ng-control {
+    .ng-select-container {
         color: #333;
         cursor: default;
         display: flex;
@@ -79,11 +79,11 @@
     }
     &.ng-select-single {
         &.ng-select-filtered {
-            .ng-control .ng-value-container .ng-value {
+            .ng-select-container .ng-value-container .ng-value {
                 visibility: hidden;
             }
         }
-        .ng-control {
+        .ng-select-container {
             .ng-value-container {
                 @include wrapt-text;
                 .ng-value {
@@ -102,13 +102,13 @@
     }
     &.ng-select-multiple {
         &.ng-select-disabled {
-            >.ng-control .ng-value-container .ng-value {
+            >.ng-select-container .ng-value-container .ng-value {
                 .ng-value-icon {
                     display: none;
                 }
             }
         }
-        .ng-control {
+        .ng-select-container {
             .ng-value-container {
                 flex-wrap: wrap;
                 .ng-placeholder {

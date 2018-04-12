@@ -1676,7 +1676,7 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
             const selectEl: HTMLElement = select.elementRef.nativeElement;
-            const ngControl = selectEl.querySelector('.ng-control')
+            const ngControl = selectEl.querySelector('.ng-select-container')
             const placeholder: any = selectEl.querySelector('.ng-placeholder');
             expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
 
@@ -1691,7 +1691,7 @@ describe('NgSelectComponent', function () {
         it('should contain .ng-has-value when value was selected', fakeAsync(() => {
             tickAndDetectChanges(fixture);
             const selectEl: HTMLElement = fixture.componentInstance.select.elementRef.nativeElement;
-            const ngControl = selectEl.querySelector('.ng-control')
+            const ngControl = selectEl.querySelector('.ng-select-container')
             selectOption(fixture, KeyCode.ArrowDown, 2);
             expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
         }));
@@ -1751,7 +1751,7 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            const selectInput = fixture.debugElement.query(By.css('.ng-control'));
+            const selectInput = fixture.debugElement.query(By.css('.ng-select-container'));
             // open
             selectInput.triggerEventHandler('mousedown', { stopPropagation: () => { } });
             tickAndDetectChanges(fixture);

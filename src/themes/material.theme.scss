@@ -2,7 +2,7 @@ $highlight-color: #3f51b5;
 .ng-select {
     padding-bottom: 1.25em;
     &.ng-select-disabled {
-        .ng-control {
+        .ng-select-container {
             &:after {
                 border-bottom-color: transparent;
                 background-image: linear-gradient(to right, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.42) 33%, transparent 0%);
@@ -24,7 +24,7 @@ $highlight-color: #3f51b5;
         }
     }
     &.ng-select-focused {
-        .ng-control {
+        .ng-select-container {
             &:after {
                 border-color: $highlight-color;
                 border-width: 2px;
@@ -50,7 +50,7 @@ $highlight-color: #3f51b5;
             transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
         }
     }
-    .ng-control {
+    .ng-select-container {
         align-items: baseline;
         min-height: 51.5px;
         &:after {
@@ -77,7 +77,7 @@ $highlight-color: #3f51b5;
         }
     }
     &.ng-select-single {
-        .ng-control {
+        .ng-select-container {
             .ng-arrow-wrapper {
                 align-self: flex-end;
                 bottom: 9px;
@@ -90,12 +90,12 @@ $highlight-color: #3f51b5;
     }
     &.ng-select-multiple {
         &.ng-select-disabled {
-            .ng-control .ng-value-container .ng-value {
+            .ng-select-container .ng-value-container .ng-value {
                 background-color: rgba(0, 0, 0, .12);
                 color: rgba(0, 0, 0, .26);
             }
         }
-        .ng-control {
+        .ng-select-container {
             .ng-value-container {
                 .ng-value {
                     margin-right: 0.4375em;

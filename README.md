@@ -195,7 +195,7 @@ If you are not happy with default styles you can easily override them with incre
     min-height: 0px;
     border-radius: 0;
 }
-.ng-select.custom .ng-control  {            
+.ng-select.custom .ng-select-container  {            
     min-height: 0px;
     border-radius: 0;
 }
@@ -349,7 +349,7 @@ export class SelectCustomTemplatesComponent {
 By default when you use reactive forms validators or template driven forms validators css class `ng-invalid` will be applied on ng-select. You can show errors state by having adding this custom css style
 
 ```css
-ng-select.ng-invalid.ng-touched .ng-control {
+ng-select.ng-invalid.ng-touched .ng-select-container {
     border-color: #dc3545;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px #fde6e8;
 }
