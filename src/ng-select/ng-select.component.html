@@ -80,7 +80,7 @@
     <ng-container>
         <div class="ng-option" [attr.role]="item.hasChildren ? 'group' : 'option'" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
                 *ngFor="let item of viewPortItems"
-                [class.disabled]="item.disabled"
+                [class.ng-option-disabled]="item.disabled"
                 [class.selected]="item.selected"
                 [class.ng-optgroup]="item.hasChildren"
                 [class.ng-option]="!item.hasChildren"
@@ -105,7 +105,7 @@
 
     <ng-container *ngIf="showNoItemsFound()">
         <ng-template #defaultNotFoundTemplate>
-            <div class="ng-option disabled">{{notFoundText}}</div>
+            <div class="ng-option ng-option-disabled">{{notFoundText}}</div>
         </ng-template>
     
         <ng-template
@@ -116,7 +116,7 @@
 
     <ng-container *ngIf="showTypeToSearch()">
         <ng-template #defaultTypeToSearchTemplate>
-            <div class="ng-option disabled">{{typeToSearchText}}</div>
+            <div class="ng-option ng-option-disabled">{{typeToSearchText}}</div>
         </ng-template>
     
         <ng-template
@@ -126,7 +126,7 @@
    
     <ng-container *ngIf="isLoading && itemsList.filteredItems.length === 0">
         <ng-template #defaultLoadingTextTemplate>
-            <div class="ng-option disabled">{{loadingText}}</div>
+            <div class="ng-option ng-option-disabled">{{loadingText}}</div>
         </ng-template>
     
         <ng-template

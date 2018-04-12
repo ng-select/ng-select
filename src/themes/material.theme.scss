@@ -1,7 +1,7 @@
 $highlight-color: #3f51b5;
 .ng-select {
     padding-bottom: 1.25em;
-    &.disabled {
+    &.ng-select-disabled {
         .ng-control {
             &:after {
                 border-bottom-color: transparent;
@@ -89,7 +89,7 @@ $highlight-color: #3f51b5;
         }
     }
     &.ng-multiple {
-        &.disabled {
+        &.ng-select-disabled {
             .ng-control .ng-value-container .ng-value {
                 background-color: rgba(0, 0, 0, .12);
                 color: rgba(0, 0, 0, .26);
@@ -228,7 +228,7 @@ $highlight-color: #3f51b5;
                 background: rgba(0, 0, 0, .12);
                 color: $highlight-color;
             }
-            &.disabled {
+            &.ng-option-disabled {
                 color: rgba(0, 0, 0, 0.38);
             }
             &.ng-option-child {

@@ -35,7 +35,7 @@ $color-selected: #f5faff;
             box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px rgba(0, 126, 255, 0.1);
         }
     }
-    &.disabled {
+    &.ng-select-disabled {
         >.ng-control {
             background-color: #f9f9f9;
         }
@@ -74,7 +74,7 @@ $color-selected: #f5faff;
         }
     }
     &.ng-multiple {
-        &.disabled {
+        &.ng-select-disabled {
             >.ng-control .ng-value-container .ng-value {
                 background-color: #f9f9f9;
                 border: 1px solid #e3e3e3;
@@ -94,7 +94,7 @@ $color-selected: #f5faff;
                     background-color: $color-selected;
                     border-radius: 2px;
                     border: 1px solid #c2e0ff;
-                    &.disabled {
+                    &.ng-select-disabled {
                         background-color: #f9f9f9;
                         border: 1px solid #e3e3e3;
                     }
@@ -202,7 +202,7 @@ $color-selected: #f5faff;
             user-select: none;
             cursor: default;
             padding: 8px 10px;
-            &.disabled {
+            &.ng-select-disabled {
                 color: rgba(0, 0, 0, .54);
             }
             &.marked {
@@ -230,7 +230,7 @@ $color-selected: #f5faff;
                 background-color: #ebf5ff;
                 color: #333;
             }
-            &.disabled {
+            &.ng-option-disabled {
                 color: #cccccc;
             }
             &.ng-option-child {

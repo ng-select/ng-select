@@ -30,7 +30,7 @@
     &.ng-select-opened .ng-control {
         z-index: 1001;
     }
-    &.disabled {
+    &.ng-select-disabled {
         .ng-control {
             .ng-value-container {
                 .ng-placeholder,
@@ -101,7 +101,7 @@
         }
     }
     &.ng-multiple {
-        &.disabled {
+        &.ng-select-disabled {
             >.ng-control .ng-value-container .ng-value {
                 .ng-value-icon {
                     display: none;
