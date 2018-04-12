@@ -128,7 +128,7 @@ $color-selected: #f5faff;
             }
         }
     }
-    .ng-clear-zone {
+    .ng-clear-wrapper {
         color: #999;
         .ng-clear {
             &:hover {
@@ -140,7 +140,7 @@ $color-selected: #f5faff;
         padding-right: 5px;
         padding-top: 5px;
     }
-    .ng-arrow-zone {
+    .ng-arrow-wrapper {
         padding-right: 5px;
         width: 25px;
         .ng-arrow {

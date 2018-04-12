@@ -40,7 +40,7 @@
                 }
             }
         }
-        .ng-arrow-zone {
+        .ng-arrow-wrapper {
             cursor: default;
         }
     }
@@ -135,7 +135,7 @@
             }
         }
     }
-    .ng-clear-zone {
+    .ng-clear-wrapper {
         cursor: pointer;
         position: relative;
         width: 17px;
@@ -186,7 +186,7 @@
             }
         }
     }
-    .ng-arrow-zone {
+    .ng-arrow-wrapper {
         cursor: pointer;
         position: relative;
         text-align: center;

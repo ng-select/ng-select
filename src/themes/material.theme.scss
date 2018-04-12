@@ -18,8 +18,8 @@ $highlight-color: #3f51b5;
                 }
             }
         }
-        .ng-arrow-zone .ng-arrow,
-        .ng-clear-zone {
+        .ng-arrow-wrapper .ng-arrow,
+        .ng-clear-wrapper {
             color: rgba(0, 0, 0, 0.38);
         }
     }
@@ -33,7 +33,7 @@ $highlight-color: #3f51b5;
                 transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
                 color: $highlight-color;
             }
-            .ng-arrow-zone .ng-arrow {
+            .ng-arrow-wrapper .ng-arrow {
                 color: $highlight-color;
             }
         }
@@ -78,11 +78,11 @@ $highlight-color: #3f51b5;
     }
     &.ng-select-single {
         .ng-control {
-            .ng-arrow-zone {
+            .ng-arrow-wrapper {
                 align-self: flex-end;
                 bottom: 9px;
             }
-            .ng-clear-zone {
+            .ng-clear-wrapper {
                 align-self: flex-end;
                 bottom: 7px;
             }
@@ -126,20 +126,20 @@ $highlight-color: #3f51b5;
                     padding-bottom: 0;
                     padding-top: .1875em;
                 }
-                .ng-clear-zone,
-                .ng-arrow-zone {
+                .ng-clear-wrapper,
+                .ng-arrow-wrapper {
                     border-top: .84375em solid transparent;
                 }
             }
         }
     }
-    .ng-clear-zone {
+    .ng-clear-wrapper {
         color: rgba(0, 0, 0, 0.54);
         &:hover {
             color: rgba(0, 0, 0, .87);
         }
     }
-    .ng-arrow-zone {
+    .ng-arrow-wrapper {
         bottom: 2px;
         .ng-arrow {
             border-left: 5px solid transparent;
