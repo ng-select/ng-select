@@ -17,32 +17,33 @@ Table of contents
 
   * [Features](#features)
   * [Getting started](#getting-started)
-  * [Roadmap](#roadmap)
   * [API](#api)
   * [Change detection](#change-detection)
   * [Custom styles](#custom-styles)
-  * [Examples](#examples)
-    * [Basic example](#basic-example)
-    * [Flexible autocomplete](#flexible-autocomplete)
-    * [Custom display templates](#custom-display-templates)
     * [Validation state](#validation-state)
   * [Contributing](#contributing)
   * [Development](#development)
   * [Inspiration](#inspiration)
 
 ## Features
-- [x] Custom model bindings to property or object
+- [x] Custom binding to property or object
 - [x] Custom option, label, header and footer templates
 - [x] Virtual Scroll support with large data sets (>5000 items).
+- [x] Infinite scroll
 - [x] Keyboard navigation
 - [x] Multiselect
 - [x] Flexible autocomplete with client/server filtering
+- [x] Custom search
 - [x] Custom tags
-- [x] Append to body
+- [x] Append to
 - [x] Group items
+- [x] Output events
+- [x] Accessibility
+- [x] Good base functionality test coverage
+- [x] Themes
 
 ## Warning
-Library is under active development and may have API breaking changes until stable 1.0.0 release or subsequent major versions after 1.0.0.
+Library is under active development and may have API breaking changes for subsequent major versions after 1.0.0.
 
 ## Getting started
 ### Step 1: Install `ng-select`:
@@ -101,26 +102,8 @@ map: {
 }
 ```
 
-## Roadmap
-
-- [x] Custom binding to property or object
-- [x] Custom option and label templates
-- [x] Virtual Scroll support with large data sets (>5000 items).
-- [x] Filter data by display text
-- [x] Filter data by custom filter function
-- [x] Expose useful events like blur, change, focus, close, open ...
-- [x] Correct keyboard events behaviour
-- [x] Integration app generated with angular-cli
-- [x] Good base functionality test coverage
-- [x] Multiselect support
-- [x] Autocomplete
-- [x] Custom tags
-- [x] Themes
-- [x] Items grouping
-- [ ] Accessibility
-- [ ] Many more
-
 ## API
+### Inputs
 | Input  | Type | Default | Required | Description |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | [addTag] | `boolean \| ((term: string) => any \| Promise<any>)`  | `false` | no | Allows to create custom options. |
@@ -129,13 +112,13 @@ map: {
 | bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
 | bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |
 | closeOnSelect | `boolean` |  true | no | Whether to close the menu when a value is selected |
-| [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
 | clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
+| [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
+| [compareWith] | `(a: any, b: any) => boolean` | `(a, b) => a === b` | no | A function to compare the option values with the selected values |
 | dropdownPosition | `bottom` \| `top` \| `auto` |  `auto` | no | Set the dropdown position on open |
 | [groupBy] | `string` \| `Function` | null | no | Allow to group items by key or function expression |
 | [selectableGroup] | `boolean` | false | no | Allow to select group when groupBy is used |
-| [items] | `Array<NgOption>` | `[]` | yes | Items array |
-| [compareWith] | `(a: any, b: any) => boolean` | `(a, b) => a === b` | no | A function to compare the option values with the selected values |
+| [items] | `Array<any>` | `[]` | yes | Items array |
 | loading | `boolean` |  `-` | no | You can set the loading state from the outside (e.g. async items loading) |
 | loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
 | [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. Default `true`|
@@ -151,6 +134,8 @@ map: {
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
 
+### Outputs
+
 | Output  | Description |
 | ------------- | ------------- |
 | (add)  | Fired when item is selected |
@@ -162,6 +147,19 @@ map: {
 | (open)  | Fired on select dropdown open |
 | (remove)  | Fired when item is removed |
 | (scrollToEnd)  | Fired when scrolled to the end of items. Can be used for loading more items in chunks. |
+
+
+### Methods
+ Name  | Description |
+| ------------- | ------------- |
+| open  | Opens the select dropdown panel |
+| close  | Closes the select dropdown panel |
+| focus  | Focuses the select element |
+
+### Other
+ Name  | Type | Description |
+| ------------- | ------------- | ------------- |
+| [ngOptionHighlight] | directive | Highlights search term in option. Accepts search term. Should be used on option element. |
 
 ## Change Detection
 Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable 
@@ -183,7 +181,7 @@ this is a pricey operation, however, it is much more performant than running `ng
 constantly diffing the array.
 
 ## Custom styles
-If you are not happy with default styles you can easily override them with increased selector specificity. E.g.
+If you are not happy with default styles you can easily override them with increased selector specificity or creating your own theme. E.g.
 
 ```html
 <ng-select class="custom"></ng-select>
@@ -201,152 +199,8 @@ If you are not happy with default styles you can easily override them with incre
 }
 ```
 
-## Examples
-### Basic example
-This example in [Plunkr](https://plnkr.co/edit/hjZX6W?p=preview)
-
-```js
-@Component({
-    selector: 'cities-page',
-    template: `
-        <label>City</label>
-        <ng-select [items]="cities"
-                   bindLabel="name"
-                   bindValue="id"
-                   placeholder="Select city"
-                   [(ngModel)]="selectedCityId">
-        </ng-select>
-        <p>
-            Selected city ID: {{selectedCityId}}
-        </p>
-    `
-})
-export class CitiesPageComponent {
-    cities = [
-        {id: 1, name: 'Vilnius'},
-        {id: 2, name: 'Kaunas'},
-        {id: 3, name: 'Pabradė'}
-    ];
-    selectedCityId: any;
-}
-```
-
-### Flexible autocomplete
-
-This example in [Plunkr](https://plnkr.co/edit/KFpvA9?p=preview)
-
-In case of autocomplete you can get full control by creating simple `EventEmmiter` and passing it as an input to ng-select. When you type text, ng-select will fire events to EventEmmiter to which you can subscribe and control bunch of things like debounce, http cancellation and so on.
-```js
-import { Component, ChangeDetectionStrategy, EventEmitter } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { catchError, map, debounceTime, switchMap } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
-import { ChangeDetectorRef } from '@angular/core';
-
-@Component({
-    selector: 'select-autocomplete',
-    template: `
-        <label>Search with autocomplete in Github accounts</label>
-        <ng-select [items]="items"
-                   bindLabel="login"
-                   placeholder="Type to search"
-                   [typeahead]="typeahead"
-                   [(ngModel)]="githubAccount">
-            <ng-template ng-option-tmp let-item="item">
-                <img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}
-            </ng-template>
-        </ng-select>
-        <p>
-            Selected github account:
-            <span *ngIf="githubAccount">
-                <img [src]="githubAccount.avatar_url" width="20px" height="20px"> {{githubAccount.login}}
-            </span>
-        </p>
-    `
-})
-export class SelectAutocompleteComponent {
-
-    githubAccount: any;
-    items = [];
-    typeahead = new EventEmitter<string>();
-
-    constructor(private http: HttpClient, private cd: ChangeDetectorRef) {
-        this.typeahead
-            .pipe(
-                debounceTime(200),
-                switchMap(term => this.loadGithubUsers(term))
-            )
-            .subscribe(items => {
-                this.items = items;
-                this.cd.markForCheck();
-            }, (err) => {
-                console.log('error', err);
-                this.items = [];
-                this.cd.markForCheck();
-            });
-    }
-
-    loadGithubUsers(term: string): Observable<any[]> {
-        return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).pipe(
-            catchError(() => of(({items: []}))),
-            map(rsp => rsp.items),
-        );
-    }
-}
-```
-
-### Custom display templates
-This example in [Plunkr](https://plnkr.co/edit/csZbjH?p=preview)
-
-To customize look of ng-select you can use `ng-template` with `ng-label-tmp`, `ng-option-tmp`, `ng-header-tmp`, `ng-footer-tmp` directives applied to it.
-```js
-import {Component, NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {FormsModule} from '@angular/forms';
-import {NgSelectModule} from '@ng-select/ng-select';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-
-@Component({
-    selector: 'select-custom-templates',
-    template: `
-        <label>Demo for ng-select with custom templates</label>
-        <ng-select [items]="albums"
-                   [(ngModel)]="selectedAlbumId"
-                   bindLabel="title"
-                   bindValue="id"
-                   placeholder="Select album">
-            <ng-template ng-header-tmp>
-               Custom header
-            </ng-template>
-            <ng-template ng-label-tmp let-item="item">
-               <b>({{item.id}})</b> {{item.title}}
-            </ng-template>
-            <ng-template ng-option-tmp let-item="item">
-                <div>Title: {{item.title}}</div>
-                <small><b>Id:</b> {{item.id}} | <b>UserId:</b> {{item.userId}}</small>
-            </ng-template>
-            <ng-template ng-footer-tmp>
-               Custom footer
-            </ng-template>
-        </ng-select>
-        <p>Selected album ID: {{selectedAlbumId || 'none'}}</p>
-    `
-})
-export class SelectCustomTemplatesComponent {
-    albums = [];
-    selectedAlbumId = null;
-
-    constructor(http: HttpClient) {
-        http.get<any[]>('https://jsonplaceholder.typicode.com/albums').subscribe(albums => {
-            this.albums = albums;
-        });
-    }
-}
-```
-
 ### Validation state
-By default when you use reactive forms validators or template driven forms validators css class `ng-invalid` will be applied on ng-select. You can show errors state by having adding this custom css style
+By default when you use reactive forms validators or template driven forms validators css class `ng-invalid` will be applied on ng-select. You can show errors state by adding custom css style
 
 ```css
 ng-select.ng-invalid.ng-touched .ng-control {
@@ -354,10 +208,6 @@ ng-select.ng-invalid.ng-touched .ng-control {
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px #fde6e8;
 }
 ```
-
-### More demos
-Visit [demos](https://github.com/ng-select/ng-select/tree/master/demo/app/examples) for more examples.
-
 
 ## Contributing
 
