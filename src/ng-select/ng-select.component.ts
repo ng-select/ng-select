@@ -137,7 +137,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ViewChild('filterInput') filterInput: ElementRef;
 
     @HostBinding('class.ng-select-opened') isOpen = false;
-    @HostBinding('class.focused') isFocused = false;
+    @HostBinding('class.ng-select-focused') isFocused = false;
     @HostBinding('class.disabled') isDisabled = false;
     @HostBinding('class.filtered') get filtered() { return !!this.filterValue };
 

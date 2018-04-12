@@ -23,7 +23,7 @@ $highlight-color: #3f51b5;
             color: rgba(0, 0, 0, 0.38);
         }
     }
-    &.focused {
+    &.ng-select-focused {
         .ng-control {
             &:after {
                 border-color: $highlight-color;
