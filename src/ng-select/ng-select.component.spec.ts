@@ -24,20 +24,41 @@ import { ConsoleService } from './console.service';
 
 describe('NgSelectComponent', function () {
 
-    describe('Init', () => {
-        it('should map items correctly', fakeAsync(() => {
+    describe('Data source', () => {
+        it('should set items from primitive numbers array', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [searchable]="false"
-                                [clearable]="false"
-                                [items]="[0, 30, 60, 90, 120, 180, 240]"
-                                [(ngModel)]="selectedCityId">
-                    </ng-select>`);
+                `<ng-select [items]="[0, 30, 60, 90, 120, 180, 240]">
+                </ng-select>`);
 
-            fixture.componentInstance.selectedCityId = 0;
             tickAndDetectChanges(fixture);
-            expect(fixture.componentInstance.selectedCityId).toEqual(0);
-            expect(fixture.componentInstance.select.itemsList.items[0].label).toEqual('0');
+            const itemsList = fixture.componentInstance.select.itemsList;
+            expect(itemsList.items.length).toBe(7);
+            expect(itemsList.items[0]).toEqual(jasmine.objectContaining({
+                label: '0',
+                value: 0
+            }));
+        }));
+
+        it('should set ng-option dom elements', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [(ngModel)]="selectedCityId">
+                    <ng-option [value]="'a'">A</ng-option>
+                    <ng-option [value]="'b'">B</ng-option>
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            const itemsList = fixture.componentInstance.select.itemsList;
+            expect(itemsList.items.length).toBe(2);
+            expect(itemsList.items[0]).toEqual(jasmine.objectContaining({
+                label: 'A',
+                value: 'a'
+            }));
+            expect(itemsList.items[1]).toEqual(jasmine.objectContaining({
+                label: 'B',
+                value: 'b'
+            }));
         }));
     });
 
@@ -478,6 +499,30 @@ describe('NgSelectComponent', function () {
 
             expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
                 value: fixture.componentInstance.cities[1]
+            })]);
+            discardPeriodicTasks();
+        }));
+
+        it('bind to dom ng-option value object', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [(ngModel)]="selectedCityId">
+                    <ng-option [value]="1">A</ng-option>
+                    <ng-option [value]="2">B</ng-option>
+                </ng-select>`);
+
+            // from component to model
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.selectedCityId).toEqual(1);
+
+            // from model to component
+            fixture.componentInstance.selectedCityId = 2
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
+                value: 2,
+                label: 'B'
             })]);
             discardPeriodicTasks();
         }));
@@ -1369,10 +1414,10 @@ describe('NgSelectComponent', function () {
             const items = fixture.componentInstance.select.itemsList.items;
             expect(items.length).toBe(2);
             expect(items[0]).toEqual(jasmine.objectContaining({
-                value: { label: 'Yes', value: true, disabled: false }
+                label: 'Yes', value: true, disabled: false
             }));
             expect(items[1]).toEqual(jasmine.objectContaining({
-                value: { label: 'No', value: false, disabled: false }
+                label: 'No', value: false, disabled: false
             }));
         }));
 
@@ -1970,7 +2015,7 @@ describe('NgSelectComponent', function () {
         });
     });
 
-    describe('aria', () => {
+    describe('Accessability', () => {
         let fixture: ComponentFixture<NgSelectTestCmp>;
         let select: NgSelectComponent;
         let input: HTMLInputElement;

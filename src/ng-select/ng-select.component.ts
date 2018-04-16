@@ -148,7 +148,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     selectedItemId = 0;
 
     private _defaultLabel = 'label';
-    private _defaultValue = 'value';
     private _typeaheadLoading = false;
     private _primitive: boolean;
     private _compareWith: CompareWithFn;
@@ -454,9 +453,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _setItemsFromNgOptions() {
-        this.bindLabel = this.bindLabel || this._defaultLabel;
-        this.bindValue = this.bindValue || this._defaultValue;
-
         const handleNgOptions = (options: QueryList<NgOptionComponent>) => {
             this.items = options.map(option => ({
                 value: option.value,
