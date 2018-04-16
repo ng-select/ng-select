@@ -1533,6 +1533,14 @@ describe('NgSelectComponent', function () {
                 expect(select.isOpen).toBeFalsy();
             }));
 
+            it('should open dropdown when all items are selected and tagging is enabled', fakeAsync(() => {
+                select.addTag = true;
+                fixture.componentInstance.cities = [];
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                expect(select.isOpen).toBeTruthy();
+            }));
+
             it('should remove selected item from items list', fakeAsync(() => {
                 fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
                 tickAndDetectChanges(fixture);

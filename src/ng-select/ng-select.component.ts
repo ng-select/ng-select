@@ -294,7 +294,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (this.isDisabled || this.isOpen || this.itemsList.maxItemsSelected) {
             return;
         }
-        if (!this._isTypeahead && (this.itemsList.noItemsToSelect)) {
+        
+        if ((!this._isTypeahead && !this.addTag && (this.itemsList.noItemsToSelect)) {
             return;
         }
         this.isOpen = true;
@@ -376,7 +377,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     showAddTag() {
         return this.addTag &&
             this.filterValue &&
-            !this.itemsList.filteredItems.some(x => x.label.toLowerCase() === this.filterValue.toLowerCase()) &&
+            !this.selectedItems.some(x => x.label.toLowerCase() === this.filterValue.toLowerCase()) &&
             !this.isLoading;
     }
 
