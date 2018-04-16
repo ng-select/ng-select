@@ -295,7 +295,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
         
-        if ((!this._isTypeahead && !this.addTag && (this.itemsList.noItemsToSelect)) {
+        if (!this._isTypeahead && !this.addTag && this.itemsList.noItemsToSelect) {
             return;
         }
         this.isOpen = true;
