@@ -68,7 +68,7 @@ import { Observable } from 'rxjs/Observable';
         <button type="button" class="btn btn-secondary btn-sm" (click)="toggleDisabled()">Toggle disabled</button>
         <hr/>
         ---html,true
-        <ng-select [searchable]="false" [(ngModel)]="selectedCarId">
+        <ng-select [(ngModel)]="selectedCarId">
             <ng-option *ngFor="let car of cars" [value]="car.id" [disabled]="car.disabled" >{{car.name}}</ng-option>
             <ng-option [value]="'custom'">Custom</ng-option>
         </ng-select>

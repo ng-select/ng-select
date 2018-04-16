@@ -208,11 +208,18 @@ export class ItemsList {
     }
 
     mapItem(item: any, index: number): NgOption {
-        const label = this.resolveNested(item, this._ngSelect.bindLabel);
+        let label = '';
+        if (isDefined(item.label)) {
+            label = item.label;
+        } else {
+            label = this.resolveNested(item, this._ngSelect.bindLabel);
+            label = isDefined(label) ? label.toString() : '';
+        }
+        const value = isDefined(item.value) ? item.value : item;
         return {
             index: index,
-            label: isDefined(label) ? label.toString() : '',
-            value: item,
+            label: label,
+            value: value,
             disabled: item.disabled,
             htmlId: newId()
         };
