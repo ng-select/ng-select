@@ -24,7 +24,7 @@ import {
     SimpleChanges,
     ContentChildren,
     QueryList,
-    InjectionToken
+    InjectionToken,
 } from '@angular/core';
 
 import {
@@ -135,7 +135,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ViewChild(forwardRef(() => NgDropdownPanelComponent)) dropdownPanel: NgDropdownPanelComponent;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
     @ViewChild('filterInput') filterInput: ElementRef;
-    @ViewChild('overflowContainer') overflowContainer: ElementRef;
 
     @HostBinding('class.ng-select-opened') isOpen = false;
     @HostBinding('class.ng-select-disabled') isDisabled = false;
