@@ -11,7 +11,7 @@ import { AppComponent } from './app.component';
 import { SelectWithTemplatesComponent } from './examples/custom-templates.component';
 import { SelectBindingsComponent } from './examples/bindings.component';
 import { SelectSearchComponent } from './examples/search.component';
-import { ReactiveFormsComponent } from './examples/reactive-forms.component';
+import { ReactiveFormsComponent, ConfirmationComponent } from './examples/reactive-forms.component';
 import { SelectEventsComponent } from './examples/events.component';
 import { SelectMultiComponent } from './examples/multi.component';
 import { SelectTagsComponent } from './examples/tags.component';
@@ -91,8 +91,10 @@ export const appRoutes: Routes = [
         VirtualScrollComponent,
         AppendToComponent,
         DataSourceComponent,
-        SelectGroupsComponent
+        SelectGroupsComponent,
+        ConfirmationComponent
     ],
+    entryComponents: [ConfirmationComponent],
     bootstrap: [AppComponent]
 })
 export class AppModule {
