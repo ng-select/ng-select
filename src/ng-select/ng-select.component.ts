@@ -137,7 +137,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ViewChild('filterInput') filterInput: ElementRef;
 
     @HostBinding('class.ng-select-opened') isOpen = false;
-    @HostBinding('class.ng-select-focused') isFocused = false;
     @HostBinding('class.ng-select-disabled') isDisabled = false;
     @HostBinding('class.ng-select-filtered') get filtered() { return !!this.filterValue };
 
@@ -331,16 +330,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     select(item: NgOption) {
-        if (!item.selected) {
-            this.itemsList.select(item);
-            this._clearSearch();
-            this._updateNgModel();
-            this.addEvent.emit(item.value);
-        }
-
+        this.itemsList.select(item);
+        this._clearSearch();
+        this.addEvent.emit(item.value);
         if (this.closeOnSelect || this.itemsList.noItemsToSelect) {
             this.close();
         }
+
+        this._updateNgModel();
     }
 
     focus() {
@@ -412,12 +409,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     onInputFocus() {
-        this.isFocused = true;
+        (<HTMLElement>this.elementRef.nativeElement).classList.add('ng-select-focused');
         this.focusEvent.emit(null);
     }
 
     onInputBlur() {
-        this.isFocused = false;
+        (<HTMLElement>this.elementRef.nativeElement).classList.remove('ng-select-focused');
         this.blurEvent.emit(null);
         if (!this.isOpen && !this.isDisabled) {
             this._onTouched();
