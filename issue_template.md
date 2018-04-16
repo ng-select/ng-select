@@ -3,7 +3,7 @@ Please fill below information if issuing a bug report.
 Describe how you think it should work
 
 ### Actual behaviour
-Describe how it actually works or create example using [Plunker](https://plnkr.co/edit/hjZX6W?p=preview) issue template
+Describe how it actually works or even better create example using [StackBlitz](https://stackblitz.com/edit/ng-select-example?file=app/app.component.ts) issue template
 
 ### More Info
 ng-select version: [INSERT HERE]
