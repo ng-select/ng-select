@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.1-rc.0"></a>
+## [1.0.1-rc.0](https://github.com/ng-select/ng-select/compare/v0.36.2...v1.0.1-rc.0) (2018-04-16)
+
+
+### Bug Fixes
+
+* add ng-option-marked class for custom tags ([a158d7b](https://github.com/ng-select/ng-select/commit/a158d7b))
+* remove input if searchable is false ([#442](https://github.com/ng-select/ng-select/issues/442)) ([2149517](https://github.com/ng-select/ng-select/commit/2149517))
+* rename focusSearchInput to focus ([#447](https://github.com/ng-select/ng-select/issues/447)) ([cb71544](https://github.com/ng-select/ng-select/commit/cb71544))
+
+
+
 <a name="0.36.2"></a>
 ## [0.36.2](https://github.com/ng-select/ng-select/compare/v0.36.1...v0.36.2) (2018-04-11)
 
