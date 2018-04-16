@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.1"></a>
+## [1.0.1](https://github.com/ng-select/ng-select/compare/v1.0.1-rc.0...v1.0.1) (2018-04-16)
+
+
+### Bug Fixes
+
+* do not use HostBinding for focus state ([#461](https://github.com/ng-select/ng-select/issues/461)) ([5de7e30](https://github.com/ng-select/ng-select/commit/5de7e30))
+* support object value in ng-option ([#459](https://github.com/ng-select/ng-select/issues/459)) ([829fea5](https://github.com/ng-select/ng-select/commit/829fea5)), closes [#414](https://github.com/ng-select/ng-select/issues/414)
+
+
+
 <a name="1.0.1-rc.0"></a>
 ## [1.0.1-rc.0](https://github.com/ng-select/ng-select/compare/v0.36.2...v1.0.1-rc.0) (2018-04-16)
 
