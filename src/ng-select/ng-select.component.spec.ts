@@ -2002,15 +2002,6 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.selectedItems).toEqual([])
             }));
 
-            it('should start and stop loading indicator', fakeAsync(() => {
-                fixture.componentInstance.filter.subscribe();
-                fixture.componentInstance.select.filter('buk');
-                expect(fixture.componentInstance.select.isLoading).toBeTruthy();
-                fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];
-                tickAndDetectChanges(fixture);
-                expect(fixture.componentInstance.select.isLoading).toBeFalsy();
-            }));
-
             it('should open dropdown when hideSelected=true and no items to select', fakeAsync(() => {
                 fixture.componentInstance.hideSelected = true;
                 fixture.componentInstance.cities = [];

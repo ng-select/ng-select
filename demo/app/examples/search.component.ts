@@ -1,6 +1,7 @@
-import { Component, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { distinctUntilChanged, debounceTime, switchMap, tap } from 'rxjs/operators'
 import { DataService, Person } from '../shared/data.service';
+import { Subject } from 'rxjs/Subject';
 
 
 @Component({
@@ -16,22 +17,20 @@ import { DataService, Person } from '../shared/data.service';
         ---html,true
         <ng-select [items]="people"
                    bindLabel="name"
-                   [loading]="peopleLoading"
-                   [(ngModel)]="selectedPerson">
+                   [loading]="peopleLoading">
         </ng-select>
         ---
         <br/>
 
         <h5>Search across multiple fields using <b>[searchFn]</b></h5>
         <hr>
-        <p>Use <b>typeahead</b> to get search term and filter on custom fields. Type <b>female</b> to see only females.</p>
+        <p>Use search term and filter on custom fields. Type <b>female</b> to see only females.</p>
 
         ---html,true
-        <ng-select [items]="peopleFiltered"
+        <ng-select [items]="people2"
                    bindLabel="name"
-                   [searchFn]="customSearchFn"
-                   (close)="peopleFiltered = people"
-                   [(ngModel)]="selectedCustom">
+                   [loading]="peopleLoading2"
+                   [searchFn]="customSearchFn">
                 <ng-template ng-option-tmp let-item="item">
                     {{item.name}} <br />
                     <small>{{item.gender}}</small>
@@ -47,39 +46,39 @@ import { DataService, Person } from '../shared/data.service';
         Loading state is automatically set when filter value changes.</p>
         <label>Multi select + Typeahead + Custom items (tags)</label>
         ---html,true
-        <ng-select [items]="serverSideFilterItems"
+        <ng-select [items]="people3"
                    bindLabel="name"
                    [addTag]="true"
                    [multiple]="true"
                    [hideSelected]="true"
-                   [typeahead]="peopleTypeahead"
+                   [loading]="people3Loading"
+                   [typeahead]="people3Typeahead"
                    [(ngModel)]="selectedPersons">
         </ng-select>
         ---
-
         <p style="margin-bottom:300px">
             Selected persons: {{selectedPersons | json}}
         </p>
     `
 })
 export class SelectSearchComponent {
-
     people: Person[] = [];
-    peopleFiltered = [];
-    serverSideFilterItems = [];
-    
-    peopleTypeahead = new EventEmitter<string>();
-    selectedPersons: Person[] = <any>[{name: 'Karyn Wright'}, {name: 'Other'}];
-    selectedPerson: Person;
-    selectedCustom: Person;
-
     peopleLoading = false;
+
+    people2: Person[] = [];
+    people2Loading = false;
+
+    people3: Person[] = [];
+    people3Loading = false;
+    people3Typeahead = new Subject<string>();
+    selectedPersons: Person[] = <any>[{name: 'Karyn Wright'}, {name: 'Other'}];
 
     constructor(private dataService: DataService, private cd: ChangeDetectorRef) { }
 
     ngOnInit() {
-        this.loadPeopleForClientSide();
-        this.serverSideSearch();
+        this.loadPeople();
+        this.loadPeople2();
+        this.loadPeople3();
     }
 
     customSearchFn(term: string, item: Person) {
@@ -87,26 +86,34 @@ export class SelectSearchComponent {
         return item.name.toLocaleLowerCase().indexOf(term) > -1 || item.gender.toLocaleLowerCase() === term;
     }
 
-    private serverSideSearch() {
-        this.peopleTypeahead.pipe(
-            distinctUntilChanged(),
-            debounceTime(200),
-            switchMap(term => this.dataService.getPeople(term))
-        ).subscribe(x => {
-            this.cd.markForCheck();
-            this.serverSideFilterItems = x;
-        }, (err) => {
-            console.log(err);
-            this.serverSideFilterItems = [];
-        });
-    }
-
-    private loadPeopleForClientSide() {
+    private loadPeople() {
         this.peopleLoading = true;
         this.dataService.getPeople().subscribe(x => {
             this.people = x;
-            this.peopleFiltered = x;
             this.peopleLoading = false;
+        });
+    }
+
+    private loadPeople2() {
+        this.people2Loading = true;
+        this.dataService.getPeople().subscribe(x => {
+            this.people2 = x;
+            this.people2Loading = false;
+        });
+    }
+
+    private loadPeople3() {
+        this.people3Typeahead.pipe(
+            tap(() => this.people3Loading = true),
+            distinctUntilChanged(),
+            debounceTime(200),
+            switchMap(term => this.dataService.getPeople(term)),
+        ).subscribe(x => {
+            this.people3 = x;
+            this.people3Loading = false;
+            this.cd.markForCheck();
+        }, () => {
+            this.people3 = [];
         });
     }
 }
