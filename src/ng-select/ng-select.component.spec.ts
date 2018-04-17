@@ -1567,7 +1567,7 @@ describe('NgSelectComponent', function () {
             it('should reset list while clearing all selected items', fakeAsync(() => {
                 fixture.componentInstance.selectedCities = [...fixture.componentInstance.cities];
                 tickAndDetectChanges(fixture);
-                select.handleClearClick(<any>{ stopPropagation: () => { } });
+                select.handleClearClick();
                 expect(select.selectedItems.length).toBe(0);
                 expect(select.itemsList.filteredItems.length).toBe(3);
             }));
@@ -1727,7 +1727,7 @@ describe('NgSelectComponent', function () {
             const placeholder: any = selectEl.querySelector('.ng-placeholder');
             expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
 
-            select.handleClearClick(<any>{ stopPropagation: () => { } });
+            select.handleClearClick();
             tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
 
@@ -2222,7 +2222,7 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
             tickAndDetectChanges(fixture);
-            fixture.componentInstance.select.handleClearClick(<any>{ stopPropagation: () => { } });
+            fixture.componentInstance.select.handleClearClick();
             tickAndDetectChanges(fixture);
 
             expect(fixture.componentInstance.onClear).toHaveBeenCalled();
