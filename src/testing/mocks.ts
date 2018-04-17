@@ -21,6 +21,11 @@ export class MockNgWindow extends WindowService {
     requestAnimationFrame(fn: Function): any {
         return fn();
     }
+
+    setTimeout(handler: (...args: any[]) => void, _: number): number {
+        handler();
+        return 0;
+    }
 }
 
 @Injectable()

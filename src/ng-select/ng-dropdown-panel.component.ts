@@ -60,12 +60,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
     @Output() update = new EventEmitter<any[]>();
     @Output() scrollToEnd = new EventEmitter<{ start: number; end: number }>();
+    @Output() outsideClick = new EventEmitter<void>();
 
     @ViewChild('content', { read: ElementRef }) contentElementRef: ElementRef;
     @ViewChild('scroll', { read: ElementRef }) scrollElementRef: ElementRef;
     @ViewChild('padding', { read: ElementRef }) paddingElementRef: ElementRef;
 
-    private _selectElementRef: ElementRef;
+    private _selectElement: HTMLElement;
     private _previousStart: number;
     private _previousEnd: number;
     private _startupLoop = true;
@@ -75,6 +76,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     private _currentPosition: 'bottom' | 'top';
     private _disposeScrollListener = () => { };
     private _disposeDocumentResizeListener = () => { };
+    private _disposeDocumentClickListener = () => { };
 
     constructor(
         @Inject(forwardRef(() => NgSelectComponent)) _ngSelect: NgSelectComponent,
@@ -84,12 +86,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         private _virtualScrollService: VirtualScrollService,
         private _window: WindowService
     ) {
-        this._selectElementRef = _ngSelect.elementRef;
+        this._selectElement = _ngSelect.elementRef.nativeElement;
         this._itemsList = _ngSelect.itemsList;
     }
 
     ngOnInit() {
         this._handleScroll();
+        this._handleDocumentClick();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -101,6 +104,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     ngOnDestroy() {
         this._disposeDocumentResizeListener();
         this._disposeScrollListener();
+        this._disposeDocumentClickListener();
         if (this.appendTo) {
             this._renderer.removeChild(this._elementRef.nativeElement.parentNode, this._elementRef.nativeElement);
         }
@@ -153,6 +157,21 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         this._disposeScrollListener = this._renderer.listen(this.scrollElementRef.nativeElement, 'scroll', () => {
             this.refresh();
             this._fireScrollToEnd();
+        });
+    }
+
+    private _handleDocumentClick() {
+        this._disposeDocumentClickListener = this._renderer.listen('document', 'mousedown', ($event: any) => {
+            if (this._selectElement.contains($event.target)) {
+                return;
+            }
+
+            const dropdown: HTMLElement = this._elementRef.nativeElement;
+            if (dropdown.contains($event.target)) {
+                return;
+            }
+
+            this.outsideClick.emit();
         });
     }
 
@@ -262,7 +281,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
         const dropdownEl: HTMLElement = this._elementRef.nativeElement;
         this._currentPosition = this._calculateCurrentPosition(dropdownEl);
-        const selectEl: HTMLElement = this._selectElementRef.nativeElement;
+        const selectEl: HTMLElement = this._selectElement;
         if (this._currentPosition === 'top') {
             this._renderer.addClass(dropdownEl, TOP_CSS_CLASS)
             this._renderer.removeClass(dropdownEl, BOTTOM_CSS_CLASS)
@@ -286,7 +305,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         if (this.position !== 'auto') {
             return this.position;
         }
-        const selectRect: ClientRect = this._selectElementRef.nativeElement.getBoundingClientRect();
+        const selectRect: ClientRect = this._selectElement.getBoundingClientRect();
         const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         const offsetTop = selectRect.top + window.pageYOffset;
         const height = selectRect.height;
@@ -308,7 +327,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
     private _updateAppendedDropdownPosition() {
         const parent = document.querySelector(this.appendTo) || document.body;
-        const selectRect: ClientRect = this._selectElementRef.nativeElement.getBoundingClientRect();
+        const selectRect: ClientRect = this._selectElement.getBoundingClientRect();
         const dropdownPanel: HTMLElement = this._elementRef.nativeElement;
         const boundingRect = parent.getBoundingClientRect();
         const offsetTop = selectRect.top - boundingRect.top;

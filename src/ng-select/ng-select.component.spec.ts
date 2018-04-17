@@ -1128,7 +1128,8 @@ describe('NgSelectComponent', function () {
         beforeEach(() => {
             fixture = createTestingModule(
                 NgSelectTestCmp,
-                `   <ng-select id="select" [items]="cities"
+                `<div id="outside">Outside</div><br />
+                <ng-select id="select" [items]="cities"
                     bindLabel="name"
                     multiple="true"
                     [closeOnSelect]="false"
@@ -1137,33 +1138,26 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
         });
 
-        it('close dropdown if opened and clicked outside dropdown container', () => {
+        it('close dropdown if opened and clicked outside dropdown container', fakeAsync(() => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
-            fixture.whenStable().then(() => {
-                (document.querySelector('.ng-overlay') as HTMLElement).click();
-                expect(fixture.componentInstance.select.isOpen).toBeFalsy();
-            });
-        });
+            document.getElementById('outside').click();
+            let event = new MouseEvent('mousedown', {bubbles: true});
+            document.getElementById('outside').dispatchEvent(event);
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+        }));
 
-        it('prevent dropdown close if clicked on select', () => {
+        it('prevent dropdown close if clicked on select', fakeAsync(() => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
-            fixture.whenStable().then(() => {
-                document.getElementById('select').click();
-                expect(fixture.componentInstance.select.isOpen).toBeTruthy();
-            });
-        });
+            document.getElementById('select').click();
+            let event = new MouseEvent('mousedown', {bubbles: true});
+            document.getElementById('select').dispatchEvent(event);
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+        }));
 
-        it('should not close dropdown when closeOnSelect is false and in body', () => {
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
-            fixture.whenStable().then(() => {
-                (document.querySelector('.ng-option.ng-option-marked') as HTMLElement).click();
-                fixture.detectChanges();
-                expect(fixture.componentInstance.select.isOpen).toBeTruthy();
-            });
-        });
     });
 
     describe('Dropdown position', () => {
@@ -1573,7 +1567,7 @@ describe('NgSelectComponent', function () {
             it('should reset list while clearing all selected items', fakeAsync(() => {
                 fixture.componentInstance.selectedCities = [...fixture.componentInstance.cities];
                 tickAndDetectChanges(fixture);
-                select.handleClearClick(<any>{ stopPropagation: () => { } });
+                select.handleClearClick();
                 expect(select.selectedItems.length).toBe(0);
                 expect(select.itemsList.filteredItems.length).toBe(3);
             }));
@@ -1733,7 +1727,7 @@ describe('NgSelectComponent', function () {
             const placeholder: any = selectEl.querySelector('.ng-placeholder');
             expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
 
-            select.handleClearClick(<any>{ stopPropagation: () => { } });
+            select.handleClearClick();
             tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
 
@@ -1746,6 +1740,7 @@ describe('NgSelectComponent', function () {
             const selectEl: HTMLElement = fixture.componentInstance.select.elementRef.nativeElement;
             const ngControl = selectEl.querySelector('.ng-select-container')
             selectOption(fixture, KeyCode.ArrowDown, 2);
+            tickAndDetectChanges(fixture);
             expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
         }));
     });
@@ -1806,12 +1801,12 @@ describe('NgSelectComponent', function () {
 
             const selectInput = fixture.debugElement.query(By.css('.ng-select-container'));
             // open
-            selectInput.triggerEventHandler('mousedown', { stopPropagation: () => { } });
+            selectInput.triggerEventHandler('mousedown', { target: {} });
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
 
             // close
-            selectInput.triggerEventHandler('mousedown', { stopPropagation: () => { } });
+            selectInput.triggerEventHandler('mousedown', { target: {} });
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
         }));
@@ -2227,7 +2222,7 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
             tickAndDetectChanges(fixture);
-            fixture.componentInstance.select.handleClearClick(<any>{ stopPropagation: () => { } });
+            fixture.componentInstance.select.handleClearClick();
             tickAndDetectChanges(fixture);
 
             expect(fixture.componentInstance.onClear).toHaveBeenCalled();
@@ -2236,7 +2231,7 @@ describe('NgSelectComponent', function () {
 
     describe('Clear icon click', () => {
         let fixture: ComponentFixture<NgSelectTestCmp>;
-        let clickIcon: DebugElement = null;
+        let triggerClearClick = null;
 
         beforeEach(fakeAsync(() => {
             fixture = createTestingModule(
@@ -2252,11 +2247,14 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
-            clickIcon = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
+            triggerClearClick = () => {
+                const control = fixture.debugElement.query(By.css('.ng-select-container'))
+                control.triggerEventHandler('mousedown', { target: { className: 'ng-clear'} });
+            };
         }));
 
         it('should clear model', fakeAsync(() => {
-            clickIcon.triggerEventHandler('click', { stopPropagation: () => { } });
+            triggerClearClick();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.selectedCity).toBe(null);
             expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
@@ -2266,14 +2264,14 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.selectedCity = null;
             fixture.componentInstance.select.filterValue = 'Hey! Whats up!?';
             tickAndDetectChanges(fixture);
-            clickIcon.triggerEventHandler('click', { stopPropagation: () => { } });
+            triggerClearClick();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(0);
             expect(fixture.componentInstance.select.filterValue).toBe(null);
         }));
 
         it('should not open dropdown', fakeAsync(() => {
-            clickIcon.triggerEventHandler('click', { stopPropagation: () => { } });
+            triggerClearClick();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
         }));
@@ -2289,7 +2287,7 @@ describe('NgSelectComponent', function () {
 
     describe('Arrow icon click', () => {
         let fixture: ComponentFixture<NgSelectTestCmp>;
-        let arrowIcon: DebugElement = null;
+        let triggerArrowIconClick = null;
 
         beforeEach(fakeAsync(() => {
             fixture = createTestingModule(
@@ -2301,23 +2299,25 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             tickAndDetectChanges(fixture);
-            arrowIcon = fixture.debugElement.query(By.css('.ng-arrow-wrapper'));
+            triggerArrowIconClick = () => {
+                const control = fixture.debugElement.query(By.css('.ng-select-container'))
+                control.triggerEventHandler('mousedown', { target: { className: 'ng-arrow'} });
+            };
         }));
 
         it('should toggle dropdown', fakeAsync(() => {
-            const clickArrow = () => arrowIcon.triggerEventHandler('mousedown', { stopPropagation: () => { } });
             // open
-            clickArrow();
+            triggerArrowIconClick();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
 
             // close
-            clickArrow();
+            triggerArrowIconClick();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
 
             // open
-            clickArrow();
+            triggerArrowIconClick();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         }));
@@ -2338,7 +2338,7 @@ describe('NgSelectComponent', function () {
             fixture.whenStable().then(() => {
                 const dropdown = <HTMLElement>document.querySelector('.ng-dropdown-panel');
                 expect(dropdown.parentElement).toBe(document.body);
-                expect(dropdown.style.top).toBe('18px');
+                expect(dropdown.style.top).not.toBe('0px');
                 expect(dropdown.style.left).toBe('0px');
             })
         }));
@@ -2358,7 +2358,7 @@ describe('NgSelectComponent', function () {
 
             fixture.whenStable().then(() => {
                 const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
-                expect(dropdown.style.top).toBe('18px');
+                expect(dropdown.style.top).not.toBe('0px');
                 expect(dropdown.style.left).toBe('0px');
             });
         }));
