@@ -21,6 +21,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         ---html,true
         <ng-select [items]="companies"
                 [addTag]="addTag"
+                [hideSelected]="true"
                 multiple="true"
                 bindLabel="name"
                 [(ngModel)]="selectedCompanyCustom">
