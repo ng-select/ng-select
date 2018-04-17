@@ -48,7 +48,7 @@
         </div>
     </div>
 
-    <div class="ng-spinner-loader" *ngIf="isLoading"></div>
+    <div class="ng-spinner-loader" *ngIf="loading"></div>
 
     <span *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
         <span class="ng-clear" aria-hidden="true">×</span>
@@ -121,7 +121,7 @@
         </ng-template>
     </ng-container>
    
-    <ng-container *ngIf="isLoading && itemsList.filteredItems.length === 0">
+    <ng-container *ngIf="loading && itemsList.filteredItems.length === 0">
         <ng-template #defaultLoadingTextTemplate>
             <div class="ng-option ng-option-disabled">{{loadingText}}</div>
         </ng-template>

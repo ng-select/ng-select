@@ -149,7 +149,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     selectedItemId = 0;
 
     private _defaultLabel = 'label';
-    private _typeaheadLoading = false;
     private _primitive: boolean;
     private _compareWith: CompareWithFn;
 
@@ -178,10 +177,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     get selectedValues() {
         return this.selectedItems.map(x => x.value);
-    }
-
-    get isLoading() {
-        return this.loading || this._typeaheadLoading;
     }
 
     get hasValue() {
@@ -400,19 +395,19 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         return this.addTag &&
             this.filterValue &&
             !this.selectedItems.some(x => x.label.toLowerCase() === this.filterValue.toLowerCase()) &&
-            !this.isLoading;
+            !this.loading;
     }
 
     showNoItemsFound() {
         const empty = this.itemsList.filteredItems.length === 0;
         return ((empty && !this._isTypeahead && !this.loading) ||
-            (empty && this._isTypeahead && this.filterValue && !this.isLoading)) &&
+            (empty && this._isTypeahead && this.filterValue && !this.loading)) &&
             !this.showAddTag();
     }
 
     showTypeToSearch() {
         const empty = this.itemsList.filteredItems.length === 0;
-        return empty && this._isTypeahead && !this.filterValue && !this.isLoading;
+        return empty && this._isTypeahead && !this.filterValue && !this.loading;
     }
 
     filter(term: string) {
@@ -423,7 +418,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.open();
 
         if (this._isTypeahead) {
-            this._typeaheadLoading = true;
             this.typeahead.next(this.filterValue);
         } else {
             this.itemsList.filter(this.filterValue);
@@ -467,7 +461,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         if (this._isTypeahead) {
-            this._typeaheadLoading = false;
             this.itemsList.markSelectedOrDefault(this.markFirst);
         }
     }
