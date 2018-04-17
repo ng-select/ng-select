@@ -60,6 +60,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
     @Output() update = new EventEmitter<any[]>();
     @Output() scrollToEnd = new EventEmitter<{ start: number; end: number }>();
+    @Output() outsideClick = new EventEmitter<void>();
 
     @ViewChild('content', { read: ElementRef }) contentElementRef: ElementRef;
     @ViewChild('scroll', { read: ElementRef }) scrollElementRef: ElementRef;
@@ -75,6 +76,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     private _currentPosition: 'bottom' | 'top';
     private _disposeScrollListener = () => { };
     private _disposeDocumentResizeListener = () => { };
+    private _disposeDocumentClickListener = () => { };
 
     constructor(
         @Inject(forwardRef(() => NgSelectComponent)) _ngSelect: NgSelectComponent,
@@ -90,6 +92,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
     ngOnInit() {
         this._handleScroll();
+        this._handleDocumentClick();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -101,6 +104,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     ngOnDestroy() {
         this._disposeDocumentResizeListener();
         this._disposeScrollListener();
+        this._disposeDocumentClickListener();
         if (this.appendTo) {
             this._renderer.removeChild(this._elementRef.nativeElement.parentNode, this._elementRef.nativeElement);
         }
@@ -153,6 +157,23 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         this._disposeScrollListener = this._renderer.listen(this.scrollElementRef.nativeElement, 'scroll', () => {
             this.refresh();
             this._fireScrollToEnd();
+        });
+    }
+
+    private _handleDocumentClick() {
+        this._disposeDocumentClickListener = this._renderer.listen('document', 'click', ($event: any) => {
+            // prevent close if clicked on select
+            if (this._selectElementRef.nativeElement.contains($event.target)) {
+                return;
+            }
+
+            // prevent close if clicked on dropdown menu
+            const dropdown: HTMLElement = this._elementRef.nativeElement;
+            if (dropdown.contains($event.target)) {
+                return;
+            }
+
+            this.outsideClick.emit();
         });
     }
 

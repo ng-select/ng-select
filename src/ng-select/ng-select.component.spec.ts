@@ -1128,7 +1128,8 @@ describe('NgSelectComponent', function () {
         beforeEach(() => {
             fixture = createTestingModule(
                 NgSelectTestCmp,
-                `   <ng-select id="select" [items]="cities"
+                `<button id="outside">Outside</button>
+                <ng-select id="select" [items]="cities"
                     bindLabel="name"
                     multiple="true"
                     [closeOnSelect]="false"
@@ -1137,33 +1138,23 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
         });
 
-        it('close dropdown if opened and clicked outside dropdown container', () => {
+        it('close dropdown if opened and clicked outside dropdown container', fakeAsync(() => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
-            fixture.whenStable().then(() => {
-                (document.querySelector('.ng-overlay') as HTMLElement).click();
-                expect(fixture.componentInstance.select.isOpen).toBeFalsy();
-            });
-        });
+            document.getElementById('outside').click();
+            fixture.debugElement.query(By.css('#outside')).triggerEventHandler('click', {});
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+        }));
 
-        it('prevent dropdown close if clicked on select', () => {
+        it('prevent dropdown close if clicked on select', fakeAsync(() => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
-            fixture.whenStable().then(() => {
-                document.getElementById('select').click();
-                expect(fixture.componentInstance.select.isOpen).toBeTruthy();
-            });
-        });
+            document.getElementById('select').click();
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+        }));
 
-        it('should not close dropdown when closeOnSelect is false and in body', () => {
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
-            fixture.whenStable().then(() => {
-                (document.querySelector('.ng-option.ng-option-marked') as HTMLElement).click();
-                fixture.detectChanges();
-                expect(fixture.componentInstance.select.isOpen).toBeTruthy();
-            });
-        });
     });
 
     describe('Dropdown position', () => {
@@ -1746,6 +1737,7 @@ describe('NgSelectComponent', function () {
             const selectEl: HTMLElement = fixture.componentInstance.select.elementRef.nativeElement;
             const ngControl = selectEl.querySelector('.ng-select-container')
             selectOption(fixture, KeyCode.ArrowDown, 2);
+            tickAndDetectChanges(fixture);
             expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
         }));
     });
@@ -2338,7 +2330,7 @@ describe('NgSelectComponent', function () {
             fixture.whenStable().then(() => {
                 const dropdown = <HTMLElement>document.querySelector('.ng-dropdown-panel');
                 expect(dropdown.parentElement).toBe(document.body);
-                expect(dropdown.style.top).toBe('18px');
+                expect(dropdown.style.top).not.toBe('0px');
                 expect(dropdown.style.left).toBe('0px');
             })
         }));
@@ -2358,7 +2350,7 @@ describe('NgSelectComponent', function () {
 
             fixture.whenStable().then(() => {
                 const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
-                expect(dropdown.style.top).toBe('18px');
+                expect(dropdown.style.top).not.toBe('0px');
                 expect(dropdown.style.left).toBe('0px');
             });
         }));

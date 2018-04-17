@@ -25,6 +25,7 @@ import {
     ContentChildren,
     QueryList,
     InjectionToken,
+    NgZone,
 } from '@angular/core';
 
 import {
@@ -46,6 +47,7 @@ import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { isDefined, isFunction, isPromise, isObject } from './value-utils';
 import { ConsoleService } from './console.service';
 import { newId } from './id';
+import { WindowService } from './window.service';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
@@ -154,7 +156,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private readonly _destroy$ = new Subject<void>();
     private _onChange = (_: NgOption) => { };
     private _onTouched = () => { };
-    
+
     clearItem = (item: any) => {
         const option = this.selectedItems.find(x => x.value === item);
         this.unselect(option);
@@ -163,6 +165,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     constructor(@Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private _cd: ChangeDetectorRef,
         private _console: ConsoleService,
+        private _zone: NgZone,
+        private _window: WindowService,
         public elementRef: ElementRef
     ) {
         this._mergeGlobalConfig(config);
@@ -294,7 +298,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (this.isDisabled || this.isOpen || this.itemsList.maxItemsSelected) {
             return;
         }
-        
+
         if (!this._isTypeahead && !this.addTag && this.itemsList.noItemsToSelect) {
             return;
         }
@@ -315,7 +319,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this._clearSearch();
         this._onTouched();
         this.closeEvent.emit();
-        this.detectChanges();
+        this._cd.markForCheck();
     }
 
     toggleItem(item: NgOption) {
@@ -345,7 +349,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this.filterInput) {
             return;
         }
-        this.filterInput.nativeElement.focus();
+        this._zone.runOutsideAngular(() => {
+            this._window.setTimeout(() => {
+                this.filterInput.nativeElement.focus();
+            }, 0);
+        });
     }
 
     unselect(item: NgOption) {
