@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.3"></a>
+## [1.0.3](https://github.com/ng-select/ng-select/compare/v1.0.2...v1.0.3) (2018-04-17)
+
+
+### Bug Fixes
+
+* **hideSelected:** allow to open dropdown when tagging enabled ([#464](https://github.com/ng-select/ng-select/issues/464)) ([852643f](https://github.com/ng-select/ng-select/commit/852643f)), closes [#457](https://github.com/ng-select/ng-select/issues/457)
+* close dropdown on outside click ([#465](https://github.com/ng-select/ng-select/issues/465)) ([8d8f2a5](https://github.com/ng-select/ng-select/commit/8d8f2a5)), closes [#453](https://github.com/ng-select/ng-select/issues/453) [#313](https://github.com/ng-select/ng-select/issues/313)
+* do not try to set loading state automatically ([#466](https://github.com/ng-select/ng-select/issues/466)) ([7e3a12d](https://github.com/ng-select/ng-select/commit/7e3a12d))
+
+
+
 <a name="1.0.2"></a>
 ## [1.0.2](https://github.com/ng-select/ng-select/compare/v1.0.1...v1.0.2) (2018-04-16)
 
