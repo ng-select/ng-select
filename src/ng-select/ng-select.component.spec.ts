@@ -1128,7 +1128,7 @@ describe('NgSelectComponent', function () {
         beforeEach(() => {
             fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<button id="outside">Outside</button>
+                `<div id="outside">Outside</div><br />
                 <ng-select id="select" [items]="cities"
                     bindLabel="name"
                     multiple="true"
@@ -1142,7 +1142,8 @@ describe('NgSelectComponent', function () {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
             document.getElementById('outside').click();
-            fixture.debugElement.query(By.css('#outside')).triggerEventHandler('click', {});
+            let event = new MouseEvent('mousedown', {bubbles: true});
+            document.getElementById('outside').dispatchEvent(event);
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBeFalsy();
         }));
@@ -1151,6 +1152,8 @@ describe('NgSelectComponent', function () {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
             document.getElementById('select').click();
+            let event = new MouseEvent('mousedown', {bubbles: true});
+            document.getElementById('select').dispatchEvent(event);
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
         }));
@@ -1798,12 +1801,12 @@ describe('NgSelectComponent', function () {
 
             const selectInput = fixture.debugElement.query(By.css('.ng-select-container'));
             // open
-            selectInput.triggerEventHandler('mousedown', { stopPropagation: () => { } });
+            selectInput.triggerEventHandler('mousedown', { target: {} });
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
 
             // close
-            selectInput.triggerEventHandler('mousedown', { stopPropagation: () => { } });
+            selectInput.triggerEventHandler('mousedown', { target: {} });
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
         }));
@@ -2228,7 +2231,7 @@ describe('NgSelectComponent', function () {
 
     describe('Clear icon click', () => {
         let fixture: ComponentFixture<NgSelectTestCmp>;
-        let clickIcon: DebugElement = null;
+        let triggerClearClick = null;
 
         beforeEach(fakeAsync(() => {
             fixture = createTestingModule(
@@ -2244,11 +2247,14 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
-            clickIcon = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
+            triggerClearClick = () => {
+                const control = fixture.debugElement.query(By.css('.ng-select-container'))
+                control.triggerEventHandler('mousedown', { target: { className: 'ng-clear'} });
+            };
         }));
 
         it('should clear model', fakeAsync(() => {
-            clickIcon.triggerEventHandler('click', { stopPropagation: () => { } });
+            triggerClearClick();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.selectedCity).toBe(null);
             expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
@@ -2258,14 +2264,14 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.selectedCity = null;
             fixture.componentInstance.select.filterValue = 'Hey! Whats up!?';
             tickAndDetectChanges(fixture);
-            clickIcon.triggerEventHandler('click', { stopPropagation: () => { } });
+            triggerClearClick();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(0);
             expect(fixture.componentInstance.select.filterValue).toBe(null);
         }));
 
         it('should not open dropdown', fakeAsync(() => {
-            clickIcon.triggerEventHandler('click', { stopPropagation: () => { } });
+            triggerClearClick();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
         }));
@@ -2281,7 +2287,7 @@ describe('NgSelectComponent', function () {
 
     describe('Arrow icon click', () => {
         let fixture: ComponentFixture<NgSelectTestCmp>;
-        let arrowIcon: DebugElement = null;
+        let triggerArrowIconClick = null;
 
         beforeEach(fakeAsync(() => {
             fixture = createTestingModule(
@@ -2293,23 +2299,25 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             tickAndDetectChanges(fixture);
-            arrowIcon = fixture.debugElement.query(By.css('.ng-arrow-wrapper'));
+            triggerArrowIconClick = () => {
+                const control = fixture.debugElement.query(By.css('.ng-select-container'))
+                control.triggerEventHandler('mousedown', { target: { className: 'ng-arrow'} });
+            };
         }));
 
         it('should toggle dropdown', fakeAsync(() => {
-            const clickArrow = () => arrowIcon.triggerEventHandler('mousedown', { stopPropagation: () => { } });
             // open
-            clickArrow();
+            triggerArrowIconClick();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
 
             // close
-            clickArrow();
+            triggerArrowIconClick();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
 
             // open
-            clickArrow();
+            triggerArrowIconClick();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
         }));

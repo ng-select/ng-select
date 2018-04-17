@@ -237,8 +237,23 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
     }
 
-    handleArrowClick($event: Event) {
-        $event.stopPropagation();
+    handleMousedown($event) {
+        if ($event.target.className === 'ng-clear') {
+            this.handleClearClick();
+            return;
+        }
+        if ($event.target.className === 'ng-arrow') {
+            this.handleArrowClick();
+            return;
+        }
+        if (this.searchable) {
+            this.open();
+        } else {
+            this.toggle();
+        }
+    }
+
+    handleArrowClick() {
         if (this.isOpen) {
             this.close();
         } else {
@@ -246,8 +261,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
     }
 
-    handleClearClick($event: Event) {
-        $event.stopPropagation();
+    handleClearClick() {
         if (this.hasValue) {
             this.clearModel();
         }
