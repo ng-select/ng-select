@@ -29,7 +29,7 @@ import { Subject } from 'rxjs/Subject';
         ---html,true
         <ng-select [items]="people2"
                    bindLabel="name"
-                   [loading]="peopleLoading2"
+                   [loading]="people2Loading"
                    [searchFn]="customSearchFn">
                 <ng-template ng-option-tmp let-item="item">
                     {{item.name}} <br />
