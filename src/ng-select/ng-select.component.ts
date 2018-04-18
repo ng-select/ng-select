@@ -25,7 +25,6 @@ import {
     ContentChildren,
     QueryList,
     InjectionToken,
-    NgZone,
 } from '@angular/core';
 
 import {
@@ -47,10 +46,11 @@ import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { isDefined, isFunction, isPromise, isObject } from './value-utils';
 import { ConsoleService } from './console.service';
 import { newId } from './id';
-import { WindowService } from './window.service';
+import { NgInputComponent } from './ng-input.component';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
+export type SearchPosition = 'inline' | 'dropdown';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
 
@@ -91,6 +91,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() closeOnSelect = true;
     @Input() hideSelected = false;
     @Input() selectOnTab = false;
+    @Input() searchPosition: SearchPosition = 'inline';
     @Input() maxSelectedItems: number;
     @Input() groupBy: string;
     @Input() bufferAmount = 4;
@@ -136,11 +137,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @ViewChild(forwardRef(() => NgDropdownPanelComponent)) dropdownPanel: NgDropdownPanelComponent;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
-    @ViewChild('filterInput') filterInput: ElementRef;
+    @ViewChild(NgInputComponent) ngInput: NgInputComponent;
+    @ViewChild('focusContainer') focusContainer: ElementRef;
 
     @HostBinding('class.ng-select-opened') isOpen = false;
     @HostBinding('class.ng-select-disabled') isDisabled = false;
     @HostBinding('class.ng-select-filtered') get filtered() { return !!this.filterValue };
+    @HostBinding('class.ng-select-inline') get inlined() { return this.searchPosition === 'inline' };
 
     itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];
@@ -164,8 +167,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     constructor(@Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         private _cd: ChangeDetectorRef,
         private _console: ConsoleService,
-        private _zone: NgZone,
-        private _window: WindowService,
         public elementRef: ElementRef
     ) {
         this._mergeGlobalConfig(config);
@@ -359,14 +360,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     focus() {
-        if (!this.filterInput) {
-            return;
+        if (this.searchable && this.ngInput) {
+            this.ngInput.setFocus();
+        } else {
+            this.focusContainer.nativeElement.focus();
         }
-        this._zone.runOutsideAngular(() => {
-            this._window.setTimeout(() => {
-                this.filterInput.nativeElement.focus();
-            }, 0);
-        });
     }
 
     unselect(item: NgOption) {
@@ -429,12 +427,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
     }
 
-    onInputFocus() {
+    onFocus() {
         (<HTMLElement>this.elementRef.nativeElement).classList.add('ng-select-focused');
         this.focusEvent.emit(null);
     }
 
-    onInputBlur() {
+    onBlur() {
         (<HTMLElement>this.elementRef.nativeElement).classList.remove('ng-select-focused');
         this.blurEvent.emit(null);
         this.close();

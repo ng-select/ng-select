@@ -122,15 +122,21 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
         </p>
 
         <hr />
-
+        
         <label>Custom search</label>
         ---html,true
-        <ng-select #api [items]="cities" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
-            <ng-template ng-header-tmp>
-                <input style="width: 100%" type="text" (input)="api.filter($event.target.value)" />
-            </ng-template>
+        <ng-select #select 
+            [items]="cities" 
+            searchPosition="dropdown" 
+            placeholder="Select city"
+            [(ngModel)]="selectedCity" 
+            appendTo="body"
+            bindLabel="name" 
+            bindValue="name">
         </ng-select>
         ---
+        <br/>
+        <button (click)="select.focus()" class="btn btn-sm btn-secondary">Focus select</button>
     `
 })
 export class SelectWithTemplatesComponent {

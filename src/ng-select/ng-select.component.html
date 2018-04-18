@@ -21,31 +21,33 @@
                 [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
         </ng-template>
 
-        <div *ngIf="!isDisabled" class="ng-input">
-            <div *ngIf="!searchable"
-                #filterInput
-                tabindex="0"
-                (focus)="onInputFocus()"
-                (blur)="onInputBlur()"
-                role="combobox"
-                [attr.aria-expanded]="isOpen"
-                [attr.aria-owns]="isOpen ? dropdownId : null"
-                [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null">
-            </div>
-            <input #filterInput
-                   *ngIf="searchable"
-                   type="text"
-                   autocomplete="off"
-                   [value]="filterValue"
-                   (input)="filter(filterInput.value)"
-                   (focus)="onInputFocus()"
-                   (blur)="onInputBlur()"
-                   (change)="$event.stopPropagation()"
-                   role="combobox"
-                   [attr.aria-expanded]="isOpen"
-                   [attr.aria-owns]="isOpen ? dropdownId : null"
-                   [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null">
+        <div #focusContainer
+            *ngIf="searchPosition === 'dropdown' || !searchable"
+            tabindex="0"
+            (focus)="onFocus()"
+            (blur)="searchPosition === 'inline' && onBlur()"
+            role="combobox"
+            [attr.aria-expanded]="open"
+            [attr.aria-owns]="dropdownId"
+            [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null">
         </div>
+
+        <ng-container *ngIf="!isDisabled && searchPosition === 'inline'" [ngTemplateOutlet]="inputTemplate"></ng-container>
+        <ng-template #inputTemplate>
+            <ng-input
+                [open]="isOpen"
+                [value]="filterValue"
+                [searchable]="searchable"
+                [searchPosition]="searchPosition"
+                [appendTo]="appendTo"
+                [ownerId]="dropdownId"
+                [descendantId]="isOpen ? itemsList?.markedItem?.htmlId : null"
+                (keyDown)="handleKeyDown($event)"
+                (focus)="onFocus()"
+                (blur)="onBlur()"
+                (filter)="filter($event)">
+            </ng-input>
+        </ng-template>
     </div>
 
     <div class="ng-spinner-loader" *ngIf="loading"></div>
@@ -67,6 +69,7 @@
     [position]="dropdownPosition"
     [headerTemplate]="headerTemplate"
     [footerTemplate]="footerTemplate"
+    [inputTemplate]="searchPosition === 'dropdown' ? inputTemplate : null"
     [items]="itemsList.filteredItems"
     (update)="viewPortItems = $event"
     (scrollToEnd)="scrollToEnd.emit($event)"
