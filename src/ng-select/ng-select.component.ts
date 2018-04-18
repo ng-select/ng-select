@@ -473,7 +473,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _setItemsFromNgOptions() {
         const handleNgOptions = (options: QueryList<NgOptionComponent>) => {
             this.items = options.map(option => ({
-                value: option.value,
+                $ngOptionValue: option.value,
                 label: option.elementRef.nativeElement.innerHTML,
                 disabled: option.disabled
             }));
