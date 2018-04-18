@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.4"></a>
+## [1.0.4](https://github.com/ng-select/ng-select/compare/v1.0.3...v1.0.4) (2018-04-18)
+
+
+### Bug Fixes
+
+* increase css specifity ([0d1d13c](https://github.com/ng-select/ng-select/commit/0d1d13c)), closes [#468](https://github.com/ng-select/ng-select/issues/468)
+* use blur event to close dropdown ([1f85adc](https://github.com/ng-select/ng-select/commit/1f85adc))
+* use special value mapping for ng-options ([61d61a2](https://github.com/ng-select/ng-select/commit/61d61a2))
+
+
+
 <a name="1.0.3"></a>
 ## [1.0.3](https://github.com/ng-select/ng-select/compare/v1.0.2...v1.0.3) (2018-04-17)
 
