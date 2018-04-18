@@ -30,15 +30,12 @@ import { delay } from 'rxjs/operators';
                 <div class="form-group col-md-6">
                     <label for="heroId">Basic select</label>
                     <ng-select [searchable]="false" formControlName="heroId">
-                        <ng-option value="hero1">
-                            <img src="{{basePath}}/assets/batman.png" width="20px" height="20px" /> Batman
-                        </ng-option>
-                        <ng-option value="hero2">
-                            <img src="{{basePath}}/assets/spidey.png" width="20px" height="20px" /> Spider-Man
-                        </ng-option>
-                        <ng-option value="hero3">
-                            <img src="{{basePath}}/assets/thor.png" width="20px" height="20px" /> Thor
-                        </ng-option>
+                        <ng-template ng-label-tmp let-item="item" let-label="label">
+                            <img src="{{basePath}}/assets/{{item}}.png" width="20px" height="20px" /> {{label}}
+                        </ng-template>
+                        <ng-option value="batman">Batman</ng-option>
+                        <ng-option value="spidey">Spider-Man</ng-option>
+                        <ng-option value="thor">Thor</ng-option>
                     </ng-select>
                 </div>
             </div>
@@ -199,7 +196,7 @@ export class ReactiveFormsComponent {
         this.loadPhotos();
 
         this.heroForm = this.fb.group({
-            heroId: 'hero1',
+            heroId: 'batman',
             agree: null,
             selectedCitiesIds: [],
             age: [null, Validators.required],

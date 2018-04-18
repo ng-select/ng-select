@@ -108,7 +108,7 @@ map: {
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | [addTag] | `boolean \| ((term: string) => any \| Promise<any>)`  | `false` | no | Allows to create custom options. |
 | addTagText | `string` | `Add item` | no | Set custom text when using tagging |
-| appendTo | `string` |  null | no | Append drodown to body or any other element using css selector |
+| appendTo | `string` |  null | no | Append dropdown to body or any other element using css selector |
 | bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
 | bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |
 | closeOnSelect | `boolean` |  true | no | Whether to close the menu when a value is selected |
@@ -128,9 +128,9 @@ map: {
 | notFoundText | `string` | `No items found` | no | Set custom text when filter returns empty result |
 | placeholder | `string` | `-` | no | Placeholder text. |
 | [searchable] | `boolean` | `true` | no | Allow to search for value. Default `true`|
-| [searchFn] | `(term: string, item: any) => boolean` | `null` | no | Allow to search by custom search function expression |
+| [searchFn] | `(term: string, item: any) => boolean` | `null` | no | Allow to filter by custom search function |
 | [selectOnTab] | `boolean` | `false` | no | Select marked dropdown item using tab. Default `false`|
-| [typeahead] | `Subject` |  `-` | no | Custom autocomplete or filter. |
+| [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
 

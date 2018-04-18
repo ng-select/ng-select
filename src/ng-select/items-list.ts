@@ -215,7 +215,7 @@ export class ItemsList {
             label = this.resolveNested(item, this._ngSelect.bindLabel);
             label = isDefined(label) ? label.toString() : '';
         }
-        const value = isDefined(item.value) ? item.value : item;
+        const value = isDefined(item.$ngOptionValue) ? item.$ngOptionValue : item;
         return {
             index: index,
             label: label,

@@ -1124,7 +1124,7 @@ describe('NgSelectComponent', function () {
 
     describe('Outside click', () => {
         let fixture: ComponentFixture<NgSelectTestCmp>;
-
+        let select: NgSelectComponent;
         beforeEach(() => {
             fixture = createTestingModule(
                 NgSelectTestCmp,
@@ -1136,32 +1136,31 @@ describe('NgSelectComponent', function () {
                     appendTo="body"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
+            select = fixture.componentInstance.select;
         });
 
-        it('close dropdown if opened and clicked outside dropdown container', fakeAsync(() => {
+        it('should close dropdown on input blur', fakeAsync(() => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
-            document.getElementById('outside').click();
-            let event = new MouseEvent('mousedown', {bubbles: true});
-            document.getElementById('outside').dispatchEvent(event);
+            expect(select.isOpen).toBeTruthy();
+            select.onInputBlur();
             tickAndDetectChanges(fixture);
-            expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+            expect(select.isOpen).toBeFalsy();
         }));
 
-        it('prevent dropdown close if clicked on select', fakeAsync(() => {
+        it('should prevent dropdown close if clicked on select', fakeAsync(() => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+            expect(select.isOpen).toBeTruthy();
             document.getElementById('select').click();
-            let event = new MouseEvent('mousedown', {bubbles: true});
+            let event = new MouseEvent('mousedown', { bubbles: true });
             document.getElementById('select').dispatchEvent(event);
             tickAndDetectChanges(fixture);
-            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+            expect(select.isOpen).toBeTruthy();
         }));
 
     });
 
     describe('Dropdown position', () => {
-        it('should autoposition dropdown to bottom by default', fakeAsync(() => {
+        it('should auto position dropdown to bottom by default', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"></ng-select>`);
@@ -1179,7 +1178,7 @@ describe('NgSelectComponent', function () {
             expect(panelClasses.contains('ng-select-top')).toBeFalsy();
         }));
 
-        it('should autoposition dropdown to top if position input is set', fakeAsync(() => {
+        it('should auto position dropdown to top if position input is set', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select dropdownPosition="top" [items]="cities"></ng-select>`);
@@ -1197,7 +1196,7 @@ describe('NgSelectComponent', function () {
             expect(panelClasses.contains('ng-select-top')).toBeTruthy();
         }));
 
-        it('should autoposition appended to body dropdown to bottom', fakeAsync(() => {
+        it('should auto position appended to body dropdown to bottom', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities" appendTo="body"></ng-select>`);
@@ -1801,12 +1800,12 @@ describe('NgSelectComponent', function () {
 
             const selectInput = fixture.debugElement.query(By.css('.ng-select-container'));
             // open
-            selectInput.triggerEventHandler('mousedown', { target: {} });
+            selectInput.triggerEventHandler('mousedown', createEvent({ target: {} }));
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
 
             // close
-            selectInput.triggerEventHandler('mousedown', { target: {} });
+            selectInput.triggerEventHandler('mousedown', createEvent({ target: {} }));
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
         }));
@@ -2240,7 +2239,7 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
             triggerClearClick = () => {
                 const control = fixture.debugElement.query(By.css('.ng-select-container'))
-                control.triggerEventHandler('mousedown', { target: { className: 'ng-clear'} });
+                control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-clear' } }));
             };
         }));
 
@@ -2292,7 +2291,7 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
             triggerArrowIconClick = () => {
                 const control = fixture.debugElement.query(By.css('.ng-select-container'))
-                control.triggerEventHandler('mousedown', { target: { className: 'ng-arrow'} });
+                control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-arrow' } }));
             };
         }));
 
@@ -2488,6 +2487,14 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
     const fixture = TestBed.createComponent(cmp);
     fixture.detectChanges();
     return fixture;
+}
+
+function createEvent(event) {
+    return {
+        stopPropagation: () => { },
+        preventDefault: () => { },
+        ...event
+    }
 }
 
 @Component({
