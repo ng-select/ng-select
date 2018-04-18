@@ -39,7 +39,7 @@ $highlight-color: #3f51b5;
         }
     }
     .ng-has-value,
-    &.ng-select-filtered {
+    &.ng-select-filtered .ng-select-container {
         .ng-placeholder {
             display: initial;
         }
