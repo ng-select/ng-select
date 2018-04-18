@@ -16,7 +16,8 @@ import {
     ChangeDetectionStrategy,
     AfterContentInit,
     OnInit,
-    OnChanges
+    OnChanges,
+    HostListener
 } from '@angular/core';
 
 import { NgOption } from './ng-select.types';
@@ -33,16 +34,16 @@ const BOTTOM_CSS_CLASS = 'ng-select-bottom';
     encapsulation: ViewEncapsulation.None,
     selector: 'ng-dropdown-panel',
     template: `
-        <div *ngIf="headerTemplate" class="ng-dropdown-header" ngProjectAs="header" header>
+        <div *ngIf="headerTemplate" class="ng-dropdown-header">
             <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
         </div>
-        <div #scroll class="ng-dropdown-panel-items scroll-host">
+        <div  #scroll class="ng-dropdown-panel-items scroll-host">
             <div #padding [class.total-padding]="virtualScroll"></div>
             <div #content [class.scrollable-content]="virtualScroll && items.length > 0">
                 <ng-content></ng-content>
             </div>
         </div>
-        <div *ngIf="footerTemplate" class="ng-dropdown-footer" ngProjectAs="footer" footer>
+        <div *ngIf="footerTemplate" class="ng-dropdown-footer">
             <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
         </div>
     `,
@@ -148,6 +149,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         const el: Element = this.scrollElementRef.nativeElement;
         const d = this._calculateDimensions();
         el.scrollTop = d.childHeight * (d.itemsLength + 1);
+    }
+
+    @HostListener('mousedown', ['$event'])
+    handleMousedown($event: MouseEvent) {
+        $event.preventDefault();
     }
 
     private _handleScroll() {
