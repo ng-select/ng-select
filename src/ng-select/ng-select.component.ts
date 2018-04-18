@@ -232,12 +232,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
     }
 
-    handleMousedown($event) {
-        if ($event.target.className === 'ng-clear') {
+    handleMousedown($event: MouseEvent) {
+        $event.stopPropagation();
+        $event.preventDefault();
+
+        const target = $event.target as HTMLElement;
+        if (target.className === 'ng-clear') {
             this.handleClearClick();
             return;
         }
-        if ($event.target.className === 'ng-arrow') {
+        if (target.className === 'ng-arrow') {
             this.handleArrowClick();
             return;
         }
@@ -433,7 +437,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     onInputBlur() {
         (<HTMLElement>this.elementRef.nativeElement).classList.remove('ng-select-focused');
         this.blurEvent.emit(null);
-        if (!this.isOpen && !this.isDisabled) {
+        this.close();
+        if (!this.isDisabled) {
             this._onTouched();
         }
     }
