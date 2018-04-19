@@ -1822,7 +1822,6 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             const select = fixture.componentInstance.select;
-            select.filter('vilnius');
             tickAndDetectChanges(fixture);
             const filterInput = select.elementRef.nativeElement.querySelector('input');
             expect(select.filterValue).toBeNull();
