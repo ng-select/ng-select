@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/ng-select/ng-select/compare/v1.0.6...v1.1.0) (2018-04-19)
+
+
+### Features
+
+* transfer classes to dropdown-panel ([#486](https://github.com/ng-select/ng-select/issues/486)) ([8f14eba](https://github.com/ng-select/ng-select/commit/8f14eba)), closes [#434](https://github.com/ng-select/ng-select/issues/434) [#476](https://github.com/ng-select/ng-select/issues/476)
+
+
+
 <a name="1.0.6"></a>
 ## [1.0.6](https://github.com/ng-select/ng-select/compare/v1.0.5...v1.0.6) (2018-04-19)
 
