@@ -187,13 +187,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (changes.multiple) {
             this.itemsList.clearSelected();
         }
-        if (changes.items) {
+        if (changes.items && 
+            (changes.items.firstChange || 
+            (!changes.items.firstChange && changes.items.currentValue.length !== changes.items.previousValue.length))) {
             this._setItems(changes.items.currentValue || []);
         }
     }
 
     ngAfterViewInit() {
-        this._setItemsFromNgOptions();
+        if (this.ngOptions.length > 0 && this.items.length === 0) {
+            this._setItemsFromNgOptions();
+        }
     }
 
     ngOnDestroy() {
@@ -455,6 +459,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _setItems(items: any[]) {
+        console.log('selectSetItems');
         const firstItem = items[0];
         this.bindLabel = this.bindLabel || this._defaultLabel;
         this._primitive = !isObject(firstItem);
