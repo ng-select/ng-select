@@ -459,7 +459,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _setItems(items: any[]) {
-        console.log('selectSetItems');
         const firstItem = items[0];
         this.bindLabel = this.bindLabel || this._defaultLabel;
         this._primitive = !isObject(firstItem);
