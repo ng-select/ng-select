@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.6"></a>
+## [1.0.6](https://github.com/ng-select/ng-select/compare/v1.0.5...v1.0.6) (2018-04-19)
+
+
+### Bug Fixes
+
+* rework outside click ([d248545](https://github.com/ng-select/ng-select/commit/d248545))
+
+
+
 <a name="1.0.5"></a>
 ## [1.0.5](https://github.com/ng-select/ng-select/compare/v1.0.4...v1.0.5) (2018-04-18)
 
