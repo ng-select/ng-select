@@ -26,6 +26,7 @@ import {
     QueryList,
     InjectionToken,
     NgZone,
+    Attribute
 } from '@angular/core';
 
 import {
@@ -147,6 +148,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     filterValue: string = null;
     dropdownId = newId();
     selectedItemId = 0;
+    customClasses;
 
     private _defaultLabel = 'label';
     private _primitive: boolean;
@@ -161,13 +163,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.unselect(option);
     };
 
-    constructor(@Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
+    constructor(
+        @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
+        @Attribute('class') classes: string,
         private _cd: ChangeDetectorRef,
         private _console: ConsoleService,
         private _zone: NgZone,
         private _window: WindowService,
         public elementRef: ElementRef
     ) {
+        this.customClasses = classes;
         this._mergeGlobalConfig(config);
     }
 
