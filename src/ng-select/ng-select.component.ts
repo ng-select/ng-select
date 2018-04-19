@@ -148,7 +148,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     filterValue: string = null;
     dropdownId = newId();
     selectedItemId = 0;
-    customClasses;
 
     private _defaultLabel = 'label';
     private _primitive: boolean;
@@ -165,14 +164,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     constructor(
         @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
-        @Attribute('class') classes: string,
+        @Attribute('class') public classes: string,
         private _cd: ChangeDetectorRef,
         private _console: ConsoleService,
         private _zone: NgZone,
         private _window: WindowService,
         public elementRef: ElementRef
     ) {
-        this.customClasses = classes;
         this._mergeGlobalConfig(config);
     }
 
