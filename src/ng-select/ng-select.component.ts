@@ -152,6 +152,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     selectedItemId = 0;
 
     private _defaultLabel = 'label';
+    private _focused = false;
     private _primitive: boolean;
     private _compareWith: CompareWithFn;
 
@@ -429,15 +430,34 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     onFocus() {
         (<HTMLElement>this.elementRef.nativeElement).classList.add('ng-select-focused');
-        this.focusEvent.emit(null);
+        if (!this._focused) {
+            this.focusEvent.emit(null);
+        }
+        this._focused = true;
     }
 
     onBlur() {
         (<HTMLElement>this.elementRef.nativeElement).classList.remove('ng-select-focused');
         this.blurEvent.emit(null);
+        this._focused = false;
         this.close();
         if (!this.isDisabled) {
             this._onTouched();
+        }
+    }
+
+    onInputBlur() {
+        if (this.searchPosition === 'dropdown') {
+            this.close();
+            this.focusContainer.nativeElement.focus();
+        } else {
+            this.onBlur();
+        }
+    }
+
+    onContainerBlur() {
+        if (this.searchPosition === 'inline' || !this.isOpen) {
+            this.onBlur();
         }
     }
 

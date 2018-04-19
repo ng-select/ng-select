@@ -36,47 +36,50 @@
             }
         }
     }
-    .ng-input {
-        border-bottom: 1px solid #ccc;
-        padding: 5px 7px;
-        overflow: hidden;
-        input {
-            width: calc(100% - 24px);
-            box-sizing: content-box;
-            background: none transparent;
-            border: 0 none;
-            box-shadow: none;
-            margin-left: 24px;
-            outline: none;
-            cursor: default;
-            &::-ms-clear {
-                display: none;
+    .ng-search-container {
+        position: relative;
+        .ng-input {
+            border-bottom: 1px solid #ccc;
+            padding: 5px 7px;
+            overflow: hidden;
+            input {
+                width: calc(100% - 24px);
+                box-sizing: content-box;
+                background: none transparent;
+                border: 0 none;
+                box-shadow: none;
+                margin-left: 24px;
+                outline: none;
+                cursor: default;
+                &::-ms-clear {
+                    display: none;
+                }
             }
         }
-    }
-    .ng-search-icon {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        transform: rotate(45deg);
-        margin: 4px 4px 8px 8px;
-        border: 2px solid;
-        display: inline-block;
-        vertical-align: middle;
-        color: #ddd;
-        position: absolute;
-        top: 6px;
-        left: 4px;
-        &::before {
-            content: '';
-            width: 2px;
-            height: 11px;
-            box-shadow: inset 0 0 0 32px;
-            top: 8px;
-            border-radius: 0 0 1px 1px;
+        .ng-search-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            transform: rotate(45deg);
+            margin: 4px 4px 8px 8px;
+            border: 2px solid;
+            display: inline-block;
+            vertical-align: middle;
+            color: #ddd;
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 6px;
+            left: 4px;
+            &::before {
+                content: '';
+                width: 2px;
+                height: 11px;
+                box-shadow: inset 0 0 0 32px;
+                top: 8px;
+                border-radius: 0 0 1px 1px;
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+            }
         }
     }
     .scroll-host {

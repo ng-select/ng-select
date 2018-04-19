@@ -37,7 +37,7 @@ const BOTTOM_CSS_CLASS = 'ng-select-bottom';
         <div *ngIf="headerTemplate" class="ng-dropdown-header">
             <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
         </div>
-        <div *ngIf="inputTemplate">
+        <div class="ng-search-container" *ngIf="inputTemplate">
             <ng-container [ngTemplateOutlet]="inputTemplate"></ng-container>
             <i class="ng-search-icon"></i>
         </div>

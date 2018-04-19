@@ -25,7 +25,7 @@
             *ngIf="searchPosition === 'dropdown' || !searchable"
             tabindex="0"
             (focus)="onFocus()"
-            (blur)="searchPosition === 'inline' && onBlur()"
+            (blur)="onContainerBlur()"
             role="combobox"
             [attr.aria-expanded]="open"
             [attr.aria-owns]="dropdownId"
@@ -44,10 +44,30 @@
                 [descendantId]="isOpen ? itemsList?.markedItem?.htmlId : null"
                 (keyDown)="handleKeyDown($event)"
                 (focus)="onFocus()"
-                (blur)="onBlur()"
+                (blur)="onInputBlur()"
                 (filter)="filter($event)">
             </ng-input>
         </ng-template>
+
+        <ng-template #inputeTemplate2>
+            <div class="ng-input">
+                <input #filterInput
+                    type="text"
+                    autocomplete="off"
+                    [value]="filterValue"
+                    (keydown)="handleKeyDown($event)"
+                    (input)="filter(filterInput.value)"
+                    (focus)="onFocus()"
+                    (blur)="onInputBlur()"
+                    (change)="$event.stopPropagation()"
+                    role="combobox"
+                    [attr.aria-expanded]="isOpen"
+                    [attr.aria-owns]="dropdownId"
+                    [attr.aria-activedescendant]="sOpen ? itemsList?.markedItem?.htmlId : null">
+            </div>
+        </ng-template>
+
+
     </div>
 
     <div class="ng-spinner-loader" *ngIf="loading"></div>

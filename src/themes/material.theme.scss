@@ -119,7 +119,6 @@ $highlight-color: #3f51b5;
                     line-height: 1.375em;
                 }
             }
-
             &.ng-has-value {
                 align-items: center;
                 .ng-value-container {
@@ -152,18 +151,6 @@ $highlight-color: #3f51b5;
     .ng-spinner-zone {
         top: 3px;
     }
-    .ng-dropdown-header {
-        border-bottom: 1px solid rgba(0, 0, 0, .12);
-        padding: 0 16px;
-        line-height: 3em;
-        height: 3em;
-    }
-    .ng-dropdown-footer {
-        border-top: 1px solid rgba(0, 0, 0, .12);
-        padding: 0 16px;
-        line-height: 3em;
-        height: 3em;
-    }
 }
 
 .ng-dropdown-panel {
@@ -186,7 +173,18 @@ $highlight-color: #3f51b5;
             }
         }
     }
-
+    .ng-dropdown-header {
+        border-bottom: 1px solid rgba(0, 0, 0, .12);
+        padding: 0 16px;
+        line-height: 3em;
+        height: 3em;
+    }
+    .ng-dropdown-footer {
+        border-top: 1px solid rgba(0, 0, 0, .12);
+        padding: 0 16px;
+        line-height: 3em;
+        height: 3em;
+    }
     .ng-dropdown-panel-items {
         .ng-optgroup {
             user-select: none;
@@ -194,20 +192,18 @@ $highlight-color: #3f51b5;
             line-height: 3em;
             height: 3em;
             padding: 0 16px;
-            
             &.ng-option-marked {
                 background: rgba(0, 0, 0, .04);
                 color: rgba(0, 0, 0, .87);
             }
             &.ng-option-disabled {
-                color: rgba(0,0,0,.54);
+                color: rgba(0, 0, 0, .54);
             }
             &.ng-option-selected {
                 background: rgba(0, 0, 0, .12);
                 color: $highlight-color;
             }
         }
-
         .ng-option {
             line-height: 3em;
             height: 3em;
@@ -218,8 +214,7 @@ $highlight-color: #3f51b5;
             text-align: left;
             text-decoration: none;
             position: relative;
-            color: rgba(0,0,0,.87);
-            
+            color: rgba(0, 0, 0, .87);
             &.ng-option-marked {
                 background: rgba(0, 0, 0, .04);
                 color: rgba(0, 0, 0, .87);
@@ -234,7 +229,6 @@ $highlight-color: #3f51b5;
             &.ng-option-child {
                 padding-left: 32px;
             }
-
             .ng-tag-label {
                 padding-right: 5px;
                 font-size: 80%;
@@ -243,5 +237,4 @@ $highlight-color: #3f51b5;
             }
         }
     }
-    
 }
