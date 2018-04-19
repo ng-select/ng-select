@@ -187,9 +187,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (changes.multiple) {
             this.itemsList.clearSelected();
         }
-        if (changes.items && 
-            (changes.items.firstChange || 
-            (!changes.items.firstChange && changes.items.currentValue.length !== changes.items.previousValue.length))) {
+        if (changes.items) {
             this._setItems(changes.items.currentValue || []);
         }
     }
