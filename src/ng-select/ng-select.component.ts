@@ -140,7 +140,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @HostBinding('class.ng-select-opened') isOpen = false;
     @HostBinding('class.ng-select-disabled') isDisabled = false;
-    @HostBinding('class.ng-select-filtered') get filtered() { return !!this.filterValue };
+    @HostBinding('class.ng-select-filtered') get filtered() { return !!this.filterValue && this.searchable };
 
     itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];
@@ -365,7 +365,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this._zone.runOutsideAngular(() => {
             this._window.setTimeout(() => {
                 this.filterInput.nativeElement.focus();
-            }, 0);
+            }, 5);
         });
     }
 
@@ -415,9 +415,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     filter(term: string) {
-        if (!this.searchable) {
-            return;
-        }
         this.filterValue = term;
         this.open();
 
@@ -437,8 +434,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     onInputBlur() {
         (<HTMLElement>this.elementRef.nativeElement).classList.remove('ng-select-focused');
         this.blurEvent.emit(null);
-        this.close();
-        if (!this.isDisabled) {
+        if (!this.isOpen && !this.isDisabled) {
             this._onTouched();
         }
     }
