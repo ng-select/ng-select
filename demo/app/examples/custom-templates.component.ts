@@ -125,7 +125,7 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 
         <label>Custom search</label>
         ---html,true
-        <ng-select #api [items]="cities" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
+        <ng-select #api [items]="cities" [searchable]="false" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
             <ng-template ng-header-tmp>
                 <input style="width: 100%" type="text" (input)="api.filter($event.target.value)" />
             </ng-template>

@@ -16,8 +16,7 @@ import {
     ChangeDetectionStrategy,
     AfterContentInit,
     OnInit,
-    OnChanges,
-    HostListener
+    OnChanges
 } from '@angular/core';
 
 import { NgOption } from './ng-select.types';
@@ -25,6 +24,10 @@ import { NgSelectComponent, DropdownPosition } from './ng-select.component';
 import { ItemsList } from './items-list';
 import { WindowService } from './window.service';
 import { VirtualScrollService } from './virtual-scroll.service';
+import { fromEventPattern } from 'rxjs/observable/fromEventPattern';
+import { DOCUMENT } from '@angular/platform-browser';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
 
 const TOP_CSS_CLASS = 'ng-select-top';
 const BOTTOM_CSS_CLASS = 'ng-select-bottom';
@@ -67,7 +70,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     @ViewChild('scroll', { read: ElementRef }) scrollElementRef: ElementRef;
     @ViewChild('padding', { read: ElementRef }) paddingElementRef: ElementRef;
 
+    private readonly _destroy$ = new Subject<void>();
     private _selectElement: HTMLElement;
+    private _document: Document;
     private _previousStart: number;
     private _previousEnd: number;
     private _startupLoop = true;
@@ -80,6 +85,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
     constructor(
         @Inject(forwardRef(() => NgSelectComponent)) _ngSelect: NgSelectComponent,
+        @Inject(DOCUMENT) document: Document,
         private _renderer: Renderer2,
         private _elementRef: ElementRef,
         private _zone: NgZone,
@@ -88,10 +94,14 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     ) {
         this._selectElement = _ngSelect.elementRef.nativeElement;
         this._itemsList = _ngSelect.itemsList;
+        this._document = document;
     }
 
     ngOnInit() {
         this._handleScroll();
+        fromEventPattern((handler: any) => this._document.addEventListener('mousedown', handler, true))
+            .pipe(takeUntil(this._destroy$))
+            .subscribe(($event) => this._handleOutsideClick($event))
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -103,6 +113,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     ngOnDestroy() {
         this._disposeDocumentResizeListener();
         this._disposeScrollListener();
+        this._destroy$.next();
+        this._destroy$.complete();
         if (this.appendTo) {
             this._renderer.removeChild(this._elementRef.nativeElement.parentNode, this._elementRef.nativeElement);
         }
@@ -151,9 +163,17 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         el.scrollTop = d.childHeight * (d.itemsLength + 1);
     }
 
-    @HostListener('mousedown', ['$event'])
-    handleMousedown($event: MouseEvent) {
-        $event.preventDefault();
+    private _handleOutsideClick($event: any) {
+        if (this._selectElement.contains($event.target)) {
+            return;
+        }
+
+        const dropdown: HTMLElement = this._elementRef.nativeElement;
+        if (dropdown.contains($event.target)) {
+            return;
+        }
+
+        this.outsideClick.emit();
     }
 
     private _handleScroll() {
@@ -338,7 +358,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
                 resolve();
                 return;
             }
-            this._zone.runOutsideAngular(() => { 
+            this._zone.runOutsideAngular(() => {
                 setTimeout(() => ready(resolve), 5);
             });
         };

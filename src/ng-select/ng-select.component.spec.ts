@@ -1139,12 +1139,14 @@ describe('NgSelectComponent', function () {
             select = fixture.componentInstance.select;
         });
 
-        it('should close dropdown on input blur', fakeAsync(() => {
+        it('should close dropdown if opened and clicked outside dropdown container', fakeAsync(() => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            expect(select.isOpen).toBeTruthy();
-            select.onInputBlur();
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+            document.getElementById('outside').click();
+            let event = new MouseEvent('mousedown', {bubbles: true});
+            document.getElementById('outside').dispatchEvent(event);
             tickAndDetectChanges(fixture);
-            expect(select.isOpen).toBeFalsy();
+            expect(fixture.componentInstance.select.isOpen).toBeFalsy();
         }));
 
         it('should prevent dropdown close if clicked on select', fakeAsync(() => {
