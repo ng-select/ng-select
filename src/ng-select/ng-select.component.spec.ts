@@ -1142,7 +1142,7 @@ describe('NgSelectComponent', function () {
         it('should close dropdown on input blur', fakeAsync(() => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(select.isOpen).toBeTruthy();
-            select.onInputBlur();
+            select.onBlur();
             tickAndDetectChanges(fixture);
             expect(select.isOpen).toBeFalsy();
         }));

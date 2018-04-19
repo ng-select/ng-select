@@ -37,7 +37,11 @@ const BOTTOM_CSS_CLASS = 'ng-select-bottom';
         <div *ngIf="headerTemplate" class="ng-dropdown-header">
             <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
         </div>
-        <div  #scroll class="ng-dropdown-panel-items scroll-host">
+        <div class="ng-search-container" *ngIf="inputTemplate">
+            <ng-container [ngTemplateOutlet]="inputTemplate"></ng-container>
+            <i class="ng-search-icon"></i>
+        </div>
+        <div #scroll class="ng-dropdown-panel-items scroll-host">
             <div #padding [class.total-padding]="virtualScroll"></div>
             <div #content [class.scrollable-content]="virtualScroll && items.length > 0">
                 <ng-content></ng-content>
@@ -58,6 +62,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     @Input() virtualScroll = false;
     @Input() headerTemplate: TemplateRef<any>;
     @Input() footerTemplate: TemplateRef<any>;
+    @Input() inputTemplate: TemplateRef<any>;
 
     @Output() update = new EventEmitter<any[]>();
     @Output() scrollToEnd = new EventEmitter<{ start: number; end: number }>();

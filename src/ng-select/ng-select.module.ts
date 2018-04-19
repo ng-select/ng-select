@@ -18,10 +18,12 @@ import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { WindowService } from './window.service';
 import { VirtualScrollService } from './virtual-scroll.service';
 import { ConsoleService } from './console.service';
+import { NgInputComponent } from './ng-input.component';
 
 @NgModule({
     declarations: [
         NgDropdownPanelComponent,
+        NgInputComponent,
         NgOptionComponent,
         NgSelectComponent,
         NgOptionHighlightDirective,
@@ -40,6 +42,7 @@ import { ConsoleService } from './console.service';
     ],
     exports: [
         NgSelectComponent,
+        NgInputComponent,
         NgOptionComponent,
         NgOptionHighlightDirective,
         NgOptgroupTemplateDirective,

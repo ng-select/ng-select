@@ -44,7 +44,7 @@
             cursor: default;
         }
     }
-    &.ng-select-filtered {
+    &.ng-select-filtered.ng-select-inline {
         .ng-placeholder {
             display: none;
         }
@@ -60,6 +60,9 @@
         .ng-value-container {
             display: flex;
             flex: 1;
+            ng-input {
+                flex: 1;
+            }
             .ng-input {
                 opacity: 0;
                 >input {
@@ -78,7 +81,7 @@
         }
     }
     &.ng-select-single {
-        &.ng-select-filtered {
+        &.ng-select-filtered.ng-select-inline {
             .ng-select-container .ng-value-container .ng-value {
                 visibility: hidden;
             }
