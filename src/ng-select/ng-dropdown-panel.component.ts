@@ -25,7 +25,6 @@ import { ItemsList } from './items-list';
 import { WindowService } from './window.service';
 import { VirtualScrollService } from './virtual-scroll.service';
 import { fromEventPattern } from 'rxjs/observable/fromEventPattern';
-import { DOCUMENT } from '@angular/platform-browser';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 
@@ -72,7 +71,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
     private readonly _destroy$ = new Subject<void>();
     private _selectElement: HTMLElement;
-    private _document: Document;
     private _previousStart: number;
     private _previousEnd: number;
     private _startupLoop = true;
@@ -85,7 +83,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
     constructor(
         @Inject(forwardRef(() => NgSelectComponent)) _ngSelect: NgSelectComponent,
-        @Inject(DOCUMENT) document: Document,
         private _renderer: Renderer2,
         private _elementRef: ElementRef,
         private _zone: NgZone,
@@ -99,7 +96,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
     ngOnInit() {
         this._handleScroll();
-        fromEventPattern((handler: any) => this._document.addEventListener('mousedown', handler, true))
+        fromEventPattern((handler: any) => document.addEventListener('mousedown', handler, true))
             .pipe(takeUntil(this._destroy$))
             .subscribe(($event) => this._handleOutsideClick($event))
     }
