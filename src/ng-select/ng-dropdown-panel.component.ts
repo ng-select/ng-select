@@ -91,7 +91,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     ) {
         this._selectElement = _ngSelect.elementRef.nativeElement;
         this._itemsList = _ngSelect.itemsList;
-        this._document = document;
     }
 
     ngOnInit() {
