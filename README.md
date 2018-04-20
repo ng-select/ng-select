@@ -172,8 +172,7 @@ this.items.push({id: 1, name: 'New item'})
 Component will not detect a change. Instead you need to do:
 
 ```javascript
-this.items.push({id: 1, name: 'New item'})
-this.items = [...this.items];
+this.items = [...this.items, {id: 1, name: 'New item'}];
 ```
 
 This will cause the component to detect the change and update. Some might have concerns that
