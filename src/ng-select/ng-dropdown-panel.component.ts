@@ -340,7 +340,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         dropdownPanel.style.top = offsetTop + topDelta + 'px';
         dropdownPanel.style.bottom = 'auto';
         dropdownPanel.style.left = offsetLeft + 'px';
-        dropdownPanel.style.width = selectRect.width + 'px';
+        dropdownPanel.style.minWidth = selectRect.width + 'px';
+        dropdownPanel.style.width = 'auto';
     }
 
     private _whenContentReady(): Promise<void> {

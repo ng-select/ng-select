@@ -35,7 +35,7 @@
             <input #filterInput
                    *ngIf="searchable"
                    type="text"
-                   autocomplete="off"
+                   autocomplete="{{dropdownId}}"
                    [value]="filterValue"
                    (input)="filter(filterInput.value)"
                    (focus)="onInputFocus()"
