@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/ng-select/ng-select/compare/v1.1.0...v1.1.1) (2018-04-22)
+
+
+### Bug Fixes
+
+* use bindlabel for group key when using fn expression ([1006a93](https://github.com/ng-select/ng-select/commit/1006a93)), closes [#488](https://github.com/ng-select/ng-select/issues/488)
+* use min-width for dropdown panel ([727c637](https://github.com/ng-select/ng-select/commit/727c637)), closes [#476](https://github.com/ng-select/ng-select/issues/476)
+* use random id for autocomplete attribute ([e097c4a](https://github.com/ng-select/ng-select/commit/e097c4a)), closes [#269](https://github.com/ng-select/ng-select/issues/269)
+
+
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/ng-select/ng-select/compare/v1.0.6...v1.1.0) (2018-04-19)
 
