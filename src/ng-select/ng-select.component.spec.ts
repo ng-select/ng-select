@@ -2392,6 +2392,7 @@ describe('NgSelectComponent', function () {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
                 `<ng-select [items]="accounts"
+                        bindLabel="name"
                         [groupBy]="groupByFn"
                         [(ngModel)]="selectedAccount">
                 </ng-select>`);
@@ -2402,7 +2403,9 @@ describe('NgSelectComponent', function () {
 
             expect(items.length).toBe(12);
             expect(items[0].hasChildren).toBe(true);
+            expect(items[0].value['name']).toBe('c1');
             expect(items[6].hasChildren).toBe(true);
+            expect(items[6].value['name']).toBe('c2');
         }));
 
         it('should not mark optgroup item as marked', fakeAsync(() => {

@@ -1,7 +1,7 @@
 import { NgOption } from './ng-select.types';
 import * as searchHelper from './search-helper';
 import { NgSelectComponent } from './ng-select.component';
-import { isObject, isDefined } from './value-utils';
+import { isObject, isDefined, isFunction } from './value-utils';
 import { newId } from './id';
 
 type OptionGroups = Map<string, NgOption[]>;
@@ -268,9 +268,8 @@ export class ItemsList {
     }
 
     private _groupBy(items: NgOption[], prop: string | Function): OptionGroups {
-        const isPropFn = prop instanceof Function;
         const groups = items.reduce((grouped, item) => {
-            const key = isPropFn ? (<Function>prop).apply(this, [item.value]) : item.value[<string>prop];
+            const key = isFunction(prop) ? (<Function>prop).apply(this, [item.value]) : item.value[<string>prop];
             const group = grouped.get(key);
             if (group) {
                 group.push(item);
@@ -293,8 +292,8 @@ export class ItemsList {
                 disabled: !this._ngSelect.selectableGroup,
                 htmlId: newId()
             };
-            parent.value = {};
-            parent.value[this._ngSelect.groupBy] = key;
+            const groupKey = isFunction(this._ngSelect.groupBy) ? this._ngSelect.bindLabel : this._ngSelect.groupBy;
+            parent.value = { [groupKey]: key };
             items.push(parent);
             i++;
 
