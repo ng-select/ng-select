@@ -357,7 +357,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (this.clearOnAdd) {
             this._clearSearch();
         }
-        
+
         this.addEvent.emit(item.value);
         if (this.closeOnSelect || this.itemsList.noItemsToSelect) {
             this.close();
@@ -457,6 +457,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     detectChanges() {
         if (!(<any>this._cd).destroyed) {
             this._cd.detectChanges();
+        }
+    }
+
+    updateDropdownPosition() {
+        if (this.dropdownPanel) {
+            this.dropdownPanel.updateDropdownPosition();
         }
     }
 
