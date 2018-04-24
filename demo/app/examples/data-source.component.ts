@@ -74,6 +74,19 @@ import { Observable } from 'rxjs/Observable';
         </ng-select>
         ---
         <br />Selected car ID: {{selectedCarId | json}}
+        <hr />
+        <p>
+            Filling ng options after ngAfterViewInit
+        </p>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="toggleDisabled()">Toggle disabled</button>
+        <hr/>
+        ---html,true
+        <ng-select>
+            <ng-option *ngFor="let test of testData" [value]="test.id">{{test.name}}</ng-option>
+        </ng-select>
+        ---
+        <br />
+        <button type="button" class="btn btn-primary btn-sm" (click)="popTestData()">Populate Test Data</button>
     `
 })
 export class DataSourceComponent {
@@ -85,6 +98,8 @@ export class DataSourceComponent {
     selectedSimpleItem = 'Two';
     simpleItems = [];
     disable = true;
+
+    testData = [];
 
     selectedCarId = 3;
     cars = [
@@ -105,6 +120,14 @@ export class DataSourceComponent {
     toggleDisabled() {
         const car: any = this.cars[1];
         car.disabled = !car.disabled;
+    }
+
+    popTestData() {
+        this.testData = [];
+
+        for (let i = 0; i < 5; i++) {
+            this.testData.push({id: i, name: i});
+        }
     }
 }
 
