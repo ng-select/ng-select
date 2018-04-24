@@ -1143,7 +1143,7 @@ describe('NgSelectComponent', function () {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
             document.getElementById('outside').click();
-            let event = new MouseEvent('mousedown', {bubbles: true});
+            let event = new MouseEvent('mousedown', { bubbles: true });
             document.getElementById('outside').dispatchEvent(event);
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBeFalsy();
@@ -2005,6 +2005,58 @@ describe('NgSelectComponent', function () {
                 fixture.componentInstance.filter.subscribe();
                 fixture.componentInstance.select.open();
                 expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+            }));
+        });
+
+        describe('clear on add', () => {
+            it('should clear search term by default', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                        [typeahead]="filter"
+                        bindLabel="name"
+                        [hideSelected]="hideSelected"
+                        [closeOnSelect]="false"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+
+                expect(fixture.componentInstance.select.clearOnAdd).toBeTruthy();
+
+                fixture.componentInstance.filter.subscribe();
+                fixture.componentInstance.select.filter('new');
+                fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
+                expect(fixture.componentInstance.select.filterValue).toBe('new');
+
+                fixture.componentInstance.select.select(fixture.componentInstance.select.viewPortItems[0]);
+                expect(fixture.componentInstance.select.filterValue).toBeNull();
+            }));
+
+            it('should not clear search term when clearOnAdd is false', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                        [typeahead]="filter"
+                        bindLabel="name"
+                        [hideSelected]="hideSelected"
+                        [clearOnAdd]="false"
+                        [closeOnSelect]="false"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+
+                expect(fixture.componentInstance.select.clearOnAdd).toBeFalsy();
+                expect(fixture.componentInstance.select.closeOnSelect).toBeFalsy();
+                    
+                fixture.componentInstance.filter.subscribe();
+                fixture.componentInstance.select.filter('new');
+                fixture.componentInstance.cities = [{ id: 4, name: 'New York' }, { id: 5, name: 'California' }];
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(2);
+                expect(fixture.componentInstance.select.filterValue).toBe('new');
+
+                fixture.componentInstance.select.select(fixture.componentInstance.select.viewPortItems[0]);
+                expect(fixture.componentInstance.select.filterValue).toBe('new');
             }));
         });
     });
