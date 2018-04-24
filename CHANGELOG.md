@@ -6,11 +6,6 @@ All notable changes to this project will be documented in this file. See [standa
 ## [1.1.3](https://github.com/ng-select/ng-select/compare/v1.1.2...v1.1.3) (2018-04-24)
 
 
-
-<a name="1.1.2"></a>
-## [1.1.2](https://github.com/ng-select/ng-select/compare/v1.1.1...v1.1.2) (2018-04-24)
-
-
 ### Bug Fixes
 
 * use width for dropdown panel ([c07351c](https://github.com/ng-select/ng-select/commit/c07351c))
