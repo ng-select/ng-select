@@ -268,8 +268,9 @@ export class ItemsList {
     }
 
     private _groupBy(items: NgOption[], prop: string | Function): OptionGroups {
+        const isFn = isFunction(this._ngSelect.groupBy);
         const groups = items.reduce((grouped, item) => {
-            const key = isFunction(prop) ? (<Function>prop).apply(this, [item.value]) : item.value[<string>prop];
+            const key = isFn ? (<Function>prop).apply(this, [item.value]) : item.value[<string>prop];
             const group = grouped.get(key);
             if (group) {
                 group.push(item);
@@ -282,6 +283,7 @@ export class ItemsList {
     }
 
     private _flatten(groups: OptionGroups) {
+        const isFn = isFunction(this._ngSelect.groupBy);
         let i = 0;
 
         return Array.from(groups.keys()).reduce((items: NgOption[], key: string) => {
@@ -292,7 +294,7 @@ export class ItemsList {
                 disabled: !this._ngSelect.selectableGroup,
                 htmlId: newId()
             };
-            const groupKey = isFunction(this._ngSelect.groupBy) ? this._ngSelect.bindLabel : this._ngSelect.groupBy;
+            const groupKey = isFn ? this._ngSelect.bindLabel : this._ngSelect.groupBy;
             parent.value = { [groupKey]: key };
             items.push(parent);
             i++;
