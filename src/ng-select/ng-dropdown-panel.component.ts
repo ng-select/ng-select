@@ -118,6 +118,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
     ngAfterContentInit() {
         this._whenContentReady().then(() => {
+            if (this.appendTo) {
+                this._appendDropdown();
+                this._handleDocumentResize();
+            }
             this.updateDropdownPosition();
         });
     }
@@ -160,11 +164,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     }
 
     updateDropdownPosition() {
-        if (this.appendTo) {
-            this._appendDropdown();
-            this._handleDocumentResize();
-        }
-
         const dropdownEl: HTMLElement = this._elementRef.nativeElement;
         this._currentPosition = this._calculateCurrentPosition(dropdownEl);
         const selectEl: HTMLElement = this._selectElement;
