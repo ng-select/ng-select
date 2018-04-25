@@ -2020,7 +2020,7 @@ describe('NgSelectComponent', function () {
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
 
-                expect(fixture.componentInstance.select.clearOnAdd).toBeTruthy();
+                expect(fixture.componentInstance.select.clearSearchOnAdd).toBeTruthy();
 
                 fixture.componentInstance.filter.subscribe();
                 fixture.componentInstance.select.filter('new');
@@ -2033,19 +2033,19 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.filterValue).toBeNull();
             }));
 
-            it('should not clear search term when clearOnAdd is false', fakeAsync(() => {
+            it('should not clear search term when clearSearchOnAdd is false', fakeAsync(() => {
                 const fixture = createTestingModule(
                     NgSelectTestCmp,
                     `<ng-select [items]="cities"
                         [typeahead]="filter"
                         bindLabel="name"
                         [hideSelected]="hideSelected"
-                        [clearOnAdd]="false"
+                        [clearSearchOnAdd]="false"
                         [closeOnSelect]="false"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
 
-                expect(fixture.componentInstance.select.clearOnAdd).toBeFalsy();
+                expect(fixture.componentInstance.select.clearSearchOnAdd).toBeFalsy();
                 expect(fixture.componentInstance.select.closeOnSelect).toBeFalsy();
                     
                 fixture.componentInstance.filter.subscribe();

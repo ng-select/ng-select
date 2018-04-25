@@ -98,7 +98,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() virtualScroll = false;
     @Input() selectableGroup = false;
     @Input() searchFn = null;
-    @Input() clearOnAdd = true;
+    @Input() clearSearchOnAdd = true;
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
     @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
@@ -354,7 +354,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     select(item: NgOption) {
         this.itemsList.select(item);
 
-        if (this.clearOnAdd) {
+        if (this.clearSearchOnAdd) {
             this._clearSearch();
         }
 
