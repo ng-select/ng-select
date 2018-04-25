@@ -196,12 +196,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     ngAfterViewInit() {
-        // Old Way
-        // if (this.ngOptions.length > 0 && this.items.length === 0) {
-        //     this._setItemsFromNgOptions();
-        // }
-
-        // New Way
         if (this.items && this.items.length === 0) {
             this._setItemsFromNgOptions();
         }
