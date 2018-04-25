@@ -1,7 +1,3 @@
-import { Subject } from 'rxjs/Subject';
-import { merge } from 'rxjs/observable/merge';
-import { takeUntil, startWith } from 'rxjs/operators';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     Component,
     OnDestroy,
@@ -28,6 +24,10 @@ import {
     NgZone,
     Attribute
 } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { takeUntil, startWith, tap, debounceTime, map, filter } from 'rxjs/operators';
+import { merge } from 'rxjs/observable/merge';
+import { Subject } from 'rxjs/Subject';
 
 import {
     NgOptionTemplateDirective,
@@ -41,13 +41,13 @@ import {
     NgMultiLabelTemplateDirective
 } from './ng-templates.directive';
 
-import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
-import { ItemsList } from './items-list';
-import { NgOptionComponent } from './ng-option.component';
-import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
-import { isDefined, isFunction, isPromise, isObject } from './value-utils';
 import { ConsoleService } from './console.service';
+import { isDefined, isFunction, isPromise, isObject } from './value-utils';
+import { ItemsList } from './items-list';
+import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { newId } from './id';
+import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
+import { NgOptionComponent } from './ng-option.component';
 import { WindowService } from './window.service';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
@@ -152,9 +152,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     private _defaultLabel = 'label';
     private _primitive: boolean;
+    private _pressedKeys: string[] = [];
     private _compareWith: CompareWithFn;
 
     private readonly _destroy$ = new Subject<void>();
+    private readonly _keyPress$ = new Subject<string>();
     private _onChange = (_: NgOption) => { };
     private _onTouched = () => { };
 
@@ -185,6 +187,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     get hasValue() {
         return this.selectedItems.length > 0;
+    }
+
+    ngOnInit() {
+        this._handleKeyPresses();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -233,6 +239,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                     this._handleBackspace();
                     break;
             }
+        } else if ($event.key && $event.key.length === 1) {
+            this._keyPress$.next($event.key.toLocaleLowerCase());
         }
     }
 
@@ -573,7 +581,28 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
     }
 
-
+    _handleKeyPresses() {
+        if (!this.searchable) {
+            this._keyPress$
+                .pipe(takeUntil(this._destroy$),
+                    tap(letter => this._pressedKeys.push(letter)),
+                    debounceTime(200),
+                    filter(() => this._pressedKeys.length > 0),
+                    map(() => this._pressedKeys.join('')))
+                .subscribe(term => {
+                    const item = this.itemsList.findByLabel(term);
+                    if (item) {
+                        if (this.isOpen) {
+                            this.itemsList.markItem(item);
+                            this._cd.markForCheck();
+                        } else {
+                            this.select(item);
+                        }
+                    }
+                    this._pressedKeys = [];
+                });
+        }
+    }
 
     private _updateNgModel() {
         const model = [];

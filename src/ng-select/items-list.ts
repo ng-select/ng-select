@@ -119,6 +119,14 @@ export class ItemsList {
         }
     }
 
+    findByLabel(term: string) {
+        term = searchHelper.stripSpecialChars(term).toLocaleLowerCase();
+        return this.filteredItems.find(item => {
+            const label = searchHelper.stripSpecialChars(item.label).toLocaleLowerCase();
+            return label.startsWith(term);
+        });
+    }
+
     filter(term: string) {
         if (!term) {
             this.resetItems();
