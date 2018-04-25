@@ -1120,6 +1120,33 @@ describe('NgSelectComponent', function () {
                 expect(select.selectedItems).toEqual(result);
             }));
         });
+
+        describe('key presses', () => {
+            beforeEach(() => {
+                select.searchable = false;
+                select.ngOnInit();
+            });
+
+            it('should select item using key while not opened', fakeAsync(() => {
+                triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'v');
+                tick(200);
+
+                expect(fixture.componentInstance.selectedCity.name).toBe('Vilnius');
+            }));
+            
+            it('should mark item using key while opened', fakeAsync(() => {
+                const findByLabel = spyOn(select.itemsList, 'findByLabel');
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'v');
+                triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'i');
+                triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'l');
+                tick(200);
+
+                expect(fixture.componentInstance.selectedCity).toBeUndefined();
+                expect(select.itemsList.markedItem.label).toBe('Vilnius')
+                expect(findByLabel).toHaveBeenCalledWith('vil')
+            }));
+        });
     });
 
     describe('Outside click', () => {

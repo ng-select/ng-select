@@ -123,7 +123,7 @@ export class ItemsList {
         term = searchHelper.stripSpecialChars(term).toLocaleLowerCase();
         return this.filteredItems.find(item => {
             const label = searchHelper.stripSpecialChars(item.label).toLocaleLowerCase();
-            return label.startsWith(term);
+            return label.substr(0, term.length) === term;
         });
     }
 

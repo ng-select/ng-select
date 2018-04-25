@@ -582,26 +582,28 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     _handleKeyPresses() {
-        if (!this.searchable) {
-            this._keyPress$
-                .pipe(takeUntil(this._destroy$),
-                    tap(letter => this._pressedKeys.push(letter)),
-                    debounceTime(200),
-                    filter(() => this._pressedKeys.length > 0),
-                    map(() => this._pressedKeys.join('')))
-                .subscribe(term => {
-                    const item = this.itemsList.findByLabel(term);
-                    if (item) {
-                        if (this.isOpen) {
-                            this.itemsList.markItem(item);
-                            this._cd.markForCheck();
-                        } else {
-                            this.select(item);
-                        }
-                    }
-                    this._pressedKeys = [];
-                });
+        if (this.searchable) {
+            return;
         }
+        
+        this._keyPress$
+            .pipe(takeUntil(this._destroy$),
+                tap(letter => this._pressedKeys.push(letter)),
+                debounceTime(200),
+                filter(() => this._pressedKeys.length > 0),
+                map(() => this._pressedKeys.join('')))
+            .subscribe(term => {
+                const item = this.itemsList.findByLabel(term);
+                if (item) {
+                    if (this.isOpen) {
+                        this.itemsList.markItem(item);
+                        this._cd.markForCheck();
+                    } else {
+                        this.select(item);
+                    }
+                }
+                this._pressedKeys = [];
+            });
     }
 
     private _updateNgModel() {
