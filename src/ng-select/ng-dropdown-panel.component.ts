@@ -355,7 +355,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
                 return;
             }
             this._zone.runOutsideAngular(() => {
-                console.log('here')
                 setTimeout(() => ready(resolve), 5);
             });
         };
