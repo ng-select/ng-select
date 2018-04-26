@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/ng-select/ng-select/compare/v1.2.1...v1.3.0) (2018-04-26)
+
+
+### Bug Fixes
+
+* load items from ng-option async  ([#489](https://github.com/ng-select/ng-select/issues/489)) ([47f2e59](https://github.com/ng-select/ng-select/commit/47f2e59)), closes [#479](https://github.com/ng-select/ng-select/issues/479)
+
+
+### Features
+
+* support item navigation while not searchable ([#499](https://github.com/ng-select/ng-select/issues/499)) ([38c27dc](https://github.com/ng-select/ng-select/commit/38c27dc)), closes [#117](https://github.com/ng-select/ng-select/issues/117)
+
+
+
 <a name="1.2.1"></a>
 ## [1.2.1](https://github.com/ng-select/ng-select/compare/v1.2.0...v1.2.1) (2018-04-25)
 
