@@ -1147,6 +1147,20 @@ describe('NgSelectComponent', function () {
                 expect(findByLabel).toHaveBeenCalledWith('vil')
             }));
         });
+
+        describe('enter', () => {
+            it('should open dropdown when it is closed', () => {
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+                expect(select.isOpen).toBe(true);
+            });
+
+            it('should select option and close dropdown', () => {
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+                expect(select.selectedItems[0].value).toEqual(fixture.componentInstance.cities[0])
+                expect(select.isOpen).toBe(false);
+            });
+        });
     });
 
     describe('Outside click', () => {
