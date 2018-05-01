@@ -9,4 +9,4 @@ Please do the following before creating PR.
 * Test cases for your change are present. Generally we don't accept PR's without a test case.
 * All tests are passing and build is not failing.
 * In development run `yarn start` to start demo app.
-* In development run `yarn run test:watch` to start running tests in watch mode.
+* In development run `yarn test:watch` to start running tests in watch mode.
