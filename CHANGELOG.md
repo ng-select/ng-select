@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.4.0"></a>
+# [1.4.0](https://github.com/ng-select/ng-select/compare/v1.3.0...v1.4.0) (2018-05-01)
+
+
+### Bug Fixes
+
+* keep dropdown closed while unselecting value ([bcf3340](https://github.com/ng-select/ng-select/commit/bcf3340)), closes [#496](https://github.com/ng-select/ng-select/issues/496)
+
+
+### Features
+
+* open dropdown on enter ([aeed111](https://github.com/ng-select/ng-select/commit/aeed111)), closes [#508](https://github.com/ng-select/ng-select/issues/508)
+
+
+
 <a name="1.3.0"></a>
 # [1.3.0](https://github.com/ng-select/ng-select/compare/v1.2.1...v1.3.0) (2018-04-26)
 
