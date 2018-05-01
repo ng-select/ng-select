@@ -257,6 +257,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.handleArrowClick();
             return;
         }
+        if (target.className.includes('ng-value-icon')) {
+            this.focus();
+            return;
+        }
+
         if (this.searchable) {
             this.open();
         } else {
@@ -682,6 +687,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             } else if (this.addTag) {
                 this.selectTag();
             }
+        } else {
+            this.open();
         }
         $event.preventDefault();
         $event.stopPropagation();
