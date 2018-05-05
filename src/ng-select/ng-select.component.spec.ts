@@ -2318,6 +2318,33 @@ describe('NgSelectComponent', function () {
         let select: NgSelectComponent;
         let triggerMousedown = null;
 
+        describe('dropdown click', () => {
+            beforeEach(fakeAsync(() => {
+                fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [multiple]="true"
+                            [(ngModel)]="selectedCities">
+                    </ng-select>`);
+                select = fixture.componentInstance.select;
+
+                tickAndDetectChanges(fixture);
+                tickAndDetectChanges(fixture);
+                triggerMousedown = () => {
+                    const control = fixture.debugElement.query(By.css('.ng-select-container'))
+                    control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-control' } }));
+                };
+            }));
+
+            it('should focus dropdown', fakeAsync(() => {
+                const focus = spyOn(select, 'focus');
+                triggerMousedown();
+                tickAndDetectChanges(fixture);
+                expect(focus).toHaveBeenCalled();
+            }));
+        });
+
         describe('clear icon click', () => {
             beforeEach(fakeAsync(() => {
                 fixture = createTestingModule(

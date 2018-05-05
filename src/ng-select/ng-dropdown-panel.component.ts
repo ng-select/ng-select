@@ -16,7 +16,8 @@ import {
     ChangeDetectionStrategy,
     AfterContentInit,
     OnInit,
-    OnChanges
+    OnChanges,
+    HostListener
 } from '@angular/core';
 
 import { NgOption } from './ng-select.types';
@@ -91,6 +92,16 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     ) {
         this._selectElement = _ngSelect.elementRef.nativeElement;
         this._itemsList = _ngSelect.itemsList;
+    }
+
+    @HostListener('mousedown', ['$event'])
+    handleMousedown($event: MouseEvent) {
+        const target = $event.target as HTMLElement;
+        if (target.tagName === 'INPUT') {
+            return;
+        }
+        $event.preventDefault();
+        $event.stopPropagation();
     }
 
     ngOnInit() {
