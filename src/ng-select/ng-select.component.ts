@@ -495,7 +495,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.itemsList.mapSelectedItems();
         }
 
-        if (this._isTypeahead) {
+        if (this._isTypeahead || this.isOpen) {
             this.itemsList.markSelectedOrDefault(this.markFirst);
         }
     }

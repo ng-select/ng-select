@@ -63,6 +63,8 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Model bindings', () => {
+        let select: NgSelectComponent;
+
         it('should update ngModel on value change', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
@@ -150,7 +152,7 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.cities = [{ id: 7, name: 'Pailgis' }];
             tickAndDetectChanges(fixture);
 
-            const select = fixture.componentInstance.select;
+            select = fixture.componentInstance.select;
             expect(select.selectedItems[0]).toBe(select.itemsList.items[0]);
             expect(select.selectedItems).toEqual([jasmine.objectContaining({
                 value: { id: 7, name: 'Pailgis' }
@@ -173,7 +175,7 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.cities = [{ id: 7, name: 'Pailgis' }];
             tickAndDetectChanges(fixture);
 
-            const select = fixture.componentInstance.select;
+            select = fixture.componentInstance.select;
             expect(select.selectedItems[0]).toBe(select.itemsList.items[0]);
             expect(select.selectedItems).toEqual([jasmine.objectContaining({
                 value: { id: 7, name: 'Pailgis' }
@@ -190,7 +192,7 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            const select = fixture.componentInstance.select;
+            select = fixture.componentInstance.select;
             fixture.componentInstance.selectedCity = { id: 1, name: 'Vilnius' };
             tickAndDetectChanges(fixture);
             expect(select.selectedItems).toEqual([
@@ -219,7 +221,7 @@ describe('NgSelectComponent', function () {
                     [(ngModel)]="selectedCities">
                 </ng-select>`);
 
-            const select = fixture.componentInstance.select;
+            select = fixture.componentInstance.select;
             fixture.componentInstance.selectedCities = [{ id: 1, name: 'Vilnius' }, { id: 2, name: 'Kaunas' }];
             tickAndDetectChanges(fixture);
             expect(select.selectedItems).toEqual([
@@ -361,7 +363,7 @@ describe('NgSelectComponent', function () {
 
             fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
             tickAndDetectChanges(fixture);
-            const select = fixture.componentInstance.select;
+            select = fixture.componentInstance.select;
             expect(select.selectedItems.length).toBe(1);
 
             fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[1]];
@@ -392,6 +394,28 @@ describe('NgSelectComponent', function () {
             const internalItems = fixture.componentInstance.select.itemsList.items;
             expect(internalItems.length).toBe(1);
             expect(internalItems[0].value).toEqual(jasmine.objectContaining({ id: 1, name: 'New city' }));
+        }));
+
+        it('should reset marked item when [items] are changed and dropdown is opened', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+            select = fixture.componentInstance.select;
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[2];
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            expect(fixture.componentInstance.select.itemsList.markedItem.value).toEqual({ name: 'Pabrade', id: 3 });
+
+            fixture.componentInstance.selectedCity = { name: 'New city', id: 5 };
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.cities = [...fixture.componentInstance.cities]
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.itemsList.markedItem.value).toEqual({ name: 'Vilnius', id: 1 });
         }));
 
         it('bind to custom object properties', fakeAsync(() => {
@@ -583,7 +607,7 @@ describe('NgSelectComponent', function () {
                         value: { id: 2, name: 'Kaunas' },
                         selected: true
                     })];
-                    const select = fixture.componentInstance.select;
+                    select = fixture.componentInstance.select;
                     expect(select.selectedItems).toEqual(result);
                 }));
 

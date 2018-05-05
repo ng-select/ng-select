@@ -113,6 +113,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.items) {
+            this._isScrolledToMarked = false;
             this._handleItemsChange(changes.items);
         }
     }
