@@ -25,9 +25,8 @@ import { NgSelectComponent, DropdownPosition } from './ng-select.component';
 import { ItemsList } from './items-list';
 import { WindowService } from './window.service';
 import { VirtualScrollService } from './virtual-scroll.service';
-import { fromEventPattern } from 'rxjs/observable/fromEventPattern';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs/Subject';
+import { Subject, fromEventPattern } from 'rxjs';
 
 const TOP_CSS_CLASS = 'ng-select-top';
 const BOTTOM_CSS_CLASS = 'ng-select-bottom';

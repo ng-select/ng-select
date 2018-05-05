@@ -26,8 +26,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil, startWith, tap, debounceTime, map, filter } from 'rxjs/operators';
-import { merge } from 'rxjs/observable/merge';
-import { Subject } from 'rxjs/Subject';
+import { Subject, merge } from 'rxjs';
 
 import {
     NgOptionTemplateDirective,
