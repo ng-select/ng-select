@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.4.1"></a>
+## [1.4.1](https://github.com/ng-select/ng-select/compare/v1.4.0...v1.4.1) (2018-05-05)
+
+
+### Bug Fixes
+
+* keep input focues while clicking dropdown items ([fe3853d](https://github.com/ng-select/ng-select/commit/fe3853d)), closes [#514](https://github.com/ng-select/ng-select/issues/514)
+* reset marked item when items updated ([5f05b30](https://github.com/ng-select/ng-select/commit/5f05b30)), closes [#510](https://github.com/ng-select/ng-select/issues/510)
+
+
+
 <a name="1.4.0"></a>
 # [1.4.0](https://github.com/ng-select/ng-select/compare/v1.3.0...v1.4.0) (2018-05-01)
 
