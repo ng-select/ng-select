@@ -152,6 +152,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     private _defaultLabel = 'label';
     private _primitive: boolean;
+    private _focused: boolean;
     private _pressedKeys: string[] = [];
     private _compareWith: CompareWithFn;
 
@@ -257,8 +258,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.handleArrowClick();
             return;
         }
-        if (target.className.includes('ng-value-icon')) {
+
+        if (!this._focused) {
             this.focus();
+        }
+
+        if (target.className.includes('ng-value-icon')) {
             return;
         }
 
@@ -450,6 +455,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     onInputFocus() {
         (<HTMLElement>this.elementRef.nativeElement).classList.add('ng-select-focused');
         this.focusEvent.emit(null);
+        this._focused = true;
     }
 
     onInputBlur() {
@@ -458,6 +464,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this.isOpen && !this.isDisabled) {
             this._onTouched();
         }
+        this._focused = false;
     }
 
     onItemHover(item: NgOption) {
@@ -590,7 +597,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (this.searchable) {
             return;
         }
-        
+
         this._keyPress$
             .pipe(takeUntil(this._destroy$),
                 tap(letter => this._pressedKeys.push(letter)),
