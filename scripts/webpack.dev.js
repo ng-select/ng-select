@@ -2,9 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 // Webpack Plugins
-const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const {TsConfigPathsPlugin} = require('awesome-typescript-loader');
 
@@ -15,6 +13,7 @@ const isProd = ENV === 'build:demo';
 
 module.exports = function makeWebpackConfig() {
     let config = {
+        mode: isProd ? 'production' : "development",
         devtool: isProd ? 'source-map' : 'eval-source-map',
         entry: {
             'app': './demo/main.ts',
@@ -25,6 +24,18 @@ module.exports = function makeWebpackConfig() {
             publicPath: isProd ? 'ng-select' : 'http://localhost:8080/',
             filename: isProd ? 'js/[name].[hash].js' : 'js/[name].js',
             chunkFilename: isProd ? '[id].[hash].chunk.js' : '[id].chunk.js'
+        },
+        optimization: {
+            splitChunks: {
+                cacheGroups: {
+                    commons: {
+                        test: /[\\/]polyfills[\\/]/,
+                        name: 'polyfills',
+                        chunks: 'all'
+                    }
+                }
+            },
+            minimize: isProd
         },
         resolve: {
             extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html'],
@@ -37,17 +48,17 @@ module.exports = function makeWebpackConfig() {
         },
         module: {
             rules: [
-                {
-                    test: /\.ts$/,
-                    loader: ['awesome-typescript-loader?configFileName=./demo/tsconfig.json', 'angular2-template-loader', 'ng-snippets-loader'],
-                    exclude: [/\.(spec|e2e)\.ts$/, /node_modules\/(?!(ng2-.+))/],
-                },
+            {
+                test: /\.ts$/,
+                loader: ['awesome-typescript-loader?configFileName=./demo/tsconfig.json', 'angular2-template-loader', 'ng-snippets-loader'],
+                exclude: [/\.(spec|e2e)\.ts$/, /node_modules\/(?!(ng2-.+))/],
+            },
 
-                {
-                    test: /\.ts$/,
-                    enforce: 'pre',
-                    loader: 'tslint-loader'
-                },
+            {
+                test: /\.ts$/,
+                enforce: 'pre',
+                loader: 'tslint-loader'
+            },
 
                 // copy those assets to output
                 {
@@ -59,12 +70,19 @@ module.exports = function makeWebpackConfig() {
                 {
                     test: /\.scss$/,
                     include: root('demo', 'style'),
-                    loader: ExtractTextPlugin.extract({
-                        fallback: "style-loader",
-                        use: "css-loader!sass-loader"
-                    })
-                },
-                
+                    use: [
+                    {
+                            loader: "style-loader" // creates style nodes from JS strings
+                        },
+                        {
+                            loader: "css-loader" // translates CSS into CommonJS
+                        },
+                        {
+                            loader: "sass-loader" // compiles Sass to CSS
+                        }
+                        ]
+                    },
+
                 // all themes will be added to bundle as usable
                 {
                     test: /(theme)\.scss$/,
@@ -80,60 +98,51 @@ module.exports = function makeWebpackConfig() {
                 
                 // support for .html as raw text
                 {test: /\.html$/, loader: ['raw-loader', 'ng-snippets-loader'], exclude: root('src', 'public')}
-            ]
-        },
-        plugins: [
-            // Workaround needed for angular 2 angular/angular#11580
-            new webpack.ContextReplacementPlugin(
-                // The (\\|\/) piece accounts for path separators in *nix and Windows
-                /(.+)?angular(\\|\/)core(.+)?/,
-                root('./demo/') // location of your src
-            ),
+                ]
+            },
+            plugins: [
+                // Workaround needed for angular 2 angular/angular#11580
+                new webpack.ContextReplacementPlugin(
+                    // The (\\|\/) piece accounts for path separators in *nix and Windows
+                    /(.+)?angular(\\|\/)core(.+)?/,
+                    root('./demo/') // location of your src
+                    ),
 
-            // Tslint configuration for webpack 2
-            new webpack.LoaderOptionsPlugin({
-                options: {
-                    tslint: {
-                        emitErrors: false,
-                        failOnHint: false
+                // Tslint configuration for webpack 2
+                new webpack.LoaderOptionsPlugin({
+                    options: {
+                        tslint: {
+                            emitErrors: false,
+                            failOnHint: false
+                        }
                     }
-                }
-            }),
+                }),
 
-            new CommonsChunkPlugin({
-                names: ['polyfills']
-            }),
+                new HtmlWebpackPlugin({
+                    template: './demo/index.ejs',
+                    chunksSortMode: 'dependency',
+                    basePath: isProd ? '/ng-select' : '/',
+                    ngSelectVersion: require(root('./src/package.json')).version
+                }),
 
-            new HtmlWebpackPlugin({
-                template: './demo/index.ejs',
-                chunksSortMode: 'dependency',
-                basePath: isProd ? '/ng-select' : '/',
-                ngSelectVersion: require(root('./src/package.json')).version
-            }),
-
-            new ExtractTextPlugin({filename: 'css/[name].[hash].css', disable: !isProd}),
-
-            new CopyWebpackPlugin([
-                {
-                    from: root('./demo/assets'), to: 'assets'
-                }
-            ])
-        ],
-        devServer: {
-            contentBase: './demo',
-            historyApiFallback: true,
-            quiet: false,
-            stats: { colors: true }
-        }
-    };
+                new CopyWebpackPlugin([
+                    {
+                        from: root('./demo/assets'), to: 'assets'
+                    }
+                ])
+            ],
+            devServer: {
+                contentBase: './demo',
+                historyApiFallback: true,
+                quiet: false,
+                stats: { colors: true }
+            }
+        };
 
 
     // Add build specific plugins
     if (isProd) {
-        config.plugins.push(
-            new webpack.NoEmitOnErrorsPlugin(),
-            new webpack.optimize.UglifyJsPlugin({sourceMap: true, mangle: {keep_fnames: true}})
-        );
+        config.plugins.push(new webpack.NoEmitOnErrorsPlugin());
     }
 
     return config;
