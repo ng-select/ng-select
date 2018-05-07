@@ -23,8 +23,8 @@
     "@angular/router": "^5.0.3",
     "@ng-select/ng-select": "../dist/",
     "core-js": "^2.4.1",
-    "rxjs": "^5.4.2",
     "zone.js": "^0.8.14"
+    "rxjs": "^6.0.0",
   },
   "devDependencies": {
     "@angular/cli": "^1.6.8",

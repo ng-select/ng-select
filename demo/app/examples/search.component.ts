@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { distinctUntilChanged, debounceTime, switchMap, tap } from 'rxjs/operators'
 import { DataService, Person } from '../shared/data.service';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 
 @Component({
