@@ -111,7 +111,7 @@ map: {
 | appendTo | `string` |  null | no | Append dropdown to body or any other element using css selector |
 | bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
 | bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |
-| closeOnSelect | `boolean` |  true | no | Whether to close the menu when a value is selected |
+| [closeOnSelect] | `boolean` |  true | no | Whether to close the menu when a value is selected |
 | clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
 | [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
 | [compareWith] | `(a: any, b: any) => boolean` | `(a, b) => a === b` | no | A function to compare the option values with the selected values |
