@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.4.2"></a>
+## [1.4.2](https://github.com/ng-select/ng-select/compare/v1.4.1...v1.4.2) (2018-05-10)
+
+
+### Bug Fixes
+
+* **material:** set min height for ng-option ([eb6f9bd](https://github.com/ng-select/ng-select/commit/eb6f9bd)), closes [#520](https://github.com/ng-select/ng-select/issues/520)
+* **style:** add padding to individual disabled elements ([6e5cf50](https://github.com/ng-select/ng-select/commit/6e5cf50)), closes [#406](https://github.com/ng-select/ng-select/issues/406)
+
+
+
 <a name="1.4.1"></a>
 ## [1.4.1](https://github.com/ng-select/ng-select/compare/v1.4.0...v1.4.1) (2018-05-05)
 
