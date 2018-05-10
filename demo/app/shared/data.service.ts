@@ -68,6 +68,7 @@ function getMockPeople() {
             'picture': 'http://placehold.it/32x32',
             'age': 35,
             'name': 'Rochelle Estes',
+            'disabled': true,
             'gender': 'female',
             'company': 'EXTRAWEAR',
             'email': 'rochelleestes@extrawear.com',
@@ -106,6 +107,7 @@ function getMockPeople() {
             'name': 'Marquez Nolan',
             'gender': 'male',
             'company': 'MIRACLIS',
+            'disabled': true,
             'email': 'marqueznolan@miraclis.com',
             'phone': '+1 (853) 571-3921'
         },

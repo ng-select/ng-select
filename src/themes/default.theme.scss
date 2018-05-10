@@ -94,9 +94,12 @@ $color-selected: #f5faff;
                     background-color: $color-selected;
                     border-radius: 2px;
                     border: 1px solid #c2e0ff;
-                    &.ng-select-disabled {
+                    &.ng-value-disabled {
                         background-color: #f9f9f9;
                         border: 1px solid #e3e3e3;
+                        .ng-value-label {
+                            padding-left: 5px;
+                        }
                     }
                     .ng-value-label {
                         display: inline-block;
