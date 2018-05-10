@@ -104,6 +104,10 @@ $highlight-color: #3f51b5;
                     border-radius: 2px;
                     color: #fff;
                     padding: 2px 5px;
+                    &.ng-value-disabled {
+                        background-color: rgba(0, 0, 0, .12);
+                        color: rgba(0, 0, 0, .26);
+                    }
                     .ng-value-label {
                         font-size: 14px;
                         font-weight: 500
@@ -177,13 +181,13 @@ $highlight-color: #3f51b5;
         border-bottom: 1px solid rgba(0, 0, 0, .12);
         padding: 0 16px;
         line-height: 3em;
-        height: 3em;
+        min-height: 3em;
     }
     .ng-dropdown-footer {
         border-top: 1px solid rgba(0, 0, 0, .12);
         padding: 0 16px;
         line-height: 3em;
-        height: 3em;
+        min-height: 3em;
     }
     .ng-dropdown-panel-items {
         .ng-optgroup {
@@ -206,7 +210,7 @@ $highlight-color: #3f51b5;
         }
         .ng-option {
             line-height: 3em;
-            height: 3em;
+            min-height: 3em;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;

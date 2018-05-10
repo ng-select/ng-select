@@ -26,7 +26,7 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
         <ng-select [items]="cities2" [(ngModel)]="selectedCity2" bindLabel="name" bindValue="name">
             <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
                 <div *ngIf="item.name === 'Kaunas'">{{item.name}}</div>
-                <div class="card" *ngIf="item.name !== 'Kaunas'">
+                <div style="margin: 10px 0;" class="card" *ngIf="item.name !== 'Kaunas'">
                     <div class="card-body">
                         <h5 class="card-title" [ngOptionHighlight]="search">{{item.name}}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
@@ -127,7 +127,7 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
         ---html,true
         <ng-select #api [items]="cities" [searchable]="false" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
             <ng-template ng-header-tmp>
-                <input style="width: 100%" type="text" (input)="api.filter($event.target.value)" />
+                <input style="width: 100%; line-height: 24px" type="text" (input)="api.filter($event.target.value)" />
             </ng-template>
         </ng-select>
         ---
