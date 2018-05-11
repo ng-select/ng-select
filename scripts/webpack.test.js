@@ -61,7 +61,12 @@ module.exports = function makeWebpackConfig() {
             'process.env': {
                 'NODE_ENV': JSON.stringify('TEST')
             },
-        })
+        }),
+        new webpack.ContextReplacementPlugin(
+            // The (\\|\/) piece accounts for path separators in *nix and Windows
+            /angular(\\|\/)core(\\|\/)@angular/,
+            root('./src/') // location of your src
+        ),
     ];
 
     return config;

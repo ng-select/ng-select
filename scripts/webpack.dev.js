@@ -75,7 +75,10 @@ module.exports = function makeWebpackConfig() {
                 },
 
                 // support for .html as raw text
-                { test: /\.html$/, loader: ['raw-loader', 'ng-snippets-loader'], exclude: root('src', 'public') }
+                { test: /\.html$/, loader: ['raw-loader', 'ng-snippets-loader'], exclude: root('src', 'public') },
+
+                // Ignore warnings about System.import in Angular
+                { test: /[\/\\]@angular[\/\\].+\.js$/, parser: { system: true } }
             ]
         },
         plugins: [
@@ -85,6 +88,12 @@ module.exports = function makeWebpackConfig() {
                 basePath: isProd ? '/ng-select' : '/',
                 ngSelectVersion: require(root('./src/package.json')).version
             }),
+            
+            new webpack.ContextReplacementPlugin(
+                // The (\\|\/) piece accounts for path separators in *nix and Windows
+                /(.+)?angular(\\|\/)core(.+)?/,
+                root('./demo/') // location of your src
+            ),
 
             new CopyWebpackPlugin([{
                 from: root('./demo/assets'), to: 'assets'
