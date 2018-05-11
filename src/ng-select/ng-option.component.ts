@@ -6,7 +6,7 @@ import {
     OnChanges,
     SimpleChanges
 } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'ng-option',

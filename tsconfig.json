@@ -14,7 +14,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "lib": [
-      "es2015",
+      "es2017",
       "dom"
     ],
     "typeRoots": [

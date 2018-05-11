@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { distinctUntilChanged, debounceTime, switchMap, tap } from 'rxjs/operators'
 import { DataService, Person } from '../shared/data.service';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -71,7 +71,7 @@ export class SelectSearchComponent {
     people3: Person[] = [];
     people3Loading = false;
     people3Typeahead = new Subject<string>();
-    selectedPersons: Person[] = <any>[{name: 'Karyn Wright'}, {name: 'Other'}];
+    selectedPersons: Person[] = <any>[{ name: 'Karyn Wright' }, { name: 'Other' }];
 
     constructor(private dataService: DataService, private cd: ChangeDetectorRef) { }
 

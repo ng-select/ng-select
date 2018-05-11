@@ -111,7 +111,7 @@ map: {
 | appendTo | `string` |  null | no | Append dropdown to body or any other element using css selector |
 | bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
 | bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |
-| closeOnSelect | `boolean` |  true | no | Whether to close the menu when a value is selected |
+| [closeOnSelect] | `boolean` |  true | no | Whether to close the menu when a value is selected |
 | clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
 | [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
 | [compareWith] | `(a: any, b: any) => boolean` | `(a, b) => a === b` | no | A function to compare the option values with the selected values |
@@ -119,12 +119,12 @@ map: {
 | [groupBy] | `string` \| `Function` | null | no | Allow to group items by key or function expression |
 | [selectableGroup] | `boolean` | false | no | Allow to select group when groupBy is used |
 | [items] | `Array<any>` | `[]` | yes | Items array |
-| loading | `boolean` |  `-` | no | You can set the loading state from the outside (e.g. async items loading) |
+| [loading] | `boolean` |  `-` | no | You can set the loading state from the outside (e.g. async items loading) |
 | loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
 | [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. Default `true`|
 | maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
-| hideSelected | `boolean` | `false` | no | Allows to hide selected items. |
-| multiple | `boolean` | `false` | no | Allows to select multiple items. |
+| [hideSelected] | `boolean` | `false` | no | Allows to hide selected items. |
+| [multiple] | `boolean` | `false` | no | Allows to select multiple items. |
 | notFoundText | `string` | `No items found` | no | Set custom text when filter returns empty result |
 | placeholder | `string` | `-` | no | Placeholder text. |
 | [searchable] | `boolean` | `true` | no | Allow to search for value. Default `true`|

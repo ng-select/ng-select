@@ -41,6 +41,7 @@ export const appRoutes: Routes = [
     { path: 'events', component: SelectEventsComponent, data: { title: 'Output events', fileName: 'events.component.ts' } },
     // tslint:disable-next-line:max-line-length
     { path: 'virtual-scroll', component: VirtualScrollComponent, data: { title: 'Virtual scroll', fileName: 'virtual-scroll.component.ts' } },
+    // tslint:disable-next-line:max-line-length
     { path: 'dropdown-position', component: DropdownPositionsComponent, data: { title: 'Dropdown position', fileName: 'dropdown-positions.component.ts' } },
     // tslint:disable-next-line:max-line-length
     { path: 'append-to-element', component: AppendToComponent, data: { title: 'Append to element', fileName: 'append-to.component.ts' } },
