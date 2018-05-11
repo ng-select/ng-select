@@ -2,11 +2,9 @@ const path = require('path');
 const webpack = require('webpack');
 
 // Webpack Plugins
-const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const {TsConfigPathsPlugin} = require('awesome-typescript-loader');
+const { TsConfigPathsPlugin } = require('awesome-typescript-loader');
 
 const root = path.join.bind(path, path.resolve(__dirname, '..'));
 
@@ -16,9 +14,10 @@ const isProd = ENV === 'build:demo';
 module.exports = function makeWebpackConfig() {
     let config = {
         devtool: isProd ? 'source-map' : 'eval-source-map',
+        mode: isProd ? 'production' : 'development',
         entry: {
+            'polyfills': './demo/polyfills.ts',
             'app': './demo/main.ts',
-            'polyfills': './demo/polyfills.ts'
         },
         output: {
             path: root('dist'),
@@ -59,12 +58,9 @@ module.exports = function makeWebpackConfig() {
                 {
                     test: /\.scss$/,
                     include: root('demo', 'style'),
-                    loader: ExtractTextPlugin.extract({
-                        fallback: "style-loader",
-                        use: "css-loader!sass-loader"
-                    })
+                    loader: 'style-loader!css-loader!sass-loader'
                 },
-                
+
                 // all themes will be added to bundle as usable
                 {
                     test: /(theme)\.scss$/,
@@ -77,33 +73,12 @@ module.exports = function makeWebpackConfig() {
                     exclude: [root('demo', 'style'), root('src', 'themes')],
                     loader: 'raw-loader!sass-loader'
                 },
-                
+
                 // support for .html as raw text
-                {test: /\.html$/, loader: ['raw-loader', 'ng-snippets-loader'], exclude: root('src', 'public')}
+                { test: /\.html$/, loader: ['raw-loader', 'ng-snippets-loader'], exclude: root('src', 'public') }
             ]
         },
         plugins: [
-            // Workaround needed for angular 2 angular/angular#11580
-            new webpack.ContextReplacementPlugin(
-                // The (\\|\/) piece accounts for path separators in *nix and Windows
-                /(.+)?angular(\\|\/)core(.+)?/,
-                root('./demo/') // location of your src
-            ),
-
-            // Tslint configuration for webpack 2
-            new webpack.LoaderOptionsPlugin({
-                options: {
-                    tslint: {
-                        emitErrors: false,
-                        failOnHint: false
-                    }
-                }
-            }),
-
-            new CommonsChunkPlugin({
-                names: ['polyfills']
-            }),
-
             new HtmlWebpackPlugin({
                 template: './demo/index.ejs',
                 chunksSortMode: 'dependency',
@@ -111,13 +86,9 @@ module.exports = function makeWebpackConfig() {
                 ngSelectVersion: require(root('./src/package.json')).version
             }),
 
-            new ExtractTextPlugin({filename: 'css/[name].[hash].css', disable: !isProd}),
-
-            new CopyWebpackPlugin([
-                {
-                    from: root('./demo/assets'), to: 'assets'
-                }
-            ])
+            new CopyWebpackPlugin([{
+                from: root('./demo/assets'), to: 'assets'
+            }])
         ],
         devServer: {
             contentBase: './demo',
@@ -126,15 +97,6 @@ module.exports = function makeWebpackConfig() {
             stats: { colors: true }
         }
     };
-
-
-    // Add build specific plugins
-    if (isProd) {
-        config.plugins.push(
-            new webpack.NoEmitOnErrorsPlugin(),
-            new webpack.optimize.UglifyJsPlugin({sourceMap: true, mangle: {keep_fnames: true}})
-        );
-    }
 
     return config;
 }();
