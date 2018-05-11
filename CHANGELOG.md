@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/ng-select/ng-select/compare/v1.4.2...v2.0.0) (2018-05-11)
+
+
+### Features
+
+* update to angular 6, RXJs 6 ([#545](https://github.com/ng-select/ng-select/issues/545)) ([c9e7a0a](https://github.com/ng-select/ng-select/commit/c9e7a0a)), closes [#530](https://github.com/ng-select/ng-select/issues/530)
+
+
+### BREAKING CHANGES
+
+* this changes utilizes new RXJs 6 which is not with previous version. Due to that angular version was also.
+
+
+
 <a name="1.4.2"></a>
 ## [1.4.2](https://github.com/ng-select/ng-select/compare/v1.4.1...v1.4.2) (2018-05-10)
 
