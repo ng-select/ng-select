@@ -25,7 +25,7 @@ module.exports = function makeWebpackConfig() {
         rules: [
             {
                 test: /\.ts$/,
-                loaders: ['awesome-typescript-loader?configFileName=./tsconfig.test.json&' + atlOptions, 'angular2-template-loader'],
+                loader: ['awesome-typescript-loader?configFileName=./tsconfig.test.json&' + atlOptions, 'angular2-template-loader'],
                 exclude: [/node_modules\/(?!(ng2-.+))/],
             },
 
@@ -61,25 +61,8 @@ module.exports = function makeWebpackConfig() {
             'process.env': {
                 'NODE_ENV': JSON.stringify('TEST')
             },
-        }),
-
-        // Workaround needed for angular 2 angular/angular#11580
-        new webpack.ContextReplacementPlugin(
-            // The (\\|\/) piece accounts for path separators in *nix and Windows
-            /angular(\\|\/)core(\\|\/)@angular/,
-            root('./src/') // location of your src
-        ),
-
-        new webpack.LoaderOptionsPlugin({
-            options: {
-                tslint: {
-                    emitErrors: false,
-                    failOnHint: false
-                }
-            }
         })
     ];
-
 
     return config;
 }();
