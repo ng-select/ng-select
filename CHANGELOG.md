@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### BREAKING CHANGES
 
-* this changes utilizes new RXJs 6 which is not with previous version. Due to that angular version was also.
+* this changes utilizes new RXJs 6 which is not with previous version. Due to that angular version was also increased.
 
 
 
