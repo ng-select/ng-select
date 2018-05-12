@@ -7,7 +7,7 @@
 [travis-badge-url]: https://travis-ci.org/ng-select/ng-select
 [coveralls-image]: https://coveralls.io/repos/github/ng-select/ng-select/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/ng-select/ng-select?branch=master
-[ng-select-url]: https://unpkg.com/@ng-select/ng-select@latest/bundles/ng-select.umd.min.js
+[ng-select-url]: https://unpkg.com/@ng-select/ng-select@latest
 
 # Angular ng-select - Lightweight all in one UI Select, Multiselect and Autocomplete
 See [Demos](https://ng-select.github.io/ng-select) or try in [Stackblitz](https://stackblitz.com/edit/ng-select?file=app%2Fapp.component.ts) or [Plunker](https://plnkr.co/edit/NaQ27M?p=preview)
