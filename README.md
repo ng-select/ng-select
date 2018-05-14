@@ -1,4 +1,4 @@
-[![npm version](https://badge.fury.io/js/%40ng-select%2Fng-select.svg)](https://badge.fury.io/js/%40ng-select%2Fng-select)
+ [![npm version](https://badge.fury.io/js/%40ng-select%2Fng-select.svg)](https://badge.fury.io/js/%40ng-select%2Fng-select)
 [![Build Status][travis-badge]][travis-badge-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![gzip bundle size](http://img.badgesize.io/https://unpkg.com/@ng-select/ng-select@latest/bundles/ng-select.umd.min.js?compression=gzip&style=flat-square)][ng-select-url]
@@ -11,6 +11,15 @@
 
 # Angular ng-select - Lightweight all in one UI Select, Multiselect and Autocomplete
 See [Demos](https://ng-select.github.io/ng-select) or try in [Stackblitz](https://stackblitz.com/edit/ng-select?file=app%2Fapp.component.ts) or [Plunker](https://plnkr.co/edit/NaQ27M?p=preview)
+
+---
+
+## v2.0.0
+
+Latest version targets **Angular v6** since it uses new RxJS which has breaking changes. If you are using **Angular v5** you could use `ng-select v1.x` or install `rxjs-compat` compatability package. 
+We will support **v1.x** with latest bug fixes to allow easier migration. For v1.x you can refer the [1.x branch](https://github.com/ng-select/ng-select/tree/1.x).
+
+---
 
 Table of contents
 =================
