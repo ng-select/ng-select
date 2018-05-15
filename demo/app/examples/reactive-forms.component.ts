@@ -41,11 +41,13 @@ import { delay } from 'rxjs/operators';
             </div>
             <hr>
             <div class="form-group">
-                <label for="state">Single select</label>
+                <label>Single select</label>
                 ---html,true
+                <label for="age">Age</label>
                 <ng-select #agesSelect [items]="ages"
                         [selectOnTab]="true"
                         bindValue="value"
+                        labelForId="age"
                         (ngModelChange)="showConfirm()"
                         placeholder="Select age"
                         formControlName="age">

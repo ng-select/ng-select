@@ -36,6 +36,7 @@
                    *ngIf="searchable"
                    type="text"
                    autocomplete="{{dropdownId}}"
+                   [id]="labelForId"
                    [value]="filterValue"
                    (input)="filter(filterInput.value)"
                    (focus)="onInputFocus()"
