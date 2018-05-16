@@ -73,6 +73,9 @@
                     &::-ms-clear {
                         display: none;
                     }
+                    &[readonly] {
+                        user-select: none;
+                    }
                 }
             }
         }

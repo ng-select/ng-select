@@ -1,26 +1,35 @@
 import {
-    async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick
+    async,
+    ComponentFixture,
+    discardPeriodicTasks,
+    fakeAsync,
+    TestBed,
+    tick
 } from '@angular/core/testing';
-
 import { By } from '@angular/platform-browser';
 import {
-    DebugElement,
     Component,
-    ViewChild,
-    Type,
+    DebugElement,
     ErrorHandler,
-    NgZone
+    NgZone,
+    Type,
+    ViewChild
 } from '@angular/core';
+import { ConsoleService } from './console.service';
 import { FormsModule } from '@angular/forms';
-
-import { NgSelectModule } from './ng-select.module';
-import { NgSelectComponent } from './ng-select.component';
+import {
+    getNgSelectElement,
+    selectOption,
+    TestsErrorHandler,
+    tickAndDetectChanges,
+    triggerKeyDownEvent
+} from '../testing/helpers';
 import { KeyCode, NgOption } from './ng-select.types';
 import { Subject } from 'rxjs/Subject';
+import { MockConsole, MockNgWindow, MockNgZone } from '../testing/mocks';
+import { NgSelectComponent } from './ng-select.component';
+import { NgSelectModule } from './ng-select.module';
 import { WindowService } from './window.service';
-import { TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent, getNgSelectElement, selectOption } from '../testing/helpers';
-import { MockNgZone, MockNgWindow, MockConsole } from '../testing/mocks';
-import { ConsoleService } from './console.service';
 
 describe('NgSelectComponent', function () {
 
@@ -1887,10 +1896,14 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
 
             const select = fixture.componentInstance.select;
-            tickAndDetectChanges(fixture);
-            const filterInput = select.elementRef.nativeElement.querySelector('input');
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'v');
+            tick(200);
+            fixture.detectChanges();
+
+            const input: HTMLInputElement = select.elementRef.nativeElement.querySelector('input');
             expect(select.filterValue).toBeNull();
-            expect(filterInput).toBeNull();
+            expect(input.readOnly).toBeTruthy();
         }));
 
         it('should mark first item on filter', fakeAsync(() => {
