@@ -21,21 +21,13 @@
                 [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
         </ng-template>
 
-        <div *ngIf="!isDisabled" class="ng-input">
-            <div *ngIf="!searchable"
-                #filterInput
-                tabindex="0"
-                (focus)="onInputFocus()"
-                (blur)="onInputBlur()"
-                role="combobox"
-                [attr.aria-expanded]="isOpen"
-                [attr.aria-owns]="isOpen ? dropdownId : null"
-                [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null">
-            </div>
+        <div class="ng-input">
             <input #filterInput
-                   *ngIf="searchable"
                    type="text"
                    autocomplete="{{dropdownId}}"
+                   [id]="labelForId"
+                   [readOnly]="!searchable"
+                   [disabled]="isDisabled"
                    [value]="filterValue"
                    (input)="filter(filterInput.value)"
                    (focus)="onInputFocus()"
