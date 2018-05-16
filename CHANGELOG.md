@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file. See [standa
 <a name="2.0.1"></a>
 ## [2.0.1](https://github.com/ng-select/ng-select/compare/v2.0.0...v2.0.1) (2018-05-16)
 
+### Features
+
+* label for support ([#557](https://github.com/ng-select/ng-select/issues/557)) ([231c049](https://github.com/ng-select/ng-select/commit/231c049)), closes [#537](https://github.com/ng-select/ng-select/issues/537)
 
 
 <a name="2.0.0"></a>
