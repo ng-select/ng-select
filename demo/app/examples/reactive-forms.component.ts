@@ -20,7 +20,7 @@ import { delay } from 'rxjs/operators';
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="yesno">Not searchable</label>
-                    <ng-select #agreeSelect [searchable]="false" formControlName="agree">
+                    <ng-select #agreeSelect labelForId="yesno" [searchable]="false" formControlName="agree">
                         <ng-option [value]="true">Yes</ng-option>
                         <ng-option [value]="false">No</ng-option>
                     </ng-select>
@@ -29,7 +29,7 @@ import { delay } from 'rxjs/operators';
                 </div>
                 <div class="form-group col-md-6">
                     <label for="heroId">Basic select</label>
-                    <ng-select [searchable]="false" formControlName="heroId">
+                    <ng-select [searchable]="false" labelForId="heroId" formControlName="heroId">
                         <ng-template ng-label-tmp let-item="item" let-label="label">
                             <img src="{{basePath}}/assets/{{item}}.png" width="20px" height="20px" /> {{label}}
                         </ng-template>
@@ -41,9 +41,8 @@ import { delay } from 'rxjs/operators';
             </div>
             <hr>
             <div class="form-group">
-                <label>Single select</label>
+                <label for="age">Single select</label>
                 ---html,true
-                <label for="age">Age</label>
                 <ng-select #agesSelect [items]="ages"
                         [selectOnTab]="true"
                         bindValue="value"
@@ -66,6 +65,7 @@ import { delay } from 'rxjs/operators';
                            [items]="cities"
                            bindLabel="name"
                            bindValue="id"
+                           labelForId="state"
                            [multiple]="true"
                            placeholder="Select cities"
                            clearAllText="Clear"
@@ -85,6 +85,7 @@ import { delay } from 'rxjs/operators';
                            bindLabel="title"
                            dropdownPosition="auto"
                            bindValue="id"
+                           labelForId="album"
                            placeholder="Select album"
                            [virtualScroll]="true"
                            formControlName="album">
@@ -104,11 +105,12 @@ import { delay } from 'rxjs/operators';
             <hr>
 
             <div class="form-group">
-                <label for="album">Custom templates</label>
+                <label for="photos">Custom templates</label>
                 <ng-select [items]="photos"
                            bindLabel="title"
                            bindValue="thumbnailUrl"
                            placeholder="Select photo"
+                           labelForId="photos"
                            [virtualScroll]="true"
                            formControlName="photo">
                     <ng-template ng-label-tmp let-item="item">
