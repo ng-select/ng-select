@@ -9,7 +9,7 @@ cd ..
 yarn run build
 
 # push tags
-git push --follow-tags origin master
+git push --follow-tags origin 1.x
 
 # push to npm
 cp README.md ./dist
