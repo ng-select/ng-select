@@ -121,6 +121,7 @@ map: {
 | [items] | `Array<any>` | `[]` | yes | Items array |
 | loading | `boolean` |  `-` | no | You can set the loading state from the outside (e.g. async items loading) |
 | loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
+| labelForId | `string` | `-` | no | Id to associate control with label. |
 | [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. Default `true`|
 | maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
 | hideSelected | `boolean` | `false` | no | Allows to hide selected items. |
