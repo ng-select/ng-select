@@ -10,6 +10,7 @@ const isTest = ENV === 'test';
 module.exports = function makeWebpackConfig() {
     let config = {
         devtool: 'inline-source-map',
+        mode: 'development',
         output: {},
         resolve: {
             extensions: ['.ts', '.js', '.json', '.css', '.scss', '.html']
