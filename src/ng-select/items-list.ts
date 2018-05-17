@@ -313,7 +313,7 @@ export class ItemsList {
                 i++;
                 return x;
             });
-            items.push(...children)
+            items.push(...children);
             return items;
         }, []);
     }

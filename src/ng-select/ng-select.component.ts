@@ -512,7 +512,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 this.itemsList.mapSelectedItems();
             }
             this.detectChanges();
-        }
+        };
 
         const handleOptionChange = () => {
             const changedOrDestroyed = merge(this.ngOptions.changes, this._destroy$);
@@ -523,7 +523,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                     item.disabled = option.disabled;
                     this._cd.markForCheck();
                 });
-        }
+        };
 
         this.ngOptions.changes
             .pipe(startWith(this.ngOptions), takeUntil(this._destroy$))
@@ -563,14 +563,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _handleWriteValue(ngModel: any | any[]) {
         if (!this._isValidWriteValue(ngModel)) {
             return
-        };
+        }
 
         const select = (val: any) => {
             let item = this.itemsList.findItem(val);
             if (item) {
                 this.itemsList.select(item);
             } else {
-                const isValObject = isObject(val)
+                const isValObject = isObject(val);
                 const isPrimitive = !isValObject && !this.bindValue;
                 if ((isValObject || isPrimitive)) {
                     this.itemsList.select(this.itemsList.mapItem(val, null));
