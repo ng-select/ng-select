@@ -1142,6 +1142,7 @@ describe('NgSelectComponent', function () {
             }));
 
             it('should remove last selected value when multiple', fakeAsync(() => {
+                const remove = spyOn(select.removeEvent, 'emit');
                 fixture.componentInstance.multiple = true;
                 fixture.componentInstance.cities = [...fixture.componentInstance.cities];
                 tickAndDetectChanges(fixture);
@@ -1153,6 +1154,7 @@ describe('NgSelectComponent', function () {
                     value: fixture.componentInstance.cities[1]
                 })];
                 expect(select.selectedItems).toEqual(result);
+                expect(remove).toHaveBeenCalled();
             }));
         });
 

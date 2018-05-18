@@ -44,6 +44,10 @@ export class ItemsList {
         return this._ngSelect.multiple && this._ngSelect.maxSelectedItems <= this._selected.length;
     }
 
+    get lastSelectedItem() {
+        return this._selected[this._selected.length - 1];
+    }
+
     setItems(items: any[]) {
         this._items = items.map((item, index) => this.mapItem(item, index));
         if (this._ngSelect.groupBy) {
@@ -91,13 +95,6 @@ export class ItemsList {
             this._filteredItems.splice(item.index, 0, item);
             this._filteredItems = [...this._filteredItems.sort((a, b) => (a.index - b.index))];
         }
-    }
-
-    unselectLast() {
-        if (this._selected.length === 0) {
-            return;
-        }
-        this.unselect(this._lastSelectedItem);
     }
 
     addItem(item: any) {
@@ -188,8 +185,8 @@ export class ItemsList {
         if (this._filteredItems.length === 0) {
             return;
         }
-        const indexOfLastSelected = this._ngSelect.hideSelected ? -1 : this._filteredItems.indexOf(this._lastSelectedItem);
-        if (this._lastSelectedItem && indexOfLastSelected > -1) {
+        const indexOfLastSelected = this._ngSelect.hideSelected ? -1 : this._filteredItems.indexOf(this.lastSelectedItem);
+        if (this.lastSelectedItem && indexOfLastSelected > -1) {
             this._markedIndex = indexOfLastSelected;
         } else {
             this._markedIndex = markDefault ? this.filteredItems.findIndex(x => !x.disabled) : -1;
@@ -269,10 +266,6 @@ export class ItemsList {
         if (this.markedItem.disabled) {
             this._stepToItem(steps);
         }
-    }
-
-    private get _lastSelectedItem() {
-        return this._selected[this._selected.length - 1];
     }
 
     private _groupBy(items: NgOption[], prop: string | Function): OptionGroups {
