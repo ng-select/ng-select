@@ -91,7 +91,7 @@ export class ItemsList {
         this._selected = this._selected.filter(x => x !== item);
         item.selected = false;
 
-        if (this._ngSelect.hideSelected) {
+        if (this._ngSelect.hideSelected && isDefined(item.index)) {
             this._filteredItems.splice(item.index, 0, item);
             this._filteredItems = [...this._filteredItems.sort((a, b) => (a.index - b.index))];
         }

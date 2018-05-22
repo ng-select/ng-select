@@ -21,7 +21,6 @@ import {
     ContentChildren,
     QueryList,
     InjectionToken,
-    NgZone,
     Attribute
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -47,7 +46,6 @@ import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { newId } from './id';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
-import { WindowService } from './window.service';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
@@ -171,8 +169,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         @Attribute('class') public classes: string,
         private _cd: ChangeDetectorRef,
         private _console: ConsoleService,
-        private _zone: NgZone,
-        private _window: WindowService,
         public elementRef: ElementRef
     ) {
         this._mergeGlobalConfig(config);
@@ -385,14 +381,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     focus() {
-        if (!this.filterInput) {
-            return;
-        }
-        this._zone.runOutsideAngular(() => {
-            this._window.setTimeout(() => {
-                this.filterInput.nativeElement.focus();
-            }, 5);
-        });
+        this.filterInput.nativeElement.focus();
     }
 
     unselect(item: NgOption) {
@@ -409,11 +398,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             tag = this._primitive ? this.filterValue : { [this.bindLabel]: this.filterValue };
         }
 
+        const handleTag = (item) => this._isTypeahead ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item);
         if (isPromise(tag)) {
-            tag.then(item => this.select(this.itemsList.addItem(item)))
-                .catch(() => { });
+            tag.then(item => this.select(handleTag(item))).catch(() => { });
         } else if (tag) {
-            this.select(this.itemsList.addItem(tag));
+            this.select(handleTag(tag));
         }
     }
 
@@ -489,7 +478,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _setItems(items: any[]) {
         const firstItem = items[0];
         this.bindLabel = this.bindLabel || this._defaultLabel;
-        this._primitive = !isObject(firstItem);
+        this._primitive = !firstItem ? this._primitive : !isObject(firstItem);
         this.itemsList.setItems(items);
         if (items.length > 0 && this.hasValue) {
             this.itemsList.mapSelectedItems();

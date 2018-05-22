@@ -1614,6 +1614,23 @@ describe('NgSelectComponent', function () {
                 expect(select.isOpen).toBeTruthy();
             }));
 
+            it('should not insert option back to list if it is newly created option', fakeAsync(() => {
+                select.addTag = true;
+                select.typeahead = new Subject();
+                select.typeahead.subscribe();
+                fixture.componentInstance.cities = [];
+                tickAndDetectChanges(fixture);
+                fixture.componentInstance.select.filter('New item');
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+
+                expect(select.selectedItems.length).toBe(1);
+                expect(select.items.length).toBe(0);
+                select.unselect(select.selectedItems[0]);
+                tickAndDetectChanges(fixture);
+                expect(select.itemsList.filteredItems.length).toBe(0);
+            }));
+
             it('should remove selected item from items list', fakeAsync(() => {
                 fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
                 tickAndDetectChanges(fixture);
