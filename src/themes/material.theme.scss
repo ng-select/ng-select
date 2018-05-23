@@ -193,16 +193,17 @@ $highlight-color: #3f51b5;
     .ng-dropdown-panel-items {
         .ng-optgroup {
             user-select: none;
-            cursor: default;
+            cursor: pointer;
             line-height: 3em;
             height: 3em;
             padding: 0 16px;
+            color: rgba(0, 0, 0, .54);
+            font-weight: 500;
             &.ng-option-marked {
                 background: rgba(0, 0, 0, .04);
-                color: rgba(0, 0, 0, .87);
             }
             &.ng-option-disabled {
-                color: rgba(0, 0, 0, .54);
+                cursor: default;
             }
             &.ng-option-selected {
                 background: rgba(0, 0, 0, .12);
