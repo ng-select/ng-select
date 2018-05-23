@@ -271,7 +271,8 @@ export class ItemsList {
     private _groupBy(items: NgOption[], prop: string | Function): OptionGroups {
         const isFn = isFunction(this._ngSelect.groupBy);
         const groups = items.reduce((grouped, item) => {
-            const key = isFn ? (<Function>prop).apply(this, [item.value]) : item.value[<string>prop];
+            let key = isFn ? (<Function>prop).apply(this, [item.value]) : item.value[<string>prop];
+            key = key || undefined;
             const group = grouped.get(key);
             if (group) {
                 group.push(item);
@@ -285,29 +286,33 @@ export class ItemsList {
 
     private _flatten(groups: OptionGroups) {
         const isFn = isFunction(this._ngSelect.groupBy);
-        let i = 0;
-
-        return Array.from(groups.keys()).reduce((items: NgOption[], key: string) => {
+        const items = [];
+        const withoutGroup = groups.get(undefined) || [];
+        items.push(...withoutGroup);
+        let i = withoutGroup.length;
+        for (const key of Array.from(groups.keys())) {
+            if (!key) {
+                continue;
+            }
             const parent: NgOption = {
                 label: key,
                 hasChildren: true,
-                index: i,
+                index: i++,
                 disabled: !this._ngSelect.selectableGroup,
                 htmlId: newId()
             };
             const groupKey = isFn ? this._ngSelect.bindLabel : this._ngSelect.groupBy;
             parent.value = { [groupKey]: key };
             items.push(parent);
-            i++;
 
             const children = groups.get(key).map(x => {
                 x.parent = parent;
                 x.hasChildren = false;
-                i++;
+                x.index = i++;
                 return x;
             });
             items.push(...children);
-            return items;
-        }, []);
+        }
+        return items;
     }
 }

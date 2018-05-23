@@ -2601,6 +2601,31 @@ describe('NgSelectComponent', function () {
             expect(items[11].parent).toBe(items[10]);
         }));
 
+        it('should not group items without key', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.accounts.push(
+                <any>{ name: 'Henry', email: 'henry@email.com', age: 10 },
+                <any>{ name: 'Meg', email: 'meg@email.com', age: 7, country: null },
+            );
+            fixture.componentInstance.accounts = [...fixture.componentInstance.accounts]
+            tickAndDetectChanges(fixture);
+
+            const items = fixture.componentInstance.select.itemsList.items;
+            expect(items.length).toBe(16);
+            expect(items[0].hasChildren).toBeUndefined();
+            expect(items[0].parent).toBeUndefined();
+            expect(items[1].hasChildren).toBeUndefined();
+            expect(items[1].parent).toBeUndefined();
+        }));
+
         it('should group by group fn', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
