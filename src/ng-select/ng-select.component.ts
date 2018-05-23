@@ -749,6 +749,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _mergeGlobalConfig(config: NgSelectConfig) {
+        this.placeholder = this.placeholder || config.placeholder;
         this.notFoundText = this.notFoundText || config.notFoundText;
         this.typeToSearchText = this.typeToSearchText || config.typeToSearchText;
         this.addTagText = this.addTagText || config.addTagText;

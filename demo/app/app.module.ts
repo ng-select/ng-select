@@ -69,6 +69,7 @@ export const appRoutes: Routes = [
         {
             provide: NG_SELECT_DEFAULT_CONFIG,
             useValue: {
+                placeholder: 'Select item',
                 notFoundText: 'Items not found',
                 addTagText: 'Add item',
                 typeToSearchText: 'Type to search',
