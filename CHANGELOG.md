@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/ng-select/ng-select/compare/v2.0.3...v2.1.0) (2018-05-24)
+
+
+### Bug Fixes
+
+* **styles:** make group more distinctable ([5808eb7](https://github.com/ng-select/ng-select/commit/5808eb7))
+* **typeahead:** don't insert option back to list for newly created tag ([4c20e9e](https://github.com/ng-select/ng-select/commit/4c20e9e)), closes [#513](https://github.com/ng-select/ng-select/issues/513)
+* don't group items without key ([0bf6483](https://github.com/ng-select/ng-select/commit/0bf6483))
+
+
+### Features
+
+* add placeholder as global config ([ad8a644](https://github.com/ng-select/ng-select/commit/ad8a644))
+
+
+
 <a name="2.0.3"></a>
 ## [2.0.3](https://github.com/ng-select/ng-select/compare/v2.0.2...v2.0.3) (2018-05-18)
 
