@@ -55,7 +55,10 @@ export class SelectGroupsComponent {
     selectedAccount = ['Samantha'];
     accounts = [
         { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { state: 'Active' } },
-        { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States',  child: { state: 'Active' } },
+        { name: 'Jill', email: 'jill@email.com', age: 15, child: { state: 'Active' } },
+        { name: 'Henry', email: 'henry@email.com', age: 10, child: { state: 'Active' } },
+        { name: 'Meg', email: 'meg@email.com', age: 7, country: null, child: { state: 'Active' } },
+        { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States', child: { state: 'Active' } },
         { name: 'Amalie', email: 'amalie@email.com', age: 12, country: 'Argentina', child: { state: 'Active' } },
         { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina', child: { state: 'Active' } },
         { name: 'Adrian', email: 'adrian@email.com', age: 21, country: 'Ecuador', child: { state: 'Active' } },

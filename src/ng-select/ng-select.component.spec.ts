@@ -1614,6 +1614,23 @@ describe('NgSelectComponent', function () {
                 expect(select.isOpen).toBeTruthy();
             }));
 
+            it('should not insert option back to list if it is newly created option', fakeAsync(() => {
+                select.addTag = true;
+                select.typeahead = new Subject();
+                select.typeahead.subscribe();
+                fixture.componentInstance.cities = [];
+                tickAndDetectChanges(fixture);
+                fixture.componentInstance.select.filter('New item');
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+
+                expect(select.selectedItems.length).toBe(1);
+                expect(select.items.length).toBe(0);
+                select.unselect(select.selectedItems[0]);
+                tickAndDetectChanges(fixture);
+                expect(select.itemsList.filteredItems.length).toBe(0);
+            }));
+
             it('should remove selected item from items list', fakeAsync(() => {
                 fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
                 tickAndDetectChanges(fixture);
@@ -2581,6 +2598,31 @@ describe('NgSelectComponent', function () {
 
             expect(items[10].label).toBe('Colombia');
             expect(items[11].parent).toBe(items[10]);
+        }));
+
+        it('should not group items without key', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.accounts.push(
+                <any>{ name: 'Henry', email: 'henry@email.com', age: 10 },
+                <any>{ name: 'Meg', email: 'meg@email.com', age: 7, country: null },
+            );
+            fixture.componentInstance.accounts = [...fixture.componentInstance.accounts]
+            tickAndDetectChanges(fixture);
+
+            const items = fixture.componentInstance.select.itemsList.items;
+            expect(items.length).toBe(16);
+            expect(items[0].hasChildren).toBeUndefined();
+            expect(items[0].parent).toBeUndefined();
+            expect(items[1].hasChildren).toBeUndefined();
+            expect(items[1].parent).toBeUndefined();
         }));
 
         it('should group by group fn', fakeAsync(() => {

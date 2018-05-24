@@ -205,15 +205,16 @@ $color-selected: #f5faff;
             user-select: none;
             cursor: default;
             padding: 8px 10px;
-            &.ng-select-disabled {
-                color: rgba(0, 0, 0, .54);
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.54);
+            cursor: pointer;
+            &.ng-option-disabled {
+                cursor: default;
             }
             &.ng-option-marked {
                 background-color: #ebf5ff;
-                color: #333;
             }
             &.ng-option-selected {
-                color: #333;
                 background-color: $color-selected;
                 font-weight: 600;
             }
