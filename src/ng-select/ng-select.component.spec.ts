@@ -709,7 +709,7 @@ describe('NgSelectComponent', function () {
                     expect(fixture.componentInstance.select.selectedItems).toEqual(result);
                 }));
 
-                it('should select by compareWith function', fakeAsync(() => {
+                it('should select by compareWith function when bindValue is not used', fakeAsync(() => {
                     const fixture = createTestingModule(
                         NgSelectTestCmp,
                         `<ng-select [items]="cities"
@@ -727,6 +727,27 @@ describe('NgSelectComponent', function () {
 
                     tickAndDetectChanges(fixture);
                     expect(fixture.componentInstance.select.selectedItems[0].value).toEqual(city);
+                }));
+
+                it('should select by compareWith function when bindValue is used', fakeAsync(() => {
+                    const fixture = createTestingModule(
+                        NgSelectTestCmp,
+                        `<ng-select [items]="cities"
+                            bindLabel="name"
+                            bindValue="id"
+                            placeholder="select value"
+                            [compareWith]="compareWith"
+                            [(ngModel)]="selectedCityId">
+                        </ng-select>`);
+
+                    const cmp = fixture.componentInstance;
+                    const cityId = cmp.cities[1].id.toString();
+                    cmp.selectedCityId = cityId;
+                   
+                    cmp.compareWith = (city, model: string) => city.id === +model;
+
+                    tickAndDetectChanges(fixture);
+                    expect(cmp.select.selectedItems[0].value).toEqual(cmp.cities[1]);
                 }));
 
                 it('should select selected when there is no items', fakeAsync(() => {

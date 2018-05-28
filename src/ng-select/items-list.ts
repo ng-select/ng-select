@@ -76,15 +76,16 @@ export class ItemsList {
     }
 
     findItem(value: any): NgOption {
-        if (this._ngSelect.bindValue) {
-            return this._items.find(item => !item.hasChildren && this.resolveNested(item.value, this._ngSelect.bindValue) === value);
+        let findBy: (item: NgOption) => boolean;
+        if (this._ngSelect.compareWith) {
+            findBy = item => this._ngSelect.compareWith(item.value, value) 
+        } else if (this._ngSelect.bindValue) {
+            findBy = item => !item.hasChildren && this.resolveNested(item.value, this._ngSelect.bindValue) === value
+        } else {
+            findBy = item => item.value === value ||
+                    !item.hasChildren && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel)
         }
-        const option = this._items.find(x => x.value === value);
-        const findBy = this._ngSelect.compareWith ?
-            (item: NgOption) => this._ngSelect.compareWith(item.value, value) :
-            (item: NgOption) => !item.hasChildren && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel);
-
-        return option || this._items.find(item => findBy(item));
+        return this._items.find(item => findBy(item));
     }
 
     unselect(item: NgOption) {

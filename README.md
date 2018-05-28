@@ -123,7 +123,7 @@ map: {
 | [closeOnSelect] | `boolean` |  true | no | Whether to close the menu when a value is selected |
 | clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
 | [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
-| [compareWith] | `(a: any, b: any) => boolean` | `(a, b) => a === b` | no | A function to compare the option values with the selected values |
+| [compareWith] | `(a: any, b: any) => boolean` | `(a, b) => a === b` | no | A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. |
 | dropdownPosition | `bottom` \| `top` \| `auto` |  `auto` | no | Set the dropdown position on open |
 | [groupBy] | `string` \| `Function` | null | no | Allow to group items by key or function expression |
 | [selectableGroup] | `boolean` | false | no | Allow to select group when groupBy is used |
