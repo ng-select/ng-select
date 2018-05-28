@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { distinctUntilChanged, debounceTime, switchMap, tap } from 'rxjs/operators'
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { distinctUntilChanged, debounceTime, switchMap, tap, catchError } from 'rxjs/operators'
 import { DataService, Person } from '../shared/data.service';
-import { Subject } from 'rxjs';
+import { Subject, Observable, of, concat } from 'rxjs';
 
 
 @Component({
@@ -42,17 +42,16 @@ import { Subject } from 'rxjs';
        
         <h5>Custom server-side search</h5>
         <hr>
-        <p>Use <b>typeahead</b> to subscribe to search term and load async items.
-        Loading state is automatically set when filter value changes.</p>
+        <p>Use <b>typeahead</b> to subscribe to search term and load async items.</p>
         <label>Multi select + Typeahead + Custom items (tags)</label>
         ---html,true
-        <ng-select [items]="people3"
+        <ng-select [items]="people3$ | async"
                    bindLabel="name"
                    [addTag]="true"
                    [multiple]="true"
                    [hideSelected]="true"
                    [loading]="people3Loading"
-                   [typeahead]="people3Typeahead"
+                   [typeahead]="people3input$"
                    [(ngModel)]="selectedPersons">
         </ng-select>
         ---
@@ -68,12 +67,12 @@ export class SelectSearchComponent {
     people2: Person[] = [];
     people2Loading = false;
 
-    people3: Person[] = [];
+    people3$: Observable<Person[]>;
     people3Loading = false;
-    people3Typeahead = new Subject<string>();
+    people3input$ = new Subject<string>();
     selectedPersons: Person[] = <any>[{ name: 'Karyn Wright' }, { name: 'Other' }];
 
-    constructor(private dataService: DataService, private cd: ChangeDetectorRef) { }
+    constructor(private dataService: DataService) { }
 
     ngOnInit() {
         this.loadPeople();
@@ -103,18 +102,18 @@ export class SelectSearchComponent {
     }
 
     private loadPeople3() {
-        this.people3Typeahead.pipe(
-            tap(() => this.people3Loading = true),
-            distinctUntilChanged(),
-            debounceTime(200),
-            switchMap(term => this.dataService.getPeople(term)),
-        ).subscribe(x => {
-            this.people3 = x;
-            this.people3Loading = false;
-            this.cd.markForCheck();
-        }, () => {
-            this.people3 = [];
-        });
+        this.people3$ = concat(
+            of([]), // default items
+            this.people3input$.pipe(
+               debounceTime(200),
+               distinctUntilChanged(),
+               tap(() => this.people3Loading = true),
+               switchMap(term => this.dataService.getPeople(term).pipe(
+                   catchError(() => of([])), // empty list on error
+                   tap(() => this.people3Loading = false)
+               )) 
+            )
+        );
     }
 }
 
