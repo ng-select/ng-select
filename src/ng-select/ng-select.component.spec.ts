@@ -2039,6 +2039,42 @@ describe('NgSelectComponent', function () {
             expect(filteredItems[1].label).toBe('Adam');
         }));
 
+        it('should continue filtering items on update of items', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.select.filter('vil');
+            tickAndDetectChanges(fixture);
+
+            let result = [jasmine.objectContaining({
+                value: { id: 1, name: 'Vilnius' }
+            })];
+            expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual(result);
+
+            fixture.componentInstance.cities = [
+                { id: 1, name: 'Vilnius' },
+                { id: 2, name: 'Kaunas' },
+                { id: 3, name: 'Pabrade' },
+                { id: 4, name: 'Bruchhausen-Vilsen' },
+            ];
+            tickAndDetectChanges(fixture);
+
+            result = [
+                jasmine.objectContaining({
+                    value: { id: 1, name: 'Vilnius' }
+                }),
+                jasmine.objectContaining({
+                    value: { id: 4, name: 'Bruchhausen-Vilsen' }
+                })
+            ];
+            expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual(result);
+        }));
+
         describe('with typeahead', () => {
             let fixture: ComponentFixture<NgSelectTestCmp>
             beforeEach(() => {
