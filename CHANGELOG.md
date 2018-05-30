@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.2"></a>
+## [2.1.2](https://github.com/ng-select/ng-select/compare/v2.1.1...v2.1.2) (2018-05-30)
+
+
+### Bug Fixes
+
+* allow to use compareWith fn when bindValue is used ([#586](https://github.com/ng-select/ng-select/issues/586)) ([7a3dfb3](https://github.com/ng-select/ng-select/commit/7a3dfb3)), closes [#535](https://github.com/ng-select/ng-select/issues/535)
+
+
+
 <a name="2.1.1"></a>
 ## [2.1.1](https://github.com/ng-select/ng-select/compare/v2.1.0...v2.1.1) (2018-05-29)
 
