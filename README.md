@@ -247,4 +247,4 @@ yarn run test:watch
 To release to npm just run `./release.sh`, of course if you have permissions ;)
 
 ## Inspiration
-This component is inspired by [React select](https://github.com/JedWatson/react-select) and [Vitual scroll](https://github.com/rintoj/angular2-virtual-scroll). Check theirs amazing work and components :)
+This component is inspired by [React select](https://github.com/JedWatson/react-select) and [Virtual scroll](https://github.com/rintoj/angular2-virtual-scroll). Check theirs amazing work and components :)
