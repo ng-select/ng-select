@@ -271,17 +271,17 @@ export class ItemsList {
 
     private _groupBy(items: NgOption[], prop: string | Function): OptionGroups {
         const isFn = isFunction(this._ngSelect.groupBy);
-        const groups = items.reduce((grouped, item) => {
+        const groups = new Map<string, NgOption[]>();
+        for (const item of items) {
             let key = isFn ? (<Function>prop).apply(this, [item.value]) : item.value[<string>prop];
-            key = key || undefined;
-            const group = grouped.get(key);
+            key = isDefined(key) ? key : undefined;
+            const group = groups.get(key);
             if (group) {
                 group.push(item);
             } else {
-                grouped.set(key, [item]);
+                groups.set(key, [item]);
             }
-            return grouped;
-        }, new Map<string, NgOption[]>());
+        }
         return groups;
     }
 
@@ -292,7 +292,7 @@ export class ItemsList {
         items.push(...withoutGroup);
         let i = withoutGroup.length;
         for (const key of Array.from(groups.keys())) {
-            if (!key) {
+            if (!isDefined(key)) {
                 continue;
             }
             const parent: NgOption = {
