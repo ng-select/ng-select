@@ -11,11 +11,14 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         <label>Default group by key</label>
         ---html,true
         <ng-select [items]="accounts"
-                bindLabel="name"
-                bindValue="name"
-                groupBy="country"
-                [multiple]="true"
-                [(ngModel)]="selectedAccount">
+            bindLabel="name"
+            bindValue="name"
+            groupBy="country"
+            [multiple]="true"
+            [(ngModel)]="selectedAccount">
+            <ng-template ng-optgroup-tmp let-item="item">
+                {{item.country || 'Unnamed group'}}
+            </ng-template>
         </ng-select>
         ---
         <p>
@@ -25,11 +28,11 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         <label>Group by function expression</label>
         ---html,true
         <ng-select [items]="accounts2"
-                bindLabel="name"
-                bindValue="name"
-                [groupBy]="groupByFn"
-                [multiple]="true"
-                [(ngModel)]="selectedAccount2">
+            bindLabel="name"
+            bindValue="name"
+            [groupBy]="groupByFn"
+            [multiple]="true"
+            [(ngModel)]="selectedAccount2">
         </ng-select>
         ---
         <p>
@@ -40,10 +43,13 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         <label>With selectable groups</label>
         ---html,true
         <ng-select [items]="accounts3"
-                bindLabel="name"
-                groupBy="country"
-                [selectableGroup]="true"
-                [(ngModel)]="selectedAccount3">
+            bindLabel="name"
+            groupBy="country"
+            [selectableGroup]="true"
+            [(ngModel)]="selectedAccount3">
+            <ng-template ng-optgroup-tmp let-item="item">
+                {{item.country || 'Unnamed group'}}
+            </ng-template>
         </ng-select>
         ---
         <p>
@@ -58,6 +64,7 @@ export class SelectGroupsComponent {
         { name: 'Jill', email: 'jill@email.com', age: 15, child: { state: 'Active' } },
         { name: 'Henry', email: 'henry@email.com', age: 10, child: { state: 'Active' } },
         { name: 'Meg', email: 'meg@email.com', age: 7, country: null, child: { state: 'Active' } },
+        { name: 'Homer', email: 'homer@email.com', age: 47, country: '', child: { state: 'Active' } },
         { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States', child: { state: 'Active' } },
         { name: 'Amalie', email: 'amalie@email.com', age: 12, country: 'Argentina', child: { state: 'Active' } },
         { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina', child: { state: 'Active' } },
