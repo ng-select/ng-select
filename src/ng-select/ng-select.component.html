@@ -25,7 +25,7 @@
             <input #filterInput
                    type="text"
                    autocomplete="{{dropdownId}}"
-                   [id]="labelForId"
+                   [attr.id]="labelForId"
                    [readOnly]="!searchable"
                    [disabled]="isDisabled"
                    [value]="filterValue"
