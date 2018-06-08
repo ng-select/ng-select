@@ -53,7 +53,7 @@ import { DataService } from '../shared/data.service';
         <div class="mt-3">
             Selected value: <br />
             <ul>
-                <li *ngFor="let item of selectedPeople1">{{item.name}}</li>
+                <li *ngFor="let item of selectedPeople2">{{item.name}}</li>
             </ul>
             <button (click)="clearModel2()" class="btn btn-secondary btn-sm">Clear model</button>
         </div>
