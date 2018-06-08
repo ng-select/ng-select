@@ -96,7 +96,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() selectableGroup = false;
     @Input() searchFn = null;
     @Input() clearSearchOnAdd = true;
-    @Input() labelForId = '';
+    @Input() labelForId = null;
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
     @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
@@ -584,7 +584,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
     }
 
-    _handleKeyPresses() {
+    private _handleKeyPresses() {
         if (this.searchable) {
             return;
         }
@@ -701,7 +701,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _handleArrowDown($event: KeyboardEvent) {
-        if (this.nextItemIsTag(+1)) {
+        if (this._nextItemIsTag(+1)) {
             this.itemsList.unmarkItem();
             this._scrollToTag();
         } else {
@@ -717,7 +717,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
 
-        if (this.nextItemIsTag(-1)) {
+        if (this._nextItemIsTag(-1)) {
             this.itemsList.unmarkItem();
             this._scrollToTag();
         } else {
@@ -727,7 +727,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         $event.preventDefault();
     }
 
-    private nextItemIsTag(nextStep: number): boolean {
+    private _nextItemIsTag(nextStep: number): boolean {
         const nextIndex = this.itemsList.markedIndex + nextStep;
         return this.addTag && this.filterValue
             && this.itemsList.markedItem

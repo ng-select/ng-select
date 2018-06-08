@@ -2225,6 +2225,7 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
+                        labelForId="lbl"
                         (change)="onChange($event)" 
                         bindLabel="name">
                 </ng-select>`);
@@ -2291,6 +2292,11 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
             expect(input.hasAttribute('aria-owns'))
                 .toBe(false);
+        }));
+
+        it('should add labelForId on filter input id attribute', fakeAsync(() => {
+            tickAndDetectChanges(fixture);
+            expect(input.getAttribute('id')).toEqual('lbl');
         }));
     });
 
