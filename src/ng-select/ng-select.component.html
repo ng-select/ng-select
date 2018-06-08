@@ -76,7 +76,7 @@
                 [class.ng-option]="!item.hasChildren"
                 [class.ng-option-child]="!!item.parent"
                 [class.ng-option-marked]="item === itemsList.markedItem"
-                id="{{item?.htmlId || null}}">
+                [attr.id]="item?.htmlId">
 
             <ng-template #defaultOptionTemplate>
                 <span class="ng-option-label">{{item.label}}</span>

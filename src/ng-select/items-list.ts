@@ -69,9 +69,16 @@ export class ItemsList {
         }
         this._selected.push(item);
         item.selected = true;
-
         if (this._ngSelect.hideSelected) {
             this._filteredItems = this._filteredItems.filter(x => x !== item);
+            if (item.parent !== null) {
+                const children = this._filteredItems.filter(x => x.parent === item.parent);
+                if (children.length === 0) {
+                    this._filteredItems = this._filteredItems.filter(x => x !== item.parent);
+                }
+            } else if (item.hasChildren) {
+                this._filteredItems = this.filteredItems.filter(x => x.parent !== item);
+            }
         }
     }
 
@@ -298,6 +305,7 @@ export class ItemsList {
             const parent: NgOption = {
                 label: key,
                 hasChildren: true,
+                parent: null,
                 index: i++,
                 disabled: !this._ngSelect.selectableGroup,
                 htmlId: newId()
