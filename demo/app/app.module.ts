@@ -24,6 +24,7 @@ import { DataService } from './shared/data.service';
 import { AppendToComponent } from './examples/append-to.component';
 import { DataSourceComponent } from './examples/data-source.component';
 import { SelectGroupsComponent } from './examples/groups.component';
+import { SelectMultiCheckboxComponent } from './examples/multi-checkbox.component';
 
 export const appRoutes: Routes = [
     {
@@ -38,6 +39,11 @@ export const appRoutes: Routes = [
     { path: 'tags', component: SelectTagsComponent, data: { title: 'Tags', fileName: 'tags.component.ts' } },
     { path: 'templates', component: SelectWithTemplatesComponent, data: { title: 'Templates', fileName: 'custom-templates.component.ts' } },
     { path: 'multiselect', component: SelectMultiComponent, data: { title: 'Multiselect', fileName: 'multi.component.ts' } },
+    { 
+        path: 'multiselect-checkbox',
+        component: SelectMultiCheckboxComponent,
+        data: { title: 'Multiselect checkbox', fileName: 'multi-checkbox.component.ts' } 
+    },
     { path: 'events', component: SelectEventsComponent, data: { title: 'Output events', fileName: 'events.component.ts' } },
     // tslint:disable-next-line:max-line-length
     { path: 'virtual-scroll', component: VirtualScrollComponent, data: { title: 'Virtual scroll', fileName: 'virtual-scroll.component.ts' } },
@@ -94,7 +100,8 @@ export const appRoutes: Routes = [
         AppendToComponent,
         DataSourceComponent,
         SelectGroupsComponent,
-        ConfirmationComponent
+        ConfirmationComponent,
+        SelectMultiCheckboxComponent
     ],
     entryComponents: [ConfirmationComponent],
     bootstrap: [AppComponent]

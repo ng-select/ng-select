@@ -12,6 +12,8 @@ export interface Person {
     company: string;
     email: string;
     phone: string;
+    disabled?: boolean;
+    selected?: boolean;
 }
 
 @Injectable({
