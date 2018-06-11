@@ -55,6 +55,46 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         <p>
             <small>Selected: {{selectedAccount3 | json}}</small>
         </p>
+
+        <hr />
+        <label>With selectable multiple groups</label>
+        ---html,true
+        <ng-select [items]="accounts4"
+            bindLabel="name"
+            groupBy="country"
+            [multiple]="true"
+            [selectableGroup]="true"
+            [compareWith]="selectedAccounts4Fn"
+            [(ngModel)]="selectedAccounts4">
+            <ng-template ng-optgroup-tmp let-item="item">
+                {{item.country || 'Unnamed group'}}
+            </ng-template>
+        </ng-select>
+        ---
+        <p>
+            <small>Selected: {{selectedAccounts4 | json}}</small>
+        </p>
+
+        <hr />
+        <label>With selectable multiple groups and hidden selected items</label>
+        ---html,true
+        <ng-select [items]="accounts5"
+            bindLabel="name"
+            groupBy="country"
+            [multiple]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            [selectableGroup]="true"
+            [compareWith]="selectedAccounts5Fn"
+            [(ngModel)]="selectedAccounts5">
+            <ng-template ng-optgroup-tmp let-item="item">
+                {{item.country || 'Unnamed group'}}
+            </ng-template>
+        </ng-select>
+        ---
+        <p>
+            <small>Selected: {{selectedAccounts5 | json}}</small>
+        </p>
     `
 })
 export class SelectGroupsComponent {
@@ -82,6 +122,18 @@ export class SelectGroupsComponent {
 
     accounts3 = this.accounts.slice();
     selectedAccount3 = this.accounts3[1];
+
+    accounts4 = this.accounts.slice();
+    selectedAccounts4 = [ { country: 'United States' }];
+    selectedAccounts4Fn = (item, selected) => {
+        return (selected.name && item.name === selected.name) || (item.country === selected.country);
+    };
+
+    accounts5 = this.accounts.slice();
+    selectedAccounts5 = [ { country: 'Argentina' }];
+    selectedAccounts5Fn = (item, selected) => {
+        return (selected.name && item.name === selected.name) || (item.country === selected.country);
+    };
 
     ngOnInit() {
 

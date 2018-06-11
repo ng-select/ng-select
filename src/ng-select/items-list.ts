@@ -67,8 +67,18 @@ export class ItemsList {
         if (!this._ngSelect.multiple) {
             this.clearSelected();
         }
-        this._selected.push(item);
         item.selected = true;
+        if (isDefined(item.parent)) {
+            this._selected = this._selected.filter(x => x !== item.parent);
+            this._selected.push(item);
+        } else if (item.hasChildren) {
+            const children = this._items.filter(x => x.parent === item);
+            this._selected = this._selected.filter(x => children.indexOf(x) === -1);
+            this._selected.push(item);
+        } else {
+            this._selected.push(item);
+        }
+   
         if (this._ngSelect.hideSelected) {
             this._filteredItems = this._filteredItems.filter(x => x !== item);
             if (isDefined(item.parent)) {
@@ -79,6 +89,29 @@ export class ItemsList {
             } else if (item.hasChildren) {
                 this._filteredItems = this.filteredItems.filter(x => x.parent !== item);
             }
+        }
+    }
+
+    unselect(item: NgOption) {
+        this._selected = this._selected.filter(x => x !== item);
+        item.selected = false;
+
+        if (this._ngSelect.hideSelected && isDefined(item.index)) {
+            this._filteredItems.splice(item.index, 0, item);
+            if (isDefined(item.parent)) {
+                const isParentAddedBack = isDefined(this._filteredItems.find(x => x === item.parent));
+                if (!isParentAddedBack) {
+                    const parent = this._items.find(x => x === item.parent);
+                    this._filteredItems.splice(parent.index, 0, parent);
+                }
+            } else if (item.hasChildren) {
+                const children = this._items.filter(x => x.parent === item);
+                for (const child of children) {
+                    child.selected = false;
+                    this._filteredItems.splice(child.index, 0, child);
+                }
+            }
+            this._filteredItems = [...this._filteredItems.sort((a, b) => (a.index - b.index))];
         }
     }
 
@@ -93,25 +126,6 @@ export class ItemsList {
                     !item.hasChildren && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel)
         }
         return this._items.find(item => findBy(item));
-    }
-
-    unselect(item: NgOption) {
-        this._selected = this._selected.filter(x => x !== item);
-        item.selected = false;
-
-        if (this._ngSelect.hideSelected && isDefined(item.index)) {
-            this._filteredItems.splice(item.index, 0, item);
-            if (isDefined(item.parent)) {
-                const parent = this._items.find(x => x === item.parent);
-                this._filteredItems.splice(parent.index, 0, parent);
-            } else if (item.hasChildren) {
-                const children = this._items.filter(x => x.parent === item);
-                for (const child of children) {
-                    this._filteredItems.splice(child.index, 0, child);
-                }
-            }
-            this._filteredItems = [...this._filteredItems.sort((a, b) => (a.index - b.index))];
-        }
     }
 
     addItem(item: any) {
@@ -141,7 +155,7 @@ export class ItemsList {
         });
     }
 
-    filter(term: string) {
+    filter(term: string): void {
         if (!term) {
             this.resetItems();
             return;
@@ -150,11 +164,12 @@ export class ItemsList {
         this._filteredItems = [];
         term = this._ngSelect.searchFn ? term : searchHelper.stripSpecialChars(term).toLocaleLowerCase();
         const match = this._ngSelect.searchFn || this._defaultSearchFn;
+        const hideSelected = this._ngSelect.hideSelected;
 
         for (const key of Array.from(this._groups.keys())) {
             const matchedItems = [];
             for (const item of this._groups.get(key)) {
-                if (this._ngSelect.hideSelected && this._selected.indexOf(item) > -1) {
+                if (hideSelected && (item.parent && item.parent.selected || item.selected)) {
                     continue;
                 }
                 const searchItem = this._ngSelect.searchFn ? item.value : item;

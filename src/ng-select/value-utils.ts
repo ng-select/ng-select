@@ -1,9 +1,9 @@
 export function isDefined(value: any) {
-    return value !== null && value !== undefined;
+    return value !== undefined && value !== null;
 }
 
 export function isObject(value: any) {
-    return isDefined(value) && typeof value === 'object'
+    return typeof value === 'object' && isDefined(value);
 }
 
 export function isPromise(value: any) {

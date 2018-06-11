@@ -19,7 +19,7 @@ describe('ItemsList', () => {
                 expect(list.value.length).toBe(1);
                 expect(list.value[0].value).toBe('val2');
             });
-        })
+        });
 
         describe('multiple', () => {
             let list: ItemsList;
@@ -45,6 +45,34 @@ describe('ItemsList', () => {
                 expect(list.value.length).toBe(0);
             });
 
+            it('should select only group item when at least one child was selected and then group item was selected', () => {
+                cmp.hideSelected = true;
+                cmp.groupBy = 'groupKey';
+                list.setItems([
+                    { label: 'K1', val: 'V1', groupKey: 'G1' },
+                    { label: 'K2', val: 'V2', groupKey: 'G1' }
+                ]);
+                list.select(list.items[1]); // K1
+                list.select(list.items[0]); // G1
+
+                expect(list.value.length).toBe(1);
+                expect(list.value[0]).toBe(list.items[0]);
+            });
+
+            it('should remove group item if it was selected and then child group item is selected', () => {
+                cmp.hideSelected = true;
+                cmp.groupBy = 'groupKey';
+                list.setItems([
+                    { label: 'K1', val: 'V1', groupKey: 'G1' },
+                    { label: 'K2', val: 'V2', groupKey: 'G1' }
+                ]);
+                list.select(list.items[0]); // G1
+                list.select(list.items[1]); // K1
+
+                expect(list.value.length).toBe(1);
+                expect(list.value[0]).toBe(list.items[1]);
+            });
+
             it('should remove item from filtered items when hideSelected=true', () => {
                 cmp.hideSelected = true;
                 list.setItems([
@@ -64,25 +92,27 @@ describe('ItemsList', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([
-                    { label: 'K1', val: 'V1', groupKey: 'K1' },
-                    { label: 'K2', val: 'V2', groupKey: 'K1' }
+                    { label: 'K1', val: 'V1', groupKey: 'G1' },
+                    { label: 'K2', val: 'V2', groupKey: 'G1' }
                 ]);
-                list.select(list.items[1]);
-                list.select(list.items[2]);
+                list.select(list.items[1]); // K1
+                list.select(list.items[2]); // K2
 
-                expect(list.filteredItems.length).toBe(0);
+                expect(list.filteredItems.length).toBe(0); // remove all items since all child items was selected
+                expect(list.value.length).toBe(2);
             });
 
-            it('should remove all children item if group item is selected when hideSelected=true', () => {
+            it('should remove all children items if group item is selected when hideSelected=true', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([
-                    { label: 'K1', val: 'V1', groupKey: 'K1' },
-                    { label: 'K2', val: 'V2', groupKey: 'K1' }
+                    { label: 'K1', val: 'V1', groupKey: 'G1' },
+                    { label: 'K2', val: 'V2', groupKey: 'G1' }
                 ]);
-                list.select(list.items[0]);
+                list.select(list.items[1]); // K1
+                list.select(list.items[0]); // G1
 
-                expect(list.filteredItems.length).toBe(0);
+                expect(list.filteredItems.length).toBe(0); // remove all items since group was selected
             });
         });
     });
@@ -99,10 +129,10 @@ describe('ItemsList', () => {
                 list.setItems([
                     { label: 'K1', val: 'V1' }
                 ]);
-    
+
                 list.select(list.items[0]);
                 list.unselect(list.items[0]);
-    
+
                 expect(list.value.length).toBe(0);
             });
         });
@@ -120,12 +150,12 @@ describe('ItemsList', () => {
                     { label: 'K1', val: 'V1' },
                     { label: 'K2', val: 'V2' },
                 ]);
-    
+
                 list.select(list.items[0]);
                 list.select(list.items[1]);
                 list.unselect(list.items[0]);
                 list.unselect(list.items[1]);
-    
+
                 expect(list.value.length).toBe(0);
             });
 
@@ -135,10 +165,10 @@ describe('ItemsList', () => {
                     { label: 'K1', val: 'V1' },
                     { label: 'K2', val: 'V2' },
                 ]);
-    
+
                 list.select(list.items[0]);
                 list.unselect(list.items[0]);
-    
+
                 expect(list.filteredItems.length).toBe(2);
             });
 
@@ -146,10 +176,10 @@ describe('ItemsList', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([
-                    { label: 'K1', val: 'V1', groupKey: 'K1' },
-                    { label: 'K2', val: 'V2', groupKey: 'K1' }
+                    { label: 'K1', val: 'V1', groupKey: 'G1' },
+                    { label: 'K2', val: 'V2', groupKey: 'G1' }
                 ]);
-    
+
                 list.select(list.items[0]);
                 expect(list.filteredItems.length).toBe(0);
                 list.unselect(list.items[0]);
@@ -162,12 +192,81 @@ describe('ItemsList', () => {
                 list.setItems([
                     { label: 'K1', val: 'V1', groupKey: 'K1' }
                 ]);
-    
+
                 list.select(list.items[1]);
                 expect(list.filteredItems.length).toBe(0);
                 list.unselect(list.items[1]);
                 expect(list.filteredItems.length).toBe(2);
             });
+        });
+    });
+
+    describe('filter', () => {
+        let list: ItemsList;
+        let cmp: NgSelectComponent;
+        beforeEach(() => {
+            cmp = ngSelect();
+            list = itemsList(cmp);
+        });
+
+        it('should find item from items list', () => {
+            list.setItems([
+                { label: 'K1 part1 part2', val: 'V1' },
+                { label: 'K2 part1 part2', val: 'V2' },
+                { label: 'K3 part1 part2.2', val: 'V3' },
+                { label: 'K4 part1 part2.2', val: 'V4' },
+                { label: 'K5 part1 part2.2 part3', val: 'V5' },
+            ]);
+
+            list.filter('part1');
+            expect(list.filteredItems.length).toBe(5);
+
+            list.filter('part2.2');
+            expect(list.filteredItems.length).toBe(3);
+
+            list.filter('part3');
+            expect(list.filteredItems.length).toBe(1);
+
+            list.filter('nope');
+            expect(list.filteredItems.length).toBe(0);
+        });
+
+        it('should find item from grouped items list', () => {
+            cmp.groupBy = 'groupKey';
+            list.setItems([
+                // G1 group
+                { label: 'K1 part1 part2', val: 'V1', groupKey: 'G1' },
+                { label: 'K2 part1 part2', val: 'V2', groupKey: 'G1' },
+                // G2 group
+                { label: 'K3 part1 part2.2', val: 'V3', groupKey: 'G2' },
+                { label: 'K4 part1 part2.2', val: 'V4', groupKey: 'G2' },
+                { label: 'K5 part1 part2.2 part3', val: 'V5', groupKey: 'G2' },
+            ]);
+
+            list.filter('part1');
+            expect(list.filteredItems.length).toBe(7); // 5 items + 2 groups
+
+            list.filter('part2.2');
+            expect(list.filteredItems.length).toBe(4); // 3 item + 1 group
+
+            list.filter('part3');
+            expect(list.filteredItems.length).toBe(2); // 1 item + 1 group
+
+            list.filter('nope');
+            expect(list.filteredItems.length).toBe(0);
+        });
+
+        it('should exclude child item if its parent is already selected when hideSelected=true', () => {
+            cmp.groupBy = 'groupKey';
+            cmp.hideSelected = true;
+            list.setItems([
+                { label: 'K1', val: 'V1', groupKey: 'G1' },
+                { label: 'K2', val: 'V2', groupKey: 'G1' },
+            ]);
+
+            list.select(list.items[0]); // select group;
+            list.filter('K1');
+            expect(list.filteredItems.length).toBe(0);
         });
     });
 });
