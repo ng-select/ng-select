@@ -71,7 +71,7 @@ export class ItemsList {
         item.selected = true;
         if (this._ngSelect.hideSelected) {
             this._filteredItems = this._filteredItems.filter(x => x !== item);
-            if (item.parent !== null) {
+            if (isDefined(item.parent)) {
                 const children = this._filteredItems.filter(x => x.parent === item.parent);
                 if (children.length === 0) {
                     this._filteredItems = this._filteredItems.filter(x => x !== item.parent);
@@ -101,6 +101,15 @@ export class ItemsList {
 
         if (this._ngSelect.hideSelected && isDefined(item.index)) {
             this._filteredItems.splice(item.index, 0, item);
+            if (isDefined(item.parent)) {
+                const parent = this._items.find(x => x === item.parent);
+                this._filteredItems.splice(parent.index, 0, parent);
+            } else if (item.hasChildren) {
+                const children = this._items.filter(x => x.parent === item);
+                for (const child of children) {
+                    this._filteredItems.splice(child.index, 0, child);
+                }
+            }
             this._filteredItems = [...this._filteredItems.sort((a, b) => (a.index - b.index))];
         }
     }

@@ -87,13 +87,14 @@ fdescribe('ItemsList', () => {
         });
     });
 
-    fdescribe('unselect', () => {
-        let list: ItemsList;
-        beforeEach(() => {
-            const cmp = ngSelect();
-            list = itemsList(cmp);
-        });
+    describe('unselect', () => {
         describe('single', () => {
+            let list: ItemsList;
+            let cmp: NgSelectComponent;
+            beforeEach(() => {
+                cmp = ngSelect();
+                list = itemsList(cmp);
+            });
             it('should unselect selected item', () => {
                 list.setItems([
                     { label: 'K1', val: 'V1' }
@@ -103,7 +104,70 @@ fdescribe('ItemsList', () => {
                 list.unselect(list.items[0]);
     
                 expect(list.value.length).toBe(0);
-            })
+            });
+        });
+
+        describe('multiple', () => {
+            let list: ItemsList;
+            let cmp: NgSelectComponent;
+            beforeEach(() => {
+                cmp = ngSelect();
+                list = itemsList(cmp);
+            });
+
+            it('should unselect selected items', () => {
+                list.setItems([
+                    { label: 'K1', val: 'V1' },
+                    { label: 'K2', val: 'V2' },
+                ]);
+    
+                list.select(list.items[0]);
+                list.select(list.items[1]);
+                list.unselect(list.items[0]);
+                list.unselect(list.items[1]);
+    
+                expect(list.value.length).toBe(0);
+            });
+
+            it('should unselect selected item and return it back to filtered items list when hideSelected=true', () => {
+                cmp.hideSelected = true;
+                list.setItems([
+                    { label: 'K1', val: 'V1' },
+                    { label: 'K2', val: 'V2' },
+                ]);
+    
+                list.select(list.items[0]);
+                list.unselect(list.items[0]);
+    
+                expect(list.filteredItems.length).toBe(2);
+            });
+
+            it('should unselect selected group and return it back to filtered items with child items when hideSelected=true', () => {
+                cmp.hideSelected = true;
+                cmp.groupBy = 'groupKey';
+                list.setItems([
+                    { label: 'K1', val: 'V1', groupKey: 'K1' },
+                    { label: 'K2', val: 'V2', groupKey: 'K1' }
+                ]);
+    
+                list.select(list.items[0]);
+                expect(list.filteredItems.length).toBe(0);
+                list.unselect(list.items[0]);
+                expect(list.filteredItems.length).toBe(3);
+            });
+
+            it('should unselect selected item and return it back to filtered with item parent group items when hideSelected=true', () => {
+                cmp.hideSelected = true;
+                cmp.groupBy = 'groupKey';
+                list.setItems([
+                    { label: 'K1', val: 'V1', groupKey: 'K1' }
+                ]);
+    
+                list.select(list.items[1]);
+                expect(list.filteredItems.length).toBe(0);
+                list.unselect(list.items[1]);
+                expect(list.filteredItems.length).toBe(2);
+            });
         });
     });
 });
