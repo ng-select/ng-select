@@ -1,7 +1,7 @@
 import { NgSelectComponent } from './ng-select.component';
 import { ItemsList } from './items-list';
 
-fdescribe('ItemsList', () => {
+describe('ItemsList', () => {
     describe('select', () => {
         describe('single', () => {
             let list: ItemsList;
