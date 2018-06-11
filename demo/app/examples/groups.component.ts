@@ -63,6 +63,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
             bindLabel="name"
             groupBy="country"
             [multiple]="true"
+            [closeOnSelect]="false"
             [selectableGroup]="true"
             [compareWith]="selectedAccounts4Fn"
             [(ngModel)]="selectedAccounts4">

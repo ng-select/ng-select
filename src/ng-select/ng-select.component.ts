@@ -175,7 +175,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     get selectedItems(): NgOption[] {
-        return this.itemsList.value;
+        return this.itemsList.selectedItems;
     }
 
     get selectedValues() {
@@ -642,7 +642,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         this.filterValue = null;
-        this.itemsList.resetItems();
+        this.itemsList.resetFilteredItems();
     }
 
     private _scrollToMarked() {

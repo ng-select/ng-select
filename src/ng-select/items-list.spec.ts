@@ -12,12 +12,12 @@ describe('ItemsList', () => {
 
             it('should add only one item to selected items', () => {
                 list.select({ value: 'val' });
-                expect(list.value.length).toBe(1);
-                expect(list.value[0].value).toBe('val');
+                expect(list.selectedItems.length).toBe(1);
+                expect(list.selectedItems[0].value).toBe('val');
 
                 list.select({ value: 'val2' });
-                expect(list.value.length).toBe(1);
-                expect(list.value[0].value).toBe('val2');
+                expect(list.selectedItems.length).toBe(1);
+                expect(list.selectedItems[0].value).toBe('val2');
             });
         });
 
@@ -33,16 +33,16 @@ describe('ItemsList', () => {
 
             it('should add item to selected items', () => {
                 list.select({ value: 'val' });
-                expect(list.value.length).toBe(1);
+                expect(list.selectedItems.length).toBe(1);
 
                 list.select({ value: 'val2' });
-                expect(list.value.length).toBe(2);
+                expect(list.selectedItems.length).toBe(2);
             });
 
             it('should skip when item already selected', () => {
                 list.select({ selected: true });
 
-                expect(list.value.length).toBe(0);
+                expect(list.selectedItems.length).toBe(0);
             });
 
             it('should select only group item when at least one child was selected and then group item was selected', () => {
@@ -55,22 +55,8 @@ describe('ItemsList', () => {
                 list.select(list.items[1]); // K1
                 list.select(list.items[0]); // G1
 
-                expect(list.value.length).toBe(1);
-                expect(list.value[0]).toBe(list.items[0]);
-            });
-
-            it('should remove group item if it was selected and then child group item is selected', () => {
-                cmp.hideSelected = true;
-                cmp.groupBy = 'groupKey';
-                list.setItems([
-                    { label: 'K1', val: 'V1', groupKey: 'G1' },
-                    { label: 'K2', val: 'V2', groupKey: 'G1' }
-                ]);
-                list.select(list.items[0]); // G1
-                list.select(list.items[1]); // K1
-
-                expect(list.value.length).toBe(1);
-                expect(list.value[0]).toBe(list.items[1]);
+                expect(list.selectedItems.length).toBe(1);
+                expect(list.selectedItems[0]).toBe(list.items[0]);
             });
 
             it('should remove item from filtered items when hideSelected=true', () => {
@@ -99,7 +85,7 @@ describe('ItemsList', () => {
                 list.select(list.items[2]); // K2
 
                 expect(list.filteredItems.length).toBe(0); // remove all items since all child items was selected
-                expect(list.value.length).toBe(2);
+                expect(list.selectedItems.length).toBe(2);
             });
 
             it('should remove all children items if group item is selected when hideSelected=true', () => {
@@ -110,6 +96,19 @@ describe('ItemsList', () => {
                     { label: 'K2', val: 'V2', groupKey: 'G1' }
                 ]);
                 list.select(list.items[1]); // K1
+                list.select(list.items[0]); // G1
+
+                expect(list.filteredItems.length).toBe(0); // remove all items since group was selected
+            });
+
+            it('should remove all children items if group item is selected when hideSelected=true and filter is used', () => {
+                cmp.hideSelected = true;
+                cmp.groupBy = 'groupKey';
+                list.setItems([
+                    { label: 'K1', val: 'V1', groupKey: 'G1' },
+                    { label: 'K2', val: 'V2', groupKey: 'G1' }
+                ]);
+                list.filter('K');
                 list.select(list.items[0]); // G1
 
                 expect(list.filteredItems.length).toBe(0); // remove all items since group was selected
@@ -133,7 +132,7 @@ describe('ItemsList', () => {
                 list.select(list.items[0]);
                 list.unselect(list.items[0]);
 
-                expect(list.value.length).toBe(0);
+                expect(list.selectedItems.length).toBe(0);
             });
         });
 
@@ -156,7 +155,7 @@ describe('ItemsList', () => {
                 list.unselect(list.items[0]);
                 list.unselect(list.items[1]);
 
-                expect(list.value.length).toBe(0);
+                expect(list.selectedItems.length).toBe(0);
             });
 
             it('should unselect selected item and return it back to filtered items list when hideSelected=true', () => {
