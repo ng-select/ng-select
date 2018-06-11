@@ -65,44 +65,24 @@ export class ItemsList {
         if (item.selected || this.maxItemsSelected) {
             return;
         }
-        if (!this._ngSelect.multiple) {
+        const multiple = this._ngSelect.multiple;
+        if (!multiple) {
             this.clearSelected();
         }
 
-        this._selectionModel.select(this._items, item, this._ngSelect.multiple);
-
-        if (this._ngSelect.hideSelected) {
-            this._filteredItems = this._filteredItems.filter(x => x !== item);
-            if (isDefined(item.parent)) {
-                const children = this._filteredItems.filter(x => x.parent === item.parent);
-                if (children.length === 0) {
-                    this._filteredItems = this._filteredItems.filter(x => x !== item.parent);
-                }
-            } else if (item.hasChildren) {
-                this._filteredItems = this.filteredItems.filter(x => x.parent !== item);
-            }
+        this._selectionModel.select(this._items, item, multiple);
+        if (this._ngSelect.hideSelected && multiple) {
+            this._hideSelectedItems(item);
         }
     }
 
     unselect(item: NgOption) {
+        if (!item.selected) {
+            return;
+        }
         this._selectionModel.unselect(this._items, item, this._ngSelect.multiple);
-
-        if (this._ngSelect.hideSelected && isDefined(item.index)) {
-            this._filteredItems.splice(item.index, 0, item);
-            if (isDefined(item.parent)) {
-                const isParentAddedBack = isDefined(this._filteredItems.find(x => x === item.parent));
-                if (!isParentAddedBack) {
-                    const parent = this._items.find(x => x === item.parent);
-                    this._filteredItems.splice(parent.index, 0, parent);
-                }
-            } else if (item.hasChildren) {
-                const children = this._items.filter(x => x.parent === item);
-                for (const child of children) {
-                    child.selected = false;
-                    this._filteredItems.splice(child.index, 0, child);
-                }
-            }
-            this._filteredItems = [...this._filteredItems.sort((a, b) => (a.index - b.index))];
+        if (this._ngSelect.hideSelected && isDefined(item.index) && this._ngSelect.multiple) {
+            this._showSelectedItems(item);
         }
     }
 
@@ -267,6 +247,36 @@ export class ItemsList {
 
         if (this._ngSelect.hideSelected) {
             this._filteredItems = this.filteredItems.filter(x => this.selectedItems.indexOf(x) === -1);
+        }
+    }
+
+    private _showSelectedItems(current: NgOption) {
+        this._filteredItems.splice(current.index, 0, current);
+        if (isDefined(current.parent)) {
+            const parent = current.parent;
+            const alreadyAdded = this._filteredItems.find(x => x === parent);
+            if (!alreadyAdded) {
+                this._filteredItems.splice(parent.index, 0, parent);
+            }
+        } else if (current.hasChildren) {
+            const children = this._items.filter(x => x.parent === current);
+            for (const child of children) {
+                child.selected = false;
+                this._filteredItems.splice(child.index, 0, child);
+            }
+        }
+        this._filteredItems = [...this._filteredItems.sort((a, b) => (a.index - b.index))];
+    }
+
+    private _hideSelectedItems(current: NgOption) {
+        this._filteredItems = this._filteredItems.filter(x => x !== current);
+        if (isDefined(current.parent)) {
+            const children = this._filteredItems.filter(x => x.parent === current.parent);
+            if (children.length === 0) {
+                this._filteredItems = this._filteredItems.filter(x => x !== current.parent);
+            }
+        } else if (current.hasChildren) {
+            this._filteredItems = this.filteredItems.filter(x => x.parent !== current);
         }
     }
 

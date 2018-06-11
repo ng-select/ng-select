@@ -28,7 +28,8 @@ export class SelectionModel {
         item.selected = false;
         if (multiple) {
             if (isDefined(item.parent) && item.parent.selected) {
-                this._selected = items.filter(x => x.parent === item.parent && x !== item);
+                this._selected = this._selected.filter(x => x !== item.parent);
+                this._selected.push(...items.filter(x => x.parent === item.parent && x !== item));
                 item.parent.selected = false;
             } else if (item.hasChildren) {
                 const children = items.filter(x => x.parent === item);

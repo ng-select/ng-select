@@ -141,6 +141,7 @@ describe('ItemsList', () => {
             let cmp: NgSelectComponent;
             beforeEach(() => {
                 cmp = ngSelect();
+                cmp.multiple = true;
                 list = itemsList(cmp);
             });
 
@@ -158,7 +159,7 @@ describe('ItemsList', () => {
                 expect(list.selectedItems.length).toBe(0);
             });
 
-            it('should unselect selected item and return it back to filtered items list when hideSelected=true', () => {
+            it('should unselect selected item and insert it back to filtered items list when hideSelected=true', () => {
                 cmp.hideSelected = true;
                 list.setItems([
                     { label: 'K1', val: 'V1' },
@@ -171,7 +172,7 @@ describe('ItemsList', () => {
                 expect(list.filteredItems.length).toBe(2);
             });
 
-            it('should unselect selected group and return it back to filtered items with child items when hideSelected=true', () => {
+            it('should unselect selected group and insert it back to filtered items with child items when hideSelected=true', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([
@@ -185,17 +186,39 @@ describe('ItemsList', () => {
                 expect(list.filteredItems.length).toBe(3);
             });
 
-            it('should unselect selected item and return it back to filtered with item parent group items when hideSelected=true', () => {
+            it('should unselect selected item and insert it back to filtered with item parent group items when hideSelected=true', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([
-                    { label: 'K1', val: 'V1', groupKey: 'K1' }
+                    { label: 'K1', val: 'V1', groupKey: 'G1' }
                 ]);
 
                 list.select(list.items[1]);
                 expect(list.filteredItems.length).toBe(0);
                 list.unselect(list.items[1]);
                 expect(list.filteredItems.length).toBe(2);
+            });
+
+            it('should not inserted unselected group parent item to filtered items if it is already exsists', () => {
+                cmp.hideSelected = true;
+                cmp.groupBy = 'groupKey';
+                list.setItems([
+                    // G1
+                    { label: 'K1', val: 'V1', groupKey: 'G1' },
+                    { label: 'K2', val: 'V2', groupKey: 'G1' },
+                    // G2
+                    { label: 'K3', val: 'V3', groupKey: 'G2' },
+                    { label: 'K4', val: 'V4', groupKey: 'G2' },
+                ]);
+
+                list.select(list.items[1]);
+                list.select(list.items[2]);
+                list.select(list.items[4]);
+                list.unselect(list.items[1]);
+                list.unselect(list.items[2]);
+                
+                expect(list.filteredItems.length).toBe(5);
+                expect(list.selectedItems.length).toBe(1);
             });
         });
     });
