@@ -13,7 +13,7 @@ export class SelectionModel {
         this._selected.push(item);
         if (multiple) {
             if (isDefined(item.parent)) {
-                this._selected = this._selected.filter(x => x !== parent);
+                this._removeParent(item.parent);
                 const childrenCount = item.parent.children ? item.parent.children.length : 0;
                 const selectedCount = this._selected.filter(x => x.parent === item.parent).length;
                 item.parent.selected = childrenCount === selectedCount;
@@ -30,9 +30,10 @@ export class SelectionModel {
         item.selected = false;
         if (multiple) {
             if (isDefined(item.parent) && item.parent.selected) {
-                // const children = item.parent.children;
-                // this._removeSelectedChildren(children);
-                // this._selected.push(...children.filter(x => x === item));
+                const children = item.parent.children;
+                this._removeParent(item.parent);
+                this._removeSelectedChildren(children);
+                this._selected.push(...children.filter(x => x !== item));
                 item.parent.selected = false;
             } else if (item.children) {
                 const children = item.children
@@ -52,5 +53,9 @@ export class SelectionModel {
 
     private _removeSelectedChildren(children: NgOption[]) {
         this._selected = this._selected.filter(x => children.indexOf(x) === -1);
+    }
+
+    private _removeParent(parent: NgOption) {
+        this._selected = this._selected.filter(x => x !== parent)
     }
 }

@@ -1,7 +1,7 @@
 import { NgSelectComponent } from './ng-select.component';
 import { ItemsList } from './items-list';
 
-fdescribe('ItemsList', () => {
+describe('ItemsList', () => {
     describe('select', () => {
         describe('single', () => {
             let list: ItemsList;
@@ -210,7 +210,7 @@ fdescribe('ItemsList', () => {
                 list.unselect(list.items[1]); // K1
 
                 expect(list.selectedItems.length).toBe(1);
-                expect(list.selectedItems[0]).toBe(list.items[2]);
+                expect(list.selectedItems[0].label).toBe(list.items[2].label); // should select only K2
             });
 
             it('should unselect selected item and insert it back to filtered items list when hideSelected=true', () => {
