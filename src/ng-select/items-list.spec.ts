@@ -1,7 +1,7 @@
 import { NgSelectComponent } from './ng-select.component';
 import { ItemsList } from './items-list';
 
-describe('ItemsList', () => {
+fdescribe('ItemsList', () => {
     describe('select', () => {
         describe('single', () => {
             let list: ItemsList;
@@ -59,6 +59,23 @@ describe('ItemsList', () => {
                 expect(list.selectedItems[0]).toBe(list.items[0]);
             });
 
+            it('should items from different groups', () => {
+                cmp.groupBy = 'groupKey';
+                list.setItems([
+                    // G1
+                    { label: 'K1', val: 'V1', groupKey: 'G1' },
+                    { label: 'K2', val: 'V2', groupKey: 'G1' },
+                    // G2
+                    { label: 'K3', val: 'V3', groupKey: 'G2' },
+                    { label: 'K4', val: 'V4', groupKey: 'G2' }
+                ]);
+
+                list.select(list.items[0]); // K1
+                list.select(list.items[4]); // K3
+
+                expect(list.selectedItems.length).toBe(2);
+            });
+
             it('should remove item from filtered items when hideSelected=true', () => {
                 cmp.hideSelected = true;
                 list.setItems([
@@ -74,34 +91,42 @@ describe('ItemsList', () => {
                 expect(list.filteredItems.length).toBe(2);
             });
 
-            it('should remove gouped item from filtered items when hideSelected=true and all child items are selected', () => {
+            it('should remove goup from filtered items when hideSelected=true and all child group items are selected', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([
+                    // G1
                     { label: 'K1', val: 'V1', groupKey: 'G1' },
-                    { label: 'K2', val: 'V2', groupKey: 'G1' }
+                    { label: 'K2', val: 'V2', groupKey: 'G1' },
+                    // G2
+                    { label: 'K3', val: 'V3', groupKey: 'G2' },
+                    { label: 'K4', val: 'V4', groupKey: 'G2' }
                 ]);
                 list.select(list.items[1]); // K1
                 list.select(list.items[2]); // K2
 
-                expect(list.filteredItems.length).toBe(0); // remove all items since all child items was selected
+                expect(list.filteredItems.length).toBe(3); // should contain only second group items
                 expect(list.selectedItems.length).toBe(2);
             });
 
-            it('should remove all children items if group item is selected when hideSelected=true', () => {
+            it('should remove all group and group children items if group is selected when hideSelected=true', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([
+                    // G1
                     { label: 'K1', val: 'V1', groupKey: 'G1' },
-                    { label: 'K2', val: 'V2', groupKey: 'G1' }
+                    { label: 'K2', val: 'V2', groupKey: 'G1' },
+                    // G2
+                    { label: 'K3', val: 'V3', groupKey: 'G2' },
+                    { label: 'K4', val: 'V4', groupKey: 'G2' }
                 ]);
                 list.select(list.items[1]); // K1
                 list.select(list.items[0]); // G1
 
-                expect(list.filteredItems.length).toBe(0); // remove all items since group was selected
+                expect(list.filteredItems.length).toBe(3); // should contain only second group items
             });
 
-            it('should remove all children items if group item is selected when hideSelected=true and filter is used', () => {
+            it('should remove all children items if group is selected when hideSelected=true and filter is used', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([
@@ -159,6 +184,35 @@ describe('ItemsList', () => {
                 expect(list.selectedItems.length).toBe(0);
             });
 
+            it('should unselect grouped selected item', () => {
+                cmp.groupBy = 'groupKey';
+                list.setItems([
+                    { label: 'K1', val: 'V1', groupKey: 'G1' },
+                    { label: 'K2', val: 'V2', groupKey: 'G1' },
+                ]);
+
+                list.select(list.items[1]); // K1
+                list.select(list.items[2]); // K2
+                list.unselect(list.items[1]);
+
+                expect(list.selectedItems.length).toBe(1);
+                expect(list.selectedItems[0]).toBe(list.items[2]);
+            });
+
+            it('should unselect grouped selected item when group was selected', () => {
+                cmp.groupBy = 'groupKey';
+                list.setItems([
+                    { label: 'K1', val: 'V1', groupKey: 'G1' },
+                    { label: 'K2', val: 'V2', groupKey: 'G1' },
+                ]);
+
+                list.select(list.items[0]); // G1
+                list.unselect(list.items[1]); // K1
+
+                expect(list.selectedItems.length).toBe(1);
+                expect(list.selectedItems[0]).toBe(list.items[2]);
+            });
+
             it('should unselect selected item and insert it back to filtered items list when hideSelected=true', () => {
                 cmp.hideSelected = true;
                 list.setItems([
@@ -172,7 +226,7 @@ describe('ItemsList', () => {
                 expect(list.filteredItems.length).toBe(2);
             });
 
-            it('should unselect selected group and insert it back to filtered items with child items when hideSelected=true', () => {
+            it('should unselect selected group and insert it back to filtered items when hideSelected=true', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([
@@ -186,7 +240,7 @@ describe('ItemsList', () => {
                 expect(list.filteredItems.length).toBe(3);
             });
 
-            it('should unselect selected item and insert it back to filtered with item parent group items when hideSelected=true', () => {
+            it('should unselect selected item and insert it back to filtered items with parent group when hideSelected=true', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([

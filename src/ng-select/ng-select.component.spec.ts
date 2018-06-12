@@ -2053,7 +2053,7 @@ describe('NgSelectComponent', function () {
 
             const filteredItems = fixture.componentInstance.select.itemsList.filteredItems;
             expect(filteredItems.length).toBe(2);
-            expect(filteredItems[0].hasChildren).toBe(true);
+            expect(filteredItems[0].children).toBeDefined();
             expect(filteredItems[0].label).toBe('United States');
             expect(filteredItems[1].parent).toBe(filteredItems[0]);
             expect(filteredItems[1].label).toBe('Adam');
@@ -2643,16 +2643,16 @@ describe('NgSelectComponent', function () {
             const items = fixture.componentInstance.select.itemsList.items;
 
             expect(items.length).toBe(14);
-            expect(items[0].hasChildren).toBe(true);
+            expect(items[0].children).toBeDefined()
             expect(items[0].index).toBe(0);
             expect(items[0].label).toBe('United States');
             expect(items[0].disabled).toBeTruthy();
             expect(items[0].value).toEqual({ country: 'United States' });
 
-            expect(items[1].hasChildren).toBe(false);
+            expect(items[1].children).toBeUndefined();
             expect(items[1].parent).toBe(items[0]);
 
-            expect(items[2].hasChildren).toBe(false);
+            expect(items[2].children).toBeUndefined();
             expect(items[2].parent).toBe(items[0]);
 
             expect(items[3].label).toBe('Argentina');
@@ -2682,11 +2682,11 @@ describe('NgSelectComponent', function () {
 
             const items: NgOption[] = fixture.componentInstance.select.itemsList.items;
             expect(items.length).toBe(18);
-            expect(items[0].hasChildren).toBeUndefined();
+            expect(items[0].children).toBeUndefined();
             expect(items[0].parent).toBeUndefined();
-            expect(items[1].hasChildren).toBeUndefined();
+            expect(items[1].children).toBeUndefined();
             expect(items[1].parent).toBeUndefined();
-            expect(items[16].hasChildren).toBeTruthy();
+            expect(items[16].children).toBeTruthy();
             expect(items[16].label).toBe('');
             expect(items[17].parent).toBeDefined();
         }));
@@ -2705,9 +2705,9 @@ describe('NgSelectComponent', function () {
             const items = fixture.componentInstance.select.itemsList.items;
 
             expect(items.length).toBe(12);
-            expect(items[0].hasChildren).toBe(true);
+            expect(items[0].children).toBeDefined();
             expect(items[0].value['name']).toBe('c1');
-            expect(items[6].hasChildren).toBe(true);
+            expect(items[6].children).toBeDefined();
             expect(items[6].value['name']).toBe('c2');
         }));
 
@@ -2744,7 +2744,7 @@ describe('NgSelectComponent', function () {
 
             const filteredItems = select.itemsList.filteredItems;
             expect(filteredItems.length).toBe(2);
-            expect(filteredItems[0].hasChildren).toBeTruthy();
+            expect(filteredItems[0].children).toBeTruthy();
             expect(filteredItems[1].parent).toBe(filteredItems[0]);
 
             select.filter('not in list');

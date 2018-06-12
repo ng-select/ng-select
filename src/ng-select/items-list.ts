@@ -70,7 +70,7 @@ export class ItemsList {
             this.clearSelected();
         }
 
-        this._selectionModel.select(this._items, item, multiple);
+        this._selectionModel.select(item, multiple);
         if (this._ngSelect.hideSelected && multiple) {
             this._hideSelectedItems(item);
         }
@@ -80,7 +80,7 @@ export class ItemsList {
         if (!item.selected) {
             return;
         }
-        this._selectionModel.unselect(this._items, item, this._ngSelect.multiple);
+        this._selectionModel.unselect(item, this._ngSelect.multiple);
         if (this._ngSelect.hideSelected && isDefined(item.index) && this._ngSelect.multiple) {
             this._showSelectedItems(item);
         }
@@ -91,10 +91,10 @@ export class ItemsList {
         if (this._ngSelect.compareWith) {
             findBy = item => this._ngSelect.compareWith(item.value, value)
         } else if (this._ngSelect.bindValue) {
-            findBy = item => !item.hasChildren && this.resolveNested(item.value, this._ngSelect.bindValue) === value
+            findBy = item => !item.children && this.resolveNested(item.value, this._ngSelect.bindValue) === value
         } else {
             findBy = item => item.value === value ||
-                !item.hasChildren && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel)
+                !item.children && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel)
         }
         return this._items.find(item => findBy(item));
     }
@@ -258,9 +258,8 @@ export class ItemsList {
             if (!alreadyAdded) {
                 this._filteredItems.splice(parent.index, 0, parent);
             }
-        } else if (current.hasChildren) {
-            const children = this._items.filter(x => x.parent === current);
-            for (const child of children) {
+        } else if (current.children) {
+            for (const child of current.children) {
                 child.selected = false;
                 this._filteredItems.splice(child.index, 0, child);
             }
@@ -271,13 +270,24 @@ export class ItemsList {
     private _hideSelectedItems(current: NgOption) {
         this._filteredItems = this._filteredItems.filter(x => x !== current);
         if (isDefined(current.parent)) {
-            const children = this._filteredItems.filter(x => x.parent === current.parent);
-            if (children.length === 0) {
+            const children = current.parent.children;
+            const selectedChildrenCount = this._countItems(this.selectedItems, x => children.indexOf(x) > -1);
+            if (children.length === selectedChildrenCount) {
                 this._filteredItems = this._filteredItems.filter(x => x !== current.parent);
             }
-        } else if (current.hasChildren) {
+        } else if (current.children) {
             this._filteredItems = this.filteredItems.filter(x => x.parent !== current);
         }
+    }
+
+    private _countItems(items: NgOption[], predicate: (item: NgOption) => boolean) {
+        let count = 0;
+        for (const item of items) {
+            if (predicate(item)) {
+                count++;
+            }
+        }   
+        return count;
     }
 
     private _defaultSearchFn(search: string, opt: NgOption) {
@@ -331,7 +341,7 @@ export class ItemsList {
             }
             const parent: NgOption = {
                 label: key,
-                hasChildren: true,
+                children: undefined,
                 parent: null,
                 index: i++,
                 disabled: !this._ngSelect.selectableGroup,
@@ -343,10 +353,11 @@ export class ItemsList {
 
             const children = groups.get(key).map(x => {
                 x.parent = parent;
-                x.hasChildren = false;
+                x.children = undefined;
                 x.index = i++;
                 return x;
             });
+            parent.children = children;
             items.push(...children);
         }
         return items;

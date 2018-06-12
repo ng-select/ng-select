@@ -8,31 +8,34 @@ export class SelectionModel {
         return this._selected;
     }
 
-    select(items: NgOption[], item: NgOption, multiple: boolean) {
+    select(item: NgOption, multiple: boolean) {
         item.selected = true;
+        this._selected.push(item);
         if (multiple) {
-            if (isDefined(item.parent) && item.parent.selected) {
+            if (isDefined(item.parent)) {
                 this._selected = this._selected.filter(x => x !== parent);
-                item.parent.selected = false;
-            } else if (item.hasChildren) {
-                const children = items.filter(x => x.parent === item);
+                const childrenCount = item.parent.children ? item.parent.children.length : 0;
+                const selectedCount = this._selected.filter(x => x.parent === item.parent).length;
+                item.parent.selected = childrenCount === selectedCount;
+            } else if (item.children) {
+                const children = item.children;
                 this._setChildrenSelectedState(children, true);
                 this._removeSelectedChildren(children);
             }
         }
-        this._selected.push(item);
     }
 
-    unselect(items: NgOption[], item: NgOption, multiple: boolean) {
+    unselect(item: NgOption, multiple: boolean) {
         this._selected = this._selected.filter(x => x !== item);
         item.selected = false;
         if (multiple) {
             if (isDefined(item.parent) && item.parent.selected) {
-                this._selected = this._selected.filter(x => x !== item.parent);
-                this._selected.push(...items.filter(x => x.parent === item.parent && x !== item));
+                // const children = item.parent.children;
+                // this._removeSelectedChildren(children);
+                // this._selected.push(...children.filter(x => x === item));
                 item.parent.selected = false;
-            } else if (item.hasChildren) {
-                const children = items.filter(x => x.parent === item);
+            } else if (item.children) {
+                const children = item.children
                 this._setChildrenSelectedState(children, false);
                 this._removeSelectedChildren(children);
             }
