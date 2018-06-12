@@ -252,7 +252,7 @@ export class ItemsList {
 
     private _showSelectedItems(current: NgOption) {
         this._filteredItems.splice(current.index, 0, current);
-        if (isDefined(current.parent)) {
+        if (current.parent) {
             const parent = current.parent;
             const alreadyAdded = this._filteredItems.find(x => x === parent);
             if (!alreadyAdded) {
@@ -269,7 +269,7 @@ export class ItemsList {
 
     private _hideSelectedItems(current: NgOption) {
         this._filteredItems = this._filteredItems.filter(x => x !== current);
-        if (isDefined(current.parent)) {
+        if (current.parent) {
             const children = current.parent.children;
             const selectedChildrenCount = this._countItems(this.selectedItems, x => children.indexOf(x) > -1);
             if (children.length === selectedChildrenCount) {

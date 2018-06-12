@@ -1,5 +1,4 @@
 import { NgOption } from './ng-select.types';
-import { isDefined } from './value-utils';
 
 export class SelectionModel {
     private _selected: NgOption[] = [];
@@ -12,7 +11,7 @@ export class SelectionModel {
         item.selected = true;
         this._selected.push(item);
         if (multiple) {
-            if (isDefined(item.parent)) {
+            if (item.parent) {
                 this._removeParent(item.parent);
                 const childrenCount = item.parent.children ? item.parent.children.length : 0;
                 const selectedCount = this._selected.filter(x => x.parent === item.parent).length;
@@ -29,7 +28,7 @@ export class SelectionModel {
         this._selected = this._selected.filter(x => x !== item);
         item.selected = false;
         if (multiple) {
-            if (isDefined(item.parent) && item.parent.selected) {
+            if (item.parent && item.parent.selected) {
                 const children = item.parent.children;
                 this._removeParent(item.parent);
                 this._removeSelectedChildren(children);
