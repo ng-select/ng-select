@@ -138,13 +138,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
     @ViewChild('filterInput') filterInput: ElementRef;
 
-    @HostBinding('class.ng-select-opened') isOpen = false;
-    @HostBinding('class.ng-select-disabled') isDisabled = false;
+    @HostBinding('class.ng-select-opened') opened = false;
+    @HostBinding('class.ng-select-disabled') disabled = false;
     @HostBinding('class.ng-select-filtered') get filtered() { return !!this.filterValue && this.searchable };
 
     itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];
-    filterValue: string = null;
+    filterValue: string = null; 
     dropdownId = newId();
     selectedItemId = 0;
 
@@ -271,7 +271,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     handleArrowClick() {
-        if (this.isOpen) {
+        if (this.opened) {
             this.close();
         } else {
             this.open();
@@ -313,12 +313,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     setDisabledState(isDisabled: boolean): void {
-        this.isDisabled = isDisabled;
+        this.disabled = isDisabled;
         this._cd.markForCheck();
     }
 
     toggle() {
-        if (!this.isOpen) {
+        if (!this.opened) {
             this.open();
         } else {
             this.close();
@@ -326,14 +326,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     open() {
-        if (this.isDisabled || this.isOpen || this.itemsList.maxItemsSelected) {
+        if (this.disabled || this.opened || this.itemsList.maxItemsSelected) {
             return;
         }
 
         if (!this._isTypeahead && !this.addTag && this.itemsList.noItemsToSelect) {
             return;
         }
-        this.isOpen = true;
+        this.opened = true;
         this.itemsList.markSelectedOrDefault(this.markFirst);
         this.openEvent.emit();
         if (!this.filterValue) {
@@ -343,10 +343,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     close() {
-        if (!this.isOpen) {
+        if (!this.opened) {
             return;
         }
-        this.isOpen = false;
+        this.opened = false;
         this._clearSearch();
         this._onTouched();
         this.closeEvent.emit();
@@ -354,7 +354,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     toggleItem(item: NgOption) {
-        if (!item || item.disabled || this.isDisabled) {
+        if (!item || item.disabled || this.disabled) {
             return;
         }
 
@@ -407,7 +407,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     showClear() {
-        return this.clearable && (this.hasValue || this.filterValue) && !this.isDisabled;
+        return this.clearable && (this.hasValue || this.filterValue) && !this.disabled;
     }
 
     showAddTag() {
@@ -450,7 +450,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     onInputBlur() {
         (<HTMLElement>this.elementRef.nativeElement).classList.remove('ng-select-focused');
         this.blurEvent.emit(null);
-        if (!this.isOpen && !this.isDisabled) {
+        if (!this.opened && !this.disabled) {
             this._onTouched();
         }
         this._focused = false;
@@ -483,10 +483,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (items.length > 0 && this.hasValue) {
             this.itemsList.mapSelectedItems();
         }
-        if (this.isOpen && isDefined(this.filterValue) && !this._isTypeahead) {
+        if (this.opened && isDefined(this.filterValue) && !this._isTypeahead) {
             this.itemsList.filter(this.filterValue);
         }
-        if (this._isTypeahead || this.isOpen) {
+        if (this._isTypeahead || this.opened) {
             this.itemsList.markSelectedOrDefault(this.markFirst);
         }
     }
@@ -598,7 +598,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             .subscribe(term => {
                 const item = this.itemsList.findByLabel(term);
                 if (item) {
-                    if (this.isOpen) {
+                    if (this.opened) {
                         this.itemsList.markItem(item);
                         this._cd.markForCheck();
                     } else {
@@ -646,21 +646,21 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _scrollToMarked() {
-        if (!this.isOpen || !this.dropdownPanel) {
+        if (!this.opened || !this.dropdownPanel) {
             return;
         }
         this.dropdownPanel.scrollInto(this.itemsList.markedItem);
     }
 
     private _scrollToTag() {
-        if (!this.isOpen || !this.dropdownPanel) {
+        if (!this.opened || !this.dropdownPanel) {
             return;
         }
         this.dropdownPanel.scrollIntoTag();
     }
 
     private _handleTab($event: KeyboardEvent) {
-        if (!this.isOpen) {
+        if (!this.opened) {
             return;
         }
         if (this.selectOnTab) {
@@ -679,7 +679,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _handleEnter($event: KeyboardEvent) {
-        if (this.isOpen) {
+        if (this.opened) {
             if (this.itemsList.markedItem) {
                 this.toggleItem(this.itemsList.markedItem);
             } else if (this.addTag) {
@@ -693,7 +693,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _handleSpace($event: KeyboardEvent) {
-        if (this.isOpen) {
+        if (this.opened) {
             return;
         }
         this.open();
@@ -713,7 +713,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _handleArrowUp($event: KeyboardEvent) {
-        if (!this.isOpen) {
+        if (!this.opened) {
             return;
         }
 
