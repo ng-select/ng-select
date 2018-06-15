@@ -87,6 +87,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() appendTo: string;
     @Input() loading = false;
     @Input() closeOnSelect = true;
+    @Input() isOpen: boolean;
     @Input() hideSelected = false;
     @Input() selectOnTab = false;
     @Input() maxSelectedItems: number;
@@ -231,6 +232,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                     break;
                 case KeyCode.Esc:
                     this.close();
+                    $event.preventDefault();
+                    $event.stopPropagation();
                     break;
                 case KeyCode.Backspace:
                     this._handleBackspace();
@@ -326,7 +329,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     open() {
-        if (this.disabled || this.opened || this.itemsList.maxItemsSelected) {
+        if (this.disabled || this.opened || this.itemsList.maxItemsSelected || this.isOpen === false) {
             return;
         }
 
@@ -343,7 +346,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     close() {
-        if (!this.opened) {
+        if (!this.opened || this.isOpen) {
             return;
         }
         this.opened = false;
@@ -437,7 +440,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.typeahead.next(this.filterValue);
         } else {
             this.itemsList.filter(this.filterValue);
-            this.itemsList.markSelectedOrDefault(this.markFirst);
+            if (this.isOpen !== false) {
+                this.itemsList.markSelectedOrDefault(this.markFirst);
+            }
         }
     }
 
@@ -679,10 +684,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _handleEnter($event: KeyboardEvent) {
-        if (this.opened) {
+        if (this.opened || this.isOpen === false) {
             if (this.itemsList.markedItem) {
                 this.toggleItem(this.itemsList.markedItem);
-            } else if (this.addTag) {
+            } else if (this.addTag && this.filterValue) {
                 this.selectTag();
             }
         } else {

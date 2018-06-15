@@ -926,7 +926,23 @@ describe('NgSelectComponent', function () {
             fixture.whenStable().then(() => {
                 expect(fixture.componentInstance.select.opened).toBeFalsy();
             })
+        }));
 
+        it('should not close when isOpen is true', async(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                            [isOpen]="true"
+                            bindLabel="name"
+                            [(ngModel)]="city">
+                </ng-select>`);
+
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                expect(fixture.componentInstance.select.opened).toBeTruthy();
+            })
         }));
 
         it('should not close on option select when [closeOnSelect]="false"', fakeAsync(() => {
@@ -966,6 +982,12 @@ describe('NgSelectComponent', function () {
             it('should open dropdown', () => {
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 expect(select.opened).toBe(true);
+            });
+
+            it('should not open dropdown when isOpen is false', () => {
+                select.isOpen = false;
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                expect(select.opened).toBeFalsy();
             });
 
             it('should open empty dropdown if no items', fakeAsync(() => {
@@ -1965,6 +1987,22 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(result);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
             expect(fixture.componentInstance.select.selectedItems).toEqual([result]);
+        }));
+
+        it('should not mark first item when isOpen is false', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [isOpen]="false"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            tick(200);
+            fixture.componentInstance.select.filter('pab');
+            tick(200);
+
+            expect(fixture.componentInstance.select.itemsList.markedItem).toBeUndefined();
         }));
 
         it('should mark first item on filter when selected is not among filtered items', fakeAsync(() => {
