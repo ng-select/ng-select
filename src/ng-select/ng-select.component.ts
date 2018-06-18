@@ -87,7 +87,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() appendTo: string;
     @Input() loading = false;
     @Input() closeOnSelect = true;
-    @Input() isOpen: boolean;
     @Input() hideSelected = false;
     @Input() selectOnTab = false;
     @Input() maxSelectedItems: number;
@@ -102,6 +101,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
     @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
     @Input() @HostBinding('class.ng-select-searchable') searchable = true;
+    @Input() @HostBinding('class.ng-select-opened') isOpen = false;
 
     @Input()
     get compareWith() { return this._compareWith; }
@@ -139,7 +139,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
     @ViewChild('filterInput') filterInput: ElementRef;
 
-    @HostBinding('class.ng-select-opened') opened = false;
     @HostBinding('class.ng-select-disabled') disabled = false;
     @HostBinding('class.ng-select-filtered') get filtered() { return !!this.filterValue && this.searchable };
 
@@ -152,6 +151,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _defaultLabel = 'label';
     private _primitive: boolean;
     private _focused: boolean;
+    private _manualOpen: boolean;
     private _pressedKeys: string[] = [];
     private _compareWith: CompareWithFn;
 
@@ -197,6 +197,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
         if (changes.items) {
             this._setItems(changes.items.currentValue || []);
+        }
+        if (changes.isOpen) {
+            this._manualOpen = true;
         }
     }
 
@@ -274,7 +277,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     handleArrowClick() {
-        if (this.opened) {
+        if (this.isOpen) {
             this.close();
         } else {
             this.open();
@@ -321,7 +324,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     toggle() {
-        if (!this.opened) {
+        if (!this.isOpen) {
             this.open();
         } else {
             this.close();
@@ -329,14 +332,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     open() {
-        if (this.disabled || this.opened || this.itemsList.maxItemsSelected || this.isOpen === false) {
+        if (this.disabled || this.isOpen || this.itemsList.maxItemsSelected || this._manualOpen) {
             return;
         }
 
         if (!this._isTypeahead && !this.addTag && this.itemsList.noItemsToSelect) {
             return;
         }
-        this.opened = true;
+        this.isOpen = true;
         this.itemsList.markSelectedOrDefault(this.markFirst);
         this.openEvent.emit();
         if (!this.filterValue) {
@@ -346,10 +349,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     close() {
-        if (!this.opened || this.isOpen) {
+        if (!this.isOpen || this._manualOpen) {
             return;
         }
-        this.opened = false;
+        this.isOpen = false;
         this._clearSearch();
         this._onTouched();
         this.closeEvent.emit();
@@ -440,7 +443,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.typeahead.next(this.filterValue);
         } else {
             this.itemsList.filter(this.filterValue);
-            if (this.isOpen !== false) {
+            if (this.isOpen) {
                 this.itemsList.markSelectedOrDefault(this.markFirst);
             }
         }
@@ -455,7 +458,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     onInputBlur() {
         (<HTMLElement>this.elementRef.nativeElement).classList.remove('ng-select-focused');
         this.blurEvent.emit(null);
-        if (!this.opened && !this.disabled) {
+        if (!this.isOpen && !this.disabled) {
             this._onTouched();
         }
         this._focused = false;
@@ -488,10 +491,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (items.length > 0 && this.hasValue) {
             this.itemsList.mapSelectedItems();
         }
-        if (this.opened && isDefined(this.filterValue) && !this._isTypeahead) {
+        if (this.isOpen && isDefined(this.filterValue) && !this._isTypeahead) {
             this.itemsList.filter(this.filterValue);
         }
-        if (this._isTypeahead || this.opened) {
+        if (this._isTypeahead || this.isOpen) {
             this.itemsList.markSelectedOrDefault(this.markFirst);
         }
     }
@@ -603,7 +606,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             .subscribe(term => {
                 const item = this.itemsList.findByLabel(term);
                 if (item) {
-                    if (this.opened) {
+                    if (this.isOpen) {
                         this.itemsList.markItem(item);
                         this._cd.markForCheck();
                     } else {
@@ -651,21 +654,21 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _scrollToMarked() {
-        if (!this.opened || !this.dropdownPanel) {
+        if (!this.isOpen || !this.dropdownPanel) {
             return;
         }
         this.dropdownPanel.scrollInto(this.itemsList.markedItem);
     }
 
     private _scrollToTag() {
-        if (!this.opened || !this.dropdownPanel) {
+        if (!this.isOpen || !this.dropdownPanel) {
             return;
         }
         this.dropdownPanel.scrollIntoTag();
     }
 
     private _handleTab($event: KeyboardEvent) {
-        if (!this.opened) {
+        if (!this.isOpen) {
             return;
         }
         if (this.selectOnTab) {
@@ -684,7 +687,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _handleEnter($event: KeyboardEvent) {
-        if (this.opened || this.isOpen === false) {
+        if (this.isOpen || this._manualOpen) {
             if (this.itemsList.markedItem) {
                 this.toggleItem(this.itemsList.markedItem);
             } else if (this.addTag && this.filterValue) {
@@ -698,7 +701,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _handleSpace($event: KeyboardEvent) {
-        if (this.opened) {
+        if (this.isOpen) {
             return;
         }
         this.open();
@@ -718,7 +721,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _handleArrowUp($event: KeyboardEvent) {
-        if (!this.opened) {
+        if (!this.isOpen) {
             return;
         }
 

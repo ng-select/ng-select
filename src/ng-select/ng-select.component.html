@@ -34,9 +34,9 @@
                    (blur)="onInputBlur()"
                    (change)="$event.stopPropagation()"
                    role="combobox"
-                   [attr.aria-expanded]="opened"
-                   [attr.aria-owns]="opened ? dropdownId : null"
-                   [attr.aria-activedescendant]="opened ? itemsList?.markedItem?.htmlId : null">
+                   [attr.aria-expanded]="isOpen"
+                   [attr.aria-owns]="isOpen ? dropdownId : null"
+                   [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null">
         </div>
     </div>
 
@@ -51,7 +51,7 @@
     </span>
 </div>
 
-<ng-dropdown-panel *ngIf="opened"
+<ng-dropdown-panel *ngIf="isOpen"
     class="ng-dropdown-panel"
     [virtualScroll]="virtualScroll"
     [bufferAmount]="bufferAmount"
