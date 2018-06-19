@@ -16,7 +16,7 @@ See [Demos](https://ng-select.github.io/ng-select) or try in [Stackblitz](https:
 
 ## v2.0.0
 
-Latest version targets **Angular v6** since it uses new RxJS which has breaking changes. If you are using **Angular v5** you could use `ng-select v1.x` or install `rxjs-compat` compatability package. 
+Latest version targets **Angular v6** since it uses new RxJS which has breaking changes. If you are using **Angular v5** you could use `ng-select v1.x` or install `rxjs-compat` compatibility package. 
 We will support **v1.x** with latest bug fixes to allow easier migration. For **v1.x** you can refer the [1.x branch](https://github.com/ng-select/ng-select/tree/1.x).
 
 ---
