@@ -72,7 +72,7 @@ export class ItemsList {
 
         this._selectionModel.select(item, multiple);
         if (this._ngSelect.hideSelected && multiple) {
-            this._hideSelectedItems(item);
+            this._hideSelected(item);
         }
     }
 
@@ -82,7 +82,7 @@ export class ItemsList {
         }
         this._selectionModel.unselect(item, this._ngSelect.multiple);
         if (this._ngSelect.hideSelected && isDefined(item.index) && this._ngSelect.multiple) {
-            this._showSelectedItems(item);
+            this._showSelected(item);
         }
     }
 
@@ -250,44 +250,33 @@ export class ItemsList {
         }
     }
 
-    private _showSelectedItems(current: NgOption) {
-        this._filteredItems.splice(current.index, 0, current);
-        if (current.parent) {
-            const parent = current.parent;
-            const alreadyAdded = this._filteredItems.find(x => x === parent);
-            if (!alreadyAdded) {
-                this._filteredItems.splice(parent.index, 0, parent);
+    private _showSelected(item: NgOption) {
+        this._filteredItems.push(item);
+        if (item.parent) {
+            const parent = item.parent;
+            const parentExists = this._filteredItems.find(x => x === parent);
+            if (!parentExists) {
+                this._filteredItems.push(parent);
             }
-        } else if (current.children) {
-            for (const child of current.children) {
+        } else if (item.children) {
+            for (const child of item.children) {
                 child.selected = false;
-                this._filteredItems.splice(child.index, 0, child);
+                this._filteredItems.push(child);
             }
         }
         this._filteredItems = [...this._filteredItems.sort((a, b) => (a.index - b.index))];
     }
 
-    private _hideSelectedItems(current: NgOption) {
-        this._filteredItems = this._filteredItems.filter(x => x !== current);
-        if (current.parent) {
-            const children = current.parent.children;
-            const selectedChildrenCount = this._countItems(this.selectedItems, x => children.indexOf(x) > -1);
-            if (children.length === selectedChildrenCount) {
-                this._filteredItems = this._filteredItems.filter(x => x !== current.parent);
+    private _hideSelected(item: NgOption) {
+        this._filteredItems = this._filteredItems.filter(x => x !== item);
+        if (item.parent) {
+            const children = item.parent.children;
+            if (children.every(x => x.selected)) {
+                this._filteredItems = this._filteredItems.filter(x => x !== item.parent);
             }
-        } else if (current.children) {
-            this._filteredItems = this.filteredItems.filter(x => x.parent !== current);
+        } else if (item.children) {
+            this._filteredItems = this.filteredItems.filter(x => x.parent !== item);
         }
-    }
-
-    private _countItems(items: NgOption[], predicate: (item: NgOption) => boolean) {
-        let count = 0;
-        for (const item of items) {
-            if (predicate(item)) {
-                count++;
-            }
-        }   
-        return count;
     }
 
     private _defaultSearchFn(search: string, opt: NgOption) {

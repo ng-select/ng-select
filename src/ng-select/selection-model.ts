@@ -13,13 +13,12 @@ export class SelectionModel {
         if (multiple) {
             if (item.parent) {
                 this._removeParent(item.parent);
-                const childrenCount = item.parent.children ? item.parent.children.length : 0;
-                const selectedCount = this._selected.filter(x => x.parent === item.parent).length;
+                const childrenCount = item.parent.children.length;
+                const selectedCount = item.parent.children.filter(x => x.selected).length;
                 item.parent.selected = childrenCount === selectedCount;
             } else if (item.children) {
-                const children = item.children;
-                this._setChildrenSelectedState(children, true);
-                this._removeSelectedChildren(children);
+                this._setChildrenSelectedState(item.children, true);
+                this._removeParentChildren(item);
             }
         }
     }
@@ -31,13 +30,12 @@ export class SelectionModel {
             if (item.parent && item.parent.selected) {
                 const children = item.parent.children;
                 this._removeParent(item.parent);
-                this._removeSelectedChildren(children);
+                this._removeParentChildren(item.parent);
                 this._selected.push(...children.filter(x => x !== item));
                 item.parent.selected = false;
             } else if (item.children) {
-                const children = item.children
-                this._setChildrenSelectedState(children, false);
-                this._removeSelectedChildren(children);
+                this._setChildrenSelectedState(item.children, false);
+                this._removeParentChildren(item);
             }
         }
     }
@@ -47,11 +45,11 @@ export class SelectionModel {
     }
 
     private _setChildrenSelectedState(children: NgOption[], selected: boolean) {
-        children.forEach(c => c.selected = selected);
+        children.forEach(x => x.selected = selected);
     }
 
-    private _removeSelectedChildren(children: NgOption[]) {
-        this._selected = this._selected.filter(x => children.indexOf(x) === -1);
+    private _removeParentChildren(parent: NgOption) {
+        this._selected = this._selected.filter(x => x.parent !== parent);
     }
 
     private _removeParent(parent: NgOption) {
