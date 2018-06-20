@@ -486,7 +486,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _setItems(items: any[]) {
         const firstItem = items[0];
         this.bindLabel = this.bindLabel || this._defaultLabel;
-        this._primitive = !firstItem ? this._primitive : !isObject(firstItem);
+        if(!firstItem) {
+            this._primitive = true;
+        } else {
+            this._primitive = !isObject(firstItem);
+        }
+        
         this.itemsList.setItems(items);
         if (items.length > 0 && this.hasValue) {
             this.itemsList.mapSelectedItems();
