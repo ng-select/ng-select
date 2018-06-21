@@ -68,22 +68,22 @@
     [id]="dropdownId">
     
     <ng-container>
-        <div class="ng-option" [attr.role]="item.hasChildren ? 'group' : 'option'" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
+        <div class="ng-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
                 *ngFor="let item of viewPortItems"
                 [class.ng-option-disabled]="item.disabled"
                 [class.ng-option-selected]="item.selected"
-                [class.ng-optgroup]="item.hasChildren"
-                [class.ng-option]="!item.hasChildren"
+                [class.ng-optgroup]="item.children"
+                [class.ng-option]="!item.children"
                 [class.ng-option-child]="!!item.parent"
                 [class.ng-option-marked]="item === itemsList.markedItem"
-                id="{{item?.htmlId || null}}">
+                [attr.id]="item?.htmlId">
 
             <ng-template #defaultOptionTemplate>
                 <span class="ng-option-label">{{item.label}}</span>
             </ng-template>
 
             <ng-template
-                [ngTemplateOutlet]="item.hasChildren ? (optgroupTemplate || defaultOptionTemplate) : (optionTemplate || defaultOptionTemplate)"
+                [ngTemplateOutlet]="item.children ? (optgroupTemplate || defaultOptionTemplate) : (optionTemplate || defaultOptionTemplate)"
                 [ngTemplateOutletContext]="{ item: item.value, index: item.index, searchTerm: filterValue }">
             </ng-template>
         </div>

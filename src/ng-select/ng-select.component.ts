@@ -176,7 +176,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     get selectedItems(): NgOption[] {
-        return this.itemsList.value;
+        return this.itemsList.selectedItems;
     }
 
     get selectedValues() {
@@ -622,7 +622,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         for (const item of this.selectedItems) {
             if (this.bindValue) {
                 let resolvedValue = null;
-                if (item.hasChildren) {
+                if (item.children) {
                     resolvedValue = item.value[this.groupBy];
                 } else {
                     resolvedValue = this.itemsList.resolveNested(item.value, this.bindValue);
@@ -650,7 +650,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         this.filterValue = null;
-        this.itemsList.resetItems();
+        this.itemsList.resetFilteredItems();
     }
 
     private _scrollToMarked() {
