@@ -8,8 +8,6 @@ import { map } from 'rxjs/operators';
         <label>Select multiple elements using custom templates with checkboxes.</label>
         ---html,true
         <ng-select
-                #ref
-                class="multichebox-select"
                 [items]="people"
                 [multiple]="true"
                 bindLabel="name"
@@ -17,9 +15,9 @@ import { map } from 'rxjs/operators';
                 [selectableGroup]="true"
                 [closeOnSelect]="false"
                 bindValue="id"
-                [(ngModel)]="selectedPeople1">
+                [(ngModel)]="selectedPeople">
             <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
-                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.gender}}
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.gender | uppercase}}
             </ng-template>
             <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
                 <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.name}}
@@ -27,13 +25,13 @@ import { map } from 'rxjs/operators';
         </ng-select>
         ---
         <br />
-        <small>{{selectedPeople1 | json}}</small>
+        <small>{{selectedPeople | json}}</small>
     `
 })
 export class SelectMultiCheckboxComponent {
 
     people: Person[] = [];
-    selectedPeople1 = [];
+    selectedPeople = [];
 
     constructor(private dataService: DataService) { }
 
@@ -42,7 +40,7 @@ export class SelectMultiCheckboxComponent {
         .pipe(map(x => x.filter(y => !y.disabled)))
         .subscribe((res) => {
             this.people = res;
-            this.selectedPeople1 = [this.people[0].id, this.people[1].id];
+            this.selectedPeople = [this.people[0].id, this.people[1].id];
         });
     }
 }
