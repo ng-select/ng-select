@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.2.0"></a>
+# [2.2.0](https://github.com/ng-select/ng-select/compare/v2.1.3...v2.2.0) (2018-06-18)
+
+
+### Bug Fixes
+
+* use [attr.id] instead of [id] ([#605](https://github.com/ng-select/ng-select/issues/605)) ([917ad74](https://github.com/ng-select/ng-select/commit/917ad74)), closes [#599](https://github.com/ng-select/ng-select/issues/599)
+
+
+### Features
+
+* **isOpen:** allow to control whether dropdown should open or close ([ab6c388](https://github.com/ng-select/ng-select/commit/ab6c388))
+
+
+
 <a name="2.1.3"></a>
 ## [2.1.3](https://github.com/ng-select/ng-select/compare/v2.1.2...v2.1.3) (2018-06-01)
 

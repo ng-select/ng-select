@@ -55,15 +55,56 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         <p>
             <small>Selected: {{selectedAccount3 | json}}</small>
         </p>
+
+        <hr />
+        <label>With selectable multiple groups</label>
+        ---html,true
+        <ng-select [items]="accounts4"
+            bindLabel="name"
+            groupBy="country"
+            [multiple]="true"
+            [closeOnSelect]="false"
+            [selectableGroup]="true"
+            [compareWith]="selectedAccounts4Fn"
+            [(ngModel)]="selectedAccounts4">
+            <ng-template ng-optgroup-tmp let-item="item">
+                {{item.country || 'Unnamed group'}}
+            </ng-template>
+        </ng-select>
+        ---
+        <p>
+            <small>Selected: {{selectedAccounts4 | json}}</small>
+        </p>
+
+        <hr />
+        <label>With selectable multiple groups and hidden selected items</label>
+        ---html,true
+        <ng-select [items]="accounts5"
+            bindLabel="name"
+            groupBy="country"
+            [multiple]="true"
+            [hideSelected]="true"
+            [closeOnSelect]="false"
+            [selectableGroup]="true"
+            [compareWith]="selectedAccounts5Fn"
+            [(ngModel)]="selectedAccounts5">
+            <ng-template ng-optgroup-tmp let-item="item">
+                {{item.country || 'Unnamed group'}}
+            </ng-template>
+        </ng-select>
+        ---
+        <p>
+            <small>Selected: {{selectedAccounts5 | json}}</small>
+        </p>
     `
 })
 export class SelectGroupsComponent {
     selectedAccount = ['Samantha'];
     accounts = [
-        { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { state: 'Active' } },
-        { name: 'Jill', email: 'jill@email.com', age: 15, child: { state: 'Active' } },
-        { name: 'Henry', email: 'henry@email.com', age: 10, child: { state: 'Active' } },
+        { name: 'Jill', email: 'jill@email.com', age: 15, country: undefined, child: { state: 'Active' } },
+        { name: 'Henry', email: 'henry@email.com', age: 10, country: undefined, child: { state: 'Active' } },
         { name: 'Meg', email: 'meg@email.com', age: 7, country: null, child: { state: 'Active' } },
+        { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { state: 'Active' } },
         { name: 'Homer', email: 'homer@email.com', age: 47, country: '', child: { state: 'Active' } },
         { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States', child: { state: 'Active' } },
         { name: 'Amalie', email: 'amalie@email.com', age: 12, country: 'Argentina', child: { state: 'Active' } },
@@ -82,6 +123,30 @@ export class SelectGroupsComponent {
 
     accounts3 = this.accounts.slice();
     selectedAccount3 = this.accounts3[1];
+
+    accounts4 = this.accounts.slice();
+    selectedAccounts4 = [{ country: 'United States' }, { country: 'Ecuador' }, { name: 'Nicolás' }];
+    selectedAccounts4Fn = (item, selected) => {
+        if (selected.country && item.country) {
+            return item.country === selected.country;
+        }
+        if (item.name && selected.name) {
+            return item.name === selected.name;
+        }
+        return false;
+    };
+
+    accounts5 = this.accounts.slice();
+    selectedAccounts5 = [{ country: 'Argentina' }, { name: 'Samantha' }];
+    selectedAccounts5Fn = (item, selected) => {
+        if (selected.country && item.country) {
+            return item.country === selected.country;
+        }
+        if (item.name && selected.name) {
+            return item.name === selected.name;
+        }
+        return false;
+    };
 
     ngOnInit() {
 
