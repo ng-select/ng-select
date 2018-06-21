@@ -13,7 +13,6 @@ export interface Person {
     email: string;
     phone: string;
     disabled?: boolean;
-    selected?: boolean;
 }
 
 @Injectable({
