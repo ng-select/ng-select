@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.3.0"></a>
+# [2.3.0](https://github.com/ng-select/ng-select/compare/v2.2.0...v2.3.0) (2018-06-21)
+
+
+### Bug Fixes
+
+* grouped items select/unselect ([#613](https://github.com/ng-select/ng-select/issues/613)) ([8a8b622](https://github.com/ng-select/ng-select/commit/8a8b622)), closes [#606](https://github.com/ng-select/ng-select/issues/606)
+* use [attr.id] instead of [id] ([bb56fea](https://github.com/ng-select/ng-select/commit/bb56fea))
+
+
+### Features
+
+* custom templates multichecbox support ([#638](https://github.com/ng-select/ng-select/issues/638)) ([94c6202](https://github.com/ng-select/ng-select/commit/94c6202)), closes [#607](https://github.com/ng-select/ng-select/issues/607)
+
+
+
 <a name="2.2.0"></a>
 # [2.2.0](https://github.com/ng-select/ng-select/compare/v2.1.3...v2.2.0) (2018-06-18)
 
