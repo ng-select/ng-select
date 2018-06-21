@@ -84,7 +84,7 @@
 
             <ng-template
                 [ngTemplateOutlet]="item.children ? (optgroupTemplate || defaultOptionTemplate) : (optionTemplate || defaultOptionTemplate)"
-                [ngTemplateOutletContext]="{ item: item.value, index: item.index, searchTerm: filterValue }">
+                [ngTemplateOutletContext]="{ item: item.value, item$:item, index: item.index, searchTerm: filterValue }">
             </ng-template>
         </div>
 
