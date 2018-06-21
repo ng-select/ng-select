@@ -8,7 +8,7 @@ export interface NgOption {
     label?: string;
     value?: string | Object;
     parent?: NgOption;
-    hasChildren?: boolean;
+    children?: NgOption[];
 }
 
 export enum KeyCode {

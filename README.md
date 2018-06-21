@@ -14,10 +14,12 @@ See [Demos](https://ng-select.github.io/ng-select) or try in [Stackblitz](https:
 
 ---
 
-## v2.0.0
+## Versions
 
-Latest version targets **Angular v6** since it uses new RxJS which has breaking changes. If you are using **Angular v5** you could use `ng-select v1.x` or install `rxjs-compat` compatability package. 
-We will support **v1.x** with latest bug fixes to allow easier migration. For **v1.x** you can refer the [1.x branch](https://github.com/ng-select/ng-select/tree/1.x).
+| Angular       | ng-select|
+| --------------|:------:| 
+| Angular v6.x  | v2.x |
+| Angular v5.x  | v1.x |
 
 ---
 
@@ -131,7 +133,8 @@ map: {
 | [loading] | `boolean` |  `-` | no | You can set the loading state from the outside (e.g. async items loading) |
 | loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
 | labelForId | `string` | `-` | no | Id to associate control with label. |
-| [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. Default `true`|
+| [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. |
+| [isOpen] | `boolean` | `-` | no | Allows manual control of dropdown opening and closing. `True` - won't close. `False` - won't open. |
 | maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
 | [hideSelected] | `boolean` | `false` | no | Allows to hide selected items. |
 | [multiple] | `boolean` | `false` | no | Allows to select multiple items. |

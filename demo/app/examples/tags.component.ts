@@ -43,6 +43,16 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
                 [(ngModel)]="selectedCompanyCustomPromise">
         </ng-select>
         ---
+
+        <hr>
+        <label>Tagging without dropdown. Press enter to add item</label>
+        ---html,true
+        <ng-select [items]="[]"
+                   [addTag]="true"
+                   [multiple]="true"
+                   [isOpen]="false">
+        </ng-select>
+        ---
     `
 })
 export class SelectTagsComponent {
