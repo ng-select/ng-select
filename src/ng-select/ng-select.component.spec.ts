@@ -1774,6 +1774,23 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.selectedCity).toBe(<any>'Copenhagen');
         }));
 
+        it('should add tag as string when the input array is empty', fakeAsync(() => {
+            let fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="[]"
+                    [addTag]="true"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+            
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.filter('Copenhagen');
+
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect(fixture.componentInstance.selectedCity).toBe(<any>'Copenhagen');
+        }));
+
         it('should add tag as string when tab pressed', fakeAsync(() => {
             let fixture = createTestingModule(
                 NgSelectTestCmp,
