@@ -193,6 +193,22 @@ describe('NgSelectComponent', function () {
             })]);
         }));
 
+        it('should map label correctly', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.cities = [{ label: 'Vilnius city', name: 'Vilnius' }];
+            tickAndDetectChanges(fixture);
+            select = fixture.componentInstance.select;
+
+            expect(select.itemsList.items[0].label).toBe('Vilnius');
+        }));
+
         it('should set items correctly after ngModel set first when typeahead and single select is used', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,

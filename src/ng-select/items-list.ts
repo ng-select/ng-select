@@ -218,17 +218,11 @@ export class ItemsList {
     }
 
     mapItem(item: any, index: number): NgOption {
-        let label = '';
-        if (isDefined(item.label)) {
-            label = item.label;
-        } else {
-            label = this.resolveNested(item, this._ngSelect.bindLabel);
-            label = isDefined(label) ? label.toString() : '';
-        }
+        const label = isDefined(item.$ngOptionLabel) ? item.$ngOptionLabel : this.resolveNested(item, this._ngSelect.bindLabel);
         const value = isDefined(item.$ngOptionValue) ? item.$ngOptionValue : item;
         return {
             index: index,
-            label: label,
+            label: isDefined(label) ? label.toString() : '',
             value: value,
             disabled: item.disabled,
             htmlId: newId()
