@@ -7,6 +7,7 @@ describe('ItemsList', () => {
             let list: ItemsList;
             beforeEach(() => {
                 const cmp = ngSelect();
+                cmp.bindLabel = 'label';
                 list = itemsList(cmp);
             });
 
@@ -147,6 +148,7 @@ describe('ItemsList', () => {
             let cmp: NgSelectComponent;
             beforeEach(() => {
                 cmp = ngSelect();
+                cmp.bindLabel = 'label';
                 list = itemsList(cmp);
             });
             it('should unselect selected item', () => {
@@ -167,6 +169,7 @@ describe('ItemsList', () => {
             beforeEach(() => {
                 cmp = ngSelect();
                 cmp.multiple = true;
+                cmp.bindLabel = 'label';
                 list = itemsList(cmp);
             });
 
@@ -282,6 +285,7 @@ describe('ItemsList', () => {
         let cmp: NgSelectComponent;
         beforeEach(() => {
             cmp = ngSelect();
+            cmp.bindLabel = 'label';
             list = itemsList(cmp);
         });
 
