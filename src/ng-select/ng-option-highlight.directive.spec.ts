@@ -7,10 +7,12 @@ import { By } from '@angular/platform-browser';
     template: `
         <span id="test1" [ngOptionHighlight]="term">My text is highlighted</span>
         <span id="test2" [ngOptionHighlight]="term">My text is not highlighted</span>
+        <span id="test3" *ngIf="showNew" [ngOptionHighlight]="term">New label</span>
     `
 })
 class TestComponent {
     term: string;
+    showNew = false;
 }
 
 describe('NgOptionHighlightDirective', () => {
@@ -44,5 +46,15 @@ describe('NgOptionHighlightDirective', () => {
         fixture.detectChanges();
         expect(span.nativeElement.querySelector('.highlighted')).toBeNull();
         expect(span.nativeElement.innerHTML).toBe('My text is not highlighted');
+    });
+
+    it('should highlight text when label changed',  () => {
+        fixture.componentInstance.term = 'new';
+        fixture.detectChanges();
+        fixture.componentInstance.showNew = true;
+        fixture.detectChanges();
+        const span = fixture.debugElement.query(By.css('#test3'));
+        expect(span.nativeElement.querySelector('.highlighted').innerHTML).toBe('New');
+        expect(span.nativeElement.textContent).toBe('New label');
     });
 });
