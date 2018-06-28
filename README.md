@@ -16,10 +16,10 @@ See [Demos](https://ng-select.github.io/ng-select) or try in [Stackblitz](https:
 
 ## Versions
 
-| Angular       | ng-select|
-| --------------|:------:| 
-| Angular v6.x  | v2.x |
-| Angular v5.x  | v1.x |
+| Angular| ng-select|
+| ------|:------:| 
+| v6.x  | v2.x |
+| v5.x  | v1.x |
 
 ---
 
