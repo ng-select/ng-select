@@ -247,9 +247,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     handleMousedown($event: MouseEvent) {
-        $event.stopPropagation();
-        $event.preventDefault();
-
+        if (!this.searchable) {
+            $event.stopPropagation();
+            $event.preventDefault();
+        }
         const target = $event.target as HTMLElement;
         if (target.className === 'ng-clear') {
             this.handleClearClick();
