@@ -1867,6 +1867,22 @@ describe('NgSelectComponent', function () {
             }));
         }));
 
+        it('should propagate click to input when searchable true', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            const selectInput = fixture.debugElement.query(By.css('.ng-select-container'));
+            const event = createEvent({ target: { className: '' } });
+            const stopPropagation = spyOn(event, 'stopPropagation');
+            selectInput.triggerEventHandler('mousedown', event);
+            tickAndDetectChanges(fixture);
+            expect(stopPropagation).not.toHaveBeenCalled();
+        }));
+
         it('should toggle dropdown when searchable false', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
