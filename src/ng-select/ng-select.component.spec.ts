@@ -2355,7 +2355,7 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Output events', () => {
-        it('fire open event once', fakeAsync(() => {
+        it('should fire open event once', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -2372,7 +2372,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.onOpen).toHaveBeenCalledTimes(1);
         }));
 
-        it('fire close event once', fakeAsync(() => {
+        it('should fire close event once', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -2390,7 +2390,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.onClose).toHaveBeenCalledTimes(1);
         }));
 
-        it('fire change when changed', fakeAsync(() => {
+        it('should fire change when changed', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -2413,7 +2413,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.selectedCityId).toBe(fixture.componentInstance.cities[0].id);
         }));
 
-        it('do not fire change when item not changed', fakeAsync(() => {
+        it('should not fire change when item not changed', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -2431,7 +2431,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
         }));
 
-        it('fire add when item is added', fakeAsync(() => {
+        it('should fire addEvent when item is added', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -2448,7 +2448,23 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.onAdd).toHaveBeenCalledWith(fixture.componentInstance.cities[0]);
         }));
 
-        it('fire remove when item is removed', fakeAsync(() => {
+        it('should not fire addEvent for single select', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                            (add)="onAdd($event)"
+                            [multiple]="false"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            spyOn(fixture.componentInstance, 'onAdd');
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.select(fixture.componentInstance.select.itemsList.items[0]);
+            expect(fixture.componentInstance.onAdd).not.toHaveBeenCalled();
+        }));
+
+        it('should fire remove when item is removed', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -2467,7 +2483,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.onRemove).toHaveBeenCalledWith(fixture.componentInstance.cities[0]);
         }));
 
-        it('fire clear when model is cleared using clear icon', fakeAsync(() => {
+        it('should fire clear when model is cleared using clear icon', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
