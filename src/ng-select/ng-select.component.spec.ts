@@ -2307,10 +2307,11 @@ describe('NgSelectComponent', function () {
 
             spyOn(fixture.componentInstance, 'onChange');
 
-            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
-            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
 
-            fixture.componentInstance.select.select(fixture.componentInstance.cities[0]);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
 
             expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
         }));
