@@ -372,18 +372,21 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     select(item: NgOption) {
-        this.itemsList.select(item);
+        if (!item.selected) {
+            this.itemsList.select(item);
+            if (this.clearSearchOnAdd) {
+                this._clearSearch();
+            }
 
-        if (this.clearSearchOnAdd) {
-            this._clearSearch();
+            if (this.multiple) {
+                this.addEvent.emit(item.value);
+            }
+            this._updateNgModel();
         }
 
-        this.addEvent.emit(item.value);
         if (this.closeOnSelect || this.itemsList.noItemsToSelect) {
             this.close();
         }
-
-        this._updateNgModel();
     }
 
     focus() {
@@ -584,9 +587,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         };
 
         if (this.multiple) {
-            (<any[]>ngModel).forEach(item => {
-                select(item);
-            });
+            (<any[]>ngModel).forEach(item => select(item));
         } else {
             select(ngModel);
         }
@@ -633,12 +634,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             }
         }
 
+        const selected = this.selectedItems.map(x => x.value);
         if (this.multiple) {
             this._onChange(model);
-            this.changeEvent.emit(this.selectedItems.map(x => x.value));
+            this.changeEvent.emit(selected);
         } else {
             this._onChange(isDefined(model[0]) ? model[0] : null);
-            this.changeEvent.emit(this.selectedItems[0] && this.selectedItems[0].value);
+            this.changeEvent.emit(selected[0]);
         }
 
         this._cd.markForCheck();
