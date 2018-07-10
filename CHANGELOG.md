@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.3.3"></a>
+## [2.3.3](https://github.com/ng-select/ng-select/compare/v2.3.2...v2.3.3) (2018-07-10)
+
+
+### Bug Fixes
+
+* don't fire addEvent for single select ([cbfd948](https://github.com/ng-select/ng-select/commit/cbfd948))
+* don't fire change event for same selection ([8ed435c](https://github.com/ng-select/ng-select/commit/8ed435c)), closes [#664](https://github.com/ng-select/ng-select/issues/664)
+
+
+
 <a name="2.3.2"></a>
 ## [2.3.2](https://github.com/ng-select/ng-select/compare/v2.3.1...v2.3.2) (2018-06-27)
 
