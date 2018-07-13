@@ -268,11 +268,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
 
-        if (this.searchable) {
-            this.open();
-        } else {
-            this.toggle();
-        }
+        this.toggle();
     }
 
     handleArrowClick() {

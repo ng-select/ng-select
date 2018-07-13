@@ -255,7 +255,7 @@ describe('NgSelectComponent', function () {
         it('should set items correctly if there is no bindLabel', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select 
+                `<ng-select
                     [items]="cities"
                     [clearable]="true"
                     [(ngModel)]="selectedCity">
@@ -1225,14 +1225,14 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.isOpen).toBeFalsy();
         }));
 
-        it('should prevent dropdown close if clicked on select', fakeAsync(() => {
+        it('should close dropdown if clicked on select input', fakeAsync(() => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(select.isOpen).toBeTruthy();
-            document.getElementById('select').click();
+            const input: HTMLInputElement = select.elementRef.nativeElement.querySelector('input');
             let event = new MouseEvent('mousedown', { bubbles: true });
-            document.getElementById('select').dispatchEvent(event);
+            input.dispatchEvent(event);
             tickAndDetectChanges(fixture);
-            expect(select.isOpen).toBeTruthy();
+            expect(select.isOpen).toBeFalsy();
         }));
 
     });
@@ -1411,10 +1411,10 @@ describe('NgSelectComponent', function () {
         it('should display custom loading and no data found template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [items]="cities" 
+                `<ng-select [items]="cities"
                             [loading]="citiesLoading"
                             [(ngModel)]="selectedCity">
-                    
+
                     <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
                         <div class="custom-notfound">
                             No data found for "{{searchTerm}}"
@@ -1449,15 +1449,15 @@ describe('NgSelectComponent', function () {
         it('should display custom type for search template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [items]="cities" 
-                            [typeahead]="filter" 
+                `<ng-select [items]="cities"
+                            [typeahead]="filter"
                             [(ngModel)]="selectedCity">
                     <ng-template ng-typetosearch-tmp>
                         <div class="custom-typeforsearch">
                             Start typing...
                         </div>
                     </ng-template>
-                   
+
                 </ng-select>`);
 
             fixture.whenStable().then(() => {
@@ -2150,7 +2150,7 @@ describe('NgSelectComponent', function () {
             fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
-                        (change)="onChange($event)" 
+                        (change)="onChange($event)"
                         bindLabel="name">
                 </ng-select>`);
             select = fixture.componentInstance.select;
