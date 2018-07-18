@@ -452,15 +452,15 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
     }
 
-    onInputFocus() {
+    onInputFocus($event) {
         (<HTMLElement>this.elementRef.nativeElement).classList.add('ng-select-focused');
-        this.focusEvent.emit(null);
+        this.focusEvent.emit($event);
         this._focused = true;
     }
 
-    onInputBlur() {
+    onInputBlur($event) {
         (<HTMLElement>this.elementRef.nativeElement).classList.remove('ng-select-focused');
-        this.blurEvent.emit(null);
+        this.blurEvent.emit($event);
         if (!this.isOpen && !this.disabled) {
             this._onTouched();
         }
