@@ -272,7 +272,7 @@ describe('NgSelectComponent', function () {
         it('should set items correctly if there is no bindLabel', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select 
+                `<ng-select
                     [items]="cities"
                     [clearable]="true"
                     [(ngModel)]="selectedCity">
@@ -778,7 +778,7 @@ describe('NgSelectComponent', function () {
 
                     const cmp = fixture.componentInstance;
                     cmp.selectedCityId = cmp.cities[1].id.toString();
-                   
+
                     cmp.compareWith = (city, model: string) => city.id === +model;
 
                     tickAndDetectChanges(fixture);
@@ -1491,10 +1491,10 @@ describe('NgSelectComponent', function () {
         it('should display custom loading and no data found template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [items]="cities" 
+                `<ng-select [items]="cities"
                             [loading]="citiesLoading"
                             [(ngModel)]="selectedCity">
-                    
+
                     <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
                         <div class="custom-notfound">
                             No data found for "{{searchTerm}}"
@@ -1529,15 +1529,15 @@ describe('NgSelectComponent', function () {
         it('should display custom type for search template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [items]="cities" 
-                            [typeahead]="filter" 
+                `<ng-select [items]="cities"
+                            [typeahead]="filter"
                             [(ngModel)]="selectedCity">
                     <ng-template ng-typetosearch-tmp>
                         <div class="custom-typeforsearch">
                             Start typing...
                         </div>
                     </ng-template>
-                   
+
                 </ng-select>`);
 
             fixture.whenStable().then(() => {
@@ -2280,7 +2280,7 @@ describe('NgSelectComponent', function () {
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
                         labelForId="lbl"
-                        (change)="onChange($event)" 
+                        (change)="onChange($event)"
                         bindLabel="name">
                 </ng-select>`);
             select = fixture.componentInstance.select;
@@ -2636,7 +2636,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-arrow' } }));
+                    control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-arrow-wrapper' } }));
                 };
             }));
 
