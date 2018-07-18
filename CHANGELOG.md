@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.3.4"></a>
+## [2.3.4](https://github.com/ng-select/ng-select/compare/v2.3.3...v2.3.4) (2018-07-18)
+
+
+### Bug Fixes
+
+* don't fail while resolving selected item using ng-option ([6c676c8](https://github.com/ng-select/ng-select/commit/6c676c8)), closes [#677](https://github.com/ng-select/ng-select/issues/677)
+* emit focus and blur events ([3edb0df](https://github.com/ng-select/ng-select/commit/3edb0df)), closes [#690](https://github.com/ng-select/ng-select/issues/690)
+
+
+
 <a name="2.3.3"></a>
 ## [2.3.3](https://github.com/ng-select/ng-select/compare/v2.3.2...v2.3.3) (2018-07-10)
 
