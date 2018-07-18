@@ -51,24 +51,23 @@ describe('NgSelectComponent', function () {
             }));
         }));
 
-        it('should set ng-option dom elements', fakeAsync(() => {
+        it('should create items from ng-option', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [(ngModel)]="selectedCityId">
-                    <ng-option [value]="'a'">A</ng-option>
-                    <ng-option [value]="'b'">B</ng-option>
-                </ng-select>`);
+                `<ng-select [(ngModel)]="selectedCity">
+                <ng-option [value]="true">Yes</ng-option>
+                <ng-option [value]="false">No</ng-option>
+            </ng-select>`);
 
             tickAndDetectChanges(fixture);
-            const itemsList = fixture.componentInstance.select.itemsList;
-            expect(itemsList.items.length).toBe(2);
-            expect(itemsList.items[0]).toEqual(jasmine.objectContaining({
-                label: 'A',
-                value: 'a'
+
+            const items = fixture.componentInstance.select.itemsList.items;
+            expect(items.length).toBe(2);
+            expect(items[0]).toEqual(jasmine.objectContaining({
+                label: 'Yes', value: true, disabled: false
             }));
-            expect(itemsList.items[1]).toEqual(jasmine.objectContaining({
-                label: 'B',
-                value: 'b'
+            expect(items[1]).toEqual(jasmine.objectContaining({
+                label: 'No', value: false, disabled: false
             }));
         }));
     });
@@ -554,29 +553,50 @@ describe('NgSelectComponent', function () {
             discardPeriodicTasks();
         }));
 
-        it('bind to dom ng-option value object', fakeAsync(() => {
-            const fixture = createTestingModule(
-                NgSelectTestCmp,
-                `<ng-select [(ngModel)]="selectedCityId">
+        describe('ng-option', () => {
+            it('should bind value', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [(ngModel)]="selectedCityId">
                     <ng-option [value]="1">A</ng-option>
                     <ng-option [value]="2">B</ng-option>
                 </ng-select>`);
 
-            // from component to model
-            selectOption(fixture, KeyCode.ArrowDown, 0);
-            tickAndDetectChanges(fixture);
-            expect(fixture.componentInstance.selectedCityId).toEqual(1);
+                // from component to model
+                selectOption(fixture, KeyCode.ArrowDown, 0);
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.selectedCityId).toEqual(1);
 
-            // from model to component
-            fixture.componentInstance.selectedCityId = 2;
-            tickAndDetectChanges(fixture);
+                // from model to component
+                fixture.componentInstance.selectedCityId = 2;
+                tickAndDetectChanges(fixture);
 
-            expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
-                value: 2,
-                label: 'B'
-            })]);
-            discardPeriodicTasks();
-        }));
+                expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
+                    value: 2,
+                    label: 'B'
+                })]);
+                discardPeriodicTasks();
+            }));
+
+            it('should not fail while resolving selected item from object', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [(ngModel)]="selectedCity">
+                        <ng-option [value]="cities[0]">Vilnius</ng-option>
+                        <ng-option [value]="cities[1]">Kaunas</ng-option>
+                </ng-select>`);
+
+                const selected = { name: 'Vilnius', id: 1 };
+                fixture.componentInstance.selectedCity = selected;
+                tickAndDetectChanges(fixture);
+
+                expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
+                    value: selected,
+                    label: ''
+                })]);
+            }));
+        });
+
 
         it('should not set internal model when single select ngModel is not valid', fakeAsync(() => {
             const fixture = createTestingModule(
@@ -1530,26 +1550,6 @@ describe('NgSelectComponent', function () {
                 const loadingOption = fixture.debugElement.queryAll(By.css('.custom-typeforsearch'));
                 expect(loadingOption.length).toBe(1);
             });
-        }));
-
-        it('should create items from ng-option', fakeAsync(() => {
-            const fixture = createTestingModule(
-                NgSelectTestCmp,
-                `<ng-select [(ngModel)]="selectedCity">
-                    <ng-option [value]="true">Yes</ng-option>
-                    <ng-option [value]="false">No</ng-option>
-                </ng-select>`);
-
-            tickAndDetectChanges(fixture);
-
-            const items = fixture.componentInstance.select.itemsList.items;
-            expect(items.length).toBe(2);
-            expect(items[0]).toEqual(jasmine.objectContaining({
-                label: 'Yes', value: true, disabled: false
-            }));
-            expect(items[1]).toEqual(jasmine.objectContaining({
-                label: 'No', value: false, disabled: false
-            }));
         }));
 
         it('should update ng-option state', fakeAsync(() => {
