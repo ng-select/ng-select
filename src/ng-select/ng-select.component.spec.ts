@@ -2636,7 +2636,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-arrow' } }));
+                    control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-arrow-wrapper' } }));
                 };
             }));
 

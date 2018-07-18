@@ -195,6 +195,7 @@
         text-align: center;
         user-select: none;
         .ng-arrow {
+            pointer-events: none;
             display: inline-block;
             height: 0;
             width: 0;
