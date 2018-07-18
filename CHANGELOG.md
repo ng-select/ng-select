@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.3.5"></a>
+## [2.3.5](https://github.com/ng-select/ng-select/compare/v2.3.4...v2.3.5) (2018-07-18)
+
+
+### Bug Fixes
+
+* increase arrow click area ([cf5a5c4](https://github.com/ng-select/ng-select/commit/cf5a5c4)), closes [#601](https://github.com/ng-select/ng-select/issues/601)
+
+
+
 <a name="2.3.4"></a>
 ## [2.3.4](https://github.com/ng-select/ng-select/compare/v2.3.3...v2.3.4) (2018-07-18)
 
