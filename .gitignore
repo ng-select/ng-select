@@ -3,6 +3,7 @@ coverage
 dist
 out-tsc
 .idea
+*.iml
 .DS_Store
 travis_rsa
 travis_rsa.pub
