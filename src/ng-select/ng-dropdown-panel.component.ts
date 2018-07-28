@@ -60,6 +60,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     @Input() virtualScroll = false;
     @Input() headerTemplate: TemplateRef<any>;
     @Input() footerTemplate: TemplateRef<any>;
+    @Input() bottomDistance = 0;
 
     @Output() update = new EventEmitter<any[]>();
     @Output() scrollToEnd = new EventEmitter<{ start: number; end: number }>();
@@ -282,7 +283,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
             this.paddingElementRef.nativeElement :
             this.contentElementRef.nativeElement;
 
-        if (scroll.scrollTop + panel.clientHeight >= padding.clientHeight) {
+        if (scroll.scrollTop + panel.clientHeight >= padding.clientHeight - this.bottomDistance) {
             this.scrollToEnd.emit();
             this._scrollToEndFired = true;
         }

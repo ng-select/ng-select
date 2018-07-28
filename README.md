@@ -147,6 +147,7 @@ map: {
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
+| [bottomDistance] | `number` | 0 | no | The distanec from the bottom when to trigger the scrollToEnd event. Makes it possible to pre-load new items before the user has scrolled to the end of the list. |
 
 ### Outputs
 
