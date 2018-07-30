@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.3.6"></a>
+## [2.3.6](https://github.com/ng-select/ng-select/compare/v2.3.5...v2.3.6) (2018-07-30)
+
+
+### Bug Fixes
+
+* focus select after unselecting single item ([1bc3f02](https://github.com/ng-select/ng-select/commit/1bc3f02)), closes [#661](https://github.com/ng-select/ng-select/issues/661)
+
+
+
 <a name="2.3.5"></a>
 ## [2.3.5](https://github.com/ng-select/ng-select/compare/v2.3.4...v2.3.5) (2018-07-18)
 
