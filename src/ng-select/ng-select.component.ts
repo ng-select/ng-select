@@ -93,7 +93,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() groupBy: string;
     @Input() bufferAmount = 4;
     @Input() virtualScroll = false;
-    @Input() bottomDistance = 0;
+    @Input() preTriggerDistance = 0;
     @Input() selectableGroup = false;
     @Input() searchFn = null;
     @Input() clearSearchOnAdd = true;
@@ -145,7 +145,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];
-    filterValue: string = null; 
+    filterValue: string = null;
     dropdownId = newId();
     selectedItemId = 0;
 

@@ -8,7 +8,7 @@
                     <span class="ng-value-icon left" (click)="unselect(item);" aria-hidden="true">×</span>
                     <span class="ng-value-label">{{item.label}}</span>
                 </ng-template>
-    
+
                 <ng-template
                     [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
                     [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
@@ -54,7 +54,7 @@
 <ng-dropdown-panel *ngIf="isOpen"
     class="ng-dropdown-panel"
     [virtualScroll]="virtualScroll"
-    [bottomDistance]="bottomDistance"
+    [preTriggerDistance]="preTriggerDistance"
     [bufferAmount]="bufferAmount"
     [appendTo]="appendTo"
     [position]="dropdownPosition"
@@ -67,7 +67,7 @@
     [class.ng-select-multiple]="multiple"
     [ngClass]="classes"
     [id]="dropdownId">
-    
+
     <ng-container>
         <div class="ng-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)" (mousedown)="$event.preventDefault()" (mouseover)="onItemHover(item)"
                 *ngFor="let item of viewPortItems"
@@ -98,7 +98,7 @@
         <ng-template #defaultNotFoundTemplate>
             <div class="ng-option ng-option-disabled">{{notFoundText}}</div>
         </ng-template>
-    
+
         <ng-template
             [ngTemplateOutlet]="notFoundTemplate || defaultNotFoundTemplate"
             [ngTemplateOutletContext]="{ searchTerm: filterValue }">
@@ -109,17 +109,17 @@
         <ng-template #defaultTypeToSearchTemplate>
             <div class="ng-option ng-option-disabled">{{typeToSearchText}}</div>
         </ng-template>
-    
+
         <ng-template
             [ngTemplateOutlet]="typeToSearchTemplate || defaultTypeToSearchTemplate">
         </ng-template>
     </ng-container>
-   
+
     <ng-container *ngIf="loading && itemsList.filteredItems.length === 0">
         <ng-template #defaultLoadingTextTemplate>
             <div class="ng-option ng-option-disabled">{{loadingText}}</div>
         </ng-template>
-    
+
         <ng-template
             [ngTemplateOutlet]="loadingTextTemplate || defaultLoadingTextTemplate"
             [ngTemplateOutletContext]="{ searchTerm: filterValue  }">

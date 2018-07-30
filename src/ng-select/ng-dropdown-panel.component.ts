@@ -60,7 +60,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     @Input() virtualScroll = false;
     @Input() headerTemplate: TemplateRef<any>;
     @Input() footerTemplate: TemplateRef<any>;
-    @Input() bottomDistance = 0;
+    @Input() preTriggerDistance = 0;
 
     @Output() update = new EventEmitter<any[]>();
     @Output() scrollToEnd = new EventEmitter<{ start: number; end: number }>();
@@ -283,10 +283,30 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
             this.paddingElementRef.nativeElement :
             this.contentElementRef.nativeElement;
 
-        if (scroll.scrollTop + panel.clientHeight >= padding.clientHeight - this.bottomDistance) {
+        const preTriggerDistance = this._getPreTriggerDistance();
+
+        if (scroll.scrollTop + panel.clientHeight + preTriggerDistance >= padding.clientHeight) {
             this.scrollToEnd.emit();
             this._scrollToEndFired = true;
         }
+    }
+
+    private _getPreTriggerDistance() {
+        let preTriggerDistance = 0;
+
+        if (this.preTriggerDistance) {
+            const dropdownPanel: HTMLElement = this._elementRef.nativeElement;
+            const additionalElementsHeight = ['.ng-dropdown-header', '.ng-dropdown-footer'].reduce((totalHeight, selector) => {
+                const el = dropdownPanel.querySelector(selector);
+                totalHeight += (el && el.getBoundingClientRect().height || 0);
+                return totalHeight;
+            }, 0);
+
+            const { childHeight } = this._calculateDimensions();
+            preTriggerDistance = this.preTriggerDistance * childHeight - additionalElementsHeight;
+        }
+
+        return preTriggerDistance;
     }
 
     private _calculateDimensions(index = 0) {
