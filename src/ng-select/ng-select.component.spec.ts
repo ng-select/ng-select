@@ -2615,9 +2615,9 @@ describe('NgSelectComponent', function () {
                 expect(select.isOpen).toBe(false);
             }));
 
-            it('should focus dropdown', fakeAsync(() => {
+            it('should focus dropdown while unselecting', fakeAsync(() => {
                 const focus = spyOn(select, 'focus');
-                triggerMousedown();
+                select.unselect(fixture.componentInstance.cities[0]);
                 tickAndDetectChanges(fixture);
                 expect(focus).toHaveBeenCalled();
             }));

@@ -261,12 +261,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
 
-        if (!this._focused) {
-            this.focus();
-        }
-
         if (target.className.includes('ng-value-icon')) {
             return;
+        }
+
+        if (!this._focused) {
+            this.focus();
         }
 
         if (this.searchable) {
@@ -395,6 +395,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     unselect(item: NgOption) {
         this.itemsList.unselect(item);
+        this.focus();
         this._updateNgModel();
         this.removeEvent.emit(item);
     }
@@ -453,6 +454,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     onInputFocus($event) {
+        if (this._focused) {
+            return;
+        }
+
         (<HTMLElement>this.elementRef.nativeElement).classList.add('ng-select-focused');
         this.focusEvent.emit($event);
         this._focused = true;
