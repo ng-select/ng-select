@@ -16,7 +16,7 @@ import { HttpClient } from '@angular/common/http';
                    bindLabel="title"
                    bindValue="thumbnailUrl"
                    placeholder="Select photo"
-                   [bottomDistance]="400"
+                   [preTriggerDistance]="10"
                    (scrollToEnd)="fetchMore($event)">
             <ng-template ng-header-tmp>
                 <small class="form-text text-muted">Loaded {{photosBuffer.length}} of {{photos.length}}</small>
