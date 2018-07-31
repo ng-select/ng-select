@@ -194,7 +194,7 @@ this is a pricey operation, however, it is much more performant than running `ng
 constantly diffing the array.
 
 ## Custom styles
-If you are not happy with default styles you can easily override them with increased selector specificity or creating your own theme. E.g.
+If you are not happy with default styles you can easily override them with increased selector specificity or creating your own theme. This applies if you are using no `ViewEncapsulation` or adding styles to global stylesheet. E.g.
 
 ```html
 <ng-select class="custom"></ng-select>
@@ -207,6 +207,15 @@ If you are not happy with default styles you can easily override them with incre
     border-radius: 0;
 }
 .ng-select.custom .ng-select-container  {            
+    min-height: 0px;
+    border-radius: 0;
+}
+```
+
+If you are using `ViewEncapsulation`, your should use special `::ng-deep` selector which will prevent scoping for nested selectors.
+
+```css
+.ng-select.custom ::ng-deep .ng-select-container  {            
     min-height: 0px;
     border-radius: 0;
 }
