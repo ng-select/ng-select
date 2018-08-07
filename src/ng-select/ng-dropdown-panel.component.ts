@@ -207,6 +207,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
             return;
         }
 
+        if ($event.target && $event.target.shadowRoot && $event.path && $event.path[0] && this._selectElement.contains($event.path[0])) {
+            return;
+        }
+
         this.outsideClick.emit();
     }
 

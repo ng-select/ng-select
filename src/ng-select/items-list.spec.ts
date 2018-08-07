@@ -92,7 +92,7 @@ describe('ItemsList', () => {
                 expect(list.filteredItems.length).toBe(2);
             });
 
-            it('should remove goup from filtered items when hideSelected=true and all child group items are selected', () => {
+            it('should remove group from filtered items when hideSelected=true and all child group items are selected', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([
