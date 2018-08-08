@@ -1021,9 +1021,11 @@ describe('NgSelectComponent', function () {
             });
 
             it('should not open dropdown when isOpen is false', () => {
+                const open = spyOn(select, 'open');
                 select.ngOnChanges(<any>{ isOpen: { currentValue: false }});
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 expect(select.isOpen).toBeFalsy();
+                expect(open).not.toHaveBeenCalled();
             });
 
             it('should open empty dropdown if no items', fakeAsync(() => {
@@ -1847,6 +1849,46 @@ describe('NgSelectComponent', function () {
                 id: 5, name: 'server side tag', valid: true
             }));
         }));
+
+        describe('show add tag', () => {
+            let select: NgSelectComponent;
+            let fixture: ComponentFixture<NgSelectTestCmp>;
+            beforeEach(() => {
+                fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [multiple]="true"
+                    [addTag]="true"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCities">
+                </ng-select>`);
+                select = fixture.componentInstance.select;
+            });
+
+            it('should be false when there is no search term', () => {
+                select.filterValue = null;
+                expect(select.showAddTag).toBeFalsy();
+            });
+
+            it('should be true when term not exists among items', () => {
+                select.filterValue = 'Vil';
+                expect(select.showAddTag).toBeTruthy();
+            });
+
+            it('should be false when term exists among items', () => {
+                select.filterValue = 'Vilnius';
+                expect(select.showAddTag).toBeFalsy();
+            });
+
+            it('should be false when term exists among selected items', fakeAsync(() => {
+                fixture.componentInstance.selectedCities = [{name: 'Palanga', id: 9}];
+                select.filterValue = 'Palanga';
+                select.hideSelected = true;
+                tickAndDetectChanges(fixture);
+                expect(select.showAddTag).toBeFalsy();
+            }));
+        });
     });
 
     describe('Placeholder', () => {
@@ -2714,7 +2756,7 @@ describe('NgSelectComponent', function () {
             const items = fixture.componentInstance.select.itemsList.items;
 
             expect(items.length).toBe(14);
-            expect(items[0].children).toBeDefined()
+            expect(items[0].children).toBeDefined();
             expect(items[0].index).toBe(0);
             expect(items[0].label).toBe('United States');
             expect(items[0].disabled).toBeTruthy();
