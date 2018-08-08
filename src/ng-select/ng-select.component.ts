@@ -168,6 +168,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     constructor(
         @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         @Attribute('class') public classes: string,
+        @Attribute('tabindex') public tabIndex: string,
         private _cd: ChangeDetectorRef,
         private _console: ConsoleService,
         public elementRef: ElementRef
