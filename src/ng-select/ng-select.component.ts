@@ -715,7 +715,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _handleSpace($event: KeyboardEvent) {
-        if (this.isOpen) {
+        if (this.isOpen || this._manualOpen) {
             return;
         }
         this.open();

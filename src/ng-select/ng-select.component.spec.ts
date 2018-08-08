@@ -1021,9 +1021,11 @@ describe('NgSelectComponent', function () {
             });
 
             it('should not open dropdown when isOpen is false', () => {
+                const open = spyOn(select, 'open');
                 select.ngOnChanges(<any>{ isOpen: { currentValue: false }});
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 expect(select.isOpen).toBeFalsy();
+                expect(open).not.toHaveBeenCalled();
             });
 
             it('should open empty dropdown if no items', fakeAsync(() => {
@@ -1848,7 +1850,7 @@ describe('NgSelectComponent', function () {
             }));
         }));
 
-        describe('Show add tag', () => {
+        describe('show add tag', () => {
             let select: NgSelectComponent;
             let fixture: ComponentFixture<NgSelectTestCmp>;
             beforeEach(() => {
