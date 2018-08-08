@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.4.0"></a>
+# [2.4.0](https://github.com/ng-select/ng-select/compare/v2.3.6...v2.4.0) (2018-08-08)
+
+
+### Bug Fixes
+
+* **tagging:** don't show tag if it exists among items or selected ([d5e97af](https://github.com/ng-select/ng-select/commit/d5e97af)), closes [#693](https://github.com/ng-select/ng-select/issues/693)
+* accept spaces while tagging without dropdown ([4320098](https://github.com/ng-select/ng-select/commit/4320098)), closes [#676](https://github.com/ng-select/ng-select/issues/676)
+
+
+### Features
+
+* support tabindex ([75e9ac2](https://github.com/ng-select/ng-select/commit/75e9ac2)), closes [#680](https://github.com/ng-select/ng-select/issues/680)
+
+
+
 <a name="2.3.6"></a>
 ## [2.3.6](https://github.com/ng-select/ng-select/compare/v2.3.5...v2.3.6) (2018-07-30)
 
