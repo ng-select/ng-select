@@ -420,10 +420,15 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         return this.clearable && (this.hasValue || this.filterValue) && !this.disabled;
     }
 
-    showAddTag() {
+    get showAddTag() {
+        if (!this.filterValue) {
+            return false;
+        }
+
+        const term = this.filterValue.toLowerCase();
         return this.addTag &&
-            this.filterValue &&
-            !this.selectedItems.some(x => x.label.toLowerCase() === this.filterValue.toLowerCase()) &&
+            (!this.itemsList.filteredItems.some(x => x.label.toLowerCase() === term) &&
+                (!this.hideSelected || !this.selectedItems.some(x => x.label.toLowerCase() === term))) &&
             !this.loading;
     }
 
@@ -431,7 +436,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         const empty = this.itemsList.filteredItems.length === 0;
         return ((empty && !this._isTypeahead && !this.loading) ||
             (empty && this._isTypeahead && this.filterValue && !this.loading)) &&
-            !this.showAddTag();
+            !this.showAddTag;
     }
 
     showTypeToSearch() {
@@ -683,7 +688,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             if (this.itemsList.markedItem) {
                 this.toggleItem(this.itemsList.markedItem);
                 $event.preventDefault();
-            } else if (this.showAddTag()) {
+            } else if (this.showAddTag) {
                 this.selectTag();
                 $event.preventDefault();
             } else {
@@ -698,7 +703,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (this.isOpen || this._manualOpen) {
             if (this.itemsList.markedItem) {
                 this.toggleItem(this.itemsList.markedItem);
-            } else if (this.addTag && this.filterValue) {
+            } else if (this.showAddTag) {
                 this.selectTag();
             }
         } else {
