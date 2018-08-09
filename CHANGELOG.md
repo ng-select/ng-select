@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.4.1"></a>
+## [2.4.1](https://github.com/ng-select/ng-select/compare/v2.4.0...v2.4.1) (2018-08-09)
+
+
+### Bug Fixes
+
+* allow to reposition input cursor using mouse ([25de23f](https://github.com/ng-select/ng-select/commit/25de23f)), closes [#644](https://github.com/ng-select/ng-select/issues/644)
+
+
+
 <a name="2.4.0"></a>
 # [2.4.0](https://github.com/ng-select/ng-select/compare/v2.3.6...v2.4.0) (2018-08-08)
 
