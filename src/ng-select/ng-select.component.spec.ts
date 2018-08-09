@@ -1997,12 +1997,12 @@ describe('NgSelectComponent', function () {
 
             const selectInput = fixture.debugElement.query(By.css('.ng-select-container'));
             // open
-            selectInput.triggerEventHandler('mousedown', createEvent({ target: { className: '' } }));
+            selectInput.triggerEventHandler('mousedown', createEvent());
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
 
             // close
-            selectInput.triggerEventHandler('mousedown', createEvent({ target: { className: '' } }));
+            selectInput.triggerEventHandler('mousedown', createEvent());
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
         }));
@@ -2566,7 +2566,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-control' } }));
+                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-control' }));
                 };
             }));
 
@@ -2575,6 +2575,33 @@ describe('NgSelectComponent', function () {
                 triggerMousedown();
                 tickAndDetectChanges(fixture);
                 expect(focus).toHaveBeenCalled();
+            }));
+        });
+
+        describe('input click', () => {
+            let event: Event;
+            beforeEach(fakeAsync(() => {
+                fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [multiple]="true"
+                            [(ngModel)]="selectedCities">
+                    </ng-select>`);
+                select = fixture.componentInstance.select;
+
+                event = createEvent({ tagName: 'INPUT' }) as any;
+                triggerMousedown = () => {
+                    const control = fixture.debugElement.query(By.css('.ng-select-container'));
+                    control.triggerEventHandler('mousedown', event);
+                };
+            }));
+
+            it('should not prevent default', fakeAsync(() => {
+                const preventDefault = spyOn(event, 'preventDefault');
+                triggerMousedown();
+                tickAndDetectChanges(fixture);
+                expect(preventDefault).not.toHaveBeenCalled();
             }));
         });
 
@@ -2595,7 +2622,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-clear' } }));
+                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-clear' }));
                 };
             }));
 
@@ -2647,7 +2674,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-value-icon' } }));
+                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-value-icon' }));
                 };
             }));
 
@@ -2678,7 +2705,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-arrow-wrapper' } }));
+                    control.triggerEventHandler('mousedown', createEvent({className: 'ng-arrow-wrapper' }));
                 };
             }));
 
@@ -2909,11 +2936,15 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
     return fixture;
 }
 
-function createEvent(event) {
+function createEvent(target = {}) {
     return {
         stopPropagation: () => { },
         preventDefault: () => { },
-        ...event
+        target: {
+            className: '',
+            tagName: '',
+            ...target
+        }
     }
 }
 
