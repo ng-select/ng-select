@@ -778,7 +778,7 @@ describe('NgSelectComponent', function () {
 
                     const cmp = fixture.componentInstance;
                     cmp.selectedCityId = cmp.cities[1].id.toString();
-                   
+
                     cmp.compareWith = (city, model: string) => city.id === +model;
 
                     tickAndDetectChanges(fixture);
@@ -2934,6 +2934,7 @@ class NgSelectTestCmp {
     onAdd() { }
     onRemove() { }
     onClear() { }
+    onScroll() { }
     onScrollToEnd() { }
 }
 

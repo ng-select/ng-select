@@ -60,9 +60,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     @Input() virtualScroll = false;
     @Input() headerTemplate: TemplateRef<any>;
     @Input() footerTemplate: TemplateRef<any>;
-    @Input() preTriggerDistance = 0;
 
     @Output() update = new EventEmitter<any[]>();
+    @Output() scroll = new EventEmitter<{ start: number; end: number }>();
     @Output() scrollToEnd = new EventEmitter<{ start: number; end: number }>();
     @Output() outsideClick = new EventEmitter<void>();
 
@@ -256,6 +256,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
             if (res.start !== this._previousStart || res.end !== this._previousEnd) {
                 this._zone.run(() => {
                     this.update.emit(this.items.slice(res.start, res.end));
+                    this.scroll.emit({ start: res.start, end: res.end });
                 });
                 this._previousStart = res.start;
                 this._previousEnd = res.end;
@@ -283,30 +284,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
             this.paddingElementRef.nativeElement :
             this.contentElementRef.nativeElement;
 
-        const preTriggerDistance = this._getPreTriggerDistance();
 
-        if (scroll.scrollTop + panel.clientHeight + preTriggerDistance >= padding.clientHeight) {
+        if (scroll.scrollTop + panel.clientHeight >= padding.clientHeight) {
             this.scrollToEnd.emit();
             this._scrollToEndFired = true;
         }
-    }
-
-    private _getPreTriggerDistance() {
-        let preTriggerDistance = 0;
-
-        if (this.preTriggerDistance) {
-            const dropdownPanel: HTMLElement = this._elementRef.nativeElement;
-            const additionalElementsHeight = ['.ng-dropdown-header', '.ng-dropdown-footer'].reduce((totalHeight, selector) => {
-                const el = dropdownPanel.querySelector(selector);
-                totalHeight += (el && el.getBoundingClientRect().height || 0);
-                return totalHeight;
-            }, 0);
-
-            const { childHeight } = this._calculateDimensions();
-            preTriggerDistance = this.preTriggerDistance * childHeight - additionalElementsHeight;
-        }
-
-        return preTriggerDistance;
     }
 
     private _calculateDimensions(index = 0) {

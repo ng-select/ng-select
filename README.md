@@ -147,7 +147,6 @@ map: {
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
-| [preTriggerDistance] | `number` | 0 | no | The number of items from the end of the list when to trigger the scrollToEnd event. Makes it possible to pre-load new items before the user has scrolled all the way to the end of the list. |
 
 ### Outputs
 
@@ -161,6 +160,7 @@ map: {
 | (focus)  | Fired on select focus |
 | (open)  | Fired on select dropdown open |
 | (remove)  | Fired when item is removed |
+| (scroll)  | Fired when scrolled. Provides the start and end index of the currently available items. Can be used for loading more items in chunks before the user has scrolled all the way to the bottom of the list. |
 | (scrollToEnd)  | Fired when scrolled to the end of items. Can be used for loading more items in chunks. |
 
 

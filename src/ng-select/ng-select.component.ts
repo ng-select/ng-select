@@ -93,7 +93,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() groupBy: string;
     @Input() bufferAmount = 4;
     @Input() virtualScroll = false;
-    @Input() preTriggerDistance = 0;
     @Input() selectableGroup = false;
     @Input() searchFn = null;
     @Input() clearSearchOnAdd = true;
@@ -123,6 +122,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Output('clear') clearEvent = new EventEmitter();
     @Output('add') addEvent = new EventEmitter();
     @Output('remove') removeEvent = new EventEmitter();
+    @Output('scroll') scroll = new EventEmitter<{ start: number; end: number }>();
     @Output('scrollToEnd') scrollToEnd = new EventEmitter<{ start: number; end: number }>();
 
     // custom templates

@@ -16,7 +16,7 @@ import { HttpClient } from '@angular/common/http';
                    bindLabel="title"
                    bindValue="thumbnailUrl"
                    placeholder="Select photo"
-                   [preTriggerDistance]="10"
+                   (scroll)="scroll($event)"
                    (scrollToEnd)="fetchMore($event)">
             <ng-template ng-header-tmp>
                 <small class="form-text text-muted">Loaded {{photosBuffer.length}} of {{photos.length}}</small>
@@ -33,6 +33,7 @@ export class VirtualScrollComponent {
     photos = [];
     photosBuffer = [];
     bufferSize = 50;
+    numberOfItemsFromEndBeforeFetchingMore = 10;
     loading = false;
 
     constructor(private http: HttpClient) {}
@@ -53,5 +54,15 @@ export class VirtualScrollComponent {
             this.loading = false;
             this.photosBuffer = this.photosBuffer.concat(more);
         }, 200)
+    }
+
+    scroll( { end } ) {
+        if (this.loading) {
+            return;
+        }
+
+        if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.photosBuffer.length) {
+            this.fetchMore();
+        }
     }
 }
