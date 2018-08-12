@@ -61,6 +61,7 @@
     [headerTemplate]="headerTemplate"
     [footerTemplate]="footerTemplate"
     [items]="itemsList.filteredItems"
+    [markedItem]="itemsList.markedItem"
     (update)="viewPortItems = $event"
     (scrollToEnd)="scrollToEnd.emit($event)"
     (outsideClick)="close()"
