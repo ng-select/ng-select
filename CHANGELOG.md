@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.4.2"></a>
+## [2.4.2](https://github.com/ng-select/ng-select/compare/v2.4.1...v2.4.2) (2018-08-12)
+
+
+### Bug Fixes
+
+* listen to `touchstart` events for outside click. ([70fcd66](https://github.com/ng-select/ng-select/commit/70fcd66))
+* remove circular dependency between dropdown and select cmp ([#741](https://github.com/ng-select/ng-select/issues/741)) ([7520e85](https://github.com/ng-select/ng-select/commit/7520e85)), closes [#668](https://github.com/ng-select/ng-select/issues/668)
+
+
+
 <a name="2.4.1"></a>
 ## [2.4.1](https://github.com/ng-select/ng-select/compare/v2.4.0...v2.4.1) (2018-08-09)
 
