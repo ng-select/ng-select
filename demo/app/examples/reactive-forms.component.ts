@@ -141,9 +141,11 @@ import { delay } from 'rxjs/operators';
                         <label for="album">Favorite photo</label>
                         <ng-select [items]="photos"
                                    (change)="changePhoto($event)"
+                                   #select
                                    bindLabel="title"
                                    bindValue="thumbnailUrl"
                                    placeholder="Select photo"
+                                   (keyup.esc)="$event.preventDefault()"
                                    appendTo="body"
                                    [virtualScroll]="true"
                                    formControlName="photo">
