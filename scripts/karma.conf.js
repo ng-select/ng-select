@@ -44,6 +44,9 @@ module.exports = function (config) {
     // possible values: 'dots', 'progress', 'mocha'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ["mocha"],
+    mochaReporter: {
+        ignoreSkipped: true
+    },
 
     // web server port
     port: 9876,
