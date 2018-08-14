@@ -1021,9 +1021,11 @@ describe('NgSelectComponent', function () {
             });
 
             it('should not open dropdown when isOpen is false', () => {
+                const open = spyOn(select, 'open');
                 select.ngOnChanges(<any>{ isOpen: { currentValue: false }});
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 expect(select.isOpen).toBeFalsy();
+                expect(open).not.toHaveBeenCalled();
             });
 
             it('should open empty dropdown if no items', fakeAsync(() => {
@@ -1300,6 +1302,15 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
             document.getElementById('outside').click();
             let event = new MouseEvent('mousedown', { bubbles: true });
+            document.getElementById('outside').dispatchEvent(event);
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+        }));
+
+        it('should close dropdown if opened and touched outside dropdown container', fakeAsync(() => {
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+            let event = new TouchEvent('touchstart', { bubbles: true });
             document.getElementById('outside').dispatchEvent(event);
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBeFalsy();
@@ -1847,6 +1858,46 @@ describe('NgSelectComponent', function () {
                 id: 5, name: 'server side tag', valid: true
             }));
         }));
+
+        describe('show add tag', () => {
+            let select: NgSelectComponent;
+            let fixture: ComponentFixture<NgSelectTestCmp>;
+            beforeEach(() => {
+                fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                    bindLabel="name"
+                    [multiple]="true"
+                    [addTag]="true"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCities">
+                </ng-select>`);
+                select = fixture.componentInstance.select;
+            });
+
+            it('should be false when there is no search term', () => {
+                select.filterValue = null;
+                expect(select.showAddTag).toBeFalsy();
+            });
+
+            it('should be true when term not exists among items', () => {
+                select.filterValue = 'Vil';
+                expect(select.showAddTag).toBeTruthy();
+            });
+
+            it('should be false when term exists among items', () => {
+                select.filterValue = 'Vilnius';
+                expect(select.showAddTag).toBeFalsy();
+            });
+
+            it('should be false when term exists among selected items', fakeAsync(() => {
+                fixture.componentInstance.selectedCities = [{name: 'Palanga', id: 9}];
+                select.filterValue = 'Palanga';
+                select.hideSelected = true;
+                tickAndDetectChanges(fixture);
+                expect(select.showAddTag).toBeFalsy();
+            }));
+        });
     });
 
     describe('Placeholder', () => {
@@ -1955,12 +2006,12 @@ describe('NgSelectComponent', function () {
 
             const selectInput = fixture.debugElement.query(By.css('.ng-select-container'));
             // open
-            selectInput.triggerEventHandler('mousedown', createEvent({ target: { className: '' } }));
+            selectInput.triggerEventHandler('mousedown', createEvent());
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
 
             // close
-            selectInput.triggerEventHandler('mousedown', createEvent({ target: { className: '' } }));
+            selectInput.triggerEventHandler('mousedown', createEvent());
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
         }));
@@ -2524,7 +2575,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-control' } }));
+                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-control' }));
                 };
             }));
 
@@ -2533,6 +2584,33 @@ describe('NgSelectComponent', function () {
                 triggerMousedown();
                 tickAndDetectChanges(fixture);
                 expect(focus).toHaveBeenCalled();
+            }));
+        });
+
+        describe('input click', () => {
+            let event: Event;
+            beforeEach(fakeAsync(() => {
+                fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [multiple]="true"
+                            [(ngModel)]="selectedCities">
+                    </ng-select>`);
+                select = fixture.componentInstance.select;
+
+                event = createEvent({ tagName: 'INPUT' }) as any;
+                triggerMousedown = () => {
+                    const control = fixture.debugElement.query(By.css('.ng-select-container'));
+                    control.triggerEventHandler('mousedown', event);
+                };
+            }));
+
+            it('should not prevent default', fakeAsync(() => {
+                const preventDefault = spyOn(event, 'preventDefault');
+                triggerMousedown();
+                tickAndDetectChanges(fixture);
+                expect(preventDefault).not.toHaveBeenCalled();
             }));
         });
 
@@ -2553,7 +2631,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-clear' } }));
+                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-clear' }));
                 };
             }));
 
@@ -2605,7 +2683,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-value-icon' } }));
+                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-value-icon' }));
                 };
             }));
 
@@ -2615,9 +2693,9 @@ describe('NgSelectComponent', function () {
                 expect(select.isOpen).toBe(false);
             }));
 
-            it('should focus dropdown', fakeAsync(() => {
+            it('should focus dropdown while unselecting', fakeAsync(() => {
                 const focus = spyOn(select, 'focus');
-                triggerMousedown();
+                select.unselect(fixture.componentInstance.cities[0]);
                 tickAndDetectChanges(fixture);
                 expect(focus).toHaveBeenCalled();
             }));
@@ -2636,7 +2714,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ target: { className: 'ng-arrow-wrapper' } }));
+                    control.triggerEventHandler('mousedown', createEvent({className: 'ng-arrow-wrapper' }));
                 };
             }));
 
@@ -2714,7 +2792,7 @@ describe('NgSelectComponent', function () {
             const items = fixture.componentInstance.select.itemsList.items;
 
             expect(items.length).toBe(14);
-            expect(items[0].children).toBeDefined()
+            expect(items[0].children).toBeDefined();
             expect(items[0].index).toBe(0);
             expect(items[0].label).toBe('United States');
             expect(items[0].disabled).toBeTruthy();
@@ -2867,11 +2945,15 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
     return fixture;
 }
 
-function createEvent(event) {
+function createEvent(target = {}) {
     return {
         stopPropagation: () => { },
         preventDefault: () => { },
-        ...event
+        target: {
+            className: '',
+            tagName: '',
+            ...target
+        }
     }
 }
 

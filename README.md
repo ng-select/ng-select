@@ -119,7 +119,7 @@ map: {
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | [addTag] | `boolean \| ((term: string) => any \| Promise<any>)`  | `false` | no | Allows to create custom options. |
 | addTagText | `string` | `Add item` | no | Set custom text when using tagging |
-| appendTo | `string` |  null | no | Append dropdown to body or any other element using css selector |
+| appendTo | `string` |  null | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative` |
 | bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
 | bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |
 | [closeOnSelect] | `boolean` |  true | no | Whether to close the menu when a value is selected |
@@ -195,7 +195,7 @@ this is a pricey operation, however, it is much more performant than running `ng
 constantly diffing the array.
 
 ## Custom styles
-If you are not happy with default styles you can easily override them with increased selector specificity or creating your own theme. E.g.
+If you are not happy with default styles you can easily override them with increased selector specificity or creating your own theme. This applies if you are using no `ViewEncapsulation` or adding styles to global stylesheet. E.g.
 
 ```html
 <ng-select class="custom"></ng-select>
@@ -208,6 +208,15 @@ If you are not happy with default styles you can easily override them with incre
     border-radius: 0;
 }
 .ng-select.custom .ng-select-container  {            
+    min-height: 0px;
+    border-radius: 0;
+}
+```
+
+If you are using `ViewEncapsulation`, your should use special `::ng-deep` selector which will prevent scoping for nested selectors.
+
+```css
+.ng-select.custom ::ng-deep .ng-select-container  {            
     min-height: 0px;
     border-radius: 0;
 }

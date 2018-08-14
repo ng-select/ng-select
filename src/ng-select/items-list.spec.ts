@@ -356,6 +356,6 @@ function itemsList(cmp: NgSelectComponent): ItemsList {
 }
 
 function ngSelect(): NgSelectComponent {
-    const cmp = new NgSelectComponent({}, null, null, null, null);
+    const cmp = new NgSelectComponent({}, null, null, null, null, null);
     return cmp;
 }

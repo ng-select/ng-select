@@ -26,6 +26,7 @@
                    type="text"
                    autocomplete="{{dropdownId}}"
                    [attr.id]="labelForId"
+                   [attr.tabindex]="tabIndex"
                    [readOnly]="!searchable"
                    [disabled]="disabled"
                    [value]="filterValue"
@@ -60,6 +61,7 @@
     [headerTemplate]="headerTemplate"
     [footerTemplate]="footerTemplate"
     [items]="itemsList.filteredItems"
+    [markedItem]="itemsList.markedItem"
     (update)="viewPortItems = $event"
     (scroll)="scroll.emit($event)"
     (scrollToEnd)="scrollToEnd.emit($event)"
@@ -89,7 +91,7 @@
             </ng-template>
         </div>
 
-        <div class="ng-option" [class.ng-option-marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag()">
+        <div class="ng-option" [class.ng-option-marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag">
             <span><span class="ng-tag-label">{{addTagText}}</span>"{{filterValue}}"</span>
         </div>
     </ng-container>
