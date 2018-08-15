@@ -75,6 +75,8 @@
                     }
                     &[readonly] {
                         user-select: none;
+                        width: 0;
+                        padding: 0;
                     }
                 }
             }
