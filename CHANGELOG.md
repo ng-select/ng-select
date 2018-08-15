@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.4.3"></a>
+## [2.4.3](https://github.com/ng-select/ng-select/compare/v2.4.2...v2.4.3) (2018-08-15)
+
+
+### Bug Fixes
+
+* set input width to 0 when not searchable ([056f34f](https://github.com/ng-select/ng-select/commit/056f34f)), closes [#651](https://github.com/ng-select/ng-select/issues/651)
+
+
+
 <a name="2.4.2"></a>
 ## [2.4.2](https://github.com/ng-select/ng-select/compare/v2.4.1...v2.4.2) (2018-08-12)
 
