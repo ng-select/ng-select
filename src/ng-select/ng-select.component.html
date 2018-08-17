@@ -92,7 +92,14 @@
         </div>
 
         <div class="ng-option" [class.ng-option-marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag">
-            <span><span class="ng-tag-label">{{addTagText}}</span>"{{filterValue}}"</span>
+            <ng-template #defaultTagTemplate>
+                <span><span class="ng-tag-label">{{addTagText}}</span>"{{filterValue}}"</span>
+            </ng-template>
+
+            <ng-template
+                [ngTemplateOutlet]="tagTemplate || defaultTagTemplate"
+                [ngTemplateOutletContext]="{ searchTerm: filterValue }">
+            </ng-template>
         </div>
     </ng-container>
 

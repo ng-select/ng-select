@@ -1499,6 +1499,25 @@ describe('NgSelectComponent', function () {
             });
         }));
 
+        it('should display custom tag template', async(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities" [(ngModel)]="selectedCity" [addTag]="true">
+                    <ng-template ng-tag-tmp let-search="searchTerm">
+                        <span class="tag-template">{{searchTerm}}</span>
+                    </ng-template>
+                </ng-select>`);
+
+            fixture.componentInstance.select.filterValue = 'tag';
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const template = fixture.debugElement.query(By.css('.tag-template')).nativeElement;
+                expect(template).toBeDefined();
+            });
+        }));
+
         it('should display custom loading and no data found template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
