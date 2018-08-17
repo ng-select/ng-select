@@ -160,6 +160,7 @@ map: {
 | (focus)  | Fired on select focus |
 | (open)  | Fired on select dropdown open |
 | (remove)  | Fired when item is removed |
+| (scroll)  | Fired when scrolled. Provides the start and end index of the currently available items. Can be used for loading more items in chunks before the user has scrolled all the way to the bottom of the list. |
 | (scrollToEnd)  | Fired when scrolled to the end of items. Can be used for loading more items in chunks. |
 
 

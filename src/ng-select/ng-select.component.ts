@@ -122,6 +122,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Output('clear') clearEvent = new EventEmitter();
     @Output('add') addEvent = new EventEmitter();
     @Output('remove') removeEvent = new EventEmitter();
+    @Output('scroll') scroll = new EventEmitter<{ start: number; end: number }>();
     @Output('scrollToEnd') scrollToEnd = new EventEmitter<{ start: number; end: number }>();
 
     // custom templates
@@ -144,7 +145,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];
-    filterValue: string = null; 
+    filterValue: string = null;
     dropdownId = newId();
     selectedItemId = 0;
 

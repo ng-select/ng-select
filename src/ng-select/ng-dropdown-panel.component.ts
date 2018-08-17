@@ -63,6 +63,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     @Input() footerTemplate: TemplateRef<any>;
 
     @Output() update = new EventEmitter<any[]>();
+    @Output() scroll = new EventEmitter<{ start: number; end: number }>();
     @Output() scrollToEnd = new EventEmitter<{ start: number; end: number }>();
     @Output() outsideClick = new EventEmitter<void>();
 
@@ -258,6 +259,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
             if (res.start !== this._previousStart || res.end !== this._previousEnd) {
                 this._zone.run(() => {
                     this.update.emit(this.items.slice(res.start, res.end));
+                    this.scroll.emit({ start: res.start, end: res.end });
                 });
                 this._previousStart = res.start;
                 this._previousEnd = res.end;
