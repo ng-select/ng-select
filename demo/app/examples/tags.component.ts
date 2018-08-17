@@ -41,6 +41,10 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
                 bindLabel="name"
                 [loading]="loading"
                 [(ngModel)]="selectedCompanyCustomPromise">
+                
+            <ng-template ng-tag-tmp let-search="searchTerm">
+                <b>create new</b>: {{search}}
+            </ng-template>
         </ng-select>
         ---
     `
