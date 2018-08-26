@@ -1,7 +1,8 @@
-import { ComponentFixture, tick } from '@angular/core/testing';
-import { KeyCode } from '../ng-select/ng-select.types';
 import { DebugElement } from '@angular/core';
+import { ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+
+import { KeyCode } from '../ng-select/ng-select.types';
 
 export class TestsErrorHandler {
     handleError(error: any) {

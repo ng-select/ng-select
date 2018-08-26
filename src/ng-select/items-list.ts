@@ -1,9 +1,9 @@
+import { newId } from './id';
+import { NgSelectComponent } from './ng-select.component';
 import { NgOption } from './ng-select.types';
 import * as searchHelper from './search-helper';
-import { NgSelectComponent } from './ng-select.component';
-import { isObject, isDefined, isFunction } from './value-utils';
-import { newId } from './id';
 import { SelectionModel } from './selection-model';
+import { isDefined, isFunction, isObject } from './value-utils';
 
 type OptionGroups = Map<string, NgOption[]>;
 

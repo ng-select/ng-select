@@ -1,5 +1,5 @@
-import { NgSelectComponent } from './ng-select.component';
 import { ItemsList } from './items-list';
+import { NgSelectComponent } from './ng-select.component';
 
 describe('ItemsList', () => {
     describe('select', () => {

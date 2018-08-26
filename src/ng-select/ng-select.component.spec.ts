@@ -1,34 +1,21 @@
-import {
-    async,
-    ComponentFixture,
-    discardPeriodicTasks,
-    fakeAsync,
-    TestBed,
-    tick
-} from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import {
-    Component,
-    DebugElement,
-    ErrorHandler,
-    NgZone,
-    Type,
-    ViewChild
-} from '@angular/core';
-import { ConsoleService } from './console.service';
+import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild } from '@angular/core';
+import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
+
 import {
     getNgSelectElement,
     selectOption,
     TestsErrorHandler,
     tickAndDetectChanges,
-    triggerKeyDownEvent
+    triggerKeyDownEvent,
 } from '../testing/helpers';
-import { KeyCode, NgOption } from './ng-select.types';
 import { MockConsole, MockNgWindow, MockNgZone } from '../testing/mocks';
+import { ConsoleService } from './console.service';
 import { NgSelectComponent } from './ng-select.component';
 import { NgSelectModule } from './ng-select.module';
-import { Subject } from 'rxjs';
+import { KeyCode, NgOption } from './ng-select.types';
 import { WindowService } from './window.service';
 
 

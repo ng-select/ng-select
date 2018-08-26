@@ -1,32 +1,32 @@
-import {
-    Component,
-    OnDestroy,
-    Renderer2,
-    ElementRef,
-    Input,
-    EventEmitter,
-    Output,
-    ViewChild,
-    SimpleChanges,
-    NgZone,
-    TemplateRef,
-    ViewEncapsulation,
-    ChangeDetectionStrategy,
-    AfterContentInit,
-    OnInit,
-    OnChanges,
-    HostListener,
-    Optional,
-    Inject
-} from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-
-import { NgOption } from './ng-select.types';
-import { DropdownPosition } from './ng-select.component';
-import { WindowService } from './window.service';
-import { VirtualScrollService } from './virtual-scroll.service';
+import {
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Inject,
+    Input,
+    NgZone,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Optional,
+    Output,
+    Renderer2,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+} from '@angular/core';
+import { fromEvent, merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Subject, fromEvent, merge } from 'rxjs';
+
+import { DropdownPosition } from './ng-select.component';
+import { NgOption } from './ng-select.types';
+import { VirtualScrollService } from './virtual-scroll.service';
+import { WindowService } from './window.service';
 
 const TOP_CSS_CLASS = 'ng-select-top';
 const BOTTOM_CSS_CLASS = 'ng-select-bottom';
