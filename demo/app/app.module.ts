@@ -1,30 +1,29 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
-import { NgSelectModule, NG_SELECT_DEFAULT_CONFIG } from '@ng-select/ng-select';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NG_SELECT_DEFAULT_CONFIG, NgSelectModule } from '@ng-select/ng-select';
 
 import { AppComponent } from './app.component';
-import { SelectWithTemplatesComponent } from './examples/custom-templates.component';
-import { SelectBindingsComponent } from './examples/bindings.component';
-import { SelectSearchComponent } from './examples/search.component';
-import { ReactiveFormsComponent, ConfirmationComponent } from './examples/reactive-forms.component';
-import { SelectEventsComponent } from './examples/events.component';
-import { SelectMultiComponent } from './examples/multi.component';
-import { SelectTagsComponent } from './examples/tags.component';
-import { DropdownPositionsComponent } from './examples/dropdown-positions.component';
-
-import { LayoutHeaderComponent } from './layout/header.component';
-import { LayoutSidenavComponent } from './layout/sidenav-component';
-import { VirtualScrollComponent } from './examples/virtual-scroll.component';
-import { DataService } from './shared/data.service';
 import { AppendToComponent } from './examples/append-to.component';
+import { SelectBindingsComponent } from './examples/bindings.component';
+import { SelectWithTemplatesComponent } from './examples/custom-templates.component';
 import { DataSourceComponent } from './examples/data-source.component';
+import { DropdownPositionsComponent } from './examples/dropdown-positions.component';
+import { SelectEventsComponent } from './examples/events.component';
 import { SelectGroupsComponent } from './examples/groups.component';
 import { SelectMultiCheckboxComponent } from './examples/multi-checkbox.component';
+import { SelectMultiComponent } from './examples/multi.component';
+import { ConfirmationComponent, ReactiveFormsComponent } from './examples/reactive-forms.component';
+import { SelectSearchComponent } from './examples/search.component';
+import { SelectTagsComponent } from './examples/tags.component';
+import { VirtualScrollComponent } from './examples/virtual-scroll.component';
+import { LayoutHeaderComponent } from './layout/header.component';
+import { LayoutSidenavComponent } from './layout/sidenav-component';
+import { DataService } from './shared/data.service';
 
 export const appRoutes: Routes = [
     {

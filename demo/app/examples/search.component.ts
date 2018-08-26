@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { distinctUntilChanged, debounceTime, switchMap, tap, catchError } from 'rxjs/operators'
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { concat, Observable, of, Subject } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+
 import { DataService, Person } from '../shared/data.service';
-import { Subject, Observable, of, concat } from 'rxjs';
 
 
 @Component({

@@ -13,7 +13,7 @@
   display: block;
   a {
     display: block;
-    padding: .125rem 1.5rem;
+    padding: 0.125rem 1.5rem;
     color: #99979c;
     &:hover {
       color: $blue;
@@ -38,23 +38,23 @@
   .nav {
     margin-top: 10px;
   } // All levels of nav
-  .nav>li>a {
+  .nav > li > a {
     display: block;
-    color: rgba(0, 0, 0, .65);
+    color: rgba(0, 0, 0, 0.65);
     font-weight: 500;
   }
-  .nav>li>a:hover {
-    color: rgba(0, 0, 0, .85);
+  .nav > li > a:hover {
+    color: rgba(0, 0, 0, 0.85);
     text-decoration: none;
     background-color: transparent;
   }
-  .nav>.active>a,
-  .nav>.active:hover>a {
+  .nav > .active > a,
+  .nav > .active:hover > a {
     font-weight: 500;
-    color: rgba(0, 0, 0, .85);
+    color: rgba(0, 0, 0, 0.85);
     background-color: transparent;
   }
-  .nav>.active>a.active {
+  .nav > .active > a.active {
     border: 0 #343a40 solid;
     border-left-width: 4px;
     background-color: rgba(248, 248, 248, 0.62);
@@ -89,11 +89,11 @@
 
 .bd-toc-link {
   display: block;
-  padding: .25rem 1.5rem;
+  padding: 0.25rem 1.5rem;
   font-weight: 500;
-  color: rgba(0, 0, 0, .65);
+  color: rgba(0, 0, 0, 0.65);
   &:hover {
-    color: rgba(0, 0, 0, .85);
+    color: rgba(0, 0, 0, 0.85);
     text-decoration: none;
   }
 }
@@ -104,13 +104,13 @@
     &:not(:first-child) {
       margin-top: 1rem;
     }
-    >.bd-toc-link {
-      color: rgba(0, 0, 0, .85);
+    > .bd-toc-link {
+      color: rgba(0, 0, 0, 0.85);
       &:hover {
         background-color: transparent;
       }
     }
-    >.bd-sidenav {
+    > .bd-sidenav {
       display: block;
     }
   }

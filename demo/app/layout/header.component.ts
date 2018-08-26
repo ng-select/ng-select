@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+
 const defaultTheme = require('./../../../src/themes/default.theme.scss');
 const materialTheme = require('./../../../src/themes/material.theme.scss');
 

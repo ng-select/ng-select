@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+
 import { appRoutes } from '../app.module';
 
 @Component({

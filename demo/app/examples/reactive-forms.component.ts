@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgOption } from '@ng-select/ng-select';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DataService } from '../shared/data.service';
-import { NgSelectComponent } from '../../../src/ng-select/ng-select.component';
 import { delay } from 'rxjs/operators';
+
+import { NgSelectComponent } from '../../../src/ng-select/ng-select.component';
+import { DataService } from '../shared/data.service';
 
 @Component({
     selector: 'reactive-forms',
@@ -284,8 +285,6 @@ export class ReactiveFormsComponent {
         });
     }
 }
-
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-confirmation',

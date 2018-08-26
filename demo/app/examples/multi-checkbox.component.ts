@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { DataService, Person } from '../shared/data.service';
 import { map } from 'rxjs/operators';
+
+import { DataService, Person } from '../shared/data.service';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
