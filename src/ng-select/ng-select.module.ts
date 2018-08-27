@@ -10,7 +10,8 @@ import {
     NgNotFoundTemplateDirective,
     NgTypeToSearchTemplateDirective,
     NgLoadingTextTemplateDirective,
-    NgMultiLabelTemplateDirective
+    NgMultiLabelTemplateDirective,
+    NgTagTemplateDirective
 } from './ng-templates.directive';
 import { NgOptionComponent } from './ng-option.component';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
@@ -33,7 +34,8 @@ import { ConsoleService } from './console.service';
         NgFooterTemplateDirective,
         NgNotFoundTemplateDirective,
         NgTypeToSearchTemplateDirective,
-        NgLoadingTextTemplateDirective
+        NgLoadingTextTemplateDirective,
+        NgTagTemplateDirective
     ],
     imports: [
         CommonModule
@@ -50,7 +52,8 @@ import { ConsoleService } from './console.service';
         NgFooterTemplateDirective,
         NgNotFoundTemplateDirective,
         NgTypeToSearchTemplateDirective,
-        NgLoadingTextTemplateDirective
+        NgLoadingTextTemplateDirective,
+        NgTagTemplateDirective
     ],
     providers: [
         ConsoleService,

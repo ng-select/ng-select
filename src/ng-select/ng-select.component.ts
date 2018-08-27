@@ -38,7 +38,8 @@ import {
     NgNotFoundTemplateDirective,
     NgTypeToSearchTemplateDirective,
     NgLoadingTextTemplateDirective,
-    NgMultiLabelTemplateDirective
+    NgMultiLabelTemplateDirective,
+    NgTagTemplateDirective
 } from './ng-templates.directive';
 
 import { ConsoleService } from './console.service';
@@ -136,6 +137,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChild(NgNotFoundTemplateDirective, { read: TemplateRef }) notFoundTemplate: TemplateRef<any>;
     @ContentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef }) typeToSearchTemplate: TemplateRef<any>;
     @ContentChild(NgLoadingTextTemplateDirective, { read: TemplateRef }) loadingTextTemplate: TemplateRef<any>;
+    @ContentChild(NgTagTemplateDirective, { read: TemplateRef }) tagTemplate: TemplateRef<any>;
 
     @ViewChild(forwardRef(() => NgDropdownPanelComponent)) dropdownPanel: NgDropdownPanelComponent;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
