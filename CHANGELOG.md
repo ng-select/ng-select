@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.6.0"></a>
+# [1.6.0](https://github.com/ng-select/ng-select/compare/v1.5.2...v1.6.0) (2018-08-27)
+
+
+### Features
+
+* addTag custom template ([3b8f0c9](https://github.com/ng-select/ng-select/commit/3b8f0c9)), closes [#421](https://github.com/ng-select/ng-select/issues/421)
+
+
+
 <a name="1.5.2"></a>
 ## [1.5.2](https://github.com/ng-select/ng-select/compare/v1.5.1...v1.5.2) (2018-05-18)
 
