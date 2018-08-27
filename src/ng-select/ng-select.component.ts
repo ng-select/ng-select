@@ -253,9 +253,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     handleMousedown($event: MouseEvent) {
         const target = $event.target as HTMLElement;
-        if (target.tagName.toLowerCase() !== 'input') {
+        if (target.tagName !== 'INPUT') {
             $event.preventDefault();
         }
+        $event.stopPropagation();
 
         if (target.className === 'ng-clear') {
             this.handleClearClick();
@@ -279,8 +280,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         } else {
             this.toggle();
         }
-
-        $event.stopPropagation();
     }
 
     handleArrowClick() {
