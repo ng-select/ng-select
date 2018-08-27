@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.5.1"></a>
+## [2.5.1](https://github.com/ng-select/ng-select/compare/v2.5.0...v2.5.1) (2018-08-27)
+
+
+### Bug Fixes
+
+* stop mouse down propagation at the beginning ([b85dedd](https://github.com/ng-select/ng-select/commit/b85dedd))
+
+
+
 <a name="2.5.0"></a>
 # [2.5.0](https://github.com/ng-select/ng-select/compare/v2.4.3...v2.5.0) (2018-08-17)
 
