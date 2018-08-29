@@ -1,7 +1,10 @@
 import { NgOption } from './ng-select.types';
+import { NgSelectComponent } from './ng-select.component';
 
 export class SelectionModel {
     private _selected: NgOption[] = [];
+
+    constructor(private _ngSelect: NgSelectComponent) { }
 
     get value(): NgOption[] {
         return this._selected;
@@ -9,21 +12,25 @@ export class SelectionModel {
 
     select(item: NgOption, multiple: boolean) {
         item.selected = true;
-        this._selected.push(item);
+        const groupAsModel = this._ngSelect.selectableGroupAsModel;
+        if (groupAsModel || item.parent) {
+            this._selected.push(item);
+        }
         if (multiple) {
             if (item.parent) {
                 const childrenCount = item.parent.children.length;
                 const selectedCount = item.parent.children.filter(x => x.selected).length;
                 item.parent.selected = childrenCount === selectedCount;
-                if (item.parent.selected) {
+                if (item.parent.selected && groupAsModel) {
                     this._removeChildren(item.parent);
                     this._selected = [...this._selected, item.parent];
-                } else {
-                    this._removeParent(item.parent);
                 }
             } else if (item.children) {
                 this._setChildrenSelectedState(item.children, true);
                 this._removeChildren(item);
+                if (!groupAsModel) {
+                    this._selected = [...this._selected, ...item.children];
+                }
             }
         }
     }

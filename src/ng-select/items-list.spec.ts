@@ -152,6 +152,32 @@ describe('ItemsList', () => {
 
                 expect(list.filteredItems.length).toBe(0); // remove all items since group was selected
             });
+
+            describe('group as model', () => {
+                beforeEach(() => {
+                    cmp.selectableGroupAsModel = false;
+                    cmp.groupBy = 'groupKey';
+                    list.setItems([
+                        { label: 'K1', val: 'V1', groupKey: 'G1' },
+                        { label: 'K2', val: 'V2', groupKey: 'G1' },
+                    ]);
+                });
+
+                it('should select all group children', () => {
+                    list.select(list.items[0]);
+                    expect(list.selectedItems.length).toBe(2);
+                    expect(list.selectedItems[0].label).toBe('K1');
+                    expect(list.selectedItems[1].label).toBe('K2');
+                });
+
+                it('should select all group children when child already selected', () => {
+                    list.select(list.items[1]);
+                    list.select(list.items[0]);
+                    expect(list.selectedItems.length).toBe(2);
+                    expect(list.selectedItems[0].label).toBe('K1');
+                    expect(list.selectedItems[1].label).toBe('K2');
+                });
+            })
         });
     });
 

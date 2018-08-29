@@ -95,6 +95,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() bufferAmount = 4;
     @Input() virtualScroll = false;
     @Input() selectableGroup = false;
+    @Input() selectableGroupAsModel = true;
     @Input() searchFn = null;
     @Input() clearSearchOnAdd = true;
     @Input() labelForId = null;
