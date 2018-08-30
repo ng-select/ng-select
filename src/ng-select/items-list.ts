@@ -13,9 +13,11 @@ export class ItemsList {
     private _filteredItems: NgOption[] = [];
     private _groups: OptionGroups;
     private _markedIndex = -1;
-    private _selectionModel = new SelectionModel();
+    private _selectionModel;
 
-    constructor(private _ngSelect: NgSelectComponent) { }
+    constructor(private _ngSelect: NgSelectComponent) {
+        this._selectionModel = new SelectionModel(_ngSelect);
+    }
 
     get items(): NgOption[] {
         return this._items;

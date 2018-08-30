@@ -17,21 +17,44 @@ import { map } from 'rxjs/operators';
                 bindValue="id"
                 [(ngModel)]="selectedPeople">
             <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
-                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.gender | uppercase}}
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.gender | uppercase}}
             </ng-template>
             <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
-                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.name}}
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.name}}
             </ng-template>
         </ng-select>
         ---
-        <br />
+        <br/>
         <small>{{selectedPeople | json}}</small>
+
+        <hr>
+        <label>Group selects children</label>
+        ---html,true
+        <ng-select
+                [items]="people"
+                [multiple]="true"
+                bindLabel="name"
+                groupBy="gender"
+                [selectableGroup]="true"
+                [selectableGroupAsModel]="false"
+                [closeOnSelect]="false"
+                bindValue="id"
+                [(ngModel)]="selectedPeople2">
+            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.gender | uppercase}}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.name}}
+            </ng-template>
+        </ng-select>
+        ---
     `
 })
 export class SelectMultiCheckboxComponent {
 
     people: Person[] = [];
     selectedPeople = [];
+    selectedPeople2 = [];
 
     constructor(private dataService: DataService) { }
 

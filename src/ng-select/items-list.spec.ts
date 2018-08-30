@@ -106,8 +106,21 @@ describe('ItemsList', () => {
                 list.select(list.items[1]); // K1
                 list.select(list.items[2]); // K2
 
-                expect(list.filteredItems.length).toBe(3); // should contain only second group items
-                expect(list.selectedItems.length).toBe(2);
+                expect(list.filteredItems.length).toBe(3);
+            });
+
+            it('should select group when all group children are selected', () => {
+                cmp.hideSelected = true;
+                cmp.groupBy = 'groupKey';
+                list.setItems([
+                    { label: 'K1', val: 'V1', groupKey: 'G1' },
+                    { label: 'K2', val: 'V2', groupKey: 'G1' },
+                ]);
+                list.select(list.items[1]); // K1
+                list.select(list.items[2]); // K2
+
+                expect(list.selectedItems.length).toBe(1);
+                expect(list.selectedItems[0].label).toBe('G1');
             });
 
             it('should remove all group and group children items if group is selected when hideSelected=true', () => {
@@ -139,6 +152,32 @@ describe('ItemsList', () => {
 
                 expect(list.filteredItems.length).toBe(0); // remove all items since group was selected
             });
+
+            describe('group as model', () => {
+                beforeEach(() => {
+                    cmp.selectableGroupAsModel = false;
+                    cmp.groupBy = 'groupKey';
+                    list.setItems([
+                        { label: 'K1', val: 'V1', groupKey: 'G1' },
+                        { label: 'K2', val: 'V2', groupKey: 'G1' },
+                    ]);
+                });
+
+                it('should select all group children', () => {
+                    list.select(list.items[0]);
+                    expect(list.selectedItems.length).toBe(2);
+                    expect(list.selectedItems[0].label).toBe('K1');
+                    expect(list.selectedItems[1].label).toBe('K2');
+                });
+
+                it('should select all group children when child already selected', () => {
+                    list.select(list.items[1]);
+                    list.select(list.items[0]);
+                    expect(list.selectedItems.length).toBe(2);
+                    expect(list.selectedItems[0].label).toBe('K1');
+                    expect(list.selectedItems[1].label).toBe('K2');
+                });
+            })
         });
     });
 
