@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { DataService, Person } from '../shared/data.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Observable } from 'rxjs';
+
+import { DataService, Person } from '../shared/data.service';
 
 @Component({
     selector: 'select-search',

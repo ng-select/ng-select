@@ -1,46 +1,46 @@
-@import "~bootstrap/scss/bootstrap";
-@import "github-highlight";
-@import "custom";
-@import "sidebar";
-@import "content";
+@import '~bootstrap/scss/bootstrap';
+@import 'github-highlight';
+@import 'custom';
+@import 'sidebar';
+@import 'content';
 body {
-    position: relative;
+  position: relative;
 }
 
 html,
 body,
 demo-app {
-    height: 100%;
+  height: 100%;
 }
 
 demo-app,
 layout-header,
 layout-sidenav {
-    display: block;
+  display: block;
 }
 
 .fill {
-    height: 100%;
+  height: 100%;
 }
 
 .card {
-    label {
-        margin-bottom: 5px;
-    }
-    p {
-        margin: 10px 0 20px 0;
-    }
+  label {
+    margin-bottom: 5px;
+  }
+  p {
+    margin: 10px 0 20px 0;
+  }
 }
 
 .bd-main {
-    order: 1;
+  order: 1;
 }
 
 ng-select.ng-invalid.ng-touched .ng-select-container {
-    border-color: #dc3545;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px #fde6e8;
+  border-color: #dc3545;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px #fde6e8;
 }
 
-.btn+.btn {
-    margin-left: 5px
+.btn + .btn {
+  margin-left: 5px;
 }

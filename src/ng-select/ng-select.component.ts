@@ -1,52 +1,51 @@
 import {
-    Component,
-    OnDestroy,
-    OnChanges,
     AfterViewInit,
-    forwardRef,
-    ChangeDetectorRef,
-    Input,
-    Output,
-    EventEmitter,
-    ContentChild,
-    TemplateRef,
-    ViewEncapsulation,
-    HostListener,
-    HostBinding,
-    ViewChild,
-    ElementRef,
+    Attribute,
     ChangeDetectionStrategy,
-    Inject,
-    SimpleChanges,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
     ContentChildren,
-    QueryList,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    HostBinding,
+    HostListener,
+    Inject,
     InjectionToken,
-    Attribute
+    Input,
+    OnChanges,
+    OnDestroy,
+    Output,
+    QueryList,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { takeUntil, startWith, tap, debounceTime, map, filter } from 'rxjs/operators';
-import { Subject, merge } from 'rxjs';
-
-import {
-    NgOptionTemplateDirective,
-    NgLabelTemplateDirective,
-    NgHeaderTemplateDirective,
-    NgFooterTemplateDirective,
-    NgOptgroupTemplateDirective,
-    NgNotFoundTemplateDirective,
-    NgTypeToSearchTemplateDirective,
-    NgLoadingTextTemplateDirective,
-    NgMultiLabelTemplateDirective,
-    NgTagTemplateDirective
-} from './ng-templates.directive';
+import { merge, Subject } from 'rxjs';
+import { debounceTime, filter, map, startWith, takeUntil, tap } from 'rxjs/operators';
 
 import { ConsoleService } from './console.service';
-import { isDefined, isFunction, isPromise, isObject } from './value-utils';
-import { ItemsList } from './items-list';
-import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { newId } from './id';
+import { ItemsList } from './items-list';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
+import { KeyCode, NgOption, NgSelectConfig } from './ng-select.types';
+import {
+    NgFooterTemplateDirective,
+    NgHeaderTemplateDirective,
+    NgLabelTemplateDirective,
+    NgLoadingTextTemplateDirective,
+    NgMultiLabelTemplateDirective,
+    NgNotFoundTemplateDirective,
+    NgOptgroupTemplateDirective,
+    NgOptionTemplateDirective,
+    NgTagTemplateDirective,
+    NgTypeToSearchTemplateDirective,
+} from './ng-templates.directive';
+import { isDefined, isFunction, isObject, isPromise } from './value-utils';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';

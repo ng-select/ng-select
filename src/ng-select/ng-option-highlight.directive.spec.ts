@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgOptionHighlightDirective } from './ng-option-highlight.directive';
 import { By } from '@angular/platform-browser';
+
+import { NgOptionHighlightDirective } from './ng-option-highlight.directive';
 
 @Component({
     template: `

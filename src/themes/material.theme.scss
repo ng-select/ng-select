@@ -5,7 +5,12 @@ $highlight-color: #3f51b5;
         .ng-select-container {
             &:after {
                 border-bottom-color: transparent;
-                background-image: linear-gradient(to right, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.42) 33%, transparent 0%);
+                background-image: linear-gradient(
+                    to right,
+                    rgba(0, 0, 0, 0.42) 0%,
+                    rgba(0, 0, 0, 0.42) 33%,
+                    transparent 0%
+                );
                 background-size: 4px 1px;
                 background-repeat: repeat-x;
             }
@@ -30,7 +35,8 @@ $highlight-color: #3f51b5;
                 border-width: 2px;
             }
             .ng-value-container .ng-placeholder {
-                transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
+                transform: translateY(-1.28125em) scale(0.75) perspective(100px)
+                    translateZ(0.001px);
                 color: $highlight-color;
             }
             .ng-arrow-wrapper .ng-arrow {
@@ -47,32 +53,35 @@ $highlight-color: #3f51b5;
     .ng-has-value,
     &.ng-select-opened {
         .ng-placeholder {
-            transform: translateY(-1.28125em) scale(.75) perspective(100px) translateZ(.001px);
+            transform: translateY(-1.28125em) scale(0.75) perspective(100px)
+                translateZ(0.001px);
         }
     }
     .ng-select-container {
         align-items: baseline;
         min-height: 51.5px;
         &:after {
-            border-bottom: 1px solid rgba(0, 0, 0, .42);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.42);
             content: '';
             width: 100%;
             bottom: 0;
             position: absolute;
-            transition: border-color .3s cubic-bezier(.55, 0, .55, .2);
+            transition: border-color 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
         }
         .ng-value-container {
             align-items: baseline;
-            padding: .4375em 0;
-            border-top: .84375em solid transparent;
+            padding: 0.4375em 0;
+            border-top: 0.84375em solid transparent;
             .ng-placeholder {
                 position: absolute;
-                color: rgba(0, 0, 0, .54);
+                color: rgba(0, 0, 0, 0.54);
                 transform-origin: 0 0;
-                transition: transform .4s cubic-bezier(.25, .8, .25, 1), color .4s cubic-bezier(.25, .8, .25, 1), width .4s cubic-bezier(.25, .8, .25, 1);
+                transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                    color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                    width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             }
             .ng-input {
-                bottom: .4375em;
+                bottom: 0.4375em;
             }
         }
     }
@@ -91,8 +100,8 @@ $highlight-color: #3f51b5;
     &.ng-select-multiple {
         &.ng-select-disabled {
             .ng-select-container .ng-value-container .ng-value {
-                background-color: rgba(0, 0, 0, .12);
-                color: rgba(0, 0, 0, .26);
+                background-color: rgba(0, 0, 0, 0.12);
+                color: rgba(0, 0, 0, 0.26);
             }
         }
         .ng-select-container {
@@ -105,18 +114,18 @@ $highlight-color: #3f51b5;
                     color: #fff;
                     padding: 2px 5px;
                     &.ng-value-disabled {
-                        background-color: rgba(0, 0, 0, .12);
-                        color: rgba(0, 0, 0, .26);
+                        background-color: rgba(0, 0, 0, 0.12);
+                        color: rgba(0, 0, 0, 0.26);
                     }
                     .ng-value-label {
                         font-size: 14px;
-                        font-weight: 500
+                        font-weight: 500;
                     }
                     .ng-value-icon {
-                        color: rgba(255, 255, 255, .54);
+                        color: rgba(255, 255, 255, 0.54);
                         padding-right: 5px;
                         &:hover {
-                            color: rgba(255, 255, 255, .87);
+                            color: rgba(255, 255, 255, 0.87);
                         }
                     }
                 }
@@ -128,11 +137,11 @@ $highlight-color: #3f51b5;
                 align-items: center;
                 .ng-value-container {
                     padding-bottom: 0;
-                    padding-top: .1875em;
+                    padding-top: 0.1875em;
                 }
                 .ng-clear-wrapper,
                 .ng-arrow-wrapper {
-                    border-top: .84375em solid transparent;
+                    border-top: 0.84375em solid transparent;
                 }
             }
         }
@@ -140,7 +149,7 @@ $highlight-color: #3f51b5;
     .ng-clear-wrapper {
         color: rgba(0, 0, 0, 0.54);
         &:hover {
-            color: rgba(0, 0, 0, .87);
+            color: rgba(0, 0, 0, 0.87);
         }
     }
     .ng-arrow-wrapper {
@@ -150,7 +159,7 @@ $highlight-color: #3f51b5;
             border-right: 5px solid transparent;
             border-top: 5px solid;
             margin: 0 4px;
-            color: rgba(0, 0, 0, .54);
+            color: rgba(0, 0, 0, 0.54);
         }
     }
     .ng-spinner-zone {
@@ -162,11 +171,15 @@ $highlight-color: #3f51b5;
     background: #fff;
     &.ng-select-bottom {
         top: calc(100% - 1.25em);
-        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+            0 8px 10px 1px rgba(0, 0, 0, 0.14),
+            0 3px 14px 2px rgba(0, 0, 0, 0.12);
     }
     &.ng-select-top {
-        bottom: calc(100% - .84375em);
-        box-shadow: 0 -5px 5px -3px rgba(0, 0, 0, .2), 0 -8px 10px 1px rgba(0, 0, 0, .14), 0 -3px 14px 2px rgba(0, 0, 0, .12);
+        bottom: calc(100% - 0.84375em);
+        box-shadow: 0 -5px 5px -3px rgba(0, 0, 0, 0.2),
+            0 -8px 10px 1px rgba(0, 0, 0, 0.14),
+            0 -3px 14px 2px rgba(0, 0, 0, 0.12);
     }
     &.multiple {
         .ng-option {
@@ -174,18 +187,18 @@ $highlight-color: #3f51b5;
                 background: #fff;
             }
             &.marked {
-                background: rgba(0, 0, 0, .04);
+                background: rgba(0, 0, 0, 0.04);
             }
         }
     }
     .ng-dropdown-header {
-        border-bottom: 1px solid rgba(0, 0, 0, .12);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
         padding: 0 16px;
         line-height: 3em;
         min-height: 3em;
     }
     .ng-dropdown-footer {
-        border-top: 1px solid rgba(0, 0, 0, .12);
+        border-top: 1px solid rgba(0, 0, 0, 0.12);
         padding: 0 16px;
         line-height: 3em;
         min-height: 3em;
@@ -197,16 +210,16 @@ $highlight-color: #3f51b5;
             line-height: 3em;
             height: 3em;
             padding: 0 16px;
-            color: rgba(0, 0, 0, .54);
+            color: rgba(0, 0, 0, 0.54);
             font-weight: 500;
             &.ng-option-marked {
-                background: rgba(0, 0, 0, .04);
+                background: rgba(0, 0, 0, 0.04);
             }
             &.ng-option-disabled {
                 cursor: default;
             }
             &.ng-option-selected {
-                background: rgba(0, 0, 0, .12);
+                background: rgba(0, 0, 0, 0.12);
                 color: $highlight-color;
             }
         }
@@ -220,13 +233,13 @@ $highlight-color: #3f51b5;
             text-align: left;
             text-decoration: none;
             position: relative;
-            color: rgba(0, 0, 0, .87);
+            color: rgba(0, 0, 0, 0.87);
             &.ng-option-marked {
-                background: rgba(0, 0, 0, .04);
-                color: rgba(0, 0, 0, .87);
+                background: rgba(0, 0, 0, 0.04);
+                color: rgba(0, 0, 0, 0.87);
             }
             &.ng-option-selected {
-                background: rgba(0, 0, 0, .12);
+                background: rgba(0, 0, 0, 0.12);
                 color: $highlight-color;
             }
             &.ng-option-disabled {

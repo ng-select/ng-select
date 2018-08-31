@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter } from '@angular/core';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+
 import { DataService } from '../shared/data.service';
-import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 
 
 @Component({
