@@ -47,6 +47,7 @@ import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { newId } from './id';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
+import { SelectionModel, DefaultSelectionModel} from './selection-model';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
@@ -99,6 +100,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() searchFn = null;
     @Input() clearSearchOnAdd = true;
     @Input() labelForId = null;
+    @Input() selectionModel: SelectionModel = new DefaultSelectionModel();
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
     @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
@@ -146,6 +148,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @HostBinding('class.ng-select-disabled') disabled = false;
     @HostBinding('class.ng-select-filtered') get filtered() { return !!this.filterValue && this.searchable };
 
+    
     itemsList = new ItemsList(this);
     viewPortItems: NgOption[] = [];
     filterValue: string = null;

@@ -3,7 +3,6 @@ import * as searchHelper from './search-helper';
 import { NgSelectComponent } from './ng-select.component';
 import { isObject, isDefined, isFunction } from './value-utils';
 import { newId } from './id';
-import { SelectionModel } from './selection-model';
 
 type OptionGroups = Map<string, NgOption[]>;
 
@@ -13,11 +12,8 @@ export class ItemsList {
     private _filteredItems: NgOption[] = [];
     private _groups: OptionGroups;
     private _markedIndex = -1;
-    private _selectionModel;
 
-    constructor(private _ngSelect: NgSelectComponent) {
-        this._selectionModel = new SelectionModel(_ngSelect);
-    }
+    constructor(private _ngSelect: NgSelectComponent) { }
 
     get items(): NgOption[] {
         return this._items;
@@ -28,7 +24,7 @@ export class ItemsList {
     }
 
     get selectedItems() {
-        return this._selectionModel.value;
+        return this._ngSelect.selectionModel.value;
     }
 
     get markedItem(): NgOption {
@@ -72,7 +68,7 @@ export class ItemsList {
             this.clearSelected();
         }
 
-        this._selectionModel.select(item, multiple);
+        this._ngSelect.selectionModel.select(item, multiple, this._ngSelect.selectableGroupAsModel);
         if (this._ngSelect.hideSelected && multiple) {
             this._hideSelected(item);
         }
@@ -82,7 +78,7 @@ export class ItemsList {
         if (!item.selected) {
             return;
         }
-        this._selectionModel.unselect(item, this._ngSelect.multiple);
+        this._ngSelect.selectionModel.unselect(item, this._ngSelect.multiple);
         if (this._ngSelect.hideSelected && isDefined(item.index) && this._ngSelect.multiple) {
             this._showSelected(item);
         }
@@ -109,7 +105,7 @@ export class ItemsList {
     }
 
     clearSelected() {
-        this._selectionModel.clear();
+        this._ngSelect.selectionModel.clear();
         this._items.forEach((item) => {
             item.selected = false;
             item.marked = false;

@@ -1,18 +1,21 @@
 import { NgOption } from './ng-select.types';
-import { NgSelectComponent } from './ng-select.component';
 
-export class SelectionModel {
+export interface SelectionModel {
+    value: NgOption[];
+    select(item: NgOption, multiple: boolean, selectableGroupAsModel: boolean);
+    unselect(item: NgOption, multiple: boolean);
+    clear();
+}
+
+export class DefaultSelectionModel implements SelectionModel {
     private _selected: NgOption[] = [];
-
-    constructor(private _ngSelect: NgSelectComponent) { }
 
     get value(): NgOption[] {
         return this._selected;
     }
 
-    select(item: NgOption, multiple: boolean) {
+    select(item: NgOption, multiple: boolean, groupAsModel: boolean) {
         item.selected = true;
-        const groupAsModel = this._ngSelect.selectableGroupAsModel;
         if (groupAsModel || item.parent) {
             this._selected.push(item);
         }
