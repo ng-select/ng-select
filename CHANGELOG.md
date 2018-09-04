@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.7.0"></a>
+# [2.7.0](https://github.com/ng-select/ng-select/compare/v2.6.0...v2.7.0) (2018-09-04)
+
+
+### Bug Fixes
+
+* don't set group as selected when all it's children selected ([5f63d13](https://github.com/ng-select/ng-select/commit/5f63d13))
+
+
+### Features
+
+* introduce customisable selection model ([#785](https://github.com/ng-select/ng-select/issues/785)) ([a1ce17f](https://github.com/ng-select/ng-select/commit/a1ce17f))
+
+
+
 <a name="2.6.0"></a>
 # [2.6.0](https://github.com/ng-select/ng-select/compare/v2.5.1...v2.6.0) (2018-08-30)
 
