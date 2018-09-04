@@ -1,18 +1,27 @@
 import { NgOption } from './ng-select.types';
-import { NgSelectComponent } from './ng-select.component';
+import { Injectable } from '@angular/core';
 
-export class SelectionModel {
+export function DEFAULT_SELECTION_MODEL_FACTORY() {
+    return new DefaultSelectionModel();
+}
+
+@Injectable({ providedIn: 'root', useFactory: DEFAULT_SELECTION_MODEL_FACTORY })
+export abstract class SelectionModel {
+    abstract get value(): NgOption[];
+    abstract select(item: NgOption, multiple: boolean, selectableGroupAsModel: boolean);
+    abstract unselect(item: NgOption, multiple: boolean);
+    abstract clear();
+}
+
+export class DefaultSelectionModel {
     private _selected: NgOption[] = [];
-
-    constructor(private _ngSelect: NgSelectComponent) { }
 
     get value(): NgOption[] {
         return this._selected;
     }
 
-    select(item: NgOption, multiple: boolean) {
+    select(item: NgOption, multiple: boolean, groupAsModel: boolean) {
         item.selected = true;
-        const groupAsModel = this._ngSelect.selectableGroupAsModel;
         if (groupAsModel || item.parent) {
             this._selected.push(item);
         }

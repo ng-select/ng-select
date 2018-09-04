@@ -1,14 +1,15 @@
 import { NgSelectComponent } from './ng-select.component';
 import { ItemsList } from './items-list';
+import { DefaultSelectionModel } from './selection-model';
 
 describe('ItemsList', () => {
     describe('select', () => {
         describe('single', () => {
             let list: ItemsList;
             beforeEach(() => {
-                const cmp = ngSelect();
+                const cmp = ngSelectFactory();
                 cmp.bindLabel = 'label';
-                list = itemsList(cmp);
+                list = itemsListFactory(cmp);
             });
 
             it('should add only one item to selected items', () => {
@@ -26,10 +27,10 @@ describe('ItemsList', () => {
             let list: ItemsList;
             let cmp: NgSelectComponent;
             beforeEach(() => {
-                cmp = ngSelect();
+                cmp = ngSelectFactory();
                 cmp.multiple = true;
                 cmp.bindLabel = 'label';
-                list = itemsList(cmp);
+                list = itemsListFactory(cmp);
             });
 
             it('should add item to selected items', () => {
@@ -172,9 +173,9 @@ describe('ItemsList', () => {
             let list: ItemsList;
             let cmp: NgSelectComponent;
             beforeEach(() => {
-                cmp = ngSelect();
+                cmp = ngSelectFactory();
                 cmp.bindLabel = 'label';
-                list = itemsList(cmp);
+                list = itemsListFactory(cmp);
             });
             it('should unselect selected item', () => {
                 list.setItems([
@@ -192,10 +193,10 @@ describe('ItemsList', () => {
             let list: ItemsList;
             let cmp: NgSelectComponent;
             beforeEach(() => {
-                cmp = ngSelect();
+                cmp = ngSelectFactory();
                 cmp.multiple = true;
                 cmp.bindLabel = 'label';
-                list = itemsList(cmp);
+                list = itemsListFactory(cmp);
             });
 
             it('should unselect selected items', () => {
@@ -309,9 +310,9 @@ describe('ItemsList', () => {
         let list: ItemsList;
         let cmp: NgSelectComponent;
         beforeEach(() => {
-            cmp = ngSelect();
+            cmp = ngSelectFactory();
             cmp.bindLabel = 'label';
-            list = itemsList(cmp);
+            list = itemsListFactory(cmp);
         });
 
         it('should find item from items list', () => {
@@ -376,11 +377,10 @@ describe('ItemsList', () => {
     });
 });
 
-function itemsList(cmp: NgSelectComponent): ItemsList {
-    return new ItemsList(cmp);
+function itemsListFactory(cmp: NgSelectComponent): ItemsList {
+    return new ItemsList(cmp, new DefaultSelectionModel());
 }
 
-function ngSelect(): NgSelectComponent {
-    const cmp = new NgSelectComponent({}, null, null, null, null, null);
-    return cmp;
+function ngSelectFactory(): NgSelectComponent {
+    return new NgSelectComponent(null, null, {}, {} as any, null, null, null);
 }

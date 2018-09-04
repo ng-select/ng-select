@@ -47,6 +47,7 @@ import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { newId } from './id';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
+import { SelectionModel } from './selection-model';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
@@ -146,11 +147,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @HostBinding('class.ng-select-disabled') disabled = false;
     @HostBinding('class.ng-select-filtered') get filtered() { return !!this.filterValue && this.searchable };
 
-    itemsList = new ItemsList(this);
+    itemsList: ItemsList;
     viewPortItems: NgOption[] = [];
     filterValue: string = null;
     dropdownId = newId();
     selectedItemId = 0;
+    element: HTMLElement;
 
     private _defaultLabel = 'label';
     private _primitive: boolean;
@@ -170,14 +172,18 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     };
 
     constructor(
-        @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
         @Attribute('class') public classes: string,
         @Attribute('tabindex') public tabIndex: string,
+        @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
+        _elementRef: ElementRef,
+        _selectionModel: SelectionModel,
         private _cd: ChangeDetectorRef,
         private _console: ConsoleService,
-        public elementRef: ElementRef
+
     ) {
         this._mergeGlobalConfig(config);
+        this.itemsList = new ItemsList(this, _selectionModel);
+        this.element = _elementRef.nativeElement;
     }
 
     get selectedItems(): NgOption[] {
@@ -470,13 +476,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
 
-        (<HTMLElement>this.elementRef.nativeElement).classList.add('ng-select-focused');
+        this.element.classList.add('ng-select-focused');
         this.focusEvent.emit($event);
         this._focused = true;
     }
 
     onInputBlur($event) {
-        (<HTMLElement>this.elementRef.nativeElement).classList.remove('ng-select-focused');
+        this.element.classList.remove('ng-select-focused');
         this.blurEvent.emit($event);
         if (!this.isOpen && !this.disabled) {
             this._onTouched();
