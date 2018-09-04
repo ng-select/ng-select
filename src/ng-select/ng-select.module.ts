@@ -16,9 +16,6 @@ import {
 import { NgOptionComponent } from './ng-option.component';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
-import { WindowService } from './window.service';
-import { VirtualScrollService } from './virtual-scroll.service';
-import { ConsoleService } from './console.service';
 
 @NgModule({
     declarations: [
@@ -56,9 +53,6 @@ import { ConsoleService } from './console.service';
         NgTagTemplateDirective
     ],
     providers: [
-        ConsoleService,
-        WindowService,
-        VirtualScrollService,
         {
             provide: NG_SELECT_DEFAULT_CONFIG,
             useValue: {

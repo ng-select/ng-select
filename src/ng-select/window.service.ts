@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class WindowService {
     requestAnimationFrame(fn) {
         return window.requestAnimationFrame(fn);

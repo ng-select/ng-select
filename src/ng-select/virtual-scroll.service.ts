@@ -16,7 +16,7 @@ export interface ItemsRangeResult {
     end: number;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class VirtualScrollService {
 
     calculateItems(d: ItemsDimensions, dropdownEl: HTMLElement, bufferAmount: number): ItemsRangeResult {
