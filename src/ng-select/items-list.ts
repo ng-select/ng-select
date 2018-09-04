@@ -1,7 +1,7 @@
 import { NgOption } from './ng-select.types';
 import * as searchHelper from './search-helper';
 import { NgSelectComponent } from './ng-select.component';
-import { isObject, isDefined, isFunction } from './value-utils';
+import { isDefined, isFunction, isObject } from './value-utils';
 import { newId } from './id';
 import { SelectionModel } from './selection-model';
 
@@ -9,22 +9,29 @@ type OptionGroups = Map<string, NgOption[]>;
 
 export class ItemsList {
 
-    private _items: NgOption[] = [];
-    private _filteredItems: NgOption[] = [];
     private _groups: OptionGroups;
-    private _markedIndex = -1;
-    private _selectionModel;
 
-    constructor(private _ngSelect: NgSelectComponent) {
-        this._selectionModel = new SelectionModel(_ngSelect);
+    constructor(
+        private _ngSelect: NgSelectComponent,
+        private _selectionModel: SelectionModel) {
     }
+
+    private _items: NgOption[] = [];
 
     get items(): NgOption[] {
         return this._items;
     }
 
+    private _filteredItems: NgOption[] = [];
+
     get filteredItems(): NgOption[] {
         return this._filteredItems;
+    }
+
+    private _markedIndex = -1;
+
+    get markedIndex(): number {
+        return this._markedIndex;
     }
 
     get selectedItems() {
@@ -33,10 +40,6 @@ export class ItemsList {
 
     get markedItem(): NgOption {
         return this._filteredItems[this._markedIndex];
-    }
-
-    get markedIndex(): number {
-        return this._markedIndex;
     }
 
     get noItemsToSelect(): boolean {
@@ -72,7 +75,7 @@ export class ItemsList {
             this.clearSelected();
         }
 
-        this._selectionModel.select(item, multiple);
+        this._selectionModel.select(item, multiple, this._ngSelect.selectableGroupAsModel);
         if (this._ngSelect.hideSelected && multiple) {
             this._hideSelected(item);
         }
