@@ -152,6 +152,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     filterValue: string = null;
     dropdownId = newId();
     selectedItemId = 0;
+    element: HTMLElement;
 
     private _defaultLabel = 'label';
     private _primitive: boolean;
@@ -159,7 +160,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _manualOpen: boolean;
     private _pressedKeys: string[] = [];
     private _compareWith: CompareWithFn;
-    private _element: HTMLElement;
 
     private readonly _destroy$ = new Subject<void>();
     private readonly _keyPress$ = new Subject<string>();
@@ -183,7 +183,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     ) {
         this._mergeGlobalConfig(config);
         this.itemsList = new ItemsList(this, _selectionModel);
-        this._element = _elementRef.nativeElement;
+        this.element = _elementRef.nativeElement;
     }
 
     get selectedItems(): NgOption[] {
@@ -476,13 +476,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
 
-        this._element.classList.add('ng-select-focused');
+        this.element.classList.add('ng-select-focused');
         this.focusEvent.emit($event);
         this._focused = true;
     }
 
     onInputBlur($event) {
-        this._element.classList.remove('ng-select-focused');
+        this.element.classList.remove('ng-select-focused');
         this.blurEvent.emit($event);
         if (!this.isOpen && !this.disabled) {
             this._onTouched();

@@ -1934,8 +1934,8 @@ describe('NgSelectComponent', function () {
         it('should be visible when no value selected', async(() => {
             fixture.detectChanges();
             fixture.whenStable().then(() => {
-                const selectEl: HTMLElement = fixture.componentInstance.select.elementRef.nativeElement;
-                const placeholder: any = selectEl.querySelector('.ng-placeholder');
+                const element = fixture.componentInstance.select.element;
+                const placeholder: any = element.querySelector('.ng-placeholder');
                 expect(placeholder.innerText).toBe('select value');
                 expect(getComputedStyle(placeholder).display).toBe('block');
             });
@@ -1946,9 +1946,9 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
-            const selectEl: HTMLElement = select.elementRef.nativeElement;
-            const ngControl = selectEl.querySelector('.ng-select-container');
-            const placeholder: any = selectEl.querySelector('.ng-placeholder');
+            const element = fixture.componentInstance.select.element;
+            const ngControl = element.querySelector('.ng-select-container');
+            const placeholder = element.querySelector('.ng-placeholder');
             expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
 
             select.handleClearClick();
@@ -1961,8 +1961,8 @@ describe('NgSelectComponent', function () {
 
         it('should contain .ng-has-value when value was selected', fakeAsync(() => {
             tickAndDetectChanges(fixture);
-            const selectEl: HTMLElement = fixture.componentInstance.select.elementRef.nativeElement;
-            const ngControl = selectEl.querySelector('.ng-select-container');
+            const element = fixture.componentInstance.select.element;
+            const ngControl = element.querySelector('.ng-select-container');
             selectOption(fixture, KeyCode.ArrowDown, 2);
             tickAndDetectChanges(fixture);
             expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
@@ -2050,7 +2050,7 @@ describe('NgSelectComponent', function () {
             tick(200);
             fixture.detectChanges();
 
-            const input: HTMLInputElement = select.elementRef.nativeElement.querySelector('input');
+            const input: HTMLInputElement = select.element.querySelector('input');
             expect(select.filterValue).toBeNull();
             expect(input.readOnly).toBeTruthy();
         }));
