@@ -2,6 +2,10 @@ import { NgOption } from './ng-select.types';
 
 export type SelectionModelFactory = () => SelectionModel;
 
+export function DefaultSelectionModelFactory() {
+    return new DefaultSelectionModel();
+}
+
 export interface SelectionModel {
     value: NgOption[];
     select(item: NgOption, multiple: boolean, selectableGroupAsModel: boolean);

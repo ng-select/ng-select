@@ -16,7 +16,7 @@ import {
 import { NgOptionComponent } from './ng-option.component';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
-import { DefaultSelectionModel } from './selection-model';
+import { DefaultSelectionModelFactory } from './selection-model';
 
 @NgModule({
     declarations: [
@@ -54,7 +54,7 @@ import { DefaultSelectionModel } from './selection-model';
         NgTagTemplateDirective
     ],
     providers: [
-        { provide: SELECTION_MODEL_FACTORY, useValue: () => new DefaultSelectionModel() },
+        { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory },
         {
             provide: NG_SELECT_DEFAULT_CONFIG,
             useValue: {
