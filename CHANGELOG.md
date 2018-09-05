@@ -10,14 +10,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 * use factory to resolve new instance of selection model ([#789](https://github.com/ng-select/ng-select/issues/789)) ([f1a4f23](https://github.com/ng-select/ng-select/commit/f1a4f23)), closes [#787](https://github.com/ng-select/ng-select/issues/787)
 
-
-
-<a name="2.7.0"></a>
-# [2.7.0](https://github.com/ng-select/ng-select/compare/v2.6.0...v2.7.0) (2018-09-04)
-
-
-### Bug Fixes
-
 * don't set group as selected when all it's children selected ([5f63d13](https://github.com/ng-select/ng-select/commit/5f63d13))
 
 
