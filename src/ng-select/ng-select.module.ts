@@ -1,21 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgSelectComponent, NG_SELECT_DEFAULT_CONFIG } from './ng-select.component';
+import { NG_SELECT_DEFAULT_CONFIG, NgSelectComponent, SELECTION_MODEL_FACTORY } from './ng-select.component';
 import {
-    NgOptionTemplateDirective,
-    NgLabelTemplateDirective,
-    NgHeaderTemplateDirective,
     NgFooterTemplateDirective,
-    NgOptgroupTemplateDirective,
-    NgNotFoundTemplateDirective,
-    NgTypeToSearchTemplateDirective,
+    NgHeaderTemplateDirective,
+    NgLabelTemplateDirective,
     NgLoadingTextTemplateDirective,
     NgMultiLabelTemplateDirective,
-    NgTagTemplateDirective
+    NgNotFoundTemplateDirective,
+    NgOptgroupTemplateDirective,
+    NgOptionTemplateDirective,
+    NgTagTemplateDirective,
+    NgTypeToSearchTemplateDirective
 } from './ng-templates.directive';
 import { NgOptionComponent } from './ng-option.component';
-import { NgOptionHighlightDirective } from './ng-option-highlight.directive' ;
+import { NgOptionHighlightDirective } from './ng-option-highlight.directive';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
+import { DefaultSelectionModelFactory } from './selection-model';
 
 @NgModule({
     declarations: [
@@ -53,6 +54,7 @@ import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
         NgTagTemplateDirective
     ],
     providers: [
+        { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory },
         {
             provide: NG_SELECT_DEFAULT_CONFIG,
             useValue: {

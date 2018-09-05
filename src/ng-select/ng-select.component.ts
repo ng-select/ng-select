@@ -47,9 +47,10 @@ import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
 import { newId } from './id';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
-import { SelectionModel } from './selection-model';
+import { SelectionModelFactory } from './selection-model';
 
 export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
+export const SELECTION_MODEL_FACTORY = new InjectionToken<NgSelectConfig>('ng-select-selection-model');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
@@ -175,14 +176,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         @Attribute('class') public classes: string,
         @Attribute('tabindex') public tabIndex: string,
         @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
+        @Inject(SELECTION_MODEL_FACTORY) newSelectionModel: SelectionModelFactory,
         _elementRef: ElementRef,
-        _selectionModel: SelectionModel,
         private _cd: ChangeDetectorRef,
-        private _console: ConsoleService,
-
+        private _console: ConsoleService
     ) {
         this._mergeGlobalConfig(config);
-        this.itemsList = new ItemsList(this, _selectionModel);
+        this.itemsList = new ItemsList(this, newSelectionModel());
         this.element = _elementRef.nativeElement;
     }
 

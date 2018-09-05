@@ -1,19 +1,19 @@
 import { NgOption } from './ng-select.types';
-import { Injectable } from '@angular/core';
 
-export function DEFAULT_SELECTION_MODEL_FACTORY() {
+export type SelectionModelFactory = () => SelectionModel;
+
+export function DefaultSelectionModelFactory() {
     return new DefaultSelectionModel();
 }
 
-@Injectable({ providedIn: 'root', useFactory: DEFAULT_SELECTION_MODEL_FACTORY })
-export abstract class SelectionModel {
-    abstract get value(): NgOption[];
-    abstract select(item: NgOption, multiple: boolean, selectableGroupAsModel: boolean);
-    abstract unselect(item: NgOption, multiple: boolean);
-    abstract clear();
+export interface SelectionModel {
+    value: NgOption[];
+    select(item: NgOption, multiple: boolean, selectableGroupAsModel: boolean);
+    unselect(item: NgOption, multiple: boolean);
+    clear();
 }
 
-export class DefaultSelectionModel {
+export class DefaultSelectionModel implements SelectionModel {
     private _selected: NgOption[] = [];
 
     get value(): NgOption[] {
