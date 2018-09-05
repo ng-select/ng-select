@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DataService } from '../shared/data.service';
 
 
@@ -21,6 +21,7 @@ interface AngSelectEvent {
                    (open)="onOpen()"
                    (close)="onClose()"
                    (focus)="onFocus($event)"
+                   (search)="onSearch($event)"
                    (blur)="onBlur($event)"
                    (clear)="onClear()"
                    (add)="onAdd($event)"
@@ -57,39 +58,43 @@ export class SelectEventsComponent {
     }
 
     onChange($event) {
-        this.events.push({name: '(change)', value: $event});
+        this.events.push({ name: '(change)', value: $event });
     }
 
     onFocus($event: Event) {
-        this.events.push({name: '(focus)', value: $event});
+        this.events.push({ name: '(focus)', value: $event });
     }
 
     onBlur($event: Event) {
-        this.events.push({name: '(blur)', value: $event});
+        this.events.push({ name: '(blur)', value: $event });
     }
 
     onOpen() {
-        this.events.push({name: '(open)', value: null});
+        this.events.push({ name: '(open)', value: null });
     }
 
     onClose() {
-        this.events.push({name: '(close)', value: null});
+        this.events.push({ name: '(close)', value: null });
     }
 
     onAdd($event) {
-        this.events.push({name: '(add)', value: $event});
+        this.events.push({ name: '(add)', value: $event });
     }
 
     onRemove($event) {
-        this.events.push({name: '(remove)', value: $event});
+        this.events.push({ name: '(remove)', value: $event });
     }
 
     onClear() {
-        this.events.push({name: '(clear)', value: null});
+        this.events.push({ name: '(clear)', value: null });
     }
 
     onScrollToEnd($event) {
-        this.events.push({name: '(scrollToEnd)', value: $event});
+        this.events.push({ name: '(scrollToEnd)', value: $event });
+    }
+
+    onSearch($event) {
+        this.events.push({ name: '(search)', value: $event })
     }
 }
 
