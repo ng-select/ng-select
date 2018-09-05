@@ -43,7 +43,11 @@ import { DataService } from '../shared/data.service';
 
         <label>Select multiple elements with a limit number of selections (e.g 3)</label>
         ---html,true
+        <div class="alert alert-warning mb-2" *ngIf="selectedPeople2.length === 3 && select.focused">
+            <small >Max selection reached</small>
+        </div>
         <ng-select
+                #select
                 [items]="people$2 | async"
                 [multiple]="true"
                 [maxSelectedItems]="3"
