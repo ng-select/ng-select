@@ -178,7 +178,7 @@ map: {
 | ------------- | ------------- | ------------- |
 | [ngOptionHighlight] | directive | Highlights search term in option. Accepts search term. Should be used on option element. |
 | NG_SELECT_DEFAULT_CONFIG | configuration | Configuration provider for the NgSelect component. You can inject this service and provide application wide configuration. |
-| SelectionModel | service | Abstract type serving as a DI token for selecting options. You can provide custom implementation changing selection behaviour. |
+| SELECTION_MODEL_FACTORY | service | DI token for SelectionModel implementation. You can provide custom implementation changing selection behaviour. |
 
 ## Change Detection
 Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable 
