@@ -93,7 +93,7 @@ describe('ItemsList', () => {
                 expect(list.filteredItems.length).toBe(2);
             });
 
-            it('should remove goup from filtered items when hideSelected=true and all child group items are selected', () => {
+            it('should remove group from filtered items when hideSelected=true and all child group items are selected', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([
@@ -168,7 +168,7 @@ describe('ItemsList', () => {
         });
     });
 
-    describe('unselect', () => {
+    describe('un-select', () => {
         describe('single', () => {
             let list: ItemsList;
             let cmp: NgSelectComponent;
@@ -177,7 +177,7 @@ describe('ItemsList', () => {
                 cmp.bindLabel = 'label';
                 list = itemsListFactory(cmp);
             });
-            it('should unselect selected item', () => {
+            it('should un-select selected item', () => {
                 list.setItems([
                     { label: 'K1', val: 'V1' }
                 ]);
@@ -199,7 +199,7 @@ describe('ItemsList', () => {
                 list = itemsListFactory(cmp);
             });
 
-            it('should unselect selected items', () => {
+            it('should un-select selected items', () => {
                 list.setItems([
                     { label: 'K1', val: 'V1' },
                     { label: 'K2', val: 'V2' },
@@ -213,7 +213,7 @@ describe('ItemsList', () => {
                 expect(list.selectedItems.length).toBe(0);
             });
 
-            it('should unselect grouped selected item', () => {
+            it('should un-select grouped selected item', () => {
                 cmp.groupBy = 'groupKey';
                 list.setItems([
                     { label: 'K1', val: 'V1', groupKey: 'G1' },
@@ -228,7 +228,7 @@ describe('ItemsList', () => {
                 expect(list.selectedItems[0]).toBe(list.items[2]);
             });
 
-            it('should unselect grouped selected item when group was selected', () => {
+            it('should un-select grouped selected item when group was selected', () => {
                 cmp.groupBy = 'groupKey';
                 list.setItems([
                     { label: 'K1', val: 'V1', groupKey: 'G1' },
@@ -242,7 +242,7 @@ describe('ItemsList', () => {
                 expect(list.selectedItems[0].label).toBe(list.items[2].label); // should select only K2
             });
 
-            it('should unselect selected item and insert it back to filtered items list when hideSelected=true', () => {
+            it('should un-select selected item and insert it back to filtered items list when hideSelected=true', () => {
                 cmp.hideSelected = true;
                 list.setItems([
                     { label: 'K1', val: 'V1' },
@@ -255,7 +255,7 @@ describe('ItemsList', () => {
                 expect(list.filteredItems.length).toBe(2);
             });
 
-            it('should unselect selected group and insert it back to filtered items when hideSelected=true', () => {
+            it('should un-select selected group and insert it back to filtered items when hideSelected=true', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([
@@ -269,7 +269,7 @@ describe('ItemsList', () => {
                 expect(list.filteredItems.length).toBe(3);
             });
 
-            it('should unselect selected item and insert it back to filtered items with parent group when hideSelected=true', () => {
+            it('should un-select selected item and insert it back to filtered items with parent group when hideSelected=true', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([
@@ -282,7 +282,7 @@ describe('ItemsList', () => {
                 expect(list.filteredItems.length).toBe(2);
             });
 
-            it('should not inserted unselected group parent item to filtered items if it is already exsists', () => {
+            it('should not inserted unselected group parent item to filtered items if it is already exists', () => {
                 cmp.hideSelected = true;
                 cmp.groupBy = 'groupKey';
                 list.setItems([
@@ -299,7 +299,7 @@ describe('ItemsList', () => {
                 list.select(list.items[4]);
                 list.unselect(list.items[1]);
                 list.unselect(list.items[2]);
-                
+
                 expect(list.filteredItems.length).toBe(5);
                 expect(list.selectedItems.length).toBe(1);
             });
@@ -373,6 +373,39 @@ describe('ItemsList', () => {
             list.select(list.items[0]); // select group;
             list.filter('K1');
             expect(list.filteredItems.length).toBe(0);
+        });
+    });
+
+    describe('map selected', () => {
+        let list: ItemsList;
+        let cmp: NgSelectComponent;
+        beforeEach(() => {
+            cmp = ngSelectFactory();
+            cmp.multiple = true;
+            cmp.bindLabel = 'name';
+            cmp.bindValue = 'name';
+            cmp.groupBy = 'country';
+            cmp.selectableGroupAsModel = false;
+            list = itemsListFactory(cmp);
+        });
+
+        it('should map selected items from items', () => {
+            list.select(list.mapItem({ name: 'Adam' }, null));
+            list.select(list.mapItem({ name: 'Samantha' }, null));
+            list.select(list.mapItem({ name: 'Amalie' }, null));
+
+            list.setItems([
+                { name: 'Adam', country: 'United States' },
+                { name: 'Samantha', country: 'United States' },
+                { name: 'Amalie', country: 'Argentina' }]);
+
+            list.mapSelectedItems();
+
+            expect(list.selectedItems.length).toBe(3);
+            expect(list.selectedItems[0].parent.label).toBe('United States');
+            expect(list.selectedItems[0].selected).toBeTruthy();
+            expect(list.items[0].label).toBe('United States');
+            expect(list.items[0].selected).toBeTruthy();
         });
     });
 });

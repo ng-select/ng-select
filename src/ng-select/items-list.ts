@@ -235,14 +235,15 @@ export class ItemsList {
     }
 
     mapSelectedItems() {
-        this.selectedItems.forEach((selected, i) => {
+        const multiple = this._ngSelect.multiple;
+        for (const selected of this.selectedItems) {
             const value = this._ngSelect.bindValue ? selected.value[this._ngSelect.bindValue] : selected.value;
             const item = this.findItem(value);
             if (item && selected !== item) {
-                item.selected = true;
-                this.selectedItems[i] = item;
+                this._selectionModel.unselect(selected, multiple);
+                this._selectionModel.select(item, multiple, this._ngSelect.selectableGroupAsModel);
             }
-        });
+        }
 
         if (this._ngSelect.hideSelected) {
             this._filteredItems = this.filteredItems.filter(x => this.selectedItems.indexOf(x) === -1);

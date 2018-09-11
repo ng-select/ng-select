@@ -99,7 +99,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() selectableGroup = false;
     @Input() selectableGroupAsModel = true;
     @Input() searchFn = null;
-    @Input() clearSearchOnAdd = true;
+
     @Input() labelForId = null;
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
@@ -115,6 +115,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
         this._compareWith = fn;
     }
+
+    @Input()
+    get clearSearchOnAdd() { return isDefined(this._clearSearchOnAdd) ? this._clearSearchOnAdd : this.closeOnSelect; };
+    set clearSearchOnAdd(value) {
+        this._clearSearchOnAdd = value;
+    };
 
     // output events
     @Output('blur') blurEvent = new EventEmitter();
@@ -161,6 +167,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _manualOpen: boolean;
     private _pressedKeys: string[] = [];
     private _compareWith: CompareWithFn;
+    private _clearSearchOnAdd: boolean;
 
     private readonly _destroy$ = new Subject<void>();
     private readonly _keyPress$ = new Subject<string>();
