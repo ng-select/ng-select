@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.8.1"></a>
+## [2.8.1](https://github.com/ng-select/ng-select/compare/v2.8.0...v2.8.1) (2018-09-11)
+
+
+### Bug Fixes
+
+* correctly map selected items from items array ([c8216e8](https://github.com/ng-select/ng-select/commit/c8216e8)), closes [#781](https://github.com/ng-select/ng-select/issues/781)
+* don't clear search term when closeOnSelect is false ([4fc243a](https://github.com/ng-select/ng-select/commit/4fc243a)), closes [#794](https://github.com/ng-select/ng-select/issues/794)
+
+
+
 <a name="2.8.0"></a>
 # [2.8.0](https://github.com/ng-select/ng-select/compare/v2.7.1...v2.8.0) (2018-09-07)
 
