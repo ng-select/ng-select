@@ -22,7 +22,7 @@ export class DefaultSelectionModel implements SelectionModel {
 
     select(item: NgOption, multiple: boolean, groupAsModel: boolean) {
         item.selected = true;
-        if (groupAsModel || item.parent) {
+        if (groupAsModel || !item.children) {
             this._selected.push(item);
         }
         if (multiple) {
