@@ -306,7 +306,7 @@ export class ItemsList {
         const isFn = isFunction(this._ngSelect.groupBy);
         const groups = new Map<string, NgOption[]>();
         for (const item of items) {
-            let key = isFn ? (<Function>prop).apply(this, [item.value]) : item.value[<string>prop];
+            let key = isFn ? (<Function>prop)(item.value) : item.value[<string>prop];
             key = isDefined(key) ? key : undefined;
             const group = groups.get(key);
             if (group) {
@@ -336,10 +336,8 @@ export class ItemsList {
                 disabled: !this._ngSelect.selectableGroup,
                 htmlId: newId()
             };
-            const groupKey = isFn ? this._ngSelect.bindLabel : this._ngSelect.groupBy;
-            parent.value = { [groupKey]: key };
-            items.push(parent);
-
+            const groupKey = isFn ? this._ngSelect.bindLabel : <string>this._ngSelect.groupBy;
+            const groupValue = this._ngSelect.groupValue || (() => ({ [groupKey]: key }));
             const children = groups.get(key).map(x => {
                 x.parent = parent;
                 x.children = undefined;
@@ -347,6 +345,8 @@ export class ItemsList {
                 return x;
             });
             parent.children = children;
+            parent.value = groupValue(key, children.map(x => x.value));
+            items.push(parent);
             items.push(...children);
         }
         return items;

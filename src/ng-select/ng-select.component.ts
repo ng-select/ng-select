@@ -93,7 +93,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() hideSelected = false;
     @Input() selectOnTab = false;
     @Input() maxSelectedItems: number;
-    @Input() groupBy: string;
+    @Input() groupBy: string | Function;
+    @Input() groupValue: Function;
     @Input() bufferAmount = 4;
     @Input() virtualScroll = false;
     @Input() selectableGroup = false;
@@ -657,7 +658,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             if (this.bindValue) {
                 let resolvedValue = null;
                 if (item.children) {
-                    resolvedValue = item.value[this.groupBy];
+                    resolvedValue = item.value[<string>this.groupBy];
                 } else {
                     resolvedValue = this.itemsList.resolveNested(item.value, this.bindValue);
                 }

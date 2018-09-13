@@ -2915,6 +2915,27 @@ describe('NgSelectComponent', function () {
             expect(items[6].value['name']).toBe('c2');
         }));
 
+        it('should set group value using custom fn', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        bindLabel="name"
+                        [groupBy]="groupByFn"
+                        [groupValue]="groupValueFn"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+
+            const items = fixture.componentInstance.select.itemsList.items;
+
+            expect(items.length).toBe(12);
+            expect(items[0].children).toBeDefined();
+            expect(items[0].value['group']).toBe('c1');
+            expect(items[6].children).toBeDefined();
+            expect(items[6].value['group']).toBe('c2');
+        }));
+
         it('should not mark optgroup item as marked', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
@@ -3084,6 +3105,7 @@ class NgSelectGroupingTestCmp {
     selectedAccountName = 'Adam';
     selectedAccount = null;
     groupByFn = (item) => item.child.name;
+    groupValueFn = (key, _) => ({ group: key});
     accounts = [
         { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { name: 'c1' } },
         { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States', child: { name: 'c1' } },
