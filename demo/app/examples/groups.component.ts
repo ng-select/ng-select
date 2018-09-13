@@ -25,14 +25,19 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
             <small>Selected: {{selectedAccount | json}}</small>
         </p>
 
-        <label>Group by function expression</label>
+        <label>Group by function expression and custom group value</label>
         ---html,true
         <ng-select [items]="accounts2"
             bindLabel="name"
             bindValue="name"
             [groupBy]="groupByFn"
+            [groupValue]="groupValueFn"
             [multiple]="true"
             [(ngModel)]="selectedAccount2">
+            <ng-template ng-optgroup-tmp let-item="item">
+                <span style="vertical-align: middle;">{{item.name}}</span>
+                <span class="ml-1 badge badge-secondary">{{item.total}}</span>
+            </ng-template>
         </ng-select>
         ---
         <p>
@@ -120,6 +125,7 @@ export class SelectGroupsComponent {
     accounts2 = this.accounts.slice();
     selectedAccount2 = ['Natasha'];
     groupByFn = (item) => item.child.state;
+    groupValueFn = (_: string, children: any[]) => ({ name: children[0].child.state, total: children.length });
 
     accounts3 = this.accounts.slice();
     selectedAccount3 = this.accounts3[1];
