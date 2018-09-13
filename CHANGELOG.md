@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.9.0"></a>
+# [2.9.0](https://github.com/ng-select/ng-select/compare/v2.8.1...v2.9.0) (2018-09-13)
+
+
+### Features
+
+* **groupValue:** allow to specify custom grouped value ([b458231](https://github.com/ng-select/ng-select/commit/b458231))
+
+
+
 <a name="2.8.1"></a>
 ## [2.8.1](https://github.com/ng-select/ng-select/compare/v2.8.0...v2.8.1) (2018-09-11)
 
