@@ -17,7 +17,8 @@ import { map } from 'rxjs/operators';
                 bindValue="id"
                 [(ngModel)]="selectedPeople">
             <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
-                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.gender | uppercase}}
+                <input id="item-{{index}}" type="checkbox" [indeterminate]="item$.indeterminate"
+                    [ngModel]="item$.selected"/> {{item.gender | uppercase}}
             </ng-template>
             <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
                 <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.name}}
@@ -41,7 +42,8 @@ import { map } from 'rxjs/operators';
                 bindValue="id"
                 [(ngModel)]="selectedPeople2">
             <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
-                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.gender | uppercase}}
+                <input id="item-{{index}}" [indeterminate]="item$.indeterminate"
+                    type="checkbox" [ngModel]="item$.selected"/> {{item.gender | uppercase}} 
             </ng-template>
             <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
                 <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.name}}
