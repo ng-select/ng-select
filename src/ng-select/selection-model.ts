@@ -30,11 +30,13 @@ export class DefaultSelectionModel implements SelectionModel {
                 const childrenCount = item.parent.children.length;
                 const selectedCount = item.parent.children.filter(x => x.selected).length;
                 item.parent.selected = childrenCount === selectedCount;
+                item.parent.indeterminate = !item.parent.selected && selectedCount > 0;
             } else if (item.children) {
                 this._setChildrenSelectedState(item.children, true);
                 this._removeChildren(item);
                 if (!groupAsModel) {
                     this._selected = [...this._selected, ...item.children];
+                    item.indeterminate = (this._selected.length !== item.children.length) && this._selected.length > 0;
                 }
             }
         }
@@ -43,13 +45,17 @@ export class DefaultSelectionModel implements SelectionModel {
     unselect(item: NgOption, multiple: boolean) {
         this._selected = this._selected.filter(x => x !== item);
         item.selected = false;
+        item.indeterminate = false;
         if (multiple) {
-            if (item.parent && item.parent.selected) {
-                const children = item.parent.children;
-                this._removeParent(item.parent);
-                this._removeChildren(item.parent);
-                this._selected.push(...children.filter(x => x !== item));
-                item.parent.selected = false;
+            if (item.parent) {
+                if (item.parent.selected) {
+                    const children = item.parent.children;
+                    this._removeParent(item.parent);
+                    this._removeChildren(item.parent);
+                    this._selected.push(...children.filter(x => x !== item));
+                    item.parent.selected = false;
+                }
+                item.parent.indeterminate  = this._selected.length && !item.parent.selected ? true : false;
             } else if (item.children) {
                 this._setChildrenSelectedState(item.children, false);
                 this._removeChildren(item);

@@ -6,6 +6,7 @@ export interface NgOption {
     disabled?: boolean;
     marked?: boolean;
     label?: string;
+    indeterminate?: boolean;
     value?: string | Object;
     parent?: NgOption;
     children?: NgOption[];
