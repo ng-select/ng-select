@@ -25,6 +25,7 @@ interface AngSelectEvent {
                    (blur)="onBlur($event)"
                    (clear)="onClear()"
                    (add)="onAdd($event)"
+                   (afterAdd)="onAfterAdd($event)"
                    (scrollToEnd)="onScrollToEnd($event)"
                    (remove)="onRemove($event)"
                    (change)="onChange($event)">
@@ -79,6 +80,10 @@ export class SelectEventsComponent {
 
     onAdd($event) {
         this.events.push({ name: '(add)', value: $event });
+    }
+
+    onAfterAdd($event) {
+        this.events.push({ name: '(afterAdd)', value: $event});
     }
 
     onRemove($event) {

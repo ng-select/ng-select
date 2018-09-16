@@ -154,7 +154,8 @@ map: {
 
 | Output  | Description |
 | ------------- | ------------- |
-| (add)  | Fired when item is selected |
+| (add)  | Fired when item is selected before ngModel updates |
+| (afterAdd)  | Fired after item is selected and ngModel updates |
 | (blur)  | Fired on select blur |
 | (change)  | Fired on selected value change |
 | (close)  | Fired on select dropdown close |
