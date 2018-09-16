@@ -2571,7 +2571,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.onAdd).not.toHaveBeenCalled();
         }));
 
-        fit('should fire afterAddEvent after item is added', fakeAsync(() => {
+        it('should fire afterAddEvent after item is added', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
