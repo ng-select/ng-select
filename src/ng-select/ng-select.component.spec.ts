@@ -2571,6 +2571,21 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.onAdd).not.toHaveBeenCalled();
         }));
 
+        fit('should fire afterAddEvent after item is added', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                            (afterAdd)="onAfterAdd($event)"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            spyOn(fixture.componentInstance, 'onAfterAdd');
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.select(fixture.componentInstance.select.itemsList.items[0]);
+            expect(fixture.componentInstance.onAfterAdd).toHaveBeenCalledWith(fixture.componentInstance.cities[0]);
+        }));
+
         it('should fire remove when item is removed', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
@@ -3090,6 +3105,7 @@ class NgSelectTestCmp {
     onOpen() { }
     onClose() { }
     onAdd() { }
+    onAfterAdd() {}
     onRemove() { }
     onClear() { }
     onSearch() { }
