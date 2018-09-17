@@ -2555,7 +2555,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.onAdd).toHaveBeenCalledWith(fixture.componentInstance.cities[0]);
         }));
 
-        it('should updated ngModel beforeAddEvent is fired', fakeAsync(() => {
+        it('should update ngModel before AddEvent is fired after selection', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
