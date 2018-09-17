@@ -2555,6 +2555,26 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.onAdd).toHaveBeenCalledWith(fixture.componentInstance.cities[0]);
         }));
 
+        it('should updated ngModel beforeAddEvent is fired', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                            (add)="onAdd($event)"
+                            [multiple]="true"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+
+            expect(fixture.componentInstance.selectedCity).toBeUndefined();
+            spyOn(fixture.componentInstance, 'onAdd');
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.select(fixture.componentInstance.select.itemsList.items[0]);
+            expect(fixture.componentInstance.selectedCity).toBeDefined();
+
+            expect(fixture.componentInstance.onAdd).toHaveBeenCalledWith(fixture.componentInstance.cities[0]);
+        }));
+
         it('should not fire addEvent for single select', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
