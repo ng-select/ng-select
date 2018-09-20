@@ -154,7 +154,7 @@ map: {
 
 | Output  | Description |
 | ------------- | ------------- |
-| (add)  | Fired when item is selected |
+| (add)  | Fired when item is added while [multiple]=true. Outputs added item |
 | (blur)  | Fired on select blur |
 | (change)  | Fired on selected value change |
 | (close)  | Fired on select dropdown close |
