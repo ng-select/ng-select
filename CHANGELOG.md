@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.9.1"></a>
+## [2.9.1](https://github.com/ng-select/ng-select/compare/v2.9.0...v2.9.1) (2018-09-20)
+
+
+### Bug Fixes
+
+* **tags:** add tag as string when there are no items defined ([7dd4094](https://github.com/ng-select/ng-select/commit/7dd4094)), closes [#809](https://github.com/ng-select/ng-select/issues/809)
+* **tags:** allow to add previously added tag when select is closed ([daac234](https://github.com/ng-select/ng-select/commit/daac234)), closes [#783](https://github.com/ng-select/ng-select/issues/783)
+
+
+
 <a name="2.9.0"></a>
 # [2.9.0](https://github.com/ng-select/ng-select/compare/v2.8.1...v2.9.0) (2018-09-13)
 
