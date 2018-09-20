@@ -164,7 +164,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     focused: boolean;
 
     private _defaultLabel = 'label';
-    private _primitive: boolean;
+    private _primitive = true;
     private _manualOpen: boolean;
     private _pressedKeys: string[] = [];
     private _compareWith: CompareWithFn;
@@ -429,7 +429,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             tag = this._primitive ? this.filterValue : { [this.bindLabel]: this.filterValue };
         }
 
-        const handleTag = (item) => this._isTypeahead ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item);
+        const handleTag = (item) => this._isTypeahead || !this.isOpen ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item);
         if (isPromise(tag)) {
             tag.then(item => this.select(handleTag(item))).catch(() => { });
         } else if (tag) {
@@ -449,7 +449,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         const term = this.filterValue.toLowerCase();
         return this.addTag &&
             (!this.itemsList.filteredItems.some(x => x.label.toLowerCase() === term) &&
-                (!this.hideSelected || !this.selectedItems.some(x => x.label.toLowerCase() === term))) &&
+                (!this.hideSelected && this.isOpen || !this.selectedItems.some(x => x.label.toLowerCase() === term))) &&
             !this.loading;
     }
 
@@ -522,7 +522,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _setItems(items: any[]) {
         const firstItem = items[0];
         this.bindLabel = this.bindLabel || this._defaultLabel;
-        this._primitive = !firstItem ? this._primitive : !isObject(firstItem);
+        this._primitive = isDefined(firstItem) ? !isObject(firstItem) : this._primitive;
         this.itemsList.setItems(items);
         if (items.length > 0 && this.hasValue) {
             this.itemsList.mapSelectedItems();

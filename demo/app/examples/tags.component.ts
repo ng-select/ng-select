@@ -6,9 +6,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
     template: `
         <label>Default tags</label>
         ---html,true
-        <ng-select [items]="companies"
+        <ng-select [items]="[]"
                 [addTag]="true"
-                bindLabel="name"
                 [(ngModel)]="selectedCompany">
         </ng-select>
         ---

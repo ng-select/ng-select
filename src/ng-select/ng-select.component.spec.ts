@@ -1804,6 +1804,38 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.selectedCity).toBe(<any>'Copenhagen');
         }));
 
+        it('should add tag as string when there are no items', fakeAsync(() => {
+            let fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="[]"
+                    [addTag]="true"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.filter('Copenhagen');
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect(fixture.componentInstance.selectedCity).toBe(<any>'Copenhagen');
+            expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
+        }));
+
+        it('should not add item to list when select is closed', fakeAsync(() => {
+            let fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="[]"
+                    [isOpen]="false"
+                    [addTag]="true"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.filter('Copenhagen');
+            tickAndDetectChanges(fixture);
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(0);
+        }));
+
         it('should add tag as string when tab pressed', fakeAsync(() => {
             let fixture = createTestingModule(
                 NgSelectTestCmp,
@@ -1913,6 +1945,16 @@ describe('NgSelectComponent', function () {
                 fixture.componentInstance.selectedCities = [{name: 'Palanga', id: 9}];
                 select.filterValue = 'Palanga';
                 select.hideSelected = true;
+                select.isOpen = true;
+                tickAndDetectChanges(fixture);
+                expect(select.showAddTag).toBeFalsy();
+            }));
+
+            it('should be false when term exists among selected items and select is closed', fakeAsync(() => {
+                fixture.componentInstance.selectedCities = [{name: 'Palanga', id: 9}];
+                select.filterValue = 'Palanga';
+                select.hideSelected = false;
+                select.isOpen = false;
                 tickAndDetectChanges(fixture);
                 expect(select.showAddTag).toBeFalsy();
             }));
