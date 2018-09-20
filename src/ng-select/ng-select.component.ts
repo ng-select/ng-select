@@ -100,6 +100,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() selectableGroup = false;
     @Input() selectableGroupAsModel = true;
     @Input() searchFn = null;
+    @Input() dropdownOpenOnEnter = true;
 
     @Input() labelForId = null;
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
@@ -729,7 +730,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             } else if (this.showAddTag) {
                 this.selectTag();
             }
-        } else {
+        } else if (this.dropdownOpenOnEnter) {
             this.open();
         }
         $event.preventDefault();
