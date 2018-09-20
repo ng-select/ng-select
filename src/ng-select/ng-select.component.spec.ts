@@ -3362,6 +3362,41 @@ describe('NgSelectComponent', function () {
             selectOption(fixture, KeyCode.ArrowDown, 0);
             expect(fixture.componentInstance.selectedAccount).toBe('adam@email.com');
         }));
+
+        it('should group option indeterminate be correctly set', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        [multiple]="true"
+                        [selectableGroup]="true"
+                        groupBy="country"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            const items: NgOption[] = fixture.componentInstance.select.itemsList.items;
+            expect(items[0].label).toBe('United States');
+            expect(items[0].indeterminate).toBeFalsy();
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+            tickAndDetectChanges(fixture);
+            expect(items[0].indeterminate).toBeTruthy();
+            // We select the second option (so all are selected now)
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+            tickAndDetectChanges(fixture);
+            expect(items[0].indeterminate).toBeFalsy();
+            // We unselect one option
+            selectOption(fixture, KeyCode.ArrowUp, 0);
+            tickAndDetectChanges(fixture);
+            expect(items[0].indeterminate).toBeTruthy();
+            // We unselect the second option
+            selectOption(fixture, KeyCode.ArrowUp, 1);
+            tickAndDetectChanges(fixture);
+            expect(items[0].indeterminate).toBeFalsy();
+            // We select the group
+            selectOption(fixture, KeyCode.ArrowUp, 1);
+            tickAndDetectChanges(fixture);
+            expect(items[0].indeterminate).toBeFalsy();
+        }));
     });
 });
 

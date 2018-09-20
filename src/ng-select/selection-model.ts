@@ -22,6 +22,7 @@ export class DefaultSelectionModel implements SelectionModel {
 
     select(item: NgOption, multiple: boolean, groupAsModel: boolean) {
         item.selected = true;
+        item.indeterminate = false;
         if (groupAsModel || !item.children) {
             this._selected.push(item);
         }
@@ -30,6 +31,7 @@ export class DefaultSelectionModel implements SelectionModel {
                 const childrenCount = item.parent.children.length;
                 const selectedCount = item.parent.children.filter(x => x.selected).length;
                 item.parent.selected = childrenCount === selectedCount;
+                item.parent.indeterminate = !item.parent.selected;
             } else if (item.children) {
                 this._setChildrenSelectedState(item.children, true);
                 this._removeChildren(item);
@@ -43,6 +45,7 @@ export class DefaultSelectionModel implements SelectionModel {
     unselect(item: NgOption, multiple: boolean) {
         this._selected = this._selected.filter(x => x !== item);
         item.selected = false;
+        item.indeterminate = false;
         if (multiple) {
             if (item.parent && item.parent.selected) {
                 const children = item.parent.children;
@@ -50,6 +53,11 @@ export class DefaultSelectionModel implements SelectionModel {
                 this._removeChildren(item.parent);
                 this._selected.push(...children.filter(x => x !== item));
                 item.parent.selected = false;
+                item.parent.indeterminate = this._selected.length > 0;
+            } else if (item.parent) {
+                const childrenCount = item.parent.children.length;
+                const selectedCount = item.parent.children.filter(x => x.selected).length;
+                item.parent.indeterminate = selectedCount > 0 && !(childrenCount === selectedCount);
             } else if (item.children) {
                 this._setChildrenSelectedState(item.children, false);
                 this._removeChildren(item);

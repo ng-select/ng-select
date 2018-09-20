@@ -122,6 +122,7 @@ export class ItemsList {
         this._items.forEach(item => {
             item.selected = keepDisabled && item.selected && item.disabled;
             item.marked = false;
+            item.indeterminate = false;
         });
         if (this._ngSelect.hideSelected) {
             this.resetFilteredItems();
