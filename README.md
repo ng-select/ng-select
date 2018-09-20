@@ -156,7 +156,7 @@ map: {
 | ------------- | ------------- |
 | (add)  | Fired when item is added while `[multiple]="true"`. Outputs added item |
 | (blur)  | Fired on select blur |
-| (change)  | Fired on on model change. Outputs whole model |
+| (change)  | Fired on model change. Outputs whole model |
 | (close)  | Fired on select dropdown close |
 | (clear)  | Fired on clear icon click |
 | (focus)  | Fired on select focus |
