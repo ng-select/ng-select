@@ -164,7 +164,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     focused: boolean;
 
     private _defaultLabel = 'label';
-    private _primitive: boolean;
+    private _primitive = true;
     private _manualOpen: boolean;
     private _pressedKeys: string[] = [];
     private _compareWith: CompareWithFn;
@@ -522,7 +522,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _setItems(items: any[]) {
         const firstItem = items[0];
         this.bindLabel = this.bindLabel || this._defaultLabel;
-        this._primitive = !firstItem ? this._primitive : !isObject(firstItem);
+        this._primitive = isDefined(firstItem) ? !isObject(firstItem) : this._primitive;
         this.itemsList.setItems(items);
         if (items.length > 0 && this.hasValue) {
             this.itemsList.mapSelectedItems();
