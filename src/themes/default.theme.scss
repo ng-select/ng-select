@@ -1,3 +1,5 @@
+@import "mixins";
+
 $color-selected: #f5faff;
 .ng-select {
     &.ng-select-opened {
@@ -55,6 +57,10 @@ $color-selected: #f5faff;
         .ng-value-container {
             align-items: center;
             padding-left: 10px;
+            @include rtl {
+                padding-right: 10px;
+                padding-left: 0
+            }
             .ng-placeholder {
                 color: #aaa;
             }
@@ -65,10 +71,14 @@ $color-selected: #f5faff;
             height: 36px;
             .ng-value-container {
                 .ng-input {
+                    top: 5px;
                     left: 0;
                     padding-left: 10px;
                     padding-right: 50px;
-                    top: 5px;
+                    @include rtl {
+                        padding-right: 10px;
+                        padding-left: 50px;
+                    }
                 }
             }
         }
@@ -79,54 +89,80 @@ $color-selected: #f5faff;
                 background-color: #f9f9f9;
                 border: 1px solid #e3e3e3;
                 .ng-value-label {
-                    padding: 0px 5px;
+                    padding: 0 5px;
                 }
             }
         }
         .ng-select-container {
             .ng-value-container {
-                padding-left: 7px;
                 padding-top: 5px;
+                padding-left: 7px;
+                @include rtl {
+                    padding-right: 7px;
+                    padding-left: 0
+                }
                 .ng-value {
                     font-size: 0.9em;
-                    margin-right: 5px;
                     margin-bottom: 5px;
                     background-color: $color-selected;
                     border-radius: 2px;
                     border: 1px solid #c2e0ff;
+                    margin-right: 5px;
+                    @include rtl {
+                        margin-right: 0;
+                        margin-left: 5px;
+                    }
                     &.ng-value-disabled {
                         background-color: #f9f9f9;
                         border: 1px solid #e3e3e3;
                         .ng-value-label {
                             padding-left: 5px;
+                            @include rtl {
+                                padding-left: 0;
+                                padding-right: 5px;
+                            }
                         }
                     }
                     .ng-value-label {
                         display: inline-block;
-                        padding: 0px 5px 0px 5px;
+                        padding: 0 5px 0 5px;
                     }
                     .ng-value-icon {
                         display: inline-block;
-                        padding: 0px 5px;
+                        padding: 0 5px;
                         &:hover {
                             background-color: #d8eafd;
                         }
                         &.left {
                             border-right: 1px solid #c2e0ff;
+                            @include rtl {
+                                border-left: 1px solid #c2e0ff;
+                                border-right: none;
+                            }
                         }
                         &.right {
                             border-left: 1px solid #c2e0ff;
+                            @include rtl {
+                                border-left: 0;
+                                border-right: 1px solid #c2e0ff;
+                            }
                         }
                     }
                 }
                 .ng-input {
-                    padding-bottom: 3px;
-                    padding-left: 3px;
+                    padding: 0 0 3px 3px;
+                    @include rtl {
+                        padding: 0 3px 3px 0;
+                    }
                 }
                 .ng-placeholder {
                     top: 5px;
                     padding-bottom: 5px;
                     padding-left: 3px;
+                    @include rtl {
+                        padding-right: 3px;
+                        padding-left: 0;
+                    }
                 }
             }
         }
@@ -140,12 +176,19 @@ $color-selected: #f5faff;
         }
     }
     .ng-spinner-zone {
-        padding-right: 5px;
-        padding-top: 5px;
+        padding: 5px 5px 0 0;
+
+        @include rtl {
+            padding: 5px 0 0 5px;
+        }
     }
     .ng-arrow-wrapper {
-        padding-right: 5px;
         width: 25px;
+        padding-right: 5px;
+        @include rtl {
+            padding-left: 5px;
+            padding-right: 0;
+        }
         &:hover {
             .ng-arrow {
                 border-top-color: #666;
@@ -164,6 +207,7 @@ $color-selected: #f5faff;
     background-color: #fff;
     border: 1px solid #ccc;
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+    left: 0;
     &.ng-select-bottom {
         top: 100%;
         border-bottom-right-radius: 4px;
@@ -206,7 +250,6 @@ $color-selected: #f5faff;
         margin-bottom: 1px;
         .ng-optgroup {
             user-select: none;
-            cursor: default;
             padding: 8px 10px;
             font-weight: 500;
             color: rgba(0, 0, 0, 0.54);
@@ -242,11 +285,19 @@ $color-selected: #f5faff;
             }
             &.ng-option-child {
                 padding-left: 22px;
+                @include rtl {
+                    padding-right: 22px;
+                    padding-left: 0;
+                }
             }
             .ng-tag-label {
-                padding-right: 5px;
                 font-size: 80%;
                 font-weight: 400;
+                padding-right: 5px;
+                @include rtl {
+                    padding-left: 5px;
+                    padding-right: 0;
+                }
             }
         }
     }

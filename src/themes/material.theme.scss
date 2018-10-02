@@ -1,3 +1,5 @@
+@import "mixins";
+
 $highlight-color: #3f51b5;
 .ng-select {
     padding-bottom: 1.25em;
@@ -98,12 +100,14 @@ $highlight-color: #3f51b5;
         .ng-select-container {
             .ng-value-container {
                 .ng-value {
-                    margin-right: 0.4375em;
-                    margin-bottom: 0.4375em;
                     background-color: $highlight-color;
                     border-radius: 2px;
                     color: #fff;
                     padding: 2px 5px;
+                    margin: 0 0.4375em 0.4375em 0;
+                    @include rtl {
+                        margin: 0 0 0.4375em 0.4375em;
+                    }
                     &.ng-value-disabled {
                         background-color: rgba(0, 0, 0, .12);
                         color: rgba(0, 0, 0, .26);
@@ -115,6 +119,10 @@ $highlight-color: #3f51b5;
                     .ng-value-icon {
                         color: rgba(255, 255, 255, .54);
                         padding-right: 5px;
+                        @include rtl {
+                            padding-left: 5px;
+                            padding-right: 0;
+                        }
                         &:hover {
                             color: rgba(255, 255, 255, .87);
                         }
@@ -160,6 +168,7 @@ $highlight-color: #3f51b5;
 
 .ng-dropdown-panel {
     background: #fff;
+    left: 0;
     &.ng-select-bottom {
         top: calc(100% - 1.25em);
         box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
@@ -217,10 +226,13 @@ $highlight-color: #3f51b5;
             overflow: hidden;
             text-overflow: ellipsis;
             padding: 0 16px;
-            text-align: left;
             text-decoration: none;
             position: relative;
             color: rgba(0, 0, 0, .87);
+            text-align: left;
+            @include rtl {
+                text-align: right;
+            }
             &.ng-option-marked {
                 background: rgba(0, 0, 0, .04);
                 color: rgba(0, 0, 0, .87);
@@ -234,9 +246,17 @@ $highlight-color: #3f51b5;
             }
             &.ng-option-child {
                 padding-left: 32px;
+                @include rtl {
+                    padding-right: 32px;
+                    padding-left: 0
+                }
             }
             .ng-tag-label {
                 padding-right: 5px;
+                @include rtl {
+                    padding-left: 5px;
+                    padding-right: 0;
+                }
                 font-size: 80%;
                 font-weight: 400;
                 color: rgba(0, 0, 0, 0.38);
