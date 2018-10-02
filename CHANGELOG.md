@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.6.2"></a>
+## [1.6.2](https://github.com/ng-select/ng-select/compare/v1.6.1...v1.6.2) (2018-10-02)
+
+
+### Bug Fixes
+
+* **styles:** make group more distinctable ([03c3fa9](https://github.com/ng-select/ng-select/commit/03c3fa9))
+* don't group items without key ([1f34211](https://github.com/ng-select/ng-select/commit/1f34211))
+
+
+
 <a name="1.6.1"></a>
 ## [1.6.1](https://github.com/ng-select/ng-select/compare/v1.6.0...v1.6.1) (2018-09-12)
 
