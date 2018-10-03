@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.10.0"></a>
+# [2.10.0](https://github.com/ng-select/ng-select/compare/v2.9.1...v2.10.0) (2018-10-03)
+
+
+### Features
+
+* RTL support ([#846](https://github.com/ng-select/ng-select/issues/846)) ([b155f83](https://github.com/ng-select/ng-select/commit/b155f83))
+
+
+
 <a name="2.9.1"></a>
 ## [2.9.1](https://github.com/ng-select/ng-select/compare/v2.9.0...v2.9.1) (2018-09-20)
 
