@@ -15,6 +15,7 @@ export class AppComponent {
     title: string;
     version: string = window['ngSelectVersion'];
     exampleSourceUrl: string;
+    dir: 'ltr' | 'rtl' = 'ltr';
 
     constructor(private router: Router,
         private activatedRoute: ActivatedRoute,

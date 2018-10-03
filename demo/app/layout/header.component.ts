@@ -1,6 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 const defaultTheme = require('./../../../src/themes/default.theme.scss');
 const materialTheme = require('./../../../src/themes/material.theme.scss');
+
+type langDir = 'ltr' | 'rtl';
 
 @Component({
     selector: 'layout-header',
@@ -29,6 +31,14 @@ const materialTheme = require('./../../../src/themes/material.theme.scss');
                     </div>
                 </div>
 
+                <div ngbDropdown class="d-inline-block ml-2">
+                    <button class="btn btn-outline-light btn-sm text-uppercase" style="width: 60px;" ngbDropdownToggle>{{dir}}</button>
+                    <div ngbDropdownMenu>
+                        <button (click)="changeDirTo('ltr')" class="dropdown-item btn-sm text-uppercase">ltr</button>
+                        <button (click)="changeDirTo('rtl')" class="dropdown-item btn-sm text-uppercase">rtl</button>
+                    </div>
+                </div>
+
                 <ul class="navbar-nav mr-auto">
                 </ul>
 
@@ -47,6 +57,8 @@ const materialTheme = require('./../../../src/themes/material.theme.scss');
 export class LayoutHeaderComponent implements OnInit {
     theme = 'Default theme';
     @Input() version: string;
+    @Input() dir: langDir;
+    @Output() dirChange = new EventEmitter<langDir>();
 
     ngOnInit() {
         defaultTheme.use();
@@ -61,6 +73,11 @@ export class LayoutHeaderComponent implements OnInit {
             defaultTheme.unuse();
             materialTheme.use();
         }
+    }
+
+    changeDirTo(dir: langDir) {
+        this.dir = dir;
+        this.dirChange.emit(dir);
     }
 }
 
