@@ -2,3 +2,4 @@ export { NgSelectComponent, NG_SELECT_DEFAULT_CONFIG, SELECTION_MODEL_FACTORY } 
 export { NgSelectModule } from './ng-select/ng-select.module';
 export { NgOption, NgSelectConfig } from './ng-select/ng-select.types';
 export { SelectionModel } from './ng-select/selection-model';
+export * from './ng-select/ng-templates.directive';
