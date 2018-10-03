@@ -995,6 +995,35 @@ describe('NgSelectComponent', function () {
 
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
         }));
+
+        it('should open dropdown on Enter press', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [(ngModel)]="city">
+                </ng-select>`);
+
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+        }));
+
+        it('should not open dropdown on Enter press when [dropdownOpenOnEnter]="false"', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [dropdownOpenOnEnter]="false"
+                            [(ngModel)]="city">
+                </ng-select>`);
+
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+        }));
     });
 
     describe('Keyboard events', () => {
@@ -1022,7 +1051,7 @@ describe('NgSelectComponent', function () {
 
             it('should not open dropdown when isOpen is false', () => {
                 const open = spyOn(select, 'open');
-                select.ngOnChanges(<any>{ isOpen: { currentValue: false }});
+                select.ngOnChanges(<any>{ isOpen: { currentValue: false } });
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 expect(select.isOpen).toBeFalsy();
                 expect(open).not.toHaveBeenCalled();
@@ -1942,7 +1971,7 @@ describe('NgSelectComponent', function () {
             });
 
             it('should be false when term exists among selected items', fakeAsync(() => {
-                fixture.componentInstance.selectedCities = [{name: 'Palanga', id: 9}];
+                fixture.componentInstance.selectedCities = [{ name: 'Palanga', id: 9 }];
                 select.filterValue = 'Palanga';
                 select.hideSelected = true;
                 select.isOpen = true;
@@ -1951,7 +1980,7 @@ describe('NgSelectComponent', function () {
             }));
 
             it('should be false when term exists among selected items and select is closed', fakeAsync(() => {
-                fixture.componentInstance.selectedCities = [{name: 'Palanga', id: 9}];
+                fixture.componentInstance.selectedCities = [{ name: 'Palanga', id: 9 }];
                 select.filterValue = 'Palanga';
                 select.hideSelected = false;
                 select.isOpen = false;
@@ -2811,7 +2840,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({className: 'ng-arrow-wrapper' }));
+                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-arrow-wrapper' }));
                 };
             }));
 
@@ -3147,7 +3176,7 @@ class NgSelectGroupingTestCmp {
     selectedAccountName = 'Adam';
     selectedAccount = null;
     groupByFn = (item) => item.child.name;
-    groupValueFn = (key, _) => ({ group: key});
+    groupValueFn = (key, _) => ({ group: key });
     accounts = [
         { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { name: 'c1' } },
         { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States', child: { name: 'c1' } },

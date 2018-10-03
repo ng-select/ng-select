@@ -149,6 +149,7 @@ map: {
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
+| [dropdownOpenOnEnter] | `boolean` |  true | no | Whether pressing the Enter key should open dropdown (when dropdown is already in closed state) |
 
 ### Outputs
 
