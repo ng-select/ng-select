@@ -29,7 +29,7 @@
                    [attr.tabindex]="tabIndex"
                    [readOnly]="!searchable"
                    [disabled]="disabled"
-                   [value]="filterValue"
+                   [value]="filterValue ? filterValue : ''"
                    (input)="filter(filterInput.value)"
                    (focus)="onInputFocus($event)"
                    (blur)="onInputBlur($event)"
