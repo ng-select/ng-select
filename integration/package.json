@@ -5,14 +5,14 @@
         "postinstall": "webdriver-manager update --gecko false --standalone false",
         "ng": "ng",
         "start": "ng serve",
-        "start:server": "node dist/integration-server/server",
+        "start:server": "node ./dist/integration-server/server",
         "build": "yarn build:client && yarn build:server",
         "build:client": "ng build --configuration=server-e2e",
-        "build:server": "ng run integration:server && webpack --config webpack.server.config.js --progress --colors",
+        "build:server": "ng run integration:server && webpack --config ./webpack.server.config.js --progress --colors",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e",
-        "e2e:server": "concurrently \"yarn start:server\" \"protractor e2e/protractor-server.conf.js\" --kill-others --success first"
+        "e2e:server": "concurrently \"yarn start:server\" \"protractor ./e2e/protractor-server.conf.js\" --kill-others --success first"
     },
     "private": true,
     "dependencies": {
