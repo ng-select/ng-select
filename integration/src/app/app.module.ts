@@ -13,7 +13,7 @@ import { NgSelectModule, NG_SELECT_DEFAULT_CONFIG } from '@ng-select/ng-select';
   imports: [
     CommonModule,
     FormsModule,
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'ng-select' }),
     NgSelectModule
   ],
   providers: [
