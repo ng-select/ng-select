@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.10.2"></a>
+## [2.10.2](https://github.com/ng-select/ng-select/compare/v2.10.1...v2.10.2) (2018-10-09)
+
+
+### Bug Fixes
+
+* fixed null value display when using angular universal ([#852](https://github.com/ng-select/ng-select/issues/852)) ([77482c0](https://github.com/ng-select/ng-select/commit/77482c0)), closes [#764](https://github.com/ng-select/ng-select/issues/764)
+
+
+
 <a name="2.10.1"></a>
 ## [2.10.1](https://github.com/ng-select/ng-select/compare/v2.10.0...v2.10.1) (2018-10-03)
 
