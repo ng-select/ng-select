@@ -48,9 +48,9 @@ import { newId } from './id';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
 import { SelectionModelFactory } from './selection-model';
+import { NG_SELECT_DEFAULT_CONFIG, ngSelectConfigDefaults } from './config';
 
-export const NG_SELECT_DEFAULT_CONFIG = new InjectionToken<NgSelectConfig>('ng-select-default-options');
-export const SELECTION_MODEL_FACTORY = new InjectionToken<NgSelectConfig>('ng-select-selection-model');
+export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
@@ -796,10 +796,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     private _mergeGlobalConfig(config: NgSelectConfig) {
         this.placeholder = this.placeholder || config.placeholder;
-        this.notFoundText = this.notFoundText || config.notFoundText;
-        this.typeToSearchText = this.typeToSearchText || config.typeToSearchText;
-        this.addTagText = this.addTagText || config.addTagText;
-        this.loadingText = this.loadingText || config.loadingText;
-        this.clearAllText = this.clearAllText || config.clearAllText;
+        this.notFoundText = this.notFoundText || config.notFoundText || ngSelectConfigDefaults.notFoundText;
+        this.typeToSearchText = this.typeToSearchText || config.typeToSearchText  || ngSelectConfigDefaults.typeToSearchText;
+        this.addTagText = this.addTagText || config.addTagText || ngSelectConfigDefaults.addTagText;
+        this.loadingText = this.loadingText || config.loadingText || ngSelectConfigDefaults.loadingText;
+        this.clearAllText = this.clearAllText || config.clearAllText || ngSelectConfigDefaults.clearAllText;
     }
 }
