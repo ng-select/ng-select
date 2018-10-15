@@ -226,6 +226,7 @@ If you are using `ViewEncapsulation`, your should use special `::ng-deep` select
     border-radius: 0;
 }
 ```
+WARNING: Keep in mind that ng-deep is deprecated and there is no alternative to it yet. See [https://github.com/angular/angular/issues/17867](Here).
 
 ### Validation state
 By default when you use reactive forms validators or template driven forms validators css class `ng-invalid` will be applied on ng-select. You can show errors state by adding custom css style
