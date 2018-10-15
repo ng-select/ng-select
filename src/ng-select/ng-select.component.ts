@@ -43,12 +43,12 @@ import {
 import { ConsoleService } from './console.service';
 import { isDefined, isFunction, isPromise, isObject } from './value-utils';
 import { ItemsList } from './items-list';
-import { NgOption, KeyCode, NgSelectConfig } from './ng-select.types';
+import { NgOption, KeyCode } from './ng-select.types';
 import { newId } from './id';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
 import { SelectionModelFactory } from './selection-model';
-import { NG_SELECT_DEFAULT_CONFIG, ngSelectConfigDefaults } from './config';
+import { NgSelectConfig } from './config.service';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
@@ -96,7 +96,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() groupBy: string | Function;
     @Input() groupValue: Function;
     @Input() bufferAmount = 4;
-    @Input() virtualScroll = false;
+    @Input() virtualScroll: boolean;
     @Input() selectableGroup = false;
     @Input() selectableGroupAsModel = true;
     @Input() searchFn = null;
@@ -183,7 +183,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     constructor(
         @Attribute('class') public classes: string,
         @Attribute('tabindex') public tabIndex: string,
-        @Inject(NG_SELECT_DEFAULT_CONFIG) config: NgSelectConfig,
+        config: NgSelectConfig,
         @Inject(SELECTION_MODEL_FACTORY) newSelectionModel: SelectionModelFactory,
         _elementRef: ElementRef,
         private _cd: ChangeDetectorRef,
@@ -796,10 +796,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     private _mergeGlobalConfig(config: NgSelectConfig) {
         this.placeholder = this.placeholder || config.placeholder;
-        this.notFoundText = this.notFoundText || config.notFoundText || ngSelectConfigDefaults.notFoundText;
-        this.typeToSearchText = this.typeToSearchText || config.typeToSearchText  || ngSelectConfigDefaults.typeToSearchText;
-        this.addTagText = this.addTagText || config.addTagText || ngSelectConfigDefaults.addTagText;
-        this.loadingText = this.loadingText || config.loadingText || ngSelectConfigDefaults.loadingText;
-        this.clearAllText = this.clearAllText || config.clearAllText || ngSelectConfigDefaults.clearAllText;
+        this.notFoundText = this.notFoundText || config.notFoundText;
+        this.typeToSearchText = this.typeToSearchText || config.typeToSearchText;
+        this.addTagText = this.addTagText || config.addTagText;
+        this.loadingText = this.loadingText || config.loadingText;
+        this.clearAllText = this.clearAllText || config.clearAllText;
+        this.virtualScroll = this.virtualScroll != null
+            ? this.virtualScroll
+            : config.disableVirtualScroll != null ? !config.disableVirtualScroll : false;
     }
 }
