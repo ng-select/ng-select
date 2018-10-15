@@ -8,5 +8,5 @@ export class NgSelectConfig {
     addTagText = 'Add item';
     loadingText = 'Loading...';
     clearAllText = 'Clear all';
-    disableVirtualScroll = false;
+    disableVirtualScroll = true;
 }

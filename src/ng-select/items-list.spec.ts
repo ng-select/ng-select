@@ -1,6 +1,7 @@
 import { NgSelectComponent } from './ng-select.component';
 import { ItemsList } from './items-list';
 import { DefaultSelectionModel } from './selection-model';
+import { NgSelectConfig } from './config.service';
 
 describe('ItemsList', () => {
     describe('select', () => {
@@ -415,5 +416,5 @@ function itemsListFactory(cmp: NgSelectComponent): ItemsList {
 }
 
 function ngSelectFactory(): NgSelectComponent {
-    return new NgSelectComponent(null, null, {}, () => new DefaultSelectionModel(), {} as any, null, null);
+    return new NgSelectComponent(null, null, new NgSelectConfig(), () => new DefaultSelectionModel(), {} as any, null, null);
 }
