@@ -13,7 +13,7 @@ import {
     ErrorHandler,
     NgZone,
     Type,
-    ViewChild
+    ViewChild, ViewEncapsulation
 } from '@angular/core';
 import { ConsoleService } from './console.service';
 import { FormsModule } from '@angular/forms';
@@ -961,6 +961,41 @@ describe('NgSelectComponent', function () {
 
             fixture.whenStable().then(() => {
                 expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+            })
+        }));
+
+        it('should select item with encapsulation = native', fakeAsync(() => {
+            const fixture = createTestingModule(
+                EncapsulatedTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [(ngModel)]="city"></ng-select>`);
+
+            expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(0);
+            expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+
+            const cmp = fixture.componentInstance;
+
+            cmp.select.open();
+            tickAndDetectChanges(fixture);
+
+            expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(0);
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+
+            const outsideClick = spyOn(cmp.select.dropdownPanel.outsideClick, 'emit');
+            expect(outsideClick).not.toHaveBeenCalled();
+
+            const listItem = fixture.debugElement.query(By.css('.ng-option'));
+            let event = new MouseEvent('mousedown', { bubbles: true });
+            listItem.nativeElement.dispatchEvent(event);
+            event = new MouseEvent('click', { bubbles: true });
+            listItem.nativeElement.dispatchEvent(event);
+            tickAndDetectChanges(fixture);
+
+            fixture.whenStable().then(() => {
+                expect(outsideClick).not.toHaveBeenCalled();
+                expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(1);
             })
         }));
 
@@ -3140,7 +3175,15 @@ class NgSelectTestCmp {
 }
 
 @Component({
-    template: ``
+    template: ``,
+    encapsulation: ViewEncapsulation.Native,
+})
+class EncapsulatedTestCmp extends NgSelectTestCmp {
+    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+}
+
+@Component({
+    template: ``,
 })
 class NgSelectGroupingTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
