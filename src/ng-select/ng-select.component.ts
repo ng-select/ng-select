@@ -92,6 +92,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() closeOnSelect = true;
     @Input() hideSelected = false;
     @Input() selectOnTab = false;
+    @Input() openOnEnter: boolean;
     @Input() maxSelectedItems: number;
     @Input() groupBy: string | Function;
     @Input() groupValue: Function;
@@ -729,6 +730,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             } else if (this.showAddTag) {
                 this.selectTag();
             }
+        } else if (this.openOnEnter === false) {
+            return;
         } else {
             this.open();
         }
@@ -801,5 +804,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.addTagText = this.addTagText || config.addTagText;
         this.loadingText = this.loadingText || config.loadingText;
         this.clearAllText = this.clearAllText || config.clearAllText;
+        this.openOnEnter = this.openOnEnter !== undefined ? this.openOnEnter : config.openOnEnter;
     }
 }
