@@ -145,7 +145,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     }
 
     refresh(): Promise<void> {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             this._zone.runOutsideAngular(() => {
                 this._window.requestAnimationFrame(() => {
                     this._updateItems().then(resolve);
@@ -211,7 +211,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
             return;
         }
 
-        if ($event.target && $event.target.shadowRoot && $event.path && $event.path[0] && this._selectElement.contains($event.path[0])) {
+        if ($event.target && $event.target.shadowRoot && $event.path && $event.path[0] && this._select.contains($event.path[0])) {
             return;
         }
 
@@ -257,8 +257,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
             const res = this._virtualScrollService.calculateItems(d, this.scrollElementRef.nativeElement, this.bufferAmount || 0);
 
             (<HTMLElement>this.paddingElementRef.nativeElement).style.height = `${res.scrollHeight}px`;
-            const transform = 'translateY(' + res.topPadding + 'px)';
-            (<HTMLElement>this.contentElementRef.nativeElement).style.transform = transform;
+            (<HTMLElement>this.contentElementRef.nativeElement).style.transform = 'translateY(' + res.topPadding + 'px)';
 
             if (res.start !== this._previousStart || res.end !== this._previousEnd) {
                 this._zone.run(() => {
