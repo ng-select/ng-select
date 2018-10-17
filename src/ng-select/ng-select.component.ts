@@ -801,8 +801,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.addTagText = this.addTagText || config.addTagText;
         this.loadingText = this.loadingText || config.loadingText;
         this.clearAllText = this.clearAllText || config.clearAllText;
-        this.virtualScroll = this.virtualScroll != null
+        this.virtualScroll = isDefined(this.virtualScroll)
             ? this.virtualScroll
-            : config.disableVirtualScroll != null ? !config.disableVirtualScroll : false;
+            : isDefined(config.disableVirtualScroll) ? !config.disableVirtualScroll : false;
     }
 }
