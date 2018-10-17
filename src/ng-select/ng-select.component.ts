@@ -570,15 +570,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _isValidWriteValue(value: any): boolean {
-        if (!isDefined(value) ||
-            (this.multiple && value === '') ||
-            Array.isArray(value) && value.length === 0
-        ) {
+        if (!isDefined(value) || (this.multiple && value === '') || Array.isArray(value) && value.length === 0) {
             return false;
         }
 
         const validateBinding = (item: any): boolean => {
-            if (isObject(item) && this.bindValue) {
+            if (!isDefined(this.compareWith) && isObject(item) && this.bindValue) {
                 this._console.warn(`Binding object(${JSON.stringify(item)}) with bindValue is not allowed.`);
                 return false;
             }
