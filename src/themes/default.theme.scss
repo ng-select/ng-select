@@ -301,4 +301,9 @@ $color-selected: #f5faff;
             }
         }
     }
+
+    @include rtl {
+        direction: rtl;
+        text-align: right;
+    }
 }

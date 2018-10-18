@@ -92,6 +92,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() closeOnSelect = true;
     @Input() hideSelected = false;
     @Input() selectOnTab = false;
+    @Input() openOnEnter: boolean;
     @Input() maxSelectedItems: number;
     @Input() groupBy: string | Function;
     @Input() groupValue: Function;
@@ -570,15 +571,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _isValidWriteValue(value: any): boolean {
-        if (!isDefined(value) ||
-            (this.multiple && value === '') ||
-            Array.isArray(value) && value.length === 0
-        ) {
+        if (!isDefined(value) || (this.multiple && value === '') || Array.isArray(value) && value.length === 0) {
             return false;
         }
 
         const validateBinding = (item: any): boolean => {
-            if (isObject(item) && this.bindValue) {
+            if (!isDefined(this.compareWith) && isObject(item) && this.bindValue) {
                 this._console.warn(`Binding object(${JSON.stringify(item)}) with bindValue is not allowed.`);
                 return false;
             }
@@ -729,9 +727,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             } else if (this.showAddTag) {
                 this.selectTag();
             }
-        } else {
+        } else if (this.openOnEnter) {
             this.open();
+        } else {
+            return;
         }
+
         $event.preventDefault();
         $event.stopPropagation();
     }
@@ -804,5 +805,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.virtualScroll = isDefined(this.virtualScroll)
             ? this.virtualScroll
             : isDefined(config.disableVirtualScroll) ? !config.disableVirtualScroll : false;
+        this.openOnEnter = isDefined(this.openOnEnter) ? this.openOnEnter : config.openOnEnter;
     }
 }

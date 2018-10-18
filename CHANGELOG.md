@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.10.5"></a>
+## [2.10.5](https://github.com/ng-select/ng-select/compare/v2.10.4...v2.10.5) (2018-10-17)
+
+
+### Bug Fixes
+
+* don't validate selected model when compareWith is used ([e30e365](https://github.com/ng-select/ng-select/commit/e30e365))
+
+
+
+<a name="2.10.4"></a>
+## [2.10.4](https://github.com/ng-select/ng-select/compare/v2.10.3...v2.10.4) (2018-10-16)
+
+
+
+<a name="2.10.3"></a>
+## [2.10.3](https://github.com/ng-select/ng-select/compare/v2.10.2...v2.10.3) (2018-10-15)
+
+
+### Bug Fixes
+
+* resolve dropdown panel text align in rtl mode ([#868](https://github.com/ng-select/ng-select/issues/868)) ([52cd669](https://github.com/ng-select/ng-select/commit/52cd669))
+
+
+
 <a name="2.10.2"></a>
 ## [2.10.2](https://github.com/ng-select/ng-select/compare/v2.10.1...v2.10.2) (2018-10-09)
 

@@ -55,7 +55,6 @@ import { DefaultSelectionModelFactory } from './selection-model';
     ],
     providers: [
         { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory },
-
     ]
 })
 export class NgSelectModule { }

@@ -9,4 +9,5 @@ export class NgSelectConfig {
     loadingText = 'Loading...';
     clearAllText = 'Clear all';
     disableVirtualScroll = true;
+    openOnEnter = true;
 }
