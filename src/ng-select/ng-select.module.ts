@@ -63,7 +63,8 @@ import { DefaultSelectionModelFactory } from './selection-model';
                 addTagText: 'Add item',
                 loadingText: 'Loading...',
                 clearAllText: 'Clear all',
-                disableVirtualScroll: false
+                disableVirtualScroll: false,
+                openOnEnter: true
             }
         }
     ]

@@ -22,6 +22,7 @@ export enum KeyCode {
 }
 
 export interface NgSelectConfig {
+    openOnEnter?: boolean;
     placeholder?: string;
     notFoundText?: string;
     typeToSearchText?: string;

@@ -1312,6 +1312,12 @@ describe('NgSelectComponent', function () {
                 expect(select.selectedItems[0].value).toEqual(fixture.componentInstance.cities[0]);
                 expect(select.isOpen).toBe(false);
             });
+
+            it('should not open dropdown if [openOnEnter]="false"', fakeAsync(() => {
+                select.openOnEnter = false;
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+                expect(select.isOpen).toBe(false);
+            }));
         });
     });
 
