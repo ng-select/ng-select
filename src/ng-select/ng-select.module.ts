@@ -54,7 +54,7 @@ import { DefaultSelectionModelFactory } from './selection-model';
         NgTagTemplateDirective
     ],
     providers: [
-        { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory },
+        { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory }
     ]
 })
 export class NgSelectModule { }
