@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.11.0"></a>
+# [2.11.0](https://github.com/ng-select/ng-select/compare/v2.10.5...v2.11.0) (2018-10-19)
+
+
+### Bug Fixes
+
+* **NgSelectConfig:** use class as config provider ([8bea572](https://github.com/ng-select/ng-select/commit/8bea572)), closes [#863](https://github.com/ng-select/ng-select/issues/863)
+
+
+### Features
+
+* **openOnEnter:** allow to configure whether enter opens dropdown ([fe9d990](https://github.com/ng-select/ng-select/commit/fe9d990)), closes [#878](https://github.com/ng-select/ng-select/issues/878)
+
+
+
 <a name="2.10.5"></a>
 ## [2.10.5](https://github.com/ng-select/ng-select/compare/v2.10.4...v2.10.5) (2018-10-17)
 
