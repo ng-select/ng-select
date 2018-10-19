@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NgSelectConfig } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-root',
@@ -13,4 +14,8 @@ export class AppComponent {
     {id: 2, name: 'Kaunas'},
     {id: 3, name: 'Pabradė'}
   ];
+
+  constructor(config: NgSelectConfig) {
+      config.notFoundText = 'Custom not found';
+  }
 }

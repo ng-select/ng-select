@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NG_SELECT_DEFAULT_CONFIG, NgSelectComponent, SELECTION_MODEL_FACTORY } from './ng-select.component';
+import { NgSelectComponent, SELECTION_MODEL_FACTORY } from './ng-select.component';
 import {
     NgFooterTemplateDirective,
     NgHeaderTemplateDirective,
@@ -54,19 +54,7 @@ import { DefaultSelectionModelFactory } from './selection-model';
         NgTagTemplateDirective
     ],
     providers: [
-        { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory },
-        {
-            provide: NG_SELECT_DEFAULT_CONFIG,
-            useValue: {
-                notFoundText: 'No items found',
-                typeToSearchText: 'Type to search',
-                addTagText: 'Add item',
-                loadingText: 'Loading...',
-                clearAllText: 'Clear all',
-                disableVirtualScroll: false,
-                openOnEnter: true
-            }
-        }
+        { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory }
     ]
 })
 export class NgSelectModule { }

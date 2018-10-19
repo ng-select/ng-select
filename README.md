@@ -92,16 +92,14 @@ To allow customization and theming, `ng-select` bundle includes only generic sty
 
 
 ### Step 4 (Optional): Configuration 
-You can also set global configuration and localization messages by providing custom NG_SELECT_DEFAULT_CONFIG
+
+You can also set global configuration and localization messages by injecting NgSelectConfig service,
+typically in your root component, and customize the values of its properties in order to provide default values.
+
 ```js
-    providers: [
-        {
-            provide: NG_SELECT_DEFAULT_CONFIG,
-            useValue: {
-                notFoundText: 'Custom not found'
-            }
-        }
-    ]
+  constructor(private config: NgSelectConfig) {
+      this.config.notFoundText = 'Custom not found';
+  }
 ```
 ### SystemJS
 If you are using SystemJS, you should also adjust your configuration to point to the UMD bundle.
@@ -179,7 +177,7 @@ map: {
  Name  | Type | Description |
 | ------------- | ------------- | ------------- |
 | [ngOptionHighlight] | directive | Highlights search term in option. Accepts search term. Should be used on option element. |
-| NG_SELECT_DEFAULT_CONFIG | configuration | Configuration provider for the NgSelect component. You can inject this service and provide application wide configuration. |
+| NgSelectConfig | configuration | Configuration provider for the NgSelect component. You can inject this service and provide application wide configuration. |
 | SELECTION_MODEL_FACTORY | service | DI token for SelectionModel implementation. You can provide custom implementation changing selection behaviour. |
 
 ## Change Detection
