@@ -199,7 +199,11 @@ export class ItemsList {
         if (this.lastSelectedItem && indexOfLastSelected > -1) {
             this._markedIndex = indexOfLastSelected;
         } else {
-            this._markedIndex = markDefault ? this.filteredItems.findIndex(x => !x.disabled) : -1;
+            if (!this._ngSelect.excludeGroupsFromDefaultSelection) {
+                this._markedIndex = markDefault ? this.filteredItems.findIndex(x => !x.disabled) : -1;
+            } else {
+                this._markedIndex = markDefault ? this.filteredItems.findIndex(x => !x.disabled && !x.children) : -1;
+            }
         }
     }
 

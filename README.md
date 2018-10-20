@@ -148,6 +148,7 @@ map: {
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
+| [excludeGroupsFromDefaultSelection] | `boolean` |  false | no | Exclude group from default selection when `selectableGroup` is `true`. Default `false`. |
 
 ### Outputs
 

@@ -101,6 +101,27 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         <p>
             <small>Selected: {{selectedAccounts5 | json}}</small>
         </p>
+
+        <hr />
+        <label>With selectable multiple groups and groups excluded from default selection on search</label>
+        ---html,true
+        <ng-select [items]="accounts6"
+                   bindLabel="name"
+                   groupBy="country"
+                   [multiple]="true"
+                   [closeOnSelect]="false"
+                   [selectableGroup]="true"
+                   [compareWith]="selectedAccounts6Fn"
+                   [excludeGroupsFromDefaultSelection]="true"
+                   [(ngModel)]="selectedAccounts6">
+            <ng-template ng-optgroup-tmp let-item="item">
+                {{item.country || 'Unnamed group'}}
+            </ng-template>
+        </ng-select>
+        ---
+        <p>
+            <small>Selected: {{selectedAccounts6 | json}}</small>
+        </p>
     `
 })
 export class SelectGroupsComponent {
@@ -153,6 +174,10 @@ export class SelectGroupsComponent {
         }
         return false;
     };
+
+    accounts6 = this.accounts.slice();
+    selectedAccounts6 = this.selectedAccounts4.slice();
+    selectedAccounts6Fn = this.selectedAccounts4Fn;
 
     ngOnInit() {
 

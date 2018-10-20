@@ -3077,6 +3077,49 @@ describe('NgSelectComponent', function () {
             selectOption(fixture, KeyCode.ArrowDown, 1);
             expect(fixture.componentInstance.selectedAccount).toBe('adam@email.com');
         }));
+
+        it('should select group on default when [selectableGroup]="true" and [excludeGroupsFromDefaultSelection]="false', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindLabel="name"
+                        bindValue="email"
+                        [selectableGroup]="true"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+
+            const select = fixture.componentInstance.select;
+            tickAndDetectChanges(fixture);
+            select.filter('adam');
+            tick(200);
+
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            expect(fixture.componentInstance.selectedAccount).toBe('United States');
+        }));
+
+        it('should not select group on default when [selectableGroup]="true" and [excludeGroupsFromDefaultSelection]="true', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindLabel="name"
+                        bindValue="email"
+                        [selectableGroup]="true"
+                        [excludeGroupsFromDefaultSelection]="true"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+
+            const select = fixture.componentInstance.select;
+            tickAndDetectChanges(fixture);
+            select.filter('adam');
+            tick(200);
+
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            expect(fixture.componentInstance.selectedAccount).toBe('adam@email.com');
+        }));
     });
 });
 
