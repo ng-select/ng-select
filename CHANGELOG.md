@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.11.1"></a>
+## [2.11.1](https://github.com/ng-select/ng-select/compare/v2.11.0...v2.11.1) (2018-10-20)
+
+
+### Bug Fixes
+
+* repository links and silence angular 7 install warning ([9746073](https://github.com/ng-select/ng-select/commit/9746073))
+
+
+
 <a name="2.11.0"></a>
 # [2.11.0](https://github.com/ng-select/ng-select/compare/v2.10.5...v2.11.0) (2018-10-19)
 
