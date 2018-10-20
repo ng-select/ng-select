@@ -3078,7 +3078,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.selectedAccount).toBe('adam@email.com');
         }));
 
-        it('should select group on default when [selectableGroup]="true" and [excludeGroupsFromDefaultSelection]="false', fakeAsync(() => {
+        it('should select group by default when [selectableGroup]="true", [excludeGroupsFromDefaultSelection]="false', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
                 `<ng-select [items]="accounts"
@@ -3099,7 +3099,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.selectedAccount).toBe('United States');
         }));
 
-        it('should not select group on default when [selectableGroup]="true" and [excludeGroupsFromDefaultSelection]="true', fakeAsync(() => {
+        it('should not select group by default when [selectableGroup]="true", [excludeGroupsFromDefaultSelection]="true', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
                 `<ng-select [items]="accounts"
