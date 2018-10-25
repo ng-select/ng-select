@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.11.2"></a>
+## [2.11.2](https://github.com/ng-select/ng-select/compare/v2.11.1...v2.11.2) (2018-10-25)
+
+
+### Bug Fixes
+
+* use autocomplete off when labelForId is used ([5f4d833](https://github.com/ng-select/ng-select/commit/5f4d833)), closes [#269](https://github.com/ng-select/ng-select/issues/269)
+
+
+
 <a name="2.11.1"></a>
 ## [2.11.1](https://github.com/ng-select/ng-select/compare/v2.11.0...v2.11.1) (2018-10-20)
 
