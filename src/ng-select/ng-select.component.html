@@ -24,7 +24,7 @@
         <div class="ng-input">
             <input #filterInput
                    type="text"
-                   autocomplete="{{dropdownId}}"
+                   [attr.autocomplete]="labelForId ? 'off' : dropdownId"
                    [attr.id]="labelForId"
                    [attr.tabindex]="tabIndex"
                    [readOnly]="!searchable"
