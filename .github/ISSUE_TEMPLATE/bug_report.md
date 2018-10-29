@@ -8,7 +8,7 @@ about: Create a report to help us improve
 A clear and concise description of what the bug is.
 
 **Reproducbile example**
-[Example](https://stackblitz.com) which reproduces wrong behaviour
+[Example](https://stackblitz.com) which reproduces described behaviour
 
 **To Reproduce** 
 Steps to reproduce the behavior (if example is not provided):
