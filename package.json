@@ -9,7 +9,7 @@
     "prebuild": "yarn clean",
     "build": "ng-packagr -p ./src/package.json && yarn build:themes",
     "build:demo": "rimraf dist && webpack --config ./scripts/webpack.dev.js --progress --profile --bail",
-    "build:themes": "node-sass --output-style compressed src/themes/ -o dist/themes",
+    "build:themes": "node-sass --output-style compressed src/themes/ -o dist/themes && yarn copy-sass",
     "prestart": "yarn install",
     "start": "webpack-dev-server --config ./scripts/webpack.dev.js --inline --color --progress --port 8080",
     "test:watch": "karma start ./scripts/karma.conf.js --no-single-run --auto-watch",
@@ -17,7 +17,8 @@
     "coveralls": "cat ./coverage/lcov/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "integration": "./integration_test.sh",
     "lint": "tslint --type-check --project ./src/tsconfig.json",
-    "release": "sh ./release.sh"
+    "release": "sh ./release.sh",
+    "copy-sass": "copyfiles ./src/themes/*.scss ./src/ng-select/*.scss ./dist/themes/sass -f"
   },
   "devDependencies": {
     "@angular/animations": "^6.1.2",
@@ -38,6 +39,7 @@
     "awesome-typescript-loader": "^5.2.0",
     "bootstrap": "^4.1.3",
     "copy-webpack-plugin": "^4.5.2",
+    "copyfiles": "^2.1.0",
     "core-js": "^2.5.7",
     "coveralls": "^3.0.2",
     "css-loader": "^1.0.0",
