@@ -101,6 +101,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() selectableGroup = false;
     @Input() selectableGroupAsModel = true;
     @Input() searchFn = null;
+    @Input() clearOnBackspace = true;
 
     @Input() labelForId = null;
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
@@ -785,7 +786,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         if (this.multiple) {
-            this.unselect(this.itemsList.lastSelectedItem)
+            if (this.clearOnBackspace) {
+                this.unselect(this.itemsList.lastSelectedItem)
+            }
         } else {
             this.clearModel();
         }
