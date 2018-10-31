@@ -2769,7 +2769,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-clear' }));
+                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-clear-wrapper' }));
                 };
             }));
 
