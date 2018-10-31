@@ -781,14 +781,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _handleBackspace() {
-        if (this.filterValue || !this.clearable || !this.hasValue) {
+        if (this.filterValue || !this.clearable || !this.clearOnBackspace || !this.hasValue) {
             return;
         }
 
         if (this.multiple) {
-            if (this.clearOnBackspace) {
-                this.unselect(this.itemsList.lastSelectedItem)
-            }
+            this.unselect(this.itemsList.lastSelectedItem)
         } else {
             this.clearModel();
         }

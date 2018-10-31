@@ -30,7 +30,6 @@ import { NgSelectComponent } from './ng-select.component';
 import { NgSelectModule } from './ng-select.module';
 import { Subject } from 'rxjs';
 import { WindowService } from './window.service';
-import ObjectContaining = jasmine.ObjectContaining;
 
 
 
@@ -1273,10 +1272,8 @@ describe('NgSelectComponent', function () {
                 expect(remove).toHaveBeenCalled();
             }));
 
-            it('should not remove last selected value when multiple and clearOnBackspace false', fakeAsync(() => {
-                const remove = spyOn(select.removeEvent, 'emit');
+            it('should not remove selected value when clearOnBackspace false', fakeAsync(() => {
                 fixture.componentInstance.multiple = true;
-                // fixture.componentInstance.clearOnBackspace = false;
                 select.clearOnBackspace = false;
                 fixture.componentInstance.cities = [...fixture.componentInstance.cities];
                 tickAndDetectChanges(fixture);
@@ -1284,16 +1281,7 @@ describe('NgSelectComponent', function () {
                 selectOption(fixture, KeyCode.ArrowDown, 1);
                 tickAndDetectChanges(fixture);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
-                const result: ObjectContaining<{value: any}>[] = [jasmine.objectContaining({
-                    value: fixture.componentInstance.cities[1]
-                }),
-                    jasmine.objectContaining({
-                        value: fixture.componentInstance.cities[2]
-                    })];
-                expect(select.selectedItems).toEqual(result);
-                console.log(select.selectedItems);
-                console.log(result);
-                expect(remove).toHaveBeenCalledTimes(0);
+                expect(select.selectedItems.length).toEqual(2);
             }));
         });
 
