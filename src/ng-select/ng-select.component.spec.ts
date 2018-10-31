@@ -1271,6 +1271,18 @@ describe('NgSelectComponent', function () {
                 expect(select.selectedItems).toEqual(result);
                 expect(remove).toHaveBeenCalled();
             }));
+
+            it('should not remove selected value when clearOnBackspace false', fakeAsync(() => {
+                fixture.componentInstance.multiple = true;
+                select.clearOnBackspace = false;
+                fixture.componentInstance.cities = [...fixture.componentInstance.cities];
+                tickAndDetectChanges(fixture);
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
+                expect(select.selectedItems.length).toEqual(2);
+            }));
         });
 
         describe('key presses', () => {
@@ -3122,6 +3134,7 @@ function createEvent(target = {}) {
 class NgSelectTestCmp {
     @ViewChild(NgSelectComponent) select: NgSelectComponent;
     multiple = false;
+    clearOnBackspace = false;
     disabled = false;
     dropdownPosition = 'bottom';
     visible = true;
