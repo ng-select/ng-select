@@ -5,8 +5,7 @@ import {
     ElementRef,
     Input,
     OnChanges,
-    Renderer2,
-    SimpleChanges
+    Renderer2
 } from '@angular/core';
 import { isDefined } from './value-utils';
 
@@ -26,17 +25,20 @@ export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
         this.element = this.elementRef.nativeElement;
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-        if (isDefined(changes.term.currentValue) && isDefined(this.label)) {
-            this._highlightLabelWithSearchTerm();
+    ngOnChanges() {
+        if (this._canHighlight) {
+            this._highlightLabel();
         }
     }
 
     ngAfterViewInit() {
         this.label = this.element.innerHTML;
+        if (this._canHighlight) {
+            this._highlightLabel();
+        }
     }
 
-    private _highlightLabelWithSearchTerm() {
+    private _highlightLabel() {
         const label = this.label;
         if (!this.term) {
             this._setInnerHtml(label);
@@ -54,6 +56,10 @@ export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
         } else {
             this._setInnerHtml(label);
         }
+    }
+
+    private get _canHighlight() {
+        return isDefined(this.term) && isDefined(this.label);
     }
 
     private _setInnerHtml(html) {
