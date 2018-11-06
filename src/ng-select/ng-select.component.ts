@@ -275,7 +275,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
         $event.stopPropagation();
 
-        if (target.className === 'ng-clear') {
+        if (target.className === 'ng-clear-wrapper') {
             this.handleClearClick();
             return;
         }
@@ -603,7 +603,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         const select = (val: any) => {
             let item = this.itemsList.findItem(val);
             if (item) {
-                item.mapped = true;
                 this.itemsList.select(item);
             } else {
                 const isValObject = isObject(val);
