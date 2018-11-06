@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
     changeDetection: ChangeDetectionStrategy.Default,
     template: `
         <p>
-            In this example we are loading many items but only ~30 of them are rendered in the dom. 
+            In this example we are loading many items but only ~30 of them are rendered in the dom.
             This allows to load as big data as you want.
         </p>
         ---html,true
@@ -16,8 +16,8 @@ import { HttpClient } from '@angular/common/http';
                    bindLabel="title"
                    bindValue="thumbnailUrl"
                    placeholder="Select photo"
-                   (scroll)="scroll($event)"
-                   (scrollToEnd)="fetchMore($event)">
+                   (scroll)="onScroll($event)"
+                   (scrollToEnd)="onScrollToEnd()">
             <ng-template ng-header-tmp>
                 <small class="form-text text-muted">Loaded {{photosBuffer.length}} of {{photos.length}}</small>
             </ng-template>
@@ -36,7 +36,8 @@ export class VirtualScrollComponent {
     numberOfItemsFromEndBeforeFetchingMore = 10;
     loading = false;
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {
+    }
 
     ngOnInit() {
         this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').subscribe(photos => {
@@ -45,7 +46,21 @@ export class VirtualScrollComponent {
         });
     }
 
-    fetchMore() {
+    onScrollToEnd() {
+        this.fetchMore();
+    }
+
+    onScroll({ end }) {
+        if (this.loading || this.photos.length === this.photosBuffer.length) {
+            return;
+        }
+
+        if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.photosBuffer.length) {
+            this.fetchMore();
+        }
+    }
+
+    private fetchMore() {
         const len = this.photosBuffer.length;
         const more = this.photos.slice(len, this.bufferSize + len);
         this.loading = true;
@@ -54,15 +69,5 @@ export class VirtualScrollComponent {
             this.loading = false;
             this.photosBuffer = this.photosBuffer.concat(more);
         }, 200)
-    }
-
-    scroll( { end } ) {
-        if (this.loading) {
-            return;
-        }
-
-        if (end + this.numberOfItemsFromEndBeforeFetchingMore >= this.photosBuffer.length) {
-            this.fetchMore();
-        }
     }
 }
