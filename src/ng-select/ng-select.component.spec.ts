@@ -1,37 +1,15 @@
-import {
-    async,
-    ComponentFixture,
-    discardPeriodicTasks,
-    fakeAsync,
-    TestBed,
-    tick
-} from '@angular/core/testing';
+import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import {
-    Component,
-    DebugElement,
-    ErrorHandler,
-    NgZone,
-    Type,
-    ViewChild, ViewEncapsulation
-} from '@angular/core';
+import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ConsoleService } from './console.service';
 import { FormsModule } from '@angular/forms';
-import {
-    getNgSelectElement,
-    selectOption,
-    TestsErrorHandler,
-    tickAndDetectChanges,
-    triggerKeyDownEvent
-} from '../testing/helpers';
+import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
 import { KeyCode, NgOption } from './ng-select.types';
 import { MockConsole, MockNgWindow, MockNgZone } from '../testing/mocks';
 import { NgSelectComponent } from './ng-select.component';
 import { NgSelectModule } from './ng-select.module';
 import { Subject } from 'rxjs';
 import { WindowService } from './window.service';
-
-
 
 describe('NgSelectComponent', function () {
 
@@ -1057,7 +1035,7 @@ describe('NgSelectComponent', function () {
 
             it('should not open dropdown when isOpen is false', () => {
                 const open = spyOn(select, 'open');
-                select.ngOnChanges(<any>{ isOpen: { currentValue: false }});
+                select.ngOnChanges(<any>{ isOpen: { currentValue: false } });
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
                 expect(select.isOpen).toBeFalsy();
                 expect(open).not.toHaveBeenCalled();
@@ -1995,7 +1973,7 @@ describe('NgSelectComponent', function () {
             });
 
             it('should be false when term exists among selected items', fakeAsync(() => {
-                fixture.componentInstance.selectedCities = [{name: 'Palanga', id: 9}];
+                fixture.componentInstance.selectedCities = [{ name: 'Palanga', id: 9 }];
                 select.filterValue = 'Palanga';
                 select.hideSelected = true;
                 select.isOpen = true;
@@ -2004,7 +1982,7 @@ describe('NgSelectComponent', function () {
             }));
 
             it('should be false when term exists among selected items and select is closed', fakeAsync(() => {
-                fixture.componentInstance.selectedCities = [{name: 'Palanga', id: 9}];
+                fixture.componentInstance.selectedCities = [{ name: 'Palanga', id: 9 }];
                 select.filterValue = 'Palanga';
                 select.hideSelected = false;
                 select.isOpen = false;
@@ -2798,7 +2776,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-clear' }));
+                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-clear-wrapper' }));
                 };
             }));
 
@@ -2881,7 +2859,7 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({className: 'ng-arrow-wrapper' }));
+                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-arrow-wrapper' }));
                 };
             }));
 
@@ -3226,7 +3204,7 @@ class NgSelectGroupingTestCmp {
     selectedAccountName = 'Adam';
     selectedAccount = null;
     groupByFn = (item) => item.child.name;
-    groupValueFn = (key, _) => ({ group: key});
+    groupValueFn = (key, _) => ({ group: key });
     accounts = [
         { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { name: 'c1' } },
         { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States', child: { name: 'c1' } },
