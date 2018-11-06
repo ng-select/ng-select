@@ -416,5 +416,5 @@ function itemsListFactory(cmp: NgSelectComponent): ItemsList {
 }
 
 function ngSelectFactory(): NgSelectComponent {
-    return new NgSelectComponent(null, null, new NgSelectConfig(), () => new DefaultSelectionModel(), {} as any, null, null);
+    return new NgSelectComponent(null, null, null, new NgSelectConfig(), () => new DefaultSelectionModel(), {} as any, null, null);
 }

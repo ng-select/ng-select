@@ -2454,7 +2454,7 @@ describe('NgSelectComponent', function () {
         });
     });
 
-    describe('Accessability', () => {
+    describe('Accessibility', () => {
         let fixture: ComponentFixture<NgSelectTestCmp>;
         let select: NgSelectComponent;
         let input: HTMLInputElement;
@@ -2702,6 +2702,23 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
 
             expect(fixture.componentInstance.onClear).toHaveBeenCalled();
+        }));
+    });
+
+    describe('Auto-focus', () => {
+        it('should focus dropdown', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                            autofocus
+                            bindLabel="name"
+                            [multiple]="true"
+                            [(ngModel)]="selectedCities">
+                </ng-select>`);
+            const select = fixture.componentInstance.select;
+            const focus = spyOn(select, 'focus');
+            select.ngAfterViewInit();
+            expect(focus).toHaveBeenCalled();
         }));
     });
 
