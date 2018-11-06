@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 const defaultTheme = require('./../../../src/themes/default.theme.scss');
 const materialTheme = require('./../../../src/themes/material.theme.scss');
+const bootstrapTheme = require('./../../../src/themes/bootstrap.theme.scss');
 
 type langDir = 'ltr' | 'rtl';
 
@@ -28,6 +29,7 @@ type langDir = 'ltr' | 'rtl';
                     <div ngbDropdownMenu>
                         <button (click)="setTheme('Default theme')" class="dropdown-item btn-sm">Default theme</button>
                         <button (click)="setTheme('Material theme')" class="dropdown-item btn-sm">Material theme</button>
+                        <button (click)="setTheme('Bootstrap theme')" class="dropdown-item btn-sm">Bootstrap theme</button>
                     </div>
                 </div>
 
@@ -69,9 +71,15 @@ export class LayoutHeaderComponent implements OnInit {
         if (this.theme === 'Default theme') {
             materialTheme.unuse();
             defaultTheme.use();
-        } else {
+            bootstrapTheme.unuse();
+        } else if (this.theme === 'Material theme'){
             defaultTheme.unuse();
             materialTheme.use();
+            bootstrapTheme.unuse();
+        } else {
+            defaultTheme.unuse();
+            materialTheme.unuse();
+            bootstrapTheme.use();
         }
     }
 
