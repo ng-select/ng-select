@@ -185,7 +185,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     constructor(
         @Attribute('class') public classes: string,
         @Attribute('tabindex') public tabIndex: string,
-        @Attribute('autofocus') public autoFocus: any,
+        @Attribute('autofocus') private autoFocus: any,
         config: NgSelectConfig,
         @Inject(SELECTION_MODEL_FACTORY) newSelectionModel: SelectionModelFactory,
         _elementRef: ElementRef,
