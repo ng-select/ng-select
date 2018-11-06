@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.6.3"></a>
+## [1.6.3](https://github.com/ng-select/ng-select/compare/v1.6.2...v1.6.3) (2018-11-06)
+
+
+### Bug Fixes
+
+* highlight term using typeahed ([#916](https://github.com/ng-select/ng-select/issues/916)) ([1cf63bd](https://github.com/ng-select/ng-select/commit/1cf63bd)), closes [#591](https://github.com/ng-select/ng-select/issues/591)
+
+
+
 <a name="1.6.2"></a>
 ## [1.6.2](https://github.com/ng-select/ng-select/compare/v1.6.1...v1.6.2) (2018-10-02)
 
