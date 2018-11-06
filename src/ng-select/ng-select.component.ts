@@ -220,7 +220,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this._setItems(changes.items.currentValue || []);
         }
         if (changes.isOpen) {
-            this._manualOpen = true;
+            this._manualOpen = isDefined(changes.isOpen.currentValue);
         }
     }
 
