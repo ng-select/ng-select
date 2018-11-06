@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.12.0"></a>
+# [2.12.0](https://github.com/ng-select/ng-select/compare/v2.11.2...v2.12.0) (2018-11-06)
+
+
+### Bug Fixes
+
+* keep items order while mapping selected options ([bc1ef8e](https://github.com/ng-select/ng-select/commit/bc1ef8e)), closes [#907](https://github.com/ng-select/ng-select/issues/907)
+
+
+### Features
+
+* allow to customise clear icon ([3e8ad77](https://github.com/ng-select/ng-select/commit/3e8ad77)), closes [#835](https://github.com/ng-select/ng-select/issues/835)
+* **autofocus:** focus if attribute is present ([#924](https://github.com/ng-select/ng-select/issues/924)) ([b78f39f](https://github.com/ng-select/ng-select/commit/b78f39f)), closes [#762](https://github.com/ng-select/ng-select/issues/762)
+* **clearOnBackspace:** configure whether backspace removes selection ([af79a45](https://github.com/ng-select/ng-select/commit/af79a45)), closes [#861](https://github.com/ng-select/ng-select/issues/861)
+* **isOpen:** treat undefined value as default behaviour ([127d6be](https://github.com/ng-select/ng-select/commit/127d6be)), closes [#816](https://github.com/ng-select/ng-select/issues/816)
+
+
+
 <a name="2.11.2"></a>
 ## [2.11.2](https://github.com/ng-select/ng-select/compare/v2.11.1...v2.11.2) (2018-10-25)
 
