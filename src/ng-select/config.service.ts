@@ -1,7 +1,15 @@
-import { Injectable } from '@angular/core';
+export interface NgSelectConfigPayload {
+    placeholder?: string;
+    notFoundText?: string;
+    typeToSearchText?: string;
+    addTagText?: string;
+    loadingText?: string;
+    clearAllText?: string;
+    disableVirtualScroll?: boolean;
+    openOnEnter?: boolean;
+}
 
-@Injectable({providedIn: 'root'})
-export class NgSelectConfig {
+export class NgSelectConfig implements NgSelectConfigPayload {
     placeholder: string;
     notFoundText = 'No items found';
     typeToSearchText = 'Type to search';
@@ -10,4 +18,9 @@ export class NgSelectConfig {
     clearAllText = 'Clear all';
     disableVirtualScroll = true;
     openOnEnter = true;
+    constructor(payload?: NgSelectConfigPayload) {
+        Object.assign(this, payload);
+    }
 }
+
+export const defaultConfig = new NgSelectConfig();

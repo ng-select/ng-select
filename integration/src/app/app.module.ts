@@ -14,7 +14,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     CommonModule,
     FormsModule,
     BrowserModule.withServerTransition({ appId: 'ng-select' }),
-    NgSelectModule
+    NgSelectModule,
   ],
   bootstrap: [AppComponent]
 })
