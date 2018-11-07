@@ -1,3 +1,8 @@
+import {InjectionToken} from '@angular/core';
+
+export const NG_SELECT_CONFIG_PAYLOAD = new InjectionToken<NgSelectConfigPayload>('NG_SELECT_CONFIG_PAYLOAD');
+export const NG_SELECT_CONFIG = new InjectionToken<NgSelectConfig>('NG_SELECT_CONFIG');
+
 export interface NgSelectConfigPayload {
     placeholder?: string;
     notFoundText?: string;
@@ -23,4 +28,6 @@ export class NgSelectConfig implements NgSelectConfigPayload {
     }
 }
 
-export const defaultConfig = new NgSelectConfig();
+export function configFactory(providedConfig: NgSelectConfig, providedPayload: NgSelectConfigPayload) {
+    return providedConfig || new NgSelectConfig(providedPayload);
+}

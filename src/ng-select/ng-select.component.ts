@@ -22,7 +22,6 @@ import {
     QueryList,
     InjectionToken,
     Attribute,
-    Optional
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil, startWith, tap, debounceTime, map, filter } from 'rxjs/operators';
@@ -49,7 +48,7 @@ import { newId } from './id';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
 import { SelectionModelFactory } from './selection-model';
-import {defaultConfig, NgSelectConfig} from './config.service';
+import {NG_SELECT_CONFIG, NgSelectConfig} from './config.service';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
@@ -187,13 +186,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         @Attribute('class') public classes: string,
         @Attribute('tabindex') public tabIndex: string,
         @Attribute('autofocus') private autoFocus: any,
-        @Optional() config: NgSelectConfig,
+        @Inject(NG_SELECT_CONFIG) config: NgSelectConfig,
         @Inject(SELECTION_MODEL_FACTORY) newSelectionModel: SelectionModelFactory,
         _elementRef: ElementRef,
         private _cd: ChangeDetectorRef,
         private _console: ConsoleService
     ) {
-        this._mergeGlobalConfig(config || defaultConfig);
+        this._mergeGlobalConfig(config);
         this.itemsList = new ItemsList(this, newSelectionModel());
         this.element = _elementRef.nativeElement;
     }
