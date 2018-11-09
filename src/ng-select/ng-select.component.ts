@@ -280,7 +280,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
         $event.stopPropagation();
 
-        if (target.className === 'ng-clear-wrapper') {
+        if (target.className.includes('ng-clear-wrapper')) {
             this.handleClearClick();
             return;
         }
