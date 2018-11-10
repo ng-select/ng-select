@@ -281,7 +281,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
         $event.stopPropagation();
 
-        if($event.target instanceof SVGElement) {
+        if ($event.target instanceof SVGElement) {
             return
         }
 
