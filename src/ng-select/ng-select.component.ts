@@ -280,16 +280,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
         $event.stopPropagation();
 
-        if (target.className.includes('ng-clear-wrapper')) {
+        if (target.classList.contains('ng-clear-wrapper')) {
             this.handleClearClick();
             return;
         }
-        if (target.className === 'ng-arrow-wrapper') {
+
+        if (target.classList.contains('ng-arrow-wrapper')) {
             this.handleArrowClick();
             return;
         }
 
-        if (target.className.includes('ng-value-icon')) {
+        if (target.classList.contains('ng-value-icon')) {
             return;
         }
 

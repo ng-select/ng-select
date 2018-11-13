@@ -2776,7 +2776,9 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-clear-wrapper' }));
+                    control.triggerEventHandler('mousedown', createEvent({
+                        classList: { contains: (term) => term === 'ng-clear-wrapper' }
+                    }));
                 };
             }));
 
@@ -2828,7 +2830,9 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-value-icon' }));
+                    control.triggerEventHandler('mousedown', createEvent({
+                        classList: { contains: (term) => term === 'ng-value-icon' }
+                    }));
                 };
             }));
 
@@ -2859,7 +2863,9 @@ describe('NgSelectComponent', function () {
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-arrow-wrapper' }));
+                    control.triggerEventHandler('mousedown', createEvent({
+                        classList: { contains: (term) => term === 'ng-arrow-wrapper' }
+                    }));
                 };
             }));
 
@@ -3118,6 +3124,9 @@ function createEvent(target = {}) {
         target: {
             className: '',
             tagName: '',
+            classList: {
+                contains: () => { }
+            },
             ...target
         }
     }
