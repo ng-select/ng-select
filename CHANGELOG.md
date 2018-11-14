@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.12.1"></a>
+## [2.12.1](https://github.com/ng-select/ng-select/compare/v2.12.0...v2.12.1) (2018-11-14)
+
+
+### Bug Fixes
+
+* handler mousedown for clear event when used animation library ([#931](https://github.com/ng-select/ng-select/issues/931)) ([dfbbcd6](https://github.com/ng-select/ng-select/commit/dfbbcd6)), closes [#928](https://github.com/ng-select/ng-select/issues/928)
+* use classList instead of className ([bc6f084](https://github.com/ng-select/ng-select/commit/bc6f084)), closes [#940](https://github.com/ng-select/ng-select/issues/940)
+
+
+
 <a name="2.12.0"></a>
 # [2.12.0](https://github.com/ng-select/ng-select/compare/v2.11.2...v2.12.0) (2018-11-06)
 
