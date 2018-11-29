@@ -60,6 +60,7 @@
     [position]="dropdownPosition"
     [headerTemplate]="headerTemplate"
     [footerTemplate]="footerTemplate"
+    [filterValue]="filterValue"
     [items]="itemsList.filteredItems"
     [markedItem]="itemsList.markedItem"
     (update)="viewPortItems = $event"
@@ -132,7 +133,7 @@
 
         <ng-template
             [ngTemplateOutlet]="loadingTextTemplate || defaultLoadingTextTemplate"
-            [ngTemplateOutletContext]="{ searchTerm: filterValue  }">
+            [ngTemplateOutletContext]="{ searchTerm: filterValue }">
         </ng-template>
     </ng-container>
 
