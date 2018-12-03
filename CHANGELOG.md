@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.13.0"></a>
+# [2.13.0](https://github.com/ng-select/ng-select/compare/v2.12.1...v2.13.0) (2018-12-03)
+
+
+### Features
+
+* **templates:** add searchTerm to header and footer (ng-select[#961](https://github.com/ng-select/ng-select/issues/961)) ([40eb264](https://github.com/ng-select/ng-select/commit/40eb264))
+
+
+
 <a name="2.12.1"></a>
 ## [2.12.1](https://github.com/ng-select/ng-select/compare/v2.12.0...v2.12.1) (2018-11-14)
 
