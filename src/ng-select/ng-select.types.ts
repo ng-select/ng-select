@@ -2,7 +2,6 @@ export interface NgOption {
     [name: string]: any;
     index?: number;
     htmlId?: string;
-    mapped?: boolean;
     selected?: boolean;
     disabled?: boolean;
     marked?: boolean;

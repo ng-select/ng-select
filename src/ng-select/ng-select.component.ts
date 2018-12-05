@@ -174,7 +174,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     private readonly _destroy$ = new Subject<void>();
     private readonly _keyPress$ = new Subject<string>();
-    private _onChange = (_: NgOption) => { };
+    private _onChange = (_: any) => { };
     private _onTouched = () => { };
 
     clearItem = (item: any) => {
@@ -661,13 +661,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         const model = [];
         for (const item of this.selectedItems) {
             if (this.bindValue) {
-                let resolvedValue = null;
+                let value = null;
                 if (item.children) {
-                    resolvedValue = item.value[<string>this.groupBy];
+                    value = item.value[<string>this.groupBy];
                 } else {
-                    resolvedValue = this.itemsList.resolveNested(item.value, this.bindValue);
+                    value = this.itemsList.resolveNested(item.value, this.bindValue);
                 }
-                model.push(resolvedValue);
+                model.push(value);
             } else {
                 model.push(item.value);
             }
