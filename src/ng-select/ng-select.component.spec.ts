@@ -335,6 +335,30 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.selectedCity).toBeNull();
         }));
 
+        it('should map selected items with items in dropdown', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            select = fixture.componentInstance.select;
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.cities = [...fixture.componentInstance.cities];
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.cities = [...fixture.componentInstance.cities];
+            tickAndDetectChanges(fixture);
+
+            expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[0]);
+            expect(select.itemsList.filteredItems[0].selected).toBeTruthy();
+        }));
+
         it('should clear previous single select value when setting new model', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
@@ -422,7 +446,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.itemsList.markedItem.value).toEqual({ name: 'Vilnius', id: 1 });
         }));
 
-        it('bind to custom object properties', fakeAsync(() => {
+        it('should bind to custom object properties', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -431,12 +455,10 @@ describe('NgSelectComponent', function () {
                             [(ngModel)]="selectedCityId">
                 </ng-select>`);
 
-            // from component to model
             selectOption(fixture, KeyCode.ArrowDown, 0);
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.selectedCityId).toEqual(1);
 
-            // from model to component
             fixture.componentInstance.selectedCityId = 2;
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({
@@ -444,7 +466,7 @@ describe('NgSelectComponent', function () {
             })]);
         }));
 
-        it('bind to nested label property', fakeAsync(() => {
+        it('should bind to nested label property', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="countries"
@@ -467,7 +489,7 @@ describe('NgSelectComponent', function () {
             })]);
         }));
 
-        it('bind to nested value property', fakeAsync(() => {
+        it('should bind bind to nested value property', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="countries"
@@ -492,7 +514,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.selectedCountry).toEqual('b');
         }));
 
-        it('bind to simple array', fakeAsync(() => {
+        it('should bind to simple array', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="citiesNames"
@@ -508,7 +530,7 @@ describe('NgSelectComponent', function () {
                 .toEqual([jasmine.objectContaining({ label: 'Kaunas', value: 'Kaunas' })]);
         }));
 
-        it('bind to object', fakeAsync(() => {
+        it('should bind to object', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"

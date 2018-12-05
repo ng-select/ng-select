@@ -245,7 +245,6 @@ export class ReactiveFormsComponent {
 
     selectAlbumsRange(from, to) {
         this.albums = this.allAlbums.slice(from, to);
-        this.selectFirstAlbum();
     }
 
     openModal(content) {
