@@ -21,12 +21,3 @@ export enum KeyCode {
     ArrowDown = 40,
     Backspace = 8
 }
-
-export interface NgSelectConfig {
-    placeholder?: string;
-    notFoundText?: string;
-    typeToSearchText?: string;
-    addTagText?: string;
-    loadingText?: string;
-    clearAllText?: string;
-}

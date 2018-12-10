@@ -8,4 +8,10 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule);
+if (environment.manualBootstrap) {
+  window['doBootstrap'] = () => {
+      platformBrowserDynamic().bootstrapModule(AppModule);
+  };
+} else {
+  platformBrowserDynamic().bootstrapModule(AppModule);
+}

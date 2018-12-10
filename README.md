@@ -92,16 +92,14 @@ To allow customization and theming, `ng-select` bundle includes only generic sty
 
 
 ### Step 4 (Optional): Configuration 
-You can also set global configuration and localization messages by providing custom NG_SELECT_DEFAULT_CONFIG
+
+You can also set global configuration and localization messages by injecting NgSelectConfig service,
+typically in your root component, and customize the values of its properties in order to provide default values.
+
 ```js
-    providers: [
-        {
-            provide: NG_SELECT_DEFAULT_CONFIG,
-            useValue: {
-                notFoundText: 'Custom not found'
-            }
-        }
-    ]
+  constructor(private config: NgSelectConfig) {
+      this.config.notFoundText = 'Custom not found';
+  }
 ```
 ### SystemJS
 If you are using SystemJS, you should also adjust your configuration to point to the UMD bundle.
@@ -125,6 +123,7 @@ map: {
 | [closeOnSelect] | `boolean` |  true | no | Whether to close the menu when a value is selected |
 | clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
 | [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
+| [clearOnBackspace] | `boolean` | `true` | no | Clear selected values one by one when clicking backspace. Default `true`|
 | [compareWith] | `(a: any, b: any) => boolean` | `(a, b) => a === b` | no | A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. |
 | dropdownPosition | `bottom` \| `top` \| `auto` |  `auto` | no | Set the dropdown position on open |
 | [groupBy] | `string` \| `Function` | null | no | Allow to group items by key or function expression |
@@ -144,8 +143,9 @@ map: {
 | placeholder | `string` | `-` | no | Placeholder text. |
 | [searchable] | `boolean` | `true` | no | Allow to search for value. Default `true`|
 | [searchFn] | `(term: string, item: any) => boolean` | `null` | no | Allow to filter by custom search function |
-| [clearSearchOnAdd] | `boolean` | `true` | no | Clears search input when item is selected. Default `true`|
+| [clearSearchOnAdd] | `boolean` | `true` | no | Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false` |
 | [selectOnTab] | `boolean` | `false` | no | Select marked dropdown item using tab. Default `false`|
+| [openOnEnter] | `boolean` | `true` | no | Open dropdown using enter. Default `true`|
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
@@ -154,15 +154,15 @@ map: {
 
 | Output  | Description |
 | ------------- | ------------- |
-| (add)  | Fired when item is selected |
+| (add)  | Fired when item is added while `[multiple]="true"`. Outputs added item |
 | (blur)  | Fired on select blur |
-| (change)  | Fired on selected value change |
+| (change)  | Fired on model change. Outputs whole model |
 | (close)  | Fired on select dropdown close |
 | (clear)  | Fired on clear icon click |
 | (focus)  | Fired on select focus |
 | (search) | Fired while typing search term |
 | (open)  | Fired on select dropdown open |
-| (remove)  | Fired when item is removed |
+| (remove)  | Fired when item is removed while `[multiple]="true"` |
 | (scroll)  | Fired when scrolled. Provides the start and end index of the currently available items. Can be used for loading more items in chunks before the user has scrolled all the way to the bottom of the list. |
 | (scrollToEnd)  | Fired when scrolled to the end of items. Can be used for loading more items in chunks. |
 
@@ -178,7 +178,7 @@ map: {
  Name  | Type | Description |
 | ------------- | ------------- | ------------- |
 | [ngOptionHighlight] | directive | Highlights search term in option. Accepts search term. Should be used on option element. |
-| NG_SELECT_DEFAULT_CONFIG | configuration | Configuration provider for the NgSelect component. You can inject this service and provide application wide configuration. |
+| NgSelectConfig | configuration | Configuration provider for the NgSelect component. You can inject this service and provide application wide configuration. |
 | SELECTION_MODEL_FACTORY | service | DI token for SelectionModel implementation. You can provide custom implementation changing selection behaviour. |
 
 ## Change Detection
@@ -226,6 +226,7 @@ If you are using `ViewEncapsulation`, your should use special `::ng-deep` select
     border-radius: 0;
 }
 ```
+WARNING: Keep in mind that ng-deep is deprecated and there is no alternative to it yet. See [https://github.com/angular/angular/issues/17867](Here).
 
 ### Validation state
 By default when you use reactive forms validators or template driven forms validators css class `ng-invalid` will be applied on ng-select. You can show errors state by adding custom css style

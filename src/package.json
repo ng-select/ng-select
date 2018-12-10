@@ -1,11 +1,11 @@
 {
   "$schema": "../node_modules/ng-packagr/package.schema.json",
   "name": "@ng-select/ng-select",
-  "version": "2.9.0",
+  "version": "2.13.1",
   "description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
   "author": "@ng-select/ng-select",
   "license": "MIT",
-  "repository": "git@github.com:ng-select/ng-select.git",
+  "repository": "ng-select/ng-select",
   "engines": {
     "node": ">= 6.9.0",
     "npm": ">= 3.0.0"
@@ -21,9 +21,9 @@
     "angular4"
   ],
   "peerDependencies": {
-    "@angular/common": ">=6.0.0 <7.0.0",
-    "@angular/core": ">=6.0.0 <7.0.0",
-    "@angular/forms": ">=6.0.0 <7.0.0"
+    "@angular/common": ">=6.0.0 <8.0.0",
+    "@angular/core": ">=6.0.0 <8.0.0",
+    "@angular/forms": ">=6.0.0 <8.0.0"
   },
   "ngPackage": {
     "lib": {

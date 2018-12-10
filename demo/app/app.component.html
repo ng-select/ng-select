@@ -1,5 +1,5 @@
-<layout-header [version]="version"></layout-header>
-<div class="container fill">
+<layout-header [version]="version" [(dir)]="dir"></layout-header>
+<div class="container fill" [attr.dir]="dir">
     <div class="row">
         <div class="col-12 col-md-3 col-xl-3 py-md-4 bd-sidebar">
             <layout-sidenav></layout-sidenav>

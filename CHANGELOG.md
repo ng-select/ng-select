@@ -2,6 +2,151 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.13.1"></a>
+## [2.13.1](https://github.com/ng-select/ng-select/compare/v2.13.0...v2.13.1) (2018-12-05)
+
+
+### Bug Fixes
+
+* map selected items while source changed ([c5bfd3f](https://github.com/ng-select/ng-select/commit/c5bfd3f)), closes [#980](https://github.com/ng-select/ng-select/issues/980) [#977](https://github.com/ng-select/ng-select/issues/977) [#959](https://github.com/ng-select/ng-select/issues/959)
+
+
+
+<a name="2.13.0"></a>
+# [2.13.0](https://github.com/ng-select/ng-select/compare/v2.12.1...v2.13.0) (2018-12-03)
+
+
+### Features
+
+* **templates:** add searchTerm to header and footer (ng-select[#961](https://github.com/ng-select/ng-select/issues/961)) ([40eb264](https://github.com/ng-select/ng-select/commit/40eb264))
+
+
+
+<a name="2.12.1"></a>
+## [2.12.1](https://github.com/ng-select/ng-select/compare/v2.12.0...v2.12.1) (2018-11-14)
+
+
+### Bug Fixes
+
+* handler mousedown for clear event when used animation library ([#931](https://github.com/ng-select/ng-select/issues/931)) ([dfbbcd6](https://github.com/ng-select/ng-select/commit/dfbbcd6)), closes [#928](https://github.com/ng-select/ng-select/issues/928)
+* use classList instead of className ([bc6f084](https://github.com/ng-select/ng-select/commit/bc6f084)), closes [#940](https://github.com/ng-select/ng-select/issues/940)
+
+
+
+<a name="2.12.0"></a>
+# [2.12.0](https://github.com/ng-select/ng-select/compare/v2.11.2...v2.12.0) (2018-11-06)
+
+
+### Bug Fixes
+
+* keep items order while mapping selected options ([bc1ef8e](https://github.com/ng-select/ng-select/commit/bc1ef8e)), closes [#907](https://github.com/ng-select/ng-select/issues/907)
+
+
+### Features
+
+* allow to customise clear icon ([3e8ad77](https://github.com/ng-select/ng-select/commit/3e8ad77)), closes [#835](https://github.com/ng-select/ng-select/issues/835)
+* **autofocus:** focus if attribute is present ([#924](https://github.com/ng-select/ng-select/issues/924)) ([b78f39f](https://github.com/ng-select/ng-select/commit/b78f39f)), closes [#762](https://github.com/ng-select/ng-select/issues/762)
+* **clearOnBackspace:** configure whether backspace removes selection ([af79a45](https://github.com/ng-select/ng-select/commit/af79a45)), closes [#861](https://github.com/ng-select/ng-select/issues/861)
+* **isOpen:** treat undefined value as default behaviour ([127d6be](https://github.com/ng-select/ng-select/commit/127d6be)), closes [#816](https://github.com/ng-select/ng-select/issues/816)
+
+
+
+<a name="2.11.2"></a>
+## [2.11.2](https://github.com/ng-select/ng-select/compare/v2.11.1...v2.11.2) (2018-10-25)
+
+
+### Bug Fixes
+
+* use autocomplete off when labelForId is used ([5f4d833](https://github.com/ng-select/ng-select/commit/5f4d833)), closes [#269](https://github.com/ng-select/ng-select/issues/269)
+
+
+
+<a name="2.11.1"></a>
+## [2.11.1](https://github.com/ng-select/ng-select/compare/v2.11.0...v2.11.1) (2018-10-20)
+
+
+### Bug Fixes
+
+* repository links and silence angular 7 install warning ([9746073](https://github.com/ng-select/ng-select/commit/9746073))
+
+
+
+<a name="2.11.0"></a>
+# [2.11.0](https://github.com/ng-select/ng-select/compare/v2.10.5...v2.11.0) (2018-10-19)
+
+
+### Bug Fixes
+
+* **NgSelectConfig:** use class as config provider ([8bea572](https://github.com/ng-select/ng-select/commit/8bea572)), closes [#863](https://github.com/ng-select/ng-select/issues/863)
+
+
+### Features
+
+* **openOnEnter:** allow to configure whether enter opens dropdown ([fe9d990](https://github.com/ng-select/ng-select/commit/fe9d990)), closes [#878](https://github.com/ng-select/ng-select/issues/878)
+
+
+
+<a name="2.10.5"></a>
+## [2.10.5](https://github.com/ng-select/ng-select/compare/v2.10.4...v2.10.5) (2018-10-17)
+
+
+### Bug Fixes
+
+* don't validate selected model when compareWith is used ([e30e365](https://github.com/ng-select/ng-select/commit/e30e365))
+
+
+
+<a name="2.10.4"></a>
+## [2.10.4](https://github.com/ng-select/ng-select/compare/v2.10.3...v2.10.4) (2018-10-16)
+
+
+
+<a name="2.10.3"></a>
+## [2.10.3](https://github.com/ng-select/ng-select/compare/v2.10.2...v2.10.3) (2018-10-15)
+
+
+### Bug Fixes
+
+* resolve dropdown panel text align in rtl mode ([#868](https://github.com/ng-select/ng-select/issues/868)) ([52cd669](https://github.com/ng-select/ng-select/commit/52cd669))
+
+
+
+<a name="2.10.2"></a>
+## [2.10.2](https://github.com/ng-select/ng-select/compare/v2.10.1...v2.10.2) (2018-10-09)
+
+
+### Bug Fixes
+
+* fixed null value display when using angular universal ([#852](https://github.com/ng-select/ng-select/issues/852)) ([77482c0](https://github.com/ng-select/ng-select/commit/77482c0)), closes [#764](https://github.com/ng-select/ng-select/issues/764)
+
+
+
+<a name="2.10.1"></a>
+## [2.10.1](https://github.com/ng-select/ng-select/compare/v2.10.0...v2.10.1) (2018-10-03)
+
+
+
+<a name="2.10.0"></a>
+# [2.10.0](https://github.com/ng-select/ng-select/compare/v2.9.1...v2.10.0) (2018-10-03)
+
+
+### Features
+
+* RTL support ([#846](https://github.com/ng-select/ng-select/issues/846)) ([b155f83](https://github.com/ng-select/ng-select/commit/b155f83))
+
+
+
+<a name="2.9.1"></a>
+## [2.9.1](https://github.com/ng-select/ng-select/compare/v2.9.0...v2.9.1) (2018-09-20)
+
+
+### Bug Fixes
+
+* **tags:** add tag as string when there are no items defined ([7dd4094](https://github.com/ng-select/ng-select/commit/7dd4094)), closes [#809](https://github.com/ng-select/ng-select/issues/809)
+* **tags:** allow to add previously added tag when select is closed ([daac234](https://github.com/ng-select/ng-select/commit/daac234)), closes [#783](https://github.com/ng-select/ng-select/issues/783)
+
+
+
 <a name="2.9.0"></a>
 # [2.9.0](https://github.com/ng-select/ng-select/compare/v2.8.1...v2.9.0) (2018-09-13)
 

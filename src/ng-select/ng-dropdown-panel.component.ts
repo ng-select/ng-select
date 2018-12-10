@@ -37,19 +37,18 @@ const BOTTOM_CSS_CLASS = 'ng-select-bottom';
     selector: 'ng-dropdown-panel',
     template: `
         <div *ngIf="headerTemplate" class="ng-dropdown-header">
-            <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
+            <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }"></ng-container>
         </div>
-        <div  #scroll class="ng-dropdown-panel-items scroll-host">
+        <div #scroll class="ng-dropdown-panel-items scroll-host">
             <div #padding [class.total-padding]="virtualScroll"></div>
             <div #content [class.scrollable-content]="virtualScroll && items.length > 0">
                 <ng-content></ng-content>
             </div>
         </div>
         <div *ngIf="footerTemplate" class="ng-dropdown-footer">
-            <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
+            <ng-container [ngTemplateOutlet]="footerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }"></ng-container>
         </div>
-    `,
-    styleUrls: ['./ng-dropdown-panel.component.scss']
+    `
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, AfterContentInit {
 
@@ -61,6 +60,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     @Input() virtualScroll = false;
     @Input() headerTemplate: TemplateRef<any>;
     @Input() footerTemplate: TemplateRef<any>;
+    @Input() filterValue: string = null;
 
     @Output() update = new EventEmitter<any[]>();
     @Output() scroll = new EventEmitter<{ start: number; end: number }>();
@@ -145,7 +145,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     }
 
     refresh(): Promise<void> {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             this._zone.runOutsideAngular(() => {
                 this._window.requestAnimationFrame(() => {
                     this._updateItems().then(resolve);
@@ -211,6 +211,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
             return;
         }
 
+        const path = $event.path || ($event.composedPath && $event.composedPath());
+        if ($event.target && $event.target.shadowRoot && path && path[0] && this._select.contains(path[0])) {
+            return;
+        }
+
         this.outsideClick.emit();
     }
 
@@ -253,8 +258,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
             const res = this._virtualScrollService.calculateItems(d, this.scrollElementRef.nativeElement, this.bufferAmount || 0);
 
             (<HTMLElement>this.paddingElementRef.nativeElement).style.height = `${res.scrollHeight}px`;
-            const transform = 'translateY(' + res.topPadding + 'px)';
-            (<HTMLElement>this.contentElementRef.nativeElement).style.transform = transform;
+            (<HTMLElement>this.contentElementRef.nativeElement).style.transform = 'translateY(' + res.topPadding + 'px)';
 
             if (res.start !== this._previousStart || res.end !== this._previousEnd) {
                 this._zone.run(() => {

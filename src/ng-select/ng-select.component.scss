@@ -62,7 +62,7 @@
             flex: 1;
             .ng-input {
                 opacity: 0;
-                >input {
+                > input {
                     box-sizing: content-box;
                     background: none transparent;
                     border: 0 none;
@@ -107,7 +107,7 @@
     }
     &.ng-select-multiple {
         &.ng-select-disabled {
-            >.ng-select-container .ng-value-container .ng-value {
+            > .ng-select-container .ng-value-container .ng-value {
                 .ng-value-icon {
                     display: none;
                 }
@@ -149,6 +149,7 @@
             display: inline-block;
             font-size: 18px;
             line-height: 1;
+            pointer-events: none;
         }
     }
     .ng-spinner-loader {
@@ -203,5 +204,61 @@
             width: 0;
             position: relative;
         }
+    }
+}
+
+.ng-dropdown-panel {
+    box-sizing: border-box;
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    z-index: 1050;
+    -webkit-overflow-scrolling: touch;
+    .ng-dropdown-panel-items {
+        display: block;
+        height: auto;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        max-height: 240px;
+        overflow-y: auto;
+
+        .ng-optgroup {
+            @include wrapt-text();
+        }
+
+        .ng-option {
+            box-sizing: border-box;
+            cursor: pointer;
+            display: block;
+            @include wrapt-text();
+
+            .highlighted {
+                font-weight: bold;
+                text-decoration: underline;
+            }
+            &.disabled {
+                cursor: default;
+            }
+        }
+    }
+
+    .scroll-host {
+        overflow: hidden;
+        overflow-y: auto;
+        position: relative;
+        display: block;
+        -webkit-overflow-scrolling: touch;
+    }
+    .scrollable-content {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+    .total-padding {
+        width: 1px;
+        opacity: 0;
     }
 }
