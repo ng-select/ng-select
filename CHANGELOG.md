@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.13.2"></a>
+## [2.13.2](https://github.com/ng-select/ng-select/compare/v2.13.1...v2.13.2) (2018-12-18)
+
+
+### Bug Fixes
+
+* appended dropdown position ([#957](https://github.com/ng-select/ng-select/issues/957)) ([856c9cd](https://github.com/ng-select/ng-select/commit/856c9cd)), closes [#955](https://github.com/ng-select/ng-select/issues/955)
+
+
+
 <a name="2.13.1"></a>
 ## [2.13.1](https://github.com/ng-select/ng-select/compare/v2.13.0...v2.13.1) (2018-12-05)
 
