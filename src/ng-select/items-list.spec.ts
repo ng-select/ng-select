@@ -307,6 +307,29 @@ describe('ItemsList', () => {
         });
     });
 
+    describe('clearFilteredItems', () => {
+        let list: ItemsList;
+        let cmp: NgSelectComponent;
+        beforeEach(() => {
+            cmp = ngSelectFactory();
+            cmp.bindLabel = 'label';
+            list = itemsListFactory(cmp);
+        });
+        it('should clear filtered items', () => {
+            list.setItems([
+                { label: 'K1 part1 part2', val: 'V1' },
+                { label: 'K2 part1 part2', val: 'V2' },
+                { label: 'K3 part1 part2.2', val: 'V3' },
+                { label: 'K4 part1 part2.2', val: 'V4' },
+                { label: 'K5 part1 part2.2 part3', val: 'V5' },
+            ]);
+
+            list.clearFilteredItems();
+
+            expect(list.filteredItems.length).toBe(0);
+        })
+    });
+
     describe('filter', () => {
         let list: ItemsList;
         let cmp: NgSelectComponent;

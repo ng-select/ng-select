@@ -66,6 +66,10 @@ export class ItemsList {
         this._filteredItems = [...this._items];
     }
 
+    clearFilteredItems() {
+        this._filteredItems = [];
+    }
+
     select(item: NgOption) {
         if (item.selected || this.maxItemsSelected) {
             return;
