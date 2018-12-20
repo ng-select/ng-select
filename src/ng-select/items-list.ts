@@ -238,7 +238,7 @@ export class ItemsList {
         const multiple = this._ngSelect.multiple;
         for (const selected of this.selectedItems) {
             const value = this._ngSelect.bindValue ? this.resolveNested(selected.value, this._ngSelect.bindValue) : selected.value;
-            const item = this.findItem(value);
+            const item = isDefined(value) ? this.findItem(value) : null;
             this._selectionModel.unselect(selected, multiple);
             this._selectionModel.select(item || selected, multiple, this._ngSelect.selectableGroupAsModel);
         }

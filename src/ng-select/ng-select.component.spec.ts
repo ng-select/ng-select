@@ -359,6 +359,30 @@ describe('NgSelectComponent', function () {
             expect(select.itemsList.filteredItems[0].selected).toBeTruthy();
         }));
 
+        it('should keep selected item while setting new items and bindValue is incorrect', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        bindValue="value"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCityId">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture); // triggers write value
+
+            select = fixture.componentInstance.select;
+            select.select(select.itemsList.items[1]);
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.cities = [...fixture.componentInstance.cities];
+            tickAndDetectChanges(fixture);
+
+            expect(select.selectedItems[0]).toEqual(jasmine.objectContaining({
+                value: { id: 2, name: 'Kaunas' }
+            }));
+        }));
+
         it('should clear previous single select value when setting new model', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
