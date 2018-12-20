@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.13.3"></a>
+## [2.13.3](https://github.com/ng-select/ng-select/compare/v2.13.2...v2.13.3) (2018-12-20)
+
+
+### Bug Fixes
+
+* keep selected items while bindValue is incorrect ([b7294a3](https://github.com/ng-select/ng-select/commit/b7294a3)), closes [#993](https://github.com/ng-select/ng-select/issues/993)
+
+
+
 <a name="2.13.2"></a>
 ## [2.13.2](https://github.com/ng-select/ng-select/compare/v2.13.1...v2.13.2) (2018-12-18)
 
