@@ -66,8 +66,9 @@ export class ItemsList {
         this._filteredItems = [...this._items];
     }
 
-    clearFilteredItems() {
+    clearItems() {
         this._filteredItems = [];
+        this._items = [];
     }
 
     select(item: NgOption) {

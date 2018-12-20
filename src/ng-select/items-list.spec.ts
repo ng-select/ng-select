@@ -307,7 +307,7 @@ describe('ItemsList', () => {
         });
     });
 
-    describe('clearFilteredItems', () => {
+    describe('clearItems', () => {
         let list: ItemsList;
         let cmp: NgSelectComponent;
         beforeEach(() => {
@@ -315,7 +315,7 @@ describe('ItemsList', () => {
             cmp.bindLabel = 'label';
             list = itemsListFactory(cmp);
         });
-        it('should clear filtered items', () => {
+        it('should clear items', () => {
             list.setItems([
                 { label: 'K1 part1 part2', val: 'V1' },
                 { label: 'K2 part1 part2', val: 'V2' },
@@ -324,9 +324,10 @@ describe('ItemsList', () => {
                 { label: 'K5 part1 part2.2 part3', val: 'V5' },
             ]);
 
-            list.clearFilteredItems();
+            list.clearItems();
 
             expect(list.filteredItems.length).toBe(0);
+            expect(list.items.length).toBe(0);
         })
     });
 
