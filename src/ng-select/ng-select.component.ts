@@ -136,7 +136,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Output('add') addEvent = new EventEmitter();
     @Output('remove') removeEvent = new EventEmitter();
     @Output('scroll') scroll = new EventEmitter<{ start: number; end: number }>();
-    @Output('scrollToEnd') scrollToEnd = new EventEmitter<{ start: number; end: number }>();
+    @Output('scrollToEnd') scrollToEnd = new EventEmitter();
 
     // custom templates
     @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
