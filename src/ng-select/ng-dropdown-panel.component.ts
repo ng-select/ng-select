@@ -64,7 +64,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
     @Output() update = new EventEmitter<any[]>();
     @Output() scroll = new EventEmitter<{ start: number; end: number }>();
-    @Output() scrollToEnd = new EventEmitter<{ start: number; end: number }>();
+    @Output() scrollToEnd = new EventEmitter<void>();
     @Output() outsideClick = new EventEmitter<void>();
 
     @ViewChild('content', { read: ElementRef }) contentElementRef: ElementRef;
