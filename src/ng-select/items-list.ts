@@ -241,12 +241,10 @@ export class ItemsList {
     mapSelectedItems() {
         const multiple = this._ngSelect.multiple;
         for (const selected of this.selectedItems) {
-            const value = this._ngSelect.bindValue ? selected.value[this._ngSelect.bindValue] : selected.value;
-            const item = this.findItem(value);
-            if (item && selected !== item) {
-                this._selectionModel.unselect(selected, multiple);
-                this._selectionModel.select(item, multiple, this._ngSelect.selectableGroupAsModel);
-            }
+            const value = this._ngSelect.bindValue ? this.resolveNested(selected.value, this._ngSelect.bindValue) : selected.value;
+            const item = isDefined(value) ? this.findItem(value) : null;
+            this._selectionModel.unselect(selected, multiple);
+            this._selectionModel.select(item || selected, multiple, this._ngSelect.selectableGroupAsModel);
         }
 
         if (this._ngSelect.hideSelected) {

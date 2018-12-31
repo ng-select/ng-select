@@ -2,6 +2,85 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.13.3"></a>
+## [2.13.3](https://github.com/ng-select/ng-select/compare/v2.13.2...v2.13.3) (2018-12-20)
+
+
+### Bug Fixes
+
+* keep selected items while bindValue is incorrect ([b7294a3](https://github.com/ng-select/ng-select/commit/b7294a3)), closes [#993](https://github.com/ng-select/ng-select/issues/993)
+
+
+
+<a name="2.13.2"></a>
+## [2.13.2](https://github.com/ng-select/ng-select/compare/v2.13.1...v2.13.2) (2018-12-18)
+
+
+### Bug Fixes
+
+* appended dropdown position ([#957](https://github.com/ng-select/ng-select/issues/957)) ([856c9cd](https://github.com/ng-select/ng-select/commit/856c9cd)), closes [#955](https://github.com/ng-select/ng-select/issues/955)
+
+
+
+<a name="2.13.1"></a>
+## [2.13.1](https://github.com/ng-select/ng-select/compare/v2.13.0...v2.13.1) (2018-12-05)
+
+
+### Bug Fixes
+
+* map selected items while source changed ([c5bfd3f](https://github.com/ng-select/ng-select/commit/c5bfd3f)), closes [#980](https://github.com/ng-select/ng-select/issues/980) [#977](https://github.com/ng-select/ng-select/issues/977) [#959](https://github.com/ng-select/ng-select/issues/959)
+
+
+
+<a name="2.13.0"></a>
+# [2.13.0](https://github.com/ng-select/ng-select/compare/v2.12.1...v2.13.0) (2018-12-03)
+
+
+### Features
+
+* **templates:** add searchTerm to header and footer (ng-select[#961](https://github.com/ng-select/ng-select/issues/961)) ([40eb264](https://github.com/ng-select/ng-select/commit/40eb264))
+
+
+
+<a name="2.12.1"></a>
+## [2.12.1](https://github.com/ng-select/ng-select/compare/v2.12.0...v2.12.1) (2018-11-14)
+
+
+### Bug Fixes
+
+* handler mousedown for clear event when used animation library ([#931](https://github.com/ng-select/ng-select/issues/931)) ([dfbbcd6](https://github.com/ng-select/ng-select/commit/dfbbcd6)), closes [#928](https://github.com/ng-select/ng-select/issues/928)
+* use classList instead of className ([bc6f084](https://github.com/ng-select/ng-select/commit/bc6f084)), closes [#940](https://github.com/ng-select/ng-select/issues/940)
+
+
+
+<a name="2.12.0"></a>
+# [2.12.0](https://github.com/ng-select/ng-select/compare/v2.11.2...v2.12.0) (2018-11-06)
+
+
+### Bug Fixes
+
+* keep items order while mapping selected options ([bc1ef8e](https://github.com/ng-select/ng-select/commit/bc1ef8e)), closes [#907](https://github.com/ng-select/ng-select/issues/907)
+
+
+### Features
+
+* allow to customise clear icon ([3e8ad77](https://github.com/ng-select/ng-select/commit/3e8ad77)), closes [#835](https://github.com/ng-select/ng-select/issues/835)
+* **autofocus:** focus if attribute is present ([#924](https://github.com/ng-select/ng-select/issues/924)) ([b78f39f](https://github.com/ng-select/ng-select/commit/b78f39f)), closes [#762](https://github.com/ng-select/ng-select/issues/762)
+* **clearOnBackspace:** configure whether backspace removes selection ([af79a45](https://github.com/ng-select/ng-select/commit/af79a45)), closes [#861](https://github.com/ng-select/ng-select/issues/861)
+* **isOpen:** treat undefined value as default behaviour ([127d6be](https://github.com/ng-select/ng-select/commit/127d6be)), closes [#816](https://github.com/ng-select/ng-select/issues/816)
+
+
+
+<a name="2.11.2"></a>
+## [2.11.2](https://github.com/ng-select/ng-select/compare/v2.11.1...v2.11.2) (2018-10-25)
+
+
+### Bug Fixes
+
+* use autocomplete off when labelForId is used ([5f4d833](https://github.com/ng-select/ng-select/commit/5f4d833)), closes [#269](https://github.com/ng-select/ng-select/issues/269)
+
+
+
 <a name="2.11.1"></a>
 ## [2.11.1](https://github.com/ng-select/ng-select/compare/v2.11.0...v2.11.1) (2018-10-20)
 

@@ -41,6 +41,21 @@ import { DataService } from '../shared/data.service';
         ---
         <hr/>
 
+        <label>Keep selected elements on backspace</label>
+        ---html,true
+        <ng-select
+                [items]="people$1 | async"
+                [multiple]="true"
+                [closeOnSelect]="false"
+                [clearOnBackspace]="false"
+                bindLabel="name"
+                placeholder="Select people"
+                [(ngModel)]="selectedPeople5">
+        </ng-select>
+        ---
+        <hr/>
+
+
         <label>Select multiple elements with a limit number of selections (e.g 3)</label>
         ---html,true
         <div class="alert alert-warning mb-2" *ngIf="selectedPeople2.length === 3 && select.focused">
@@ -128,6 +143,7 @@ export class SelectMultiComponent {
 
     people$3: Observable<any[]>;
     selectedPeople3 = [];
+    selectedPeople5 = [];
     selectedPeople4 = [];
     disable = true;
 

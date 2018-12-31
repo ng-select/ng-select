@@ -20,6 +20,7 @@ import { Observable } from 'rxjs';
         ---html,true
         <ng-select [items]="people$ | async"
                    bindLabel="name"
+                   autofocus
                    bindValue="id"
                    [(ngModel)]="selectedPersonId">
         </ng-select>

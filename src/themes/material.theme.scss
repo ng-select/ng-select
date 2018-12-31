@@ -1,6 +1,7 @@
 @import "mixins";
 
-$highlight-color: #3f51b5;
+$highlight-color: #3f51b5 !default;
+
 .ng-select {
     padding-bottom: 1.25em;
     &.ng-select-disabled {

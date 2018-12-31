@@ -7,9 +7,10 @@
   "scripts": {
     "clean": "rimraf out-tsc dist/* integration/node_modules/@ng-select",
     "prebuild": "yarn clean",
-    "build": "ng-packagr -p ./src/package.json && yarn build:themes",
+    "build": "ng-packagr -p ./src/package.json && yarn build:themes && yarn copy-sass",
     "build:demo": "rimraf dist && webpack --config ./scripts/webpack.dev.js --progress --profile --bail",
     "build:themes": "node-sass --output-style compressed src/themes/ -o dist/themes",
+    "copy-sass": "mkdir -p dist/scss && cp src/**/*.scss dist/scss",
     "prestart": "yarn install",
     "start": "webpack-dev-server --config ./scripts/webpack.dev.js --inline --color --progress --port 8080",
     "test:watch": "karma start ./scripts/karma.conf.js --no-single-run --auto-watch",

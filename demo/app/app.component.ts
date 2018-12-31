@@ -1,9 +1,10 @@
 import '../style/styles.scss';
 
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { filter, map, mergeMap } from 'rxjs/operators';
+import { NgSelectConfig } from '../../src';
 
 @Component({
     selector: 'demo-app',
@@ -17,9 +18,13 @@ export class AppComponent {
     exampleSourceUrl: string;
     dir: 'ltr' | 'rtl' = 'ltr';
 
-    constructor(private router: Router,
+    constructor(
+        private router: Router,
         private activatedRoute: ActivatedRoute,
-        private titleService: Title) {
+        private titleService: Title,
+        private config: NgSelectConfig
+    ) {
+        this.config.placeholder = 'Select item';
     }
 
     ngOnInit() {

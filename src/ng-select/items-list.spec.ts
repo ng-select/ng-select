@@ -408,13 +408,30 @@ describe('ItemsList', () => {
             expect(list.items[0].label).toBe('United States');
             expect(list.items[0].selected).toBeTruthy();
         });
+
+        it('should retain items order', () => {
+            list.select(list.mapItem({ name: 'Samantha' }, null));
+            list.select(list.mapItem({ name: 'Other' }, null));
+            list.select(list.mapItem({ name: 'Amalie' }, null));
+
+            list.setItems([
+                { name: 'Samantha', country: 'United States' },
+                { name: 'Amalie', country: 'Argentina' }]);
+
+            list.mapSelectedItems();
+
+            expect(list.selectedItems.length).toBe(3);
+            expect(list.selectedItems[0].label).toBe('Samantha');
+            expect(list.selectedItems[1].label).toBe('Other');
+            expect(list.selectedItems[2].label).toBe('Amalie');
+        });
     });
+
+    function itemsListFactory(cmp: NgSelectComponent): ItemsList {
+        return new ItemsList(cmp, new DefaultSelectionModel());
+    }
+
+    function ngSelectFactory(): NgSelectComponent {
+        return new NgSelectComponent(null, null, null, new NgSelectConfig(), () => new DefaultSelectionModel(), {} as any, null, null);
+    }
 });
-
-function itemsListFactory(cmp: NgSelectComponent): ItemsList {
-    return new ItemsList(cmp, new DefaultSelectionModel());
-}
-
-function ngSelectFactory(): NgSelectComponent {
-    return new NgSelectComponent(null, null, new NgSelectConfig(), () => new DefaultSelectionModel(), {} as any, null, null);
-}
