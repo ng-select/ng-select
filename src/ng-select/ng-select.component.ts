@@ -52,6 +52,8 @@ import { NgSelectConfig } from './config.service';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
+export type AutoCorrect = 'off' | 'on';
+export type AutoCapitalize = 'off' | 'on';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
 
@@ -104,6 +106,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() clearOnBackspace = true;
 
     @Input() labelForId = null;
+    @Input() autoCorrect: AutoCorrect = 'off';
+    @Input() autoCapitalize: AutoCapitalize = 'off';
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
     @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;

@@ -27,6 +27,8 @@
                    [attr.autocomplete]="labelForId ? 'off' : dropdownId"
                    [attr.id]="labelForId"
                    [attr.tabindex]="tabIndex"
+                   [attr.autocorrect]="autoCorrect"
+                   [attr.autocapitalize]="autoCapitalize"
                    [readOnly]="!searchable"
                    [disabled]="disabled"
                    [value]="filterValue ? filterValue : ''"
