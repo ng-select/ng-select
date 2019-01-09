@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.14.0"></a>
+# [2.14.0](https://github.com/ng-select/ng-select/compare/v2.13.3...v2.14.0) (2019-01-09)
+
+
+### Features
+
+* Exclude groups from selection on search ([#887](https://github.com/ng-select/ng-select/issues/887)) ([#889](https://github.com/ng-select/ng-select/issues/889)) ([6a2a6e7](https://github.com/ng-select/ng-select/commit/6a2a6e7))
+
+
+
 <a name="2.13.3"></a>
 ## [2.13.3](https://github.com/ng-select/ng-select/compare/v2.13.2...v2.13.3) (2018-12-20)
 
