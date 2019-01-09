@@ -126,6 +126,7 @@ map: {
 | [clearOnBackspace] | `boolean` | `true` | no | Clear selected values one by one when clicking backspace. Default `true`|
 | [compareWith] | `(a: any, b: any) => boolean` | `(a, b) => a === b` | no | A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. |
 | dropdownPosition | `bottom` \| `top` \| `auto` |  `auto` | no | Set the dropdown position on open |
+| [excludeGroupsFromDefaultSelection] | `boolean` |  false | no | Exclude group from default selection when `selectableGroup` is `true`. Default `false`. |
 | [groupBy] | `string` \| `Function` | null | no | Allow to group items by key or function expression |
 | [groupValue] |  `(groupKey: string, cildren: any[]) => Object` | - | no | Function expression to provide group value |
 | [selectableGroup] | `boolean` | false | no | Allow to select group when groupBy is used |

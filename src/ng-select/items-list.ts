@@ -199,7 +199,11 @@ export class ItemsList {
         if (this.lastSelectedItem && indexOfLastSelected > -1) {
             this._markedIndex = indexOfLastSelected;
         } else {
-            this._markedIndex = markDefault ? this.filteredItems.findIndex(x => !x.disabled) : -1;
+            if (this._ngSelect.excludeGroupsFromDefaultSelection) {
+                this._markedIndex = markDefault ? this.filteredItems.findIndex(x => !x.disabled && !x.children) : -1;
+            } else {
+                this._markedIndex = markDefault ? this.filteredItems.findIndex(x => !x.disabled) : -1;
+            }
         }
     }
 
@@ -230,7 +234,7 @@ export class ItemsList {
             label: isDefined(label) ? label.toString() : '',
             value: value,
             disabled: item.disabled,
-            htmlId: newId()
+            htmlId: newId(),
         };
     }
 
@@ -332,10 +336,10 @@ export class ItemsList {
                 parent: null,
                 index: i++,
                 disabled: !this._ngSelect.selectableGroup,
-                htmlId: newId()
+                htmlId: newId(),
             };
             const groupKey = isFn ? this._ngSelect.bindLabel : <string>this._ngSelect.groupBy;
-            const groupValue = this._ngSelect.groupValue || (() => ({ [groupKey]: key }));
+            const groupValue = this._ngSelect.groupValue || (() => ({[groupKey]: key}));
             const children = groups.get(key).map(x => {
                 x.parent = parent;
                 x.children = undefined;
