@@ -61,9 +61,6 @@ $color-selected: #f5faff;
                 padding-right: 10px;
                 padding-left: 0
             }
-            .ng-placeholder {
-                color: #aaa;
-            }
         }
     }
     &.ng-select-single {
@@ -78,6 +75,9 @@ $color-selected: #f5faff;
                     @include rtl {
                         padding-right: 10px;
                         padding-left: 50px;
+                    }
+                    input::placeholder {
+                        color: #aaa;
                     }
                 }
             }
@@ -123,6 +123,10 @@ $color-selected: #f5faff;
                             }
                         }
                     }
+                    &:focus {
+                        border-color: #007eff;
+                        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px rgba(0, 126, 255, 0.1);
+                    }
                     .ng-value-label {
                         display: inline-block;
                         padding: 0 5px 0 5px;
@@ -153,15 +157,6 @@ $color-selected: #f5faff;
                     padding: 0 0 3px 3px;
                     @include rtl {
                         padding: 0 3px 3px 0;
-                    }
-                }
-                .ng-placeholder {
-                    top: 5px;
-                    padding-bottom: 5px;
-                    padding-left: 3px;
-                    @include rtl {
-                        padding-right: 3px;
-                        padding-left: 0;
                     }
                 }
             }

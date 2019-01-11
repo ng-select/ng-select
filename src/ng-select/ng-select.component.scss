@@ -23,8 +23,24 @@
         display: none;
     }
     &.ng-select-searchable {
-        .ng-select-container .ng-value-container .ng-input {
-            opacity: 1;
+        .ng-select-container {
+            .ng-value-container {
+                .ng-placeholder {
+                    display: none;
+                }
+                .ng-input {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+    &:not(.ng-select-searchable) {
+        .ng-has-value {
+            .ng-input {
+                input {
+                    opacity: 0;
+                }
+            }
         }
     }
     &.ng-select-opened .ng-select-container {
@@ -61,7 +77,6 @@
             display: flex;
             flex: 1;
             .ng-input {
-                opacity: 0;
                 > input {
                     box-sizing: content-box;
                     background: none transparent;
@@ -140,15 +155,23 @@
             }
         }
     }
+    .ng-icon-button {
+        background: none;
+        color: inherit;
+        border: none;
+        font: inherit;
+        cursor: pointer;
+        padding: 0 5px;
+        margin: 0;
+    }
+
     .ng-clear-wrapper {
         cursor: pointer;
         position: relative;
-        width: 17px;
         user-select: none;
         .ng-clear {
             display: inline-block;
             font-size: 18px;
-            line-height: 1;
             pointer-events: none;
         }
     }

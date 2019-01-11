@@ -41,6 +41,18 @@ $highlight-color: #3f51b5 !default;
             }
         }
     }
+    &.ng-select-searchable {
+        .ng-select-container {
+            .ng-value-container {
+                .ng-placeholder {
+                    display: initial;
+                }
+                input::placeholder {
+                    opacity: 0;
+                }
+            }
+        }
+    }
     .ng-has-value,
     &.ng-select-filtered .ng-select-container {
         .ng-placeholder {

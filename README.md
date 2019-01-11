@@ -121,7 +121,8 @@ map: {
 | bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
 | bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |
 | [closeOnSelect] | `boolean` |  true | no | Whether to close the menu when a value is selected |
-| clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
+| clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon button title |
+| toggleDropdownText | `string` | `Toggle dropdown` | no | Set custom text for toggle dropdown icon button title |
 | [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
 | [clearOnBackspace] | `boolean` | `true` | no | Clear selected values one by one when clicking backspace. Default `true`|
 | [compareWith] | `(a: any, b: any) => boolean` | `(a, b) => a === b` | no | A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. |

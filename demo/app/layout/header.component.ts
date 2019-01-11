@@ -9,7 +9,7 @@ type langDir = 'ltr' | 'rtl';
     template: `
         <nav class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar bg-dark">
             <a class="navbar-brand" href="#">
-                <img src="https://angular.io/assets/images/logos/angular/angular.svg" width="32px" height="32px"/>
+                <img src="https://angular.io/assets/images/logos/angular/angular.svg" width="32px" height="32px" alt="Angular Logo"/>
                 @ng-select/ng-select@{{version}}
             </a>
             <button class="navbar-toggler"

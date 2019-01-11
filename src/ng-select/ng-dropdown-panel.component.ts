@@ -41,7 +41,7 @@ const BOTTOM_CSS_CLASS = 'ng-select-bottom';
         </div>
         <div #scroll class="ng-dropdown-panel-items scroll-host">
             <div #padding [class.total-padding]="virtualScroll"></div>
-            <div #content [class.scrollable-content]="virtualScroll && items.length > 0">
+            <div #content [class.scrollable-content]="virtualScroll && items.length > 0" role="listbox">
                 <ng-content></ng-content>
             </div>
         </div>

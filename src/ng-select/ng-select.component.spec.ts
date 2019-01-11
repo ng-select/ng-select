@@ -250,7 +250,7 @@ describe('NgSelectComponent', function () {
         it('should set items correctly if there is no bindLabel', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select 
+                `<ng-select
                     [items]="cities"
                     [clearable]="true"
                     [(ngModel)]="selectedCity">
@@ -453,17 +453,18 @@ describe('NgSelectComponent', function () {
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
                         bindLabel="name"
+                        [multiple]="true"
                         [clearable]="true"
-                        [(ngModel)]="selectedCity">
+                        [(ngModel)]="selectedCities">
                 </ng-select>`);
             select = fixture.componentInstance.select;
 
-            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[2];
+            fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[2]];
             tickAndDetectChanges(fixture);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.itemsList.markedItem.value).toEqual({ name: 'Pabrade', id: 3 });
 
-            fixture.componentInstance.selectedCity = { name: 'New city', id: 5 };
+            fixture.componentInstance.selectedCities = [{ name: 'New city', id: 5 }];
             tickAndDetectChanges(fixture);
             fixture.componentInstance.cities = [...fixture.componentInstance.cities];
             tickAndDetectChanges(fixture);
@@ -1244,12 +1245,13 @@ describe('NgSelectComponent', function () {
         });
 
         describe('backspace', () => {
-            it('should remove selected value', fakeAsync(() => {
-                fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
-                tickAndDetectChanges(fixture);
-                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
-                expect(select.selectedItems).toEqual([]);
-            }));
+            // not true anymore as a backspace on a single-select does not clear out, it just removes last char from filterValue.
+            // it('should remove selected value', fakeAsync(() => {
+            //     fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            //     tickAndDetectChanges(fixture);
+            //     triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
+            //     expect(select.selectedItems).toEqual([]);
+            // }));
 
             it('should not remove selected value if filter is set', fakeAsync(() => {
                 select.filterValue = 'a';
@@ -1355,6 +1357,80 @@ describe('NgSelectComponent', function () {
                 expect(select.isOpen).toBe(false);
             }));
         });
+
+        describe('arrow icon', () => {
+            let button;
+            const eventObj = {
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            };
+            beforeEach(fakeAsync(() => {
+                button = fixture.debugElement.query(By.css('.ng-arrow-button'));
+
+            }));
+
+            it('should toggle dropdown with Enter key', fakeAsync(() => {
+                // open
+                button.triggerEventHandler('keydown.enter', eventObj);
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.isOpen).toBe(true);
+
+                // close
+                button.triggerEventHandler('keydown.enter', eventObj);
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.isOpen).toBe(false);
+
+                // open
+                button.triggerEventHandler('keydown.enter', eventObj);
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.isOpen).toBe(true);
+            }));
+
+            it('should toggle dropdown with Space key', fakeAsync(() => {
+                // open
+                button.triggerEventHandler('keydown.space', eventObj);
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.isOpen).toBe(true);
+
+                // close
+                button.triggerEventHandler('keydown.space', eventObj);
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.isOpen).toBe(false);
+
+                // open
+                button.triggerEventHandler('keydown.space', eventObj);
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.select.isOpen).toBe(true);
+            }));
+        });
+
+        describe('clear icon ', () => {
+            let button;
+            const eventObj = {
+                preventDefault: () => { },
+                stopPropagation: () => { }
+            };
+
+            beforeEach(fakeAsync(() => {
+                fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+                tickAndDetectChanges(fixture);
+                tickAndDetectChanges(fixture);
+                button = fixture.debugElement.query(By.css('.ng-clear-button'));
+            }));
+
+            it('should clear with Enter key', fakeAsync(() => {
+                button.triggerEventHandler('keydown.enter', eventObj);
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.selectedCity).toBe(null);
+            }));
+
+            it('should clear with Space key', fakeAsync(() => {
+                button.triggerEventHandler('keydown.space', eventObj);
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.selectedCity).toBe(null);
+            }));
+        });
+
     });
 
     describe('Outside click', () => {
@@ -1465,13 +1541,13 @@ describe('NgSelectComponent', function () {
         it('should display custom header template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [items]="cities" [(ngModel)]="selectedCity">
+                `<ng-select [items]="cities" [(ngModel)]="selectedCities" [multiple]="true">
                     <ng-template ng-label-tmp let-item="item">
                         <div class="custom-header">{{item.name}}</div>
                     </ng-template>
                 </ng-select>`);
-
-            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            // NOTE: added multiple=true as tags are shown only for multi-select.
+            fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
             tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
 
@@ -1598,10 +1674,10 @@ describe('NgSelectComponent', function () {
         it('should display custom loading and no data found template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [items]="cities" 
+                `<ng-select [items]="cities"
                             [loading]="citiesLoading"
                             [(ngModel)]="selectedCity">
-                    
+
                     <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
                         <div class="custom-notfound">
                             No data found for "{{searchTerm}}"
@@ -1636,15 +1712,15 @@ describe('NgSelectComponent', function () {
         it('should display custom type for search template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [items]="cities" 
-                            [typeahead]="filter" 
+                `<ng-select [items]="cities"
+                            [typeahead]="filter"
                             [(ngModel)]="selectedCity">
                     <ng-template ng-typetosearch-tmp>
                         <div class="custom-typeforsearch">
                             Start typing...
                         </div>
                     </ng-template>
-                   
+
                 </ng-select>`);
 
             fixture.whenStable().then(() => {
@@ -2050,17 +2126,19 @@ describe('NgSelectComponent', function () {
                 </ng-select>`);
         });
 
-        it('should be visible when no value selected', async(() => {
+        it('should be not visible', async(() => {
             fixture.detectChanges();
             fixture.whenStable().then(() => {
                 const element = fixture.componentInstance.select.element;
                 const placeholder: any = element.querySelector('.ng-placeholder');
+                const input: HTMLInputElement = element.querySelector('input');
                 expect(placeholder.innerText).toBe('select value');
-                expect(getComputedStyle(placeholder).display).toBe('block');
+                expect(getComputedStyle(placeholder).display).toBe('none');
+                expect(input.getAttribute('placeholder')).toBe('select value');
             });
         }));
 
-        it('should be visible when value was cleared', fakeAsync(() => {
+        it('should be not visible when value was cleared - input holds the placeholder', fakeAsync(() => {
             const select = fixture.componentInstance.select;
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
             tickAndDetectChanges(fixture);
@@ -2068,14 +2146,16 @@ describe('NgSelectComponent', function () {
             const element = fixture.componentInstance.select.element;
             const ngControl = element.querySelector('.ng-select-container');
             const placeholder = element.querySelector('.ng-placeholder');
+            const input: HTMLInputElement = element.querySelector('input');
             expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
-
+            expect(input.getAttribute('placeholder')).toBe('select value');
             select.handleClearClick();
             tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
 
             expect(ngControl.classList.contains('ng-has-value')).toBeFalsy();
-            expect(getComputedStyle(placeholder).display).toBe('block');
+            expect(getComputedStyle(placeholder).display).toBe('none');
+            expect(input.getAttribute('placeholder')).toBe('select value');
         }));
 
         it('should contain .ng-has-value when value was selected', fakeAsync(() => {
@@ -2427,7 +2507,7 @@ describe('NgSelectComponent', function () {
                 expect(fixture.componentInstance.select.filterValue).toBe('new');
 
                 fixture.componentInstance.select.select(fixture.componentInstance.select.viewPortItems[0]);
-                expect(fixture.componentInstance.select.filterValue).toBeNull();
+                expect(fixture.componentInstance.select.filterValue).toBe('New York');
             }));
 
             it('should not clear search term by default when closeOnSelect is false ', fakeAsync(() => {
@@ -2479,87 +2559,231 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Accessibility', () => {
-        let fixture: ComponentFixture<NgSelectTestCmp>;
-        let select: NgSelectComponent;
-        let input: HTMLInputElement;
+        describe('basic', () => {
+            let fixture: ComponentFixture<NgSelectTestCmp>;
+            let select: NgSelectComponent;
+            let input: HTMLInputElement;
+            let control: HTMLDivElement;
 
-        beforeEach(fakeAsync(() => {
-            fixture = createTestingModule(
-                NgSelectTestCmp,
-                `<ng-select [items]="cities"
+            beforeEach(fakeAsync(() => {
+                fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                            labelForId="lbl"
+                            (change)="onChange($event)" 
+                            bindLabel="name">
+                    </ng-select>`);
+                select = fixture.componentInstance.select;
+                control = fixture.debugElement.query(By.css('.ng-select-container')).nativeElement;
+                input = fixture.debugElement.query(By.css('input')).nativeElement;
+            }));
+
+            it('should set aria-activedescendant absent at start', fakeAsync(() => {
+                expect(input.hasAttribute('aria-activedescendant'))
+                    .toBe(false);
+            }));
+
+            it('should aria-owns be absent at start', fakeAsync(() => {
+                expect(input.hasAttribute('aria-owns'))
+                    .toBe(false);
+            }));
+
+            it('should set aria-owns to dropdownId on open', fakeAsync(() => {
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+
+                expect(input.getAttribute('aria-owns'))
+                    .toBe(select.dropdownId);
+            }));
+
+            it('should set aria-activedescendant equal to chosen item on open', fakeAsync(() => {
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+                expect(input.getAttribute('aria-activedescendant'))
+                    .toBe(select.itemsList.markedItem.htmlId);
+            }));
+
+            it('should set aria-activedescendant equal to chosen item on arrow down', fakeAsync(() => {
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
+                tickAndDetectChanges(fixture);
+                expect(input.getAttribute('aria-activedescendant'))
+                    .toBe(select.itemsList.markedItem.htmlId);
+            }));
+
+            it('should set aria-activedescendant equal to chosen item on arrow up', fakeAsync(() => {
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowUp);
+                tickAndDetectChanges(fixture);
+                expect(input.getAttribute('aria-activedescendant'))
+                    .toBe(select.itemsList.markedItem.htmlId);
+            }));
+
+            it('should aria-activedescendant be absent on dropdown close', fakeAsync(() => {
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+                tickAndDetectChanges(fixture);
+                expect(input.hasAttribute('aria-activedescendant'))
+                    .toBe(false);
+            }));
+
+            it('should aria-owns be absent on dropdown close', fakeAsync(() => {
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+                tickAndDetectChanges(fixture);
+                expect(input.hasAttribute('aria-owns'))
+                    .toBe(false);
+            }));
+
+            it('should add labelForId on filter input id attribute', fakeAsync(() => {
+                tickAndDetectChanges(fixture);
+                expect(input.getAttribute('id')).toEqual('lbl');
+            }));
+
+            it('should have no role', fakeAsync(() => {
+                expect(control.getAttribute('role')).toBeNull();
+            }));
+
+            it('should have no aria-orientation', fakeAsync(() => {
+                expect(control.getAttribute('aria-orientation')).toBeNull();
+            }));
+
+            it('should have no aria-haspopup', fakeAsync(() => {
+                expect(control.getAttribute('aria-haspopup')).toBeNull();
+            }));
+
+            it('should have no aria-multiselectable', fakeAsync(() => {
+                expect(control.getAttribute('aria-multiselectable')).toBeNull();
+            }));
+
+            it('should have aria-labelledby set to \'lbl\'', fakeAsync(() => {
+                expect(control.getAttribute('aria-labelledby')).toBeNull()
+            }));
+        });
+
+        describe('multi select', () => {
+            let fixture: ComponentFixture<NgSelectTestCmp>;
+            let select: NgSelectComponent;
+            let control: DebugElement;
+            let controlElement: HTMLDivElement;
+
+            beforeEach(fakeAsync(() => {
+                fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                        [multiple]="true"
                         labelForId="lbl"
-                        (change)="onChange($event)" 
+                        [(ngModel)]="selectedCities"
                         bindLabel="name">
                 </ng-select>`);
-            select = fixture.componentInstance.select;
-            input = fixture.debugElement.query(By.css('input')).nativeElement;
-        }));
+                select = fixture.componentInstance.select;
 
-        it('should set aria-activedescendant absent at start', fakeAsync(() => {
-            expect(input.hasAttribute('aria-activedescendant'))
-                .toBe(false);
-        }));
+                control = fixture.debugElement.query(By.css('.ng-select-container'));
+                controlElement = control.nativeElement;
+                fixture.componentInstance.selectedCities = [...fixture.componentInstance.cities];
+                tickAndDetectChanges(fixture);
+                tickAndDetectChanges(fixture);
+            }));
 
-        it('should set aria-owns absent at start', fakeAsync(() => {
-            expect(input.hasAttribute('aria-owns'))
-                .toBe(false);
-        }));
+            it('should have role set to listbox', fakeAsync(() => {
+                expect(controlElement.getAttribute('role')).toEqual('listbox');
+            }));
 
-        it('should set aria-owns be set to dropdownId on open', fakeAsync(() => {
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            tickAndDetectChanges(fixture);
+            it('should have aria-orientation set to horizontal', fakeAsync(() => {
+                expect(controlElement.getAttribute('aria-orientation')).toEqual('horizontal');
+            }));
 
-            expect(input.getAttribute('aria-owns'))
-                .toBe(select.dropdownId);
-        }));
+            it('should have aria-haspopup set to listbox', fakeAsync(() => {
+                expect(controlElement.getAttribute('aria-haspopup')).toEqual('listbox');
+            }));
 
-        it('should set aria-activedecendant equal to chosen item on open', fakeAsync(() => {
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            tickAndDetectChanges(fixture);
-            expect(input.getAttribute('aria-activedescendant'))
-                .toBe(select.itemsList.markedItem.htmlId);
-        }));
+            it('should have aria-labelledby set to \'lbl\'', fakeAsync(() => {
+                expect(controlElement.getAttribute('aria-labelledby')).toEqual('lbl');
+            }));
 
-        it('should set aria-activedecendant equal to chosen item on arrow down', fakeAsync(() => {
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            tickAndDetectChanges(fixture);
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
-            tickAndDetectChanges(fixture);
-            expect(input.getAttribute('aria-activedescendant'))
-                .toBe(select.itemsList.markedItem.htmlId);
-        }));
+            it('should have aria-multiselectable set to false', fakeAsync(() => {
+                expect(controlElement.getAttribute('aria-multiselectable')).toEqual('true');
+            }));
 
-        it('should set aria-activedecendant equal to chosen item on arrow up', fakeAsync(() => {
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            tickAndDetectChanges(fixture);
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowUp);
-            tickAndDetectChanges(fixture);
-            expect(input.getAttribute('aria-activedescendant'))
-                .toBe(select.itemsList.markedItem.htmlId);
-        }));
+            it('should tag container have tabindex set to 0 if selected items', fakeAsync(() => {
+                expect(controlElement.getAttribute('tabindex'))
+                    .toBe('0');
+            }));
 
-        it('should set aria-activedescendant absent on dropdown close', fakeAsync(() => {
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            tickAndDetectChanges(fixture);
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
-            tickAndDetectChanges(fixture);
-            expect(input.hasAttribute('aria-activedescendant'))
-                .toBe(false);
-        }));
+            it('should tag have tabindex set to -1', fakeAsync(() => {
+                const tag = controlElement.querySelectorAll('.ng-value')[0];
+                expect(tag.getAttribute('tabindex'))
+                    .toBe('-1');
+            }));
 
-        it('should set aria-owns  absent on dropdown close', fakeAsync(() => {
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-            tickAndDetectChanges(fixture);
-            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
-            tickAndDetectChanges(fixture);
-            expect(input.hasAttribute('aria-owns'))
-                .toBe(false);
-        }));
+            it('should tag have role set to option', fakeAsync(() => {
+                const tag = controlElement.querySelectorAll('.ng-value')[0];
+                expect(tag.getAttribute('role'))
+                    .toBe('option');
+            }));
 
-        it('should add labelForId on filter input id attribute', fakeAsync(() => {
-            tickAndDetectChanges(fixture);
-            expect(input.getAttribute('id')).toEqual('lbl');
-        }));
+            it('should tag have aria-selected set to true', fakeAsync(() => {
+                const tag = controlElement.querySelectorAll('.ng-value')[0];
+                expect(tag.getAttribute('aria-selected'))
+                    .toBe('true');
+            }));
+
+            it('should tag container have tabindex set to -1 if no selected items', fakeAsync(() => {
+                fixture.componentInstance.selectedCities = [];
+                tickAndDetectChanges(fixture);
+                tickAndDetectChanges(fixture);
+                expect(controlElement.getAttribute('tabindex'))
+                    .toBe('-1');
+            }));
+
+            it('should focus event focus first tag', fakeAsync(() => {
+                control.triggerEventHandler('focus', createEvent({}));
+                expect(document.activeElement).toBe(controlElement.querySelectorAll('.ng-value')[0]);
+            }));
+
+            it('should key navigation focus proper tags', fakeAsync(() => {
+                control.triggerEventHandler('focus', createEvent({}));
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowRight);
+                expect(document.activeElement).toBe(controlElement.querySelectorAll('.ng-value')[1]);
+
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowLeft);
+                expect(document.activeElement).toBe(controlElement.querySelectorAll('.ng-value')[0]);
+
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.End);
+                expect(document.activeElement).toBe(controlElement.querySelectorAll('.ng-value')[2]);
+
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Home);
+                expect(document.activeElement).toBe(controlElement.querySelectorAll('.ng-value')[0]);
+
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowLeft);
+                expect(document.activeElement).toBe(controlElement.querySelectorAll('.ng-value')[2]);
+
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowRight);
+                expect(document.activeElement).toBe(controlElement.querySelectorAll('.ng-value')[0]);
+            }));
+
+            it('should Delete key unselect focused item', fakeAsync(() => {
+                expect(select.selectedItems.length).toBe(3);
+
+                control.triggerEventHandler('focus', createEvent({}));
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Delete);
+                expect(select.selectedItems.length).toBe(2);
+                expect(document.activeElement).toBe(controlElement.querySelectorAll('.ng-value')[1]);
+
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Delete);
+                expect(select.selectedItems.length).toBe(1);
+                expect(document.activeElement).toBe(controlElement.querySelectorAll('.ng-value')[0]);
+
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Delete);
+                expect(select.selectedItems.length).toBe(0);
+                expect(document.activeElement).toBe(select.filterInput.nativeElement);
+            }));
+        });
+
     });
 
     describe('Output events', () => {
@@ -2823,7 +3047,7 @@ describe('NgSelectComponent', function () {
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
                     control.triggerEventHandler('mousedown', createEvent({
-                        classList: { contains: (term) => term === 'ng-clear-wrapper' }
+                        classList: { contains: (term) => term === 'ng-clear-button' }
                     }));
                 };
             }));
@@ -2910,7 +3134,7 @@ describe('NgSelectComponent', function () {
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
                     control.triggerEventHandler('mousedown', createEvent({
-                        classList: { contains: (term) => term === 'ng-arrow-wrapper' }
+                        classList: { contains: (term) => term === 'ng-arrow-button' }
                     }));
                 };
             }));
@@ -3180,6 +3404,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.selectedAccount).toBe('adam@email.com');
         }));
     });
+
 });
 
 

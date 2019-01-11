@@ -1,0 +1,5 @@
+{
+  "version": 2,
+  "alias": "brunano21-ng-select",
+  "builds": [{ "src": "./package.json", "use": "@now/static-build",  "config": { "distDir": "dist_" }}]
+}

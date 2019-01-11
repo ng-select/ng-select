@@ -8,6 +8,7 @@ export class NgSelectConfig {
     addTagText = 'Add item';
     loadingText = 'Loading...';
     clearAllText = 'Clear all';
+    toggleDropdownText = 'Toggle dropdown';
     disableVirtualScroll = true;
     openOnEnter = true;
 }

@@ -18,7 +18,8 @@
     "coveralls": "cat ./coverage/lcov/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "integration": "./integration_test.sh",
     "lint": "tslint --type-check --project ./src/tsconfig.json",
-    "release": "sh ./release.sh"
+    "release": "sh ./release.sh",
+    "now-build": "rimraf dist_ && mkdir -p dist_/ng-select && yarn run build:demo && cp -r dist/** dist_/ && mv dist_/js dist_/ng-select && yarn run build && cp -r dist/** dist_/ng-select"
   },
   "devDependencies": {
     "@angular/animations": "^6.1.2",

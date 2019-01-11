@@ -1,11 +1,28 @@
-<div (mousedown)="handleMousedown($event)" [class.ng-has-value]="hasValue" class="ng-select-container">
+<div [class.ng-has-value]="hasValue"
+     class="ng-select-container"
+     [attr.role]="multiple ? 'listbox' : null"
+     [attr.aria-orientation]="multiple ? 'horizontal' : null"
+     [attr.aria-haspopup]="multiple ? 'listbox' : null"
+     [attr.aria-multiselectable]="multiple ? 'true' : null"
+     [attr.aria-labelledby]="multiple ? labelForId : null"
+     [tabIndex]="(multiple && selectedItems.length > 0 && !focusedTag) ? 0 : -1"
+     (focus)="onWidgetFocus()"
+     (mousedown)="handleMousedown($event)">
     <div class="ng-value-container">
-        <div class="ng-placeholder">{{placeholder}}</div>
+        <div class="ng-placeholder" aria-hidden="true">{{placeholder}}</div>
 
-        <ng-container *ngIf="!multiLabelTemplate && selectedItems.length > 0">
-            <div [class.ng-value-disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems">
+        <ng-container *ngIf="((multiple && !multiLabelTemplate) || !searchable) && selectedItems.length > 0">
+            <div #tag *ngFor="let item of selectedItems"
+                 [class.ng-value-disabled]="item.disabled"
+                 [attr.aria-disabled]="item.disabled"
+                 class="ng-value"
+                 tabindex="-1"
+                 role="option"
+                 aria-selected="true"
+                 (blur)="onTagBlur($event)"
+                 [id]="item.htmlId">
                 <ng-template #defaultLabelTemplate>
-                    <span class="ng-value-icon left" (click)="unselect(item);" aria-hidden="true">×</span>
+                    <span class="ng-value-icon ng-icon-button left" (click)="unselect(item);" aria-hidden="true">×</span>
                     <span class="ng-value-label">{{item.label}}</span>
                 </ng-template>
 
@@ -17,14 +34,15 @@
         </ng-container>
 
         <ng-template *ngIf="multiLabelTemplate && selectedValues.length > 0"
-                [ngTemplateOutlet]="multiLabelTemplate"
-                [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
+                     [ngTemplateOutlet]="multiLabelTemplate"
+                     [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
         </ng-template>
 
         <div class="ng-input">
             <input #filterInput
                    type="text"
                    [attr.autocomplete]="labelForId ? 'off' : dropdownId"
+                   [attr.placeholder]="(!multiple || !searchable) ? placeholder : (hasValue ? '' : placeholder)"
                    [attr.id]="labelForId"
                    [attr.tabindex]="tabIndex"
                    [readOnly]="!searchable"
@@ -35,6 +53,7 @@
                    (blur)="onInputBlur($event)"
                    (change)="$event.stopPropagation()"
                    role="combobox"
+                   aria-autocomplete="list"
                    [attr.aria-expanded]="isOpen"
                    [attr.aria-owns]="isOpen ? dropdownId : null"
                    [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null">
@@ -43,12 +62,22 @@
 
     <div class="ng-spinner-loader" *ngIf="loading"></div>
 
-    <span *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
-        <span class="ng-clear" aria-hidden="true">×</span>
+    <span *ngIf="showClear()" class="ng-clear-wrapper">
+        <button class="ng-icon-button ng-clear-button"
+                title="{{clearAllText}}"
+                (keydown.enter)="$event.preventDefault(); $event.stopPropagation(); handleClearClick();"
+                (keydown.space)="$event.preventDefault(); $event.stopPropagation(); handleClearClick();">
+            <span class="ng-clear" aria-hidden="true">×</span>
+        </button>
     </span>
 
     <span class="ng-arrow-wrapper">
-        <span class="ng-arrow"></span>
+        <button class="ng-icon-button ng-arrow-button"
+                title="{{toggleDropdownText}}"
+                (keydown.enter)="$event.preventDefault(); $event.stopPropagation(); handleArrowClick();"
+                (keydown.space)="$event.preventDefault(); $event.stopPropagation(); handleArrowClick();">
+            <span class="ng-arrow" aria-hidden="true"></span>
+        </button>
     </span>
 </div>
 
@@ -80,6 +109,7 @@
                 [class.ng-option]="!item.children"
                 [class.ng-option-child]="!!item.parent"
                 [class.ng-option-marked]="item === itemsList.markedItem"
+                [attr.aria-disabled]="item.disabled"
                 [attr.aria-selected]="item.selected"
                 [attr.id]="item?.htmlId">
 
