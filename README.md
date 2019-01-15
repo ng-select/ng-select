@@ -150,6 +150,8 @@ map: {
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
+| autoCorrect | `string` | `off` | no | Allows control of the `autocorrect` attribute. |
+| autoCapitalize | `string` | `off` | no | Allows control of the `autocapitalize` attribute. |
 
 ### Outputs
 
