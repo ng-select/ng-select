@@ -270,6 +270,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
                 if (this._startupLoop === true) {
                     loop(resolve)
+                } else {
+                    resolve();
                 }
 
             } else if (this._startupLoop === true) {
