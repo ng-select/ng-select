@@ -124,7 +124,10 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         </p>
         
         <hr />
-        <label>Group by children array</label>
+        <label>
+            Group by children array. Note that when grouping by already grouped items ng-optgroup-tmp is 
+            required to display correct headers.
+        </label>
         ---html,true
         <ng-select [items]="projects"
             bindLabel="title"

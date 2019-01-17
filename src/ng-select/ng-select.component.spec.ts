@@ -2976,7 +2976,7 @@ describe('NgSelectComponent', function () {
     });
 
     describe('Grouping', () => {
-        it('should group by group key', fakeAsync(() => {
+        it('should group flat items list by group key', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
                 `<ng-select [items]="accounts"
@@ -3005,6 +3005,36 @@ describe('NgSelectComponent', function () {
             expect(items[3].label).toBe('Argentina');
 
             expect(items[10].label).toBe('Colombia');
+            expect(items[11].parent).toBe(items[10]);
+        }));
+
+        it('should group items with children array by group key', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="groupedAccounts"
+                        groupBy="accounts"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+
+            const items = fixture.componentInstance.select.itemsList.items;
+
+            expect(items.length).toBe(14);
+            expect(items[0].children).toBeDefined();
+            expect(items[0].index).toBe(0);
+            expect(items[0].disabled).toBeTruthy();
+            expect(items[0].value).toEqual(jasmine.objectContaining({ country: 'United States' }));
+
+            expect(items[1].children).toBeUndefined();
+            expect(items[1].parent).toBe(items[0]);
+
+            expect(items[2].children).toBeUndefined();
+            expect(items[2].parent).toBe(items[0]);
+
+            expect(items[3].value).toEqual(jasmine.objectContaining({ country: 'Argentina' }));
+
+            expect(items[10].value).toEqual(jasmine.objectContaining({ country: 'Colombia' }));
             expect(items[11].parent).toBe(items[10]);
         }));
 
@@ -3316,7 +3346,6 @@ class NgSelectGroupingTestCmp {
         { name: 'Nicolás', email: 'nicole@email.com', age: 43, country: 'Colombia', child: { name: 'c2' } }
     ];
 
-    // TODO: support this case
     groupedAccounts = [
         {
             country: 'United States',
@@ -3338,6 +3367,14 @@ class NgSelectGroupingTestCmp {
                 { name: 'Adrian', email: 'adrian@email.com', age: 21 },
                 { name: 'Wladimir', email: 'wladimir@email.com', age: 30 },
                 { name: 'Natasha', email: 'natasha@email.com', age: 54 },
+            ]
+        },
+        {
+            country: 'Colombia',
+            accounts: [
+                { name: 'Nicole', email: 'nicole@email.com', age: 43 },
+                { name: 'Michael', email: 'michael@email.com', age: 15 },
+                { name: 'Nicolás', email: 'nicole@email.com', age: 43 }
             ]
         }
     ]
