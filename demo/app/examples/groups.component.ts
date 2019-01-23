@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
     selector: 'select-groups',
     changeDetection: ChangeDetectionStrategy.Default,
     template: `
-        <p>
+    <p>
             ng-select supports grouping flat array of objects by providing <b>groupBy</b> input
         </p>
 
@@ -122,6 +122,30 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         <p>
             <small>Selected: {{selectedAccounts6 | json}}</small>
         </p>
+        
+        <hr />
+        <label>
+            Group by children array. Note that when grouping by already grouped items ng-optgroup-tmp is 
+            required to display correct headers.
+        </label>
+        ---html,true
+        <ng-select [items]="projects"
+            bindLabel="title"
+            bindValue="id"
+            groupBy="subprojects"
+            [multiple]="true"
+            [(ngModel)]="selectedProjects">
+            <ng-template ng-optgroup-tmp let-item="item">
+                {{item.title}}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+                {{item.title}}
+            </ng-template>
+        </ng-select>
+        ---
+        <p>
+            <small>Selected: {{selectedProjects | json}}</small>
+        </p>
     `
 })
 export class SelectGroupsComponent {
@@ -142,6 +166,26 @@ export class SelectGroupsComponent {
         { name: 'Michael', email: 'michael@email.com', age: 15, country: 'Colombia', child: { state: 'Inactive' } },
         { name: 'Nicolás', email: 'nicole@email.com', age: 43, country: 'Colombia', child: { state: 'Inactive' } }
     ];
+
+    selectedProjects = [];
+    projects = [
+        {
+            id: 'p1',
+            title: 'Project A',
+            subprojects: [
+                { title: 'Subproject 1 of A', id: 's1p1' },
+                { title: 'Subproject 2 of A', id: 's2p1' },
+            ]
+        },
+        {
+            id: 'p2',
+            title: 'Project B',
+            subprojects: [
+                { title: 'Subproject 1 of B', id: 's1p2' },
+                { title: 'Subproject 2 of B', id: 's2p2' },
+            ]
+        }
+    ]
 
     accounts2 = this.accounts.slice();
     selectedAccount2 = ['Natasha'];

@@ -56,6 +56,7 @@ export type AutoCorrect = 'off' | 'on';
 export type AutoCapitalize = 'off' | 'on';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
+export type GroupValueFn = (key: string | object, children: any[]) => string | object;
 
 @Component({
     selector: 'ng-select',
@@ -97,7 +98,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() openOnEnter: boolean;
     @Input() maxSelectedItems: number;
     @Input() groupBy: string | Function;
-    @Input() groupValue: Function;
+    @Input() groupValue: GroupValueFn;
     @Input() bufferAmount = 4;
     @Input() virtualScroll: boolean;
     @Input() selectableGroup = false;

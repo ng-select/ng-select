@@ -5,10 +5,9 @@ import { isDefined, isFunction, isObject } from './value-utils';
 import { newId } from './id';
 import { SelectionModel } from './selection-model';
 
-type OptionGroups = Map<string, NgOption[]>;
+type OptionGroups = Map<string | NgOption, NgOption[]>;
 
 export class ItemsList {
-
     private _groups: OptionGroups;
 
     constructor(
@@ -305,11 +304,29 @@ export class ItemsList {
     }
 
     private _groupBy(items: NgOption[], prop: string | Function): OptionGroups {
-        const isFn = isFunction(this._ngSelect.groupBy);
-        const groups = new Map<string, NgOption[]>();
+        const groups = new Map<string | NgOption, NgOption[]>();
+        if (items.length === 0) {
+            return groups;
+        }
+
+        // Check if items are already grouped by given key.
+        if (Array.isArray(items[0].value[<string>prop])) {
+            for (const item of items) {
+                const children = (item.value[<string>prop] || []).map((x, index) => this.mapItem(x, index));
+                groups.set(item, children);
+            }
+            return groups;
+        }
+
+        const isFnKey = isFunction(this._ngSelect.groupBy);
+        const keyFn = (item: NgOption) => {
+            let key = isFnKey ? (<Function>prop)(item.value) : item.value[<string>prop];
+            return isDefined(key) ? key : undefined;
+        }
+
+        // Group items by key.
         for (const item of items) {
-            let key = isFn ? (<Function>prop)(item.value) : item.value[<string>prop];
-            key = isDefined(key) ? key : undefined;
+            let key = keyFn(item);
             const group = groups.get(key);
             if (group) {
                 group.push(item);
@@ -321,7 +338,7 @@ export class ItemsList {
     }
 
     private _flatten(groups: OptionGroups) {
-        const isFn = isFunction(this._ngSelect.groupBy);
+        const isGroupByFn = isFunction(this._ngSelect.groupBy);
         const items = [];
         const withoutGroup = groups.get(undefined) || [];
         items.push(...withoutGroup);
@@ -330,16 +347,22 @@ export class ItemsList {
             if (!isDefined(key)) {
                 continue;
             }
+            const isObjectKey = isObject(key);
             const parent: NgOption = {
-                label: key,
+                label: isObjectKey ? '' : <string>key,
                 children: undefined,
                 parent: null,
                 index: i++,
                 disabled: !this._ngSelect.selectableGroup,
                 htmlId: newId(),
             };
-            const groupKey = isFn ? this._ngSelect.bindLabel : <string>this._ngSelect.groupBy;
-            const groupValue = this._ngSelect.groupValue || (() => ({[groupKey]: key}));
+            const groupKey = isGroupByFn ? this._ngSelect.bindLabel : <string>this._ngSelect.groupBy;
+            const groupValue = this._ngSelect.groupValue || (() => {
+                if (isObjectKey) {
+                    return (<NgOption>key).value;
+                }
+                return { [groupKey]: key };
+            });
             const children = groups.get(key).map(x => {
                 x.parent = parent;
                 x.children = undefined;
