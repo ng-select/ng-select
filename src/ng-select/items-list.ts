@@ -319,7 +319,7 @@ export class ItemsList {
         }
 
         const isFnKey = isFunction(this._ngSelect.groupBy);
-        const keyFn: (item: NgOption) => string = (item: NgOption) => {
+        const keyFn = (item: NgOption) => {
             let key = isFnKey ? (<Function>prop)(item.value) : item.value[<string>prop];
             return isDefined(key) ? key : undefined;
         }
