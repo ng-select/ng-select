@@ -575,7 +575,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         };
 
         this.ngOptions.changes
-            .pipe(startWith(this.ngOptions), takeUntil(this._destroy$), filter((items: QueryList<any>) => !!items.length))
+            .pipe(startWith(this.ngOptions), takeUntil(this._destroy$))
             .subscribe(options => {
                 this.bindLabel = this._defaultLabel;
                 handleNgOptions(options);
