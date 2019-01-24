@@ -1312,6 +1312,23 @@ describe('NgSelectComponent', function () {
                 expect(remove).toHaveBeenCalled();
             }));
 
+            it('should not remove last selected if it is disabled', fakeAsync(() => {
+                const remove = spyOn(select.removeEvent, 'emit');
+                fixture.componentInstance.multiple = true;
+                const disabled = { ...fixture.componentInstance.cities[1], disabled: true };
+                fixture.componentInstance.selectedCity = <any> [fixture.componentInstance.cities[0], disabled];
+                tickAndDetectChanges(fixture);
+                fixture.componentInstance.cities[1].disabled = true;
+                fixture.componentInstance.cities = [...fixture.componentInstance.cities];
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
+                const result = [jasmine.objectContaining({
+                    value: fixture.componentInstance.cities[1],
+                })];
+                expect(select.selectedItems).toEqual(result);
+                expect(remove).toHaveBeenCalled();
+            }));
+
             it('should not remove selected value when clearOnBackspace false', fakeAsync(() => {
                 fixture.componentInstance.multiple = true;
                 select.clearOnBackspace = false;
@@ -1751,7 +1768,10 @@ describe('NgSelectComponent', function () {
             }));
 
             it('should not open dropdown when maximum of items is reached', fakeAsync(() => {
-                const clickArrow = () => arrowIcon.triggerEventHandler('click', { stopPropagation: () => { } });
+                const clickArrow = () => arrowIcon.triggerEventHandler('click', {
+                    stopPropagation: () => {
+                    }
+                });
                 selectOption(fixture, KeyCode.ArrowDown, 0);
                 selectOption(fixture, KeyCode.ArrowDown, 1);
                 tickAndDetectChanges(fixture);
@@ -3254,13 +3274,16 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
 
 function createEvent(target = {}) {
     return {
-        stopPropagation: () => { },
-        preventDefault: () => { },
+        stopPropagation: () => {
+        },
+        preventDefault: () => {
+        },
         target: {
             className: '',
             tagName: '',
             classList: {
-                contains: () => { }
+                contains: () => {
+                }
             },
             ...target
         }
@@ -3319,17 +3342,38 @@ class NgSelectTestCmp {
         this.visible = !this.visible;
     }
 
-    onChange(_: Event) { }
-    onFocus(_: Event) { }
-    onBlur(_: Event) { }
-    onOpen() { }
-    onClose() { }
-    onAdd() { }
-    onRemove() { }
-    onClear() { }
-    onSearch() { }
-    onScroll() { }
-    onScrollToEnd() { }
+    onChange(_: Event) {
+    }
+
+    onFocus(_: Event) {
+    }
+
+    onBlur(_: Event) {
+    }
+
+    onOpen() {
+    }
+
+    onClose() {
+    }
+
+    onAdd() {
+    }
+
+    onRemove() {
+    }
+
+    onClear() {
+    }
+
+    onSearch() {
+    }
+
+    onScroll() {
+    }
+
+    onScrollToEnd() {
+    }
 }
 
 @Component({

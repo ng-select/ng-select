@@ -50,7 +50,14 @@ export class ItemsList {
     }
 
     get lastSelectedItem() {
-        return this.selectedItems[this.selectedItems.length - 1];
+        let i = this.selectedItems.length - 1;
+        for (; i >= 0; i--) {
+            let item = this.selectedItems[i];
+            if (!item.disabled) {
+                return item;
+            }
+        }
+        return null;
     }
 
     setItems(items: any[]) {

@@ -161,6 +161,7 @@ export class SelectMultiComponent {
 
         this.selectedPeople3 = [
             { id: '5a15b13c2340978ec3d2c0ea', name: 'Rochelle Estes', disabled: true },
+            { id: '5a15b13c663ea0af9ad0dae8', name: 'Mendoza Ruiz' },
             { id: '5a15b13c728cd3f43cc0fe8a', name: 'Marquez Nolan', disabled: true }
         ];
     }
