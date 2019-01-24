@@ -58,7 +58,7 @@ export class DefaultSelectionModel implements SelectionModel {
     }
 
     clear() {
-        this._selected = [];
+        this._selected = this._selected.filter(x => x.disabled);
     }
 
     private _setChildrenSelectedState(children: NgOption[], selected: boolean) {

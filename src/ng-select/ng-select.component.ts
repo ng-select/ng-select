@@ -429,6 +429,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     unselect(item: NgOption) {
+        if (!item) {
+            return;
+        }
+
         this.itemsList.unselect(item);
         this.focus();
         this._updateNgModel();
@@ -798,7 +802,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         if (this.multiple) {
-            this.unselect(this.itemsList.lastSelectedItem)
+            this.unselect(this.itemsList.lastSelectedItem);
         } else {
             this.clearModel();
         }
