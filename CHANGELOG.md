@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.15.0"></a>
+# [2.15.0](https://github.com/ng-select/ng-select/compare/v2.14.0...v2.15.0) (2019-01-24)
+
+
+### Bug Fixes
+
+* **ng-option:** don't filter out empty array ([90feb5f](https://github.com/ng-select/ng-select/commit/90feb5f)), closes [#1019](https://github.com/ng-select/ng-select/issues/1019)
+* don't allow to unselect disabled items ([26744d0](https://github.com/ng-select/ng-select/commit/26744d0)), closes [#971](https://github.com/ng-select/ng-select/issues/971)
+
+
+### Features
+
+* added autocorrect and autocapitalize inputs ([#1017](https://github.com/ng-select/ng-select/issues/1017)) ([c7dd2ac](https://github.com/ng-select/ng-select/commit/c7dd2ac)), closes [#994](https://github.com/ng-select/ng-select/issues/994)
+* initial children grouping implementation ([#1022](https://github.com/ng-select/ng-select/issues/1022)) ([75bd930](https://github.com/ng-select/ng-select/commit/75bd930)), closes [#186](https://github.com/ng-select/ng-select/issues/186)
+
+
+
 <a name="2.14.0"></a>
 # [2.14.0](https://github.com/ng-select/ng-select/compare/v2.13.3...v2.14.0) (2019-01-09)
 
