@@ -50,7 +50,7 @@ describe('NgSelectComponent', function () {
         }));
     });
 
-    describe('Model bindings', () => {
+    describe('Model bindings and data changes', () => {
         let select: NgSelectComponent;
 
         it('should update ngModel on value change', fakeAsync(() => {
@@ -578,6 +578,22 @@ describe('NgSelectComponent', function () {
         }));
 
         describe('ng-option', () => {
+            it('should reset to empty array', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [(ngModel)]="selectedCityId">
+                        <ng-option *ngFor="let city of cities" [value]="city.id">{{city.name}}</ng-option>
+                    </ng-select>`);
+
+                select = fixture.componentInstance.select;
+                tickAndDetectChanges(fixture);
+                expect(select.items.length).toEqual(3);
+
+                fixture.componentInstance.cities = [];
+                tickAndDetectChanges(fixture);
+                expect(select.items.length).toEqual(0);
+            }));
+
             it('should bind value', fakeAsync(() => {
                 const fixture = createTestingModule(
                     NgSelectTestCmp,
