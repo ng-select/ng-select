@@ -77,8 +77,6 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
 
-    // inputs
-    @Input() items: any[] = [];
     @Input() bindLabel: string;
     @Input() bindValue: string;
     @Input() clearable = true;
@@ -115,6 +113,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
     @Input() @HostBinding('class.ng-select-searchable') searchable = true;
     @Input() @HostBinding('class.ng-select-opened') isOpen = false;
+
+    @Input()
+    get items() { return this._items };
+    set items(value: any[]) {
+        this._itemsAreUsed = true;
+        this._items = value;
+    };
 
     @Input()
     get compareWith() { return this._compareWith; }
@@ -167,10 +172,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     viewPortItems: NgOption[] = [];
     filterValue: string = null;
     dropdownId = newId();
-    selectedItemId = 0;
     element: HTMLElement;
     focused: boolean;
 
+    private _items = [];
+    private _itemsAreUsed: boolean;
     private _defaultLabel = 'label';
     private _primitive = true;
     private _manualOpen: boolean;
@@ -232,7 +238,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     ngAfterViewInit() {
-        if (this.items && this.items.length === 0) {
+        if (!this._itemsAreUsed) {
             this._setItemsFromNgOptions();
         }
 
