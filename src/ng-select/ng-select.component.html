@@ -70,7 +70,7 @@
     (scrollToEnd)="scrollToEnd.emit($event)"
     (outsideClick)="close()"
     [class.ng-select-multiple]="multiple"
-    [ngClass]="classes"
+    [ngClass]="appendTo ? classes : null"
     [id]="dropdownId">
 
     <ng-container>
