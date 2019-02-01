@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.15.2"></a>
+## [2.15.2](https://github.com/ng-select/ng-select/compare/v2.15.1...v2.15.2) (2019-02-01)
+
+
+### Bug Fixes
+
+* **single:** allow to unselect last selected value even if disabled ([25e8e4f](https://github.com/ng-select/ng-select/commit/25e8e4f)), closes [#1036](https://github.com/ng-select/ng-select/issues/1036)
+* add class to dropdown panel only when appendTo is used ([797ac9e](https://github.com/ng-select/ng-select/commit/797ac9e)), closes [#1035](https://github.com/ng-select/ng-select/issues/1035)
+* **themes:** use more variables ([45af289](https://github.com/ng-select/ng-select/commit/45af289)), closes [#388](https://github.com/ng-select/ng-select/issues/388)
+
+
+
 <a name="2.15.1"></a>
 ## [2.15.1](https://github.com/ng-select/ng-select/compare/v2.15.0...v2.15.1) (2019-01-25)
 
