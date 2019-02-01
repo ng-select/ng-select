@@ -118,7 +118,7 @@ export class ItemsList {
     }
 
     clearSelected() {
-        this._selectionModel.clear();
+        this._selectionModel.clear(this._ngSelect.multiple);
         this._items.forEach((item) => {
             item.selected = false;
             item.marked = false;

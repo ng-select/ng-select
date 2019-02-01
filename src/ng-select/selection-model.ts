@@ -10,7 +10,7 @@ export interface SelectionModel {
     value: NgOption[];
     select(item: NgOption, multiple: boolean, selectableGroupAsModel: boolean);
     unselect(item: NgOption, multiple: boolean);
-    clear();
+    clear(multiple: boolean);
 }
 
 export class DefaultSelectionModel implements SelectionModel {
@@ -57,8 +57,8 @@ export class DefaultSelectionModel implements SelectionModel {
         }
     }
 
-    clear() {
-        this._selected = this._selected.filter(x => x.disabled);
+    clear(multiple: boolean) {
+        this._selected = multiple ? this._selected.filter(x => x.disabled) : [];
     }
 
     private _setChildrenSelectedState(children: NgOption[], selected: boolean) {

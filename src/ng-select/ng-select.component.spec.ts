@@ -403,6 +403,25 @@ describe('NgSelectComponent', function () {
             expect(lastSelection.selected).toBeFalsy();
         }));
 
+        it('should clear previous selected value even if it is disabled', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.cities[0].disabled = true;
+            fixture.componentInstance.cities = [...fixture.componentInstance.cities];
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[1];
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.selectedItems.length).toBe(1);
+        }));
+
         it('should clear previous multiple select value when setting new model', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
