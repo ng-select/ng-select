@@ -8,6 +8,7 @@ import { By } from '@angular/platform-browser';
         <span id="test1" [ngOptionHighlight]="term">My text is highlighted</span>
         <span id="test2" [ngOptionHighlight]="term">My text is not highlighted</span>
         <span id="test3" *ngIf="showNew" [ngOptionHighlight]="term">New label</span>
+        <span id="test4" [ngOptionHighlight]="term"><span>test</span> Label text</span>
     `
 })
 class TestComponent {
@@ -29,7 +30,7 @@ describe('NgOptionHighlightDirective', () => {
 
     it('should have two elements with highlight directive', () => {
         const highlightDirectives = fixture.debugElement.queryAll(By.directive(NgOptionHighlightDirective));
-        expect(highlightDirectives.length).toBe(2);
+        expect(highlightDirectives.length).toBe(3);
     });
 
     it('should have one element with highlighted text when term matching', () => {
@@ -57,4 +58,13 @@ describe('NgOptionHighlightDirective', () => {
         expect(span.nativeElement.querySelector('.highlighted').innerHTML).toBe('New');
         expect(span.nativeElement.textContent).toBe('New label');
     });
+
+    it('should show innerText contents instead of innerHTML', () => {
+        fixture.componentInstance.term = 'sp';
+        fixture.detectChanges();
+        
+        const span = fixture.debugElement.query(By.css('#test4'));
+        expect(span.nativeElement.innerHTML).toBe('test Label text', 
+            'because the NgOptionHighlightDirective looks at the innerText instead of the innerHTML');
+    })
 });
