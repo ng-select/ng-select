@@ -117,10 +117,10 @@ export class ItemsList {
         return option;
     }
 
-    clearSelected() {
-        this._selectionModel.clear(this._ngSelect.multiple);
-        this._items.forEach((item) => {
-            item.selected = false;
+    clearSelected(keepDisabled = false) {
+        this._selectionModel.clear(keepDisabled);
+        this._items.forEach(item => {
+            item.selected = keepDisabled && item.selected && item.disabled;
             item.marked = false;
         });
         if (this._ngSelect.hideSelected) {
@@ -329,7 +329,7 @@ export class ItemsList {
         const keyFn = (item: NgOption) => {
             let key = isFnKey ? (<Function>prop)(item.value) : item.value[<string>prop];
             return isDefined(key) ? key : undefined;
-        }
+        };
 
         // Group items by key.
         for (const item of items) {

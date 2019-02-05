@@ -120,7 +120,6 @@ $ng-select-marked: lighten($ng-select-highlight, 48);
                     }
                     &.ng-value-disabled {
                         background-color: $ng-select-disabled-text;
-                        border: 1px solid lighten($ng-select-border, 10);
                         .ng-value-label {
                             padding-left: 5px;
                             @include rtl {
