@@ -327,7 +327,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     handleClearClick() {
         if (this.hasValue) {
-            this.clearModel();
+            this.itemsList.clearSelected(true);
+            this._updateNgModel();
         }
         this._clearSearch();
         this.focus();

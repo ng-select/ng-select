@@ -403,6 +403,30 @@ describe('NgSelectComponent', function () {
             expect(lastSelection.selected).toBeFalsy();
         }));
 
+        it('should clear disbled selected values when setting new model', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [multiple]="true"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCities">
+                </ng-select>`);
+
+
+            const disabled = { ...fixture.componentInstance.cities[1], disabled: true };
+            fixture.componentInstance.selectedCities = <any> [fixture.componentInstance.cities[0], disabled];
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.cities[1].disabled = true;
+            fixture.componentInstance.cities = [...fixture.componentInstance.cities];
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.selectedCities = [];
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.selectedItems).toEqual([]);
+        }));
+
         it('should clear previous selected value even if it is disabled', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
@@ -2867,13 +2891,17 @@ describe('NgSelectComponent', function () {
                     `<ng-select [items]="cities"
                             (change)="onChange($event)"
                             bindLabel="name"
+                            [multiple]="true"
                             [disabled]="disabled"
-                            [(ngModel)]="selectedCity">
+                            [(ngModel)]="selectedCities">
                     </ng-select>`);
 
                 spyOn(fixture.componentInstance, 'onChange');
-                fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+                const disabled = { ...fixture.componentInstance.cities[1], disabled: true };
+                fixture.componentInstance.selectedCities = <any> [fixture.componentInstance.cities[0], disabled];
                 tickAndDetectChanges(fixture);
+                fixture.componentInstance.cities[1].disabled = true;
+                fixture.componentInstance.cities = [...fixture.componentInstance.cities];
                 tickAndDetectChanges(fixture);
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
@@ -2883,15 +2911,16 @@ describe('NgSelectComponent', function () {
                 };
             }));
 
-            it('should clear model', fakeAsync(() => {
+            it('should clear model except disabled', fakeAsync(() => {
                 triggerMousedown();
                 tickAndDetectChanges(fixture);
-                expect(fixture.componentInstance.selectedCity).toBe(null);
+                expect(fixture.componentInstance.selectedCities.length).toBe(1);
+                expect(fixture.componentInstance.selectedCities[0]).toEqual(jasmine.objectContaining({ id: 2, name: 'Kaunas' }));
                 expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
             }));
 
             it('should clear only search text', fakeAsync(() => {
-                fixture.componentInstance.selectedCity = null;
+                fixture.componentInstance.selectedCities = null;
                 fixture.componentInstance.select.filterValue = 'Hey! Whats up!?';
                 tickAndDetectChanges(fixture);
                 triggerMousedown();
