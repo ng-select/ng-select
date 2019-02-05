@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.15.3"></a>
+## [2.15.3](https://github.com/ng-select/ng-select/compare/v2.15.2...v2.15.3) (2019-02-05)
+
+
+### Bug Fixes
+
+* remove disabled items while setting new model ([9036672](https://github.com/ng-select/ng-select/commit/9036672)), closes [#1043](https://github.com/ng-select/ng-select/issues/1043)
+
+
+
 <a name="2.15.2"></a>
 ## [2.15.2](https://github.com/ng-select/ng-select/compare/v2.15.1...v2.15.2) (2019-02-01)
 
