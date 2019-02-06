@@ -3,8 +3,7 @@
         <div class="ng-placeholder">
             {{placeholder}}
             <ng-template *ngIf="placeholderTemplate && selectedValues.length == 0"
-                    [ngTemplateOutlet]="placeholderTemplate"
-                    [ngTemplateOutletContext]="{ items: selectedValues }">
+                    [ngTemplateOutlet]="placeholderTemplate">
             </ng-template>
         </div>
 
