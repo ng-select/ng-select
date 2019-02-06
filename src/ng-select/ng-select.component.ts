@@ -28,6 +28,7 @@ import { takeUntil, startWith, tap, debounceTime, map, filter } from 'rxjs/opera
 import { Subject, merge } from 'rxjs';
 
 import {
+    NgPlaceholderTemplateDirective,
     NgOptionTemplateDirective,
     NgLabelTemplateDirective,
     NgHeaderTemplateDirective,
@@ -149,7 +150,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Output('scroll') scroll = new EventEmitter<{ start: number; end: number }>();
     @Output('scrollToEnd') scrollToEnd = new EventEmitter();
 
-    // custom templates
+    // custom template
+    @ContentChild(NgPlaceholderTemplateDirective, { read: TemplateRef }) placeholderTemplate: TemplateRef<any>;
     @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
     @ContentChild(NgOptgroupTemplateDirective, { read: TemplateRef }) optgroupTemplate: TemplateRef<any>;
     @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;

@@ -1,5 +1,10 @@
 import { Directive, TemplateRef } from '@angular/core';
 
+@Directive({ selector: '[ng-placeholder-tmp]' })
+export class NgPlaceholderTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
+
 @Directive({ selector: '[ng-option-tmp]' })
 export class NgOptionTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
