@@ -182,24 +182,26 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     }
 
     updateDropdownPosition() {
-        this._currentPosition = this._calculateCurrentPosition(this._dropdown);
-        if (this._currentPosition === 'top') {
-            this._renderer.addClass(this._dropdown, TOP_CSS_CLASS);
-            this._renderer.removeClass(this._dropdown, BOTTOM_CSS_CLASS);
-            this._renderer.addClass(this._select, TOP_CSS_CLASS);
-            this._renderer.removeClass(this._select, BOTTOM_CSS_CLASS)
-        } else {
-            this._renderer.addClass(this._dropdown, BOTTOM_CSS_CLASS);
-            this._renderer.removeClass(this._dropdown, TOP_CSS_CLASS);
-            this._renderer.addClass(this._select, BOTTOM_CSS_CLASS);
-            this._renderer.removeClass(this._select, TOP_CSS_CLASS);
-        }
+        setTimeout(() => {
+            this._currentPosition = this._calculateCurrentPosition(this._dropdown);
+            if (this._currentPosition === 'top') {
+                this._renderer.addClass(this._dropdown, TOP_CSS_CLASS);
+                this._renderer.removeClass(this._dropdown, BOTTOM_CSS_CLASS);
+                this._renderer.addClass(this._select, TOP_CSS_CLASS);
+                this._renderer.removeClass(this._select, BOTTOM_CSS_CLASS)
+            } else {
+                this._renderer.addClass(this._dropdown, BOTTOM_CSS_CLASS);
+                this._renderer.removeClass(this._dropdown, TOP_CSS_CLASS);
+                this._renderer.addClass(this._select, BOTTOM_CSS_CLASS);
+                this._renderer.removeClass(this._select, TOP_CSS_CLASS);
+            }
 
-        if (this.appendTo) {
-            this._updateAppendedDropdownPosition();
-        }
+            if (this.appendTo) {
+                this._updateAppendedDropdownPosition();
+            }
 
-        this._dropdown.style.opacity = '1';
+            this._dropdown.style.opacity = '1';
+        }, 0);
     }
 
     private _handleOutsideClick($event: any) {
