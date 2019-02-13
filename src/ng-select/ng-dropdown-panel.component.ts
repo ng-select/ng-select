@@ -169,9 +169,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         if (this.virtualScroll) {
             scrollEl.scrollTop = (index * d.childHeight) - (d.childHeight * Math.min(index, buffer));
         } else {
-            const contentEl: HTMLElement = this.contentElementRef.nativeElement;
-            const childrenHeight = Array.from(contentEl.children).slice(0, index).reduce((c, n) => c + n.clientHeight, 0);
-            scrollEl.scrollTop = childrenHeight - (d.childHeight * Math.min(index, buffer));
+            setTimeout(() =>{
+                const contentEl: HTMLElement = this.contentElementRef.nativeElement;
+                const childrenHeight = Array.from(contentEl.children).slice(0, index).reduce((c, n) => c + n.clientHeight, 0);
+                scrollEl.scrollTop = childrenHeight - (d.childHeight * Math.min(index, buffer));
+            });
         }
     }
 
