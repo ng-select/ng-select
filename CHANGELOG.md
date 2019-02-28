@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.16.0"></a>
+# [2.16.0](https://github.com/ng-select/ng-select/compare/v2.15.3...v2.16.0) (2019-02-28)
+
+
+### Bug Fixes
+
+* material theme input container on IE ([#1054](https://github.com/ng-select/ng-select/issues/1054)) ([236e7b4](https://github.com/ng-select/ng-select/commit/236e7b4))
+
+
+### Features
+
+* expose filtered items through search event ([3d14002](https://github.com/ng-select/ng-select/commit/3d14002)), closes [#973](https://github.com/ng-select/ng-select/issues/973)
+
+
+
 <a name="2.15.3"></a>
 ## [2.15.3](https://github.com/ng-select/ng-select/compare/v2.15.2...v2.15.3) (2019-02-05)
 
