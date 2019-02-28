@@ -94,7 +94,7 @@ export class SelectEventsComponent {
     }
 
     onSearch($event) {
-        this.events.push({ name: '(search)', value: $event })
+        this.events.push({ name: '(search)', value: $event });
     }
 }
 
