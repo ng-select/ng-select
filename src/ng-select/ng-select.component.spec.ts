@@ -2673,7 +2673,7 @@ describe('NgSelectComponent', function () {
             tickAndDetectChanges(fixture);
 
             expect(fixture.componentInstance.onSearch).toHaveBeenCalledTimes(1);
-            expect(fixture.componentInstance.onSearch).toHaveBeenCalledWith('term');
+            expect(fixture.componentInstance.onSearch).toHaveBeenCalledWith({ term: 'term', items: [] });
         }));
 
         it('should fire close event once', fakeAsync(() => {

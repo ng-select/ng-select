@@ -142,7 +142,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Output('change') changeEvent = new EventEmitter();
     @Output('open') openEvent = new EventEmitter();
     @Output('close') closeEvent = new EventEmitter();
-    @Output('search') searchEvent = new EventEmitter();
+    @Output('search') searchEvent = new EventEmitter<{term: string, items: any[]}>();
     @Output('clear') clearEvent = new EventEmitter();
     @Output('add') addEvent = new EventEmitter();
     @Output('remove') removeEvent = new EventEmitter();
@@ -503,7 +503,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             }
         }
 
-        this.searchEvent.emit(term);
+        this.searchEvent.emit({ term, items: this.itemsList.filteredItems.map(x => x.value) });
     }
 
     onInputFocus($event) {
