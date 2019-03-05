@@ -182,7 +182,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     }
 
     updateDropdownPosition() {
-        _window.setTimeout(() => {
+        this._window.setTimeout(() => {
             this._currentPosition = this._calculateCurrentPosition(this._dropdown);
             if (this._currentPosition === 'top') {
                 this._renderer.addClass(this._dropdown, TOP_CSS_CLASS);
