@@ -1113,6 +1113,28 @@ describe('NgSelectComponent', function () {
 
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
         }));
+
+        it('should not append dropdown, nor update its position when it is destroyed', async(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `
+                <ng-select [items]="cities"
+                        appendTo="body"
+                        [(ngModel)]="city">
+                </ng-select>`);
+
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+            fixture.componentInstance.select.close();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
+                expect(selectClasses.contains('ng-select-bottom')).toBeFalsy();
+                const dropdown = <HTMLElement>document.querySelector('.ng-dropdown-panel');
+                expect(dropdown).toBeNull();
+            });
+        }));
     });
 
     describe('Keyboard events', () => {
