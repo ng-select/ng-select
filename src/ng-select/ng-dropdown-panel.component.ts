@@ -129,6 +129,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         this._disposeScrollListener();
         this._destroy$.next();
         this._destroy$.complete();
+        this._destroy$.unsubscribe();
         if (this.appendTo) {
             this._renderer.removeChild(this._dropdown.parentNode, this._dropdown);
         }
@@ -136,6 +137,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
     ngAfterContentInit() {
         this._whenContentReady().then(() => {
+            if (this._destroy$.closed) {
+                return;
+            }
             if (this.appendTo) {
                 this._appendDropdown();
                 this._handleDocumentResize();
