@@ -219,13 +219,12 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     }
 
     private _handleItemsChange(items: { previousValue: NgOption[], currentValue: NgOption[] }) {
+        if (items !== undefined && !this._scrollToEndFired) {
+            this._startupLoop = true;
+        }
         this._scrollToEndFired = false;
         this._previousStart = undefined;
         this._previousEnd = undefined;
-        if (items !== undefined && items.previousValue === undefined ||
-            (items.previousValue !== undefined && items.previousValue.length === 0)) {
-            this._startupLoop = true;
-        }
         this.items = items.currentValue || [];
         this.refresh().then(() => {
             if (this.appendTo && this._currentPosition === 'top') {
