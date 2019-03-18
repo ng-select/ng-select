@@ -93,6 +93,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() closeOnSelect = true;
     @Input() hideSelected = false;
     @Input() selectOnTab = false;
+    @Input() selectOnComma = false;
+    @Input() selectOnSemocolon = false;
     @Input() openOnEnter: boolean;
     @Input() maxSelectedItems: number;
     @Input() groupBy: string | Function;
@@ -270,6 +272,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                     break;
                 case KeyCode.Tab:
                     this._handleTab($event);
+                    break;
+                case KeyCode.Comma:
+                    this._handleComma($event);
+                    break;
+                case KeyCode.Semicolon:
+                    this._handleSemicolon($event);
                     break;
                 case KeyCode.Esc:
                     this.close();
@@ -794,6 +802,44 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this._scrollToMarked();
         }
         $event.preventDefault();
+    }
+
+    private _handleComma($event: KeyboardEvent) {
+        if (!this.multiple) {
+            return;
+        }
+        if (this.selectOnComma) {
+            if (this.itemsList.markedItem) {
+                this.toggleItem(this.itemsList.markedItem);
+                $event.preventDefault();
+            } else if (this.showAddTag) {
+                this.selectTag();
+                $event.preventDefault();
+            } else {
+                this.close();
+            }
+        } else {
+            this.close();
+        }
+    }
+
+    private _handleSemicolon($event: KeyboardEvent) {
+        if (!this.multiple) {
+            return;
+        }
+        if (this.selectOnSemocolon) {
+            if (this.itemsList.markedItem) {
+                this.toggleItem(this.itemsList.markedItem);
+                $event.preventDefault();
+            } else if (this.showAddTag) {
+                this.selectTag();
+                $event.preventDefault();
+            } else {
+                this.close();
+            }
+        } else {
+            this.close();
+        }
     }
 
     private _nextItemIsTag(nextStep: number): boolean {

@@ -17,7 +17,7 @@ See [Demos](https://ng-select.github.io/ng-select) or try in [Stackblitz](https:
 ## Versions
 
 | Angular| ng-select|
-| ------|:------:| 
+| ------|:------:|
 | v6.x  | v2.x |
 | v5.x  | v1.x |
 
@@ -80,18 +80,18 @@ import { FormsModule } from '@angular/forms';
 export class AppModule {}
 ```
 
-### Step 3: Include a theme: 
+### Step 3: Include a theme:
 To allow customization and theming, `ng-select` bundle includes only generic styles that are necessary for correct layout and positioning. To get full look of the control, include one of the themes in your application. If you're using the Angular CLI, you can add this to your `styles.scss` or include it in `.angular-cli.json` (Angular v5 and below) or `angular.json` (Angular v6 onwards).
 
 ```scss
 @import "~@ng-select/ng-select/themes/default.theme.css";
-// ... or 
+// ... or
 @import "~@ng-select/ng-select/themes/material.theme.css";
 
 ```
 
 
-### Step 4 (Optional): Configuration 
+### Step 4 (Optional): Configuration
 
 You can also set global configuration and localization messages by injecting NgSelectConfig service,
 typically in your root component, and customize the values of its properties in order to provide default values.
@@ -146,6 +146,8 @@ map: {
 | [searchFn] | `(term: string, item: any) => boolean` | `null` | no | Allow to filter by custom search function |
 | [clearSearchOnAdd] | `boolean` | `true` | no | Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false` |
 | [selectOnTab] | `boolean` | `false` | no | Select marked dropdown item using tab. Default `false`|
+| [selectOnComma] | `boolean` | `false` | no | Select marked dropdown item using comma. Default `false`|
+| [selectOnSemocolon] | `boolean` | `false` | no | Select marked dropdown item using semicolon. Default `false`|
 | [openOnEnter] | `boolean` | `true` | no | Open dropdown using enter. Default `true`|
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
@@ -185,12 +187,12 @@ map: {
 | SELECTION_MODEL_FACTORY | service | DI token for SelectionModel implementation. You can provide custom implementation changing selection behaviour. |
 
 ## Change Detection
-Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable 
+Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable
 data types. That means if you do object mutations like:
 
 ```javascript
 this.items.push({id: 1, name: 'New item'})
-``` 
+```
 
 Component will not detect a change. Instead you need to do:
 
@@ -215,7 +217,7 @@ If you are not happy with default styles you can easily override them with incre
     min-height: 0px;
     border-radius: 0;
 }
-.ng-select.custom .ng-select-container  {            
+.ng-select.custom .ng-select-container  {
     min-height: 0px;
     border-radius: 0;
 }
@@ -224,7 +226,7 @@ If you are not happy with default styles you can easily override them with incre
 If you are using `ViewEncapsulation`, your should use special `::ng-deep` selector which will prevent scoping for nested selectors.
 
 ```css
-.ng-select.custom ::ng-deep .ng-select-container  {            
+.ng-select.custom ::ng-deep .ng-select-container  {
     min-height: 0px;
     border-radius: 0;
 }
