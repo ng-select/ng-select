@@ -492,7 +492,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     filter(term: string) {
         this.filterValue = term;
-        this.open();
 
         if (this._isTypeahead) {
             this.typeahead.next(this.filterValue);
@@ -504,6 +503,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         this.searchEvent.emit({ term, items: this.itemsList.filteredItems.map(x => x.value) });
+
+        this.open();
     }
 
     onInputFocus($event) {
