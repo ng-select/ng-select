@@ -6,6 +6,66 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
 @Component({
     selector: 'select-with-templates',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: [
+        `
+        .lds-ellipsis {
+            display: inline-block;
+            position: relative;
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+        }
+        .lds-ellipsis div {
+            position: absolute;
+            top: 14px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #c2c2c2;
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+        }
+        .lds-ellipsis div:nth-child(1) {
+            left: -9px;
+            animation: lds-ellipsis1 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(2) {
+            left: -10px;
+            animation: lds-ellipsis2 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(3) {
+            left: 2px;
+            animation: lds-ellipsis2 0.6s infinite;
+        }
+        .lds-ellipsis div:nth-child(4) {
+            left: 24px;
+            animation: lds-ellipsis3 0.6s infinite;
+        }
+        @keyframes lds-ellipsis1 {
+            0% {
+                transform: scale(0);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        @keyframes lds-ellipsis3 {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(0);
+            }
+        }
+        @keyframes lds-ellipsis2 {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(19px, 0);
+            }
+        }
+        `
+    ],
     template: `
         <label>Custom label</label>
         ---html,true
@@ -128,6 +188,17 @@ import { distinctUntilChanged, debounceTime, switchMap } from 'rxjs/operators'
         <ng-select #api [items]="cities" [searchable]="false" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
             <ng-template ng-header-tmp>
                 <input style="width: 100%; line-height: 24px" type="text" (input)="api.filter($event.target.value)" />
+            </ng-template>
+        </ng-select>
+        ---
+
+        <hr />
+        
+        <label>Custom loading spinner</label>
+        ---html,true
+        <ng-select [loading]="true" [items]="cities" bindLabel="name" bindValue="name">
+            <ng-template ng-loadingspinner-tmp>
+                <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
             </ng-template>
         </ng-select>
         ---

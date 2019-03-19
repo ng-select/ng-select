@@ -11,7 +11,8 @@ import {
     NgOptgroupTemplateDirective,
     NgOptionTemplateDirective,
     NgTagTemplateDirective,
-    NgTypeToSearchTemplateDirective
+    NgTypeToSearchTemplateDirective,
+    NgLoadingSpinnerTemplateDirective
 } from './ng-templates.directive';
 import { NgOptionComponent } from './ng-option.component';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive';
@@ -33,7 +34,8 @@ import { DefaultSelectionModelFactory } from './selection-model';
         NgNotFoundTemplateDirective,
         NgTypeToSearchTemplateDirective,
         NgLoadingTextTemplateDirective,
-        NgTagTemplateDirective
+        NgTagTemplateDirective,
+        NgLoadingSpinnerTemplateDirective
     ],
     imports: [
         CommonModule
@@ -51,7 +53,8 @@ import { DefaultSelectionModelFactory } from './selection-model';
         NgNotFoundTemplateDirective,
         NgTypeToSearchTemplateDirective,
         NgLoadingTextTemplateDirective,
-        NgTagTemplateDirective
+        NgTagTemplateDirective,
+        NgLoadingSpinnerTemplateDirective
     ],
     providers: [
         { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory }

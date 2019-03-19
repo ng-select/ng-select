@@ -43,7 +43,15 @@
         </div>
     </div>
 
-    <div class="ng-spinner-loader" *ngIf="loading"></div>
+    <ng-container *ngIf="loading">
+        <ng-template #defautlLoadingSpinnerTemplate>
+            <div class="ng-spinner-loader"></div>
+        </ng-template>
+
+        <ng-template
+            [ngTemplateOutlet]="loadingSpinnerTemplate || defautlLoadingSpinnerTemplate">
+        </ng-template>
+    </ng-container>
 
     <span *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
         <span class="ng-clear" aria-hidden="true">×</span>
