@@ -490,16 +490,22 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         return empty && this._isTypeahead && !this.filterValue && !this.loading;
     }
 
-    filter(term: string) {
+    filter(term: string, $event?: any) {
         this.filterValue = term;
-        this.open();
+        if ($event && $event.which === KeyCode.Enter) {
+            this.close();
+        } else {
+            this.open();
+        }
 
         if (this._isTypeahead) {
             this.typeahead.next(this.filterValue);
         } else {
             this.itemsList.filter(this.filterValue);
             if (this.isOpen) {
-                this.itemsList.markSelectedOrDefault(this.markFirst);
+                if ($event &&  $event.which !== KeyCode.ArrowDown && $event.which !== KeyCode.ArrowUp) {
+                    this.itemsList.markSelectedOrDefault(this.markFirst);
+                }
             }
         }
 

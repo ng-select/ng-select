@@ -32,7 +32,7 @@
                    [readOnly]="!searchable"
                    [disabled]="disabled"
                    [value]="filterValue ? filterValue : ''"
-                   (input)="filter(filterInput.value)"
+                   (keyup)="filter(filterInput.value, $event)"
                    (focus)="onInputFocus($event)"
                    (blur)="onInputBlur($event)"
                    (change)="$event.stopPropagation()"
