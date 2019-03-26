@@ -429,6 +429,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (this.closeOnSelect || this.itemsList.noItemsToSelect) {
             this.close();
         }
+
+        if (this.element) {
+            // @ts-ignore
+            this.element.querySelector('input[role=\'combobox\']').value = '';
+        }
     }
 
     focus() {
@@ -514,6 +519,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.element.classList.add('ng-select-focused');
         this.focusEvent.emit($event);
         this.focused = true;
+
+        var combobox = this.element.querySelector('input[role=\'combobox\']');
+        if (combobox && this.selectedItems.length) {
+            // @ts-ignore
+            combobox.value = this.selectedItems[0].label;
+        }
     }
 
     onInputBlur($event) {
@@ -523,6 +534,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this._onTouched();
         }
         this.focused = false;
+
+        if (this.element.querySelector('input[role=\'combobox\']')) {
+            // @ts-ignore
+            this.element.querySelector('input[role=\'combobox\']').value = '';
+        }
     }
 
     onItemHover(item: NgOption) {
