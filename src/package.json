@@ -3,9 +3,9 @@
   "name": "@sillybutt/ng-select",
   "version": "2.16.10",
   "description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
-  "author": "@sillybutt",
+  "author": "@ng-select/ng-select",
   "license": "MIT",
-  "repository": "sillybutt0/ng-select",
+  "repository": "@sillybutt0/ng-select",
   "engines": {
     "node": ">= 6.9.0",
     "npm": ">= 3.0.0"
