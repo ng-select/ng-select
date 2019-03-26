@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.16.10"></a>
+## [2.16.10](https://github.com/sillybutt0/ng-select/compare/v2.16.8...v2.16.10) (2019-03-26)
+
+
+
 <a name="2.16.8"></a>
 ## [2.16.8](https://github.com/sillybutt/ng-select/compare/v2.16.3...v2.16.8) (2019-03-26)
 
