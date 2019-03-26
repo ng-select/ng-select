@@ -520,7 +520,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.focusEvent.emit($event);
         this.focused = true;
 
-        var combobox = this.element.querySelector('input[role=\'combobox\']');
+        const combobox = this.element.querySelector('input[role=\'combobox\']');
         if (combobox && this.selectedItems.length) {
             // @ts-ignore
             combobox.value = this.selectedItems[0].label;
