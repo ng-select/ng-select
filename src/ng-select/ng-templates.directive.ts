@@ -50,3 +50,7 @@ export class NgTagTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
+@Directive({ selector: '[ng-loadingspinner-tmp]' })
+export class NgLoadingSpinnerTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}

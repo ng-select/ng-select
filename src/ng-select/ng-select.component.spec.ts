@@ -1757,6 +1757,27 @@ describe('NgSelectComponent', function () {
             });
         }));
 
+        it('should display custom loading spinner template', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities" 
+                            [loading]="true"
+                            [(ngModel)]="selectedCity">
+                    
+                    <ng-template ng-loadingspinner-tmp>
+                        <div class="custom-loadingspinner">
+                            Custom loading spinner
+                        </div>
+                    </ng-template>
+                </ng-select>`);
+
+            fixture.whenStable().then(() => {
+                tickAndDetectChanges(fixture);
+                const spinner = fixture.debugElement.queryAll(By.css('.custom-loadingspinner'));
+                expect(spinner.length).toBe(1);
+            });
+        }));
+
         it('should update ng-option state', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
