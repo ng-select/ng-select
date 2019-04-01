@@ -206,6 +206,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
             this._dropdown.style.opacity = '1';
         }, 0);
+        
+        if (_this.appendTo) {
+            _this._updateAppendedDropdownPosition();
+        }
     }
 
     private _handleOutsideClick($event: any) {
