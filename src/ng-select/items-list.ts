@@ -82,7 +82,7 @@ export class ItemsList {
         }
 
         this._selectionModel.select(item, multiple, this._ngSelect.selectableGroupAsModel);
-        if (this._ngSelect.hideSelected && multiple) {
+        if (this._ngSelect.hideSelected) {
             this._hideSelected(item);
         }
     }
