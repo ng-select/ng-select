@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.17.0"></a>
+# [2.17.0](https://github.com/ng-select/ng-select/compare/v2.16.4...v2.17.0) (2019-04-11)
+
+
+### Features
+
+* add ant-design theme ([b1f3446](https://github.com/ng-select/ng-select/commit/b1f3446))
+
+
+
 <a name="2.16.4"></a>
 ## [2.16.4](https://github.com/ng-select/ng-select/compare/v2.16.3...v2.16.4) (2019-04-01)
 
