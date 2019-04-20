@@ -25,7 +25,7 @@ type langDir = 'ltr' | 'rtl';
 
             <div class="collapse navbar-collapse">
                 <div ngbDropdown class="d-inline-block">
-                    <button class="btn btn-outline-light btn-sm" style="width: 130px;" ngbDropdownToggle>{{theme}}</button>
+                    <button class="btn btn-outline-light btn-sm" style="width: 150px;" ngbDropdownToggle>{{theme}}</button>
                     <div ngbDropdownMenu>
                         <button (click)="setTheme('Default theme')" class="dropdown-item btn-sm">Default theme</button>
                         <button (click)="setTheme('Material theme')" class="dropdown-item btn-sm">Material theme</button>

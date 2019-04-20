@@ -29,7 +29,7 @@ import { delay } from 'rxjs/operators';
                 </div>
                 <div class="form-group col-md-6">
                     <label for="heroId">Basic select</label>
-                    <ng-select [searchable]="false" labelForId="heroId" formControlName="heroId">
+                    <ng-select [searchable]="false" [clearable]="false" labelForId="heroId" formControlName="heroId">
                         <ng-template ng-label-tmp let-item="item" let-label="label">
                             <img src="{{basePath}}/assets/{{item}}.png" width="20px" height="20px" /> {{label}}
                         </ng-template>

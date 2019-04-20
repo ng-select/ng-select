@@ -80,7 +80,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @Input() bindLabel: string;
     @Input() bindValue: string;
-    @Input() clearable = true;
     @Input() markFirst = true;
     @Input() placeholder: string;
     @Input() notFoundText: string;
@@ -113,6 +112,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
     @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
     @Input() @HostBinding('class.ng-select-searchable') searchable = true;
+    @Input() @HostBinding('class.ng-select-clearable') clearable = true;
     @Input() @HostBinding('class.ng-select-opened') isOpen = false;
 
     @Input()
