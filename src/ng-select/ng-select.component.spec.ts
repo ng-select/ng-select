@@ -1557,6 +1557,32 @@ describe('NgSelectComponent', function () {
             expect(selectClasses.contains('ng-select-top')).toBeFalsy();
             expect(panelClasses.contains('ng-select-top')).toBeFalsy();
         }));
+
+        it('should return current panel position', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities" appendTo="body"></ng-select>`);
+
+            const select = fixture.componentInstance.select;
+            select.open();
+            tickAndDetectChanges(fixture);
+
+            expect(select.currentPanelPosition).toBe('bottom');
+        }));
+
+        it('should return undefined for current panel position if dropdown is closed', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities" appendTo="body"></ng-select>`);
+
+            const select = fixture.componentInstance.select;
+            select.open();
+            tickAndDetectChanges(fixture);
+            select.close();
+            tickAndDetectChanges(fixture);
+
+            expect(select.currentPanelPosition).toBeUndefined();
+        }));
     });
 
     describe('Custom templates', () => {
