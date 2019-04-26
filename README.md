@@ -239,6 +239,14 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
     border-color: #dc3545;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px #fde6e8;
 }
+
+
+/* Placeholder validation style */
+
+.ng-invalid .ng-touched > .ng-select-container > .ng-value-container > .ng-placeholder {
+    color: #dc3545;
+}
+
 ```
 
 ## Contributing
