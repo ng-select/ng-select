@@ -94,6 +94,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         this._dropdown = _elementRef.nativeElement;
     }
 
+    get currentPosition(): DropdownPosition {
+        return this._currentPosition;
+    }
+
     @HostListener('mousedown', ['$event'])
     handleMousedown($event: MouseEvent) {
         const target = $event.target as HTMLElement;
