@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.19.0"></a>
+# [2.19.0](https://github.com/ng-select/ng-select/compare/v2.18.0...v2.19.0) (2019-05-04)
+
+
+### Features
+
+* add getter for current dropdown position ([0cc4203](https://github.com/ng-select/ng-select/commit/0cc4203))
+
+
+
 <a name="2.18.0"></a>
 # [2.18.0](https://github.com/ng-select/ng-select/compare/v2.17.0...v2.18.0) (2019-04-20)
 
