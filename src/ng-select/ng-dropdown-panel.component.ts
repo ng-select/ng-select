@@ -364,6 +364,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
         if (this.blockStrategy === 'block') {
             this._overlay = this._renderer.createElement('div');
+            this._overlay.classList.add('ng-dropdown-panel-overlay');
             this._overlay.style.position = 'fixed';
             this._overlay.style.top = '0';
             this._overlay.style.bottom = '0';

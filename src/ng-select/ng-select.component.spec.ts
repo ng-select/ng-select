@@ -1,14 +1,21 @@
-import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ConsoleService } from './console.service';
+import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
-import { KeyCode, NgOption } from './ng-select.types';
+import { By } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
+
+import {
+    getNgSelectElement,
+    selectOption,
+    TestsErrorHandler,
+    tickAndDetectChanges,
+    triggerKeyDownEvent
+} from '../testing/helpers';
 import { MockConsole, MockNgWindow, MockNgZone } from '../testing/mocks';
+import { ConsoleService } from './console.service';
 import { NgSelectComponent } from './ng-select.component';
 import { NgSelectModule } from './ng-select.module';
-import { Subject } from 'rxjs';
+import { KeyCode, NgOption } from './ng-select.types';
 import { WindowService } from './window.service';
 
 describe('NgSelectComponent', function () {
@@ -3104,6 +3111,26 @@ describe('NgSelectComponent', function () {
                 expect(dropdown.parentElement).toBe(document.body);
                 expect(dropdown.style.top).not.toBe('0px');
                 expect(dropdown.style.left).toBe('0px');
+            })
+        }));
+
+        it('should append dropdown to body, with blocking', async(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        appendTo="body"
+                        blockStrategy="block"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const dropdown = <HTMLElement>document.querySelector('.ng-dropdown-panel');
+                const dropdownOverlay = <HTMLElement>document.querySelector('.ng-dropdown-panel-overlay');
+                expect(dropdown.parentElement).toBe(dropdownOverlay);
+                expect(dropdownOverlay.parentElement).toBe(document.body);
             })
         }));
 
