@@ -1,5 +1,3 @@
-import { Injectable } from '@angular/core';
-
 import { coerceCssPixelValue } from './css-pixel-value';
 import { ViewportRuler } from './viewport-ruler';
 
@@ -21,9 +19,6 @@ type ScrollBehaviorCSSStyleDeclaration = CSSStyleDeclaration & { scrollBehavior:
 /**
  * Strategy that will prevent the user from scrolling while the overlay is visible.
  */
-@Injectable({
-    providedIn: 'root'
-})
 export class BlockScrollStrategy {
     private _previousHTMLStyles = { top: '', left: '' };
     private _previousScrollPosition: { top: number, left: number };
