@@ -1,7 +1,7 @@
-import { NgSelectComponent } from './ng-select.component';
-import { ItemsList } from './items-list';
-import { DefaultSelectionModel } from './selection-model';
 import { NgSelectConfig } from './config.service';
+import { ItemsList } from './items-list';
+import { NgSelectComponent } from './ng-select.component';
+import { DefaultSelectionModel } from './selection-model';
 
 describe('ItemsList', () => {
     describe('select', () => {
@@ -432,6 +432,6 @@ describe('ItemsList', () => {
     }
 
     function ngSelectFactory(): NgSelectComponent {
-        return new NgSelectComponent(null, null, null, new NgSelectConfig(), () => new DefaultSelectionModel(), {} as any, null, null);
+        return new NgSelectComponent(null, null, null, new NgSelectConfig(), () => new DefaultSelectionModel(), {} as any, null, null, null, null);
     }
 });
