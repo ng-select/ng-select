@@ -8,6 +8,12 @@ $ng-select-bg: #ffffff !default;
 $ng-select-selected: lighten($ng-select-highlight, 46);
 $ng-select-marked: lighten($ng-select-highlight, 48);
 
+.cdk-global-scrollblock {
+    position: fixed;
+    width: 100%;
+    overflow-y: scroll;
+}
+
 .ng-select {
     &.ng-select-opened {
         > .ng-select-container {

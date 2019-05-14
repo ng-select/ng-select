@@ -9,6 +9,12 @@ $ng-select-disabled-text: rgba(black, 0.38) !default;
 $ng-select-divider: rgba(black, 0.12) !default;
 $ng-select-bg: #ffffff !default;
 
+.cdk-global-scrollblock {
+    position: fixed;
+    width: 100%;
+    overflow-y: scroll;
+}
+
 .ng-select {
     padding-bottom: 1.25em;
     &.ng-select-disabled {

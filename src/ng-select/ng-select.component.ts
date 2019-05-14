@@ -1,58 +1,61 @@
+import { DOCUMENT } from '@angular/common';
 import {
-    Component,
-    OnDestroy,
-    OnChanges,
     AfterViewInit,
-    forwardRef,
-    ChangeDetectorRef,
-    Input,
-    Output,
-    EventEmitter,
-    ContentChild,
-    TemplateRef,
-    ViewEncapsulation,
-    HostListener,
-    HostBinding,
-    ViewChild,
-    ElementRef,
+    Attribute,
     ChangeDetectionStrategy,
-    Inject,
-    SimpleChanges,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
     ContentChildren,
-    QueryList,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    HostBinding,
+    HostListener,
+    Inject,
     InjectionToken,
-    Attribute
+    Input,
+    OnChanges,
+    OnDestroy,
+    Output,
+    QueryList,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { takeUntil, startWith, tap, debounceTime, map, filter } from 'rxjs/operators';
-import { Subject, merge } from 'rxjs';
+import { merge, Subject } from 'rxjs';
+import { debounceTime, filter, map, startWith, takeUntil, tap } from 'rxjs/operators';
 
-import {
-    NgOptionTemplateDirective,
-    NgLabelTemplateDirective,
-    NgHeaderTemplateDirective,
-    NgFooterTemplateDirective,
-    NgOptgroupTemplateDirective,
-    NgNotFoundTemplateDirective,
-    NgTypeToSearchTemplateDirective,
-    NgLoadingTextTemplateDirective,
-    NgMultiLabelTemplateDirective,
-    NgTagTemplateDirective,
-    NgLoadingSpinnerTemplateDirective
-} from './ng-templates.directive';
-
+import { NgSelectConfig } from './config.service';
 import { ConsoleService } from './console.service';
-import { isDefined, isFunction, isPromise, isObject } from './value-utils';
-import { ItemsList } from './items-list';
-import { NgOption, KeyCode } from './ng-select.types';
 import { newId } from './id';
+import { ItemsList } from './items-list';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
+import { KeyCode, NgOption } from './ng-select.types';
+import {
+    NgFooterTemplateDirective,
+    NgHeaderTemplateDirective,
+    NgLabelTemplateDirective,
+    NgLoadingSpinnerTemplateDirective,
+    NgLoadingTextTemplateDirective,
+    NgMultiLabelTemplateDirective,
+    NgNotFoundTemplateDirective,
+    NgOptgroupTemplateDirective,
+    NgOptionTemplateDirective,
+    NgTagTemplateDirective,
+    NgTypeToSearchTemplateDirective
+} from './ng-templates.directive';
+import { BlockScrollStrategy } from './scroll-strategy/block-scroll-strategy';
+import { ViewportRuler } from './scroll-strategy/viewport-ruler';
 import { SelectionModelFactory } from './selection-model';
-import { NgSelectConfig } from './config.service';
+import { isDefined, isFunction, isObject, isPromise } from './value-utils';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
+export type BlockStrategy = 'none' | 'block';
 export type AutoCorrect = 'off' | 'on';
 export type AutoCapitalize = 'off' | 'on';
 export type AddTagFn = ((term: string) => any | Promise<any>);
@@ -88,6 +91,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() loadingText: string;
     @Input() clearAllText: string;
     @Input() dropdownPosition: DropdownPosition = 'auto';
+    @Input() blockStrategy: BlockStrategy = 'none';
     @Input() appendTo: string;
     @Input() loading = false;
     @Input() closeOnSelect = true;
@@ -185,6 +189,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _pressedKeys: string[] = [];
     private _compareWith: CompareWithFn;
     private _clearSearchOnAdd: boolean;
+    private _blockScrollStrategy: BlockScrollStrategy;
 
     private readonly _destroy$ = new Subject<void>();
     private readonly _keyPress$ = new Subject<string>();
@@ -204,11 +209,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         @Inject(SELECTION_MODEL_FACTORY) newSelectionModel: SelectionModelFactory,
         _elementRef: ElementRef,
         private _cd: ChangeDetectorRef,
-        private _console: ConsoleService
+        private _console: ConsoleService,
+        private _viewportRuler: ViewportRuler,
+        @Inject(DOCUMENT) private document: any
     ) {
         this._mergeGlobalConfig(config);
         this.itemsList = new ItemsList(this, newSelectionModel());
         this.element = _elementRef.nativeElement;
+        this._blockScrollStrategy = new BlockScrollStrategy(this._viewportRuler, this.document);
     }
 
     get selectedItems(): NgOption[] {
@@ -396,6 +404,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this.filterValue) {
             this.focus();
         }
+        if (this.blockStrategy === 'block') {
+            this._blockScrollStrategy.enable();
+        }
         this.detectChanges();
     }
 
@@ -407,6 +418,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this._clearSearch();
         this._onTouched();
         this.closeEvent.emit();
+        if (this.blockStrategy === 'block') {
+            this._blockScrollStrategy.disable();
+        }
         this._cd.markForCheck();
     }
 

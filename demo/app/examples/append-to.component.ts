@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { DataService } from '../shared/data.service';
 
 @Component({
@@ -30,6 +31,32 @@ import { DataService } from '../shared/data.service';
             </ng-select>
         </div>
         ---
+
+        <p>It can block scrolling when appended to an element using <b>blockStrategy</b>.</p>
+        ---html,true
+        <div class="big-overflow-box ">
+
+            <ng-select [items]="people | async"
+                bindLabel="company"
+                appendTo="body"
+                blockStrategy="block"
+                placeholder="Select item"
+                [(ngModel)]="selected">
+            </ng-select>
+
+            <ng-select [items]="people | async"
+                bindLabel="company"
+                appendTo="body"
+                blockStrategy="none"
+                placeholder="Select item"
+                [(ngModel)]="selected">
+            </ng-select>
+            
+            <div class="big-box">
+                &nbsp;
+            </div>
+        </div>
+        ---
     `,
     styles: [
         `
@@ -40,6 +67,18 @@ import { DataService } from '../shared/data.service';
                border: 1px solid #999;
                overflow: hidden;
            }
+
+           .big-overflow-box {
+                padding: 5px;
+                padding-right: 50px;
+                height: 200px;
+                border: 1px solid #999;
+                overflow: auto;
+           }
+
+           .big-box {
+                height: 400px;
+           }
         `
     ]
 })
@@ -49,6 +88,7 @@ export class AppendToComponent implements OnInit {
     people: any = [];
     selected: any;
     selected2: any;
+    selected3: any;
     constructor(private dataService: DataService) { }
 
     ngOnInit() { 
