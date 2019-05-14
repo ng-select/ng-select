@@ -89,10 +89,13 @@ export class DataSourceComponent {
 
     selectedCarId = 3;
     cars = [
-        { id: 1, name: 'Volvo' },
+        { id: 1, name: 'Volvo & BMW' },
         { id: 2, name: 'Saab', disabled: true },
         { id: 3, name: 'Opel' },
         { id: 4, name: 'Audi' },
+        { id: 5, name: 'Audi & Austin' },
+        { id: 6, name: 'Audi & Buchanan' },
+        { id: 7, name: 'Audi & Cheetah' },
     ]
 
     constructor(private dataService: DataService) { }
