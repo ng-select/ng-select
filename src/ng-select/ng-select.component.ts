@@ -102,6 +102,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() selectableGroup = false;
     @Input() selectableGroupAsModel = true;
     @Input() searchFn = null;
+    @Input() trackByFn = null;
     @Input() excludeGroupsFromDefaultSelection = false;
     @Input() clearOnBackspace = true;
 
@@ -472,6 +473,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     showClear() {
         return this.clearable && (this.hasValue || this.filterValue) && !this.disabled;
     }
+
+    trackByOption = (_: number, item: NgOption) => {
+        if (this.trackByFn) {
+            return this.trackByFn(item.value);
+        }
+
+        return null;
+    };
 
     get showAddTag() {
         if (!this.filterValue) {

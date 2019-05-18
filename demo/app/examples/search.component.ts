@@ -50,6 +50,7 @@ import { Subject, Observable, of, concat } from 'rxjs';
                    [addTag]="true"
                    [multiple]="true"
                    [hideSelected]="true"
+                   [trackByFn]="trackByFn"
                    [loading]="people3Loading"
                    [typeahead]="people3input$"
                    [(ngModel)]="selectedPersons">
@@ -83,6 +84,10 @@ export class SelectSearchComponent {
     customSearchFn(term: string, item: Person) {
         term = term.toLocaleLowerCase();
         return item.name.toLocaleLowerCase().indexOf(term) > -1 || item.gender.toLocaleLowerCase() === term;
+    }
+
+    trackByFn(item: Person) {
+        return item.id;
     }
 
     private loadPeople() {
