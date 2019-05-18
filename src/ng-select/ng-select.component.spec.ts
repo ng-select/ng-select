@@ -1880,10 +1880,7 @@ describe('NgSelectComponent', function () {
             }));
 
             it('should not open dropdown when maximum of items is reached', fakeAsync(() => {
-                const clickArrow = () => arrowIcon.triggerEventHandler('click', {
-                    stopPropagation: () => {
-                    }
-                });
+                const clickArrow = () => arrowIcon.triggerEventHandler('click', {});
                 selectOption(fixture, KeyCode.ArrowDown, 0);
                 selectOption(fixture, KeyCode.ArrowDown, 1);
                 tickAndDetectChanges(fixture);
@@ -3391,8 +3388,6 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
 
 function createEvent(target = {}) {
     return {
-        stopPropagation: () => {
-        },
         preventDefault: () => {
         },
         target: {

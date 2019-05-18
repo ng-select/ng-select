@@ -3,7 +3,7 @@
         <div class="ng-placeholder">{{placeholder}}</div>
 
         <ng-container *ngIf="!multiLabelTemplate && selectedItems.length > 0">
-            <div [class.ng-value-disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems">
+            <div [class.ng-value-disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems; trackBy: trackByOption">
                 <ng-template #defaultLabelTemplate>
                     <span class="ng-value-icon left" (click)="unselect(item);" aria-hidden="true">×</span>
                     <span class="ng-value-label">{{item.label}}</span>
@@ -29,7 +29,7 @@
                    [attr.tabindex]="tabIndex"
                    [attr.autocorrect]="autoCorrect"
                    [attr.autocapitalize]="autoCapitalize"
-                   [readOnly]="!searchable"
+                   [readOnly]="!searchable || itemsList.maxItemsSelected"
                    [disabled]="disabled"
                    [value]="filterValue ? filterValue : ''"
                    (input)="filter(filterInput.value)"
@@ -83,7 +83,7 @@
 
     <ng-container>
         <div class="ng-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)" (mouseover)="onItemHover(item)"
-                *ngFor="let item of viewPortItems"
+                *ngFor="let item of viewPortItems; trackBy: trackByOption"
                 [class.ng-option-disabled]="item.disabled"
                 [class.ng-option-selected]="item.selected"
                 [class.ng-optgroup]="item.children"
