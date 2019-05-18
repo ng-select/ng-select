@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.20.0"></a>
+# [2.20.0](https://github.com/ng-select/ng-select/compare/v2.19.0...v2.20.0) (2019-05-18)
+
+
+### Bug Fixes
+
+* add tag on tab when isOpen = false ([ab8b661](https://github.com/ng-select/ng-select/commit/ab8b661)), closes [#1159](https://github.com/ng-select/ng-select/issues/1159)
+* disable input when max items is selected ([240f4b5](https://github.com/ng-select/ng-select/commit/240f4b5)), closes [#1168](https://github.com/ng-select/ng-select/issues/1168)
+* remove unnecessary stopPropagation calls ([e994937](https://github.com/ng-select/ng-select/commit/e994937)), closes [#1169](https://github.com/ng-select/ng-select/issues/1169)
+* take into account bindLabel when adding tag ([36bc0d2](https://github.com/ng-select/ng-select/commit/36bc0d2)), closes [#1141](https://github.com/ng-select/ng-select/issues/1141)
+* take into account bindValue if groupValue is used ([941217f](https://github.com/ng-select/ng-select/commit/941217f)), closes [#1161](https://github.com/ng-select/ng-select/issues/1161)
+
+
+### Features
+
+* **trackByFn:** allow to provide custom trackBy function ([0afa9c1](https://github.com/ng-select/ng-select/commit/0afa9c1)), closes [#1134](https://github.com/ng-select/ng-select/issues/1134)
+
+
+
 <a name="2.19.0"></a>
 # [2.19.0](https://github.com/ng-select/ng-select/compare/v2.18.0...v2.19.0) (2019-05-04)
 
