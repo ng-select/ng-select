@@ -29,7 +29,7 @@
                    [attr.tabindex]="tabIndex"
                    [attr.autocorrect]="autoCorrect"
                    [attr.autocapitalize]="autoCapitalize"
-                   [readOnly]="!searchable"
+                   [readOnly]="!searchable || itemsList.maxItemsSelected"
                    [disabled]="disabled"
                    [value]="filterValue ? filterValue : ''"
                    (input)="filter(filterInput.value)"
