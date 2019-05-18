@@ -697,7 +697,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             if (this.bindValue) {
                 let value = null;
                 if (item.children) {
-                    value = item.value[<string>this.groupBy];
+                    const groupKey = this.groupValue ? this.bindValue : <string>this.groupBy;
+                    value = item.value[groupKey || <string>this.groupBy];
                 } else {
                     value = this.itemsList.resolveNested(item.value, this.bindValue);
                 }
