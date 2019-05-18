@@ -53,6 +53,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         <ng-select [items]="[]"
                    [addTag]="true"
                    [multiple]="true"
+                   [selectOnTab]="true"
                    [isOpen]="false">
         </ng-select>
         ---
