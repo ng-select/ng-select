@@ -283,7 +283,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 case KeyCode.Esc:
                     this.close();
                     $event.preventDefault();
-                    $event.stopPropagation();
                     break;
                 case KeyCode.Backspace:
                     this._handleBackspace();
@@ -299,7 +298,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (target.tagName !== 'INPUT') {
             $event.preventDefault();
         }
-        $event.stopPropagation();
 
         if (target.classList.contains('ng-clear-wrapper')) {
             this.handleClearClick();
@@ -768,7 +766,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         $event.preventDefault();
-        $event.stopPropagation();
     }
 
     private _handleSpace($event: KeyboardEvent) {

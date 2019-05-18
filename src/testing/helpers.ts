@@ -31,6 +31,5 @@ export function triggerKeyDownEvent(element: DebugElement, which: number, key = 
         which: which,
         key: key,
         preventDefault: () => { },
-        stopPropagation: () => { }
     });
 }
