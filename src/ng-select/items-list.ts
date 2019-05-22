@@ -102,7 +102,7 @@ export class ItemsList {
         if (this._ngSelect.compareWith) {
             findBy = item => this._ngSelect.compareWith(item.value, value)
         } else if (this._ngSelect.bindValue) {
-            findBy = item => !item.children && this.resolveNested(item.value, this._ngSelect.bindValue) === value
+            findBy = item => this.resolveNested(item.value, this._ngSelect.bindValue) === value
         } else {
             findBy = item => item.value === value ||
                 !item.children && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel)

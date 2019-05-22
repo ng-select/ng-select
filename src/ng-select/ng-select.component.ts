@@ -641,7 +641,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         const select = (val: any) => {
-            let item = this.itemsList.findItem(val);
+            let item: NgOption | any = this.itemsList.findItem(val);
             if (item) {
                 this.itemsList.select(item);
             } else {
