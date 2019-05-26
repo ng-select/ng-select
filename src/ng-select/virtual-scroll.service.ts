@@ -1,10 +1,6 @@
-import { Injectable } from '@angular/core';
-
 export interface ItemsDimensions {
     itemsLength: number;
-    viewWidth: number;
     viewHeight: number;
-    childWidth: number;
     childHeight: number;
     itemsPerCol: number;
 }
@@ -16,16 +12,27 @@ export interface ItemsRangeResult {
     end: number;
 }
 
-@Injectable({ providedIn: 'root' })
+export interface PanelDimensions {
+    itemHeight: number;
+    panelHeight: number;
+}
+
+// @Injectable({ providedIn: 'root' })
 export class VirtualScrollService {
 
-    calculateItems(d: ItemsDimensions, dropdownEl: HTMLElement, bufferAmount: number): ItemsRangeResult {
+    private _dimensions: PanelDimensions;
+
+    get dimensions() {
+        return this._dimensions;
+    }
+
+    calculateItems(d: ItemsDimensions, dropdown: HTMLElement, bufferAmount: number): ItemsRangeResult {
         const scrollHeight = d.childHeight * d.itemsLength;
-        if (dropdownEl.scrollTop > scrollHeight) {
-            dropdownEl.scrollTop = scrollHeight;
+        if (dropdown.scrollTop > scrollHeight) {
+            dropdown.scrollTop = scrollHeight;
         }
 
-        const scrollTop = Math.max(0, dropdownEl.scrollTop);
+        const scrollTop = Math.max(0, dropdown.scrollTop);
         const indexByScrollTop = scrollTop / scrollHeight * d.itemsLength;
         let end = Math.min(d.itemsLength, Math.ceil(indexByScrollTop) + (d.itemsPerCol + 1));
 
@@ -50,21 +57,20 @@ export class VirtualScrollService {
         }
     }
 
-    calculateDimensions(itemsLength: number, index: number, panelEl: HTMLElement, contentEl: HTMLElement): ItemsDimensions {
-        const panelRect = panelEl.getBoundingClientRect();
-        const itemRect = contentEl.children[index] ? contentEl.children[index].getBoundingClientRect() : {
-            width: panelRect.width,
-            height: panelRect.height,
-            top: 0,
+    setInitialDimensions(itemHeight: number, panelHeight: number) {
+        this._dimensions = {
+            itemHeight,
+            panelHeight
         };
-        const itemsPerCol = Math.max(1, Math.floor(panelRect.height / itemRect.height));
+    }
+
+    calculateDimensions(itemsLength: number): ItemsDimensions {
+        const itemsPerCol = Math.max(1, Math.floor(this.dimensions.panelHeight / this.dimensions.itemHeight));
 
         return {
             itemsLength: itemsLength,
-            viewWidth: panelRect.width,
-            viewHeight: panelRect.height,
-            childWidth: itemRect.width,
-            childHeight: itemRect.height,
+            viewHeight: this.dimensions.panelHeight,
+            childHeight: this.dimensions.itemHeight,
             itemsPerCol: itemsPerCol,
         };
     }

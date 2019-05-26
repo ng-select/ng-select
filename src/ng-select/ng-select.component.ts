@@ -50,6 +50,7 @@ import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
 import { SelectionModelFactory } from './selection-model';
 import { NgSelectConfig } from './config.service';
+import { VirtualScrollService } from './virtual-scroll.service';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
@@ -67,7 +68,7 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
         provide: NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => NgSelectComponent),
         multi: true
-    }],
+    }, VirtualScrollService],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
