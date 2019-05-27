@@ -105,6 +105,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() trackByFn = null;
     @Input() excludeGroupsFromDefaultSelection = false;
     @Input() clearOnBackspace = true;
+    @Input() readonly = false;
 
     @Input() labelForId = null;
     @Input() autoCorrect: AutoCorrect = 'off';
@@ -382,7 +383,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     open() {
-        if (this.disabled || this.isOpen || this.itemsList.maxItemsSelected || this._manualOpen) {
+        if (this.disabled || this.isOpen || this.itemsList.maxItemsSelected || this._manualOpen || this.readonly) {
             return;
         }
 
@@ -524,7 +525,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     onInputFocus($event) {
-        if (this.focused) {
+        if (this.focused || this.readonly) {
             return;
         }
 
