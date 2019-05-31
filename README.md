@@ -222,7 +222,7 @@ If you are not happy with default styles you can easily override them with incre
 }
 ```
 
-If you are using `ViewEncapsulation`, your should use special `::ng-deep` selector which will prevent scoping for nested selectors.
+If you are using `ViewEncapsulation`, your could use special `::ng-deep` selector which will prevent scoping for nested selectors altough this is more of a workaround and we recommend using solution described above.
 
 ```css
 .ng-select.custom ::ng-deep .ng-select-container  {            
