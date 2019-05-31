@@ -1,9 +1,4 @@
-export interface ItemsDimensions {
-    itemsLength: number;
-    viewHeight: number;
-    childHeight: number;
-    itemsPerCol: number;
-}
+import { isDefined } from './value-utils';
 
 export interface ItemsRangeResult {
     scrollHeight: number;
@@ -15,6 +10,7 @@ export interface ItemsRangeResult {
 export interface PanelDimensions {
     itemHeight: number;
     panelHeight: number;
+    itemsPerViewport: number;
 }
 
 // @Injectable({ providedIn: 'root' })
@@ -26,28 +22,26 @@ export class VirtualScrollService {
         return this._dimensions;
     }
 
-    calculateItems(d: ItemsDimensions, dropdown: HTMLElement, bufferAmount: number): ItemsRangeResult {
-        const scrollHeight = d.childHeight * d.itemsLength;
-        if (dropdown.scrollTop > scrollHeight) {
-            dropdown.scrollTop = scrollHeight;
-        }
+    calculateItems(scrollPos: number, itemsLength: number, buffer: number): ItemsRangeResult {
+        const d = this._dimensions;
+        const scrollHeight = d.itemHeight * itemsLength;
 
-        const scrollTop = Math.max(0, dropdown.scrollTop);
-        const indexByScrollTop = scrollTop / scrollHeight * d.itemsLength;
-        let end = Math.min(d.itemsLength, Math.ceil(indexByScrollTop) + (d.itemsPerCol + 1));
+        const scrollTop = Math.max(0, scrollPos);
+        const indexByScrollTop = scrollTop / scrollHeight * itemsLength;
+        let end = Math.min(itemsLength, Math.ceil(indexByScrollTop) + (d.itemsPerViewport + 1));
 
         const maxStartEnd = end;
-        const maxStart = Math.max(0, maxStartEnd - d.itemsPerCol - 1);
+        const maxStart = Math.max(0, maxStartEnd - d.itemsPerViewport - 1);
         let start = Math.min(maxStart, Math.floor(indexByScrollTop));
 
-        let topPadding = d.childHeight * Math.ceil(start) - (d.childHeight * Math.min(start, bufferAmount));
+        let topPadding = d.itemHeight * Math.ceil(start) - (d.itemHeight * Math.min(start, buffer));
         topPadding = !isNaN(topPadding) ? topPadding : 0;
         start = !isNaN(start) ? start : -1;
         end = !isNaN(end) ? end : -1;
-        start -= bufferAmount;
+        start -= buffer;
         start = Math.max(0, start);
-        end += bufferAmount;
-        end = Math.min(d.itemsLength, end);
+        end += buffer;
+        end = Math.min(itemsLength, end);
 
         return {
             topPadding: topPadding,
@@ -58,20 +52,20 @@ export class VirtualScrollService {
     }
 
     setInitialDimensions(itemHeight: number, panelHeight: number) {
+        const itemsPerViewport = Math.max(1, Math.floor(panelHeight / itemHeight));
         this._dimensions = {
             itemHeight,
-            panelHeight
+            panelHeight,
+            itemsPerViewport
         };
     }
 
-    calculateDimensions(itemsLength: number): ItemsDimensions {
-        const itemsPerCol = Math.max(1, Math.floor(this.dimensions.panelHeight / this.dimensions.itemHeight));
+    getScrollPosition(index: number, buffer: number, dropdown: HTMLElement) {
+        if (isDefined(index)) {
+            const d = this.dimensions;
+            return (index * d.itemHeight) - (d.itemHeight * Math.min(index, buffer));
+        }
 
-        return {
-            itemsLength: itemsLength,
-            viewHeight: this.dimensions.panelHeight,
-            childHeight: this.dimensions.itemHeight,
-            itemsPerCol: itemsPerCol,
-        };
+        return dropdown.scrollTop;
     }
 }

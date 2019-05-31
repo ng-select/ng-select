@@ -1,6 +1,5 @@
 import { DOCUMENT } from '@angular/common';
 import {
-    AfterContentInit,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
@@ -51,7 +50,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
         </div>
     `
 })
-export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, AfterContentInit {
+export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() items: NgOption[] = [];
     @Input() markedItem: NgOption;
@@ -78,7 +77,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     private _scrollablePanel: HTMLElement;
     private _contentPanel: HTMLElement;
     private _select: HTMLElement;
-    // private _isScrolledToMarked = false;
     private _scrollToEndFired = false;
 
     constructor(
@@ -118,7 +116,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.items) {
-            this._handleItemsChange(changes.items.currentValue);
+            const change = changes.items;
+            this._handleItemsChange(change.currentValue, change.firstChange);
         }
     }
 
@@ -130,19 +129,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         if (this.appendTo) {
             this._renderer.removeChild(this._dropdown.parentNode, this._dropdown);
         }
-    }
-
-    ngAfterContentInit() {
-        this._whenContentReady().then(() => {
-            if (this._destroy$.closed) {
-                return;
-            }
-            if (this.appendTo) {
-                this._appendDropdown();
-                this._handleDocumentResize();
-            }
-            this.updateDropdownPosition();
-        });
     }
 
     scrollInto(item: NgOption) {
@@ -236,33 +222,39 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         this.outsideClick.emit();
     }
 
-    private _handleItemsChange(items: NgOption[]) {
+    private _handleItemsChange(items: NgOption[], firstChange: boolean) {
         this.items = items || [];
-        if (this.virtualScroll && this.items.length > 0) {
-            this._zone.runOutsideAngular(() => {
-                console.log('items change');
-                // TODO: if marked exists, calculate padding and render items based on index
+        if (this.virtualScroll && this.items.length) {
+            if (firstChange) {
+                this._calculateInitialRange();
+            } else {
                 this._calculateItemsRange();
-            });
+            }
         } else {
-            this.update.emit(this.items);
-            // TODO: fix scroll to marked
+            this.update.emit(this.items); // TODO: fix scroll to marked
         }
     }
 
-    private _calculateItemsRange() {
-        // TODO: separate initial render with scrolling
+    private _calculateInitialRange() {
+        this._zone.runOutsideAngular(() => {
+            this._calculateDimensions().then(() => {
+                const index = this.markedItem ? this.markedItem.index : 0;
+                this._calculateItemsRange(index);
+                this._handleDropdownPosition();
+            })
+        });
+    }
+
+    private _calculateItemsRange(startingIndex = null) {
         if (!this.virtualScroll) {
             return;
         }
 
-        this._calculateInitialDimensions().then(() => {
+        this._zone.runOutsideAngular(() => {
             this._window.requestAnimationFrame(() => {
                 NgZone.assertNotInAngularZone();
-
-
-                const d = this._virtualScrollService.calculateDimensions(this.items.length);
-                const res = this._virtualScrollService.calculateItems(d, this.scrollElementRef.nativeElement, this.bufferAmount);
+                const scrollPos = this._virtualScrollService.getScrollPosition(startingIndex, this.bufferAmount, this._scrollablePanel);
+                const res = this._virtualScrollService.calculateItems(scrollPos, this.items.length, this.bufferAmount);
                 this._virtualPadding.style.height = `${res.scrollHeight}px`;
                 this._contentPanel.style.transform = 'translateY(' + res.topPadding + 'px)';
 
@@ -270,17 +262,21 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
                     this.update.emit(this.items.slice(res.start, res.end));
                     this.scroll.emit({ start: res.start, end: res.end });
                 });
+
+                if (scrollPos && startingIndex) {
+                    this._scrollablePanel.scrollTop = scrollPos;
+                }
             });
         });
     }
 
-    private _calculateInitialDimensions(): Promise<void> {
+    private _calculateDimensions(): Promise<void> {
         if (this._virtualScrollService.dimensions) {
             return Promise.resolve();
         }
 
         return new Promise(resolve => {
-            console.log('_calculateInitialDimensions');
+            console.log('_calculateDimensions');
             const [first] = this.items;
             this.update.emit([first]);
             Promise.resolve().then(() => {
@@ -347,7 +343,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
     private _appendDropdown() {
         const parent = document.querySelector(this.appendTo);
         if (!parent) {
-            throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`)
+            throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`);
         }
         parent.appendChild(this._dropdown);
     }
@@ -368,20 +364,12 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy, A
         this._dropdown.style.minWidth = selectRect.width + 'px';
     }
 
-    private _whenContentReady(): Promise<void> {
-        if (this.items.length === 0) {
-            return Promise.resolve();
+    private _handleDropdownPosition() {
+        // TODO: maybe use Promise.resolve() to be sure dropdown already exist
+        if (this.appendTo) {
+            this._appendDropdown();
+            this._handleDocumentResize();
         }
-        const ready = (resolve) => {
-            const ngOption = this._dropdown.querySelector('.ng-option');
-            if (ngOption) {
-                resolve();
-                return;
-            }
-            this._zone.runOutsideAngular(() => {
-                setTimeout(() => ready(resolve), 5);
-            });
-        };
-        return new Promise((resolve) => ready(resolve))
+        this.updateDropdownPosition();
     }
 }
