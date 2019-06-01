@@ -132,12 +132,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     scrollTo(option: NgOption) {
-        // TODO: fix with search term
         if (!option) {
             return;
         }
 
-        const index = option.index;
+        const index = this.items.indexOf(option);
         if (index < 0 || index >= this.items.length) {
             return;
         }
@@ -227,7 +226,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         this.items = items || [];
         this._scrollToEndFired = false;
 
-        if (this.virtualScroll && this.items.length) {
+        if (this.virtualScroll) {
             // TODO: check with appendBody
             if (firstChange) {
                 this._calculateInitialRange();
@@ -303,7 +302,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
                 const optionHeight = option.clientHeight;
                 this._virtualPadding.style.height = `${optionHeight * this.items.length}px`;
                 const panelHeight = this._scrollablePanel.clientHeight;
-                this._virtualScrollService.setInitialDimensions(option.clientHeight, panelHeight);
+                this._virtualScrollService.setInitialDimensions(optionHeight, panelHeight);
 
                 resolve();
             });
