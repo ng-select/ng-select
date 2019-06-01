@@ -1001,7 +1001,7 @@ describe('NgSelectComponent', function () {
             cmp.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
             tickAndDetectChanges(fixture);
 
-            cmp.select.dropdownPanel.scrollInto(cmp.select.itemsList.items[1]);
+            cmp.select.dropdownPanel.scrollTo(cmp.select.itemsList.items[1]);
             tickAndDetectChanges(fixture);
 
             const panelItems = el.querySelector('.ng-dropdown-panel-items');
@@ -1024,7 +1024,7 @@ describe('NgSelectComponent', function () {
             cmp.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
             tickAndDetectChanges(fixture);
 
-            cmp.select.dropdownPanel.scrollInto(cmp.select.itemsList.items[15]);
+            cmp.select.dropdownPanel.scrollTo(cmp.select.itemsList.items[15]);
             tickAndDetectChanges(fixture);
 
             const panelItems = el.querySelector('.ng-dropdown-panel-items');

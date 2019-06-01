@@ -405,6 +405,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
         this.isOpen = false;
         this._clearSearch();
+        this.itemsList.unmarkItem();
         this._onTouched();
         this.closeEvent.emit();
         this._cd.markForCheck();
@@ -734,14 +735,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this.isOpen || !this.dropdownPanel) {
             return;
         }
-        this.dropdownPanel.scrollInto(this.itemsList.markedItem);
+        this.dropdownPanel.scrollTo(this.itemsList.markedItem);
     }
 
     private _scrollToTag() {
         if (!this.isOpen || !this.dropdownPanel) {
             return;
         }
-        this.dropdownPanel.scrollIntoTag();
+        this.dropdownPanel.scrollToTag();
     }
 
     private _handleTab($event: KeyboardEvent) {

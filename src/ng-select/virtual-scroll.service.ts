@@ -44,10 +44,10 @@ export class VirtualScrollService {
         end = Math.min(itemsLength, end);
 
         return {
-            topPadding: topPadding,
-            scrollHeight: scrollHeight,
-            start: start,
-            end: end
+            topPadding,
+            scrollHeight,
+            start,
+            end
         }
     }
 
@@ -60,10 +60,9 @@ export class VirtualScrollService {
         };
     }
 
-    getScrollPosition(index: number, buffer: number, dropdown: HTMLElement) {
+    getScrollPosition(index: number, dropdown: HTMLElement) {
         if (isDefined(index)) {
-            const d = this.dimensions;
-            return (index * d.itemHeight) - (d.itemHeight * Math.min(index, buffer));
+            return index * this.dimensions.itemHeight;
         }
 
         return dropdown.scrollTop;
