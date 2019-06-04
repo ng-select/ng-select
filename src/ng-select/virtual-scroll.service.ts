@@ -51,7 +51,7 @@ export class VirtualScrollService {
         }
     }
 
-    setInitialDimensions(itemHeight: number, panelHeight: number) {
+    setDimensions(itemHeight: number, panelHeight: number) {
         const itemsPerViewport = Math.max(1, Math.floor(panelHeight / itemHeight));
         this._dimensions = {
             itemHeight,
