@@ -247,9 +247,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         this._zone.runOutsideAngular(() => {
             if (firstChange) {
                 this._measureDimensions().then(() => {
+                    this._handleDropdownPosition();
                     const index = this.markedItem ? this.markedItem.index : 0;
                     this._renderItemsRange(index);
-                    this._handleDropdownPosition(); // TODO: check with appendBody
                 });
             } else {
                 this._renderItemsRange();
@@ -271,6 +271,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         const scrollPos = this._virtualScrollService.getScrollPosition(startIndex, this._scrollablePanel);
         const range = this._virtualScrollService.calculateItems(scrollPos, this.items.length, this.bufferAmount);
 
+        // TODO: height should change only when items.length has changed
         this._virtualPadding.style.height = `${range.scrollHeight}px`;
         this._contentPanel.style.transform = 'translateY(' + range.topPadding + 'px)';
 
@@ -305,6 +306,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _fireScrollToEnd() {
+        // TODO: with virtual scroll fire it inside _renderItemsRange
         if (this._scrollToEndFired) {
             return;
         }
@@ -345,10 +347,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     private _updateAppendedDropdownPosition() {
         const parent = document.querySelector(this.appendTo) || document.body;
-        this._dropdown.style.display = 'none';
         const selectRect: ClientRect = this._select.getBoundingClientRect();
         const boundingRect = parent.getBoundingClientRect();
-        this._dropdown.style.display = '';
         const offsetTop = selectRect.top - boundingRect.top;
         const offsetLeft = selectRect.left - boundingRect.left;
         const topDelta = this._currentPosition === 'bottom' ? selectRect.height : -this._dropdown.clientHeight;
@@ -360,7 +360,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _handleDropdownPosition() {
-        // TODO: maybe use Promise.resolve() to be sure dropdown already exist
+        NgZone.assertNotInAngularZone();
         if (this.appendTo) {
             this._appendDropdown();
         }
