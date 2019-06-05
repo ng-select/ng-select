@@ -120,7 +120,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnDestroy() {
-        this._disposeDocumentResizeListener();
         this._destroy$.next();
         this._destroy$.complete();
         this._destroy$.unsubscribe();
@@ -178,8 +177,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
         this._dropdown.style.opacity = '1';
     }
-
-    private _disposeDocumentResizeListener = () => { };
 
     private _handleScroll() {
         this._zone.runOutsideAngular(() => {
@@ -322,15 +319,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    private _handleDocumentResize() {
-        if (!this.appendTo) {
-            return;
-        }
-        this._disposeDocumentResizeListener = this._renderer.listen('window', 'resize', () => {
-            this._updateAppendedDropdownPosition();
-        });
-    }
-
     private _calculateCurrentPosition(dropdownEl: HTMLElement) {
         if (this.position !== 'auto') {
             return this.position;
@@ -375,7 +363,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         // TODO: maybe use Promise.resolve() to be sure dropdown already exist
         if (this.appendTo) {
             this._appendDropdown();
-            this._handleDocumentResize();
         }
         this.updateDropdownPosition();
     }
