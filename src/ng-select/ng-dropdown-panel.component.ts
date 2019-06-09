@@ -24,7 +24,8 @@ import { auditTime, takeUntil } from 'rxjs/operators';
 
 import { DropdownPosition } from './ng-select.component';
 import { NgOption } from './ng-select.types';
-import { VirtualScrollService } from './virtual-scroll.service';
+import { isDefined } from './value-utils';
+import { PanelDimensions, VirtualScrollService } from './virtual-scroll.service';
 
 const TOP_CSS_CLASS = 'ng-select-top';
 const BOTTOM_CSS_CLASS = 'ng-select-bottom';
@@ -77,6 +78,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     private _contentPanel: HTMLElement;
     private _select: HTMLElement;
     private _scrollToEndFired = false;
+    private _itemsChanged = false;
+    private _lastScrollPosition: number;
 
     constructor(
         private _renderer: Renderer2,
@@ -182,9 +185,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         this._zone.runOutsideAngular(() => {
             fromEvent(this.scrollElementRef.nativeElement, 'scroll')
                 .pipe(takeUntil(this._destroy$), auditTime(0, SCROLL_SCHEDULER))
-                .subscribe(() => {
-                    this._onContentScrolled();
-                });
+                .subscribe((e: Event) => this._onContentScrolled(e.srcElement.scrollTop));
         });
     }
 
@@ -218,6 +219,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     private _onItemsChange(items: NgOption[], firstChange: boolean) {
         this.items = items || [];
         this._scrollToEndFired = false;
+        this._itemsChanged = true;
 
         if (this.virtualScroll) {
             this._updateItemsRange(firstChange);
@@ -246,10 +248,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     private _updateItemsRange(firstChange: boolean) {
         this._zone.runOutsideAngular(() => {
             if (firstChange) {
-                this._measureDimensions().then(() => {
+                this._measureDimensions().then((d: PanelDimensions) => {
                     this._handleDropdownPosition();
                     const index = this.markedItem ? this.markedItem.index : 0;
-                    this._renderItemsRange(index);
+                    this._renderItemsRange(index * d.itemHeight);
                 });
             } else {
                 this._renderItemsRange();
@@ -257,22 +259,31 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
-    private _onContentScrolled() {
+    private _onContentScrolled(scrollTop: number) {
         if (this.virtualScroll) {
-            this._renderItemsRange();
+            this._renderItemsRange(scrollTop);
         }
 
         this._fireScrollToEnd();
     }
 
-    private _renderItemsRange(startIndex = null) {
+    private _updateVirtualHeight(height: number) {
+        if (this._itemsChanged) {
+            this._virtualPadding.style.height = `${height}px`;
+            this._itemsChanged = false;
+        }
+    }
+
+    private _renderItemsRange(scrollTop = null) {
         NgZone.assertNotInAngularZone();
 
-        const scrollPos = this._virtualScrollService.getScrollPosition(startIndex, this._scrollablePanel);
-        const range = this._virtualScrollService.calculateItems(scrollPos, this.items.length, this.bufferAmount);
+        if (scrollTop && this._lastScrollPosition === scrollTop) {
+            return;
+        }
 
-        // TODO: height should change only when items.length has changed
-        this._virtualPadding.style.height = `${range.scrollHeight}px`;
+        scrollTop = scrollTop || this._scrollablePanel.scrollTop;
+        const range = this._virtualScrollService.calculateItems(scrollTop, this.items.length, this.bufferAmount);
+        this._updateVirtualHeight(range.scrollHeight);
         this._contentPanel.style.transform = 'translateY(' + range.topPadding + 'px)';
 
         this._zone.run(() => {
@@ -280,14 +291,16 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
             this.scroll.emit({ start: range.start, end: range.end });
         });
 
-        if (scrollPos && startIndex) {
-            this._scrollablePanel.scrollTop = scrollPos;
+        if (!isDefined(this._lastScrollPosition) && scrollTop) {
+            this._scrollablePanel.scrollTop = scrollTop;
         }
+
+        this._lastScrollPosition = scrollTop;
     }
 
-    private _measureDimensions(): Promise<void> {
+    private _measureDimensions(): Promise<PanelDimensions> {
         if (this._virtualScrollService.dimensions) {
-            return Promise.resolve();
+            return Promise.resolve(this._virtualScrollService.dimensions);
         }
 
         return new Promise(resolve => {
@@ -300,7 +313,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
                 const panelHeight = this._scrollablePanel.clientHeight;
                 this._virtualScrollService.setDimensions(optionHeight, panelHeight);
 
-                resolve();
+                resolve(this._virtualScrollService.dimensions);
             });
         });
     }
@@ -316,9 +329,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
             this._contentPanel;
 
         if (this._scrollablePanel.scrollTop + this._dropdown.clientHeight >= padding.clientHeight) {
-            this.scrollToEnd.emit();
-            this._scrollToEndFired = true;
+            this._emitScrollToEnd();
         }
+    }
+
+    private _emitScrollToEnd() {
+        this.scrollToEnd.emit();
+        this._scrollToEndFired = true;
     }
 
     private _calculateCurrentPosition(dropdownEl: HTMLElement) {

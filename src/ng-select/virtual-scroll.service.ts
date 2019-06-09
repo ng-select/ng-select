@@ -1,5 +1,3 @@
-import { isDefined } from './value-utils';
-
 export interface ItemsRangeResult {
     scrollHeight: number;
     topPadding: number;
@@ -13,7 +11,6 @@ export interface PanelDimensions {
     itemsPerViewport: number;
 }
 
-// @Injectable({ providedIn: 'root' })
 export class VirtualScrollService {
 
     private _dimensions: PanelDimensions;
@@ -31,7 +28,7 @@ export class VirtualScrollService {
         let end = Math.min(itemsLength, Math.ceil(indexByScrollTop) + (d.itemsPerViewport + 1));
 
         const maxStartEnd = end;
-        const maxStart = Math.max(0, maxStartEnd - d.itemsPerViewport - 1);
+        const maxStart = Math.max(0, maxStartEnd - d.itemsPerViewport);
         let start = Math.min(maxStart, Math.floor(indexByScrollTop));
 
         let topPadding = d.itemHeight * Math.ceil(start) - (d.itemHeight * Math.min(start, buffer));
@@ -58,13 +55,5 @@ export class VirtualScrollService {
             panelHeight,
             itemsPerViewport
         };
-    }
-
-    getScrollPosition(index: number, dropdown: HTMLElement) {
-        if (isDefined(index)) {
-            return index * this.dimensions.itemHeight;
-        }
-
-        return dropdown.scrollTop;
     }
 }
