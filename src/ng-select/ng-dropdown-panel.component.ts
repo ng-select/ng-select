@@ -264,7 +264,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
             this._renderItemsRange(scrollTop);
         }
 
-        this._fireScrollToEnd();
+        this._fireScrollToEnd(scrollTop);
     }
 
     private _updateVirtualHeight(height: number) {
@@ -318,8 +318,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
 
-    private _fireScrollToEnd() {
-        // TODO: with virtual scroll fire it inside _renderItemsRange
+    private _fireScrollToEnd(scrollTop: number) {
         if (this._scrollToEndFired) {
             return;
         }
@@ -328,14 +327,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
             this._virtualPadding :
             this._contentPanel;
 
-        if (this._scrollablePanel.scrollTop + this._dropdown.clientHeight >= padding.clientHeight) {
-            this._emitScrollToEnd();
+        if (scrollTop + this._dropdown.clientHeight >= padding.clientHeight) {
+            this._zone.run(() => this.scrollToEnd.emit());
+            this._scrollToEndFired = true;
         }
-    }
-
-    private _emitScrollToEnd() {
-        this.scrollToEnd.emit();
-        this._scrollToEndFired = true;
     }
 
     private _calculateCurrentPosition(dropdownEl: HTMLElement) {
