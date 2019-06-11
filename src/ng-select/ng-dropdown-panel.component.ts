@@ -78,7 +78,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     private _contentPanel: HTMLElement;
     private _select: HTMLElement;
     private _scrollToEndFired = false;
-    private _itemsChanged = false;
+    private _updateScrollHeight = false;
     private _lastScrollPosition: number;
 
     constructor(
@@ -95,6 +95,19 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     get currentPosition(): DropdownPosition {
         return this._currentPosition;
+    }
+
+    private _itemsLength: number;
+
+    private get itemsLength() {
+        return this._itemsLength;
+    }
+
+    private set itemsLength(value: number) {
+        if (value !== this._itemsLength) {
+            this._itemsLength = value;
+            this._onItemsLengthChanged();
+        }
     }
 
     @HostListener('mousedown', ['$event'])
@@ -138,7 +151,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         const index = this.items.indexOf(option);
-        if (index < 0 || index >= this.items.length) {
+        if (index < 0 || index >= this.itemsLength) {
             return;
         }
 
@@ -160,7 +173,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         // TODO: needs fix ?
         const el: Element = this.scrollElementRef.nativeElement;
         const d = this._virtualScrollService.dimensions;
-        el.scrollTop = d.itemHeight * (this.items.length + 1);
+        el.scrollTop = d.itemHeight * (this.itemsLength + 1);
     }
 
     updateDropdownPosition() {
@@ -223,10 +236,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     private _onItemsChange(items: NgOption[], firstChange: boolean) {
         this.items = items || [];
         this._scrollToEndFired = false;
-        this._itemsChanged = true;
+        this.itemsLength = items.length;
 
         if (this.virtualScroll) {
-            // TODO: if top and item length changed need to update dropdown position ?
             this._updateItemsRange(firstChange);
         } else {
             this._updateItems();
@@ -269,10 +281,14 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _updateVirtualHeight(height: number) {
-        if (this._itemsChanged) {
+        if (this._updateScrollHeight) {
             this._virtualPadding.style.height = `${height}px`;
-            this._itemsChanged = false;
+            this._updateScrollHeight = false;
         }
+    }
+
+    private _onItemsLengthChanged() {
+        this._updateScrollHeight = true;
     }
 
     private _renderItemsRange(scrollTop = null) {
@@ -283,7 +299,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         scrollTop = scrollTop || this._scrollablePanel.scrollTop;
-        const range = this._virtualScrollService.calculateItems(scrollTop, this.items.length, this.bufferAmount);
+        const range = this._virtualScrollService.calculateItems(scrollTop, this.itemsLength, this.bufferAmount);
         this._updateVirtualHeight(range.scrollHeight);
         this._contentPanel.style.transform = 'translateY(' + range.topPadding + 'px)';
 
@@ -308,7 +324,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
             Promise.resolve().then(() => {
                 const option = this._dropdown.querySelector(`#${first.htmlId}`);
                 const optionHeight = option.clientHeight;
-                this._virtualPadding.style.height = `${optionHeight * this.items.length}px`;
+                this._virtualPadding.style.height = `${optionHeight * this.itemsLength}px`;
                 const panelHeight = this._scrollablePanel.clientHeight;
                 this._virtualScrollService.setDimensions(optionHeight, panelHeight);
 
@@ -362,13 +378,21 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     private _updateAppendedDropdownPosition() {
         const parent = document.querySelector(this.appendTo) || document.body;
-        const selectRect: ClientRect = this._select.getBoundingClientRect();
+        const selectRect = this._select.getBoundingClientRect();
         const boundingRect = parent.getBoundingClientRect();
-        const offsetTop = selectRect.top - boundingRect.top;
         const offsetLeft = selectRect.left - boundingRect.left;
-        const topDelta = this._currentPosition === 'bottom' ? selectRect.height : -this._dropdown.clientHeight;
-        this._dropdown.style.top = offsetTop + topDelta + 'px';
-        this._dropdown.style.bottom = 'auto';
+        const delta = selectRect.height;
+
+        if (this._currentPosition === 'top') {
+            const offsetBottom = boundingRect.bottom - selectRect.bottom;
+            this._dropdown.style.bottom = offsetBottom + delta + 'px';
+            this._dropdown.style.top = 'auto';
+        } else if (this._currentPosition === 'bottom') {
+            const offsetTop = selectRect.top - boundingRect.top;
+            this._dropdown.style.top = offsetTop + delta + 'px';
+            this._dropdown.style.bottom = 'auto';
+        }
+
         this._dropdown.style.left = offsetLeft + 'px';
         this._dropdown.style.width = selectRect.width + 'px';
         this._dropdown.style.minWidth = selectRect.width + 'px';
