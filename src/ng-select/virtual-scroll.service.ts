@@ -1,3 +1,5 @@
+import { isDefined } from './value-utils';
+
 export interface ItemsRangeResult {
     scrollHeight: number;
     topPadding: number;
@@ -55,5 +57,17 @@ export class VirtualScrollService {
             panelHeight,
             itemsPerViewport
         };
+    }
+
+    getScrollTo(itemTop: number, itemHeight: number, lastScroll: number) {
+        const itemBottom = itemTop + itemHeight;
+        const top = isDefined(lastScroll) ? lastScroll : itemTop;
+        const bottom = top + this.dimensions.panelHeight;
+
+        if (itemBottom > bottom) {
+            return top + itemBottom - bottom;
+        } else if (itemTop <= top) {
+            return itemTop;
+        }
     }
 }

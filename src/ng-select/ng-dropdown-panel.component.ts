@@ -141,23 +141,17 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
-        const d = this._virtualScrollService.dimensions;
+        let scrollTo;
         if (this.virtualScroll) {
-            // TODO: use same logic as in else
-            const buffer = Math.floor(d.panelHeight / d.itemHeight) - 1;
-            this._scrollablePanel.scrollTop = (index * d.itemHeight) - (d.itemHeight * Math.min(index, buffer));
+            const itemHeight = this._virtualScrollService.dimensions.itemHeight;
+            scrollTo = this._virtualScrollService.getScrollTo(index * itemHeight, itemHeight, this._lastScrollPosition);
         } else {
             const item: HTMLElement = this._dropdown.querySelector(`#${option.htmlId}`);
-            const itemTop = item.offsetTop;
-            const itemBottom = itemTop + item.clientHeight;
-            const top = isDefined(this._lastScrollPosition) ? this._lastScrollPosition : itemTop;
-            const bottom = top + d.panelHeight;
+            scrollTo = this._virtualScrollService.getScrollTo(item.offsetTop, item.clientHeight, this._lastScrollPosition);
+        }
 
-            if (itemBottom > bottom) {
-                this._scrollablePanel.scrollTop = top + itemBottom - bottom;
-            } else if (itemTop <= top) {
-                this._scrollablePanel.scrollTop = itemTop;
-            }
+        if (isDefined(scrollTo)) {
+            this._scrollablePanel.scrollTop = scrollTo;
         }
     }
 
