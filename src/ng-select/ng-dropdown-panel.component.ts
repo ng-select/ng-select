@@ -226,6 +226,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         this._itemsChanged = true;
 
         if (this.virtualScroll) {
+            // TODO: if top and item length changed need to update dropdown position ?
             this._updateItemsRange(firstChange);
         } else {
             this._updateItems();
@@ -317,7 +318,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _fireScrollToEnd(scrollTop: number) {
-        if (this._scrollToEndFired) {
+        if (this._scrollToEndFired || scrollTop === 0) {
             return;
         }
 
