@@ -113,6 +113,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         this._contentPanel = this.contentElementRef.nativeElement;
         this._handleScroll();
         this._handleOutsideClick();
+        this._appendDropdown();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -238,7 +239,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
             Promise.resolve().then(() => {
                 const panelHeight = this._scrollablePanel.clientHeight;
                 this._virtualScrollService.setDimensions(0, panelHeight);
-                this._handleDropdownPosition();
+                this.updateDropdownPosition(); // TODO: only on first change?
                 this.scrollTo(this.markedItem);
             });
         });
@@ -248,9 +249,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         this._zone.runOutsideAngular(() => {
             if (firstChange) {
                 this._measureDimensions().then((d: PanelDimensions) => {
-                    this._handleDropdownPosition();
                     const index = this.markedItem ? this.markedItem.index : 0;
                     this._renderItemsRange(index * d.itemHeight);
+                    this.updateDropdownPosition();
                 });
             } else {
                 this._renderItemsRange();
@@ -347,6 +348,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _appendDropdown() {
+        if (!this.appendTo) {
+            return;
+        }
+
         const parent = document.querySelector(this.appendTo);
         if (!parent) {
             throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`);
@@ -366,13 +371,5 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         this._dropdown.style.left = offsetLeft + 'px';
         this._dropdown.style.width = selectRect.width + 'px';
         this._dropdown.style.minWidth = selectRect.width + 'px';
-    }
-
-    private _handleDropdownPosition() {
-        NgZone.assertNotInAngularZone();
-        if (this.appendTo) {
-            this._appendDropdown();
-        }
-        this.updateDropdownPosition();
     }
 }
