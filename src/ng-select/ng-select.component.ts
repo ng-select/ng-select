@@ -345,6 +345,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.typeahead.next(null);
         }
         this.clearEvent.emit();
+
+        this._onSelectionChanged();
     }
 
     clearModel() {
@@ -421,6 +423,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         } else {
             this.select(item);
         }
+
+        this._onSelectionChanged();
     }
 
     select(item: NgOption) {
@@ -554,12 +558,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     detectChanges() {
         if (!(<any>this._cd).destroyed) {
             this._cd.detectChanges();
-        }
-    }
-
-    updateDropdownPosition() {
-        if (this.dropdownPanel) {
-            this.dropdownPanel.updateDropdownPosition();
         }
     }
 
@@ -743,6 +741,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
         this.dropdownPanel.scrollToTag();
+    }
+
+    private _onSelectionChanged() {
+        if (this.isOpen && this.multiple && this.appendTo) {
+            this._cd.detectChanges(); // make sure items are rendered
+            this.dropdownPanel.adjustDropdownPosition();
+        }
     }
 
     private _handleTab($event: KeyboardEvent) {
