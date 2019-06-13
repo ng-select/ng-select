@@ -80,7 +80,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     private _parent: HTMLElement;
     private _scrollToEndFired = false;
     private _updateScrollHeight = false;
-    private _lastScrollPosition: number;
+    private _lastScrollPosition = 0;
 
     constructor(
         private _renderer: Renderer2,
@@ -318,8 +318,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
             this.scroll.emit({ start: range.start, end: range.end });
         });
 
-        if (!isDefined(this._lastScrollPosition) && scrollTop) {
+        if (isDefined(scrollTop) && this._lastScrollPosition === 0) {
             this._scrollablePanel.scrollTop = scrollTop;
+            this._lastScrollPosition = scrollTop;
         }
     }
 

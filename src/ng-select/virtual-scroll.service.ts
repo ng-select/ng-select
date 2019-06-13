@@ -61,7 +61,7 @@ export class VirtualScrollService {
 
     getScrollTo(itemTop: number, itemHeight: number, lastScroll: number) {
         const itemBottom = itemTop + itemHeight;
-        const top = isDefined(lastScroll) ? lastScroll : itemTop;
+        const top = isDefined(lastScroll) ? lastScroll : itemTop; // TODO: needs fix, lastScroll always defined
         const bottom = top + this.dimensions.panelHeight;
 
         if (itemBottom > bottom) {

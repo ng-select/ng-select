@@ -311,7 +311,12 @@ export class ItemsList {
     }
 
     private get _lastMarkedIndex() {
-        return Math.max(this.markedIndex, this._filteredItems.indexOf(this.lastSelectedItem));
+        const selectedIndex = this._filteredItems.indexOf(this.lastSelectedItem);
+        if (selectedIndex === -1) {
+            this._markedIndex = selectedIndex;
+        }
+
+        return Math.max(this.markedIndex, selectedIndex);
     }
 
     private _groupBy(items: NgOption[], prop: string | Function): OptionGroups {
