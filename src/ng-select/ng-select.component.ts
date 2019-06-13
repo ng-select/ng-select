@@ -419,6 +419,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         } else {
             this.select(item);
         }
+        this.filterInput.nativeElement.value = '';
     }
 
     select(item: NgOption) {
