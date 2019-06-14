@@ -12,7 +12,22 @@ module.exports = {
         filename: '[name].js'
     },
     module: {
-        rules: [{ test: /\.ts$/, loader: 'ts-loader' }]
+        rules: [
+            { test: /\.ts$/, loader: 'ts-loader' },
+            // Temporary Fix for issue: https://github.com/valor-software/ngx-bootstrap/issues/964
+            // for 'ReferenceError: MouseEvent is not defined'
+            {
+                test: /\.(ts|js)$/,
+                loader: 'regexp-replace-loader',
+                query: {
+                    match: {
+                        pattern: '\\[(Mouse|Keyboard)Event\\]',
+                        flags: 'g'
+                    },
+                    replaceWith: '[]'
+                }
+            }
+        ]
     },
     plugins: [
         // Temporary Fix for issue: https://github.com/angular/angular/issues/11580
