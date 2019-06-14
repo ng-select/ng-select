@@ -3406,7 +3406,7 @@ function createEvent(target = {}) {
     template: ``
 })
 class NgSelectTestCmp {
-    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    @ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
     multiple = false;
     clearOnBackspace = false;
     disabled = false;
@@ -3493,14 +3493,14 @@ class NgSelectTestCmp {
     encapsulation: ViewEncapsulation.Native,
 })
 class EncapsulatedTestCmp extends NgSelectTestCmp {
-    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    @ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
 }
 
 @Component({
     template: ``,
 })
 class NgSelectGroupingTestCmp {
-    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    @ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
     selectedAccountName = 'Adam';
     selectedAccount = null;
     groupByFn = (item) => item.child.name;
