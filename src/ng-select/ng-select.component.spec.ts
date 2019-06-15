@@ -5,11 +5,10 @@ import { ConsoleService } from './console.service';
 import { FormsModule } from '@angular/forms';
 import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
 import { KeyCode, NgOption } from './ng-select.types';
-import { MockConsole, MockNgWindow, MockNgZone } from '../testing/mocks';
+import { MockConsole, MockNgZone } from '../testing/mocks';
 import { NgSelectComponent } from './ng-select.component';
 import { NgSelectModule } from './ng-select.module';
 import { Subject } from 'rxjs';
-import { WindowService } from './window.service';
 
 describe('NgSelectComponent', () => {
 
@@ -984,7 +983,7 @@ describe('NgSelectComponent', () => {
             fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
             tickAndDetectChanges(fixture);
             options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
-            expect(options.length).toBe(6);
+            expect(options.length).toBe(8);
             expect(options[0].innerText).toBe('a');
         }));
 
@@ -1021,17 +1020,15 @@ describe('NgSelectComponent', () => {
             const cmp = fixture.componentInstance;
             const el: HTMLElement = fixture.debugElement.nativeElement;
 
-            cmp.select.open();
-            tickAndDetectChanges(fixture);
-
             cmp.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
+            cmp.select.open();
             tickAndDetectChanges(fixture);
 
             cmp.select.dropdownPanel.scrollTo(cmp.select.itemsList.items[15]);
             tickAndDetectChanges(fixture);
 
             const panelItems = el.querySelector('.ng-dropdown-panel-items');
-            expect(panelItems.scrollTop).toBe(270);
+            expect(panelItems.scrollTop).toBe(48);
         }));
 
         it('should close on option select by default', fakeAsync(() => {
@@ -1117,7 +1114,7 @@ describe('NgSelectComponent', () => {
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
         }));
 
-        it('should not append dropdown, nor update its position when it is destroyed', async(() => {
+        it('should remove appended dropdown when it is destroyed', async(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `
@@ -1132,8 +1129,6 @@ describe('NgSelectComponent', () => {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
-                expect(selectClasses.contains('ng-select-bottom')).toBeFalsy();
                 const dropdown = <HTMLElement>document.querySelector('.ng-dropdown-panel');
                 expect(dropdown).toBeNull();
             });
@@ -3373,7 +3368,6 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
         providers: [
             { provide: ErrorHandler, useClass: TestsErrorHandler },
             { provide: NgZone, useFactory: () => new MockNgZone() },
-            { provide: WindowService, useFactory: () => new MockNgWindow() },
             { provide: ConsoleService, useFactory: () => new MockConsole() }
         ]
     })

@@ -1,5 +1,3 @@
-import { isDefined } from './value-utils';
-
 export interface ItemsRangeResult {
     scrollHeight: number;
     topPadding: number;
@@ -13,7 +11,7 @@ export interface PanelDimensions {
     itemsPerViewport: number;
 }
 
-export class VirtualScrollService {
+export class NgDropdownPanelService {
 
     private _dimensions: PanelDimensions;
 
@@ -61,7 +59,7 @@ export class VirtualScrollService {
 
     getScrollTo(itemTop: number, itemHeight: number, lastScroll: number) {
         const itemBottom = itemTop + itemHeight;
-        const top = isDefined(lastScroll) ? lastScroll : itemTop; // TODO: needs fix, lastScroll always defined
+        const top = lastScroll;
         const bottom = top + this.dimensions.panelHeight;
 
         if (itemBottom > bottom) {
@@ -69,5 +67,7 @@ export class VirtualScrollService {
         } else if (itemTop <= top) {
             return itemTop;
         }
+
+        return null;
     }
 }
