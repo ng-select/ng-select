@@ -987,6 +987,36 @@ describe('NgSelectComponent', () => {
             expect(options[0].innerText).toBe('a');
         }));
 
+        it('should scroll to selected item on first open when virtual scroll is enabled', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [virtualScroll]="true"
+                            [appendTo]="body"
+                            [(ngModel)]="city">
+                </ng-select>`);
+
+            const select = fixture.componentInstance.select;
+            const cmp = fixture.componentInstance;
+            cmp.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
+            cmp['city'] = cmp.cities[10];
+            tickAndDetectChanges(fixture);
+
+            select.open();
+            tickAndDetectChanges(fixture);
+            fixture.detectChanges();
+
+            const buffer = 4;
+            const itemHeight = 18;
+            const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+            const marked = fixture.debugElement.nativeElement.querySelector('.ng-option-marked');
+
+            expect(options.length).toBe(22);
+            expect(marked.innerText).toBe('k');
+            expect(marked.offsetTop).toBe(buffer * itemHeight);
+        }));
+
         it('should scroll to item and do not change scroll position when scrolled to visible item', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
