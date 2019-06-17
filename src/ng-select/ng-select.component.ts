@@ -94,6 +94,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() hideSelected = false;
     @Input() selectOnTab = false;
     @Input() openOnEnter: boolean;
+    @Input() openOnArrowDown: boolean;
     @Input() maxSelectedItems: number;
     @Input() groupBy: string | Function;
     @Input() groupValue: GroupValueFn;
@@ -144,7 +145,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Output('change') changeEvent = new EventEmitter();
     @Output('open') openEvent = new EventEmitter();
     @Output('close') closeEvent = new EventEmitter();
-    @Output('search') searchEvent = new EventEmitter<{term: string, items: any[]}>();
+    @Output('search') searchEvent = new EventEmitter<{ term: string, items: any[] }>();
     @Output('clear') clearEvent = new EventEmitter();
     @Output('add') addEvent = new EventEmitter();
     @Output('remove') removeEvent = new EventEmitter();
@@ -794,7 +795,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.itemsList.markNextItem();
             this._scrollToMarked();
         }
-        this.open();
+        if (this.openOnArrowDown) {
+            this.open();
+        }
         $event.preventDefault();
     }
 
@@ -847,5 +850,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             ? this.virtualScroll
             : isDefined(config.disableVirtualScroll) ? !config.disableVirtualScroll : false;
         this.openOnEnter = isDefined(this.openOnEnter) ? this.openOnEnter : config.openOnEnter;
+        this.openOnArrowDown = isDefined(this.openOnArrowDown) ? this.openOnArrowDown : config.openOnArrowDown;
     }
 }

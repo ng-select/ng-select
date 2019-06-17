@@ -10,4 +10,5 @@ export class NgSelectConfig {
     clearAllText = 'Clear all';
     disableVirtualScroll = true;
     openOnEnter = true;
+    openOnArrowDown = true;
 }
