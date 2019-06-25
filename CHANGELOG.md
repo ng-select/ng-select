@@ -12,12 +12,12 @@ All notable changes to this project will be documented in this file. See [standa
 
 * dropdown panel rework, closes [#899](https://github.com/ng-select/ng-select/issues/899),
 [#890](https://github.com/ng-select/ng-select/issues/890),
-[#1018](https://github.com/ng-select/ng-select/issues/1018)
-[#1023](https://github.com/ng-select/ng-select/issues/1023)
-[#1144](https://github.com/ng-select/ng-select/issues/1144)
-[#1095](https://github.com/ng-select/ng-select/issues/1095)
-[#1122](https://github.com/ng-select/ng-select/issues/1122)
-[#1163](https://github.com/ng-select/ng-select/issues/1163)
+[#1018](https://github.com/ng-select/ng-select/issues/1018),
+[#1023](https://github.com/ng-select/ng-select/issues/1023),
+[#1144](https://github.com/ng-select/ng-select/issues/1144),
+[#1095](https://github.com/ng-select/ng-select/issues/1095),
+[#1122](https://github.com/ng-select/ng-select/issues/1122),
+[#1163](https://github.com/ng-select/ng-select/issues/1163),
 [#955](https://github.com/ng-select/ng-select/issues/955)
 
 ### Features
