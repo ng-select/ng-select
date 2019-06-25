@@ -21,11 +21,11 @@ import {
 } from '@angular/core';
 import { animationFrameScheduler, asapScheduler, fromEvent, merge, Subject } from 'rxjs';
 import { auditTime, takeUntil } from 'rxjs/operators';
+import { NgDropdownPanelService, PanelDimensions } from './ng-dropdown-panel.service';
 
 import { DropdownPosition } from './ng-select.component';
 import { NgOption } from './ng-select.types';
 import { isDefined } from './value-utils';
-import { PanelDimensions, NgDropdownPanelService } from './ng-dropdown-panel.service';
 
 const TOP_CSS_CLASS = 'ng-select-top';
 const BOTTOM_CSS_CLASS = 'ng-select-bottom';
@@ -172,10 +172,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     scrollToTag() {
-        // TODO: needs fix ?
-        const el: Element = this.scrollElementRef.nativeElement;
-        const d = this._panelService.dimensions;
-        el.scrollTop = d.itemHeight * (this.itemsLength + 1);
+        const panel = this._scrollablePanel;
+        panel.scrollTop = panel.scrollHeight - panel.clientHeight;
     }
 
     adjustDropdownPosition() {
@@ -307,8 +305,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _renderItemsRange(scrollTop = null) {
-        NgZone.assertNotInAngularZone();
-
         if (scrollTop && this._lastScrollPosition === scrollTop) {
             return;
         }
@@ -316,7 +312,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         scrollTop = scrollTop || this._scrollablePanel.scrollTop;
         const range = this._panelService.calculateItems(scrollTop, this.itemsLength, this.bufferAmount);
         this._updateVirtualHeight(range.scrollHeight);
-        this._contentPanel.style.transform = 'translateY(' + range.topPadding + 'px)';
+        this._contentPanel.style.transform = `translateY(${range.topPadding}px)`;
 
         this._zone.run(() => {
             this.update.emit(this.items.slice(range.start, range.end));
@@ -334,18 +330,17 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
             return Promise.resolve(this._panelService.dimensions);
         }
 
-        return new Promise(resolve => {
-            const [first] = this.items;
-            this.update.emit([first]);
-            Promise.resolve().then(() => {
-                const option = this._dropdown.querySelector(`#${first.htmlId}`);
-                const optionHeight = option.clientHeight;
-                this._virtualPadding.style.height = `${optionHeight * this.itemsLength}px`;
-                const panelHeight = this._scrollablePanel.clientHeight;
-                this._panelService.setDimensions(optionHeight, panelHeight);
+        const [first] = this.items;
+        this.update.emit([first]);
 
-                resolve(this._panelService.dimensions);
-            });
+        return Promise.resolve().then(() => {
+            const option = this._dropdown.querySelector(`#${first.htmlId}`);
+            const optionHeight = option.clientHeight;
+            this._virtualPadding.style.height = `${optionHeight * this.itemsLength}px`;
+            const panelHeight = this._scrollablePanel.clientHeight;
+            this._panelService.setDimensions(optionHeight, panelHeight);
+
+            return this._panelService.dimensions;
         });
     }
 
