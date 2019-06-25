@@ -10,15 +10,15 @@ All notable changes to this project will be documented in this file. See [standa
 
 * fix: don't fire scroll to end when scrollTop = 0 ([c2b094e](https://github.com/ng-select/ng-select/commit/c2b094e)), fixes [#1018](https://github.com/ng-select/ng-select/issues/1018)
 
-* closes [#899](https://github.com/ng-select/ng-select/issues/899)
-* closes [#890](https://github.com/ng-select/ng-select/issues/890)
-* closes [#1018](https://github.com/ng-select/ng-select/issues/1018)
-* closes [#1023](https://github.com/ng-select/ng-select/issues/1023)
-* closes [#1144](https://github.com/ng-select/ng-select/issues/1144)
-* closes [#1095](https://github.com/ng-select/ng-select/issues/1095)
-* closes [#1122](https://github.com/ng-select/ng-select/issues/1122)
-* closes [#1163](https://github.com/ng-select/ng-select/issues/1163)
-* closes [#955](https://github.com/ng-select/ng-select/issues/955)
+* dropdown panel rework, closes [#899](https://github.com/ng-select/ng-select/issues/899),
+[#890](https://github.com/ng-select/ng-select/issues/890),
+[#1018](https://github.com/ng-select/ng-select/issues/1018)
+[#1023](https://github.com/ng-select/ng-select/issues/1023)
+[#1144](https://github.com/ng-select/ng-select/issues/1144)
+[#1095](https://github.com/ng-select/ng-select/issues/1095)
+[#1122](https://github.com/ng-select/ng-select/issues/1122)
+[#1163](https://github.com/ng-select/ng-select/issues/1163)
+[#955](https://github.com/ng-select/ng-select/issues/955)
 
 ### Features
 
