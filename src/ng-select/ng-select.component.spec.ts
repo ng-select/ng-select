@@ -5,13 +5,12 @@ import { ConsoleService } from './console.service';
 import { FormsModule } from '@angular/forms';
 import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
 import { KeyCode, NgOption } from './ng-select.types';
-import { MockConsole, MockNgWindow, MockNgZone } from '../testing/mocks';
+import { MockConsole, MockNgZone } from '../testing/mocks';
 import { NgSelectComponent } from './ng-select.component';
 import { NgSelectModule } from './ng-select.module';
 import { Subject } from 'rxjs';
-import { WindowService } from './window.service';
 
-describe('NgSelectComponent', function () {
+describe('NgSelectComponent', () => {
 
     describe('Data source', () => {
         it('should set items from primitive numbers array', fakeAsync(() => {
@@ -556,7 +555,7 @@ describe('NgSelectComponent', function () {
             })]);
         }));
 
-        it('should bind bind to nested value property', fakeAsync(() => {
+        it('should bind to nested value property', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="countries"
@@ -971,6 +970,9 @@ describe('NgSelectComponent', function () {
             const select = fixture.componentInstance.select;
             select.open();
 
+            tickAndDetectChanges(fixture);
+            fixture.detectChanges();
+
             expect(fixture.componentInstance.select.dropdownPanel.items.length).toBe(3);
             let options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
             expect(options.length).toBe(3);
@@ -981,8 +983,38 @@ describe('NgSelectComponent', function () {
             fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
             tickAndDetectChanges(fixture);
             options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
-            expect(options.length).toBe(6);
+            expect(options.length).toBe(8);
             expect(options[0].innerText).toBe('a');
+        }));
+
+        it('should scroll to selected item on first open when virtual scroll is enabled', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [virtualScroll]="true"
+                            [appendTo]="body"
+                            [(ngModel)]="city">
+                </ng-select>`);
+
+            const select = fixture.componentInstance.select;
+            const cmp = fixture.componentInstance;
+            cmp.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
+            cmp['city'] = cmp.cities[10];
+            tickAndDetectChanges(fixture);
+
+            select.open();
+            tickAndDetectChanges(fixture);
+            fixture.detectChanges();
+
+            const buffer = 4;
+            const itemHeight = 18;
+            const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+            const marked = fixture.debugElement.nativeElement.querySelector('.ng-option-marked');
+
+            expect(options.length).toBe(22);
+            expect(marked.innerText).toBe('k');
+            expect(marked.offsetTop).toBe(buffer * itemHeight);
         }));
 
         it('should scroll to item and do not change scroll position when scrolled to visible item', fakeAsync(() => {
@@ -1001,14 +1033,14 @@ describe('NgSelectComponent', function () {
             cmp.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
             tickAndDetectChanges(fixture);
 
-            cmp.select.dropdownPanel.scrollInto(cmp.select.itemsList.items[1]);
+            cmp.select.dropdownPanel.scrollTo(cmp.select.itemsList.items[1]);
             tickAndDetectChanges(fixture);
 
             const panelItems = el.querySelector('.ng-dropdown-panel-items');
             expect(panelItems.scrollTop).toBe(0);
         }));
 
-        it('should scroll to item and change scroll position when scrolled to not visible visible item', fakeAsync(() => {
+        it('should scroll to item and change scroll position when scrolled to not visible item', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -1018,20 +1050,18 @@ describe('NgSelectComponent', function () {
             const cmp = fixture.componentInstance;
             const el: HTMLElement = fixture.debugElement.nativeElement;
 
+            cmp.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
             cmp.select.open();
             tickAndDetectChanges(fixture);
 
-            cmp.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
-            tickAndDetectChanges(fixture);
-
-            cmp.select.dropdownPanel.scrollInto(cmp.select.itemsList.items[15]);
+            cmp.select.dropdownPanel.scrollTo(cmp.select.itemsList.items[15]);
             tickAndDetectChanges(fixture);
 
             const panelItems = el.querySelector('.ng-dropdown-panel-items');
-            expect(panelItems.scrollTop).toBe(54);
+            expect(panelItems.scrollTop).toBe(48);
         }));
 
-        it('should close on option select by default', async(() => {
+        it('should close on option select by default', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -1082,7 +1112,7 @@ describe('NgSelectComponent', function () {
             })
         }));
 
-        it('should not close when isOpen is true', async(() => {
+        it('should not close when isOpen is true', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -1114,7 +1144,7 @@ describe('NgSelectComponent', function () {
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
         }));
 
-        it('should not append dropdown, nor update its position when it is destroyed', async(() => {
+        it('should remove appended dropdown when it is destroyed', async(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `
@@ -1129,8 +1159,6 @@ describe('NgSelectComponent', function () {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
-                expect(selectClasses.contains('ng-select-bottom')).toBeFalsy();
                 const dropdown = <HTMLElement>document.querySelector('.ng-dropdown-panel');
                 expect(dropdown).toBeNull();
             });
@@ -1211,13 +1239,13 @@ describe('NgSelectComponent', function () {
         });
 
         describe('arrows', () => {
-            it('should select next value on arrow down', () => {
+            it('should select next value on arrow down', fakeAsync(() => {
                 selectOption(fixture, KeyCode.ArrowDown, 1);
                 const result = [jasmine.objectContaining({
                     value: fixture.componentInstance.cities[1]
                 })];
                 expect(select.selectedItems).toEqual(result);
-            });
+            }));
 
             it('should stop marked loop if all items disabled', fakeAsync(() => {
                 fixture.componentInstance.cities[0].disabled = true;
@@ -1262,13 +1290,13 @@ describe('NgSelectComponent', function () {
                 expect(select.selectedItems).toEqual(result);
             }));
 
-            it('should select last value on arrow up', () => {
+            it('should select last value on arrow up', fakeAsync(() => {
                 selectOption(fixture, KeyCode.ArrowUp, 1);
                 const result = [jasmine.objectContaining({
                     value: fixture.componentInstance.cities[2]
                 })];
                 expect(select.selectedItems).toEqual(result);
-            });
+            }));
         });
 
         describe('esc', () => {
@@ -1856,13 +1884,13 @@ describe('NgSelectComponent', function () {
             }));
         }));
 
-        it('should not toggle item on enter when dropdown is closed', () => {
+        it('should not toggle item on enter when dropdown is closed', fakeAsync(() => {
             selectOption(fixture, KeyCode.ArrowDown, 0);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Esc);
             expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(1);
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
             expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(1);
-        });
+        }));
 
         describe('max selected items', () => {
             let arrowIcon: DebugElement = null;
@@ -3370,7 +3398,6 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
         providers: [
             { provide: ErrorHandler, useClass: TestsErrorHandler },
             { provide: NgZone, useFactory: () => new MockNgZone() },
-            { provide: WindowService, useFactory: () => new MockNgWindow() },
             { provide: ConsoleService, useFactory: () => new MockConsole() }
         ]
     })

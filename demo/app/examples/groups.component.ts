@@ -14,7 +14,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
             bindLabel="name"
             bindValue="name"
             groupBy="country"
-            [multiple]="true"
             [(ngModel)]="selectedAccount">
             <ng-template ng-optgroup-tmp let-item="item">
                 {{item.country || 'Unnamed group'}}
@@ -149,7 +148,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
     `
 })
 export class SelectGroupsComponent {
-    selectedAccount = ['Samantha'];
+    selectedAccount = 'Michael';
     accounts = [
         { name: 'Jill', email: 'jill@email.com', age: 15, country: undefined, child: { state: 'Active' } },
         { name: 'Henry', email: 'henry@email.com', age: 10, country: undefined, child: { state: 'Active' } },
