@@ -747,7 +747,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (this.isOpen && this.multiple && this.appendTo) {
             // Make sure items are rendered.
             this._cd.detectChanges();
-            this.dropdownPanel.adjustDropdownPosition();
+            this.dropdownPanel.adjustPosition();
         }
     }
 

@@ -176,14 +176,14 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         panel.scrollTop = panel.scrollHeight - panel.clientHeight;
     }
 
-    adjustDropdownPosition() {
+    adjustPosition() {
         if (this._currentPosition === 'top') {
             return;
         }
 
         const parent = this._parent.getBoundingClientRect();
         const select = this._select.getBoundingClientRect();
-        this._setDropdownOffset(parent, select);
+        this._setOffset(parent, select);
     }
 
     private _handleDropdownPosition() {
@@ -201,7 +201,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (this.appendTo) {
-            this._updateDropdownPosition();
+            this._updatePosition();
         }
 
         this._dropdown.style.opacity = '1';
@@ -387,19 +387,19 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         this._parent.appendChild(this._dropdown);
     }
 
-    private _updateDropdownPosition() {
+    private _updatePosition() {
         const select = this._select.getBoundingClientRect();
         const parent = this._parent.getBoundingClientRect();
         const offsetLeft = select.left - parent.left;
 
-        this._setDropdownOffset(parent, select);
+        this._setOffset(parent, select);
 
         this._dropdown.style.left = offsetLeft + 'px';
         this._dropdown.style.width = select.width + 'px';
         this._dropdown.style.minWidth = select.width + 'px';
     }
 
-    private _setDropdownOffset(parent: ClientRect, select: ClientRect) {
+    private _setOffset(parent: ClientRect, select: ClientRect) {
         const delta = select.height;
 
         if (this._currentPosition === 'top') {

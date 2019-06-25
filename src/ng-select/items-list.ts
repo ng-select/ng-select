@@ -201,7 +201,8 @@ export class ItemsList {
         if (this._filteredItems.length === 0) {
             return;
         }
-        const lastMarkedIndex = this._ngSelect.hideSelected ? -1 : this._lastMarkedIndex;
+
+        const lastMarkedIndex = this._getLastMarkedIndex();
         if (lastMarkedIndex > -1) {
             this._markedIndex = lastMarkedIndex;
         } else {
@@ -310,10 +311,14 @@ export class ItemsList {
         }
     }
 
-    private get _lastMarkedIndex() {
+    private _getLastMarkedIndex() {
+        if (this._ngSelect.hideSelected) {
+            return -1;
+        }
+
         const selectedIndex = this._filteredItems.indexOf(this.lastSelectedItem);
-        if (selectedIndex === -1) {
-            this._markedIndex = selectedIndex;
+        if (this.lastSelectedItem && selectedIndex < 0) {
+            return -1;
         }
 
         return Math.max(this.markedIndex, selectedIndex);
