@@ -6,6 +6,25 @@ All notable changes to this project will be documented in this file. See [standa
 ## [2.20.1](https://github.com/ng-select/ng-select/compare/v2.20.0...v2.20.1) (2019-06-25)
 
 
+### Bug Fixes
+
+* fix: don't fire scroll to end when scrollTop = 0 ([c2b094e](https://github.com/ng-select/ng-select/commit/c2b094e)), fixes [#1018](https://github.com/ng-select/ng-select/issues/1018)
+
+* closes [#899](https://github.com/ng-select/ng-select/issues/899)
+* closes [#890](https://github.com/ng-select/ng-select/issues/890)
+* closes [#1018](https://github.com/ng-select/ng-select/issues/1018)
+* closes [#1023](https://github.com/ng-select/ng-select/issues/1023)
+* closes [#1144](https://github.com/ng-select/ng-select/issues/1144)
+* closes [#1095](https://github.com/ng-select/ng-select/issues/1095)
+* closes [#1122](https://github.com/ng-select/ng-select/issues/1122)
+* closes [#1163](https://github.com/ng-select/ng-select/issues/1163)
+* closes [#955](https://github.com/ng-select/ng-select/issues/955)
+
+### Features
+
+* feat: adjust dropdown position on selection when multiple and appendTo ([c2b094e](https://github.com/ng-select/ng-select/commit/c2b094e)), 
+closes [#984](https://github.com/ng-select/ng-select/issues/984)
+
 
 <a name="2.20.0"></a>
 # [2.20.0](https://github.com/ng-select/ng-select/compare/v2.19.0...v2.20.0) (2019-05-18)
