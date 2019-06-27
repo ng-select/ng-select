@@ -256,7 +256,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     private _updateItems(firstChange: boolean) {
         this.update.emit(this.items);
-
         if (firstChange === false) {
             return;
         }
@@ -273,15 +272,14 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     private _updateItemsRange(firstChange: boolean) {
         this._zone.runOutsideAngular(() => {
-            if (firstChange) {
-                this._measureDimensions().then((d: PanelDimensions) => {
-                    const index = this.markedItem ? this.markedItem.index : 0;
-                    this._renderItemsRange(index * d.itemHeight);
+            this._measureDimensions().then(() => {
+                if (firstChange) {
+                    this._renderItemsRange(this._startOffset);
                     this._handleDropdownPosition();
-                });
-            } else {
-                this._renderItemsRange();
-            }
+                } else {
+                    this._renderItemsRange();
+                }
+            });
         });
     }
 
@@ -302,6 +300,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     private _onItemsLengthChanged() {
         this._updateScrollHeight = true;
+    }
+
+    private get _startOffset() {
+        if (this.markedItem) {
+            return this.markedItem.index * this._panelService.dimensions.itemHeight;
+        }
+        return 0;
     }
 
     private _renderItemsRange(scrollTop = null) {
@@ -326,7 +331,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _measureDimensions(): Promise<PanelDimensions> {
-        if (this._panelService.dimensions) {
+        if (this._panelService.dimensions.itemHeight > 0 || this.itemsLength === 0) {
             return Promise.resolve(this._panelService.dimensions);
         }
 

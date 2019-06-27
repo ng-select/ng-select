@@ -982,9 +982,30 @@ describe('NgSelectComponent', () => {
 
             fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
             tickAndDetectChanges(fixture);
+            fixture.detectChanges();
             options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
             expect(options.length).toBe(8);
             expect(options[0].innerText).toBe('a');
+        }));
+
+        it('should open empty dropdown panel with virtual scroll', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="[]"
+                            bindLabel="name"
+                            [virtualScroll]="true"
+                            appendTo="body"
+                            [(ngModel)]="city">
+                </ng-select>`);
+
+            const select = fixture.componentInstance.select;
+            select.open();
+            tickAndDetectChanges(fixture);
+            fixture.detectChanges();
+
+            const options = document.querySelectorAll('.ng-option');
+            expect(options.length).toBe(1);
+            expect((<HTMLElement>options[0]).innerText).toBe('No items found');
         }));
 
         it('should scroll to selected item on first open when virtual scroll is enabled', fakeAsync(() => {
