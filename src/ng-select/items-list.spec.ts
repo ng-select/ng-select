@@ -1,7 +1,7 @@
-import { NgSelectComponent } from './ng-select.component';
-import { ItemsList } from './items-list';
-import { DefaultSelectionModel } from './selection-model';
 import { NgSelectConfig } from './config.service';
+import { ItemsList } from './items-list';
+import { NgSelectComponent } from './ng-select.component';
+import { DefaultSelectionModel } from './selection-model';
 
 describe('ItemsList', () => {
     describe('select', () => {
@@ -424,6 +424,35 @@ describe('ItemsList', () => {
             expect(list.selectedItems[0].label).toBe('Samantha');
             expect(list.selectedItems[1].label).toBe('Other');
             expect(list.selectedItems[2].label).toBe('Amalie');
+        });
+    });
+
+    describe('markSelectedOrDefault', () => {
+        let list: ItemsList;
+        let cmp: NgSelectComponent;
+
+        beforeEach(() => {
+            cmp = ngSelectFactory();
+            list = itemsListFactory(cmp);
+            const items = Array.from(Array(30)).map((_, index) => (`item-${index}`));
+            list.setItems(items);
+        });
+
+        it('should mark first item', () => {
+            list.markSelectedOrDefault(true);
+            expect(list.markedIndex).toBe(0);
+        });
+
+        it('should keep marked item if it is above last selected item', () => {
+            list.select(list.items[10]);
+            list.markSelectedOrDefault();
+            expect(list.markedIndex).toBe(10);
+
+            list.markNextItem();
+            list.markNextItem();
+            list.markNextItem();
+            list.markSelectedOrDefault();
+            expect(list.markedIndex).toBe(13);
         });
     });
 

@@ -50,6 +50,7 @@ import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
 import { SelectionModelFactory } from './selection-model';
 import { NgSelectConfig } from './config.service';
+import { NgDropdownPanelService } from './ng-dropdown-panel.service';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
@@ -67,7 +68,7 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
         provide: NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => NgSelectComponent),
         multi: true
-    }],
+    }, NgDropdownPanelService],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -344,6 +345,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.typeahead.next(null);
         }
         this.clearEvent.emit();
+
+        this._onSelectionChanged();
     }
 
     clearModel() {
@@ -404,6 +407,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
         this.isOpen = false;
         this._clearSearch();
+        this.itemsList.unmarkItem();
         this._onTouched();
         this.closeEvent.emit();
         this._cd.markForCheck();
@@ -419,6 +423,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         } else {
             this.select(item);
         }
+
+        this._onSelectionChanged();
     }
 
     select(item: NgOption) {
@@ -552,12 +558,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     detectChanges() {
         if (!(<any>this._cd).destroyed) {
             this._cd.detectChanges();
-        }
-    }
-
-    updateDropdownPosition() {
-        if (this.dropdownPanel) {
-            this.dropdownPanel.updateDropdownPosition();
         }
     }
 
@@ -733,14 +733,22 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this.isOpen || !this.dropdownPanel) {
             return;
         }
-        this.dropdownPanel.scrollInto(this.itemsList.markedItem);
+        this.dropdownPanel.scrollTo(this.itemsList.markedItem);
     }
 
     private _scrollToTag() {
         if (!this.isOpen || !this.dropdownPanel) {
             return;
         }
-        this.dropdownPanel.scrollIntoTag();
+        this.dropdownPanel.scrollToTag();
+    }
+
+    private _onSelectionChanged() {
+        if (this.isOpen && this.multiple && this.appendTo) {
+            // Make sure items are rendered.
+            this._cd.detectChanges();
+            this.dropdownPanel.adjustPosition();
+        }
     }
 
     private _handleTab($event: KeyboardEvent) {

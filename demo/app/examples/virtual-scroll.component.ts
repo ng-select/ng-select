@@ -16,6 +16,7 @@ import { HttpClient } from '@angular/common/http';
                    bindLabel="title"
                    bindValue="thumbnailUrl"
                    placeholder="Select photo"
+                   appendTo="body"
                    (scroll)="onScroll($event)"
                    (scrollToEnd)="onScrollToEnd()">
             <ng-template ng-header-tmp>

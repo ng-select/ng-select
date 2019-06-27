@@ -185,6 +185,25 @@ map: {
 | NgSelectConfig | configuration | Configuration provider for the NgSelect component. You can inject this service and provide application wide configuration. |
 | SELECTION_MODEL_FACTORY | service | DI token for SelectionModel implementation. You can provide custom implementation changing selection behaviour. |
 
+## Custom selection logic
+Ng-select allows to provide custom selection implementation using `SELECTION_MODEL_FACTORY`. To override [default](https://github.com/ng-select/ng-select/blob/master/src/ng-select/selection-model.ts) logic provide your factory method in your angular module.
+
+```javascript
+// app.module.ts
+providers: [
+    { provide: SELECTION_MODEL_FACTORY, useValue: <SelectionModelFactory>CustomSelectionFactory }
+]
+
+// selection-model.ts
+export function CustomSelectionFactory() {
+    return new CustomSelectionModel();
+}
+
+export class CustomSelectionModel implements SelectionModel {
+    ...
+}
+```
+
 ## Change Detection
 Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable 
 data types. That means if you do object mutations like:
