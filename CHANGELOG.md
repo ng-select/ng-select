@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.20.2"></a>
+## [2.20.2](https://github.com/ng-select/ng-select/compare/v2.20.1...v2.20.2) (2019-06-27)
+
+
+### Bug Fixes
+
+* don't calculate panel dimensions for empty array ([9d8ccf3](https://github.com/ng-select/ng-select/commit/9d8ccf3)), closes [#1237](https://github.com/ng-select/ng-select/issues/1237)
+* ignore tab when dropdown is closed and addTag is false ([7f31ea6](https://github.com/ng-select/ng-select/commit/7f31ea6)), closes [#1212](https://github.com/ng-select/ng-select/issues/1212)
+
+
+
 <a name="2.20.1"></a>
 ## [2.20.1](https://github.com/ng-select/ng-select/compare/v2.20.0...v2.20.1) (2019-06-25)
 
