@@ -13,7 +13,11 @@ export interface PanelDimensions {
 
 export class NgDropdownPanelService {
 
-    private _dimensions: PanelDimensions;
+    private _dimensions: PanelDimensions = {
+        itemHeight: 0,
+        panelHeight: 0,
+        itemsPerViewport: 0
+    };
 
     get dimensions() {
         return this._dimensions;
