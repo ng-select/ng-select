@@ -177,10 +177,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     adjustPosition() {
-        if (this._currentPosition === 'top') {
-            return;
-        }
-
         const parent = this._parent.getBoundingClientRect();
         const select = this._select.getBoundingClientRect();
         this._setOffset(parent, select);
