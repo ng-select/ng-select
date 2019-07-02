@@ -752,9 +752,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _handleTab($event: KeyboardEvent) {
-        if (this.isOpen === false && !isDefined(this.addTag)) {
+        if (this.isOpen === false && !this.addTag) {
             return;
         }
+
         if (this.selectOnTab) {
             if (this.itemsList.markedItem) {
                 this.toggleItem(this.itemsList.markedItem);
