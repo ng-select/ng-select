@@ -241,7 +241,7 @@ export class ItemsList {
             label: isDefined(label) ? label.toString() : '',
             value: value,
             disabled: item.disabled,
-            htmlId: newId(),
+            htmlId: `${this._ngSelect.dropdownId}-${index}`,
         };
     }
 
