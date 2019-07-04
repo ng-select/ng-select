@@ -454,6 +454,16 @@ describe('ItemsList', () => {
             list.markSelectedOrDefault();
             expect(list.markedIndex).toBe(13);
         });
+
+        it('should mark first after last marked item was filtered out', () => {
+            list.markSelectedOrDefault(true);
+            list.markNextItem();
+            list.filter('item-0');
+            list.markSelectedOrDefault(true);
+            expect(list.markedIndex).toBe(0);
+            list.markNextItem();
+            expect(list.markedIndex).toBe(0);
+        });
     });
 
     function itemsListFactory(cmp: NgSelectComponent): ItemsList {
