@@ -316,6 +316,10 @@ export class ItemsList {
             return -1;
         }
 
+        if (this._markedIndex > -1 && this.markedItem === undefined) {
+            return -1;
+        }
+
         const selectedIndex = this._filteredItems.indexOf(this.lastSelectedItem);
         if (this.lastSelectedItem && selectedIndex < 0) {
             return -1;
