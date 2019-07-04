@@ -485,7 +485,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return this.trackByFn(item.value);
         }
 
-        return null;
+        return item.htmlId;
     };
 
     get showAddTag() {
