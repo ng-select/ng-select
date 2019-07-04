@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.20.4"></a>
+## [2.20.4](https://github.com/ng-select/ng-select/compare/v2.20.3...v2.20.4) (2019-07-04)
+
+
+### Bug Fixes
+
+* track by htmlId by default ([e158bb4](https://github.com/ng-select/ng-select/commit/e158bb4)), closes [#1244](https://github.com/ng-select/ng-select/issues/1244) [#1181](https://github.com/ng-select/ng-select/issues/1181) [#1218](https://github.com/ng-select/ng-select/issues/1218) [#1229](https://github.com/ng-select/ng-select/issues/1229)
+
+
+
 <a name="2.20.3"></a>
 ## [2.20.3](https://github.com/ng-select/ng-select/compare/v2.20.2...v2.20.3) (2019-07-02)
 
