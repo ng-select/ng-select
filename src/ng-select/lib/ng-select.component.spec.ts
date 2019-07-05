@@ -1382,7 +1382,7 @@ describe('NgSelectComponent', () => {
             }));
 
             it('should not remove selected value if filter is set', fakeAsync(() => {
-                select.filterValue = 'a';
+                select.searchTerm = 'a';
                 fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
                 tickAndDetectChanges(fixture);
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
@@ -1758,7 +1758,7 @@ describe('NgSelectComponent', () => {
                     </ng-template>
                 </ng-select>`);
 
-            fixture.componentInstance.select.filterValue = 'tag';
+            fixture.componentInstance.select.searchTerm = 'tag';
             fixture.componentInstance.select.open();
             fixture.detectChanges();
 
@@ -2198,23 +2198,23 @@ describe('NgSelectComponent', () => {
             });
 
             it('should be false when there is no search term', () => {
-                select.filterValue = null;
+                select.searchTerm = null;
                 expect(select.showAddTag).toBeFalsy();
             });
 
             it('should be true when term not exists among items', () => {
-                select.filterValue = 'Vil';
+                select.searchTerm = 'Vil';
                 expect(select.showAddTag).toBeTruthy();
             });
 
             it('should be false when term exists among items', () => {
-                select.filterValue = 'Vilnius';
+                select.searchTerm = 'Vilnius';
                 expect(select.showAddTag).toBeFalsy();
             });
 
             it('should be false when term exists among selected items', fakeAsync(() => {
                 fixture.componentInstance.selectedCities = [{ name: 'Palanga', id: 9 }];
-                select.filterValue = 'Palanga';
+                select.searchTerm = 'Palanga';
                 select.hideSelected = true;
                 select.isOpen = true;
                 tickAndDetectChanges(fixture);
@@ -2223,7 +2223,7 @@ describe('NgSelectComponent', () => {
 
             it('should be false when term exists among selected items and select is closed', fakeAsync(() => {
                 fixture.componentInstance.selectedCities = [{ name: 'Palanga', id: 9 }];
-                select.filterValue = 'Palanga';
+                select.searchTerm = 'Palanga';
                 select.hideSelected = false;
                 select.isOpen = false;
                 tickAndDetectChanges(fixture);
@@ -2364,7 +2364,7 @@ describe('NgSelectComponent', () => {
             fixture.detectChanges();
 
             const input: HTMLInputElement = select.element.querySelector('input');
-            expect(select.filterValue).toBeNull();
+            expect(select.searchTerm).toBeNull();
             expect(input.readOnly).toBeTruthy();
         }));
 
@@ -2451,10 +2451,10 @@ describe('NgSelectComponent', () => {
 
             tickAndDetectChanges(fixture);
 
-            fixture.componentInstance.select.filterValue = 'Hey! Whats up!?';
+            fixture.componentInstance.select.searchTerm = 'Hey! Whats up!?';
             selectOption(fixture, KeyCode.ArrowDown, 1);
             tickAndDetectChanges(fixture);
-            expect(fixture.componentInstance.select.filterValue).toBe(null);
+            expect(fixture.componentInstance.select.searchTerm).toBe(null);
         }));
 
         it('should not reset items when selecting option', fakeAsync(() => {
@@ -2469,7 +2469,7 @@ describe('NgSelectComponent', () => {
             const resetFilteredItemsSpy = spyOn(fixture.componentInstance.select.itemsList, 'resetFilteredItems');
             tickAndDetectChanges(fixture);
 
-            fixture.componentInstance.select.filterValue = null;
+            fixture.componentInstance.select.searchTerm = null;
             selectOption(fixture, KeyCode.ArrowDown, 1);
             tickAndDetectChanges(fixture);
             expect(resetFilteredItemsSpy).not.toHaveBeenCalled();
@@ -2618,10 +2618,10 @@ describe('NgSelectComponent', () => {
                 fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
-                expect(fixture.componentInstance.select.filterValue).toBe('new');
+                expect(fixture.componentInstance.select.searchTerm).toBe('new');
 
                 fixture.componentInstance.select.select(fixture.componentInstance.select.viewPortItems[0]);
-                expect(fixture.componentInstance.select.filterValue).toBeNull();
+                expect(fixture.componentInstance.select.searchTerm).toBeNull();
             }));
 
             it('should not clear search term by default when closeOnSelect is false ', fakeAsync(() => {
@@ -2644,7 +2644,7 @@ describe('NgSelectComponent', () => {
 
                 fixture.componentInstance.select.select(fixture.componentInstance.select.viewPortItems[0]);
                 expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
-                expect(fixture.componentInstance.select.filterValue).toBe('new');
+                expect(fixture.componentInstance.select.searchTerm).toBe('new');
             }));
 
             it('should not clear search term when clearSearchOnAdd is false', fakeAsync(() => {
@@ -2667,7 +2667,7 @@ describe('NgSelectComponent', () => {
                 fixture.componentInstance.cities = [{ id: 4, name: 'New York' }, { id: 5, name: 'California' }];
                 tickAndDetectChanges(fixture);
                 fixture.componentInstance.select.select(fixture.componentInstance.select.viewPortItems[0]);
-                expect(fixture.componentInstance.select.filterValue).toBe('new');
+                expect(fixture.componentInstance.select.searchTerm).toBe('new');
             }));
         });
     });
@@ -3036,12 +3036,12 @@ describe('NgSelectComponent', () => {
 
             it('should clear only search text', fakeAsync(() => {
                 fixture.componentInstance.selectedCities = null;
-                fixture.componentInstance.select.filterValue = 'Hey! Whats up!?';
+                fixture.componentInstance.select.searchTerm = 'Hey! Whats up!?';
                 tickAndDetectChanges(fixture);
                 triggerMousedown();
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(0);
-                expect(fixture.componentInstance.select.filterValue).toBe(null);
+                expect(fixture.componentInstance.select.searchTerm).toBe(null);
             }));
 
             it('should not open dropdown', fakeAsync(() => {

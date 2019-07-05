@@ -167,14 +167,15 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @ViewChild(forwardRef(() => NgDropdownPanelComponent), { static: false }) dropdownPanel: NgDropdownPanelComponent;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
-    @ViewChild('filterInput', { static: true }) filterInput: ElementRef;
+    @ViewChild('searchInput', { static: true }) searchInput: ElementRef;
 
     @HostBinding('class.ng-select-disabled') disabled = false;
-    @HostBinding('class.ng-select-filtered') get filtered() { return !!this.filterValue && this.searchable };
+
+    @HostBinding('class.ng-select-filtered') get filtered() { return !!this.searchTerm && this.searchable };
 
     itemsList: ItemsList;
     viewPortItems: NgOption[] = [];
-    filterValue: string = null;
+    searchTerm: string = null;
     dropdownId = newId();
     element: HTMLElement;
     focused: boolean;
@@ -395,7 +396,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.isOpen = true;
         this.itemsList.markSelectedOrDefault(this.markFirst);
         this.openEvent.emit();
-        if (!this.filterValue) {
+        if (!this.searchTerm) {
             this.focus();
         }
         this.detectChanges();
@@ -446,7 +447,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     focus() {
-        this.filterInput.nativeElement.focus();
+        this.searchInput.nativeElement.focus();
+    }
+
+    blur() {
+        this.searchInput.nativeElement.blur();
     }
 
     unselect(item: NgOption) {
@@ -463,9 +468,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     selectTag() {
         let tag;
         if (isFunction(this.addTag)) {
-            tag = (<AddTagFn>this.addTag)(this.filterValue);
+            tag = (<AddTagFn>this.addTag)(this.searchTerm);
         } else {
-            tag = this._primitive ? this.filterValue : { [this.bindLabel]: this.filterValue };
+            tag = this._primitive ? this.searchTerm : { [this.bindLabel]: this.searchTerm };
         }
 
         const handleTag = (item) => this._isTypeahead || !this.isOpen ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item);
@@ -477,7 +482,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     showClear() {
-        return this.clearable && (this.hasValue || this.filterValue) && !this.disabled;
+        return this.clearable && (this.hasValue || this.searchTerm) && !this.disabled;
     }
 
     trackByOption = (_: number, item: NgOption) => {
@@ -489,11 +494,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     };
 
     get showAddTag() {
-        if (!this.filterValue) {
+        if (!this.searchTerm) {
             return false;
         }
 
-        const term = this.filterValue.toLowerCase();
+        const term = this.searchTerm.toLowerCase();
         return this.addTag &&
             (!this.itemsList.filteredItems.some(x => x.label.toLowerCase() === term) &&
                 (!this.hideSelected && this.isOpen || !this.selectedItems.some(x => x.label.toLowerCase() === term))) &&
@@ -503,22 +508,22 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     showNoItemsFound() {
         const empty = this.itemsList.filteredItems.length === 0;
         return ((empty && !this._isTypeahead && !this.loading) ||
-            (empty && this._isTypeahead && this.filterValue && !this.loading)) &&
+            (empty && this._isTypeahead && this.searchTerm && !this.loading)) &&
             !this.showAddTag;
     }
 
     showTypeToSearch() {
         const empty = this.itemsList.filteredItems.length === 0;
-        return empty && this._isTypeahead && !this.filterValue && !this.loading;
+        return empty && this._isTypeahead && !this.searchTerm && !this.loading;
     }
 
     filter(term: string) {
-        this.filterValue = term;
+        this.searchTerm = term;
 
         if (this._isTypeahead) {
-            this.typeahead.next(this.filterValue);
+            this.typeahead.next(this.searchTerm);
         } else {
-            this.itemsList.filter(this.filterValue);
+            this.itemsList.filter(this.searchTerm);
             if (this.isOpen) {
                 this.itemsList.markSelectedOrDefault(this.markFirst);
             }
@@ -569,8 +574,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (items.length > 0 && this.hasValue) {
             this.itemsList.mapSelectedItems();
         }
-        if (this.isOpen && isDefined(this.filterValue) && !this._isTypeahead) {
-            this.itemsList.filter(this.filterValue);
+        if (this.isOpen && isDefined(this.searchTerm) && !this._isTypeahead) {
+            this.itemsList.filter(this.searchTerm);
         }
         if (this._isTypeahead || this.isOpen) {
             this.itemsList.markSelectedOrDefault(this.markFirst);
@@ -721,11 +726,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _clearSearch() {
-        if (!this.filterValue) {
+        if (!this.searchTerm) {
             return;
         }
 
-        this.filterValue = null;
+        this.searchTerm = null;
         this.itemsList.resetFilteredItems();
     }
 
@@ -824,13 +829,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     private _nextItemIsTag(nextStep: number): boolean {
         const nextIndex = this.itemsList.markedIndex + nextStep;
-        return this.addTag && this.filterValue
+        return this.addTag && this.searchTerm
             && this.itemsList.markedItem
             && (nextIndex < 0 || nextIndex === this.itemsList.filteredItems.length)
     }
 
     private _handleBackspace() {
-        if (this.filterValue || !this.clearable || !this.clearOnBackspace || !this.hasValue) {
+        if (this.searchTerm || !this.clearable || !this.clearOnBackspace || !this.hasValue) {
             return;
         }
 

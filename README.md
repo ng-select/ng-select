@@ -177,6 +177,7 @@ map: {
 | open  | Opens the select dropdown panel |
 | close  | Closes the select dropdown panel |
 | focus  | Focuses the select element |
+| blur  | Blurs the select element |
 
 ### Other
  Name  | Type | Description |
