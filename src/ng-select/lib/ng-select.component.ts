@@ -153,21 +153,21 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Output('scrollToEnd') scrollToEnd = new EventEmitter();
 
     // custom templates
-    @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
-    @ContentChild(NgOptgroupTemplateDirective, { read: TemplateRef }) optgroupTemplate: TemplateRef<any>;
-    @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
-    @ContentChild(NgMultiLabelTemplateDirective, { read: TemplateRef }) multiLabelTemplate: TemplateRef<any>;
-    @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerTemplate: TemplateRef<any>;
-    @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;
-    @ContentChild(NgNotFoundTemplateDirective, { read: TemplateRef }) notFoundTemplate: TemplateRef<any>;
-    @ContentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef }) typeToSearchTemplate: TemplateRef<any>;
-    @ContentChild(NgLoadingTextTemplateDirective, { read: TemplateRef }) loadingTextTemplate: TemplateRef<any>;
-    @ContentChild(NgTagTemplateDirective, { read: TemplateRef }) tagTemplate: TemplateRef<any>;
-    @ContentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef }) loadingSpinnerTemplate: TemplateRef<any>;
+    @ContentChild(NgOptionTemplateDirective, { read: TemplateRef, static: true }) optionTemplate: TemplateRef<any>;
+    @ContentChild(NgOptgroupTemplateDirective, { read: TemplateRef, static: true }) optgroupTemplate: TemplateRef<any>;
+    @ContentChild(NgLabelTemplateDirective, { read: TemplateRef, static: true }) labelTemplate: TemplateRef<any>;
+    @ContentChild(NgMultiLabelTemplateDirective, { read: TemplateRef, static: true }) multiLabelTemplate: TemplateRef<any>;
+    @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef, static: true }) headerTemplate: TemplateRef<any>;
+    @ContentChild(NgFooterTemplateDirective, { read: TemplateRef, static: true }) footerTemplate: TemplateRef<any>;
+    @ContentChild(NgNotFoundTemplateDirective, { read: TemplateRef, static: true }) notFoundTemplate: TemplateRef<any>;
+    @ContentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef, static: true }) typeToSearchTemplate: TemplateRef<any>;
+    @ContentChild(NgLoadingTextTemplateDirective, { read: TemplateRef, static: true }) loadingTextTemplate: TemplateRef<any>;
+    @ContentChild(NgTagTemplateDirective, { read: TemplateRef, static: true }) tagTemplate: TemplateRef<any>;
+    @ContentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef, static: true }) loadingSpinnerTemplate: TemplateRef<any>;
 
-    @ViewChild(forwardRef(() => NgDropdownPanelComponent)) dropdownPanel: NgDropdownPanelComponent;
+    @ViewChild(forwardRef(() => NgDropdownPanelComponent), { static: false }) dropdownPanel: NgDropdownPanelComponent;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
-    @ViewChild('filterInput') filterInput: ElementRef;
+    @ViewChild('filterInput', { static: true }) filterInput: ElementRef;
 
     @HostBinding('class.ng-select-disabled') disabled = false;
     @HostBinding('class.ng-select-filtered') get filtered() { return !!this.filterValue && this.searchable };

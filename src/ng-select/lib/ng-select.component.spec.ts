@@ -3,10 +3,10 @@ import { By } from '@angular/platform-browser';
 import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ConsoleService } from './console.service';
 import { FormsModule } from '@angular/forms';
-import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../../testing/helpers';
+import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
 import { KeyCode, NgOption } from './ng-select.types';
-import { MockConsole, MockNgZone } from '../../testing/mocks';
-import { NgSelectComponent } from './ng-select.component';
+import { MockConsole, MockNgZone } from '../testing/mocks';
+import { NgSelectComponent } from '@ng-select/ng-select';
 import { NgSelectModule } from './ng-select.module';
 import { Subject } from 'rxjs';
 
@@ -3454,7 +3454,7 @@ function createEvent(target = {}) {
     template: ``
 })
 class NgSelectTestCmp {
-    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    @ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
     multiple = false;
     clearOnBackspace = false;
     disabled = false;
@@ -3541,14 +3541,14 @@ class NgSelectTestCmp {
     encapsulation: ViewEncapsulation.Native,
 })
 class EncapsulatedTestCmp extends NgSelectTestCmp {
-    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 }
 
 @Component({
     template: ``,
 })
 class NgSelectGroupingTestCmp {
-    @ViewChild(NgSelectComponent) select: NgSelectComponent;
+    @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
     selectedAccountName = 'Adam';
     selectedAccount = null;
     groupByFn = (item) => item.child.name;
