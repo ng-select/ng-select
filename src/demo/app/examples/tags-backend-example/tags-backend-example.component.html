@@ -1,0 +1,13 @@
+<p><b>[addTag]</b> also accepts promise if you need to verify new option with backend</p>
+
+<ng-select [items]="companies"
+           [addTag]="addTagPromise"
+           multiple="true"
+           bindLabel="name"
+           [loading]="loading"
+           [(ngModel)]="selectedCompanies">
+
+    <ng-template ng-tag-tmp let-search="searchTerm">
+        <b>create new</b>: {{search}}
+    </ng-template>
+</ng-select>

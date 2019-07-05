@@ -1,0 +1,36 @@
+<p>Groups can be made selectable. By default group acts as a separate option.</p>
+<ng-select [items]="accounts"
+           bindLabel="name"
+           groupBy="country"
+           [multiple]="true"
+           [compareWith]="compareAccounts"
+           [selectableGroup]="true"
+           [(ngModel)]="selectedAccount">
+    <ng-template ng-optgroup-tmp let-item="item">
+        {{item.country || 'Unnamed group'}}
+    </ng-template>
+</ng-select>
+
+<br>
+<small>Selected: {{selectedAccount | json}}</small>
+<hr>
+
+<p>Using <b>[selectableGroupAsModel]="false"</b> selecting group will select all of its children but not group itself.
+</p>
+
+<ng-select [items]="accounts"
+           bindLabel="name"
+           groupBy="country"
+           [multiple]="true"
+           [closeOnSelect]="false"
+           [selectableGroup]="true"
+           [selectableGroupAsModel]="false"
+           [compareWith]="compareAccounts"
+           [(ngModel)]="selectedAccounts">
+    <ng-template ng-optgroup-tmp let-item="item">
+        {{item.country || 'Unnamed group'}}
+    </ng-template>
+</ng-select>
+
+<br>
+<small>Selected: {{selectedAccounts | json}}</small>

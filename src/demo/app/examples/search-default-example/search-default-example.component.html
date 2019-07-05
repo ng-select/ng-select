@@ -1,0 +1,9 @@
+<p>
+    By default ng-select will search using label text. You can also use <b>loading</b> input to set
+    loading state manually if <b>[typeahead]</b> is not used.
+</p>
+
+<ng-select [items]="people"
+           bindLabel="name"
+           [loading]="peopleLoading">
+</ng-select>
