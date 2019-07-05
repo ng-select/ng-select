@@ -1225,6 +1225,15 @@ describe('NgSelectComponent', () => {
                 const text = fixture.debugElement.query(By.css('.ng-option')).nativeElement.innerHTML;
                 expect(text).toContain('No items found');
             }));
+            it('should open empty dropdown if no items and hideSelected is true', fakeAsync(() => {
+                fixture.componentInstance.cities = [];
+                fixture.componentInstance.hideSelected = true ;
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+                const text = fixture.debugElement.query(By.css('.ng-option')).nativeElement.innerHTML;
+                expect(text).toContain('No items found');
+            }));
 
             it('should open dropdown with loading message', fakeAsync(() => {
                 fixture.componentInstance.cities = [];
