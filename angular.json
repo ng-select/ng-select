@@ -22,7 +22,14 @@
             "main": "src/ng-select/test.ts",
             "tsConfig": "src/ng-select/tsconfig.spec.json",
             "karmaConfig": "src/ng-select/karma.conf.js",
-            "watch": false
+            "watch": false,
+            "codeCoverageExclude": [
+              "src/ng-select/testing/*",
+              "src/ng-select/*.ts",
+              "src/ng-select/lib/console.service.ts",
+              "src/ng-select/lib/search-helper.ts",
+              "src/ng-select/lib/ng-templates.directive.ts"
+            ]
           }
         },
         "lint": {
