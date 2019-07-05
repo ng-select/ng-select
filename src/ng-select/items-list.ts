@@ -42,7 +42,7 @@ export class ItemsList {
     }
 
     get noItemsToSelect(): boolean {
-        return this._ngSelect.hideSelected && this._items.length >0 && this._items.length === this.selectedItems.length;
+        return this._ngSelect.hideSelected && this._items.length > 0 && this._items.length === this.selectedItems.length;
     }
 
     get maxItemsSelected(): boolean {
