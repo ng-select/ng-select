@@ -7,7 +7,6 @@ import {
     OnChanges,
     Renderer2
 } from '@angular/core';
-import { isDefined } from './value-utils';
 
 @Directive({
     selector: '[ngOptionHighlight]'
@@ -59,10 +58,14 @@ export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
     }
 
     private get _canHighlight() {
-        return isDefined(this.term) && isDefined(this.label);
+        return this._isDefined(this.term) && this._isDefined(this.label);
     }
 
     private _setInnerHtml(html) {
         this.renderer.setProperty(this.elementRef.nativeElement, 'innerHTML', html);
+    }
+
+    private _isDefined(value: any) {
+        return value !== undefined && value !== null;
     }
 }   

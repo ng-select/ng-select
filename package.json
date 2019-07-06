@@ -13,7 +13,7 @@
     "start": "ng serve",
     "test:watch": "ng test ng-select --watch",
     "test": "ng test ng-select --code-coverage",
-    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "coveralls": "cat ./coverage/ng-select/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "lint": "ng lint ng-select",
     "release": "sh ./release.sh"
   },

@@ -15,7 +15,6 @@ import {
     NgLoadingSpinnerTemplateDirective
 } from './ng-templates.directive';
 import { NgOptionComponent } from './ng-option.component';
-import { NgOptionHighlightDirective } from './ng-option-highlight.directive';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { DefaultSelectionModelFactory } from './selection-model';
 
@@ -24,7 +23,6 @@ import { DefaultSelectionModelFactory } from './selection-model';
         NgDropdownPanelComponent,
         NgOptionComponent,
         NgSelectComponent,
-        NgOptionHighlightDirective,
         NgOptgroupTemplateDirective,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
@@ -43,7 +41,6 @@ import { DefaultSelectionModelFactory } from './selection-model';
     exports: [
         NgSelectComponent,
         NgOptionComponent,
-        NgOptionHighlightDirective,
         NgOptgroupTemplateDirective,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,

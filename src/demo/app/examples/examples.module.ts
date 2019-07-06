@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { DataSourceBackendExampleComponent } from './data-source-backend-example/data-source-backend-example.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -93,6 +94,14 @@ import { GroupChildrenExampleComponent } from './group-children-example/group-ch
     ],
     imports: [
         NgSelectModule,
+        NgOptionHighlightModule,
+        FormsModule,
+        CommonModule,
+        ReactiveFormsModule
+    ],
+    exports: [
+        NgSelectModule,
+        NgOptionHighlightModule,
         FormsModule,
         CommonModule,
         ReactiveFormsModule

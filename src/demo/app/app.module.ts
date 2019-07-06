@@ -1,11 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgSelectModule } from '@ng-select/ng-select';
 
 import { AppComponent } from './app.component';
 import { DataService } from './examples/data.service';
@@ -20,10 +17,6 @@ import { RouteViewerComponent } from './shared/route-viewer/route-viewer.compone
 @NgModule({
     imports: [
         BrowserModule,
-        NgSelectModule,
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
         HttpClientModule,
         ExamplesModule,
         NgbModule,
