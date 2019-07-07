@@ -105,6 +105,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() clearOnBackspace = true;
     @Input() labelForId = null;
     @Input() inputAttrs: { [key: string]: string } = {};
+    @Input() tabIndex: number;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
@@ -196,7 +197,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     constructor(
         @Attribute('class') public classes: string,
-        @Attribute('tabindex') public tabIndex: string,
         @Attribute('autofocus') private autoFocus: any,
         config: NgSelectConfig,
         @Inject(SELECTION_MODEL_FACTORY) newSelectionModel: SelectionModelFactory,
