@@ -23,12 +23,8 @@
 
         <div class="ng-input">
             <input #searchInput
-                   type="text"
-                   [attr.autocomplete]="labelForId ? 'off' : dropdownId"
                    [attr.id]="labelForId"
                    [attr.tabindex]="tabIndex"
-                   [attr.autocorrect]="autoCorrect"
-                   [attr.autocapitalize]="autoCapitalize"
                    [readOnly]="!searchable || itemsList.maxItemsSelected"
                    [disabled]="disabled"
                    [value]="searchTerm ? searchTerm : ''"
@@ -44,12 +40,12 @@
     </div>
 
     <ng-container *ngIf="loading">
-        <ng-template #defautlLoadingSpinnerTemplate>
+        <ng-template #defaultLoadingSpinnerTemplate>
             <div class="ng-spinner-loader"></div>
         </ng-template>
 
         <ng-template
-            [ngTemplateOutlet]="loadingSpinnerTemplate || defautlLoadingSpinnerTemplate">
+            [ngTemplateOutlet]="loadingSpinnerTemplate || defaultLoadingSpinnerTemplate">
         </ng-template>
     </ng-container>
 

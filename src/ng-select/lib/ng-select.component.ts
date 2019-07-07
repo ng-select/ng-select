@@ -54,8 +54,6 @@ import { NgDropdownPanelService } from './ng-dropdown-panel.service';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
-export type AutoCorrect = 'off' | 'on';
-export type AutoCapitalize = 'off' | 'on';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
 export type GroupValueFn = (key: string | object, children: any[]) => string | object;
@@ -105,10 +103,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() searchFn = null;
     @Input() trackByFn = null;
     @Input() clearOnBackspace = true;
-
     @Input() labelForId = null;
-    @Input() autoCorrect: AutoCorrect = 'off';
-    @Input() autoCapitalize: AutoCapitalize = 'off';
+    @Input() inputAttrs: { [key: string]: string } = {};
+
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
     @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
@@ -165,11 +162,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef, static: true }) loadingSpinnerTemplate: TemplateRef<any>;
 
     @ViewChild(forwardRef(() => NgDropdownPanelComponent), { static: false }) dropdownPanel: NgDropdownPanelComponent;
-    @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
     @ViewChild('searchInput', { static: true }) searchInput: ElementRef;
+    @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
 
     @HostBinding('class.ng-select-disabled') disabled = false;
-
     @HostBinding('class.ng-select-filtered') get filtered() { return !!this.searchTerm && this.searchable };
 
     itemsList: ItemsList;
@@ -234,6 +230,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     ngOnInit() {
         this._handleKeyPresses();
+        this._setInputAttributes();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -693,6 +690,21 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 }
                 this._pressedKeys = [];
             });
+    }
+
+    private _setInputAttributes() {
+        const input: HTMLInputElement = this.searchInput.nativeElement;
+        const attributes = {
+            type: 'text',
+            autocorrect: 'off',
+            autocapitalize: 'off',
+            autocomplete: this.labelForId ? 'off' : this.dropdownId,
+            ...this.inputAttrs
+        };
+
+        for (const key of Object.keys(attributes)) {
+            input.setAttribute(key, attributes[key]);
+        }
     }
 
     private _updateNgModel() {
