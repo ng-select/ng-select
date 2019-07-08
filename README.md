@@ -10,7 +10,7 @@
 [ng-select-url]: https://unpkg.com/@ng-select/ng-select@latest
 
 # Angular ng-select - Lightweight all in one UI Select, Multiselect and Autocomplete
-See [Demos](https://ng-select.github.io/ng-select) or try in [Stackblitz](https://stackblitz.com/edit/ng-select?file=app%2Fapp.component.ts)
+See [Demo](https://ng-select.github.io/ng-select) page.
 
 ---
 
