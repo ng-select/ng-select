@@ -106,6 +106,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() labelForId = null;
     @Input() inputAttrs: { [key: string]: string } = {};
     @Input() tabIndex: number;
+    @Input() clearSearchOnSelect = true;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
@@ -440,6 +441,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (this.closeOnSelect || this.itemsList.noItemsToSelect) {
             this.close();
         }
+
+        this._preventClearSearch(item);
     }
 
     focus() {
@@ -734,6 +737,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         this._cd.markForCheck();
+    }
+
+    private _preventClearSearch(item: NgOption) {
+      if (!this.clearSearchOnSelect && !this.multiple) {
+        this.searchTerm = item.label;
+      }
     }
 
     private _clearSearch() {

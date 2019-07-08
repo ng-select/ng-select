@@ -152,6 +152,7 @@ map: {
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
 | [inputAttrs] | `{ [key: string]: string }` |  `-` | no | Pass custom attributes to underlying `input` element |
 | [tabIndex] | `number` |  `-` | no | Set tabindex on ng-select |
+| [clearSearchOnSelect] | `boolean` |  `true` | no | Prevents clear search on item select. Default `true`. Works only if multiple is `false`. |
 
 ### Outputs
 

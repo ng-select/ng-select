@@ -1,0 +1,11 @@
+<p>
+  By default ng-select will clear search text. You can disable it by setting <b>[clearSearchOnSelect]</b>
+  input to <b>false</b>.
+</p>
+
+<ng-select [items]="people"
+         bindLabel="name"
+         [clearable]="true"
+         [clearSearchOnSelect]="false"
+         [loading]="peopleLoading">
+</ng-select>

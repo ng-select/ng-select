@@ -40,6 +40,7 @@ import { GroupFunctionExampleComponent } from './group-function-example/group-fu
 import { GroupSelectableExampleComponent } from './group-selectable-example/group-selectable-example.component';
 import { GroupSelectableHiddenExampleComponent } from './group-selectable-hidden-example/group-selectable-hidden-example.component';
 import { GroupChildrenExampleComponent } from './group-children-example/group-children-example.component';
+import { SearchEditableOnSelectComponent } from './search-editable-on-select/search-editable-on-select.component';
 
 export interface Example {
     component: any;
@@ -102,6 +103,10 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
     'search-autocomplete-example': {
         component: SearchAutocompleteExampleComponent,
         title: 'Custom server-side search'
+    },
+    'search-editable-on-select-example': {
+        component: SearchEditableOnSelectComponent,
+        title: 'Prevent search text clear on select'
     },
     'tags-default-example': {
         component: TagsDefaultExampleComponent,
