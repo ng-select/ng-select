@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'forms-with-options-example',
@@ -8,7 +9,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class FormsWithOptionsExampleComponent implements OnInit {
 
-    basePath = window['basePath'] === '/' ? '' : window['basePath'];
+    basePath = environment.production ? '/ng-select' : '';
     heroForm: FormGroup;
 
     constructor(
