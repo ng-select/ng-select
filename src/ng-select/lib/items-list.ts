@@ -1,9 +1,9 @@
+import { newId } from './id';
+import { NgSelectComponent } from './ng-select.component';
 import { NgOption } from './ng-select.types';
 import * as searchHelper from './search-helper';
-import { NgSelectComponent } from './ng-select.component';
-import { isDefined, isFunction, isObject } from './value-utils';
-import { newId } from './id';
 import { SelectionModel } from './selection-model';
+import { isDefined, isFunction, isObject } from './value-utils';
 
 type OptionGroups = Map<string | NgOption, NgOption[]>;
 
@@ -361,13 +361,14 @@ export class ItemsList {
     private _flatten(groups: OptionGroups) {
         const isGroupByFn = isFunction(this._ngSelect.groupBy);
         const items = [];
-        const withoutGroup = groups.get(undefined) || [];
-        items.push(...withoutGroup);
-        let i = withoutGroup.length;
         for (const key of Array.from(groups.keys())) {
-            if (!isDefined(key)) {
+            let i = items.length;
+            if (key === undefined) {
+                const withoutGroup = groups.get(undefined) || [];
+                items.push(...withoutGroup.map(x => ({ ...x, index: i++ })));
                 continue;
             }
+
             const isObjectKey = isObject(key);
             const parent: NgOption = {
                 label: isObjectKey ? '' : String(key),

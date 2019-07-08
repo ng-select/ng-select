@@ -3257,10 +3257,12 @@ describe('NgSelectComponent', () => {
 
             const items: NgOption[] = fixture.componentInstance.select.itemsList.items;
             expect(items.length).toBe(18);
-            expect(items[0].children).toBeUndefined();
-            expect(items[0].parent).toBeUndefined();
-            expect(items[1].children).toBeUndefined();
-            expect(items[1].parent).toBeUndefined();
+            expect(items[0].children).toBeTruthy();
+            expect(items[0].parent).toBeNull();
+            expect(items[14].children).toBeUndefined();
+            expect(items[14].parent).toBeUndefined();
+            expect(items[15].children).toBeUndefined();
+            expect(items[15].parent).toBeUndefined();
             expect(items[16].children).toBeTruthy();
             expect(items[16].label).toBe('');
             expect(items[17].parent).toBeDefined();
