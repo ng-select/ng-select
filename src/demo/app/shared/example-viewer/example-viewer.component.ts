@@ -20,6 +20,10 @@ export class ExampleHostDirective {
             font-weight: 500;
             color: rgba(0, 0, 0, 0.54);
         }
+
+        a.btn {
+            color: rgba(0, 0, 0, 0.54);
+        }
         
         .card {
             margin-bottom: 20px;
@@ -36,6 +40,10 @@ export class ExampleViewerComponent implements OnInit {
 
     constructor(
         private componentFactoryResolver: ComponentFactoryResolver) {
+    }
+
+    get sourcePath() {
+        return `https://github.com/ng-select/ng-select/tree/master/src/demo/app/examples/${this.example}`;
     }
 
     ngOnInit() {
