@@ -1,0 +1,20 @@
+<form [formGroup]="heroForm">
+    <div class="form-group">
+        <label for="state">City</label>
+        <ng-select *ngIf="isCitiesControlVisible"
+                   [items]="cities"
+                   bindLabel="name"
+                   bindValue="id"
+                   labelForId="state"
+                   [multiple]="true"
+                   placeholder="Select cities"
+                   clearAllText="Clear"
+                   formControlName="selectedCitiesIds">
+        </ng-select>
+        <br>
+        <button (click)="toggleCitiesControl()" class="btn btn-sm btn-secondary">Show/Hide</button>
+        <button (click)="clearCities()" class="btn btn-sm btn-secondary">Clear</button>
+    </div>
+</form>
+
+

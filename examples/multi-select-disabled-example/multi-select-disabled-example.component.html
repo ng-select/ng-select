@@ -1,0 +1,14 @@
+<p>Disabled multiple elements</p>
+
+<ng-select
+    [items]="people$ | async"
+    bindLabel="name"
+    [multiple]="true"
+    [disabled]="disable"
+    [(ngModel)]="selectedPeople">
+</ng-select>
+
+<br>
+<button class="btn btn-secondary btn-sm" (click)="disable = !disable">Toggle disabled</button>
+<button class="btn btn-secondary btn-sm" (click)="toggleModel()">Toggle model</button>
+

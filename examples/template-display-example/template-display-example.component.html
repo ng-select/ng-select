@@ -1,0 +1,29 @@
+<p>Custom not found, type to search and loading templates</p>
+<ng-select
+    [multiple]="true"
+    [items]="serverSideFilterItems"
+    [(ngModel)]="selectedPeople"
+    placeholder="Select people"
+    bindLabel="name"
+    bindValue="name"
+    [typeahead]="peopleTypeahead">
+    <ng-template ng-typetosearch-tmp>
+        <div class="ng-option disabled">
+            Start typing...
+        </div>
+    </ng-template>
+    <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+        <div class="ng-option disabled">
+            No data found for "{{searchTerm}}"
+        </div>
+    </ng-template>
+    <ng-template ng-loadingtext-tmp let-searchTerm="searchTerm">
+        <div class="ng-option disabled">
+            Fetching data for "{{searchTerm}}"
+        </div>
+    </ng-template>
+</ng-select>
+
+<br>
+
+Selected people: {{selectedPeople}}

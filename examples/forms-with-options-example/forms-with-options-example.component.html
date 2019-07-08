@@ -1,0 +1,24 @@
+<form [formGroup]="heroForm" novalidate>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="yesno">Not searchable</label>
+            <ng-select #agreeSelect labelForId="yesno" [searchable]="false" formControlName="agree">
+                <ng-option [value]="true">Yes</ng-option>
+                <ng-option [value]="false">No</ng-option>
+            </ng-select>
+            <br/>
+            <button (click)="agreeSelect.focus()" class="btn btn-sm btn-secondary">Focus select</button>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="heroId">Basic select</label>
+            <ng-select [searchable]="false" [clearable]="false" labelForId="heroId" formControlName="heroId">
+                <ng-template ng-label-tmp let-item="item" let-label="label">
+                    <img src="{{basePath}}/assets/{{item}}.png" width="20px" height="20px"/> {{label}}
+                </ng-template>
+                <ng-option value="batman">Batman</ng-option>
+                <ng-option value="spidey">Spider-Man</ng-option>
+                <ng-option value="thor">Thor</ng-option>
+            </ng-select>
+        </div>
+    </div>
+</form>

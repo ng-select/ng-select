@@ -1,0 +1,11 @@
+<p>Use search term and filter on custom fields. Type <b>female</b> to see only females.</p>
+
+<ng-select [items]="people"
+           bindLabel="name"
+           [loading]="peopleLoading"
+           [searchFn]="customSearchFn">
+    <ng-template ng-option-tmp let-item="item">
+        {{item.name}} <br/>
+        <small>{{item.gender}}</small>
+    </ng-template>
+</ng-select>

@@ -1,0 +1,20 @@
+<p>
+    Having more complex use case, you can use function expression as <b>groupBy</b> input. Also you can use <b>[groupValue]</b>
+    to set value of grouped item.
+</p>
+
+<ng-select [items]="accounts"
+           bindLabel="name"
+           bindValue="name"
+           [groupBy]="groupByFn"
+           [groupValue]="groupValueFn"
+           [multiple]="true"
+           [(ngModel)]="selectedAccounts">
+    <ng-template ng-optgroup-tmp let-item="item">
+        <span style="vertical-align: middle;">{{item.name}}</span>
+        <span class="ml-1 badge badge-secondary">{{item.total}}</span>
+    </ng-template>
+</ng-select>
+
+<br>
+<small>Selected: {{selectedAccounts | json}}</small>

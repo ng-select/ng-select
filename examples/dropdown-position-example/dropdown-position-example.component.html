@@ -1,0 +1,17 @@
+<p>
+    By default the dropdown position is set to auto and will be shown above if there is not space placing it at the
+    bottom.
+</p>
+
+<ng-select [items]="cities">
+</ng-select>
+
+<hr>
+<p>
+    You can force position to bottom or top by setting <b>dropdownPosition</b>
+</p>
+
+<ng-select [dropdownPosition]="'top'"
+           [searchable]="false"
+           [items]="cities">
+</ng-select>
