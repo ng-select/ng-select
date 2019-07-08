@@ -64,7 +64,7 @@ $ng-select-bg: #ffffff !default;
         align-items: baseline;
         min-height: 51.5px;
         &:after {
-            border-bottom: 1px solid rgba(0, 0, 0, .42);
+            border-bottom: thin solid rgba(0, 0, 0, .42);
             content: '';
             width: 100%;
             bottom: 0;
