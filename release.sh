@@ -1,8 +1,8 @@
 #!/bin/bash
 git pull
 # update changelog
-cd ./src
-node ../node_modules/standard-version/bin/cli.js --infile ../CHANGELOG.md
+cd ./src/ng-select/
+node ../../node_modules/standard-version/bin/cli.js --infile ../../CHANGELOG.md
 cd ..
 
 # build lib
