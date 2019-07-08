@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/ng-select/ng-select/compare/v2.20.5...v3.0.0) (2019-07-08)
+
+
+### Bug Fixes
+
+* emit add event after model has been updated ([86d611d](https://github.com/ng-select/ng-select/commit/86d611d)), closes [#620](https://github.com/ng-select/ng-select/issues/620)
+* preserve items without group order ([86ab751](https://github.com/ng-select/ng-select/commit/86ab751)), closes [#1132](https://github.com/ng-select/ng-select/issues/1132)
+* stringify group label ([d8be200](https://github.com/ng-select/ng-select/commit/d8be200)), closes [#1052](https://github.com/ng-select/ng-select/issues/1052)
+* use border thin for material theme ([1083ff6](https://github.com/ng-select/ng-select/commit/1083ff6)), closes [#969](https://github.com/ng-select/ng-select/issues/969)
+
+
+### Chores
+
+* move [ngOptionHighlight] to a separate package ([c09dde8](https://github.com/ng-select/ng-select/commit/c09dde8)), closes [#1116](https://github.com/ng-select/ng-select/issues/1116)
+* remove [excludeGroupsFromDefaultSelection] ([4fef383](https://github.com/ng-select/ng-select/commit/4fef383))
+
+
+### Features
+
+* add input for tabIndex ([112f6a2](https://github.com/ng-select/ng-select/commit/112f6a2)), closes [#1175](https://github.com/ng-select/ng-select/issues/1175)
+* expose blur method ([643cf52](https://github.com/ng-select/ng-select/commit/643cf52)), closes [#1238](https://github.com/ng-select/ng-select/issues/1238) [#1242](https://github.com/ng-select/ng-select/issues/1242)
+* pass custom input attributes using `inputAttrs` ([1614aa7](https://github.com/ng-select/ng-select/commit/1614aa7)), closes [#1222](https://github.com/ng-select/ng-select/issues/1222)
+* update ng-select to support angular v8 ([2e4d329](https://github.com/ng-select/ng-select/commit/2e4d329)), closes [#1196](https://github.com/ng-select/ng-select/issues/1196)
+
+
+### BREAKING CHANGES
+
+* autoCorrect, autoCapitalize are now removed.
+* `[ngOptionHighlight]` is now available from @ng-select/ng-option-highlight
+* `[excludeGroupsFromDefaultSelection]` is now removed until better solution is found
+* `filterValue` is now available as `searchTerm`
+
+
+
 <a name="2.20.5"></a>
 ## [2.20.5](https://github.com/ng-select/ng-select/compare/v2.20.4...v2.20.5) (2019-07-04)
 
