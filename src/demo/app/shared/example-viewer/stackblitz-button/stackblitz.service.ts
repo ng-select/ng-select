@@ -28,6 +28,8 @@ const dependencies = {
     '@angular/platform-browser-dynamic': angularVersion,
     '@angular/router': angularVersion,
     '@ng-select/ng-select': '*',
+    '@ng-select/ng-option-highlight': '*',
+    '@ng-bootstrap/ng-bootstrap': '*',
     'core-js': '^2.4.1',
     'rxjs': '>=6.0.0-beta.0 <7.0.0',
     'web-animations-js': '^2.3.1',

@@ -1,7 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap/scss/bootstrap";
-@import "style/github-highlight";
-@import "style/custom";
 @import "style/sidebar";
 @import "style/content";
 
@@ -20,6 +18,9 @@ body {
 }
 
 nav.navbar {
+    @include media-breakpoint-between(xs, sm) {
+        height: auto;
+    }
     height: 80px;
     z-index: 20;
     position: relative;
