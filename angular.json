@@ -86,6 +86,7 @@
             "polyfills": "src/demo/polyfills.ts",
             "tsConfig": "src/demo/tsconfig.app.json",
             "aot": false,
+            "deployUrl": "/ng-select/",
             "extractCss": true,
             "assets": [
               "src/demo/favicon.ico",
