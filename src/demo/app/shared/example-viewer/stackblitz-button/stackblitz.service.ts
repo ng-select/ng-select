@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import sdk from '@stackblitz/sdk';
 import { Project } from '@stackblitz/sdk/typings/interfaces';
 
-const EXAMPLE_PATH = '/examples/';
-const TEMPLATE_PATH = '/assets/stackblitz/';
+const EXAMPLE_PATH = '/ng-select/examples/';
+const TEMPLATE_PATH = '/ng-select/assets/stackblitz/';
 
 const TEMPLATE_FILES = [
     'index.html',
