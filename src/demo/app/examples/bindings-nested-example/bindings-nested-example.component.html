@@ -1,0 +1,11 @@
+<p>Bind label and value to nested custom property</p>
+
+<ng-select [items]="countries"
+           bindLabel="nested.name"
+           bindValue="nested.countryId"
+           placeholder="Select value"
+           [(ngModel)]="selectedCountryId">
+</ng-select>
+
+<br>
+Selected country ID: {{selectedCountryId}}

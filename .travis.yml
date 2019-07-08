@@ -2,7 +2,7 @@ dist: trusty
 sudo: required
 language: node_js
 node_js:
-- '8'
+  - '10'
 cache:
   directories:
   - node_modules
@@ -25,14 +25,13 @@ script:
 - yarn run lint
 - yarn run test
 - npm run-script coveralls
-- yarn run integration
 - yarn run build:demo
 - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == false ]; then node_modules/.bin/gh-pages-travis; fi
 
 env:
   global:
     - DEPLOY_BRANCH="master"
-    - SOURCE_DIR="dist"
+    - SOURCE_DIR="dist/demo"
     - TARGET_BRANCH="gh-pages"
     - SSH_KEY="travis_rsa"
     - GIT_NAME="travis"

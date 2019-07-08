@@ -1,0 +1,7 @@
+<label>Custom search control inside of dropdown</label>
+
+<ng-select #select [items]="cities" [searchable]="false" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
+    <ng-template ng-header-tmp>
+        <input style="width: 100%; line-height: 24px" type="text" (input)="select.filter($event.target.value)"/>
+    </ng-template>
+</ng-select>

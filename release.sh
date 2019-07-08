@@ -12,6 +12,6 @@ yarn run build
 git push --follow-tags origin master
 
 # push to npm
-cp README.md ./dist
-cd ./dist
+cp README.md ./dist/ng-select/
+cd ./dist/ng-select/
 yarn publish --access=public

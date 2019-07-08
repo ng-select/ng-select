@@ -1,30 +1,30 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "target": "es5",
-    "module": "es2015",
-    "moduleResolution": "node",
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
     "sourceMap": true,
-    "inlineSources": true,
-    "declaration": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "module": "esnext",
+    "moduleResolution": "node",
     "experimentalDecorators": true,
-    "noImplicitAny": false,
-    "suppressImplicitAnyIndexErrors": true,
-    "skipLibCheck": true,
-    "stripInternal": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "importHelpers": true,
+    "target": "es2015",
     "typeRoots": [
       "node_modules/@types"
-    ]
-  },
-  "exclude": [
-    "node_modules",
-    "coverage",
-    "integration",
-    "dist"
-  ]
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "@ng-select/ng-select": [
+        "src/ng-select/public-api.ts"
+      ],
+      "@ng-select/ng-option-highlight": [
+        "src/ng-option-highlight/public-api.ts"
+      ]
+    }
+  }
 }

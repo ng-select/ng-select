@@ -1,0 +1,8 @@
+{
+  "name": "@ng-select/ng-option-highlight",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^8.0.3",
+    "@angular/core": "^8.0.3"
+  }
+}
