@@ -16,12 +16,11 @@
     "dropdown",
     "multiselect",
     "autocomplete",
-    "angular2",
-    "angular4"
+    "angular2"
   ],
   "peerDependencies": {
-    "@angular/common": ">=6.0.0 <9.0.0",
-    "@angular/core": ">=6.0.0 <9.0.0",
-    "@angular/forms": ">=6.0.0 <9.0.0"
+    "@angular/common": ">=8.0.0 <9.0.0",
+    "@angular/core": ">=8.0.0 <9.0.0",
+    "@angular/forms": ">=8.0.0 <9.0.0"
   }
 }
