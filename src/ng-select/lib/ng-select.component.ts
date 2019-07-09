@@ -404,7 +404,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
         this.isOpen = false;
-        this._clearSearch();
+        if (this.clearSearchOnSelect) {
+          this._clearSearch();
+        }
         this.itemsList.unmarkItem();
         this._onTouched();
         this.closeEvent.emit();
@@ -517,6 +519,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     filter(term: string) {
+        if (!this.clearSearchOnSelect && this.searchTerm && term) {
+          if (this.searchTerm.length > term.length) {
+            this.clearModel();
+          }
+        }
+
         this.searchTerm = term;
 
         if (this._isTypeahead) {
@@ -528,8 +536,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             }
         }
 
-        this.searchEvent.emit({ term, items: this.itemsList.filteredItems.map(x => x.value) });
-
+        this.searchEvent.emit({ term, items: this.itemsList.filteredItems.map(x => x.value) })
         this.open();
     }
 
