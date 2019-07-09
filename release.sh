@@ -3,7 +3,7 @@ git pull
 # update changelog
 cd ./src/ng-select/
 node ../../node_modules/standard-version/bin/cli.js --infile ../../CHANGELOG.md
-cd ..
+cd ../..
 
 # build lib
 yarn run build
