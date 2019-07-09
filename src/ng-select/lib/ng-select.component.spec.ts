@@ -2610,16 +2610,16 @@ describe('NgSelectComponent', () => {
                         [hideSelected]="hideSelected"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
-  
+
                 expect(fixture.componentInstance.select.clearSearchOnAdd).toBeTruthy();
-  
+
                 fixture.componentInstance.filter.subscribe();
                 fixture.componentInstance.select.filter('new');
                 fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.select.itemsList.filteredItems.length).toBe(1);
                 expect(fixture.componentInstance.select.searchTerm).toBe('new');
-  
+
                 fixture.componentInstance.select.select(fixture.componentInstance.select.viewPortItems[0]);
                 expect(fixture.componentInstance.select.searchTerm).toBeNull();
             }));
@@ -2633,9 +2633,9 @@ describe('NgSelectComponent', () => {
                         [clearSearchOnSelect]="false"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
-  
+
                 expect(fixture.componentInstance.select.clearSearchOnAdd).toBeTruthy();
-  
+
                 fixture.componentInstance.filter.subscribe();
                 fixture.componentInstance.select.filter('new');
                 fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
