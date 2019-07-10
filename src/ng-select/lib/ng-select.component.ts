@@ -163,7 +163,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef, static: true }) loadingSpinnerTemplate: TemplateRef<any>;
 
     @ViewChild(forwardRef(() => NgDropdownPanelComponent), { static: false }) dropdownPanel: NgDropdownPanelComponent;
-    @ViewChild('searchInput', { static: true }) searchInput: ElementRef;
+    @ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
 
     @HostBinding('class.ng-select-disabled') disabled = false;
@@ -200,7 +200,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         @Attribute('autofocus') private autoFocus: any,
         config: NgSelectConfig,
         @Inject(SELECTION_MODEL_FACTORY) newSelectionModel: SelectionModelFactory,
-        _elementRef: ElementRef,
+        _elementRef: ElementRef<HTMLElement>,
         private _cd: ChangeDetectorRef,
         private _console: ConsoleService
     ) {
@@ -579,7 +579,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _setItemsFromNgOptions() {
-        const handleNgOptions = (options: QueryList<NgOptionComponent>) => {
+        const mapNgOptions = (options: QueryList<NgOptionComponent>) => {
             this.items = options.map(option => ({
                 $ngOptionValue: option.value,
                 $ngOptionLabel: option.elementRef.nativeElement.innerHTML,
@@ -599,7 +599,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 .subscribe(option => {
                     const item = this.itemsList.findItem(option.value);
                     item.disabled = option.disabled;
-                    this._cd.markForCheck();
+                    item.label = option.label || item.label;
+                    this._cd.detectChanges();
                 });
         };
 
@@ -607,7 +608,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             .pipe(startWith(this.ngOptions), takeUntil(this._destroy$))
             .subscribe(options => {
                 this.bindLabel = this._defaultLabel;
-                handleNgOptions(options);
+                mapNgOptions(options);
                 handleOptionChange();
             });
     }
@@ -693,7 +694,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _setInputAttributes() {
-        const input: HTMLInputElement = this.searchInput.nativeElement;
+        const input = this.searchInput.nativeElement;
         const attributes = {
             type: 'text',
             autocorrect: 'off',
