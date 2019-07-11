@@ -185,6 +185,23 @@ describe('NgSelectComponent', () => {
             expect(select.itemsList.items[0].label).toBe('Vilnius');
         }));
 
+        it('should escape label', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.cities = [{ label: '<img src="azd" (error)="alert(1)" />', name: 'Vilnius' }];
+            tickAndDetectChanges(fixture);
+            select = fixture.componentInstance.select;
+            select.open();
+
+            const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+            expect(options[0].innerText).toBe('<img src="azd" (error)="alert(1)" />');
+        }));
+
         it('should set items correctly after ngModel set first when typeahead and single select is used', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
@@ -1868,6 +1885,20 @@ describe('NgSelectComponent', () => {
             tickAndDetectChanges(fixture);
             expect(items[0].disabled).toBeTruthy();
         }));
+
+        it('should update ng-option label', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [(ngModel)]="selectedCity">
+                    <ng-option [disabled]="disabled" [value]="true">{{label}}</ng-option>
+                    <ng-option [value]="false">No</ng-option>
+                </ng-select>`);
+
+            fixture.componentInstance.label = 'Indeed';
+            tickAndDetectChanges(fixture);
+            const items = fixture.componentInstance.select.itemsList.items;
+            expect(items[0].label).toBe('Indeed');
+        }));
     });
 
     describe('Multiple', () => {
@@ -3436,6 +3467,7 @@ function createEvent(target = {}) {
 class NgSelectTestCmp {
     @ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
     multiple = false;
+    label = 'Yes';
     clearOnBackspace = false;
     disabled = false;
     dropdownPosition = 'bottom';
