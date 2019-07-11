@@ -1,4 +1,19 @@
-import { Directive, TemplateRef } from '@angular/core';
+import { Directive, ElementRef, Input, OnChanges, SimpleChanges, TemplateRef } from '@angular/core';
+import { escapeHTML } from './value-utils';
+
+@Directive({ selector: '[ngItemLabel]' })
+export class NgItemLabelDirective implements OnChanges {
+    @Input() ngItemLabel: string;
+    @Input() escape = true;
+
+    constructor(private element: ElementRef<HTMLElement>) { }
+
+    ngOnChanges(changes: SimpleChanges) {
+        this.element.nativeElement.innerHTML = this.escape ?
+            escapeHTML(this.ngItemLabel) :
+            this.ngItemLabel;
+    }
+}
 
 @Directive({ selector: '[ng-option-tmp]' })
 export class NgOptionTemplateDirective {

@@ -1868,6 +1868,20 @@ describe('NgSelectComponent', () => {
             tickAndDetectChanges(fixture);
             expect(items[0].disabled).toBeTruthy();
         }));
+
+        it('should update ng-option label', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [(ngModel)]="selectedCity">
+                    <ng-option [disabled]="disabled" [value]="true">{{label}}</ng-option>
+                    <ng-option [value]="false">No</ng-option>
+                </ng-select>`);
+
+            fixture.componentInstance.label = 'Indeed';
+            tickAndDetectChanges(fixture);
+            const items = fixture.componentInstance.select.itemsList.items;
+            expect(items[0].label).toBe('Indeed');
+        }));
     });
 
     describe('Multiple', () => {
@@ -3436,6 +3450,7 @@ function createEvent(target = {}) {
 class NgSelectTestCmp {
     @ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
     multiple = false;
+    label = 'Yes';
     clearOnBackspace = false;
     disabled = false;
     dropdownPosition = 'bottom';

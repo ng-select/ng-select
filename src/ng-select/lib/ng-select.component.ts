@@ -175,6 +175,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     dropdownId = newId();
     element: HTMLElement;
     focused: boolean;
+    escapeHTML = true;
 
     private _items = [];
     private _itemsAreUsed: boolean;
@@ -247,6 +248,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     ngAfterViewInit() {
         if (!this._itemsAreUsed) {
+            this.escapeHTML = false;
             this._setItemsFromNgOptions();
         }
 

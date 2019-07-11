@@ -1,21 +1,22 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
+import { NgOptionComponent } from './ng-option.component';
 import { NgSelectComponent, SELECTION_MODEL_FACTORY } from './ng-select.component';
 import {
     NgFooterTemplateDirective,
     NgHeaderTemplateDirective,
     NgLabelTemplateDirective,
+    NgLoadingSpinnerTemplateDirective,
     NgLoadingTextTemplateDirective,
     NgMultiLabelTemplateDirective,
     NgNotFoundTemplateDirective,
     NgOptgroupTemplateDirective,
     NgOptionTemplateDirective,
     NgTagTemplateDirective,
-    NgTypeToSearchTemplateDirective,
-    NgLoadingSpinnerTemplateDirective
+    NgItemLabelDirective,
+    NgTypeToSearchTemplateDirective
 } from './ng-templates.directive';
-import { NgOptionComponent } from './ng-option.component';
-import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { DefaultSelectionModelFactory } from './selection-model';
 
 @NgModule({
@@ -33,7 +34,8 @@ import { DefaultSelectionModelFactory } from './selection-model';
         NgTypeToSearchTemplateDirective,
         NgLoadingTextTemplateDirective,
         NgTagTemplateDirective,
-        NgLoadingSpinnerTemplateDirective
+        NgLoadingSpinnerTemplateDirective,
+        NgItemLabelDirective
     ],
     imports: [
         CommonModule
@@ -57,4 +59,4 @@ import { DefaultSelectionModelFactory } from './selection-model';
         { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory }
     ]
 })
-export class NgSelectModule { }
+export class NgSelectModule {}
