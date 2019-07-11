@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.0.2"></a>
+## [3.0.2](https://github.com/ng-select/ng-select/compare/v3.0.1...v3.0.2) (2019-07-11)
+
+
+### Bug Fixes
+
+* **ng-option:** don't escape html inside ng-options ([7ccea9d](https://github.com/ng-select/ng-select/commit/7ccea9d)), closes [#506](https://github.com/ng-select/ng-select/issues/506)
+* **ng-option:** handle label updates ([634c804](https://github.com/ng-select/ng-select/commit/634c804)), closes [#649](https://github.com/ng-select/ng-select/issues/649)
+
+
+
 <a name="3.0.1"></a>
 ## [3.0.1](https://github.com/ng-select/ng-select/compare/v3.0.0...v3.0.1) (2019-07-09)
 
