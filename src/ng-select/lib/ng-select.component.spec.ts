@@ -185,6 +185,23 @@ describe('NgSelectComponent', () => {
             expect(select.itemsList.items[0].label).toBe('Vilnius');
         }));
 
+        it('should escape label', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.cities = [{ label: '<img src="azd" (error)="alert(1)" />', name: 'Vilnius' }];
+            tickAndDetectChanges(fixture);
+            select = fixture.componentInstance.select;
+            select.open();
+
+            const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+            expect(options[0].innerText).toBe('<img src="azd" (error)="alert(1)" />');
+        }));
+
         it('should set items correctly after ngModel set first when typeahead and single select is used', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
