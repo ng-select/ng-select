@@ -1,6 +1,15 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [3.0.3](https://github.com/ng-select/ng-select/compare/v3.0.2...v3.0.3) (2019-07-15)
+
+
+### Bug Fixes
+
+* use item as default track by ([1d7df92](https://github.com/ng-select/ng-select/commit/1d7df92)), closes [#1269](https://github.com/ng-select/ng-select/issues/1269)
+
+
 
 <a name="3.0.2"></a>
 ## [3.0.2](https://github.com/ng-select/ng-select/compare/v3.0.1...v3.0.2) (2019-07-11)
