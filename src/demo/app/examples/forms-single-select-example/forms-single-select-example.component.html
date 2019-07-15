@@ -1,0 +1,28 @@
+<form [formGroup]="heroForm" novalidate>
+
+    <div class="form-group">
+        <label for="age">Age</label>
+        <ng-select #agesSelect [items]="ages"
+                   [selectOnTab]="true"
+                   bindValue="value"
+                   labelForId="age"
+                   (ngModelChange)="showConfirm(confirmation)"
+                   placeholder="Select age"
+                   formControlName="age">
+        </ng-select>
+        <br>
+        <button class="btn btn-secondary btn-sm" (click)="toggleAgeDisable()">Toggle disabled</button>
+        <button (click)="agesSelect.focus()" class="btn btn-sm btn-secondary">Focus select</button>
+    </div>
+
+</form>
+
+<ng-template #confirmation let-c="close" let-d="dismiss">
+    <div class="modal-header">Next Step</div>
+    <div class="modal-body">Do you wish to continue?</div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="d()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="c()">Yes</button>
+    </div>
+
+</ng-template>

@@ -1,0 +1,27 @@
+<form [formGroup]="heroForm">
+    <div class="form-group">
+        <label for="album">Loading async data</label>
+        <ng-select [items]="albums"
+                   #select
+                   bindLabel="title"
+                   dropdownPosition="auto"
+                   bindValue="id"
+                   labelForId="album"
+                   placeholder="Select album"
+                   [virtualScroll]="true"
+                   formControlName="album">
+            <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                <div><span>Title: </span><span [ngOptionHighlight]="search">{{item.title}}</span></div>
+                <small><b>Id:</b> {{item.id}} | <b>UserId:</b> {{item.userId}}</small>
+            </ng-template>
+        </ng-select>
+        <small class="form-text text-muted">Albums data from backend using HttpClient.</small>
+        <br>
+        <button class="btn btn-secondary btn-sm" (click)="selectFirstAlbum()">Select first album</button>
+        <button class="btn btn-secondary btn-sm" (click)="selectAlbumsRange(0, 10)">Set 0-10 albums</button>
+        <button class="btn btn-secondary btn-sm" (click)="selectAlbumsRange(10, 20)">Set 10-20 albums</button>
+        <button (click)="openSelect(select)" class="btn btn-sm btn-secondary">Open</button>
+        <button (click)="closeSelect(select)" class="btn btn-sm btn-secondary">Close</button>
+    </div>
+</form>
+

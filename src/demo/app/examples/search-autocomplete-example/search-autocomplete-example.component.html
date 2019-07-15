@@ -1,0 +1,18 @@
+<p>Use <b>typeahead</b> to subscribe to search term and load async items.</p>
+<label>Multi select + Typeahead + Custom items (tags)</label>
+
+<ng-select [items]="people$ | async"
+           bindLabel="name"
+           [addTag]="true"
+           [multiple]="true"
+           [hideSelected]="true"
+           [trackByFn]="trackByFn"
+           [loading]="peopleLoading"
+           [typeahead]="peopleInput$"
+           [(ngModel)]="selectedPersons">
+</ng-select>
+<br>
+
+<div style="margin-bottom:100px">
+    Selected persons: {{selectedPersons | json}}
+</div>

@@ -1,0 +1,14 @@
+<p class="card-text">
+    Most common case is showing data from backend
+    API and with ng-select this is extremely simple since you can bind directly to
+    observable when using angular <b> | async</b> pipe
+</p>
+
+<ng-select [items]="people$ | async"
+           bindLabel="name"
+           autofocus
+           bindValue="id"
+           [(ngModel)]="selectedPersonId">
+</ng-select>
+
+<br/>Selected: {{selectedPersonId}}

@@ -1,7 +1,7 @@
  [![npm version](https://badge.fury.io/js/%40ng-select%2Fng-select.svg)](https://badge.fury.io/js/%40ng-select%2Fng-select)
 [![Build Status][travis-badge]][travis-badge-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
-[![gzip bundle size](http://img.badgesize.io/https://unpkg.com/@ng-select/ng-select@latest/bundles/ng-select.umd.min.js?compression=gzip&style=flat-square)][ng-select-url]
+[![gzip bundle size](http://img.badgesize.io/https://unpkg.com/@ng-select/ng-select@latest/bundles/ng-select-ng-select.umd.min.js?compression=gzip&style=flat-square)][ng-select-url]
 
 [travis-badge]: https://travis-ci.org/ng-select/ng-select.svg?branch=master
 [travis-badge-url]: https://travis-ci.org/ng-select/ng-select
@@ -10,7 +10,7 @@
 [ng-select-url]: https://unpkg.com/@ng-select/ng-select@latest
 
 # Angular ng-select - Lightweight all in one UI Select, Multiselect and Autocomplete
-See [Demos](https://ng-select.github.io/ng-select) or try in [Stackblitz](https://stackblitz.com/edit/ng-select?file=app%2Fapp.component.ts)
+See [Demo](https://ng-select.github.io/ng-select) page.
 
 ---
 
@@ -18,8 +18,9 @@ See [Demos](https://ng-select.github.io/ng-select) or try in [Stackblitz](https:
 
 | Angular| ng-select|
 | ------|:------:| 
-| v6.x  | v2.x |
-| v5.x  | v1.x |
+| >=8.0.0 <9.0.0  | v3.x |
+| >=6.0.0 <8.0.0  | v2.x |
+| v5.x.x  | v1.x |
 
 ---
 
@@ -126,7 +127,6 @@ map: {
 | [clearOnBackspace] | `boolean` | `true` | no | Clear selected values one by one when clicking backspace. Default `true`|
 | [compareWith] | `(a: any, b: any) => boolean` | `(a, b) => a === b` | no | A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. |
 | dropdownPosition | `bottom` \| `top` \| `auto` |  `auto` | no | Set the dropdown position on open |
-| [excludeGroupsFromDefaultSelection] | `boolean` |  false | no | Exclude group from default selection when `selectableGroup` is `true`. Default `false`. |
 | [groupBy] | `string` \| `Function` | null | no | Allow to group items by key or function expression |
 | [groupValue] |  `(groupKey: string, cildren: any[]) => Object` | - | no | Function expression to provide group value |
 | [selectableGroup] | `boolean` | false | no | Allow to select group when groupBy is used |
@@ -152,8 +152,8 @@ map: {
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
-| autoCorrect | `string` | `off` | no | Allows control of the `autocorrect` attribute. |
-| autoCapitalize | `string` | `off` | no | Allows control of the `autocapitalize` attribute. |
+| [inputAttrs] | `{ [key: string]: string }` |  `-` | no | Pass custom attributes to underlying `input` element |
+| [tabIndex] | `number` |  `-` | no | Set tabindex on ng-select |
 
 ### Outputs
 
@@ -178,6 +178,7 @@ map: {
 | open  | Opens the select dropdown panel |
 | close  | Closes the select dropdown panel |
 | focus  | Focuses the select element |
+| blur  | Blurs the select element |
 
 ### Other
  Name  | Type | Description |

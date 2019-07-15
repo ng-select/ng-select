@@ -1,0 +1,8 @@
+<p>Custom selected item label using <b>ng-label-tmp</b></p>
+
+<ng-select [items]="cities" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
+    <ng-template ng-label-tmp let-item="item">
+        <img height="15" width="15" [src]="item.avatar"/>
+        {{item.name}}
+    </ng-template>
+</ng-select>
