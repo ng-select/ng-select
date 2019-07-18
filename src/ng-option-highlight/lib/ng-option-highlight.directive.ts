@@ -44,17 +44,9 @@ export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
             return;
         }
 
-        const indexOfTerm = searchHelper.stripSpecialChars(label)
-            .toLowerCase()
-            .indexOf(searchHelper.stripSpecialChars(this.term).toLowerCase());
-        if (indexOfTerm > -1) {
-            this._setInnerHtml(
-                label.substring(0, indexOfTerm)
-                + `<span class="highlighted">${label.substr(indexOfTerm, this.term.length)}</span>`
-                + label.substring(indexOfTerm + this.term.length, label.length));
-        } else {
-            this._setInnerHtml(label);
-        }
+        const alternationString = this.term.replace(' ', '|')
+        const termRegex = new RegExp(alternationString, 'gi')
+        this._setInnerHtml(label.replace(termRegex, `<span class=\"highlighted\">$&</span>`))
     }
 
     private get _canHighlight() {
