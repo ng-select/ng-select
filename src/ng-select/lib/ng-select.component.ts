@@ -142,7 +142,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Output('change') changeEvent = new EventEmitter();
     @Output('open') openEvent = new EventEmitter();
     @Output('close') closeEvent = new EventEmitter();
-    @Output('search') searchEvent = new EventEmitter<{term: string, items: any[]}>();
+    @Output('search') searchEvent = new EventEmitter<{ term: string, items: any[] }>();
     @Output('clear') clearEvent = new EventEmitter();
     @Output('add') addEvent = new EventEmitter();
     @Output('remove') removeEvent = new EventEmitter();
@@ -167,7 +167,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
 
     @HostBinding('class.ng-select-disabled') disabled = false;
-    @HostBinding('class.ng-select-filtered') get filtered() { return !!this.searchTerm && this.searchable };
+    @HostBinding('class.ng-select-filtered') get filtered() { return (!!this.searchTerm && this.searchable || this._IMEComposition) };
 
     itemsList: ItemsList;
     viewPortItems: NgOption[] = [];
@@ -190,6 +190,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private readonly _keyPress$ = new Subject<string>();
     private _onChange = (_: any) => { };
     private _onTouched = () => { };
+
+    /**
+     * Is IME in compostion mode
+     * 
+     * @private
+     * @memberof NgSelectComponent
+     */
+    private _IMEComposition = false;
 
     clearItem = (item: any) => {
         const option = this.selectedItems.find(x => x.value === item);
@@ -515,7 +523,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         return empty && this._isTypeahead && !this.searchTerm && !this.loading;
     }
 
+    handleSearchComposition(isCompositionStart: boolean, term: string) {
+        this._IMEComposition = isCompositionStart;
+        if (this._IMEComposition === false) {
+            this.filter(term);
+        }
+    }
+
     filter(term: string) {
+        if (this._IMEComposition) {
+            return;
+        }
         this.searchTerm = term;
 
         if (this._isTypeahead) {
