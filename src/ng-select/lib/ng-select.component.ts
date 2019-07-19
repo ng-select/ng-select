@@ -194,7 +194,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     /**
      * Is IME in compostion mode
      * 
-     * @private
      * @memberof NgSelectComponent
      */
     private _IMEComposition = false;
