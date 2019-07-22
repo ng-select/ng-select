@@ -37,9 +37,10 @@ describe('NgOptionHighlightDirective', () => {
 
     it('should have one element with highlighted text when term matching', () => {
         const span = fixture.debugElement.query(By.css('#test1'));
-        fixture.componentInstance.term = 'highlighted';
+        fixture.componentInstance.term = 'is high';
         fixture.detectChanges();
-        expect(span.nativeElement.querySelector('.highlighted').innerHTML).toBe('highlighted');
+        expect(span.nativeElement.querySelectorAll('.highlighted')[0].innerHTML).toBe('is');
+        expect(span.nativeElement.querySelectorAll('.highlighted')[1].innerHTML).toBe('high');
         expect(span.nativeElement.textContent).toBe('My text is highlighted');
     });
 
