@@ -8,9 +8,8 @@ import { By } from '@angular/platform-browser';
         <span id="test1" [ngOptionHighlight]="term">My text is highlighted</span>
         <span id="test2" [ngOptionHighlight]="term">My text is not highlighted</span>
         <span id="test3" [ngOptionHighlight]="term">My text is highlighted</span>
-        <span id="test4" [ngOptionHighlight]="term">My text is highlighted text</span>
-        <span id="test5" [ngOptionHighlight]="term">My ťëxť is highlighted text</span>
-        <span id="test6" *ngIf="showNew" [ngOptionHighlight]="term">New label</span>
+        <span id="test4" [ngOptionHighlight]="term">My ťëxť is highlighted text</span>
+        <span id="test5" *ngIf="showNew" [ngOptionHighlight]="term">New label</span>
     `
 })
 class TestComponent {
@@ -62,7 +61,7 @@ describe('NgOptionHighlightDirective', () => {
     });
 
     it('Highlights special characters', () => {
-        const span = fixture.debugElement.query(By.css('#test5'));
+        const span = fixture.debugElement.query(By.css('#test4'));
         fixture.componentInstance.term = 'ťëxť';
         fixture.detectChanges();
         expect(span.nativeElement.querySelector('.highlighted').innerHTML).toBe('ťëxť');
@@ -74,7 +73,7 @@ describe('NgOptionHighlightDirective', () => {
         fixture.detectChanges();
         fixture.componentInstance.showNew = true;
         fixture.detectChanges();
-        const span = fixture.debugElement.query(By.css('#test6'));
+        const span = fixture.debugElement.query(By.css('#test5'));
         expect(span.nativeElement.querySelector('.highlighted').innerHTML).toBe('New');
         expect(span.nativeElement.textContent).toBe('New label');
     });
