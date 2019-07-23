@@ -31,7 +31,7 @@ describe('NgOptionHighlightDirective', () => {
 
     it('should have five elements with highlight directive', () => {
         const highlightDirectives = fixture.debugElement.queryAll(By.directive(NgOptionHighlightDirective));
-        expect(highlightDirectives.length).toBe(5);
+        expect(highlightDirectives.length).toBe(4);
     });
 
     it('should have one element with highlighted text when term matching', () => {

@@ -182,12 +182,12 @@ map: {
 ### Other
  Name  | Type | Description |
 | ------------- | ------------- | ------------- |
-| [ngOptionHighlight] | directive | Highlights search term in option. Accepts search term. Should be used on option element. |
+| [ngOptionHighlight] | directive | Highlights search term in option. Accepts search term. Should be used on option element. [README](https://github.com/ng-select/ng-select/blob/master/src/ng-option-highlight/README.md) |
 | NgSelectConfig | configuration | Configuration provider for the NgSelect component. You can inject this service and provide application wide configuration. |
 | SELECTION_MODEL_FACTORY | service | DI token for SelectionModel implementation. You can provide custom implementation changing selection behaviour. |
 
 ## Custom selection logic
-Ng-select allows to provide custom selection implementation using `SELECTION_MODEL_FACTORY`. To override [default](https://github.com/ng-select/ng-select/blob/master/src/ng-select/selection-model.ts) logic provide your factory method in your angular module.
+Ng-select allows to provide custom selection implementation using `SELECTION_MODEL_FACTORY`. To override [default](https://github.com/ng-select/ng-select/blob/master/src/ng-select/lib/selection-model.ts) logic provide your factory method in your angular module.
 
 ```javascript
 // app.module.ts
