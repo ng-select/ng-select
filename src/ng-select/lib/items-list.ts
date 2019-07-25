@@ -206,7 +206,8 @@ export class ItemsList {
         if (lastMarkedIndex > -1) {
             this._markedIndex = lastMarkedIndex;
         } else {
-            this._markedIndex = markDefault && !isDefined(this._ngSelect.groupBy) ? this.filteredItems.findIndex(x => !x.disabled) : -1;
+            this._markedIndex = markDefault && (!isDefined(this._ngSelect.groupBy) || this._ngSelect.selectableGroup)
+                ? this.filteredItems.findIndex(x => !x.disabled) : -1;
         }
     }
 
