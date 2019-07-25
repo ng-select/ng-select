@@ -5,7 +5,8 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "build": "ng build ng-select && yarn build:themes && yarn copy-sass",
+    "build": "ng-packagr -p src/ng-select/package.json && yarn build:themes && yarn copy-sass",
+    "build:ng-option-highlight": "ng-packagr -p src/ng-option-highlight/package.json",
     "build:demo": "ng build demo --prod --baseHref=/ng-select && yarn copy-examples",
     "build:themes": "node-sass --output-style compressed src/ng-select/themes/ -o dist/ng-select/themes",
     "copy-sass": "mkdir -p dist/ng-select/scss && cp src/ng-select/**/*.scss dist/ng-select/scss",

@@ -9,6 +9,13 @@
     "node": ">= 6.9.0",
     "npm": ">= 3.0.0"
   },
+  "ngPackage": {
+    "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+    "dest": "../../dist/ng-select",
+    "lib": {
+      "entryFile": "public-api.ts"
+    }
+  },
   "keywords": [
     "angular",
     "select",

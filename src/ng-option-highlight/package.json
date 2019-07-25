@@ -1,6 +1,13 @@
 {
   "name": "@ng-select/ng-option-highlight",
   "version": "0.0.2",
+  "ngPackage": {
+    "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+    "dest": "../../dist/ng-option-highlight",
+    "lib": {
+      "entryFile": "public-api.ts"
+    }
+  },
   "peerDependencies": {
     "@angular/common": "^8.0.3",
     "@angular/core": "^8.0.3"
