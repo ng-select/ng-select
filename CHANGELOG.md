@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.4](https://github.com/ng-select/ng-select/compare/v3.0.3...v3.0.4) (2019-07-26)
+
+
+### Bug Fixes
+
+* dynamic footer and header template ([#1268](https://github.com/ng-select/ng-select/issues/1268)) ([8787fa9](https://github.com/ng-select/ng-select/commit/8787fa9)), closes [#1282](https://github.com/ng-select/ng-select/issues/1282)
+* use regex with multiple return to highlight multiple search terms ([#1275](https://github.com/ng-select/ng-select/issues/1275)) ([8a0d880](https://github.com/ng-select/ng-select/commit/8a0d880)), closes [#739](https://github.com/ng-select/ng-select/issues/739)
+
+
+
 ### [3.0.3](https://github.com/ng-select/ng-select/compare/v3.0.2...v3.0.3) (2019-07-15)
 
 
