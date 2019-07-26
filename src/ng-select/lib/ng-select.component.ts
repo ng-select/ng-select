@@ -154,8 +154,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChild(NgOptgroupTemplateDirective, { read: TemplateRef, static: true }) optgroupTemplate: TemplateRef<any>;
     @ContentChild(NgLabelTemplateDirective, { read: TemplateRef, static: true }) labelTemplate: TemplateRef<any>;
     @ContentChild(NgMultiLabelTemplateDirective, { read: TemplateRef, static: true }) multiLabelTemplate: TemplateRef<any>;
-    @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef, static: true }) headerTemplate: TemplateRef<any>;
-    @ContentChild(NgFooterTemplateDirective, { read: TemplateRef, static: true }) footerTemplate: TemplateRef<any>;
+    @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef, static: false }) headerTemplate: TemplateRef<any>;
+    @ContentChild(NgFooterTemplateDirective, { read: TemplateRef, static: false }) footerTemplate: TemplateRef<any>;
     @ContentChild(NgNotFoundTemplateDirective, { read: TemplateRef, static: true }) notFoundTemplate: TemplateRef<any>;
     @ContentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef, static: true }) typeToSearchTemplate: TemplateRef<any>;
     @ContentChild(NgLoadingTextTemplateDirective, { read: TemplateRef, static: true }) loadingTextTemplate: TemplateRef<any>;
