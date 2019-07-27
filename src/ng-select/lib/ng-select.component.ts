@@ -167,7 +167,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
 
     @HostBinding('class.ng-select-disabled') disabled = false;
-    @HostBinding('class.ng-select-filtered') get filtered() { return (!!this.searchTerm && this.searchable || this._IMEComposition) };
+    @HostBinding('class.ng-select-filtered') get filtered() { return (!!this.searchTerm && this.searchable || this._isComposing) };
 
     itemsList: ItemsList;
     viewPortItems: NgOption[] = [];
@@ -191,12 +191,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _onChange = (_: any) => { };
     private _onTouched = () => { };
 
-    /**
-     * Is IME in compostion mode
-     * 
-     * @memberof NgSelectComponent
-     */
-    private _IMEComposition = false;
+    private _isComposing = false;
 
     clearItem = (item: any) => {
         const option = this.selectedItems.find(x => x.value === item);
@@ -521,16 +516,18 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         const empty = this.itemsList.filteredItems.length === 0;
         return empty && this._isTypeahead && !this.searchTerm && !this.loading;
     }
+    
+    onCompositionStart() {
+        this._isComposing = true;
+    }
 
-    handleSearchComposition(isCompositionStart: boolean, term: string) {
-        this._IMEComposition = isCompositionStart;
-        if (this._IMEComposition === false) {
-            this.filter(term);
-        }
+    onCompositionEnd(term: string) {
+        this._isComposing = false;
+        this.filter(term);
     }
 
     filter(term: string) {
-        if (this._IMEComposition) {
+        if (this._isComposing) {
             return;
         }
         this.searchTerm = term;
