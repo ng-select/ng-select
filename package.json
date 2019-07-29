@@ -5,6 +5,7 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
+<<<<<<< HEAD
     "clean": "rimraf out-tsc dist/* integration/node_modules/@ng-select",
     "prebuild": "yarn clean",
     "build": "ng-packagr -p ./src/package.json && yarn build:themes && yarn copy-sass",
@@ -18,9 +19,37 @@
     "coveralls": "cat ./coverage/lcov/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "integration": "./integration_test.sh",
     "lint": "tslint --type-check --project ./src/tsconfig.json",
+=======
+    "build": "ng build ng-select && yarn build:themes && yarn copy-sass",
+    "build:demo": "ng build demo --prod --baseHref=/ng-select && yarn copy-examples",
+    "build:themes": "node-sass --output-style compressed src/ng-select/themes/ -o dist/ng-select/themes",
+    "copy-sass": "mkdir -p dist/ng-select/scss && cp src/ng-select/**/*.scss dist/ng-select/scss",
+    "copy-examples": "cp -r src/demo/app/examples dist/demo",
+    "start": "ng serve",
+    "test:watch": "ng test ng-select --watch",
+    "test": "ng test ng-select --code-coverage",
+    "coveralls": "cat ./coverage/ng-select/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "lint": "ng lint ng-select",
+>>>>>>> c35ea323234f1bedbda6f8f1671809e364afb382
     "release": "sh ./release.sh"
   },
+  "dependencies": {
+    "@angular/animations": "~8.1.1",
+    "@angular/common": "~8.1.1",
+    "@angular/compiler": "~8.1.1",
+    "@angular/core": "~8.1.1",
+    "@angular/forms": "~8.1.1",
+    "@angular/platform-browser": "~8.1.1",
+    "@angular/platform-browser-dynamic": "~8.1.1",
+    "@angular/router": "~8.1.1",
+    "@ng-bootstrap/ng-bootstrap": "^5.0.0",
+    "bootstrap": "^4.3.1",
+    "rxjs": "~6.5.2",
+    "tslib": "^1.9.0",
+    "zone.js": "~0.9.1"
+  },
   "devDependencies": {
+<<<<<<< HEAD
     "@angular/animations": "^8.0.0",
     "@angular/common": "^8.0.0",
     "@angular/compiler": "^8.0.0",
@@ -40,16 +69,23 @@
     "bootstrap": "^4.1.3",
     "copy-webpack-plugin": "^4.5.2",
     "core-js": "^2.5.7",
+=======
+    "@angular-devkit/build-angular": "~0.801.1",
+    "@angular-devkit/build-ng-packagr": "~0.801.1",
+    "@angular/cli": "~8.1.1",
+    "@angular/compiler-cli": "~8.1.1",
+    "@angular/language-service": "~8.1.1",
+    "@stackblitz/sdk": "^1.3.0",
+    "@types/jasmine": "^3.3.13",
+    "@types/jasminewd2": "^2.0.6",
+    "@types/node": "^12.6.2",
+    "codelyzer": "^5.1.0",
+>>>>>>> c35ea323234f1bedbda6f8f1671809e364afb382
     "coveralls": "^3.0.2",
-    "css-loader": "^1.0.0",
-    "extract-text-webpack-plugin": "^3.0.2",
-    "file-loader": "^1.1.11",
     "gh-pages-travis": "^1.0.4",
-    "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.2.0",
-    "istanbul-instrumenter-loader": "^3.0.1",
-    "jasmine-core": "^3.2.0",
+    "jasmine-core": "^3.4.0",
     "jasmine-spec-reporter": "^4.2.1",
+<<<<<<< HEAD
     "jquery": "^3.3.1",
     "karma": "^3.0.0",
     "karma-chrome-launcher": "^2.0.0",
@@ -83,5 +119,19 @@
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.14",
     "zone.js": "^0.9.1"
+=======
+    "karma": "^4.1.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage-istanbul-reporter": "^2.0.5",
+    "karma-jasmine": "^2.0.1",
+    "karma-jasmine-html-reporter": "^1.4.2",
+    "ng-packagr": "^5.1.0",
+    "node-sass": "^4.12.0",
+    "standard-version": "^6.0.1",
+    "ts-node": "~8.3.0",
+    "tsickle": "^0.35.0",
+    "tslint": "~5.18.0",
+    "typescript": "~3.4.3"
+>>>>>>> c35ea323234f1bedbda6f8f1671809e364afb382
   }
 }

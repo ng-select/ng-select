@@ -1,0 +1,20 @@
+<p>Select multiple elements</p>
+
+<ng-select
+    [items]="people$ | async"
+    [multiple]="true"
+    [closeOnSelect]="false"
+    [searchable]="false"
+    bindLabel="name"
+    placeholder="Select people"
+    [(ngModel)]="selectedPeople">
+</ng-select>
+
+<div class="mt-3">
+    Selected value: <br/>
+    <ul>
+        <li *ngFor="let item of selectedPeople">{{item.name}}</li>
+    </ul>
+    <button (click)="clearModel()" class="btn btn-secondary btn-sm">Clear model</button>
+    <button (click)="changeModel()" class="btn btn-secondary btn-sm">Change model</button>
+</div>

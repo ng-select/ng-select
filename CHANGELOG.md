@@ -1,6 +1,245 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [3.0.4](https://github.com/ng-select/ng-select/compare/v3.0.3...v3.0.4) (2019-07-26)
+
+
+### Bug Fixes
+
+* dynamic footer and header template ([#1268](https://github.com/ng-select/ng-select/issues/1268)) ([8787fa9](https://github.com/ng-select/ng-select/commit/8787fa9)), closes [#1282](https://github.com/ng-select/ng-select/issues/1282)
+* use regex with multiple return to highlight multiple search terms ([#1275](https://github.com/ng-select/ng-select/issues/1275)) ([8a0d880](https://github.com/ng-select/ng-select/commit/8a0d880)), closes [#739](https://github.com/ng-select/ng-select/issues/739)
+
+
+
+### [3.0.3](https://github.com/ng-select/ng-select/compare/v3.0.2...v3.0.3) (2019-07-15)
+
+
+### Bug Fixes
+
+* use item as default track by ([1d7df92](https://github.com/ng-select/ng-select/commit/1d7df92)), closes [#1269](https://github.com/ng-select/ng-select/issues/1269)
+
+
+
+<a name="3.0.2"></a>
+## [3.0.2](https://github.com/ng-select/ng-select/compare/v3.0.1...v3.0.2) (2019-07-11)
+
+
+### Bug Fixes
+
+* **ng-option:** don't escape html inside ng-options ([7ccea9d](https://github.com/ng-select/ng-select/commit/7ccea9d)), closes [#506](https://github.com/ng-select/ng-select/issues/506)
+* **ng-option:** handle label updates ([634c804](https://github.com/ng-select/ng-select/commit/634c804)), closes [#649](https://github.com/ng-select/ng-select/issues/649)
+
+
+
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/ng-select/ng-select/compare/v3.0.0...v3.0.1) (2019-07-09)
+
+
+### Bug Fixes
+
+* update peer dependencies to start from v8 ([a90e3f1](https://github.com/ng-select/ng-select/commit/a90e3f1))
+
+
+
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/ng-select/ng-select/compare/v2.20.5...v3.0.0) (2019-07-08)
+
+
+### Bug Fixes
+
+* emit add event after model has been updated ([86d611d](https://github.com/ng-select/ng-select/commit/86d611d)), closes [#620](https://github.com/ng-select/ng-select/issues/620)
+* preserve items without group order ([86ab751](https://github.com/ng-select/ng-select/commit/86ab751)), closes [#1132](https://github.com/ng-select/ng-select/issues/1132)
+* stringify group label ([d8be200](https://github.com/ng-select/ng-select/commit/d8be200)), closes [#1052](https://github.com/ng-select/ng-select/issues/1052)
+* use border thin for material theme ([1083ff6](https://github.com/ng-select/ng-select/commit/1083ff6)), closes [#969](https://github.com/ng-select/ng-select/issues/969)
+
+
+### Chores
+
+* move [ngOptionHighlight] to a separate package ([c09dde8](https://github.com/ng-select/ng-select/commit/c09dde8)), closes [#1116](https://github.com/ng-select/ng-select/issues/1116)
+* remove [excludeGroupsFromDefaultSelection] ([4fef383](https://github.com/ng-select/ng-select/commit/4fef383))
+
+
+### Features
+
+* add input for tabIndex ([112f6a2](https://github.com/ng-select/ng-select/commit/112f6a2)), closes [#1175](https://github.com/ng-select/ng-select/issues/1175)
+* expose blur method ([643cf52](https://github.com/ng-select/ng-select/commit/643cf52)), closes [#1238](https://github.com/ng-select/ng-select/issues/1238) [#1242](https://github.com/ng-select/ng-select/issues/1242)
+* pass custom input attributes using `inputAttrs` ([1614aa7](https://github.com/ng-select/ng-select/commit/1614aa7)), closes [#1222](https://github.com/ng-select/ng-select/issues/1222)
+* update ng-select to support angular v8 ([2e4d329](https://github.com/ng-select/ng-select/commit/2e4d329)), closes [#1196](https://github.com/ng-select/ng-select/issues/1196)
+
+
+### BREAKING CHANGES
+
+* autoCorrect, autoCapitalize are now removed.
+* `[ngOptionHighlight]` is now available from @ng-select/ng-option-highlight
+* `[excludeGroupsFromDefaultSelection]` is now removed until better solution is found
+* `filterValue` is now available as `searchTerm`
+
+
+
+<a name="2.20.5"></a>
+## [2.20.5](https://github.com/ng-select/ng-select/compare/v2.20.4...v2.20.5) (2019-07-04)
+
+
+### Bug Fixes
+
+* mark first item when last marked is filtered out ([e08a769](https://github.com/ng-select/ng-select/commit/e08a769)), closes [#1247](https://github.com/ng-select/ng-select/issues/1247)
+
+
+
+<a name="2.20.4"></a>
+## [2.20.4](https://github.com/ng-select/ng-select/compare/v2.20.3...v2.20.4) (2019-07-04)
+
+
+### Bug Fixes
+
+* track by htmlId by default ([e158bb4](https://github.com/ng-select/ng-select/commit/e158bb4)), closes [#1244](https://github.com/ng-select/ng-select/issues/1244) [#1181](https://github.com/ng-select/ng-select/issues/1181) [#1218](https://github.com/ng-select/ng-select/issues/1218) [#1229](https://github.com/ng-select/ng-select/issues/1229)
+
+
+
+<a name="2.20.3"></a>
+## [2.20.3](https://github.com/ng-select/ng-select/compare/v2.20.2...v2.20.3) (2019-07-02)
+
+
+### Bug Fixes
+
+* adjust dropdown position on selection change - include top ([69490ae](https://github.com/ng-select/ng-select/commit/69490ae)), closes [#1234](https://github.com/ng-select/ng-select/issues/1234)
+
+
+
+<a name="2.20.2"></a>
+## [2.20.2](https://github.com/ng-select/ng-select/compare/v2.20.1...v2.20.2) (2019-06-27)
+
+
+### Bug Fixes
+
+* don't calculate panel dimensions for empty array ([9d8ccf3](https://github.com/ng-select/ng-select/commit/9d8ccf3)), closes [#1237](https://github.com/ng-select/ng-select/issues/1237)
+* ignore tab when dropdown is closed and addTag is false ([7f31ea6](https://github.com/ng-select/ng-select/commit/7f31ea6)), closes [#1212](https://github.com/ng-select/ng-select/issues/1212)
+
+
+
+<a name="2.20.1"></a>
+## [2.20.1](https://github.com/ng-select/ng-select/compare/v2.20.0...v2.20.1) (2019-06-25)
+
+
+### Bug Fixes
+
+* fix: don't fire scroll to end when scrollTop = 0 ([c2b094e](https://github.com/ng-select/ng-select/commit/c2b094e)), fixes [#1018](https://github.com/ng-select/ng-select/issues/1018)
+
+* dropdown panel rework, closes [#899](https://github.com/ng-select/ng-select/issues/899),
+[#890](https://github.com/ng-select/ng-select/issues/890),
+[#1018](https://github.com/ng-select/ng-select/issues/1018),
+[#1023](https://github.com/ng-select/ng-select/issues/1023),
+[#1144](https://github.com/ng-select/ng-select/issues/1144),
+[#1095](https://github.com/ng-select/ng-select/issues/1095),
+[#1122](https://github.com/ng-select/ng-select/issues/1122),
+[#1163](https://github.com/ng-select/ng-select/issues/1163),
+[#955](https://github.com/ng-select/ng-select/issues/955)
+
+### Features
+
+* feat: adjust dropdown position on selection when multiple and appendTo ([c2b094e](https://github.com/ng-select/ng-select/commit/c2b094e)), 
+closes [#984](https://github.com/ng-select/ng-select/issues/984)
+
+
+<a name="2.20.0"></a>
+# [2.20.0](https://github.com/ng-select/ng-select/compare/v2.19.0...v2.20.0) (2019-05-18)
+
+
+### Bug Fixes
+
+* add tag on tab when isOpen = false ([ab8b661](https://github.com/ng-select/ng-select/commit/ab8b661)), closes [#1159](https://github.com/ng-select/ng-select/issues/1159)
+* disable input when max items is selected ([240f4b5](https://github.com/ng-select/ng-select/commit/240f4b5)), closes [#1168](https://github.com/ng-select/ng-select/issues/1168)
+* remove unnecessary stopPropagation calls ([e994937](https://github.com/ng-select/ng-select/commit/e994937)), closes [#1169](https://github.com/ng-select/ng-select/issues/1169)
+* take into account bindLabel when adding tag ([36bc0d2](https://github.com/ng-select/ng-select/commit/36bc0d2)), closes [#1141](https://github.com/ng-select/ng-select/issues/1141)
+* take into account bindValue if groupValue is used ([941217f](https://github.com/ng-select/ng-select/commit/941217f)), closes [#1161](https://github.com/ng-select/ng-select/issues/1161)
+
+
+### Features
+
+* **trackByFn:** allow to provide custom trackBy function ([0afa9c1](https://github.com/ng-select/ng-select/commit/0afa9c1)), closes [#1134](https://github.com/ng-select/ng-select/issues/1134)
+
+
+
+<a name="2.19.0"></a>
+# [2.19.0](https://github.com/ng-select/ng-select/compare/v2.18.0...v2.19.0) (2019-05-04)
+
+
+### Features
+
+* add getter for current dropdown position ([0cc4203](https://github.com/ng-select/ng-select/commit/0cc4203))
+
+
+
+<a name="2.18.0"></a>
+# [2.18.0](https://github.com/ng-select/ng-select/compare/v2.17.0...v2.18.0) (2019-04-20)
+
+
+### Features
+
+* proper ant design theme ([b6c8535](https://github.com/ng-select/ng-select/commit/b6c8535))
+
+
+
+<a name="2.17.0"></a>
+# [2.17.0](https://github.com/ng-select/ng-select/compare/v2.16.4...v2.17.0) (2019-04-11)
+
+
+### Features
+
+* add ant-design theme ([b1f3446](https://github.com/ng-select/ng-select/commit/b1f3446))
+
+
+
+<a name="2.16.4"></a>
+## [2.16.4](https://github.com/ng-select/ng-select/compare/v2.16.3...v2.16.4) (2019-04-01)
+
+
+### Bug Fixes
+
+* **hideSelected:** allow in single selection ([ee9ee0d](https://github.com/ng-select/ng-select/commit/ee9ee0d)), closes [#1059](https://github.com/ng-select/ng-select/issues/1059)
+
+
+
+<a name="2.16.3"></a>
+## [2.16.3](https://github.com/ng-select/ng-select/compare/v2.16.2...v2.16.3) (2019-03-28)
+
+
+
+<a name="2.16.2"></a>
+## [2.16.2](https://github.com/ng-select/ng-select/compare/v2.16.1...v2.16.2) (2019-03-08)
+
+
+### Bug Fixes
+
+* add timeout for dropdown panel to fully render ([d38f897](https://github.com/ng-select/ng-select/commit/d38f897)), closes [#1042](https://github.com/ng-select/ng-select/issues/1042)
+
+
+
+<a name="2.16.1"></a>
+## [2.16.1](https://github.com/ng-select/ng-select/compare/v2.16.0...v2.16.1) (2019-03-08)
+
+
+### Bug Fixes
+
+* do not append dropdown when it is destroyed ([#1091](https://github.com/ng-select/ng-select/issues/1091)) ([d9e23c6](https://github.com/ng-select/ng-select/commit/d9e23c6))
+
+
+
+<a name="2.16.0"></a>
+# [2.16.0](https://github.com/ng-select/ng-select/compare/v2.15.3...v2.16.0) (2019-02-28)
+
+
+### Bug Fixes
+
+* material theme input container on IE ([#1054](https://github.com/ng-select/ng-select/issues/1054)) ([236e7b4](https://github.com/ng-select/ng-select/commit/236e7b4))
+
+
+### Features
+
+* expose filtered items through search event ([3d14002](https://github.com/ng-select/ng-select/commit/3d14002)), closes [#973](https://github.com/ng-select/ng-select/issues/973)
+
+
 
 <a name="2.15.3"></a>
 ## [2.15.3](https://github.com/ng-select/ng-select/compare/v2.15.2...v2.15.3) (2019-02-05)
