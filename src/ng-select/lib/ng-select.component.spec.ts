@@ -2716,7 +2716,7 @@ describe('NgSelectComponent', () => {
                 expect(fixture.componentInstance.select.clearSearchOnAdd).toBeTruthy();
                 expect(fixture.componentInstance.select.closeOnSelect).toBeFalsy();
 
-                var lastEmittedSearchTerm = '';
+                let lastEmittedSearchTerm = '';
                 fixture.componentInstance.filter.subscribe((value) => {
                     lastEmittedSearchTerm = value;
                 });
