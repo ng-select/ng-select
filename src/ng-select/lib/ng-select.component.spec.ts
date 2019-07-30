@@ -3420,6 +3420,58 @@ describe('NgSelectComponent', () => {
             expect(fixture.componentInstance.selectedAccount).toBe('United States');
         }));
     });
+
+    describe('Input method composition', () => {
+        let fixture: ComponentFixture<NgSelectTestCmp>;
+        let select: NgSelectComponent;
+        const originValue = '';
+        const imeInputValue = 'zhangsan';
+
+        beforeEach(() => {
+            fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="citiesNames"
+                    [addTag]="true"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+            select = fixture.componentInstance.select;
+        });
+
+        describe('composition start', () => {
+            it('should not update search term', fakeAsync(() => {
+                select.filter(originValue);
+                tickAndDetectChanges(fixture);
+                select.onCompositionStart();
+                tickAndDetectChanges(fixture);
+                select.filter(imeInputValue);
+
+                expect(select.searchTerm).toBe(originValue);
+            }));
+
+            it('should be filtered even search term is empty', fakeAsync(() => {
+                select.filter('');
+                tickAndDetectChanges(fixture);
+                select.onCompositionStart();
+                tickAndDetectChanges(fixture);
+                select.filter(imeInputValue);
+
+                expect(select.searchTerm).toBe('');
+                expect(select.filtered).toBeTruthy();
+            }));
+        });
+
+        describe('composition end', () => {
+            it('should update search term', fakeAsync(() => {
+                select.filter(originValue);
+                tickAndDetectChanges(fixture);
+                select.onCompositionEnd(imeInputValue);
+                tickAndDetectChanges(fixture);
+
+                expect(select.searchTerm).toBe(imeInputValue);
+            }));
+        });
+    });
 });
 
 

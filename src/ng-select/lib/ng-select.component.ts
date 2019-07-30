@@ -142,7 +142,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Output('change') changeEvent = new EventEmitter();
     @Output('open') openEvent = new EventEmitter();
     @Output('close') closeEvent = new EventEmitter();
-    @Output('search') searchEvent = new EventEmitter<{term: string, items: any[]}>();
+    @Output('search') searchEvent = new EventEmitter<{ term: string, items: any[] }>();
     @Output('clear') clearEvent = new EventEmitter();
     @Output('add') addEvent = new EventEmitter();
     @Output('remove') removeEvent = new EventEmitter();
@@ -167,7 +167,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
 
     @HostBinding('class.ng-select-disabled') disabled = false;
-    @HostBinding('class.ng-select-filtered') get filtered() { return !!this.searchTerm && this.searchable };
+    @HostBinding('class.ng-select-filtered') get filtered() { return (!!this.searchTerm && this.searchable || this._isComposing) };
 
     itemsList: ItemsList;
     viewPortItems: NgOption[] = [];
@@ -190,6 +190,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private readonly _keyPress$ = new Subject<string>();
     private _onChange = (_: any) => { };
     private _onTouched = () => { };
+
+    private _isComposing = false;
 
     clearItem = (item: any) => {
         const option = this.selectedItems.find(x => x.value === item);
@@ -514,8 +516,20 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         const empty = this.itemsList.filteredItems.length === 0;
         return empty && this._isTypeahead && !this.searchTerm && !this.loading;
     }
+    
+    onCompositionStart() {
+        this._isComposing = true;
+    }
+
+    onCompositionEnd(term: string) {
+        this._isComposing = false;
+        this.filter(term);
+    }
 
     filter(term: string) {
+        if (this._isComposing) {
+            return;
+        }
         this.searchTerm = term;
 
         if (this._isTypeahead) {

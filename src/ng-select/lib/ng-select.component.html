@@ -29,6 +29,8 @@
                    [disabled]="disabled"
                    [value]="searchTerm ? searchTerm : ''"
                    (input)="filter(searchInput.value)"
+                   (compositionstart)="onCompositionStart()"
+                   (compositionend)="onCompositionEnd(searchInput.value)"
                    (focus)="onInputFocus($event)"
                    (blur)="onInputBlur($event)"
                    (change)="$event.stopPropagation()"
