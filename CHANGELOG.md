@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.5](https://github.com/ng-select/ng-select/compare/v3.0.4...v3.0.5) (2019-07-30)
+
+
+### Bug Fixes
+
+* handle IME compositon mode ([5bf42a6](https://github.com/ng-select/ng-select/commit/5bf42a6)), closes [#704](https://github.com/ng-select/ng-select/issues/704)
+
+
+
 ### [3.0.4](https://github.com/ng-select/ng-select/compare/v3.0.3...v3.0.4) (2019-07-26)
 
 
