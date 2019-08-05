@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.6](https://github.com/ng-select/ng-select/compare/v3.0.5...v3.0.6) (2019-08-05)
+
+
+### Bug Fixes
+
+* emit typeahead value when search is cleared after item is added ([#1289](https://github.com/ng-select/ng-select/issues/1289)) ([550a75a](https://github.com/ng-select/ng-select/commit/550a75a)), closes [#1107](https://github.com/ng-select/ng-select/issues/1107)
+
+
+
 ### [3.0.5](https://github.com/ng-select/ng-select/compare/v3.0.4...v3.0.5) (2019-07-30)
 
 
