@@ -342,9 +342,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
         this._clearSearch();
         this.focus();
-        if (this._isTypeahead) {
-            this.typeahead.next(null);
-        }
         this.clearEvent.emit();
 
         this._onSelectionChanged();
@@ -516,7 +513,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         const empty = this.itemsList.filteredItems.length === 0;
         return empty && this._isTypeahead && !this.searchTerm && !this.loading;
     }
-    
+
     onCompositionStart() {
         this._isComposing = true;
     }
@@ -530,11 +527,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (this._isComposing) {
             return;
         }
-        this.searchTerm = term;
+        this._changeSearch(term);
 
-        if (this._isTypeahead) {
-            this.typeahead.next(this.searchTerm);
-        } else {
+        if (!this._isTypeahead) {
             this.itemsList.filter(this.searchTerm);
             if (this.isOpen) {
                 this.itemsList.markSelectedOrDefault(this.markFirst);
@@ -758,8 +753,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
 
-        this.searchTerm = null;
+        this._changeSearch(null);
+
         this.itemsList.resetFilteredItems();
+    }
+
+    private _changeSearch(searchTerm) {
+        this.searchTerm = searchTerm;
+
+        if (this._isTypeahead) {
+            this.typeahead.next(searchTerm);
+        }
     }
 
     private _scrollToMarked() {

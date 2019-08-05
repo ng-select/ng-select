@@ -266,7 +266,7 @@ describe('NgSelectComponent', () => {
         it('should set items correctly if there is no bindLabel', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select 
+                `<ng-select
                     [items]="cities"
                     [clearable]="true"
                     [(ngModel)]="selectedCity">
@@ -1788,10 +1788,10 @@ describe('NgSelectComponent', () => {
         it('should display custom loading and no data found template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [items]="cities" 
+                `<ng-select [items]="cities"
                             [loading]="citiesLoading"
                             [(ngModel)]="selectedCity">
-                    
+
                     <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
                         <div class="custom-notfound">
                             No data found for "{{searchTerm}}"
@@ -1826,15 +1826,15 @@ describe('NgSelectComponent', () => {
         it('should display custom type for search template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [items]="cities" 
-                            [typeahead]="filter" 
+                `<ng-select [items]="cities"
+                            [typeahead]="filter"
                             [(ngModel)]="selectedCity">
                     <ng-template ng-typetosearch-tmp>
                         <div class="custom-typeforsearch">
                             Start typing...
                         </div>
                     </ng-template>
-                   
+
                 </ng-select>`);
 
             fixture.whenStable().then(() => {
@@ -1852,10 +1852,10 @@ describe('NgSelectComponent', () => {
         it('should display custom loading spinner template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [items]="cities" 
+                `<ng-select [items]="cities"
                             [loading]="true"
                             [(ngModel)]="selectedCity">
-                    
+
                     <ng-template ng-loadingspinner-tmp>
                         <div class="custom-loadingspinner">
                             Custom loading spinner
@@ -2700,6 +2700,33 @@ describe('NgSelectComponent', () => {
                 fixture.componentInstance.select.select(fixture.componentInstance.select.viewPortItems[0]);
                 expect(fixture.componentInstance.select.searchTerm).toBe('new');
             }));
+
+            it('should update the typeahead term when the search is cleared on add', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                        [typeahead]="filter"
+                        bindLabel="name"
+                        [hideSelected]="hideSelected"
+                        [clearSearchOnAdd]="true"
+                        [closeOnSelect]="false"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+
+                expect(fixture.componentInstance.select.clearSearchOnAdd).toBeTruthy();
+                expect(fixture.componentInstance.select.closeOnSelect).toBeFalsy();
+
+                let lastEmittedSearchTerm = '';
+                fixture.componentInstance.filter.subscribe((value) => {
+                    lastEmittedSearchTerm = value;
+                });
+                fixture.componentInstance.select.filter('new');
+                expect(lastEmittedSearchTerm).toBe('new');
+                fixture.componentInstance.cities = [{ id: 4, name: 'New York' }, { id: 5, name: 'California' }];
+                tickAndDetectChanges(fixture);
+                fixture.componentInstance.select.select(fixture.componentInstance.select.viewPortItems[0]);
+                expect(lastEmittedSearchTerm).toBe(null);
+            }));
         });
     });
 
@@ -2713,7 +2740,7 @@ describe('NgSelectComponent', () => {
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
                         labelForId="lbl"
-                        (change)="onChange($event)" 
+                        (change)="onChange($event)"
                         bindLabel="name">
                 </ng-select>`);
             select = fixture.componentInstance.select;
