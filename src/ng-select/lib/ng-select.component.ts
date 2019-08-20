@@ -796,15 +796,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             if (this.itemsList.markedItem) {
                 this.toggleItem(this.itemsList.markedItem);
                 $event.preventDefault();
+                return;
+
             } else if (this.showAddTag) {
                 this.selectTag();
                 $event.preventDefault();
-            } else {
-                this.close();
+                return;
             }
-        } else {
-            this.close();
         }
+
+        this.close();
     }
 
     private _handleEnter($event: KeyboardEvent) {

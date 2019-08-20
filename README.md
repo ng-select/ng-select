@@ -297,5 +297,6 @@ This component is inspired by [React select](https://github.com/JedWatson/react-
 This is a fork of `ng-select` to improve usability in software developed by CTcue.
 It makes the following changes compared with upstream:
 
-  * The input tag (enabled by the `[addTag]` property) is visible while loading.
-  * The loading text is hidden while the input tag is visible.
+  * The custom tag (enabled by the `[addTag]` property) is listed before the items.
+  * The custom tag is visible while loading.
+  * The loading text is hidden while the custom tag is visible.

@@ -80,6 +80,17 @@
                    [id]="dropdownId">
 
     <ng-container>
+        <div class="ng-option" [class.ng-option-marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag">
+            <ng-template #defaultTagTemplate>
+                <span><span class="ng-tag-label">{{addTagText}}</span>"{{searchTerm}}"</span>
+            </ng-template>
+
+            <ng-template
+                [ngTemplateOutlet]="tagTemplate || defaultTagTemplate"
+                [ngTemplateOutletContext]="{ searchTerm: searchTerm }">
+            </ng-template>
+        </div>
+
         <div class="ng-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)" (mouseover)="onItemHover(item)"
                 *ngFor="let item of viewPortItems; trackBy: trackByOption"
                 [class.ng-option-disabled]="item.disabled"
@@ -98,17 +109,6 @@
             <ng-template
                 [ngTemplateOutlet]="item.children ? (optgroupTemplate || defaultOptionTemplate) : (optionTemplate || defaultOptionTemplate)"
                 [ngTemplateOutletContext]="{ item: item.value, item$:item, index: item.index, searchTerm: searchTerm }">
-            </ng-template>
-        </div>
-
-        <div class="ng-option" [class.ng-option-marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag">
-            <ng-template #defaultTagTemplate>
-                <span><span class="ng-tag-label">{{addTagText}}</span>"{{searchTerm}}"</span>
-            </ng-template>
-
-            <ng-template
-                [ngTemplateOutlet]="tagTemplate || defaultTagTemplate"
-                [ngTemplateOutletContext]="{ searchTerm: searchTerm }">
             </ng-template>
         </div>
     </ng-container>
