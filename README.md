@@ -17,7 +17,7 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 ## Versions
 
 | Angular| ng-select|
-| ------|:------:| 
+| ------|:------:|
 | >=8.0.0 <9.0.0  | v3.x |
 | >=6.0.0 <8.0.0  | v2.x |
 | v5.x.x  | v1.x |
@@ -36,6 +36,7 @@ Table of contents
   * [Contributing](#contributing)
   * [Development](#development)
   * [Inspiration](#inspiration)
+  * [CTcue fork](#ctcue-fork)
 
 ## Features
 - [x] Custom binding to property or object
@@ -81,18 +82,18 @@ import { FormsModule } from '@angular/forms';
 export class AppModule {}
 ```
 
-### Step 3: Include a theme: 
+### Step 3: Include a theme:
 To allow customization and theming, `ng-select` bundle includes only generic styles that are necessary for correct layout and positioning. To get full look of the control, include one of the themes in your application. If you're using the Angular CLI, you can add this to your `styles.scss` or include it in `.angular-cli.json` (Angular v5 and below) or `angular.json` (Angular v6 onwards).
 
 ```scss
 @import "~@ng-select/ng-select/themes/default.theme.css";
-// ... or 
+// ... or
 @import "~@ng-select/ng-select/themes/material.theme.css";
 
 ```
 
 
-### Step 4 (Optional): Configuration 
+### Step 4 (Optional): Configuration
 
 You can also set global configuration and localization messages by injecting NgSelectConfig service,
 typically in your root component, and customize the values of its properties in order to provide default values.
@@ -206,12 +207,12 @@ export class CustomSelectionModel implements SelectionModel {
 ```
 
 ## Change Detection
-Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable 
+Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable
 data types. That means if you do object mutations like:
 
 ```javascript
 this.items.push({id: 1, name: 'New item'})
-``` 
+```
 
 Component will not detect a change. Instead you need to do:
 
@@ -236,7 +237,7 @@ If you are not happy with default styles you can easily override them with incre
     min-height: 0px;
     border-radius: 0;
 }
-.ng-select.custom .ng-select-container  {            
+.ng-select.custom .ng-select-container  {
     min-height: 0px;
     border-radius: 0;
 }
@@ -245,7 +246,7 @@ If you are not happy with default styles you can easily override them with incre
 If you are using `ViewEncapsulation`, you could use special `::ng-deep` selector which will prevent scoping for nested selectors altough this is more of a workaround and we recommend using solution described above.
 
 ```css
-.ng-select.custom ::ng-deep .ng-select-container  {            
+.ng-select.custom ::ng-deep .ng-select-container  {
     min-height: 0px;
     border-radius: 0;
 }
@@ -291,3 +292,6 @@ To release to npm just run `./release.sh`, of course if you have permissions ;)
 
 ## Inspiration
 This component is inspired by [React select](https://github.com/JedWatson/react-select) and [Virtual scroll](https://github.com/rintoj/angular2-virtual-scroll). Check theirs amazing work and components :)
+
+## CTcue fork
+This is a fork of `ng-select` to improve usability in software developed by CTcue.
