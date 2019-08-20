@@ -391,7 +391,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
         this.isOpen = true;
-        this.itemsList.markSelectedOrDefault(this.markFirst);
+        this.itemsList.markSelectedOrDefault(this.markFirst && !this.showAddTag);
         this.openEvent.emit();
         if (!this.searchTerm) {
             this.focus();
@@ -531,7 +531,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this._isTypeahead) {
             this.itemsList.filter(this.searchTerm);
             if (this.isOpen) {
-                this.itemsList.markSelectedOrDefault(this.markFirst);
+                this.itemsList.markSelectedOrDefault(this.markFirst && !this.showAddTag);
             }
         }
 
@@ -584,7 +584,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.itemsList.filter(this.searchTerm);
         }
         if (this._isTypeahead || this.isOpen) {
-            this.itemsList.markSelectedOrDefault(this.markFirst);
+            this.itemsList.markSelectedOrDefault(this.markFirst && !this.showAddTag);
         }
     }
 
@@ -796,15 +796,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             if (this.itemsList.markedItem) {
                 this.toggleItem(this.itemsList.markedItem);
                 $event.preventDefault();
+                return;
+
             } else if (this.showAddTag) {
                 this.selectTag();
                 $event.preventDefault();
-            } else {
-                this.close();
+                return;
             }
-        } else {
-            this.close();
         }
+
+        this.close();
     }
 
     private _handleEnter($event: KeyboardEvent) {

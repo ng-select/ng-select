@@ -172,8 +172,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     scrollToTag() {
-        const panel = this._scrollablePanel;
-        panel.scrollTop = panel.scrollHeight - panel.clientHeight;
+        this._scrollablePanel.scrollTop = 0;
     }
 
     adjustPosition() {
