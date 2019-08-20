@@ -134,7 +134,7 @@
         </ng-template>
     </ng-container>
 
-    <ng-container *ngIf="loading && itemsList.filteredItems.length === 0">
+    <ng-container *ngIf="loading && itemsList.filteredItems.length === 0 && !showAddTag">
         <ng-template #defaultLoadingTextTemplate>
             <div class="ng-option ng-option-disabled">{{loadingText}}</div>
         </ng-template>
