@@ -295,3 +295,6 @@ This component is inspired by [React select](https://github.com/JedWatson/react-
 
 ## CTcue fork
 This is a fork of `ng-select` to improve usability in software developed by CTcue.
+It makes the following changes compared with upstream:
+
+  * The custom tag based on user input (enabled by `[addTag]`) is visible while loading.
