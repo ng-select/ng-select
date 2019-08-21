@@ -404,7 +404,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
         this.isOpen = false;
-        this._clearSearch();
         this.itemsList.unmarkItem();
         this._onTouched();
         this.closeEvent.emit();

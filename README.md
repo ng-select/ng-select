@@ -300,3 +300,4 @@ It makes the following changes compared with upstream:
   * The custom tag (enabled by the `[addTag]` property) is listed before the items.
   * The custom tag is visible while loading.
   * The loading text is hidden while the custom tag is visible.
+  * The input text is not cleared when closing the dropdown.
