@@ -300,7 +300,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     private get _startOffset() {
         if (this.markedItem) {
-            return this.markedItem.index * this._panelService.dimensions.itemHeight;
+            const { itemHeight, panelHeight } = this._panelService.dimensions;
+            const offset = this.markedItem.index * itemHeight;
+            return panelHeight > offset ? 0 : offset;
         }
         return 0;
     }
