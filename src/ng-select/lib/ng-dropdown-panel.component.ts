@@ -111,6 +111,15 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
+    private get _startOffset() {
+        if (this.markedItem) {
+            const { itemHeight, panelHeight } = this._panelService.dimensions;
+            const offset = this.markedItem.index * itemHeight;
+            return panelHeight > offset ? 0 : offset;
+        }
+        return 0;
+    }
+
     @HostListener('mousedown', ['$event'])
     handleMousedown($event: MouseEvent) {
         const target = $event.target as HTMLElement;
@@ -235,7 +244,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
-        this.outsideClick.emit();
+        this._zone.run(() => this.outsideClick.emit());
     }
 
     private _onItemsChange(items: NgOption[], firstChange: boolean) {
@@ -296,13 +305,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     private _onItemsLengthChanged() {
         this._updateScrollHeight = true;
-    }
-
-    private get _startOffset() {
-        if (this.markedItem) {
-            return this.markedItem.index * this._panelService.dimensions.itemHeight;
-        }
-        return 0;
     }
 
     private _renderItemsRange(scrollTop = null) {

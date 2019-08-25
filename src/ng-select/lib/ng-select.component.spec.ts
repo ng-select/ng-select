@@ -1045,14 +1045,12 @@ describe('NgSelectComponent', () => {
             tickAndDetectChanges(fixture);
             fixture.detectChanges();
 
-            const buffer = 4;
-            const itemHeight = 18;
             const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
             const marked = fixture.debugElement.nativeElement.querySelector('.ng-option-marked');
 
-            expect(options.length).toBe(22);
+            expect(options.length).toBe(18);
             expect(marked.innerText).toBe('k');
-            expect(marked.offsetTop).toBe(buffer * itemHeight);
+            expect(marked.offsetTop).toBe(180);
         }));
 
         it('should scroll to item and do not change scroll position when scrolled to visible item', fakeAsync(() => {

@@ -51,8 +51,12 @@ describe('NgDropdownPanelService', () => {
         });
 
         it('should not scroll if item is in visible area', () => {
-            expect(service.getScrollTo(0, 40, 0)).toBe(0);
+            expect(service.getScrollTo(0, 40, 0)).toBeNull();
             expect(service.getScrollTo(200, 40, 0)).toBeNull();
+        });
+
+        it('should not scroll if item is inside panel height', () => {
+            expect(service.getScrollTo(40, 40, 40)).toBeNull();
         });
 
         it('should scroll by item height', () => {

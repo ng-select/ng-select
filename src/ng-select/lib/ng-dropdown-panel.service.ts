@@ -62,9 +62,14 @@ export class NgDropdownPanelService {
     }
 
     getScrollTo(itemTop: number, itemHeight: number, lastScroll: number) {
+        const { panelHeight } = this.dimensions;
         const itemBottom = itemTop + itemHeight;
         const top = lastScroll;
-        const bottom = top + this.dimensions.panelHeight;
+        const bottom = top + panelHeight;
+
+        if (panelHeight >= itemBottom && lastScroll === itemTop) {
+            return null;
+        }
 
         if (itemBottom > bottom) {
             return top + itemBottom - bottom;
