@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.7](https://github.com/ng-select/ng-select/compare/v3.0.6...v3.0.7) (2019-08-25)
+
+
+### Bug Fixes
+
+* run close event inside zone ([b5f63b6](https://github.com/ng-select/ng-select/commit/b5f63b6)), closes [#1309](https://github.com/ng-select/ng-select/issues/1309)
+* scroll to marked item only when it is outside of panel height ([eb1a803](https://github.com/ng-select/ng-select/commit/eb1a803)), closes [#1273](https://github.com/ng-select/ng-select/issues/1273)
+
+
+
 ### [3.0.6](https://github.com/ng-select/ng-select/compare/v3.0.5...v3.0.6) (2019-08-05)
 
 
