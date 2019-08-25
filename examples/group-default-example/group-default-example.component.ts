@@ -7,11 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GroupDefaultExampleComponent implements OnInit {
 
-    selectedAccount = 'Michael';
+    selectedAccount = 'Adam';
     accounts = [
-        { name: 'Jill', email: 'jill@email.com', age: 15, country: undefined, child: { state: 'Active' } },
-        { name: 'Henry', email: 'henry@email.com', age: 10, country: undefined, child: { state: 'Active' } },
-        { name: 'Meg', email: 'meg@email.com', age: 7, country: null, child: { state: 'Active' } },
         { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { state: 'Active' } },
         { name: 'Homer', email: 'homer@email.com', age: 47, country: '', child: { state: 'Active' } },
         { name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States', child: { state: 'Active' } },
