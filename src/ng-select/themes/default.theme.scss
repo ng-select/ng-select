@@ -59,6 +59,7 @@ $ng-select-value-font-size: 0.9em !default;
         display: none;
     }
     .ng-select-container {
+        color: $ng-select-primary-text;
         background-color: $ng-select-bg;
         border-radius: $ng-select-border-radius;
         border: 1px solid $ng-select-border;

@@ -75,6 +75,7 @@ $ng-select-bg: #ffffff !default;
         .ng-value-container {
             align-items: stretch;
             padding: .4375em 0;
+            color: $ng-select-primary-text;
             border-top: .84375em solid transparent;
             .ng-placeholder {
                 position: absolute;

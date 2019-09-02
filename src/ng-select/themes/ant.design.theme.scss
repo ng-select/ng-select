@@ -69,6 +69,7 @@ $ng-select-marked: #e6f7ff !default;
     }
 
     .ng-select-container {
+        color: $ng-select-primary-text;
         background-color: $ng-select-bg;
         border-radius: 4px;
         border: 1px solid $ng-select-border;
