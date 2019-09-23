@@ -12,12 +12,18 @@
         <div class="form-group col-md-6">
             <label for="heroId">Basic select</label>
             <ng-select [searchable]="false" [clearable]="false" labelForId="heroId" formControlName="heroId">
-                <ng-template ng-label-tmp let-item="item" let-label="label">
-                    <img src="{{basePath}}/assets/{{item}}.png" width="20px" height="20px"/> {{label}}
-                </ng-template>
-                <ng-option value="batman">Batman</ng-option>
-                <ng-option value="spidey">Spider-Man</ng-option>
-                <ng-option value="thor">Thor</ng-option>
+                <ng-option value="batman">
+                    <img src="{{basePath}}/assets/batman.png" width="20px" height="20px"/>
+                    Batman
+                </ng-option>
+                <ng-option value="spidey">
+                    <img src="{{basePath}}/assets/spidey.png" width="20px" height="20px"/>
+                    Spider-Man & Goblin
+                </ng-option>
+                <ng-option value="thor">
+                    <img src="{{basePath}}/assets/thor.png" width="20px" height="20px"/>
+                    Thor
+                </ng-option>
             </ng-select>
         </div>
     </div>

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'forms-with-options-example',
@@ -9,7 +8,7 @@ import { environment } from '../../../environments/environment';
 })
 export class FormsWithOptionsExampleComponent implements OnInit {
 
-    basePath = environment.production ? '/ng-select' : '';
+    basePath;
     heroForm: FormGroup;
 
     constructor(
@@ -17,6 +16,7 @@ export class FormsWithOptionsExampleComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.basePath = window.location.host.includes('localhost') ? '' : '/ng-select';
         this.heroForm = this.fb.group({
             heroId: 'batman',
             agree: null

@@ -185,6 +185,23 @@ describe('NgSelectComponent', () => {
             expect(select.itemsList.items[0].label).toBe('Vilnius');
         }));
 
+        it('should escape label', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            fixture.componentInstance.cities = [{ label: '<img src="azd" (error)="alert(1)" />', name: 'Vilnius' }];
+            tickAndDetectChanges(fixture);
+            select = fixture.componentInstance.select;
+            select.open();
+
+            const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+            expect(options[0].innerText).toBe('<img src="azd" (error)="alert(1)" />');
+        }));
+
         it('should set items correctly after ngModel set first when typeahead and single select is used', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
@@ -249,7 +266,7 @@ describe('NgSelectComponent', () => {
         it('should set items correctly if there is no bindLabel', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select 
+                `<ng-select
                     [items]="cities"
                     [clearable]="true"
                     [(ngModel)]="selectedCity">
@@ -1028,14 +1045,12 @@ describe('NgSelectComponent', () => {
             tickAndDetectChanges(fixture);
             fixture.detectChanges();
 
-            const buffer = 4;
-            const itemHeight = 18;
             const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
             const marked = fixture.debugElement.nativeElement.querySelector('.ng-option-marked');
 
-            expect(options.length).toBe(22);
+            expect(options.length).toBe(18);
             expect(marked.innerText).toBe('k');
-            expect(marked.offsetTop).toBe(buffer * itemHeight);
+            expect(marked.offsetTop).toBe(180);
         }));
 
         it('should scroll to item and do not change scroll position when scrolled to visible item', fakeAsync(() => {
@@ -1771,10 +1786,10 @@ describe('NgSelectComponent', () => {
         it('should display custom loading and no data found template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [items]="cities" 
+                `<ng-select [items]="cities"
                             [loading]="citiesLoading"
                             [(ngModel)]="selectedCity">
-                    
+
                     <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
                         <div class="custom-notfound">
                             No data found for "{{searchTerm}}"
@@ -1809,15 +1824,15 @@ describe('NgSelectComponent', () => {
         it('should display custom type for search template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [items]="cities" 
-                            [typeahead]="filter" 
+                `<ng-select [items]="cities"
+                            [typeahead]="filter"
                             [(ngModel)]="selectedCity">
                     <ng-template ng-typetosearch-tmp>
                         <div class="custom-typeforsearch">
                             Start typing...
                         </div>
                     </ng-template>
-                   
+
                 </ng-select>`);
 
             fixture.whenStable().then(() => {
@@ -1835,10 +1850,10 @@ describe('NgSelectComponent', () => {
         it('should display custom loading spinner template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [items]="cities" 
+                `<ng-select [items]="cities"
                             [loading]="true"
                             [(ngModel)]="selectedCity">
-                    
+
                     <ng-template ng-loadingspinner-tmp>
                         <div class="custom-loadingspinner">
                             Custom loading spinner
@@ -1867,6 +1882,20 @@ describe('NgSelectComponent', () => {
             fixture.componentInstance.disabled = true;
             tickAndDetectChanges(fixture);
             expect(items[0].disabled).toBeTruthy();
+        }));
+
+        it('should update ng-option label', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [(ngModel)]="selectedCity">
+                    <ng-option [disabled]="disabled" [value]="true">{{label}}</ng-option>
+                    <ng-option [value]="false">No</ng-option>
+                </ng-select>`);
+
+            fixture.componentInstance.label = 'Indeed';
+            tickAndDetectChanges(fixture);
+            const items = fixture.componentInstance.select.itemsList.items;
+            expect(items[0].label).toBe('Indeed');
         }));
     });
 
@@ -2692,6 +2721,33 @@ describe('NgSelectComponent', () => {
                 fixture.componentInstance.select.select(fixture.componentInstance.select.viewPortItems[0]);
                 expect(fixture.componentInstance.select.searchTerm).toBe('new');
             }));
+
+            it('should update the typeahead term when the search is cleared on add', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                        [typeahead]="filter"
+                        bindLabel="name"
+                        [hideSelected]="hideSelected"
+                        [clearSearchOnAdd]="true"
+                        [closeOnSelect]="false"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+
+                expect(fixture.componentInstance.select.clearSearchOnAdd).toBeTruthy();
+                expect(fixture.componentInstance.select.closeOnSelect).toBeFalsy();
+
+                let lastEmittedSearchTerm = '';
+                fixture.componentInstance.filter.subscribe((value) => {
+                    lastEmittedSearchTerm = value;
+                });
+                fixture.componentInstance.select.filter('new');
+                expect(lastEmittedSearchTerm).toBe('new');
+                fixture.componentInstance.cities = [{ id: 4, name: 'New York' }, { id: 5, name: 'California' }];
+                tickAndDetectChanges(fixture);
+                fixture.componentInstance.select.select(fixture.componentInstance.select.viewPortItems[0]);
+                expect(lastEmittedSearchTerm).toBe(null);
+            }));
         });
     });
 
@@ -2705,7 +2761,7 @@ describe('NgSelectComponent', () => {
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
                         labelForId="lbl"
-                        (change)="onChange($event)" 
+                        (change)="onChange($event)"
                         bindLabel="name">
                 </ng-select>`);
             select = fixture.componentInstance.select;
@@ -3412,6 +3468,58 @@ describe('NgSelectComponent', () => {
             expect(fixture.componentInstance.selectedAccount).toBe('United States');
         }));
     });
+
+    describe('Input method composition', () => {
+        let fixture: ComponentFixture<NgSelectTestCmp>;
+        let select: NgSelectComponent;
+        const originValue = '';
+        const imeInputValue = 'zhangsan';
+
+        beforeEach(() => {
+            fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="citiesNames"
+                    [addTag]="true"
+                    placeholder="select value"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`);
+            select = fixture.componentInstance.select;
+        });
+
+        describe('composition start', () => {
+            it('should not update search term', fakeAsync(() => {
+                select.filter(originValue);
+                tickAndDetectChanges(fixture);
+                select.onCompositionStart();
+                tickAndDetectChanges(fixture);
+                select.filter(imeInputValue);
+
+                expect(select.searchTerm).toBe(originValue);
+            }));
+
+            it('should be filtered even search term is empty', fakeAsync(() => {
+                select.filter('');
+                tickAndDetectChanges(fixture);
+                select.onCompositionStart();
+                tickAndDetectChanges(fixture);
+                select.filter(imeInputValue);
+
+                expect(select.searchTerm).toBe('');
+                expect(select.filtered).toBeTruthy();
+            }));
+        });
+
+        describe('composition end', () => {
+            it('should update search term', fakeAsync(() => {
+                select.filter(originValue);
+                tickAndDetectChanges(fixture);
+                select.onCompositionEnd(imeInputValue);
+                tickAndDetectChanges(fixture);
+
+                expect(select.searchTerm).toBe(imeInputValue);
+            }));
+        });
+    });
 });
 
 
@@ -3459,6 +3567,7 @@ function createEvent(target = {}) {
 class NgSelectTestCmp {
     @ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
     multiple = false;
+    label = 'Yes';
     clearOnBackspace = false;
     disabled = false;
     dropdownPosition = 'bottom';

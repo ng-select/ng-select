@@ -1,6 +1,74 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [3.0.7](https://github.com/ng-select/ng-select/compare/v3.0.6...v3.0.7) (2019-08-25)
+
+
+### Bug Fixes
+
+* run close event inside zone ([b5f63b6](https://github.com/ng-select/ng-select/commit/b5f63b6)), closes [#1309](https://github.com/ng-select/ng-select/issues/1309)
+* scroll to marked item only when it is outside of panel height ([eb1a803](https://github.com/ng-select/ng-select/commit/eb1a803)), closes [#1273](https://github.com/ng-select/ng-select/issues/1273)
+
+
+
+### [3.0.6](https://github.com/ng-select/ng-select/compare/v3.0.5...v3.0.6) (2019-08-05)
+
+
+### Bug Fixes
+
+* emit typeahead value when search is cleared after item is added ([#1289](https://github.com/ng-select/ng-select/issues/1289)) ([550a75a](https://github.com/ng-select/ng-select/commit/550a75a)), closes [#1107](https://github.com/ng-select/ng-select/issues/1107)
+
+
+
+### [3.0.5](https://github.com/ng-select/ng-select/compare/v3.0.4...v3.0.5) (2019-07-30)
+
+
+### Bug Fixes
+
+* handle IME compositon mode ([5bf42a6](https://github.com/ng-select/ng-select/commit/5bf42a6)), closes [#704](https://github.com/ng-select/ng-select/issues/704)
+
+
+
+### [3.0.4](https://github.com/ng-select/ng-select/compare/v3.0.3...v3.0.4) (2019-07-26)
+
+
+### Bug Fixes
+
+* dynamic footer and header template ([#1268](https://github.com/ng-select/ng-select/issues/1268)) ([8787fa9](https://github.com/ng-select/ng-select/commit/8787fa9)), closes [#1282](https://github.com/ng-select/ng-select/issues/1282)
+* use regex with multiple return to highlight multiple search terms ([#1275](https://github.com/ng-select/ng-select/issues/1275)) ([8a0d880](https://github.com/ng-select/ng-select/commit/8a0d880)), closes [#739](https://github.com/ng-select/ng-select/issues/739)
+
+
+
+### [3.0.3](https://github.com/ng-select/ng-select/compare/v3.0.2...v3.0.3) (2019-07-15)
+
+
+### Bug Fixes
+
+* use item as default track by ([1d7df92](https://github.com/ng-select/ng-select/commit/1d7df92)), closes [#1269](https://github.com/ng-select/ng-select/issues/1269)
+
+
+
+<a name="3.0.2"></a>
+## [3.0.2](https://github.com/ng-select/ng-select/compare/v3.0.1...v3.0.2) (2019-07-11)
+
+
+### Bug Fixes
+
+* **ng-option:** don't escape html inside ng-options ([7ccea9d](https://github.com/ng-select/ng-select/commit/7ccea9d)), closes [#506](https://github.com/ng-select/ng-select/issues/506)
+* **ng-option:** handle label updates ([634c804](https://github.com/ng-select/ng-select/commit/634c804)), closes [#649](https://github.com/ng-select/ng-select/issues/649)
+
+
+
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/ng-select/ng-select/compare/v3.0.0...v3.0.1) (2019-07-09)
+
+
+### Bug Fixes
+
+* update peer dependencies to start from v8 ([a90e3f1](https://github.com/ng-select/ng-select/commit/a90e3f1))
+
+
 
 <a name="3.0.0"></a>
 # [3.0.0](https://github.com/ng-select/ng-select/compare/v2.20.5...v3.0.0) (2019-07-08)
