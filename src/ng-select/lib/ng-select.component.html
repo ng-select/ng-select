@@ -3,7 +3,7 @@
         <div class="ng-placeholder" aria-hidden="true">{{placeholder}}</div>
 
         <ng-container *ngIf="!multiLabelTemplate && selectedItems.length > 0">
-            <div [class.ng-value-disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems; trackBy: trackByOption" tabindex="0" aria-label="{ item.label }">
+            <div [class.ng-value-disabled]="item.disabled" class="ng-value" [id]="item.htmlId" *ngFor="let item of selectedItems; trackBy: trackByOption" tabindex="0" role="option" aria-label="{ item.label }" aria-selected="true">
                 <ng-template #defaultLabelTemplate>
                     <button class="ng-value-icon left" (click)="unselect(item);" aria-label="{ 'Remove ' + item.label }">×</button>
                     <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML" aria-hidden="true"></span>
@@ -52,7 +52,7 @@
     </ng-container>
 
     <span *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
-        <button class="ng-clear" aria-label="Clear this option">×</button>
+        <button class="ng-clear" aria-label="Clear this option" (keydown.enter)="$event.preventDefault(); $event.stopPropagation(); handleClearClick();" (keydown.space)="$event.preventDefault(); $event.stopPropagation(); handleClearClick();">×</button>
     </span>
 
     <span class="ng-arrow-wrapper">
