@@ -3,9 +3,9 @@
         <div class="ng-placeholder" aria-hidden="true">{{placeholder}}</div>
 
         <ng-container *ngIf="!multiLabelTemplate && selectedItems.length > 0">
-            <div [class.ng-value-disabled]="item.disabled" class="ng-value" [id]="item.htmlId" *ngFor="let item of selectedItems; trackBy: trackByOption" tabindex="0" role="option" aria-label="{ item.label }" aria-selected="true">
+            <div [class.ng-value-disabled]="item.disabled" class="ng-value" [id]="item.htmlId" *ngFor="let item of selectedItems; trackBy: trackByOption" tabindex="0" role="option" [attr.aria-label]="item?.label" aria-selected="true">
                 <ng-template #defaultLabelTemplate>
-                    <button class="ng-value-icon left" (click)="unselect(item);" aria-label="{ 'Remove ' + item.label }">×</button>
+                    <button class="ng-value-icon left" (click)="unselect(item);" attr.aria-label="{{ 'Remove ' + item.label }}">×</button>
                     <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML" aria-hidden="true"></span>
                 </ng-template>
 
