@@ -21,7 +21,8 @@ import {
     ContentChildren,
     QueryList,
     InjectionToken,
-    Attribute
+    Attribute,
+    ViewChildren
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil, startWith, tap, debounceTime, map, filter } from 'rxjs/operators';
@@ -165,6 +166,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ViewChild(forwardRef(() => NgDropdownPanelComponent), { static: false }) dropdownPanel: NgDropdownPanelComponent;
     @ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
+    @ViewChildren('tag') tagsList: QueryList<ElementRef>;
+    focusedTag: HTMLElement;
 
     @HostBinding('class.ng-select-disabled') disabled = false;
     @HostBinding('class.ng-select-filtered') get filtered() { return (!!this.searchTerm && this.searchable || this._isComposing) };
@@ -267,29 +270,51 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @HostListener('keydown', ['$event'])
     handleKeyDown($event: KeyboardEvent) {
         if (KeyCode[$event.which]) {
-            switch ($event.which) {
-                case KeyCode.ArrowDown:
-                    this._handleArrowDown($event);
-                    break;
-                case KeyCode.ArrowUp:
-                    this._handleArrowUp($event);
-                    break;
-                case KeyCode.Space:
-                    this._handleSpace($event);
-                    break;
-                case KeyCode.Enter:
-                    this._handleEnter($event);
-                    break;
-                case KeyCode.Tab:
-                    this._handleTab($event);
-                    break;
-                case KeyCode.Esc:
-                    this.close();
-                    $event.preventDefault();
-                    break;
-                case KeyCode.Backspace:
-                    this._handleBackspace();
-                    break;
+            if (!this.focusedTag) {
+                switch ($event.which) {
+                    case KeyCode.ArrowDown:
+                        this._handleArrowDown($event);
+                        break;
+                    case KeyCode.ArrowUp:
+                        this._handleArrowUp($event);
+                        break;
+                    case KeyCode.Space:
+                        this._handleSpace($event);
+                        break;
+                    case KeyCode.Enter:
+                        this._handleEnter($event);
+                        break;
+                    case KeyCode.Tab:
+                        this._handleTab($event);
+                        break;
+                    case KeyCode.Esc:
+                        this.close();
+                        $event.preventDefault();
+                        break;
+                    case KeyCode.Backspace:
+                        this._handleBackspace();
+                        break;
+                }
+            } else if ([KeyCode.Home, KeyCode.ArrowLeft, KeyCode.ArrowRight, KeyCode.End, KeyCode.Delete].includes($event.which)) {
+                $event.preventDefault();
+                $event.stopPropagation();
+                switch ($event.which) {
+                    case KeyCode.Home:
+                        this._focusFirstTag();
+                        break;
+                    case KeyCode.ArrowLeft:
+                        this._focusPreviousTag();
+                        break;
+                    case KeyCode.ArrowRight:
+                        this._focusNextTag();
+                        break;
+                    case KeyCode.End:
+                        this._focusLastTag();
+                        break;
+                    case KeyCode.Delete:
+                        this._handleDelete();
+                        break;
+                }
             }
         } else if ($event.key && $event.key.length === 1) {
             this._keyPress$.next($event.key.toLocaleLowerCase());
@@ -358,6 +383,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     writeValue(value: any | any[]): void {
         this.itemsList.clearSelected();
         this._handleWriteValue(value);
+        this._setInputValue();
         this._cd.markForCheck();
     }
 
@@ -404,7 +430,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
         this.isOpen = false;
-        this._clearSearch();
+        if (this.multiple) {
+            this._clearSearch();
+        } else {
+            this._setInputValue();
+        }
         this.itemsList.unmarkItem();
         this._onTouched();
         this.closeEvent.emit();
@@ -428,14 +458,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     select(item: NgOption) {
         if (!item.selected) {
             this.itemsList.select(item);
-            if (this.clearSearchOnAdd) {
-                this._clearSearch();
-            }
 
-            this._updateNgModel();
+            
             if (this.multiple) {
                 this.addEvent.emit(item.value);
+                
+                if (this.clearSearchOnAdd) {
+                    this._clearSearch();
+                } 
             }
+            this._updateNgModel();
         }
 
         if (this.closeOnSelect || this.itemsList.noItemsToSelect) {
@@ -538,7 +570,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
         this.searchEvent.emit({ term, items: this.itemsList.filteredItems.map(x => x.value) });
 
-        this.open();
+        onWidgetFocus() {
+            this._focusFirstTag();
+        }
+    
+        onTagBlur($event) {
+            if (!$event.relatedTarget ||
+                ($event.relatedTarget && !$event.relatedTarget.classList.contains('ng-value'))) {
+                this.focusedTag = null;
+            }
+        }
     }
 
     onInputFocus($event) {
@@ -758,6 +799,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.itemsList.resetFilteredItems();
     }
 
+    private _setInputValue() {
+        if (!this.multiple && this.selectedItems.length) {
+            this.filterValue = this.selectedItems[0].label;
+        }
+    }
+
     private _changeSearch(searchTerm) {
         this.searchTerm = searchTerm;
 
@@ -875,6 +922,43 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.unselect(this.itemsList.lastSelectedItem);
         } else {
             this.clearModel();
+        }
+    }
+
+    private _focusFirstTag() {
+        this.focusedTag = this.tagsList.first.nativeElement;
+        this.focusedTag.focus();
+    }
+
+    private _focusPreviousTag() {
+        this.focusedTag = this.focusedTag.previousElementSibling.classList.contains('ng-value') ?
+            this.focusedTag.previousElementSibling : this.tagsList.last.nativeElement;
+        this.focusedTag.focus();
+    }
+
+    private _focusNextTag() {
+        this.focusedTag = this.focusedTag.nextElementSibling.classList.contains('ng-value') ?
+            this.focusedTag.nextElementSibling : this.tagsList.first.nativeElement;
+        this.focusedTag.focus();
+    }
+
+    private _focusLastTag() {
+        this.focusedTag = this.tagsList.last.nativeElement;
+        this.focusedTag.focus();
+    }
+
+    private _handleDelete() {
+        if (this.focusedTag) {
+            const selected = this.selectedItems.find(item => item.htmlId === this.focusedTag.id);
+            this.unselect(selected);
+            this.detectChanges();
+            if (this.tagsList.length) {
+                this.focusedTag = this.tagsList.last.nativeElement;
+                this.focusedTag.focus();
+            } else {
+                this.focus(); // NOTE: unneeded as unselect() does focus the input already?
+            }
+
         }
     }
 
