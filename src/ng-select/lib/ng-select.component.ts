@@ -459,13 +459,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!item.selected) {
             this.itemsList.select(item);
 
-            
+
             if (this.multiple) {
                 this.addEvent.emit(item.value);
-                
+
                 if (this.clearSearchOnAdd) {
                     this._clearSearch();
-                } 
+                }
             }
             this._updateNgModel();
         }
@@ -570,15 +570,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
         this.searchEvent.emit({ term, items: this.itemsList.filteredItems.map(x => x.value) });
 
-        onWidgetFocus() {
-            this._focusFirstTag();
-        }
-    
-        onTagBlur($event) {
-            if (!$event.relatedTarget ||
-                ($event.relatedTarget && !$event.relatedTarget.classList.contains('ng-value'))) {
-                this.focusedTag = null;
-            }
+    }
+
+    onWidgetFocus() {
+        this._focusFirstTag();
+    }
+
+    onTagBlur($event) {
+        if (!$event.relatedTarget ||
+            ($event.relatedTarget && !$event.relatedTarget.classList.contains('ng-value'))) {
+            this.focusedTag = null;
         }
     }
 
@@ -801,7 +802,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     private _setInputValue() {
         if (!this.multiple && this.selectedItems.length) {
-            this.filterValue = this.selectedItems[0].label;
+            this.searchTerm = this.selectedItems[0].label;
         }
     }
 
