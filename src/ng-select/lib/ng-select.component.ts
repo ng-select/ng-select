@@ -570,6 +570,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
         this.searchEvent.emit({ term, items: this.itemsList.filteredItems.map(x => x.value) });
 
+        this.open();
     }
 
     onWidgetFocus() {
