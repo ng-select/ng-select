@@ -52,7 +52,8 @@
                    role="combobox"
                    [attr.aria-expanded]="isOpen"
                    [attr.aria-owns]="isOpen ? dropdownId : null"
-                   [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null">
+                   [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
+                   [required]="required">
         </div>
     </div>
 

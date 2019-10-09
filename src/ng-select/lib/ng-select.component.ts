@@ -78,6 +78,7 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
 
+    @Input() required = false;
     @Input() bindLabel: string;
     @Input() bindValue: string;
     @Input() markFirst = true;
