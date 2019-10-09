@@ -382,6 +382,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     writeValue(value: any | any[]): void {
         this.itemsList.clearSelected();
+        this._clearSearch();
         this._handleWriteValue(value);
         this._setInputValue();
         this._cd.markForCheck();
