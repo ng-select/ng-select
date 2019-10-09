@@ -53,6 +53,8 @@
                    [attr.aria-expanded]="isOpen"
                    [attr.aria-owns]="isOpen ? dropdownId : null"
                    [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
+                   aria-autocomplete="list"
+                   aria-haspopup="true"
                    [required]="required">
         </div>
     </div>
