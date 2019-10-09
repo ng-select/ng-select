@@ -70,8 +70,7 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
     }, NgDropdownPanelService],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        'role': 'listbox',
+    host: {        
         'class': 'ng-select',
         '[class.ng-select-single]': '!multiple',
     }
