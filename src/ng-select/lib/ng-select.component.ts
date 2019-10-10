@@ -70,7 +70,7 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
     }, NgDropdownPanelService],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {        
+    host: {
         'class': 'ng-select',
         '[class.ng-select-single]': '!multiple',
     }
@@ -78,6 +78,7 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
 export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
     @Input() invalid = false;
     @Input() required = false;
+    @Input() describedBy: string;
     @Input() bindLabel: string;
     @Input() bindValue: string;
     @Input() markFirst = true;

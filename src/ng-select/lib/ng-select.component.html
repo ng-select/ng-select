@@ -7,8 +7,6 @@
      (mousedown)="handleMousedown($event)"
      (focus)="onWidgetFocus()">
     <div class="ng-value-container">
-        <div class="ng-placeholder" aria-hidden="true">{{placeholder}}</div>
-
         <ng-container *ngIf="((multiple && !multiLabelTemplate) || !searchable) && selectedItems.length > 0">
             <div #tag *ngFor="let item of selectedItems; trackBy: trackByOption"
                  [class.ng-value-disabled]="item.disabled"
@@ -56,6 +54,8 @@
                    aria-autocomplete="list"
                    aria-haspopup="true"
                    [attr.aria-invalid]="invalid"
+                   [placeholder]="this.selectedItems && this.selectedItems.length ? '':placeholder"
+                   [attr.aria-describedby]="describedBy"
                    [required]="required">
         </div>
     </div>
