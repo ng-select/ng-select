@@ -599,6 +599,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     onInputBlur($event) {
         this.element.classList.remove('ng-select-focused');
         this.blurEvent.emit($event);
+        
+        // Clear the search inout if no value is selected
+        if (this.selectedItems && !this.selectedItems.length && this.searchInput.nativeElement.value) {
+            this._clearSearch();
+        }
+
         if (!this.isOpen && !this.disabled) {
             this._onTouched();
         }
