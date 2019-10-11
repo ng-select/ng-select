@@ -98,7 +98,7 @@
                    (outsideClick)="close()"
                    [class.ng-select-multiple]="multiple"
                    [ngClass]="appendTo ? classes : null"
-                   [id]="dropdownId">
+                   [dropdownId]="dropdownId">
 
     <ng-container>
         <div class="ng-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)" (mouseover)="onItemHover(item)"
