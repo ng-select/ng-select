@@ -71,7 +71,7 @@
     </ng-container>
 
     <span *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
-        <button class="ng-clear" aria-label="Clear this option" (keydown.enter)="$event.preventDefault(); $event.stopPropagation(); handleClearClick();" (keydown.space)="$event.preventDefault(); $event.stopPropagation(); handleClearClick();">×</button>
+        <button class="ng-clear" attr.aria-label="{{clearAllText}}" (keydown.enter)="$event.preventDefault(); $event.stopPropagation(); handleClearClick();" (keydown.space)="$event.preventDefault(); $event.stopPropagation(); handleClearClick();">×</button>
     </span>
 
     <span class="ng-arrow-wrapper">
