@@ -137,7 +137,7 @@
 
     <ng-container *ngIf="showNoItemsFound()">
         <ng-template #defaultNotFoundTemplate>
-            <div class="ng-option ng-option-disabled">{{notFoundText}}</div>
+            <div class="ng-option ng-option-disabled">{{notFoundText}} for "{{searchTerm}}"</div>
         </ng-template>
 
         <ng-template
