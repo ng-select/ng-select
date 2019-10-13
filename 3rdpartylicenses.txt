@@ -64,6 +64,7 @@ THE SOFTWARE.
 
 
 @ng-select/ng-option-highlight
+MIT
 
 @ng-select/ng-select
 MIT
