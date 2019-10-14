@@ -419,7 +419,7 @@ describe('NgSelectComponent', () => {
             expect(lastSelection.selected).toBeFalsy();
         }));
 
-        it('should clear disbled selected values when setting new model', fakeAsync(() => {
+        it('should clear disabled selected values when setting new model', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -3064,6 +3064,7 @@ describe('NgSelectComponent', () => {
                             bindLabel="name"
                             [multiple]="true"
                             [disabled]="disabled"
+                            [readonly]="readonly"
                             [(ngModel)]="selectedCities">
                     </ng-select>`);
 
@@ -3108,6 +3109,14 @@ describe('NgSelectComponent', () => {
 
             it('clear button should not appear if select is disabled', fakeAsync(() => {
                 fixture.componentInstance.disabled = true;
+                tickAndDetectChanges(fixture);
+                tickAndDetectChanges(fixture);
+                const el = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
+                expect(el).toBeNull();
+            }));
+
+            it('clear button should not appear if select is readonly', fakeAsync(() => {
+                fixture.componentInstance.readonly = true;
                 tickAndDetectChanges(fixture);
                 tickAndDetectChanges(fixture);
                 const el = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
@@ -3547,6 +3556,7 @@ class NgSelectTestCmp {
     label = 'Yes';
     clearOnBackspace = false;
     disabled = false;
+    readonly = false;
     dropdownPosition = 'bottom';
     visible = true;
     filter = new Subject<string>();
