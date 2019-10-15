@@ -3523,7 +3523,7 @@ describe('NgSelectComponent', () => {
             expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length)
         })
 
-        it('should not call any of default keyDown handlers if user handler returns falsy', fakeAsync(() => {
+        it('should not call any of default keyDown handlers if user handler returns false', fakeAsync(() => {
             fixture.componentInstance.keyDownFn = () => false
             tickAndDetectChanges(fixture)
             const spy = spyOn(fixture.componentInstance.select, 'handleKeyCode')
@@ -3533,6 +3533,14 @@ describe('NgSelectComponent', () => {
 
         it('should call default keyHandler if user handler returns truthy', fakeAsync(() => {
             fixture.componentInstance.keyDownFn = () => true
+            tickAndDetectChanges(fixture)
+
+            const spy = spyOn(fixture.componentInstance.select, 'handleKeyCode')
+            expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length)
+        }))
+
+        it('should call default keyHandler if user handler returns falsy but not `false`', fakeAsync(() => {
+            fixture.componentInstance.keyDownFn = () => null
             tickAndDetectChanges(fixture)
 
             const spy = spyOn(fixture.componentInstance.select, 'handleKeyCode')

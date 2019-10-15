@@ -271,7 +271,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (keyCode) {
             if (isFunction(this.keyDownFn)) {
                 const result = this.keyDownFn(keyCode, $event)
-                if (!result) {
+                if (result === false) {
                     return
                 }
             }
