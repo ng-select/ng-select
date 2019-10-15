@@ -143,6 +143,7 @@ map: {
 | notFoundText | `string` | `No items found` | no | Set custom text when filter returns empty result |
 | placeholder | `string` | `-` | no | Placeholder text. |
 | [searchable] | `boolean` | `true` | no | Allow to search for value. Default `true`|
+| [readonly] | `boolean` | `false` | no | Set ng-select as readonly. Mostly used with reactive forms. |
 | [searchFn] | `(term: string, item: any) => boolean` | `null` | no | Allow to filter by custom search function |
 | [trackByFn] | `(item: any) => any` | `null` | no | Provide custom trackBy function |
 | [clearSearchOnAdd] | `boolean` | `true` | no | Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false` |
