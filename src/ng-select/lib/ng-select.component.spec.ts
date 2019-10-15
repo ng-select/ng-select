@@ -3498,7 +3498,7 @@ describe('NgSelectComponent', () => {
         });
     });
 
-    fdescribe('User defined keyDown handler', () => {
+    describe('User defined keyDown handler', () => {
         let fixture: ComponentFixture<NgSelectTestCmp>;
         let select: NgSelectComponent;
 
