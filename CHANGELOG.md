@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/ng-select/ng-select/compare/v3.0.7...v3.1.0) (2019-10-14)
+
+
+### Bug Fixes
+
+* add licence for ng-option-highlight ([cef723f](https://github.com/ng-select/ng-select/commit/cef723f))
+* make all templates dynamic ([6801f7f](https://github.com/ng-select/ng-select/commit/6801f7f)), closes [#1255](https://github.com/ng-select/ng-select/issues/1255)
+
+
+### Features
+
+* add readonly attribute ([8c507aa](https://github.com/ng-select/ng-select/commit/8c507aa)), closes [#786](https://github.com/ng-select/ng-select/issues/786)
+
+
+
 ### [3.0.7](https://github.com/ng-select/ng-select/compare/v3.0.6...v3.0.7) (2019-08-25)
 
 

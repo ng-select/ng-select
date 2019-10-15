@@ -106,6 +106,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() labelForId = null;
     @Input() inputAttrs: { [key: string]: string } = {};
     @Input() tabIndex: number;
+    @Input() readonly = false;
     @Input() keyDownFn: Function;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
@@ -167,7 +168,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
 
-    @HostBinding('class.ng-select-disabled') disabled = false;
+    @HostBinding('class.ng-select-disabled') get disabled() { return this.readonly || this._disabled };
     @HostBinding('class.ng-select-filtered') get filtered() { return (!!this.searchTerm && this.searchable || this._isComposing) };
 
     itemsList: ItemsList;
@@ -183,6 +184,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _defaultLabel = 'label';
     private _primitive;
     private _manualOpen: boolean;
+    private _disabled: boolean;
     private _pressedKeys: string[] = [];
     private _compareWith: CompareWithFn;
     private _clearSearchOnAdd: boolean;
@@ -381,8 +383,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this._onTouched = fn;
     }
 
-    setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
+    setDisabledState(state: boolean): void {
+        this._disabled = state;
         this._cd.markForCheck();
     }
 
