@@ -57,6 +57,7 @@ export type DropdownPosition = 'bottom' | 'top' | 'auto';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
 export type GroupValueFn = (key: string | object, children: any[]) => string | object;
+export type KeyDownFn = (keyCode: string, $event: KeyboardEvent) => false | unknown;
 
 @Component({
     selector: 'ng-select',
@@ -107,7 +108,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() inputAttrs: { [key: string]: string } = {};
     @Input() tabIndex: number;
     @Input() readonly = false;
-    @Input() keyDownFn: Function;
+    @Input() keyDownFn: KeyDownFn;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
