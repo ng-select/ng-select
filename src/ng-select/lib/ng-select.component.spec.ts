@@ -3497,6 +3497,48 @@ describe('NgSelectComponent', () => {
             }));
         });
     });
+
+    fdescribe('User defined keyDown handler', () => {
+        let fixture: ComponentFixture<NgSelectTestCmp>;
+        let select: NgSelectComponent;
+
+        beforeEach(() => {
+            fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [keyDownFn]="keyDownFn"></ng-select>`);
+            select = fixture.componentInstance.select;
+        });
+
+        const expectSpyToBeCalledAfterKeyDown = (spy, expectedNumber) => {
+            const possibleKeyCodes = Object.keys(KeyCode)
+            possibleKeyCodes
+                .forEach(keyCode => {
+                    triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode[keyCode])
+                })
+            expect(spy).toHaveBeenCalledTimes(expectedNumber)
+        }
+
+        it('should execute user function if any of defined keys was pressed', () => {
+            const spy = spyOn(fixture.componentInstance.select, 'keyDownFn')
+            expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length)
+        })
+
+        it('should not call any of default keyDown handlers if user handler returns falsy', fakeAsync(() => {
+            fixture.componentInstance.keyDownFn = () => false
+            tickAndDetectChanges(fixture)
+            const spy = spyOn(fixture.componentInstance.select, 'handleKeyCode')
+
+            expectSpyToBeCalledAfterKeyDown(spy, 0)
+        }))
+
+        it('should call default keyHandler if user handler returns truthy', fakeAsync(() => {
+            fixture.componentInstance.keyDownFn = () => true
+            tickAndDetectChanges(fixture)
+
+            const spy = spyOn(fixture.componentInstance.select, 'handleKeyCode')
+            expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length)
+        }))
+    })
 });
 
 
@@ -3572,6 +3614,7 @@ class NgSelectTestCmp {
         { id: 2, description: { name: 'USA', id: 'b' } },
         { id: 3, description: { name: 'Australia', id: 'c' } }
     ];
+    keyDownFn = () => {}
 
     tagFunc(term: string) {
         return { id: term, name: term, custom: true }
