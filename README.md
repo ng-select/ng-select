@@ -153,6 +153,7 @@ map: {
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
 | [inputAttrs] | `{ [key: string]: string }` |  `-` | no | Pass custom attributes to underlying `input` element |
 | [tabIndex] | `number` |  `-` | no | Set tabindex on ng-select |
+| [disableContextmenu] | `boolean` | `false` | no | When `true`, the dropdown will not open when right clicking the component.
 
 ### Outputs
 

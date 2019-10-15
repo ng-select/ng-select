@@ -2367,12 +2367,12 @@ describe('NgSelectComponent', () => {
 
             const selectInput = fixture.debugElement.query(By.css('.ng-select-container'));
             // open
-            selectInput.triggerEventHandler('mousedown', createEvent());
+            selectInput.triggerEventHandler('click', createEvent());
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(true);
 
             // close
-            selectInput.triggerEventHandler('mousedown', createEvent());
+            selectInput.triggerEventHandler('click', createEvent());
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBe(false);
         }));
@@ -2996,10 +2996,10 @@ describe('NgSelectComponent', () => {
         }));
     });
 
-    describe('Mousedown', () => {
+    describe('Click', () => {
         let fixture: ComponentFixture<NgSelectTestCmp>;
         let select: NgSelectComponent;
-        let triggerMousedown = null;
+        let triggerClick = null;
 
         describe('dropdown click', () => {
             beforeEach(fakeAsync(() => {
@@ -3014,15 +3014,15 @@ describe('NgSelectComponent', () => {
 
                 tickAndDetectChanges(fixture);
                 tickAndDetectChanges(fixture);
-                triggerMousedown = () => {
+                triggerClick = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({ className: 'ng-control' }));
+                    control.triggerEventHandler('click', createEvent({ className: 'ng-control' }));
                 };
             }));
 
             it('should focus dropdown', fakeAsync(() => {
                 const focus = spyOn(select, 'focus');
-                triggerMousedown();
+                triggerClick();
                 tickAndDetectChanges(fixture);
                 expect(focus).toHaveBeenCalled();
             }));
@@ -3041,15 +3041,15 @@ describe('NgSelectComponent', () => {
                 select = fixture.componentInstance.select;
 
                 event = createEvent({ tagName: 'INPUT' }) as any;
-                triggerMousedown = () => {
+                triggerClick = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', event);
+                    control.triggerEventHandler('click', event);
                 };
             }));
 
             it('should not prevent default', fakeAsync(() => {
                 const preventDefault = spyOn(event, 'preventDefault');
-                triggerMousedown();
+                triggerClick();
                 tickAndDetectChanges(fixture);
                 expect(preventDefault).not.toHaveBeenCalled();
             }));
@@ -3074,16 +3074,16 @@ describe('NgSelectComponent', () => {
                 fixture.componentInstance.cities[1].disabled = true;
                 fixture.componentInstance.cities = [...fixture.componentInstance.cities];
                 tickAndDetectChanges(fixture);
-                triggerMousedown = () => {
+                triggerClick = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({
+                    control.triggerEventHandler('click', createEvent({
                         classList: { contains: (term) => term === 'ng-clear-wrapper' }
                     }));
                 };
             }));
 
             it('should clear model except disabled', fakeAsync(() => {
-                triggerMousedown();
+                triggerClick();
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.selectedCities.length).toBe(1);
                 expect(fixture.componentInstance.selectedCities[0]).toEqual(jasmine.objectContaining({ id: 2, name: 'Kaunas' }));
@@ -3094,14 +3094,14 @@ describe('NgSelectComponent', () => {
                 fixture.componentInstance.selectedCities = null;
                 fixture.componentInstance.select.searchTerm = 'Hey! Whats up!?';
                 tickAndDetectChanges(fixture);
-                triggerMousedown();
+                triggerClick();
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(0);
                 expect(fixture.componentInstance.select.searchTerm).toBe(null);
             }));
 
             it('should not open dropdown', fakeAsync(() => {
-                triggerMousedown();
+                triggerClick();
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.select.isOpen).toBe(false);
             }));
@@ -3129,16 +3129,16 @@ describe('NgSelectComponent', () => {
                 fixture.componentInstance.selectedCities = fixture.componentInstance.cities[0];
                 tickAndDetectChanges(fixture);
                 tickAndDetectChanges(fixture);
-                triggerMousedown = () => {
+                triggerClick = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({
+                    control.triggerEventHandler('click', createEvent({
                         classList: { contains: (term) => term === 'ng-value-icon' }
                     }));
                 };
             }));
 
             it('should not open dropdown', fakeAsync(() => {
-                triggerMousedown();
+                triggerClick();
                 tickAndDetectChanges(fixture);
                 expect(select.isOpen).toBe(false);
             }));
@@ -3162,9 +3162,9 @@ describe('NgSelectComponent', () => {
 
                 fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
                 tickAndDetectChanges(fixture);
-                triggerMousedown = () => {
+                triggerClick = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
-                    control.triggerEventHandler('mousedown', createEvent({
+                    control.triggerEventHandler('click', createEvent({
                         classList: { contains: (term) => term === 'ng-arrow-wrapper' }
                     }));
                 };
@@ -3172,20 +3172,106 @@ describe('NgSelectComponent', () => {
 
             it('should toggle dropdown', fakeAsync(() => {
                 // open
-                triggerMousedown();
+                triggerClick();
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.select.isOpen).toBe(true);
 
                 // close
-                triggerMousedown();
+                triggerClick();
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.select.isOpen).toBe(false);
 
                 // open
-                triggerMousedown();
+                triggerClick();
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.select.isOpen).toBe(true);
             }));
+        });
+    });
+
+    describe('Contextmenu', () => {
+        let fixture: ComponentFixture<NgSelectTestCmp>;
+        let select: NgSelectComponent;
+        let triggerContextmenu = null;
+
+        describe('dropdown contextmenu', () => {
+            beforeEach(() => {
+                triggerContextmenu = () => {
+                    const control = fixture.debugElement.query(By.css('.ng-select-container'));
+                    control.triggerEventHandler('contextmenu', createEvent({ className: 'ng-control' }));
+                };
+            });
+
+            describe('when disableContextmenu === true', () => {
+                beforeEach(fakeAsync(() => {
+                    fixture = createTestingModule(
+                        NgSelectTestCmp,
+                        `<ng-select 
+                                [disableContextmenu]="true"
+                                [items]="cities"
+                                bindLabel="name"
+                                [multiple]="true"
+                                [(ngModel)]="selectedCities">
+                        </ng-select>`);
+                    select = fixture.componentInstance.select;
+                    tickAndDetectChanges(fixture);
+                    tickAndDetectChanges(fixture);
+                }));
+    
+                it('should not focus dropdown', fakeAsync(() => {
+                    const focus = spyOn(select, 'focus');
+                    triggerContextmenu();
+                    tickAndDetectChanges(fixture);
+                    expect(focus).not.toHaveBeenCalled();
+                }));
+            });
+
+            describe('when disableContextmenu is not defined', () => {
+                beforeEach(fakeAsync(() => {
+                    fixture = createTestingModule(
+                        NgSelectTestCmp,
+                        `<ng-select 
+                                [items]="cities"
+                                bindLabel="name"
+                                [multiple]="true"
+                                [(ngModel)]="selectedCities">
+                        </ng-select>`);
+                    select = fixture.componentInstance.select;
+                    tickAndDetectChanges(fixture);
+                    tickAndDetectChanges(fixture);
+                }));
+    
+                it('should focus dropdown', fakeAsync(() => {
+                    const focus = spyOn(select, 'focus');
+                    triggerContextmenu();
+                    tickAndDetectChanges(fixture);
+                    expect(focus).toHaveBeenCalled();
+                }));
+            });
+
+            describe('when disableContextmenu === false', () => {
+                beforeEach(fakeAsync(() => {
+                    fixture = createTestingModule(
+                        NgSelectTestCmp,
+                        `<ng-select 
+                                [disableContextmenu]="false"
+                                [items]="cities"
+                                bindLabel="name"
+                                [multiple]="true"
+                                [(ngModel)]="selectedCities">
+                        </ng-select>`);
+                    select = fixture.componentInstance.select;
+                    tickAndDetectChanges(fixture);
+                    tickAndDetectChanges(fixture);
+                }));
+    
+                it('should focus dropdown', fakeAsync(() => {
+                    const focus = spyOn(select, 'focus');
+                    triggerContextmenu();
+                    tickAndDetectChanges(fixture);
+                    expect(focus).toHaveBeenCalled();
+                }));
+            });
         });
     });
 

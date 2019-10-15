@@ -93,6 +93,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() hideSelected = false;
     @Input() selectOnTab = false;
     @Input() openOnEnter: boolean;
+    @Input() disableContextmenu = false;
     @Input() maxSelectedItems: number;
     @Input() groupBy: string | Function;
     @Input() groupValue: GroupValueFn;
@@ -296,7 +297,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
     }
 
-    handleMousedown($event: MouseEvent) {
+    handleClick($event: MouseEvent) {
         const target = $event.target as HTMLElement;
         if (target.tagName !== 'INPUT') {
             $event.preventDefault();
@@ -325,6 +326,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         } else {
             this.toggle();
         }
+    }
+
+    handleContextmenu($event: MouseEvent) {
+        if (this.disableContextmenu) {
+            return;
+        }
+        this.handleClick($event);
     }
 
     handleArrowClick() {
