@@ -57,7 +57,7 @@ export type DropdownPosition = 'bottom' | 'top' | 'auto';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
 export type GroupValueFn = (key: string | object, children: any[]) => string | object;
-export type KeyDownFn = (keyCode: string, $event: KeyboardEvent) => false | unknown;
+export type KeyDownFn = (keyCode: number, $event: KeyboardEvent) => false | unknown;
 
 @Component({
     selector: 'ng-select',
@@ -273,7 +273,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         const keyCode = KeyCode[$event.which]
         if (keyCode) {
             if (isFunction(this.keyDownFn)) {
-                const result = this.keyDownFn(keyCode, $event)
+                const result = this.keyDownFn($event.which, $event)
                 if (result === false) {
                     return
                 }
