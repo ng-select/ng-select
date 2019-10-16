@@ -2258,6 +2258,11 @@ describe('NgSelectComponent', () => {
                 tickAndDetectChanges(fixture);
                 expect(select.showAddTag).toBeFalsy();
             }));
+
+            it('should be false when there is search term with only empty space', () => {
+                select.searchTerm = '   ';
+                expect(select.showAddTag).toBeFalsy();
+            });            
         });
     });
 

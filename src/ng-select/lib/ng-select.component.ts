@@ -493,7 +493,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     };
 
     get showAddTag() {
-        if (!this.searchTerm) {
+        if (!this.searchTerm || (this.searchTerm && !this.searchTerm.trim())) {
             return false;
         }
 
