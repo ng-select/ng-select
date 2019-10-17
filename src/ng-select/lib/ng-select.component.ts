@@ -21,7 +21,7 @@ import {
     ContentChildren,
     QueryList,
     InjectionToken,
-    Attribute
+    Attribute, SecurityContext
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil, startWith, tap, debounceTime, map, filter } from 'rxjs/operators';
@@ -51,6 +51,7 @@ import { NgOptionComponent } from './ng-option.component';
 import { SelectionModelFactory } from './selection-model';
 import { NgSelectConfig } from './config.service';
 import { NgDropdownPanelService } from './ng-dropdown-panel.service';
+import {DomSanitizer} from '@angular/platform-browser';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type DropdownPosition = 'bottom' | 'top' | 'auto';
@@ -207,7 +208,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         @Inject(SELECTION_MODEL_FACTORY) newSelectionModel: SelectionModelFactory,
         _elementRef: ElementRef<HTMLElement>,
         private _cd: ChangeDetectorRef,
-        private _console: ConsoleService
+        private _console: ConsoleService,
+        private sanitizer: DomSanitizer
     ) {
         this._mergeGlobalConfig(config);
         this.itemsList = new ItemsList(this, newSelectionModel());
@@ -662,6 +664,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             } else {
                 const isValObject = isObject(val);
                 const isPrimitive = !isValObject && !this.bindValue;
+                if (typeof val === 'string') {
+                    val = this.sanitizer.sanitize(SecurityContext.HTML, val);
+                }
                 if ((isValObject || isPrimitive)) {
                     this.itemsList.select(this.itemsList.mapItem(val, null));
                 } else if (this.bindValue) {
