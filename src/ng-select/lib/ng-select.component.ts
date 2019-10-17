@@ -493,11 +493,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     };
 
     get showAddTag() {
-        if (!this.searchTerm || (this.searchTerm && !this.searchTerm.trim())) {
+        let term = this.searchTerm && this.searchTerm.trim()
+        if (!term) {
             return false;
         }
 
-        const term = this.searchTerm.toLowerCase();
+        term = term.toLowerCase();
         return this.addTag &&
             (!this.itemsList.filteredItems.some(x => x.label.toLowerCase() === term) &&
                 (!this.hideSelected && this.isOpen || !this.selectedItems.some(x => x.label.toLowerCase() === term))) &&
