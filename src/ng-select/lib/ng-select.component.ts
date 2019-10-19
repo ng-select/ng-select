@@ -57,7 +57,6 @@ export type DropdownPosition = 'bottom' | 'top' | 'auto';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
 export type GroupValueFn = (key: string | object, children: any[]) => string | object;
-export type KeyDownFn = (keyCode: number, $event: KeyboardEvent) => false | unknown;
 
 @Component({
     selector: 'ng-select',
@@ -108,7 +107,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() inputAttrs: { [key: string]: string } = {};
     @Input() tabIndex: number;
     @Input() readonly = false;
-    @Input() keyDownFn: KeyDownFn;
+    @Input() keyDownFn = (_: KeyboardEvent) => true;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
@@ -119,6 +118,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @Input()
     get items() { return this._items };
+
     set items(value: any[]) {
         this._itemsAreUsed = true;
         this._items = value;
@@ -126,6 +126,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @Input()
     get compareWith() { return this._compareWith; }
+
     set compareWith(fn: CompareWithFn) {
         if (!isFunction(fn)) {
             throw Error('`compareWith` must be a function.');
@@ -135,6 +136,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @Input()
     get clearSearchOnAdd() { return isDefined(this._clearSearchOnAdd) ? this._clearSearchOnAdd : this.closeOnSelect; };
+
     set clearSearchOnAdd(value) {
         this._clearSearchOnAdd = value;
     };
@@ -170,6 +172,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
 
     @HostBinding('class.ng-select-disabled') get disabled() { return this.readonly || this._disabled };
+
     @HostBinding('class.ng-select-filtered') get filtered() { return (!!this.searchTerm && this.searchable || this._isComposing) };
 
     itemsList: ItemsList;
@@ -270,13 +273,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @HostListener('keydown', ['$event'])
     handleKeyDown($event: KeyboardEvent) {
-        const keyCode = KeyCode[$event.which]
+        const keyCode = KeyCode[$event.which];
         if (keyCode) {
-            if (isFunction(this.keyDownFn)) {
-                const result = this.keyDownFn($event.which, $event)
-                if (result === false) {
-                    return
-                }
+            if (this.keyDownFn($event) === false) {
+                return;
             }
             this.handleKeyCode($event)
         } else if ($event.key && $event.key.length === 1) {
@@ -287,26 +287,26 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     handleKeyCode($event: KeyboardEvent) {
         switch ($event.which) {
             case KeyCode.ArrowDown:
-                this._handleArrowDown($event)
-                break
+                this._handleArrowDown($event);
+                break;
             case KeyCode.ArrowUp:
-                this._handleArrowUp($event)
-                break
+                this._handleArrowUp($event);
+                break;
             case KeyCode.Space:
-                this._handleSpace($event)
-                break
+                this._handleSpace($event);
+                break;
             case KeyCode.Enter:
-                this._handleEnter($event)
-                break
+                this._handleEnter($event);
+                break;
             case KeyCode.Tab:
-                this._handleTab($event)
-                break
+                this._handleTab($event);
+                break;
             case KeyCode.Esc:
-                this.close()
-                $event.preventDefault()
-                break
+                this.close();
+                $event.preventDefault();
+                break;
             case KeyCode.Backspace:
-                this._handleBackspace()
+                this._handleBackspace();
                 break
         }
     }
@@ -506,7 +506,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     };
 
     get showAddTag() {
-        let term = this.searchTerm && this.searchTerm.trim()
+        let term = this.searchTerm && this.searchTerm.trim();
         if (!term) {
             return false;
         }
