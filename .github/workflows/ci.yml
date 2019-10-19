@@ -2,10 +2,6 @@ name: CI
 
 on:
   pull_request:
-    paths: 
-      - '**.ts'
-      - '**.html'
-      - '**.scss'
   push:
     paths: 
       - '**.ts'
