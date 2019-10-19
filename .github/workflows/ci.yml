@@ -1,6 +1,16 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  pull_request:
+    paths: 
+      - '**.ts'
+      - '**.html'
+      - '**.scss'
+  push:
+    paths: 
+      - '**.ts'
+      - '**.html'
+      - '**.scss'
 
 jobs:
   build:
