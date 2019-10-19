@@ -23,6 +23,8 @@ export class AppComponent {
         private config: NgSelectConfig
     ) {
         this.config.placeholder = 'Select item';
+        // This could be useful if you want to use appendTo in entire application without explicitly defining it. (eg: appendTo = 'body')
+        this.config.appendTo = null; 
     }
 
     ngOnInit() {
