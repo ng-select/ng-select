@@ -431,7 +431,7 @@ describe('NgSelectComponent', () => {
 
 
             const disabled = { ...fixture.componentInstance.cities[1], disabled: true };
-            fixture.componentInstance.selectedCities = <any> [fixture.componentInstance.cities[0], disabled];
+            fixture.componentInstance.selectedCities = <any>[fixture.componentInstance.cities[0], disabled];
             tickAndDetectChanges(fixture);
 
             fixture.componentInstance.cities[1].disabled = true;
@@ -1445,7 +1445,7 @@ describe('NgSelectComponent', () => {
                 const remove = spyOn(select.removeEvent, 'emit');
                 fixture.componentInstance.multiple = true;
                 const disabled = { ...fixture.componentInstance.cities[1], disabled: true };
-                fixture.componentInstance.selectedCity = <any> [fixture.componentInstance.cities[0], disabled];
+                fixture.componentInstance.selectedCity = <any>[fixture.componentInstance.cities[0], disabled];
                 tickAndDetectChanges(fixture);
                 fixture.componentInstance.cities[1].disabled = true;
                 fixture.componentInstance.cities = [...fixture.componentInstance.cities];
@@ -2262,7 +2262,7 @@ describe('NgSelectComponent', () => {
             it('should be false when there is search term with only empty space', () => {
                 select.searchTerm = '   ';
                 expect(select.showAddTag).toBeFalsy();
-            });            
+            });
         });
     });
 
@@ -3075,7 +3075,7 @@ describe('NgSelectComponent', () => {
 
                 spyOn(fixture.componentInstance, 'onChange');
                 const disabled = { ...fixture.componentInstance.cities[1], disabled: true };
-                fixture.componentInstance.selectedCities = <any> [fixture.componentInstance.cities[0], disabled];
+                fixture.componentInstance.selectedCities = <any>[fixture.componentInstance.cities[0], disabled];
                 tickAndDetectChanges(fixture);
                 fixture.componentInstance.cities[1].disabled = true;
                 fixture.componentInstance.cities = [...fixture.componentInstance.cities];
@@ -3511,6 +3511,56 @@ describe('NgSelectComponent', () => {
             }));
         });
     });
+
+    describe('User defined keyDown handler', () => {
+        let fixture: ComponentFixture<NgSelectTestCmp>;
+        let select: NgSelectComponent;
+
+        beforeEach(() => {
+            fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [keyDownFn]="keyDownFn"></ng-select>`);
+            select = fixture.componentInstance.select;
+        });
+
+        const expectSpyToBeCalledAfterKeyDown = (spy, expectedNumber) => {
+            const possibleKeyCodes = Object.keys(KeyCode);
+            possibleKeyCodes
+                .forEach(keyCode => {
+                    triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode[keyCode])
+                });
+            expect(spy).toHaveBeenCalledTimes(expectedNumber)
+        };
+
+        it('should execute user function if any of defined keys was pressed', () => {
+            const spy = spyOn(fixture.componentInstance.select, 'keyDownFn');
+            expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length)
+        });
+
+        it('should not call any of default keyDown handlers if user handler returns false', fakeAsync(() => {
+            fixture.componentInstance.keyDownFn = () => false;
+            tickAndDetectChanges(fixture);
+            const spy = spyOn(fixture.componentInstance.select, 'handleKeyCode');
+
+            expectSpyToBeCalledAfterKeyDown(spy, 0)
+        }));
+
+        it('should call default keyHandler if user handler returns truthy', fakeAsync(() => {
+            fixture.componentInstance.keyDownFn = () => true;
+            tickAndDetectChanges(fixture);
+
+            const spy = spyOn(fixture.componentInstance.select, 'handleKeyCode');
+            expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length)
+        }));
+
+        it('should call default keyHandler if user handler returns falsy but not `false`', fakeAsync(() => {
+            fixture.componentInstance.keyDownFn = () => null;
+            tickAndDetectChanges(fixture);
+
+            const spy = spyOn(fixture.componentInstance.select, 'handleKeyCode');
+            expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length)
+        }))
+    })
 });
 
 
@@ -3587,6 +3637,7 @@ class NgSelectTestCmp {
         { id: 2, description: { name: 'USA', id: 'b' } },
         { id: 3, description: { name: 'Australia', id: 'c' } }
     ];
+    keyDownFn = () => {};
 
     tagFunc(term: string) {
         return { id: term, name: term, custom: true }
