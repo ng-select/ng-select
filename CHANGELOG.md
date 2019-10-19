@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [3.1.1](https://github.com/ng-select/ng-select/compare/v3.1.0...v3.1.1) (2019-10-19)
 
+### Features
+
+* **keyDownFn** user defined keydown handler to prevent ng-select behaviour([8b2b817](https://github.com/ng-select/ng-select/commit/8b2b817)), closes [#1155](https://github.com/ng-select/ng-select/issues/1155)
+
 
 ### Bug Fixes
 
