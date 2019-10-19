@@ -37,6 +37,10 @@ export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
         }
     }
 
+    private _escapeRegExp(str: string): string {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
     private _highlightLabel() {
         const label = this.label;
         if (!this.term) {
@@ -44,8 +48,8 @@ export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
             return;
         }
 
-        const alternationString = this.term.replace(' ', '|')
-        const termRegex = new RegExp(alternationString, 'gi')
+        const alternationString = this._escapeRegExp(this.term).replace(' ', '|');
+        const termRegex = new RegExp(alternationString, 'gi');
         this._setInnerHtml(label.replace(termRegex, `<span class=\"highlighted\">$&</span>`))
     }
 
