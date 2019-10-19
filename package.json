@@ -25,6 +25,13 @@
       "@semantic-release/commit-analyzer",
       "@semantic-release/changelog",
       "@semantic-release/github",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": false,
+          "pkgRoot": "dist/ng-select"
+        }
+      ],
       "@semantic-release/release-notes-generator"
     ]
   },
