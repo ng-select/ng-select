@@ -909,5 +909,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             ? this.virtualScroll
             : isDefined(config.disableVirtualScroll) ? !config.disableVirtualScroll : false;
         this.openOnEnter = isDefined(this.openOnEnter) ? this.openOnEnter : config.openOnEnter;
+        this.appendTo = this.appendTo || config.appendTo;
     }
 }

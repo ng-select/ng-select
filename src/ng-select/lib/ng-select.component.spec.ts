@@ -9,6 +9,7 @@ import { MockConsole, MockNgZone } from '../testing/mocks';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { NgSelectModule } from './ng-select.module';
 import { Subject } from 'rxjs';
+import { NgSelectConfig } from './config.service';
 
 describe('NgSelectComponent', () => {
 
@@ -3242,6 +3243,53 @@ describe('NgSelectComponent', () => {
                 expect(dropdown.style.left).toBe('0px');
             });
         }));
+
+        it('should apply global appendTo from NgSelectConfig', async(() => {
+            const config = new NgSelectConfig();
+            config.appendTo = 'body';
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `
+                <div class="container"></div>
+                <ng-select [items]="cities"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+                config);
+
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const dropdown = <HTMLElement>document.querySelector('.ng-dropdown-panel');
+                expect(dropdown.parentElement).toBe(document.body);
+                expect(dropdown.style.top).not.toBe('0px');
+                expect(dropdown.style.left).toBe('0px');
+            });
+        }));
+
+        it('should not apply global appendTo from NgSelectConfig if appendTo prop explicitly provided in template', async(() => {
+            const config = new NgSelectConfig();
+            config.appendTo = 'body';
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `
+                <div class="container"></div>
+                <ng-select [items]="cities"
+                        appendTo=".container"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+                config);
+
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
+                expect(dropdown.style.top).not.toBe('0px');
+                expect(dropdown.style.left).toBe('0px');
+            });
+        }));
+
     });
 
     describe('Grouping', () => {
@@ -3564,7 +3612,8 @@ describe('NgSelectComponent', () => {
 });
 
 
-function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixture<T> {
+function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectConfig: NgSelectConfig | null = null): ComponentFixture<T> {
+
     TestBed.configureTestingModule({
         imports: [FormsModule, NgSelectModule],
         declarations: [cmp],
@@ -3578,8 +3627,13 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
             set: {
                 template: template
             }
-        })
-        .compileComponents();
+        });
+
+        if (customNgSelectConfig) {
+            TestBed.overrideProvider(NgSelectConfig, { useValue: customNgSelectConfig });
+        }
+
+        TestBed.compileComponents();
 
     const fixture = TestBed.createComponent(cmp);
     fixture.detectChanges();
