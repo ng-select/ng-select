@@ -29,6 +29,6 @@ jobs:
         run: cp README.md ./dist/ng-select/
 
       - name: Semantic release
-        run: npm release
+        run: npm run release
 
 
