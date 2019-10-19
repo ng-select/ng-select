@@ -57,6 +57,7 @@ export type DropdownPosition = 'bottom' | 'top' | 'auto';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
 export type GroupValueFn = (key: string | object, children: any[]) => string | object;
+export type KeyDownFn = (keyCode: number, $event: KeyboardEvent) => false | unknown;
 
 @Component({
     selector: 'ng-select',
@@ -107,6 +108,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() inputAttrs: { [key: string]: string } = {};
     @Input() tabIndex: number;
     @Input() readonly = false;
+    @Input() keyDownFn: KeyDownFn;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
@@ -268,33 +270,44 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @HostListener('keydown', ['$event'])
     handleKeyDown($event: KeyboardEvent) {
-        if (KeyCode[$event.which]) {
-            switch ($event.which) {
-                case KeyCode.ArrowDown:
-                    this._handleArrowDown($event);
-                    break;
-                case KeyCode.ArrowUp:
-                    this._handleArrowUp($event);
-                    break;
-                case KeyCode.Space:
-                    this._handleSpace($event);
-                    break;
-                case KeyCode.Enter:
-                    this._handleEnter($event);
-                    break;
-                case KeyCode.Tab:
-                    this._handleTab($event);
-                    break;
-                case KeyCode.Esc:
-                    this.close();
-                    $event.preventDefault();
-                    break;
-                case KeyCode.Backspace:
-                    this._handleBackspace();
-                    break;
+        const keyCode = KeyCode[$event.which]
+        if (keyCode) {
+            if (isFunction(this.keyDownFn)) {
+                const result = this.keyDownFn($event.which, $event)
+                if (result === false) {
+                    return
+                }
             }
+            this.handleKeyCode($event)
         } else if ($event.key && $event.key.length === 1) {
             this._keyPress$.next($event.key.toLocaleLowerCase());
+        }
+    }
+
+    handleKeyCode($event: KeyboardEvent) {
+        switch ($event.which) {
+            case KeyCode.ArrowDown:
+                this._handleArrowDown($event)
+                break
+            case KeyCode.ArrowUp:
+                this._handleArrowUp($event)
+                break
+            case KeyCode.Space:
+                this._handleSpace($event)
+                break
+            case KeyCode.Enter:
+                this._handleEnter($event)
+                break
+            case KeyCode.Tab:
+                this._handleTab($event)
+                break
+            case KeyCode.Esc:
+                this.close()
+                $event.preventDefault()
+                break
+            case KeyCode.Backspace:
+                this._handleBackspace()
+                break
         }
     }
 
