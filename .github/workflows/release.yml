@@ -34,6 +34,6 @@ jobs:
       - name: NPM publish
         run: |
           cd dist/ng-select
-          npm publish
+          cat package.json
 
 
