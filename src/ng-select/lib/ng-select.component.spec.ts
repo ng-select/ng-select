@@ -170,6 +170,86 @@ describe('NgSelectComponent', () => {
             })]);
         }));
 
+        it('should set items correctly after ngModel set first when bindValue is used from NgSelectConfig', fakeAsync(() => {
+            const config = new NgSelectConfig();
+            config.bindValue = 'id';
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCityId">
+                </ng-select>`,
+                config
+                );
+
+            fixture.componentInstance.cities = [];
+            fixture.componentInstance.selectedCityId = 7;
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.cities = [{ id: 7, name: 'Pailgis' }];
+            tickAndDetectChanges(fixture);
+
+            select = fixture.componentInstance.select;
+            expect(select.selectedItems[0]).toBe(select.itemsList.items[0]);
+            expect(select.selectedItems).toEqual([jasmine.objectContaining({
+                value: { id: 7, name: 'Pailgis' }
+            })]);
+        }));
+
+        it('should not apply global bindValue from NgSelectConfig if bindValue prop explicitly provided in template', fakeAsync(() => {
+            const config = new NgSelectConfig();
+            config.bindValue = 'globalbindvalue';
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        bindValue="id"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCityId">
+                </ng-select>`,
+                config
+                );
+
+            fixture.componentInstance.cities = [];
+            fixture.componentInstance.selectedCityId = 7;
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.cities = [{ id: 7, name: 'Pailgis' }];
+            tickAndDetectChanges(fixture);
+
+            select = fixture.componentInstance.select;
+            expect(select.selectedItems[0]).toBe(select.itemsList.items[0]);
+            expect(select.selectedItems).toEqual([jasmine.objectContaining({
+                value: { id: 7, name: 'Pailgis' }
+            })]);
+        }));
+
+        it('should bind whole object as value when bindValue prop is specified with empty string in template', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        bindValue=""
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`
+                );
+
+            fixture.componentInstance.cities = [];
+            fixture.componentInstance.selectedCity = { id: 7, name: 'Pailgis' };
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.cities = [{ id: 7, name: 'Pailgis' }];
+            tickAndDetectChanges(fixture);
+
+            select = fixture.componentInstance.select;
+            expect(select.selectedItems[0]).toBe(select.itemsList.items[0]);
+            expect(select.selectedItems).toEqual([jasmine.objectContaining({
+                value: { id: 7, name: 'Pailgis' }
+            })]);
+        }));
+
         it('should map label correctly', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
