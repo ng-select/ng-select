@@ -30,5 +30,10 @@ jobs:
 
       - name: Semantic release
         run: npx semantic-release
+      
+      - name: NPM publish
+        run: |
+          cd dist/ng-select
+          npm publish
 
 
