@@ -2,8 +2,6 @@ name: Release
 
 on:
   push:
-    paths: 
-      - '!src/ng-option-highlight/**'
     branches:
       - master
 
@@ -32,5 +30,10 @@ jobs:
 
       - name: Semantic release
         run: npx semantic-release
+      
+      - name: NPM publish
+        run: |
+          cd dist/ng-select
+          cat package.json
 
 

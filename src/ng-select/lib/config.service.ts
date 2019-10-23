@@ -11,4 +11,5 @@ export class NgSelectConfig {
     disableVirtualScroll = true;
     openOnEnter = true;
     appendTo: string;
+    bindValue: string;
 }
