@@ -119,6 +119,7 @@ map: {
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | [addTag] | `boolean \| ((term: string) => any \| Promise<any>)`  | `false` | no | Allows to create custom options. |
 | addTagText | `string` | `Add item` | no | Set custom text when using tagging |
+| allowDuplicateTag | `boolean` | `false` | no | Allow duplicate tag when using tagging |
 | appendTo | `string` |  null | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative` |
 | bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
 | bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |

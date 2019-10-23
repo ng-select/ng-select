@@ -108,6 +108,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() tabIndex: number;
     @Input() readonly = false;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
+    @Input() allowDuplicateTag: true | false = false;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
@@ -513,8 +514,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
         term = term.toLowerCase();
         return this.addTag &&
-            (!this.itemsList.filteredItems.some(x => x.label.toLowerCase() === term) &&
-                (!this.hideSelected && this.isOpen || !this.selectedItems.some(x => x.label.toLowerCase() === term))) &&
+            (this.allowDuplicateTag || !this.itemsList.filteredItems.some(x => x.label.toLowerCase() === term) &&
+                (!this.hideSelected && this.isOpen || 
+                    (this.allowDuplicateTag || !this.selectedItems.some(x => x.label.toLowerCase() === term))
+                )
+            ) &&
             !this.loading;
     }
 

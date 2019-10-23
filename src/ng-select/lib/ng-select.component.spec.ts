@@ -2264,6 +2264,31 @@ describe('NgSelectComponent', () => {
                 select.searchTerm = '   ';
                 expect(select.showAddTag).toBeFalsy();
             });
+
+            it('should allow duplicate tag if allowDuplicateTag prop is set as true', fakeAsync(() => {
+                select.searchTerm = 'Vilnius';
+                select.allowDuplicateTag = true;
+                select.isOpen = true;
+                tickAndDetectChanges(fixture);
+                expect(select.showAddTag).toBeTruthy();
+            }));
+
+            it('should not allow duplicate tag if allowDuplicateTag prop is set as false', fakeAsync(() => {
+                select.searchTerm = 'Vilnius';
+                select.allowDuplicateTag = false;
+                select.isOpen = true;
+                tickAndDetectChanges(fixture);
+                expect(select.showAddTag).toBeFalsy();
+            }));
+
+            it('should allow duplicate tag when term exists among selected items & allowDuplicateTag prop is set as true', fakeAsync(() => {
+                fixture.componentInstance.selectedCities = [{ id: 3, name: 'Pabrade' }];                
+                select.searchTerm = 'Pabrade';
+                select.allowDuplicateTag = true;
+                select.isOpen = true;
+                tickAndDetectChanges(fixture);
+                expect(select.showAddTag).toBeTruthy();
+            }));
         });
     });
 

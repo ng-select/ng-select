@@ -45,6 +45,7 @@ import { TemplateOptgroupExampleComponent } from './template-optgroup-example/te
 import { TemplateOptionExampleComponent } from './template-option-example/template-option-example.component';
 import { TemplateSearchExampleComponent } from './template-search-example/template-search-example.component';
 import { VirtualScrollExampleComponent } from './virtual-scroll-example/virtual-scroll-example.component';
+import { TagsAllowDuplicateExampleComponent } from './tags-allow-duplicate-example/tags-allow-duplicate.component';
 
 
 const examples = [DataSourceBackendExampleComponent,
@@ -62,6 +63,7 @@ const examples = [DataSourceBackendExampleComponent,
     SearchCustomExampleComponent,
     SearchAutocompleteExampleComponent,
     TagsDefaultExampleComponent,
+    TagsAllowDuplicateExampleComponent,
     TagsCustomExampleComponent,
     TagsBackendExampleComponent,
     TagsClosedDropdownExampleComponent,

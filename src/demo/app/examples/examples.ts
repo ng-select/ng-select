@@ -40,6 +40,7 @@ import { GroupFunctionExampleComponent } from './group-function-example/group-fu
 import { GroupSelectableExampleComponent } from './group-selectable-example/group-selectable-example.component';
 import { GroupSelectableHiddenExampleComponent } from './group-selectable-hidden-example/group-selectable-hidden-example.component';
 import { GroupChildrenExampleComponent } from './group-children-example/group-children-example.component';
+import { TagsAllowDuplicateExampleComponent } from './tags-allow-duplicate-example/tags-allow-duplicate.component';
 
 export interface Example {
     component: any;
@@ -110,6 +111,10 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
     'tags-custom-example': {
         component: TagsCustomExampleComponent,
         title: 'Custom tags'
+    },
+    'tags-allow-duplicate-example': {
+        component: TagsAllowDuplicateExampleComponent,
+        title: 'Allow Duplicate tags'
     },
     'tags-backend-example': {
         component: TagsBackendExampleComponent,
