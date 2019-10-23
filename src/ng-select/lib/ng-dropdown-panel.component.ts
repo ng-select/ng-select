@@ -23,8 +23,7 @@ import { animationFrameScheduler, asapScheduler, fromEvent, merge, Subject } fro
 import { auditTime, takeUntil } from 'rxjs/operators';
 import { NgDropdownPanelService, PanelDimensions } from './ng-dropdown-panel.service';
 
-import { DropdownPosition } from './ng-select.component';
-import { NgOption } from './ng-select.types';
+import { DropdownPosition, NgOption } from './ng-select.types';
 import { isDefined } from './value-utils';
 
 const TOP_CSS_CLASS = 'ng-select-top';

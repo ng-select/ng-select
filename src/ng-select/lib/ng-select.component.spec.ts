@@ -2479,7 +2479,7 @@ describe('NgSelectComponent', () => {
             fixture.detectChanges();
 
             const input: HTMLInputElement = select.element.querySelector('input');
-            expect(select.searchTerm).toBeNull();
+            expect(select.searchTerm).toBeUndefined();
             expect(input.readOnly).toBeTruthy();
         }));
 

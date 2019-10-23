@@ -40,11 +40,20 @@ import {
     NgTagTemplateDirective,
     NgLoadingSpinnerTemplateDirective
 } from './ng-templates.directive';
-
 import { ConsoleService } from './console.service';
 import { isDefined, isFunction, isPromise, isObject } from './value-utils';
 import { ItemsList } from './items-list';
-import { NgOption, KeyCode } from './ng-select.types';
+import {
+    AddTagFn,
+    CompareWithFn,
+    DropdownPosition,
+    GroupValueFn,
+    KeyCode,
+    KeyDownFn,
+    NgOption,
+    SearchFn,
+    TrackByFn
+} from './ng-select.types';
 import { newId } from './id';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
@@ -53,10 +62,6 @@ import { NgSelectConfig } from './config.service';
 import { NgDropdownPanelService } from './ng-dropdown-panel.service';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
-export type DropdownPosition = 'bottom' | 'top' | 'auto';
-export type AddTagFn = ((term: string) => any | Promise<any>);
-export type CompareWithFn = (a: any, b: any) => boolean;
-export type GroupValueFn = (key: string | object, children: any[]) => string | object;
 
 @Component({
     selector: 'ng-select',
@@ -77,44 +82,44 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
 
-    @Input() bindLabel: string;
-    @Input() bindValue: string;
-    @Input() markFirst = true;
-    @Input() placeholder: string;
-    @Input() notFoundText: string;
-    @Input() typeToSearchText: string;
-    @Input() addTagText: string;
-    @Input() loadingText: string;
-    @Input() clearAllText: string;
-    @Input() dropdownPosition: DropdownPosition = 'auto';
-    @Input() appendTo: string;
+    @Input() bindLabel = this.config.bindLabel;
+    @Input() bindValue = this.config.bindValue;
+    @Input() markFirst = this.config.markFirst;
+    @Input() placeholder = this.config.placeholder;
+    @Input() notFoundText = this.config.notFoundText;
+    @Input() typeToSearchText = this.config.typeToSearchText;
+    @Input() addTagText = this.config.addTagText;
+    @Input() loadingText = this.config.loadingText;
+    @Input() clearAllText = this.config.clearAllText;
+    @Input() dropdownPosition = this.config.dropdownPosition;
+    @Input() appendTo = this.config.appendTo;
     @Input() loading = false;
-    @Input() closeOnSelect = true;
-    @Input() hideSelected = false;
-    @Input() selectOnTab = false;
-    @Input() openOnEnter: boolean;
-    @Input() maxSelectedItems: number;
-    @Input() groupBy: string | Function;
-    @Input() groupValue: GroupValueFn;
-    @Input() bufferAmount = 4;
-    @Input() virtualScroll: boolean;
-    @Input() selectableGroup = false;
-    @Input() selectableGroupAsModel = true;
-    @Input() searchFn = null;
-    @Input() trackByFn = null;
-    @Input() clearOnBackspace = true;
-    @Input() labelForId = null;
-    @Input() inputAttrs: { [key: string]: string } = {};
-    @Input() tabIndex: number;
-    @Input() readonly = false;
-    @Input() keyDownFn = (_: KeyboardEvent) => true;
+    @Input() closeOnSelect = this.config.closeOnSelect;
+    @Input() hideSelected = this.config.hideSelected;
+    @Input() selectOnTab = this.config.selectOnTab;
+    @Input() openOnEnter = this.config.openOnEnter;
+    @Input() maxSelectedItems = this.config.maxSelectedItems;
+    @Input() groupBy = this.config.groupBy;
+    @Input() groupValue = this.config.groupValue;
+    @Input() bufferAmount = this.config.bufferAmount;
+    @Input() virtualScroll = this.config.virtualScroll;
+    @Input() selectableGroup = this.config.selectableGroup;
+    @Input() selectableGroupAsModel = this.config.selectableGroupAsModel;
+    @Input() searchFn = this.config.searchFn;
+    @Input() trackByFn = this.config.trackByFn;
+    @Input() clearOnBackspace = this.config.clearOnBackspace;
+    @Input() labelForId?: string;
+    @Input() inputAttrs = this.config.inputAttrs;
+    @Input() tabIndex = this.config.tabIndex;
+    @Input() readonly = this.config.readonly;
+    @Input() keyDownFn = this.config.keyDownFn;
 
-    @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
-    @Input() @HostBinding('class.ng-select-multiple') multiple = false;
-    @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
-    @Input() @HostBinding('class.ng-select-searchable') searchable = true;
-    @Input() @HostBinding('class.ng-select-clearable') clearable = true;
-    @Input() @HostBinding('class.ng-select-opened') isOpen = false;
+    @Input() @HostBinding('class.ng-select-typeahead') typeahead?: Subject<string>;
+    @Input() @HostBinding('class.ng-select-multiple') multiple = this.config.multiple;
+    @Input() @HostBinding('class.ng-select-taggable') addTag = this.config.addTag;
+    @Input() @HostBinding('class.ng-select-searchable') searchable = this.config.searchable;
+    @Input() @HostBinding('class.ng-select-clearable') clearable = this.config.clearable;
+    @Input() @HostBinding('class.ng-select-opened') isOpen = this.config.isOpen;
 
     @Input()
     get items() { return this._items };
@@ -151,8 +156,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Output('clear') clearEvent = new EventEmitter();
     @Output('add') addEvent = new EventEmitter();
     @Output('remove') removeEvent = new EventEmitter();
-    @Output('scroll') scroll = new EventEmitter<{ start: number; end: number }>();
-    @Output('scrollToEnd') scrollToEnd = new EventEmitter();
+    @Output('scroll') scrollEvent = new EventEmitter<{ start: number; end: number }>();
+    @Output('scrollToEnd') scrollToEndEvent = new EventEmitter();
 
     // custom templates
     @ContentChild(NgOptionTemplateDirective, { read: TemplateRef, static: false }) optionTemplate: TemplateRef<any>;
@@ -177,7 +182,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     itemsList: ItemsList;
     viewPortItems: NgOption[] = [];
-    searchTerm: string = null;
+    searchTerm?: string;
     dropdownId = newId();
     element: HTMLElement;
     focused: boolean;
@@ -208,13 +213,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     constructor(
         @Attribute('class') public classes: string,
         @Attribute('autofocus') private autoFocus: any,
-        config: NgSelectConfig,
+        private readonly config: NgSelectConfig,
         @Inject(SELECTION_MODEL_FACTORY) newSelectionModel: SelectionModelFactory,
         _elementRef: ElementRef<HTMLElement>,
         private _cd: ChangeDetectorRef,
         private _console: ConsoleService
     ) {
-        this._mergeGlobalConfig(config);
         this.itemsList = new ItemsList(this, newSelectionModel());
         this.element = _elementRef.nativeElement;
     }
@@ -896,20 +900,5 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     private get _isTypeahead() {
         return this.typeahead && this.typeahead.observers.length > 0;
-    }
-
-    private _mergeGlobalConfig(config: NgSelectConfig) {
-        this.placeholder = this.placeholder || config.placeholder;
-        this.notFoundText = this.notFoundText || config.notFoundText;
-        this.typeToSearchText = this.typeToSearchText || config.typeToSearchText;
-        this.addTagText = this.addTagText || config.addTagText;
-        this.loadingText = this.loadingText || config.loadingText;
-        this.clearAllText = this.clearAllText || config.clearAllText;
-        this.virtualScroll = isDefined(this.virtualScroll)
-            ? this.virtualScroll
-            : isDefined(config.disableVirtualScroll) ? !config.disableVirtualScroll : false;
-        this.openOnEnter = isDefined(this.openOnEnter) ? this.openOnEnter : config.openOnEnter;
-        this.appendTo = this.appendTo || config.appendTo;
-        this.bindValue = this.bindValue || config.bindValue;
     }
 }

@@ -1,3 +1,11 @@
+export type DropdownPosition = 'auto' | 'bottom' | 'top';
+export type AddTagFn = (term: string) => any | Promise<any>;
+export type CompareWithFn = (a: any, b: any) => boolean;
+export type GroupValueFn = (key: string | object, children: any[]) => string | object;
+export type KeyDownFn = (_: KeyboardEvent) => boolean;
+export type SearchFn = (term: string, item: any) => boolean;
+export type TrackByFn = (item: any) => any;
+
 export interface NgOption {
     [name: string]: any;
     index?: number;
