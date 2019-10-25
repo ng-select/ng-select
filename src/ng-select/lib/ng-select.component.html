@@ -2,7 +2,7 @@
      [attr.role]="multiple ? 'listbox' : null" 
      [attr.aria-haspopup]="multiple ? 'listbox' : null" 
      [attr.aria-multiselectable]="multiple ? 'true' : null" 
-     [attr.aria-labelledby]="multiple ? labelForId : null"
+     [attr.aria-labelledby]="multiple ? labelledBy : null"
      [tabIndex]="(multiple && selectedItems.length > 0 && !focusedTag) ? 0 : -1"
      (mousedown)="handleMousedown($event)"
      (focus)="onWidgetFocus()">
