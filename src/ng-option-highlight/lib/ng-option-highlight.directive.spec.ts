@@ -10,6 +10,7 @@ import { By } from '@angular/platform-browser';
         <span id="test3" [ngOptionHighlight]="term">My text is highlighted</span>
         <span id="test4" [ngOptionHighlight]="term">My ťëxť is highlighted text</span>
         <span id="test5" *ngIf="showNew" [ngOptionHighlight]="term">New label</span>
+        <span id="test6" [ngOptionHighlight]="term">+My text is) high\\lighted</span>
     `
 })
 class TestComponent {
@@ -31,7 +32,7 @@ describe('NgOptionHighlightDirective', () => {
 
     it('should have five elements with highlight directive', () => {
         const highlightDirectives = fixture.debugElement.queryAll(By.directive(NgOptionHighlightDirective));
-        expect(highlightDirectives.length).toBe(4);
+        expect(highlightDirectives.length).toBe(5);
     });
 
     it('should have one element with highlighted text when term matching', () => {
@@ -76,5 +77,33 @@ describe('NgOptionHighlightDirective', () => {
         const span = fixture.debugElement.query(By.css('#test5'));
         expect(span.nativeElement.querySelector('.highlighted').innerHTML).toBe('New');
         expect(span.nativeElement.textContent).toBe('New label');
+    });
+
+    it('should highlight text with an special character at the beginning of the term', () => {
+        const span = fixture.debugElement.query(By.css('#test6'));
+
+        fixture.componentInstance.term = '+My text';
+        fixture.detectChanges();
+        expect(span.nativeElement.querySelectorAll('.highlighted')[0].innerHTML).toBe('+My');
+        expect(span.nativeElement.querySelectorAll('.highlighted')[1].innerHTML).toBe('text');
+        expect(span.nativeElement.textContent).toBe('+My text is) high\\lighted');
+    });
+
+    it('should highlight text with an special character at the end of the term', () => {
+        const span = fixture.debugElement.query(By.css('#test6'));
+
+        fixture.componentInstance.term = 'is)';
+        fixture.detectChanges();
+        expect(span.nativeElement.querySelectorAll('.highlighted')[0].innerHTML).toBe('is)');
+        expect(span.nativeElement.textContent).toBe('+My text is) high\\lighted');
+    });
+
+    it('should highlight text with an special character in the middle of the term', () => {
+        const span = fixture.debugElement.query(By.css('#test6'));
+
+        fixture.componentInstance.term = 'high\\l';
+        fixture.detectChanges();
+        expect(span.nativeElement.querySelectorAll('.highlighted')[0].innerHTML).toBe('high\\l');
+        expect(span.nativeElement.textContent).toBe('+My text is) high\\lighted');
     });
 });

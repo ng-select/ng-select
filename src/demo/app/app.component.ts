@@ -23,6 +23,12 @@ export class AppComponent {
         private config: NgSelectConfig
     ) {
         this.config.placeholder = 'Select item';
+        // This could be useful if you want to use appendTo in entire application without explicitly defining it. (eg: appendTo = 'body')
+        this.config.appendTo = null; 
+        // set the bindValue to global config when you use the same bindValue in most of the place. 
+        // You can also override bindValue for the specified template by defining `bindValue` as property
+        // Eg : <ng-select bindValue="some-new-value"></ng-select>
+        // this.config.bindValue = 'value';
     }
 
     ngOnInit() {

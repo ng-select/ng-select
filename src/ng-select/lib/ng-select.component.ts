@@ -109,6 +109,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() tabIndex: number;
     @Input() typeToSearchFn: TypeToSearchFn;
     @Input() readonly = false;
+    @Input() keyDownFn = (_: KeyboardEvent) => true;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
@@ -119,6 +120,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @Input()
     get items() { return this._items };
+
     set items(value: any[]) {
         this._itemsAreUsed = true;
         this._items = value;
@@ -126,6 +128,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @Input()
     get compareWith() { return this._compareWith; }
+
     set compareWith(fn: CompareWithFn) {
         if (!isFunction(fn)) {
             throw Error('`compareWith` must be a function.');
@@ -135,6 +138,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @Input()
     get clearSearchOnAdd() { return isDefined(this._clearSearchOnAdd) ? this._clearSearchOnAdd : this.closeOnSelect; };
+
     set clearSearchOnAdd(value) {
         this._clearSearchOnAdd = value;
     };
@@ -170,6 +174,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
 
     @HostBinding('class.ng-select-disabled') get disabled() { return this.readonly || this._disabled };
+
     @HostBinding('class.ng-select-filtered') get filtered() { return (!!this.searchTerm && this.searchable || this._isComposing) };
 
     itemsList: ItemsList;
@@ -270,33 +275,41 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @HostListener('keydown', ['$event'])
     handleKeyDown($event: KeyboardEvent) {
-        if (KeyCode[$event.which]) {
-            switch ($event.which) {
-                case KeyCode.ArrowDown:
-                    this._handleArrowDown($event);
-                    break;
-                case KeyCode.ArrowUp:
-                    this._handleArrowUp($event);
-                    break;
-                case KeyCode.Space:
-                    this._handleSpace($event);
-                    break;
-                case KeyCode.Enter:
-                    this._handleEnter($event);
-                    break;
-                case KeyCode.Tab:
-                    this._handleTab($event);
-                    break;
-                case KeyCode.Esc:
-                    this.close();
-                    $event.preventDefault();
-                    break;
-                case KeyCode.Backspace:
-                    this._handleBackspace();
-                    break;
+        const keyCode = KeyCode[$event.which];
+        if (keyCode) {
+            if (this.keyDownFn($event) === false) {
+                return;
             }
+            this.handleKeyCode($event)
         } else if ($event.key && $event.key.length === 1) {
             this._keyPress$.next($event.key.toLocaleLowerCase());
+        }
+    }
+
+    handleKeyCode($event: KeyboardEvent) {
+        switch ($event.which) {
+            case KeyCode.ArrowDown:
+                this._handleArrowDown($event);
+                break;
+            case KeyCode.ArrowUp:
+                this._handleArrowUp($event);
+                break;
+            case KeyCode.Space:
+                this._handleSpace($event);
+                break;
+            case KeyCode.Enter:
+                this._handleEnter($event);
+                break;
+            case KeyCode.Tab:
+                this._handleTab($event);
+                break;
+            case KeyCode.Esc:
+                this.close();
+                $event.preventDefault();
+                break;
+            case KeyCode.Backspace:
+                this._handleBackspace();
+                break
         }
     }
 
@@ -530,7 +543,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (isFunction(this.typeToSearchFn)) {
             return this.typeToSearchFn(this.searchTerm)
         }
-        return !this.searchTerm
+        return !this.searchTerm || !this.searchTerm.trim()
     }
 
     onCompositionStart() {
@@ -912,5 +925,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             ? this.virtualScroll
             : isDefined(config.disableVirtualScroll) ? !config.disableVirtualScroll : false;
         this.openOnEnter = isDefined(this.openOnEnter) ? this.openOnEnter : config.openOnEnter;
+        this.appendTo = this.appendTo || config.appendTo;
+        this.bindValue = this.bindValue || config.bindValue;
     }
 }

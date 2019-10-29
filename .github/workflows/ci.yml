@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    paths: 
+      - '**.ts'
+      - '**.html'
+      - '**.scss'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '10.x'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run lint
+        run: yarn lint
+
+      - name: Run tests
+        run: yarn test:ci
+
+      - name: Build
+        run: yarn build:demo
+      
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./coverage/ng-select/lcov.info
