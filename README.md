@@ -151,6 +151,7 @@ map: {
 | [openOnEnter] | `boolean` | `true` | no | Open dropdown using enter. Default `true`|
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
+| [typeToSearchFn] | `(term: string) => boolean` |  `null` | no | Display typeToSearchText if that function returns true, item list is empty and select is not in loading state |
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
 | [inputAttrs] | `{ [key: string]: string }` |  `-` | no | Pass custom attributes to underlying `input` element |
 | [tabIndex] | `number` |  `-` | no | Set tabindex on ng-select |

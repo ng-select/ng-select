@@ -2226,10 +2226,29 @@ describe('NgSelectComponent', () => {
                 select = fixture.componentInstance.select;
             });
 
-            it('should be false when there is no search term', () => {
-                select.searchTerm = null;
-                expect(select.showAddTag).toBeFalsy();
-            });
+            describe('when typeToSearchFn is not present', () => {
+                it('should be false when there is no search term', () => {
+                    select.searchTerm = null;
+                    expect(select.showAddTag).toBeFalsy();
+                });
+            })
+
+            describe('when typeToSearchFn is present', () => {
+                it('should be false when typeToSearchFn returns false', () => {
+                    select.typeToSearchFn = (term) => !term || term.length < 3
+                    select.searchTerm = null;
+                    expect(select.showAddTag).toBeFalsy();
+
+                    select.searchTerm = 't';
+                    expect(select.showAddTag).toBeFalsy();
+
+                    select.searchTerm = 'te';
+                    expect(select.showAddTag).toBeFalsy();
+
+                    select.searchTerm = 'tes';
+                    expect(select.showAddTag).toBeTruthy();
+                });
+            })
 
             it('should be true when term not exists among items', () => {
                 select.searchTerm = 'Vil';
@@ -3506,6 +3525,100 @@ describe('NgSelectComponent', () => {
             }));
         });
     });
+
+    describe('Displaying noItemsFound', () => {
+        let fixture: ComponentFixture<NgSelectTestCmp>;
+        let select: NgSelectComponent;
+        beforeEach(() => {
+            fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [typeToSearchFn]="typeToSearchFn" [typeahead]="filter"></ng-select>`);
+            fixture.componentInstance.filter.subscribe()
+            select = fixture.componentInstance.select;
+            select.open();
+        });
+
+        const expectNoItemsFound = (isVisible: boolean) => {
+            expect(select.showNoItemsFound()).toBe(isVisible)
+        }
+
+        const expectNoItemsFoundForTerm = (searchTerm, isVisible) => {
+            fixture.componentInstance.select.filter(searchTerm);
+            expectNoItemsFound(isVisible)
+        }
+
+        describe('when itemsList is empty', () => {
+            describe('and isTypeahead', () => {
+                it('should show noItemsFound depending on typeToSearchFn', fakeAsync(() => {
+                    expectNoItemsFound(false)
+
+                    fixture.componentInstance.typeToSearchFn = term => {
+                        return !term || term.length <= 2
+                    }
+                    tickAndDetectChanges(fixture);
+
+                    expectNoItemsFoundForTerm('t', false)
+                    expectNoItemsFoundForTerm('te', false)
+                    expectNoItemsFoundForTerm('tes', true)
+                }))
+            })
+        })
+    })
+
+    describe('Displaying typeToSearchText', () => {
+        let fixture: ComponentFixture<NgSelectTestCmp>;
+        let select: NgSelectComponent;
+        beforeEach(() => {
+            fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [typeToSearchFn]="typeToSearchFn" [typeahead]="filter">
+                            <ng-template ng-typetosearch-tmp>
+                            <div class="custom-typeforsearch">
+                                Start typing...
+                            </div>
+                            </ng-template>
+                        </ng-select>`);
+            fixture.componentInstance.filter.subscribe()
+            select = fixture.componentInstance.select;
+            select.open();
+        });
+
+        const expectTypeToSearchText = (isVisible: boolean) => {
+            expect(select.showTypeToSearch()).toBe(isVisible)
+        }
+
+        const expectTypeToSearchVisibleForSearchTerm = (searchTerm, isVisible) => {
+            fixture.componentInstance.select.filter(searchTerm);
+            expectTypeToSearchText(isVisible)
+        }
+
+        describe('when user sets custom typeToSearch function', () => {
+            it('should show typeToSearchText only if that function returns true', fakeAsync(() => {
+                expectTypeToSearchText(true)
+
+                fixture.componentInstance.typeToSearchFn = term => {
+                    return !term || term.length <= 2
+                }
+                tickAndDetectChanges(fixture);
+
+                expectTypeToSearchVisibleForSearchTerm('t', true)
+                expectTypeToSearchVisibleForSearchTerm('te', true)
+                expectTypeToSearchVisibleForSearchTerm('tes', false)
+            }))
+        })
+        describe('when user does not set custom typeToSearch function', () => {
+            it('should show typeToSearchText if searchTerm is empty', fakeAsync(() => {
+                expectTypeToSearchText(true)
+
+                fixture.componentInstance.typeToSearchFn = null
+                tickAndDetectChanges(fixture);
+
+                expectTypeToSearchVisibleForSearchTerm('t', false)
+                expectTypeToSearchVisibleForSearchTerm('te', false)
+                expectTypeToSearchVisibleForSearchTerm('tes', false)
+            }))
+        })
+    })
 });
 
 
@@ -3582,6 +3695,7 @@ class NgSelectTestCmp {
         { id: 2, description: { name: 'USA', id: 'b' } },
         { id: 3, description: { name: 'Australia', id: 'c' } }
     ];
+    typeToSearchFn = null
 
     tagFunc(term: string) {
         return { id: term, name: term, custom: true }

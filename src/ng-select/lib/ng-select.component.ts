@@ -57,6 +57,7 @@ export type DropdownPosition = 'bottom' | 'top' | 'auto';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
 export type GroupValueFn = (key: string | object, children: any[]) => string | object;
+export type TypeToSearchFn = (term: string) => boolean;
 
 @Component({
     selector: 'ng-select',
@@ -106,6 +107,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() labelForId = null;
     @Input() inputAttrs: { [key: string]: string } = {};
     @Input() tabIndex: number;
+    @Input() typeToSearchFn: TypeToSearchFn;
     @Input() readonly = false;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
@@ -493,8 +495,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     };
 
     get showAddTag() {
-        if (!this.searchTerm) {
-            return false;
+        if (this._showTypeToSearchForTerm()) {
+            return false
         }
 
         const term = this.searchTerm.toLowerCase();
@@ -507,13 +509,28 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     showNoItemsFound() {
         const empty = this.itemsList.filteredItems.length === 0;
         return ((empty && !this._isTypeahead && !this.loading) ||
-            (empty && this._isTypeahead && this.searchTerm && !this.loading)) &&
+            (empty && this._isTypeahead && !this._showTypeToSearchForTerm() && !this.loading)) &&
             !this.showAddTag;
     }
 
     showTypeToSearch() {
+        if (!this._isTypeahead || this.loading) {
+            return false;
+        }
+
         const empty = this.itemsList.filteredItems.length === 0;
-        return empty && this._isTypeahead && !this.searchTerm && !this.loading;
+        if (!empty) {
+            return false;
+        }
+
+        return this._showTypeToSearchForTerm()
+    }
+
+    private _showTypeToSearchForTerm() {
+        if (isFunction(this.typeToSearchFn)) {
+            return this.typeToSearchFn(this.searchTerm)
+        }
+        return !this.searchTerm
     }
 
     onCompositionStart() {
