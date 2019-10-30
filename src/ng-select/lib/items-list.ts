@@ -144,9 +144,7 @@ export class ItemsList {
 
         this._filteredItems = [];
         term = this._ngSelect.searchFn ? term : searchHelper.stripSpecialChars(term).toLocaleLowerCase();
-        const match = this._ngSelect.searchFn || this._defaultSearchFn;
         const hideSelected = this._ngSelect.hideSelected;
-
         for (const key of Array.from(this._groups.keys())) {
             const matchedItems = [];
             for (const item of this._groups.get(key)) {
@@ -154,10 +152,19 @@ export class ItemsList {
                     continue;
                 }
                 const searchItem = this._ngSelect.searchFn ? item.value : item;
-                if (match(term, searchItem)) {
+
+                
+                if (this._defaultSearchFn(term, item)) {
                     matchedItems.push(item);
                 }
+                else if(this._ngSelect.searchFn)
+                {
+                    if(this._ngSelect.searchFn(term, item.value)){
+                        matchedItems.push(item);
+                    }
+                }
             }
+            
             if (matchedItems.length > 0) {
                 const [last] = matchedItems.slice(-1);
                 if (last.parent) {
