@@ -3600,6 +3600,7 @@ describe('NgSelectComponent', () => {
                 `<ng-select [items]="citiesNames"
                     [addTag]="true"
                     placeholder="select value"
+                    [searchWhileComposing]="false"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
             select = fixture.componentInstance.select;

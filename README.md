@@ -152,6 +152,7 @@ map: {
 | [searchable] | `boolean` | `true` | no | Allow to search for value. Default `true`|
 | [readonly] | `boolean` | `false` | no | Set ng-select as readonly. Mostly used with reactive forms. |
 | [searchFn] | `(term: string, item: any) => boolean` | `null` | no | Allow to filter by custom search function |
+| [searchWhileComposing] | `boolean` | `true` | no | Whether items should be filtered while composition started |
 | [trackByFn] | `(item: any) => any` | `null` | no | Provide custom trackBy function |
 | [clearSearchOnAdd] | `boolean` | `true` | no | Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false` |
 | [selectOnTab] | `boolean` | `false` | no | Select marked dropdown item using tab. Default `false`|

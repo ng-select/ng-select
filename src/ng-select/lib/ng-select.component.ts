@@ -107,6 +107,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() inputAttrs: { [key: string]: string } = {};
     @Input() tabIndex: number;
     @Input() readonly = false;
+    @Input() searchWhileComposing = true;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
@@ -192,13 +193,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _pressedKeys: string[] = [];
     private _compareWith: CompareWithFn;
     private _clearSearchOnAdd: boolean;
+    private _isComposing = false;
 
     private readonly _destroy$ = new Subject<void>();
     private readonly _keyPress$ = new Subject<string>();
     private _onChange = (_: any) => { };
     private _onTouched = () => { };
-
-    private _isComposing = false;
 
     clearItem = (item: any) => {
         const option = this.selectedItems.find(x => x.value === item);
@@ -535,12 +535,15 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     onCompositionEnd(term: string) {
+        if (this.searchWhileComposing) {
+            return;
+        }
         this._isComposing = false;
         this.filter(term);
     }
 
     filter(term: string) {
-        if (this._isComposing) {
+        if (this._isComposing && !this.searchWhileComposing) {
             return;
         }
         this._changeSearch(term);
