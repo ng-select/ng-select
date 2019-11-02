@@ -18,22 +18,16 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      
+
       - name: Install dependencies
-        run: yarn install
+        run: npm install
 
       - name: Build ng-select
-        run: yarn build
-      
+        run: npm build
+
       - name: Copy README
         run: cp README.md ./dist/ng-select/
 
       - name: Semantic release
         run: npx semantic-release
-      
-      - name: NPM publish
-        run: |
-          cd dist/ng-select
-          cat package.json
-
 

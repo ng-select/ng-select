@@ -28,7 +28,6 @@
       [
         "@semantic-release/npm",
         {
-          "npmPublish": false,
           "pkgRoot": "dist/ng-select"
         }
       ],
