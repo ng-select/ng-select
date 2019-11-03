@@ -108,6 +108,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() tabIndex: number;
     @Input() readonly = false;
     @Input() searchWhileComposing = true;
+    @Input() minTermLength = 0;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
@@ -506,12 +507,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     };
 
     get showAddTag() {
-        let term = this.searchTerm && this.searchTerm.trim();
-        if (!term) {
+        if (!this._validTerm) {
             return false;
         }
 
-        term = term.toLowerCase();
+        const term = this.searchTerm.toLowerCase().trim();
         return this.addTag &&
             (!this.itemsList.filteredItems.some(x => x.label.toLowerCase() === term) &&
                 (!this.hideSelected && this.isOpen || !this.selectedItems.some(x => x.label.toLowerCase() === term))) &&
@@ -521,13 +521,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     showNoItemsFound() {
         const empty = this.itemsList.filteredItems.length === 0;
         return ((empty && !this._isTypeahead && !this.loading) ||
-            (empty && this._isTypeahead && this.searchTerm && !this.loading)) &&
+            (empty && this._isTypeahead && this._validTerm && !this.loading)) &&
             !this.showAddTag;
     }
 
     showTypeToSearch() {
         const empty = this.itemsList.filteredItems.length === 0;
-        return empty && this._isTypeahead && !this.searchTerm && !this.loading;
+        return empty && this._isTypeahead && !this._validTerm && !this.loading;
     }
 
     onCompositionStart() {
@@ -546,7 +546,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (this._isComposing && !this.searchWhileComposing) {
             return;
         }
-        this._changeSearch(term);
+
+        this.searchTerm = term;
+        if (this._isTypeahead && this._validTerm) {
+            this.typeahead.next(term);
+        }
 
         if (!this._isTypeahead) {
             this.itemsList.filter(this.searchTerm);
@@ -556,7 +560,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         this.searchEvent.emit({ term, items: this.itemsList.filteredItems.map(x => x.value) });
-
         this.open();
     }
 
@@ -773,13 +776,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         this._changeSearch(null);
-
         this.itemsList.resetFilteredItems();
     }
 
-    private _changeSearch(searchTerm) {
+    private _changeSearch(searchTerm: string) {
         this.searchTerm = searchTerm;
-
         if (this._isTypeahead) {
             this.typeahead.next(searchTerm);
         }
@@ -899,6 +900,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     private get _isTypeahead() {
         return this.typeahead && this.typeahead.observers.length > 0;
+    }
+
+    private get _validTerm() {
+        const term = this.searchTerm && this.searchTerm.trim();
+        return term && term.length >= this.minTermLength;
     }
 
     private _mergeGlobalConfig(config: NgSelectConfig) {

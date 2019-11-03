@@ -1,4 +1,4 @@
-import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ConsoleService } from './console.service';
@@ -181,7 +181,7 @@ describe('NgSelectComponent', () => {
                         [(ngModel)]="selectedCityId">
                 </ng-select>`,
                 config
-                );
+            );
 
             fixture.componentInstance.cities = [];
             fixture.componentInstance.selectedCityId = 7;
@@ -209,7 +209,7 @@ describe('NgSelectComponent', () => {
                         [(ngModel)]="selectedCityId">
                 </ng-select>`,
                 config
-                );
+            );
 
             fixture.componentInstance.cities = [];
             fixture.componentInstance.selectedCityId = 7;
@@ -234,7 +234,7 @@ describe('NgSelectComponent', () => {
                         [clearable]="true"
                         [(ngModel)]="selectedCity">
                 </ng-select>`
-                );
+            );
 
             fixture.componentInstance.cities = [];
             fixture.componentInstance.selectedCity = { id: 7, name: 'Pailgis' };
@@ -2312,6 +2312,12 @@ describe('NgSelectComponent', () => {
                 expect(select.showAddTag).toBeFalsy();
             });
 
+            it('should be false when term is too short', () => {
+                select.searchTerm = 'vi';
+                select.minTermLength = 3;
+                expect(select.showAddTag).toBeFalsy();
+            });
+
             it('should be true when term not exists among items', () => {
                 select.searchTerm = 'Vil';
                 expect(select.showAddTag).toBeTruthy();
@@ -2654,6 +2660,7 @@ describe('NgSelectComponent', () => {
                     NgSelectTestCmp,
                     `<ng-select [items]="cities"
                         [typeahead]="filter"
+                        [minTermLength]="minTermLength"
                         bindLabel="name"
                         [hideSelected]="hideSelected"
                         [(ngModel)]="selectedCity">
@@ -2675,12 +2682,21 @@ describe('NgSelectComponent', () => {
             }));
 
             it('should push term to custom observable', fakeAsync(() => {
-                fixture.componentInstance.filter.subscribe(term => {
-                    expect(term).toBe('vilnius');
-                });
-                tick(200);
+                fixture.componentInstance.filter.subscribe();
+                const next = spyOn(fixture.componentInstance.filter, 'next');
                 fixture.componentInstance.select.filter('vilnius');
                 tickAndDetectChanges(fixture);
+                expect(next).toHaveBeenCalledWith('vilnius')
+            }));
+
+            it('should not push term to custom observable if length is less than minTermLength', fakeAsync(() => {
+                fixture.componentInstance.minTermLength = 2;
+                tickAndDetectChanges(fixture);
+                fixture.componentInstance.filter.subscribe();
+                const next = spyOn(fixture.componentInstance.filter, 'next');
+                fixture.componentInstance.select.filter('v');
+                tickAndDetectChanges(fixture);
+                expect(next).not.toHaveBeenCalledWith('v')
             }));
 
             it('should mark first item when typeahead results are loaded', fakeAsync(() => {
@@ -2713,6 +2729,26 @@ describe('NgSelectComponent', () => {
                 fixture.componentInstance.select.open();
                 expect(fixture.componentInstance.select.isOpen).toBeTruthy();
             }));
+
+            describe('search text', () => {
+                it('should be visible until minTermLength reached', fakeAsync(() => {
+                    fixture.componentInstance.cities = [];
+                    fixture.componentInstance.minTermLength = 3;
+                    fixture.componentInstance.filter.subscribe();
+                    fixture.componentInstance.select.filter('vi');
+                    tickAndDetectChanges(fixture);
+                    expect(fixture.componentInstance.select.showTypeToSearch()).toBeTruthy()
+                }));
+
+                it('should not be visible when valid search term is present', fakeAsync(() => {
+                    fixture.componentInstance.cities = [];
+                    fixture.componentInstance.minTermLength = 0;
+                    fixture.componentInstance.filter.subscribe();
+                    fixture.componentInstance.select.filter('v');
+                    tickAndDetectChanges(fixture);
+                    expect(fixture.componentInstance.select.showTypeToSearch()).toBeFalsy()
+                }));
+            });
         });
 
         describe('clear on add', () => {
@@ -3710,11 +3746,11 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
             }
         });
 
-        if (customNgSelectConfig) {
-            TestBed.overrideProvider(NgSelectConfig, { useValue: customNgSelectConfig });
-        }
+    if (customNgSelectConfig) {
+        TestBed.overrideProvider(NgSelectConfig, { useValue: customNgSelectConfig });
+    }
 
-        TestBed.compileComponents();
+    TestBed.compileComponents();
 
     const fixture = TestBed.createComponent(cmp);
     fixture.detectChanges();
@@ -3749,6 +3785,7 @@ class NgSelectTestCmp {
     readonly = false;
     dropdownPosition = 'bottom';
     visible = true;
+    minTermLength = 0;
     filter = new Subject<string>();
     searchFn: (term: string, item: any) => boolean = null;
     selectOnTab = true;
