@@ -12,4 +12,5 @@ export class NgSelectConfig {
     openOnEnter = true;
     appendTo: string;
     bindValue: string;
+    appearance = 'underline';
 }
