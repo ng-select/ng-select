@@ -130,6 +130,7 @@ All notable changes to this project will be documented in this file. See [standa
 * `[ngOptionHighlight]` is now available from @ng-select/ng-option-highlight
 * `[excludeGroupsFromDefaultSelection]` is now removed until better solution is found
 * `filterValue` is now available as `searchTerm`
+* `filterInput` is now available as `searchInput`
 
 
 
