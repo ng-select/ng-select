@@ -1,5 +1,13 @@
 {
-  "repository": "ng-select/ng-select",
+  "name": "ng-select",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/CommonApp/ng-select",
+    "directory": "packages/ng-select"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "engines": {
     "node": ">= 6.9.0",
     "npm": ">= 3.0.0"
