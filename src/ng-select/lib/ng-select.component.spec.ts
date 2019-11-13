@@ -1,4 +1,4 @@
-import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ConsoleService } from './console.service';
@@ -9,6 +9,7 @@ import { MockConsole, MockNgZone } from '../testing/mocks';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { NgSelectModule } from './ng-select.module';
 import { Subject } from 'rxjs';
+import { NgSelectConfig } from './config.service';
 
 describe('NgSelectComponent', () => {
 
@@ -154,6 +155,86 @@ describe('NgSelectComponent', () => {
                         [clearable]="true"
                         [(ngModel)]="selectedCity">
                 </ng-select>`);
+
+            fixture.componentInstance.cities = [];
+            fixture.componentInstance.selectedCity = { id: 7, name: 'Pailgis' };
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.cities = [{ id: 7, name: 'Pailgis' }];
+            tickAndDetectChanges(fixture);
+
+            select = fixture.componentInstance.select;
+            expect(select.selectedItems[0]).toBe(select.itemsList.items[0]);
+            expect(select.selectedItems).toEqual([jasmine.objectContaining({
+                value: { id: 7, name: 'Pailgis' }
+            })]);
+        }));
+
+        it('should set items correctly after ngModel set first when bindValue is used from NgSelectConfig', fakeAsync(() => {
+            const config = new NgSelectConfig();
+            config.bindValue = 'id';
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCityId">
+                </ng-select>`,
+                config
+            );
+
+            fixture.componentInstance.cities = [];
+            fixture.componentInstance.selectedCityId = 7;
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.cities = [{ id: 7, name: 'Pailgis' }];
+            tickAndDetectChanges(fixture);
+
+            select = fixture.componentInstance.select;
+            expect(select.selectedItems[0]).toBe(select.itemsList.items[0]);
+            expect(select.selectedItems).toEqual([jasmine.objectContaining({
+                value: { id: 7, name: 'Pailgis' }
+            })]);
+        }));
+
+        it('should not apply global bindValue from NgSelectConfig if bindValue prop explicitly provided in template', fakeAsync(() => {
+            const config = new NgSelectConfig();
+            config.bindValue = 'globalbindvalue';
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        bindValue="id"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCityId">
+                </ng-select>`,
+                config
+            );
+
+            fixture.componentInstance.cities = [];
+            fixture.componentInstance.selectedCityId = 7;
+            tickAndDetectChanges(fixture);
+
+            fixture.componentInstance.cities = [{ id: 7, name: 'Pailgis' }];
+            tickAndDetectChanges(fixture);
+
+            select = fixture.componentInstance.select;
+            expect(select.selectedItems[0]).toBe(select.itemsList.items[0]);
+            expect(select.selectedItems).toEqual([jasmine.objectContaining({
+                value: { id: 7, name: 'Pailgis' }
+            })]);
+        }));
+
+        it('should bind whole object as value when bindValue prop is specified with empty string in template', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        bindValue=""
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`
+            );
 
             fixture.componentInstance.cities = [];
             fixture.componentInstance.selectedCity = { id: 7, name: 'Pailgis' };
@@ -419,7 +500,7 @@ describe('NgSelectComponent', () => {
             expect(lastSelection.selected).toBeFalsy();
         }));
 
-        it('should clear disbled selected values when setting new model', fakeAsync(() => {
+        it('should clear disabled selected values when setting new model', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -431,7 +512,7 @@ describe('NgSelectComponent', () => {
 
 
             const disabled = { ...fixture.componentInstance.cities[1], disabled: true };
-            fixture.componentInstance.selectedCities = <any> [fixture.componentInstance.cities[0], disabled];
+            fixture.componentInstance.selectedCities = <any>[fixture.componentInstance.cities[0], disabled];
             tickAndDetectChanges(fixture);
 
             fixture.componentInstance.cities[1].disabled = true;
@@ -1445,7 +1526,7 @@ describe('NgSelectComponent', () => {
                 const remove = spyOn(select.removeEvent, 'emit');
                 fixture.componentInstance.multiple = true;
                 const disabled = { ...fixture.componentInstance.cities[1], disabled: true };
-                fixture.componentInstance.selectedCity = <any> [fixture.componentInstance.cities[0], disabled];
+                fixture.componentInstance.selectedCity = <any>[fixture.componentInstance.cities[0], disabled];
                 tickAndDetectChanges(fixture);
                 fixture.componentInstance.cities[1].disabled = true;
                 fixture.componentInstance.cities = [...fixture.componentInstance.cities];
@@ -2231,6 +2312,12 @@ describe('NgSelectComponent', () => {
                 expect(select.showAddTag).toBeFalsy();
             });
 
+            it('should be false when term is too short', () => {
+                select.searchTerm = 'vi';
+                select.minTermLength = 3;
+                expect(select.showAddTag).toBeFalsy();
+            });
+
             it('should be true when term not exists among items', () => {
                 select.searchTerm = 'Vil';
                 expect(select.showAddTag).toBeTruthy();
@@ -2258,6 +2345,11 @@ describe('NgSelectComponent', () => {
                 tickAndDetectChanges(fixture);
                 expect(select.showAddTag).toBeFalsy();
             }));
+
+            it('should be false when there is search term with only empty space', () => {
+                select.searchTerm = '   ';
+                expect(select.showAddTag).toBeFalsy();
+            });
         });
     });
 
@@ -2568,6 +2660,7 @@ describe('NgSelectComponent', () => {
                     NgSelectTestCmp,
                     `<ng-select [items]="cities"
                         [typeahead]="filter"
+                        [minTermLength]="minTermLength"
                         bindLabel="name"
                         [hideSelected]="hideSelected"
                         [(ngModel)]="selectedCity">
@@ -2589,12 +2682,21 @@ describe('NgSelectComponent', () => {
             }));
 
             it('should push term to custom observable', fakeAsync(() => {
-                fixture.componentInstance.filter.subscribe(term => {
-                    expect(term).toBe('vilnius');
-                });
-                tick(200);
+                fixture.componentInstance.filter.subscribe();
+                const next = spyOn(fixture.componentInstance.filter, 'next');
                 fixture.componentInstance.select.filter('vilnius');
                 tickAndDetectChanges(fixture);
+                expect(next).toHaveBeenCalledWith('vilnius')
+            }));
+
+            it('should not push term to custom observable if length is less than minTermLength', fakeAsync(() => {
+                fixture.componentInstance.minTermLength = 2;
+                tickAndDetectChanges(fixture);
+                fixture.componentInstance.filter.subscribe();
+                const next = spyOn(fixture.componentInstance.filter, 'next');
+                fixture.componentInstance.select.filter('v');
+                tickAndDetectChanges(fixture);
+                expect(next).not.toHaveBeenCalledWith('v')
             }));
 
             it('should mark first item when typeahead results are loaded', fakeAsync(() => {
@@ -2627,6 +2729,26 @@ describe('NgSelectComponent', () => {
                 fixture.componentInstance.select.open();
                 expect(fixture.componentInstance.select.isOpen).toBeTruthy();
             }));
+
+            describe('search text', () => {
+                it('should be visible until minTermLength reached', fakeAsync(() => {
+                    fixture.componentInstance.cities = [];
+                    fixture.componentInstance.minTermLength = 3;
+                    fixture.componentInstance.filter.subscribe();
+                    fixture.componentInstance.select.filter('vi');
+                    tickAndDetectChanges(fixture);
+                    expect(fixture.componentInstance.select.showTypeToSearch()).toBeTruthy()
+                }));
+
+                it('should not be visible when valid search term is present', fakeAsync(() => {
+                    fixture.componentInstance.cities = [];
+                    fixture.componentInstance.minTermLength = 0;
+                    fixture.componentInstance.filter.subscribe();
+                    fixture.componentInstance.select.filter('v');
+                    tickAndDetectChanges(fixture);
+                    expect(fixture.componentInstance.select.showTypeToSearch()).toBeFalsy()
+                }));
+            });
         });
 
         describe('clear on add', () => {
@@ -3064,12 +3186,13 @@ describe('NgSelectComponent', () => {
                             bindLabel="name"
                             [multiple]="true"
                             [disabled]="disabled"
+                            [readonly]="readonly"
                             [(ngModel)]="selectedCities">
                     </ng-select>`);
 
                 spyOn(fixture.componentInstance, 'onChange');
                 const disabled = { ...fixture.componentInstance.cities[1], disabled: true };
-                fixture.componentInstance.selectedCities = <any> [fixture.componentInstance.cities[0], disabled];
+                fixture.componentInstance.selectedCities = <any>[fixture.componentInstance.cities[0], disabled];
                 tickAndDetectChanges(fixture);
                 fixture.componentInstance.cities[1].disabled = true;
                 fixture.componentInstance.cities = [...fixture.componentInstance.cities];
@@ -3108,6 +3231,14 @@ describe('NgSelectComponent', () => {
 
             it('clear button should not appear if select is disabled', fakeAsync(() => {
                 fixture.componentInstance.disabled = true;
+                tickAndDetectChanges(fixture);
+                tickAndDetectChanges(fixture);
+                const el = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
+                expect(el).toBeNull();
+            }));
+
+            it('clear button should not appear if select is readonly', fakeAsync(() => {
+                fixture.componentInstance.readonly = true;
                 tickAndDetectChanges(fixture);
                 tickAndDetectChanges(fixture);
                 const el = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
@@ -3228,6 +3359,53 @@ describe('NgSelectComponent', () => {
                 expect(dropdown.style.left).toBe('0px');
             });
         }));
+
+        it('should apply global appendTo from NgSelectConfig', async(() => {
+            const config = new NgSelectConfig();
+            config.appendTo = 'body';
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `
+                <div class="container"></div>
+                <ng-select [items]="cities"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+                config);
+
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const dropdown = <HTMLElement>document.querySelector('.ng-dropdown-panel');
+                expect(dropdown.parentElement).toBe(document.body);
+                expect(dropdown.style.top).not.toBe('0px');
+                expect(dropdown.style.left).toBe('0px');
+            });
+        }));
+
+        it('should not apply global appendTo from NgSelectConfig if appendTo prop explicitly provided in template', async(() => {
+            const config = new NgSelectConfig();
+            config.appendTo = 'body';
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `
+                <div class="container"></div>
+                <ng-select [items]="cities"
+                        appendTo=".container"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+                config);
+
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
+                expect(dropdown.style.top).not.toBe('0px');
+                expect(dropdown.style.left).toBe('0px');
+            });
+        }));
+
     });
 
     describe('Grouping', () => {
@@ -3458,6 +3636,7 @@ describe('NgSelectComponent', () => {
                 `<ng-select [items]="citiesNames"
                     [addTag]="true"
                     placeholder="select value"
+                    [searchWhileComposing]="false"
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
             select = fixture.componentInstance.select;
@@ -3497,10 +3676,61 @@ describe('NgSelectComponent', () => {
             }));
         });
     });
+
+    describe('User defined keyDown handler', () => {
+        let fixture: ComponentFixture<NgSelectTestCmp>;
+        let select: NgSelectComponent;
+
+        beforeEach(() => {
+            fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [keyDownFn]="keyDownFn"></ng-select>`);
+            select = fixture.componentInstance.select;
+        });
+
+        const expectSpyToBeCalledAfterKeyDown = (spy, expectedNumber) => {
+            const possibleKeyCodes = Object.keys(KeyCode);
+            possibleKeyCodes
+                .forEach(keyCode => {
+                    triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode[keyCode])
+                });
+            expect(spy).toHaveBeenCalledTimes(expectedNumber)
+        };
+
+        it('should execute user function if any of defined keys was pressed', () => {
+            const spy = spyOn(fixture.componentInstance.select, 'keyDownFn');
+            expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length)
+        });
+
+        it('should not call any of default keyDown handlers if user handler returns false', fakeAsync(() => {
+            fixture.componentInstance.keyDownFn = () => false;
+            tickAndDetectChanges(fixture);
+            const spy = spyOn(fixture.componentInstance.select, 'handleKeyCode');
+
+            expectSpyToBeCalledAfterKeyDown(spy, 0)
+        }));
+
+        it('should call default keyHandler if user handler returns truthy', fakeAsync(() => {
+            fixture.componentInstance.keyDownFn = () => true;
+            tickAndDetectChanges(fixture);
+
+            const spy = spyOn(fixture.componentInstance.select, 'handleKeyCode');
+            expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length)
+        }));
+
+        it('should call default keyHandler if user handler returns falsy but not `false`', fakeAsync(() => {
+            fixture.componentInstance.keyDownFn = () => null;
+            tickAndDetectChanges(fixture);
+
+            const spy = spyOn(fixture.componentInstance.select, 'handleKeyCode');
+            expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length)
+        }))
+    })
 });
 
 
-function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixture<T> {
+function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectConfig: NgSelectConfig | null = null): ComponentFixture<T> {
+
     TestBed.configureTestingModule({
         imports: [FormsModule, NgSelectModule],
         declarations: [cmp],
@@ -3514,8 +3744,13 @@ function createTestingModule<T>(cmp: Type<T>, template: string): ComponentFixtur
             set: {
                 template: template
             }
-        })
-        .compileComponents();
+        });
+
+    if (customNgSelectConfig) {
+        TestBed.overrideProvider(NgSelectConfig, { useValue: customNgSelectConfig });
+    }
+
+    TestBed.compileComponents();
 
     const fixture = TestBed.createComponent(cmp);
     fixture.detectChanges();
@@ -3547,8 +3782,10 @@ class NgSelectTestCmp {
     label = 'Yes';
     clearOnBackspace = false;
     disabled = false;
+    readonly = false;
     dropdownPosition = 'bottom';
     visible = true;
+    minTermLength = 0;
     filter = new Subject<string>();
     searchFn: (term: string, item: any) => boolean = null;
     selectOnTab = true;
@@ -3572,6 +3809,7 @@ class NgSelectTestCmp {
         { id: 2, description: { name: 'USA', id: 'b' } },
         { id: 3, description: { name: 'Australia', id: 'c' } }
     ];
+    keyDownFn = () => {};
 
     tagFunc(term: string) {
         return { id: term, name: term, custom: true }

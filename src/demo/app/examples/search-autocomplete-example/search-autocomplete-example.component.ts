@@ -30,7 +30,6 @@ export class SearchAutocompleteExampleComponent implements OnInit {
         this.people$ = concat(
             of([]), // default items
             this.peopleInput$.pipe(
-                debounceTime(200),
                 distinctUntilChanged(),
                 tap(() => this.peopleLoading = true),
                 switchMap(term => this.dataService.getPeople(term).pipe(

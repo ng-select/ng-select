@@ -2,7 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [3.0.8](https://github.com/ng-select/ng-select/compare/v3.0.7...v3.0.8) (2019-09-25)
+### [3.1.1](https://github.com/ng-select/ng-select/compare/v3.1.0...v3.1.1) (2019-10-19)
+
+### Features
+
+* **keyDownFn:** user defined keydown handler to prevent ng-select behaviour([8b2b817](https://github.com/ng-select/ng-select/commit/8b2b817)), closes [#1155](https://github.com/ng-select/ng-select/issues/1155)
+
+
+### Bug Fixes
+
+* don't allow empty space as tag ([#1383](https://github.com/ng-select/ng-select/issues/1383)) ([6f69745](https://github.com/ng-select/ng-select/commit/6f69745))
+
+
+
+## [3.1.0](https://github.com/ng-select/ng-select/compare/v3.0.7...v3.1.0) (2019-10-14)
+
+
+### Bug Fixes
+
+* add licence for ng-option-highlight ([cef723f](https://github.com/ng-select/ng-select/commit/cef723f))
+* make all templates dynamic ([6801f7f](https://github.com/ng-select/ng-select/commit/6801f7f)), closes [#1255](https://github.com/ng-select/ng-select/issues/1255)
+
+
+### Features
+
+* add readonly attribute ([8c507aa](https://github.com/ng-select/ng-select/commit/8c507aa)), closes [#786](https://github.com/ng-select/ng-select/issues/786)
 
 
 

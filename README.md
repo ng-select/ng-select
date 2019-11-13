@@ -100,6 +100,13 @@ typically in your root component, and customize the values of its properties in 
 ```js
   constructor(private config: NgSelectConfig) {
       this.config.notFoundText = 'Custom not found';
+      this.config.appendTo = 'body';
+      // set the bindValue to global config when you use the same 
+      // bindValue in most of the place. 
+      // You can also override bindValue for the specified template 
+      // by defining `bindValue` as property
+      // Eg : <ng-select bindValue="some-new-value"></ng-select>
+      this.config.bindValue = 'value';
   }
 ```
 ### SystemJS
@@ -118,6 +125,7 @@ map: {
 | ------------- | ------------- | ------------- | ------------- | ------------- |
 | [addTag] | `boolean \| ((term: string) => any \| Promise<any>)`  | `false` | no | Allows to create custom options. |
 | addTagText | `string` | `Add item` | no | Set custom text when using tagging |
+| appearance | `string` | `underline` | no | Allows to select dropdown appearance. Set to `outline` to add border instead of underline (applies only to Material theme) |
 | appendTo | `string` |  null | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative` |
 | bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
 | bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |
@@ -143,16 +151,20 @@ map: {
 | notFoundText | `string` | `No items found` | no | Set custom text when filter returns empty result |
 | placeholder | `string` | `-` | no | Placeholder text. |
 | [searchable] | `boolean` | `true` | no | Allow to search for value. Default `true`|
+| [readonly] | `boolean` | `false` | no | Set ng-select as readonly. Mostly used with reactive forms. |
 | [searchFn] | `(term: string, item: any) => boolean` | `null` | no | Allow to filter by custom search function |
+| [searchWhileComposing] | `boolean` | `true` | no | Whether items should be filtered while composition started |
 | [trackByFn] | `(item: any) => any` | `null` | no | Provide custom trackBy function |
 | [clearSearchOnAdd] | `boolean` | `true` | no | Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false` |
 | [selectOnTab] | `boolean` | `false` | no | Select marked dropdown item using tab. Default `false`|
 | [openOnEnter] | `boolean` | `true` | no | Open dropdown using enter. Default `true`|
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |
+| [minTermLength] | `number` |  `0` | no | Minimum term length to start a search. Should be used with `typeahead` |
 | typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
 | [inputAttrs] | `{ [key: string]: string }` |  `-` | no | Pass custom attributes to underlying `input` element |
 | [tabIndex] | `number` |  `-` | no | Set tabindex on ng-select |
+| [keyDownFn] | `($event: KeyboardEvent) => bool` |  `true` | no | Provide custom keyDown function. Executed before default handler. Return false to suppress execution of default key down handlers  |
 
 ### Outputs
 
