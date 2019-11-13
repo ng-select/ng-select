@@ -1,10 +1,5 @@
 {
-  "name": "@commonapp/ng-select",
-  "version": "0.2.0",
-  "description": "A CommonApp fork of ng-select to improve functionality within the CommonApp.",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
+  "repository": "ng-select/ng-select",
   "engines": {
     "node": ">= 6.9.0",
     "npm": ">= 3.0.0"
@@ -83,16 +78,5 @@
     "tsickle": "^0.35.0",
     "tslint": "~5.18.0",
     "typescript": "~3.4.3"
-  },
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CommonApp/ng-select.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/CommonApp/ng-select/issues"
-  },
-  "homepage": "https://github.com/CommonApp/ng-select#readme"
+  }
 }
