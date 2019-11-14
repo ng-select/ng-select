@@ -2,7 +2,7 @@
     <div class="form-row">
         <div class="form-group col-md-6">
             <label for="yesno">Not searchable</label>
-            <ng-select #agreeSelect labelForId="yesno" [searchable]="false" formControlName="agree">
+            <ng-select appearance="outline" #agreeSelect labelForId="yesno" [searchable]="false" formControlName="agree">
                 <ng-option [value]="true">Yes</ng-option>
                 <ng-option [value]="false">No</ng-option>
             </ng-select>
@@ -11,7 +11,7 @@
         </div>
         <div class="form-group col-md-6">
             <label for="heroId">Basic select</label>
-            <ng-select [searchable]="false" [clearable]="false" labelForId="heroId" formControlName="heroId">
+            <ng-select appearance="outline" [searchable]="false" [clearable]="false" labelForId="heroId" formControlName="heroId">
                 <ng-option value="batman">
                     <img src="{{basePath}}/assets/batman.png" width="20px" height="20px"/>
                     Batman
