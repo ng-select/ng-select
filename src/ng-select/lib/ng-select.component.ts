@@ -536,11 +536,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     onCompositionEnd(term: string) {
-        if (this.searchWhileComposing) {
-            return;
-        }
         this._isComposing = false;
-        this.filter(term);
+        
+        if (!this.searchWhileComposing) {
+            this.filter(term);
+        }
     }
 
     filter(term: string) {
