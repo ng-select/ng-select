@@ -3674,6 +3674,15 @@ describe('NgSelectComponent', () => {
 
                 expect(select.searchTerm).toBe(imeInputValue);
             }));
+
+            it('should update search term when searchWhileComposing', fakeAsync(() => {
+                select.searchWhileComposing = true;
+                select.onCompositionStart();
+                select.onCompositionEnd(imeInputValue);
+                select.filter('new term');
+
+                expect(select.searchTerm).toBe('new term');
+            }));
         });
     });
 
