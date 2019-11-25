@@ -64,17 +64,18 @@ export class DefaultSelectionModel implements SelectionModel {
     }
 
     private _setChildrenSelectedState(children: NgOption[], selected: boolean) {
-        children.forEach(x => {
-            if (x.disabled !== true) {
-                x.selected = selected;
+        for (const child of children) {
+            if (child.disabled) {
+                continue;
             }
-        });
+            child.selected = selected;
+        };
     }
 
     private _removeChildren(parent: NgOption) {
         this._selected = [
             ...this._selected.filter(x => x.parent !== parent), 
-            ...parent.children.filter(x => x.disabled && x.selected)
+            ...parent.children.filter(x => x.parent === parent && x.disabled && x.selected)
         ];
     }
 

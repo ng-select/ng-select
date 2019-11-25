@@ -283,16 +283,21 @@ describe('ItemsList', () => {
                 list.setItems([
                     { label: 'K1', val: 'V1', groupKey: 'G1' },
                     { label: 'K2', val: 'V2', groupKey: 'G1', disabled: true },
+                    { label: 'K3', val: 'V3', groupKey: 'G2' },
+                    { label: 'K4', val: 'V4', groupKey: 'G2', disabled: true },
                 ]);
 
-                list.select(list.items[2]); // K2
-                list.select(list.items[0]); // G1
-                expect(list.selectedItems.length).toBe(1);
+                list.select(list.findByLabel('K2'));
+                list.select(list.findByLabel('K4'));
+                list.select(list.findByLabel('G1'));
+                list.select(list.findByLabel('G2'));
+                expect(list.selectedItems.length).toBe(2);
                 expect(list.selectedItems[0].label).toBe('G1');
+                expect(list.selectedItems[1].label).toBe('G2');
 
-                list.unselect(list.items[0]); // G1
-                expect(list.selectedItems.length).toBe(1);
-                expect(list.selectedItems[0].label).toBe('K2');
+                list.unselect(list.findByLabel('G1'));
+                expect(list.selectedItems.length).toBe(2);
+                expect(list.selectedItems[0].label).toBe('G2');
             });
 
             it('should not unselect disabled items within a group (groupAsModel=false)', () => {
