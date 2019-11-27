@@ -290,10 +290,16 @@ export class ItemsList {
     }
 
     private _getNextItemIndex(steps: number) {
-        if (steps > 0) {
-            return (this._markedIndex === this._filteredItems.length - 1) ? 0 : (this._markedIndex + 1);
+        if (this._ngSelect.keyboardSelectLoop === true) {
+            if (steps > 0) {
+                return (this._markedIndex === this._filteredItems.length - 1) ? 0 : (this._markedIndex + 1);
+            }
+            return (this._markedIndex <= 0) ? (this._filteredItems.length - 1) : (this._markedIndex - 1);
+        } else if (steps > 0) {
+            return (this._markedIndex === this._filteredItems.length - 1) ? this._filteredItems.length - 1 : (this._markedIndex + 1);
         }
-        return (this._markedIndex <= 0) ? (this._filteredItems.length - 1) : (this._markedIndex - 1);
+
+        return (this._markedIndex <= 0) ? 0 : (this._markedIndex - 1);
     }
 
     private _stepToItem(steps: number) {

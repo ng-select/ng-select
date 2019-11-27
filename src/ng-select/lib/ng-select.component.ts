@@ -111,6 +111,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() searchWhileComposing = true;
     @Input() minTermLength = 0;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
+    @Input() keyboardSelectLoop = true;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
