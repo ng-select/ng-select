@@ -2689,6 +2689,14 @@ describe('NgSelectComponent', () => {
                 expect(next).toHaveBeenCalledWith('vilnius')
             }));
 
+            it('should push term to custom observable', fakeAsync(() => {
+                fixture.componentInstance.filter.subscribe();
+                const next = spyOn(fixture.componentInstance.filter, 'next');
+                fixture.componentInstance.select.filter('');
+                tickAndDetectChanges(fixture);
+                expect(next).toHaveBeenCalledWith('')
+            }));
+
             it('should not push term to custom observable if length is less than minTermLength', fakeAsync(() => {
                 fixture.componentInstance.minTermLength = 2;
                 tickAndDetectChanges(fixture);
