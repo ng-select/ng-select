@@ -110,6 +110,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() readonly = false;
     @Input() searchWhileComposing = true;
     @Input() minTermLength = 0;
+    @Input() editSearchTerm = false;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
@@ -196,6 +197,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _compareWith: CompareWithFn;
     private _clearSearchOnAdd: boolean;
     private _isComposing = false;
+    private get _editSearchTerm(): boolean {
+        return this.editSearchTerm && !this.multiple;
+    }
 
     private readonly _destroy$ = new Subject<void>();
     private readonly _keyPress$ = new Subject<string>();
@@ -421,7 +425,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
         this.isOpen = false;
-        this._clearSearch();
+        if (!this._editSearchTerm) {
+            this._clearSearch();
+        }
         this.itemsList.unmarkItem();
         this._onTouched();
         this.closeEvent.emit();
@@ -445,8 +451,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     select(item: NgOption) {
         if (!item.selected) {
             this.itemsList.select(item);
-            if (this.clearSearchOnAdd) {
+            if (this.clearSearchOnAdd && !this._editSearchTerm) {
                 this._clearSearch();
+            }
+
+            if (this._editSearchTerm) {
+                this._changeSearch(item.label);
             }
 
             this._updateNgModel();
@@ -461,6 +471,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     focus() {
+        if (this._editSearchTerm) {
+            this.searchTerm = (this.selectedItems && this.selectedItems[0] && this.selectedItems[0].label) || null;
+        }
         this.searchInput.nativeElement.focus();
     }
 
