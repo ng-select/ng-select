@@ -2856,6 +2856,30 @@ describe('NgSelectComponent', () => {
                 expect(lastEmittedSearchTerm).toBe(null);
             }));
         });
+
+        describe('should allow edit search query', () => {
+            it('if option selected & input focused', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                        [typeahead]="filter"
+                        [editSearchTerm]="true"
+                        bindValue="id"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+                expect(fixture.componentInstance.select.editSearchTerm).toBeTruthy();
+                const select = fixture.componentInstance.select;
+                const input = select.searchInput.nativeElement;
+                const selectedCity = fixture.componentInstance.cities[0];
+                fixture.componentInstance.selectedCity = selectedCity.id;
+                tickAndDetectChanges(fixture);
+                input.focus();
+                tickAndDetectChanges(fixture);
+                expect(select.searchTerm).toEqual(selectedCity.name);
+                expect(input.value).toEqual(selectedCity.name);
+            }));
+        });
     });
 
     describe('Accessibility', () => {
