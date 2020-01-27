@@ -68,6 +68,7 @@ $ng-select-bg: #ffffff !default;
         }
     }
     .ng-select-container {
+        color: $ng-select-primary-text;
         align-items: baseline;
         min-height: 51.5px;
         &:after {
