@@ -1,6 +1,6 @@
 {
   "name": "@commonapp/ng-select",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A CommonApp fork of ng-select to improve functionality within the CommonApp.",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
