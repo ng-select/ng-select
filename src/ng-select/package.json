@@ -1,13 +1,10 @@
 {
-  "name": "@commonapp/ng-select",
-  "version": "1.0.1",
-  "description": "A CommonApp fork of ng-select to improve functionality within the CommonApp.",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
-  "author": "@commonapp/ng-select",
+  "name": "@ng-select/ng-select",
+  "version": "3.2.0",
+  "description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
+  "author": "@ng-select/ng-select",
   "license": "MIT",
-  "repository": "commonapp/ng-select",
+  "repository": "ng-select/ng-select",
   "engines": {
     "node": ">= 6.9.0",
     "npm": ">= 3.0.0"
