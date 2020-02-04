@@ -591,10 +591,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     onCompositionEnd(term: string) {
+        this._isComposing = false;
         if (this.searchWhileComposing) {
             return;
         }
-        this._isComposing = false;
+
         this.filter(term);
     }
 
@@ -604,7 +605,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         this.searchTerm = term;
-        if (this._isTypeahead && this._validTerm) {
+        if (this._isTypeahead && (this._validTerm || this.minTermLength === 0)) {
             this.typeahead.next(term);
         }
 

@@ -1,11 +1,14 @@
-<div [class.ng-has-value]="hasValue" class="ng-select-container ng-appearance-{{appearance}}" 
+<div (mousedown)="handleMousedown($event)"
+     (focus)="onWidgetFocus()"
+     [class.ng-appearance-outline]="appearance === 'outline'"
+     [class.ng-has-value]="hasValue"
+     class="ng-select-container"
      [attr.role]="multiple ? 'listbox' : null" 
      [attr.aria-haspopup]="multiple ? 'listbox' : null" 
      [attr.aria-multiselectable]="multiple ? 'true' : null" 
      [attr.aria-labelledby]="multiple ? labelledBy : null"
-     [tabIndex]="(multiple && selectedItems.length > 0 && !focusedTag) ? 0 : -1"
-     (mousedown)="handleMousedown($event)"
-     (focus)="onWidgetFocus()">
+     [tabIndex]="(multiple && selectedItems.length > 0 && !focusedTag) ? 0 : -1">
+
     <div class="ng-value-container">
         <ng-container *ngIf="((multiple && !multiLabelTemplate) || !searchable) && selectedItems.length > 0">
             <div #tag *ngFor="let item of selectedItems; trackBy: trackByOption"
