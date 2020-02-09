@@ -619,7 +619,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _setSearchTermFromItems() {
-        this.searchTerm = (this.selectedItems && this.selectedItems[0] && this.selectedItems[0].label) || null;
+        const selected = this.selectedItems && this.selectedItems[0];
+        this.searchTerm = (selected && selected.label) || null;
     }
 
     private _setItems(items: any[]) {
