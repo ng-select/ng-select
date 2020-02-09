@@ -581,7 +581,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         if (this._editSearchTerm) {
-            this.searchTerm = (this.selectedItems && this.selectedItems[0] && this.selectedItems[0].label) || null;
+            this._setSearchTermFromItems();
         }
 
         this.element.classList.add('ng-select-focused');
@@ -594,6 +594,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.blurEvent.emit($event);
         if (!this.isOpen && !this.disabled) {
             this._onTouched();
+        }
+        if (this._editSearchTerm) {
+            this._setSearchTermFromItems();
         }
         this.focused = false;
     }
@@ -609,6 +612,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!(<any>this._cd).destroyed) {
             this._cd.detectChanges();
         }
+    }
+
+    private _setSearchTermFromItems() {
+        this.searchTerm = (this.selectedItems && this.selectedItems[0] && this.selectedItems[0].label) || null;
     }
 
     private _setItems(items: any[]) {
