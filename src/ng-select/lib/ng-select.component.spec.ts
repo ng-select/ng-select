@@ -2863,12 +2863,12 @@ describe('NgSelectComponent', () => {
                     NgSelectTestCmp,
                     `<ng-select [items]="cities"
                         [typeahead]="filter"
-                        [editSearchTerm]="true"
+                        [editableSearchTerm]="true"
                         bindValue="id"
                         bindLabel="name"
                         [(ngModel)]="selectedCity">
                     </ng-select>`);
-                expect(fixture.componentInstance.select.editSearchTerm).toBeTruthy();
+                expect(fixture.componentInstance.select.editableSearchTerm).toBeTruthy();
                 const select = fixture.componentInstance.select;
                 const input = select.searchInput.nativeElement;
                 const selectedCity = fixture.componentInstance.cities[0];

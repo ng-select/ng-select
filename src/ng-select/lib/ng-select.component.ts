@@ -110,7 +110,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() readonly = false;
     @Input() searchWhileComposing = true;
     @Input() minTermLength = 0;
-    @Input() editSearchTerm = false;
+    @Input() editableSearchTerm = false;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
@@ -197,8 +197,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _compareWith: CompareWithFn;
     private _clearSearchOnAdd: boolean;
     private _isComposing = false;
-    private get _editSearchTerm(): boolean {
-        return this.editSearchTerm && !this.multiple;
+    private get _editableSearchTerm(): boolean {
+        return this.editableSearchTerm && !this.multiple;
     }
 
     private readonly _destroy$ = new Subject<void>();
@@ -425,7 +425,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
         this.isOpen = false;
-        if (!this._editSearchTerm) {
+        if (!this._editableSearchTerm) {
             this._clearSearch();
         }
         this.itemsList.unmarkItem();
@@ -445,7 +445,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.select(item);
         }
 
-        if (this._editSearchTerm) {
+        if (this._editableSearchTerm) {
             this._setSearchTermFromItems();
         }
 
@@ -455,11 +455,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     select(item: NgOption) {
         if (!item.selected) {
             this.itemsList.select(item);
-            if (this.clearSearchOnAdd && !this._editSearchTerm) {
+            if (this.clearSearchOnAdd && !this._editableSearchTerm) {
                 this._clearSearch();
             }
 
-            if (this._editSearchTerm) {
+            if (this._editableSearchTerm) {
                 this._changeSearch(item.label);
             }
 
@@ -584,7 +584,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
 
-        if (this._editSearchTerm) {
+        if (this._editableSearchTerm) {
             this._setSearchTermFromItems();
         }
 
@@ -599,7 +599,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this.isOpen && !this.disabled) {
             this._onTouched();
         }
-        if (this._editSearchTerm) {
+        if (this._editableSearchTerm) {
             this._setSearchTermFromItems();
         }
         this.focused = false;

@@ -1,12 +1,12 @@
 <p class="card-text">
-    By default, ng-select doesn't allow edit the current value for search. You can enable it by setting <b>[editSearchTerm]</b>
+    By default, ng-select doesn't allow edit the current value for search. You can enable it by setting <b>[editableSearchTerm]</b>
     input to <b>true</b>.  It's useful when you want to modify part of a long search query
 </p>
 
 <ng-select [items]="people$ | async"
            bindLabel="name"
            bindValue="id"
-           [editSearchTerm]="true"
+           [editableSearchTerm]="true"
            [(ngModel)]="selectedPersonId">
 </ng-select>
 
