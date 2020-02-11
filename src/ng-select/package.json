@@ -1,11 +1,8 @@
 {
-  "name": "@commonapp/ng-select",
-  "version": "1.0.2",
+  "name": "ca-select",
+  "version": "2.0.0",
   "description": "A CommonApp fork of ng-select to improve functionality within the CommonApp.",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
-  "author": "@commonapp/ng-select",
+  "author": "@commonapp",
   "license": "MIT",
   "repository": "commonapp/ng-select",
   "engines": {
