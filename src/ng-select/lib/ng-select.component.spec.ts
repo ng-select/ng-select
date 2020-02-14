@@ -2862,22 +2862,43 @@ describe('NgSelectComponent', () => {
                 const fixture = createTestingModule(
                     NgSelectTestCmp,
                     `<ng-select [items]="cities"
-                        [typeahead]="filter"
                         [editableSearchTerm]="true"
                         bindValue="id"
                         bindLabel="name"
-                        [(ngModel)]="selectedCity">
+                        [(ngModel)]="selectedCityId">
                     </ng-select>`);
                 expect(fixture.componentInstance.select.editableSearchTerm).toBeTruthy();
                 const select = fixture.componentInstance.select;
                 const input = select.searchInput.nativeElement;
-                const selectedCity = fixture.componentInstance.cities[0];
-                fixture.componentInstance.selectedCity = selectedCity.id;
+                const selectedCity: { id: number; name: string } = fixture.componentInstance.cities[0];
+                fixture.componentInstance.selectedCityId = selectedCity.id;
                 tickAndDetectChanges(fixture);
                 input.focus();
                 tickAndDetectChanges(fixture);
                 expect(select.searchTerm).toEqual(selectedCity.name);
                 expect(input.value).toEqual(selectedCity.name);
+            }));
+            it('should clear model if search query is empty', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                        [editableSearchTerm]="true"
+                        bindValue="id"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCityId">
+                    </ng-select>`);
+                const select = fixture.componentInstance.select;
+                const input = select.searchInput.nativeElement;
+                const selectedCity: { id: number; name: string } = fixture.componentInstance.cities[0];
+                fixture.componentInstance.selectedCityId = selectedCity.id;
+                tickAndDetectChanges(fixture);
+                input.focus();
+                tickAndDetectChanges(fixture);
+                expect(select.searchTerm).toEqual(selectedCity.name);
+                input.value = '';
+                select.filter('');
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.selectedCity).toBeFalsy();
             }));
         });
     });

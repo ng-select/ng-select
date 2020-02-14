@@ -460,7 +460,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             }
 
             if (this._editableSearchTerm) {
-                this._changeSearch(item.label);
+                this._setSearchTermFromItems();
             }
 
             this._updateNgModel();
@@ -573,6 +573,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             if (this.isOpen) {
                 this.itemsList.markSelectedOrDefault(this.markFirst);
             }
+        }
+
+        if (this._editableSearchTerm && !term) {
+            this.clearModel();
         }
 
         this.searchEvent.emit({ term, items: this.itemsList.filteredItems.map(x => x.value) });
