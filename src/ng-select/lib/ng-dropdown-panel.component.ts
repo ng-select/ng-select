@@ -337,8 +337,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         this.update.emit([first]);
 
         return Promise.resolve().then(() => {
-            const option = this._dropdown.querySelector(`#${first.htmlId}`);
-            const optionHeight = option.clientHeight;
+            const option = this._dropdown.querySelector(`#${first.htmlId}`) as HTMLElement;
+            const optionHeight = option.offsetHeight;
             this._virtualPadding.style.height = `${optionHeight * this.itemsLength}px`;
             const panelHeight = this._scrollablePanel.clientHeight;
             this._panelService.setDimensions(optionHeight, panelHeight);
