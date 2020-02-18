@@ -62,10 +62,19 @@ export class NgLoadingTextTemplateDirective {
 
 @Directive({ selector: '[ng-tag-tmp]' })
 export class NgTagTemplateDirective {
-    constructor(public template: TemplateRef<any>) { }
+    constructor(public template: TemplateRef<any>) {
+        console.log('lel')
+    }
 }
 
 @Directive({ selector: '[ng-loadingspinner-tmp]' })
 export class NgLoadingSpinnerTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
+}
+
+@Directive({ selector: '[ng-placeholder-tmp]' })
+export class NgPlaceholderTemplateDirective {
+    constructor(public template: TemplateRef<any>) {
+        console.log('lel')
+    }
 }

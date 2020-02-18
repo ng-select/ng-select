@@ -1,0 +1,17 @@
+<p>Custom placeholder template with <b>ng-placeholder-tmp</b></p>
+
+<ng-select
+    [multiple]="true"
+    [items]="people"
+    [(ngModel)]="selectedPeople"
+    placeholder="Select people"
+    bindLabel="name"
+    bindValue="name">
+    <ng-template ng-placeholder-tmp>
+        Name (age)
+    </ng-template>
+</ng-select>
+
+<br>
+
+Selected people: {{selectedPeople}}

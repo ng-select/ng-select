@@ -15,7 +15,8 @@ import {
     NgOptionTemplateDirective,
     NgTagTemplateDirective,
     NgItemLabelDirective,
-    NgTypeToSearchTemplateDirective
+    NgTypeToSearchTemplateDirective,
+    NgPlaceholderTemplateDirective
 } from './ng-templates.directive';
 import { DefaultSelectionModelFactory } from './selection-model';
 
@@ -35,6 +36,7 @@ import { DefaultSelectionModelFactory } from './selection-model';
         NgLoadingTextTemplateDirective,
         NgTagTemplateDirective,
         NgLoadingSpinnerTemplateDirective,
+        NgPlaceholderTemplateDirective,
         NgItemLabelDirective
     ],
     imports: [
@@ -53,7 +55,8 @@ import { DefaultSelectionModelFactory } from './selection-model';
         NgTypeToSearchTemplateDirective,
         NgLoadingTextTemplateDirective,
         NgTagTemplateDirective,
-        NgLoadingSpinnerTemplateDirective
+        NgLoadingSpinnerTemplateDirective,
+        NgPlaceholderTemplateDirective,
     ],
     providers: [
         { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory }

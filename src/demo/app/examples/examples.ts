@@ -20,6 +20,7 @@ import { TemplateLabelExampleComponent } from './template-label-example/template
 import { TemplateOptionExampleComponent } from './template-option-example/template-option-example.component';
 import { TemplateOptgroupExampleComponent } from './template-optgroup-example/template-optgroup-example.component';
 import { TemplateHeaderFooterExampleComponent } from './template-header-footer-example/template-header-footer-example.component';
+import { TemplatePlaceholderExampleComponent } from './template-placeholder-example/template-placeholder-example.component';
 import { TemplateDisplayExampleComponent } from './template-display-example/template-display-example.component';
 import { TemplateSearchExampleComponent } from './template-search-example/template-search-example.component';
 import { TemplateLoadingExampleComponent } from './template-loading-example/template-loading-example.component';
@@ -134,6 +135,10 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
     'template-header-footer-example': {
         component: TemplateHeaderFooterExampleComponent,
         title: 'Custom header footer template'
+    },
+    'template-placeholder-example': {
+        component: TemplatePlaceholderExampleComponent,
+        title: 'Custom placeholder template'
     },
     'template-display-example': {
         component: TemplateDisplayExampleComponent,

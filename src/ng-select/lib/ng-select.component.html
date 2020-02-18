@@ -5,7 +5,11 @@
     class="ng-select-container">
 
     <div class="ng-value-container">
-        <div class="ng-placeholder">{{placeholder}}</div>
+        <div class="ng-placeholder">{{placeholder}}{{!placeholderTemplate}}</div>
+        <!-- <div *ngIf="!placeholderTemplate" class="ng-placeholder">CCC{{placeholder}}</div> -->
+        <!-- <ng-container *ngIf="placeholderTemplate">Cenas</ng-container> -->
+
+        <ng-template #placeholderTemplate>Pastelaria</ng-template>
 
         <ng-container *ngIf="!multiLabelTemplate && selectedItems.length > 0">
             <div [class.ng-value-disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems; trackBy: trackByOption">
