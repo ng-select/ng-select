@@ -73,10 +73,18 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     private readonly _destroy$ = new Subject<void>();
     private readonly _dropdown: HTMLElement;
-    private _virtualPadding: HTMLElement;
-    private _scrollablePanel: HTMLElement;
-    private _contentPanel: HTMLElement;
-    private _select: HTMLElement;
+    private get _virtualPadding() {
+        return this.paddingElementRef.nativeElement;
+    };
+    private get _scrollablePanel() {
+        return this.scrollElementRef.nativeElement;
+    };
+    private get _contentPanel() {
+        return this.contentElementRef.nativeElement;
+    };
+    private get _select(): HTMLElement {
+        return this._dropdown.parentElement;
+    };
     private _parent: HTMLElement;
     private _scrollToEndFired = false;
     private _updateScrollHeight = false;
@@ -130,10 +138,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
-        this._select = this._dropdown.parentElement;
-        this._virtualPadding = this.paddingElementRef.nativeElement;
-        this._scrollablePanel = this.scrollElementRef.nativeElement;
-        this._contentPanel = this.contentElementRef.nativeElement;
         this._handleScroll();
         this._handleOutsideClick();
         this._appendDropdown();
