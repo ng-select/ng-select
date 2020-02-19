@@ -60,7 +60,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     @Input() virtualScroll = false;
     @Input() headerTemplate: TemplateRef<any>;
     @Input() footerTemplate: TemplateRef<any>;
-    // @Input() placeholderTemplate: TemplateRef<any>;
     @Input() filterValue: string = null;
 
     @Output() update = new EventEmitter<any[]>();

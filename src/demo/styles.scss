@@ -71,3 +71,10 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
 .card-body .form-group {
     margin-bottom: 0;
 }
+
+
+.ng-select.specimen {
+    .ng-select-container {
+        height: 100px !important;
+    }
+}

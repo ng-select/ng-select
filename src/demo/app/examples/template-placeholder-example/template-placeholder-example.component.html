@@ -1,15 +1,25 @@
 <p>Custom placeholder template with <b>ng-placeholder-tmp</b></p>
 
 <ng-select
-    [multiple]="true"
     [items]="people"
     [(ngModel)]="selectedPeople"
+    [searchable]="false"
+    class="custom"
     placeholder="Select people"
     bindLabel="name"
     bindValue="name">
     <ng-template ng-placeholder-tmp>
-        Name (age)
+        <div class="ng-placeholder">
+            <p>Name</p>
+            <p>Age</p>
+        </div>
     </ng-template>
+    <ng-template ng-label-tmp let-item="item">
+        <div>
+          <p>{{item.name}}</p>
+          <p>{{item.age}}</p>
+        </div>
+      </ng-template>
 </ng-select>
 
 <br>

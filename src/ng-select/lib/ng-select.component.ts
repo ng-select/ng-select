@@ -261,7 +261,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     ngAfterViewInit() {
         if (this.placeholderTemplate) {
-            console.log('yo', this.placeholderTemplate)
+            // TODO: check if needs check
         }
 
         if (!this._itemsAreUsed) {
