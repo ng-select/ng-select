@@ -56,7 +56,7 @@
         </ng-template>
     </ng-container>
 
-    <span class="ng-inline-action-wrapper ng-select-wrapper" title="{{selectAllText}}">
+    <span *ngIf="selectable" class="ng-inline-action-wrapper ng-select-wrapper" title="{{selectAllText}}">
         <span class="ng-inline-action" aria-hidden="true">
             &#10003;
         </span>

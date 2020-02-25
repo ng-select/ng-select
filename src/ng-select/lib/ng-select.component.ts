@@ -118,6 +118,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
     @Input() @HostBinding('class.ng-select-searchable') searchable = true;
     @Input() @HostBinding('class.ng-select-clearable') clearable = true;
+    /** If select all should be displayed */
+    @Input() @HostBinding('class.ng-select-selectable') selectable = false;
     @Input() @HostBinding('class.ng-select-opened') isOpen = false;
 
     @Input()
