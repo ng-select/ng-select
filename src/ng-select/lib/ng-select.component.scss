@@ -144,11 +144,16 @@
         position: relative;
         width: 17px;
         user-select: none;
-        .ng-clear {
+        .ng-inline-action {
             display: inline-block;
             font-size: 18px;
             line-height: 1;
             pointer-events: none;
+        }
+        &.ng-select-wrapper {
+            .ng-inline-action {
+                font-size: 16px;
+            }
         }
     }
     .ng-spinner-loader {

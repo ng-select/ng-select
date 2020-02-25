@@ -3208,7 +3208,7 @@ describe('NgSelectComponent', () => {
                 triggerMousedown = () => {
                     const control = fixture.debugElement.query(By.css('.ng-select-container'));
                     control.triggerEventHandler('mousedown', createEvent({
-                        classList: { contains: (term) => term === 'ng-clear-wrapper' }
+                        classList: { contains: (term) => term === 'ng-inline-action-wrapper' }
                     }));
                 };
             }));

@@ -181,7 +181,7 @@ $ng-select-value-font-size: 0.9em !default;
     }
     .ng-inline-action-wrapper {
         color: darken($ng-select-border, 20);
-        &:hover .ng-clear {
+        &:hover .ng-inline-action {
             color: #D0021B;
         }
     }
