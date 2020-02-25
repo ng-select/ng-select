@@ -56,7 +56,12 @@
         </ng-template>
     </ng-container>
 
-    <span *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
+    <span class="ng-inline-action-wrapper ng-select-wrapper" title="{{selectAllText}}">
+        <span class="ng-clear" aria-hidden="true">
+            A
+        </span>
+    </span>
+    <span *ngIf="showClear()" class="ng-inline-action-wrapper ng-clear-wrapper" title="{{clearAllText}}">
         <span class="ng-clear" aria-hidden="true">×</span>
     </span>
 

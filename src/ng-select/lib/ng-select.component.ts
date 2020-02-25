@@ -86,6 +86,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() addTagText: string;
     @Input() loadingText: string;
     @Input() clearAllText: string;
+    @Input() selectAllText: string;
     @Input() appearance: string;
     @Input() dropdownPosition: DropdownPosition = 'auto';
     @Input() appendTo: string;
@@ -324,6 +325,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
 
+        if (target.classList.contains('ng-select-wrapper')) {
+            this.handleSelectAllClick();
+            return;
+        }
+
         if (target.classList.contains('ng-arrow-wrapper')) {
             this.handleArrowClick();
             return;
@@ -350,6 +356,22 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         } else {
             this.open();
         }
+    }
+
+    handleSelectAllClick() {
+        if (this.itemsList.items) {
+            this.itemsList.filteredItems.forEach(item => {
+                this.itemsList.select(item);
+            });
+            this._updateNgModel();
+    
+            this._clearSearch();
+            this.focus();
+            this.clearEvent.emit();
+    
+            this._onSelectionChanged();
+        }
+
     }
 
     handleClearClick() {
@@ -916,6 +938,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.addTagText = this.addTagText || config.addTagText;
         this.loadingText = this.loadingText || config.loadingText;
         this.clearAllText = this.clearAllText || config.clearAllText;
+        this.selectAllText = this.selectAllText || config.selectAllText;
         this.virtualScroll = isDefined(this.virtualScroll)
             ? this.virtualScroll
             : isDefined(config.disableVirtualScroll) ? !config.disableVirtualScroll : false;

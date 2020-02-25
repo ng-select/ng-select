@@ -13,7 +13,7 @@ $ng-select-marked: #e6f7ff !default;
     position: relative;
     &.ng-select-opened {
         &.ng-select-clearable .ng-select-container.ng-has-value:hover {
-            .ng-clear-wrapper {
+            .ng-inline-action-wrapper {
                 opacity: 0;
                 pointer-events: none;
             }
@@ -59,7 +59,7 @@ $ng-select-marked: #e6f7ff !default;
     }
 
     &.ng-select-clearable .ng-select-container.ng-has-value:hover {
-        .ng-clear-wrapper {
+        .ng-inline-action-wrapper {
             opacity: 1;
         }
         .ng-arrow-wrapper {
@@ -187,7 +187,7 @@ $ng-select-marked: #e6f7ff !default;
             }
         }
     }
-    .ng-clear-wrapper {
+    .ng-inline-action-wrapper {
         opacity: 0;
         color: darken($ng-select-border, 20);
         background: rgba(0, 0, 0, 0.25);

@@ -29,7 +29,7 @@ $ng-select-bg: #ffffff !default;
             }
         }
         .ng-arrow-wrapper .ng-arrow,
-        .ng-clear-wrapper {
+        .ng-inline-action-wrapper {
             color: $ng-select-disabled-text;
         }
     }
@@ -124,7 +124,7 @@ $ng-select-bg: #ffffff !default;
                 .ng-arrow-wrapper {
                     bottom: 17px;
                 }
-                .ng-clear-wrapper {
+                .ng-inline-action-wrapper {
                     bottom: 14px;
                 }
             }
@@ -132,7 +132,7 @@ $ng-select-bg: #ffffff !default;
                 align-self: flex-end;
                 bottom: 9px;
             }
-            .ng-clear-wrapper {
+            .ng-inline-action-wrapper {
                 align-self: flex-end;
                 bottom: 7px;
             }
@@ -156,14 +156,14 @@ $ng-select-bg: #ffffff !default;
             &.ng-appearance-outline {
                 &.ng-has-value {
                     .ng-arrow-wrapper,
-                    .ng-clear-wrapper {
+                    .ng-inline-action-wrapper {
                         border-top: none;
                     }
                 }
                 .ng-arrow-wrapper {
                     top: 0;
                 }
-                .ng-clear-wrapper {
+                .ng-inline-action-wrapper {
                     top: 4px;
                 }
             }
@@ -207,14 +207,14 @@ $ng-select-bg: #ffffff !default;
                     padding-bottom: 0;
                     padding-top: .1875em;
                 }
-                .ng-clear-wrapper,
+                .ng-inline-action-wrapper,
                 .ng-arrow-wrapper {
                     border-top: .84375em solid transparent;
                 }
             }
         }
     }
-    .ng-clear-wrapper {
+    .ng-inline-action-wrapper {
         color: $ng-select-secondary-text;
         &:hover {
             color: $ng-select-primary-text;

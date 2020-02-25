@@ -3241,7 +3241,7 @@ describe('NgSelectComponent', () => {
                 fixture.componentInstance.disabled = true;
                 tickAndDetectChanges(fixture);
                 tickAndDetectChanges(fixture);
-                const el = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
+                const el = fixture.debugElement.query(By.css('.ng-inline-action-wrapper'));
                 expect(el).toBeNull();
             }));
 
@@ -3249,7 +3249,7 @@ describe('NgSelectComponent', () => {
                 fixture.componentInstance.readonly = true;
                 tickAndDetectChanges(fixture);
                 tickAndDetectChanges(fixture);
-                const el = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
+                const el = fixture.debugElement.query(By.css('.ng-inline-action-wrapper'));
                 expect(el).toBeNull();
             }));
         });
