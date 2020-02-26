@@ -193,14 +193,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     private _handleDropdownPosition() {
         this._currentPosition = this._calculateCurrentPosition(this._dropdown);
-        // it's important first to check if it has vertical scrollbar since this._renderer.addClass(this._dropdown, BOTTOM_CSS_CLASS)
-        // could make it to appear
-        let hasVerticalScrollbar = false;
-
-        if (this.appendTo) {
-          hasVerticalScrollbar = this._parent.scrollHeight > this._parent.clientHeight;
-        }
-
         if (this._currentPosition === 'top') {
             this._renderer.addClass(this._dropdown, TOP_CSS_CLASS);
             this._renderer.removeClass(this._dropdown, BOTTOM_CSS_CLASS);
@@ -214,15 +206,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (this.appendTo) {
-
-          if (!hasVerticalScrollbar) {
-              this._renderer.addClass(this._parent, 'ng-select-hide-overflow');
-          }
-
-          this._updatePosition();
-          setTimeout(() => {
-              this._renderer.removeClass(this._parent, 'ng-select-hide-overflow');
-          })
+            this._updatePosition();
         }
 
         this._dropdown.style.opacity = '1';
