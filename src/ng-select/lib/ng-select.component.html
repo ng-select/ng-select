@@ -32,6 +32,7 @@
                    [attr.tabindex]="tabIndex"
                    [readOnly]="!searchable || itemsList.maxItemsSelected"
                    [disabled]="disabled"
+                   [autocomplete]="autocomplete"
                    [value]="searchTerm ? searchTerm : ''"
                    (input)="filter(searchInput.value)"
                    (compositionstart)="onCompositionStart()"

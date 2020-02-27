@@ -124,6 +124,7 @@ map: {
 | addTagText | `string` | `Add item` | no | Set custom text when using tagging |
 | appearance | `string` | `underline` | no | Allows to select dropdown appearance. Set to `outline` to add border instead of underline (applies only to Material theme) |
 | appendTo | `string` |  null | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative` |
+| autocomplete | `string` | `on` | no | Set the autocomplete attribute of the input so browsers can autofill.
 | bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
 | bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |
 | [closeOnSelect] | `boolean` |  true | no | Whether to close the menu when a value is selected |
