@@ -427,6 +427,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.isOpen = false;
         if (!this._editableSearchTerm) {
             this._clearSearch();
+        } else {
+            this.itemsList.resetFilteredItems();
         }
         this.itemsList.unmarkItem();
         this._onTouched();
@@ -457,10 +459,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.itemsList.select(item);
             if (this.clearSearchOnAdd && !this._editableSearchTerm) {
                 this._clearSearch();
-            }
-
-            if (this._editableSearchTerm) {
-                this._changeSearch(item.label);
             }
 
             this._updateNgModel();
