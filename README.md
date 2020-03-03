@@ -153,6 +153,7 @@ map: {
 | [searchWhileComposing] | `boolean` | `true` | no | Whether items should be filtered while composition started |
 | [trackByFn] | `(item: any) => any` | `null` | no | Provide custom trackBy function |
 | [clearSearchOnAdd] | `boolean` | `true` | no | Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false` |
+| [editableSearchTerm] | `boolean` |  `false` | no | Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`. |
 | [selectOnTab] | `boolean` | `false` | no | Select marked dropdown item using tab. Default `false`|
 | [openOnEnter] | `boolean` | `true` | no | Open dropdown using enter. Default `true`|
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |
