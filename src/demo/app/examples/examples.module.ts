@@ -46,7 +46,7 @@ import { TemplateOptionExampleComponent } from './template-option-example/templa
 import { TemplateSearchExampleComponent } from './template-search-example/template-search-example.component';
 import { VirtualScrollExampleComponent } from './virtual-scroll-example/virtual-scroll-example.component';
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
-
+import { SearchClearOnClickExampleComponent} from './search-clear-on-click-example/search-clear-on-click-example.component';
 
 const examples = [DataSourceBackendExampleComponent,
     DataSourceArrayExampleComponent,
@@ -91,6 +91,7 @@ const examples = [DataSourceBackendExampleComponent,
     GroupSelectableHiddenExampleComponent,
     GroupChildrenExampleComponent,
     SearchEditableExampleComponent,
+    SearchClearOnClickExampleComponent
 ];
 
 @NgModule({
