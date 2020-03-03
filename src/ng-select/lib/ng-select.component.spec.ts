@@ -3803,6 +3803,64 @@ describe('NgSelectComponent', () => {
             expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length)
         }))
     })
+
+    describe('Clear on Click', () => {
+        let fixture: ComponentFixture<NgSelectTestCmp>;
+        let select: NgSelectComponent;
+        let input: HTMLInputElement;
+
+        beforeEach(() => {
+            fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<div id="outside"></div><br/>
+                        <ng-select [items]="cities"
+                        [clearOnClick]="true"
+                        bindValue="id"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+            select = fixture.componentInstance.select;
+            input = select.searchInput.nativeElement;
+        });
+
+        it('should store the value and clear the internal model on open, without emitting', fakeAsync(() => {
+            expect(fixture.componentInstance.select.clearOnClick).toBeTruthy();
+            const selectedCity = fixture.componentInstance.cities[0];
+            fixture.componentInstance.selectedCity = selectedCity.id;
+            tickAndDetectChanges(fixture);
+            input.click();
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.selectedCity).toEqual(selectedCity.id);
+            expect(select.selectedItems.length).toEqual(0);
+        }));
+
+        it('should restore the value and the internal model on outside click, without emitting', fakeAsync(() => {
+            const selectedCity = fixture.componentInstance.cities[0];
+            fixture.componentInstance.selectedCity = selectedCity.id;
+            tickAndDetectChanges(fixture);
+            input.click();
+            tickAndDetectChanges(fixture);
+            document.getElementById('outside').click();
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.selectedCity).toEqual(selectedCity.id);
+            expect(select.selectedItems.length).toEqual(1);
+            expect(select.selectedItems[0]).toEqual(selectedCity);
+        }));
+
+        it('should properly update the model when a new selection is made', fakeAsync(() => {
+            const selectedCity = fixture.componentInstance.cities[0];
+            const secondSelectedCity = fixture.componentInstance.cities[1];
+            fixture.componentInstance.selectedCity = selectedCity.id;
+            tickAndDetectChanges(fixture);
+            input.click();
+            tickAndDetectChanges(fixture);
+            selectOption(fixture, KeyCode.ArrowDown, 1);
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.selectedCity).toEqual(secondSelectedCity.id);
+            expect(select.selectedItems.length).toEqual(1);
+            expect(select.selectedItems[0]).toEqual(secondSelectedCity);
+        }));
+    });
 });
 
 
