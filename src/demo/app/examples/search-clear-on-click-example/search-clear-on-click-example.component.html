@@ -1,0 +1,13 @@
+<p class="card-text">
+    By default, ng-select does not clear the current value displayed until the user starts typing. You can clear the search value when the user clicks on the component by setting <b>[clearOnClick]</b>
+    input to <b>true</b>. Closing the dropdown without a new selection will restore the previous selection.
+</p>
+
+<ng-select [items]="people$ | async"
+           bindLabel="name"
+           bindValue="id"
+           [clearOnClick]="true"
+           [(ngModel)]="selectedPersonId">
+</ng-select>
+
+<br/>Selected: {{selectedPersonId}}

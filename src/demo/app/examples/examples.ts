@@ -41,6 +41,7 @@ import { GroupSelectableExampleComponent } from './group-selectable-example/grou
 import { GroupSelectableHiddenExampleComponent } from './group-selectable-hidden-example/group-selectable-hidden-example.component';
 import { GroupChildrenExampleComponent } from './group-children-example/group-children-example.component';
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
+import { SearchClearOnClickExampleComponent } from './search-clear-on-click-example/search-clear-on-click-example.component';
 
 export interface Example {
     component: any;
@@ -95,6 +96,10 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
     'search-default-example': {
         component: SearchDefaultExampleComponent,
         title: 'Default search example'
+    },
+    'search-clear-on-click-example': {
+        component: SearchClearOnClickExampleComponent,
+        title: 'Clear on click search example'
     },
     'search-custom-example': {
         component: SearchCustomExampleComponent,

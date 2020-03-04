@@ -111,6 +111,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() searchWhileComposing = true;
     @Input() minTermLength = 0;
     @Input() editableSearchTerm = false;
+    @Input() clearOnClick = false;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
@@ -197,6 +198,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _compareWith: CompareWithFn;
     private _clearSearchOnAdd: boolean;
     private _isComposing = false;
+    private _priorSelection = [];
+
+    private get _clearOnClick(): boolean {
+        return this.clearOnClick && !this.editableSearchTerm && !this.multiple;
+    }
+
     private get _editableSearchTerm(): boolean {
         return this.editableSearchTerm && !this.multiple;
     }
@@ -412,6 +419,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
         this.isOpen = true;
+        if (this._clearOnClick) {
+            this._clearSelectionWithSave();
+        }
         this.itemsList.markSelectedOrDefault(this.markFirst);
         this.openEvent.emit();
         if (!this.searchTerm) {
@@ -427,6 +437,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.isOpen = false;
         if (!this._editableSearchTerm) {
             this._clearSearch();
+            if (this._clearOnClick) {
+               this._restorePriorSelection();
+            }
         } else {
             this.itemsList.resetFilteredItems();
         }
@@ -794,6 +807,21 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
 
         this._cd.markForCheck();
+    }
+
+    private _clearSelectionWithSave() {
+        this._priorSelection = this.itemsList.selectedItems;
+        this.itemsList.clearSelected();
+    }
+
+    // Only restore the prior value if new selections were not made
+    private _restorePriorSelection() {
+        if ( !this.hasValue ) {
+            this._priorSelection.forEach(item => {
+                this.itemsList.select(item)
+            })
+        }
+        this._priorSelection = [];
     }
 
     private _clearSearch() {
