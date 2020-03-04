@@ -438,7 +438,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this._editableSearchTerm) {
             this._clearSearch();
             if (this._clearOnClick) {
-               this._unclearSelection();
+               this._restorePriorSelection();
             }
         } else {
             this.itemsList.resetFilteredItems();
@@ -815,7 +815,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     // Only restore the prior value if new selections were not made
-    private _unclearSelection() {
+    private _restorePriorSelection() {
         if ( !this.hasValue ) {
             this._priorSelection.forEach(item => {
                 this.itemsList.select(item)
