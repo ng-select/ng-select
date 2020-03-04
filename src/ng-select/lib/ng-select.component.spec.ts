@@ -3828,7 +3828,7 @@ describe('NgSelectComponent', () => {
             const selectedCity = fixture.componentInstance.cities[0];
             fixture.componentInstance.selectedCity = selectedCity.id;
             tickAndDetectChanges(fixture);
-            input.click();
+            fixture.componentInstance.select.open();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.selectedCity).toEqual(selectedCity.id);
             expect(select.selectedItems.length).toEqual(0);
@@ -3838,13 +3838,13 @@ describe('NgSelectComponent', () => {
             const selectedCity = fixture.componentInstance.cities[0];
             fixture.componentInstance.selectedCity = selectedCity.id;
             tickAndDetectChanges(fixture);
-            input.click();
+            fixture.componentInstance.select.open();
             tickAndDetectChanges(fixture);
             document.getElementById('outside').click();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.selectedCity).toEqual(selectedCity.id);
             expect(select.selectedItems.length).toEqual(1);
-            expect(select.selectedItems[0]).toEqual(selectedCity);
+            expect(select.selectedItems[0].value).toEqual(selectedCity);
         }));
 
         it('should properly update the model when a new selection is made', fakeAsync(() => {
@@ -3852,13 +3852,13 @@ describe('NgSelectComponent', () => {
             const secondSelectedCity = fixture.componentInstance.cities[1];
             fixture.componentInstance.selectedCity = selectedCity.id;
             tickAndDetectChanges(fixture);
-            input.click();
+            fixture.componentInstance.select.open();
             tickAndDetectChanges(fixture);
             selectOption(fixture, KeyCode.ArrowDown, 1);
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.selectedCity).toEqual(secondSelectedCity.id);
             expect(select.selectedItems.length).toEqual(1);
-            expect(select.selectedItems[0]).toEqual(secondSelectedCity);
+            expect(select.selectedItems[0].value).toEqual(secondSelectedCity);
         }));
     });
 });
