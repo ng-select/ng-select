@@ -3834,13 +3834,16 @@ describe('NgSelectComponent', () => {
             expect(select.selectedItems.length).toEqual(0);
         }));
 
-        it('should restore the value and the internal model on outside click, without emitting', fakeAsync(() => {
+        it('should restore the value and the internal model on close, if no selection was made, without emitting', fakeAsync(() => {
             const selectedCity = fixture.componentInstance.cities[0];
             fixture.componentInstance.selectedCity = selectedCity.id;
+            selectOption(fixture, KeyCode.ArrowDown, 0);
             tickAndDetectChanges(fixture);
+            expect(select.selectedItems.length).toEqual(1);
             fixture.componentInstance.select.open();
             tickAndDetectChanges(fixture);
-            document.getElementById('outside').click();
+            expect(select.selectedItems.length).toEqual(0);
+            fixture.componentInstance.select.close();
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.selectedCity).toEqual(selectedCity.id);
             expect(select.selectedItems.length).toEqual(1);
