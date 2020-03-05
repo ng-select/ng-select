@@ -229,8 +229,21 @@
         .ng-option {
             box-sizing: border-box;
             cursor: pointer;
-            display: block;
-            @include wrapt-text();
+            display: grid;
+            grid-template-columns: 1em 1fr;
+            gap: 0 .5em;
+            grid-template-areas:
+                "selected-icon option-text";
+
+            .ng-option__selected-icon {
+                grid-area: selected-icon;
+                width: 100%;
+                height: 1.6em;
+            }
+
+            .ng-option-label {
+                grid-area: option-text;
+            }
 
             .highlighted {
                 font-weight: bold;
