@@ -16,7 +16,7 @@
                  class="ng-value"
                  [id]="item.htmlId"
                  tabindex="-1"
-                 role="option"
+                 [attr.role]="multiple ? 'option' : null"
                  [attr.aria-disabled]="item.disabled"
                  (blur)="onTagBlur($event)"
                  aria-selected="true">
