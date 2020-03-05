@@ -289,6 +289,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 switch ($event.which) {
                     case KeyCode.ArrowDown:
                         this._handleArrowDown($event);
+                        console.log('arrow down')
                         break;
                     case KeyCode.ArrowUp:
                         this._handleArrowUp($event);
@@ -331,36 +332,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                         break;
                 }
             }
-            this.handleKeyCode($event)
         } else if ($event.key && $event.key.length === 1) {
             this._keyPress$.next($event.key.toLocaleLowerCase());
-        }
-    }
-
-    handleKeyCode($event: KeyboardEvent) {
-        switch ($event.which) {
-            case KeyCode.ArrowDown:
-                this._handleArrowDown($event);
-                break;
-            case KeyCode.ArrowUp:
-                this._handleArrowUp($event);
-                break;
-            case KeyCode.Space:
-                this._handleSpace($event);
-                break;
-            case KeyCode.Enter:
-                this._handleEnter($event);
-                break;
-            case KeyCode.Tab:
-                this._handleTab($event);
-                break;
-            case KeyCode.Esc:
-                this.close();
-                $event.preventDefault();
-                break;
-            case KeyCode.Backspace:
-                this._handleBackspace();
-                break
         }
     }
 
