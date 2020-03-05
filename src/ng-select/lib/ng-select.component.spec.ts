@@ -10,6 +10,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 import { NgSelectModule } from './ng-select.module';
 import { Subject } from 'rxjs';
 import { NgSelectConfig } from './config.service';
+import { createComponent } from '@angular/compiler/src/core';
 
 describe('NgSelectComponent', () => {
 
@@ -3689,6 +3690,43 @@ describe('NgSelectComponent', () => {
 
             selectOption(fixture, KeyCode.ArrowDown, 0);
             expect(fixture.componentInstance.selectedAccount).toBe('United States');
+        }));
+        it('Should have class ng-select', fakeAsync(()=>{
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindLabel="name"
+                        bindValue="email"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+                fixture.detectChanges();
+                const element = fixture.elementRef.nativeElement;
+                const elClasses:DOMTokenList = element.children[0].classList;
+                const hasClass = elClasses.contains('ng-select')
+
+            
+            expect(hasClass).toBe(true)
+        }));
+        it('Should have class ng-select and test', fakeAsync(()=>{
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindLabel="name"
+                        bindValue="email"
+                        [(ngModel)]="selectedAccount"
+                        [class]="'test'">
+                </ng-select>`);
+
+                fixture.detectChanges();
+                const element = fixture.elementRef.nativeElement;
+                const elClasses:DOMTokenList = element.children[0].classList;
+                const hasClass = elClasses.contains('ng-select') && elClasses.contains('test');
+
+            
+            expect(hasClass).toBe(true);
         }));
     });
 
