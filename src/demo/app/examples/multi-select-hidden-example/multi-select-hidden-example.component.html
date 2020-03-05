@@ -1,0 +1,11 @@
+<p>Selected items won't appear among dropdown options</p>
+
+<ng-select
+    [items]="people$ | async"
+    [multiple]="true"
+    [closeOnSelect]="false"
+    [hideSelected]="true"
+    bindLabel="name"
+    placeholder="Select people"
+    [(ngModel)]="selectedPeople">
+</ng-select>

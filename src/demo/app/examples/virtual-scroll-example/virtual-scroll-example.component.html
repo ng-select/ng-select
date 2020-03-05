@@ -1,0 +1,21 @@
+<p>
+    In this example we are loading many items but only ~30 of them are rendered in the DOM.
+    This allows to load as big data as you want.
+</p>
+
+<ng-select [items]="photosBuffer"
+           [virtualScroll]="true"
+           [loading]="loading"
+           bindLabel="title"
+           bindValue="thumbnailUrl"
+           placeholder="Select photo"
+           appendTo="body"
+           (scroll)="onScroll($event)"
+           (scrollToEnd)="onScrollToEnd()">
+    <ng-template ng-header-tmp>
+        <small class="form-text text-muted">Loaded {{photosBuffer.length}} of {{photos.length}}</small>
+    </ng-template>
+    <ng-template ng-option-tmp let-item="item" let-index="index">
+        <b>{{index}}</b> {{item.title}}
+    </ng-template>
+</ng-select>

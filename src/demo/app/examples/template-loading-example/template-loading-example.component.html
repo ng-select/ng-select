@@ -1,0 +1,12 @@
+<p>Custom loading spinner using <b>ng-loadingspinner-tmp</b></p>
+
+<ng-select [loading]="true" [items]="cities" bindLabel="name" bindValue="name">
+    <ng-template ng-loadingspinner-tmp>
+        <div class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </ng-template>
+</ng-select>
