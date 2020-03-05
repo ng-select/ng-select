@@ -7,7 +7,7 @@ node ../../node_modules/standard-version/bin/cli.js --infile ../../CHANGELOG.md
 cd ../..
 
 echo build lib
-yarn run build
+npm run build
 
 echo push tags
 git push --follow-tags origin master
@@ -15,4 +15,4 @@ git push --follow-tags origin master
 echo push to npm
 cp README.md ./dist/ng-select/
 cd ./dist/ng-select/
-yarn publish --access=public
+npm publish --access=public
