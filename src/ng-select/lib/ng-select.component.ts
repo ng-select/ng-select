@@ -186,7 +186,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     element: HTMLElement;
     focused: boolean;
     escapeHTML = true;
-    useDefaultClass:boolean = true;
+    useDefaultClass = true;
 
     private _items = [];
     private _itemsAreUsed: boolean;
