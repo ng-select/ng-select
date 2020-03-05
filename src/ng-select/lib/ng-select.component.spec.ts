@@ -3691,7 +3691,7 @@ describe('NgSelectComponent', () => {
             selectOption(fixture, KeyCode.ArrowDown, 0);
             expect(fixture.componentInstance.selectedAccount).toBe('United States');
         }));
-        it('Should have class ng-select', fakeAsync(()=>{
+        it('Should have class ng-select', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
                 `<ng-select [items]="accounts"
@@ -3703,13 +3703,13 @@ describe('NgSelectComponent', () => {
 
                 fixture.detectChanges();
                 const element = fixture.elementRef.nativeElement;
-                const elClasses:DOMTokenList = element.children[0].classList;
+                const elClasses: DOMTokenList = element.children[0].classList;
                 const hasClass = elClasses.contains('ng-select')
 
             
             expect(hasClass).toBe(true)
         }));
-        it('Should have class ng-select and test', fakeAsync(()=>{
+        it('Should have class ng-select and test', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectGroupingTestCmp,
                 `<ng-select [items]="accounts"
@@ -3722,7 +3722,7 @@ describe('NgSelectComponent', () => {
 
                 fixture.detectChanges();
                 const element = fixture.elementRef.nativeElement;
-                const elClasses:DOMTokenList = element.children[0].classList;
+                const elClasses: DOMTokenList = element.children[0].classList;
                 const hasClass = elClasses.contains('ng-select') && elClasses.contains('test');
 
             
