@@ -14,7 +14,7 @@
             <div #tag *ngFor="let item of selectedItems; trackBy: trackByOption"
                  [class.ng-value-disabled]="item.disabled"
                  class="ng-value"
-                 [id]="item.htmlId"
+                 id="{{ item.htmlId }}_selected"
                  tabindex="-1"
                  [attr.role]="multiple ? 'option' : null"
                  [attr.aria-disabled]="item.disabled"
