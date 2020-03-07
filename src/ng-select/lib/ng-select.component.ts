@@ -71,7 +71,7 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'role': 'listbox',
-        'class': 'ng-select',
+        '[class.ng-select]': 'useDefaultClass',
         '[class.ng-select-single]': '!multiple',
     }
 })
@@ -186,6 +186,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     element: HTMLElement;
     focused: boolean;
     escapeHTML = true;
+    useDefaultClass = true;
 
     private _items = [];
     private _itemsAreUsed: boolean;
