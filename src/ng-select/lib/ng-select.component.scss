@@ -249,7 +249,8 @@
                 font-weight: bold;
                 text-decoration: underline;
             }
-            &.disabled {
+            
+            &.ng-option-disabled {
                 cursor: default;
             }
         }
