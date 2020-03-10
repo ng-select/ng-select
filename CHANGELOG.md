@@ -2,6 +2,10 @@
 
 Started to maintain versions made from Common App for forked version.
 
+## 2.5.2
+
+- feat: add wrapping span to non-value options for spanning new grid setup
+
 ## 2.5.1
 
 - fix: add utility class to help non-standard options span grid-columns

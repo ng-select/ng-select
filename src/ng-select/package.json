@@ -1,6 +1,6 @@
 {
   "name": "@commonapp/ng-select",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "A CommonApp fork of ng-select to improve functionality within the CommonApp.",
   "author": "@commonapp",
   "license": "MIT",
