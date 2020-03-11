@@ -368,10 +368,10 @@ export class ItemsList {
                 items.push(...withoutGroup.map(x => ({ ...x, index: i++ })));
                 continue;
             }
-
+            const parentLabel = (<NgOption>key).label;
             const isObjectKey = isObject(key);
             const parent: NgOption = {
-                label: isObjectKey ? '' : String(key),
+                label: isObjectKey ? parentLabel : String(key),
                 children: undefined,
                 parent: null,
                 index: i++,
