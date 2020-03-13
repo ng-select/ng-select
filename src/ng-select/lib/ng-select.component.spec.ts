@@ -1753,11 +1753,11 @@ describe('NgSelectComponent', () => {
         it('should display custom placeholder template', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select [items]="cities" [(ngModel)]="selectedCity">
-                    <ng-template ng-placeholder-tmp let-item="item">
+                `<ng-select [items]="citiesWithPopulation" [(ngModel)]="selectedCity">
+                    <ng-template ng-placeholder-tmp>
                         <div class="custom-placeholder">
-                            <p>{{item.name}}</p>
-                            <p>{{item.population}}</p>
+                            <p>Name</p>
+                            <p>Population</p>
                         </div>
                     </ng-template>
                 </ng-select>`);
@@ -1768,7 +1768,6 @@ describe('NgSelectComponent', () => {
 
             const el = fixture.debugElement.query(By.css('.custom-placeholder'));
             expect(el).not.toBeNull();
-            expect(el).toBeNull()
             expect(el.nativeElement).not.toBeNull();
         }));
 
