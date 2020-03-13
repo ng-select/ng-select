@@ -1,10 +1,7 @@
  [![npm version](https://badge.fury.io/js/%40ng-select%2Fng-select.svg)](https://badge.fury.io/js/%40ng-select%2Fng-select)
-[![Build Status][travis-badge]][travis-badge-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![gzip bundle size](http://img.badgesize.io/https://unpkg.com/@ng-select/ng-select@latest/bundles/ng-select-ng-select.umd.min.js?compression=gzip&style=flat-square)][ng-select-url]
 
-[travis-badge]: https://travis-ci.org/ng-select/ng-select.svg?branch=master
-[travis-badge-url]: https://travis-ci.org/ng-select/ng-select
 [coveralls-image]: https://coveralls.io/repos/github/ng-select/ng-select/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/ng-select/ng-select?branch=master
 [ng-select-url]: https://unpkg.com/@ng-select/ng-select@latest
@@ -156,6 +153,7 @@ map: {
 | [searchWhileComposing] | `boolean` | `true` | no | Whether items should be filtered while composition started |
 | [trackByFn] | `(item: any) => any` | `null` | no | Provide custom trackBy function |
 | [clearSearchOnAdd] | `boolean` | `true` | no | Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false` |
+| [editableSearchTerm] | `boolean` |  `false` | no | Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`. |
 | [selectOnTab] | `boolean` | `false` | no | Select marked dropdown item using tab. Default `false`|
 | [openOnEnter] | `boolean` | `true` | no | Open dropdown using enter. Default `true`|
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |

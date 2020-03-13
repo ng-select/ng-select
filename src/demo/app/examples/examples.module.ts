@@ -46,6 +46,7 @@ import { TemplateOptionExampleComponent } from './template-option-example/templa
 import { TemplateSearchExampleComponent } from './template-search-example/template-search-example.component';
 import { VirtualScrollExampleComponent } from './virtual-scroll-example/virtual-scroll-example.component';
 import { TemplatePlaceholderExampleComponent } from './template-placeholder-example/template-placeholder-example.component';
+import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
 
 
 const examples = [
@@ -91,7 +92,8 @@ const examples = [
     GroupFunctionExampleComponent,
     GroupSelectableExampleComponent,
     GroupSelectableHiddenExampleComponent,
-    GroupChildrenExampleComponent
+    GroupChildrenExampleComponent,
+    SearchEditableExampleComponent,
 ];
 
 @NgModule({
