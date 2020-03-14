@@ -456,6 +456,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     select(item: NgOption) {
+        // set _isComposing to false to make sure, because (compositionend) inputs event not always called
+        // by browser. for example on android chrome
+        this._isComposing = false;
         if (!item.selected) {
             this.itemsList.select(item);
             if (this.clearSearchOnAdd && !this._editableSearchTerm) {
