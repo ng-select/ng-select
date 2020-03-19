@@ -18,7 +18,8 @@
                  tabindex="-1"
                  role="option"
                  [attr.aria-disabled]="item.disabled"
-                 aria-selected="true">
+                 aria-selected="true"
+                 (blur)="onTagBlur($event)">
                 <ng-template #defaultLabelTemplate>
                     <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML" aria-hidden="true"></span>
                     <span class="ng-value-icon left" (click)="unselect(item);" aria-hidden="true">×</span>
