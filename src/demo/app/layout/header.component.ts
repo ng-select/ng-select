@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
 // @ts-ignore
-import * as antDesignTheme from '../../../ng-select/themes/ant.design.theme.scss';
+import antDesignTheme from '../../../ng-select/themes/ant.design.theme.scss';
 // @ts-ignore
-import * as defaultTheme from '../../../ng-select/themes/default.theme.scss';
+import defaultTheme from '../../../ng-select/themes/default.theme.scss';
 // @ts-ignore
-import * as materialTheme from '../../../ng-select/themes/material.theme.scss';
+import materialTheme from '../../../ng-select/themes/material.theme.scss';
 
 type langDir = 'ltr' | 'rtl';
 
@@ -75,6 +75,7 @@ export class LayoutHeaderComponent implements AfterViewInit {
         setTimeout(() => {
             this.style = document.createElement('style');
             this.style.type = 'text/css';
+            this.style.id = 'MyStyleTag'
             this.style.innerHTML = defaultTheme;
             document.getElementsByTagName('head')[0].appendChild(this.style);
         }, 100);
