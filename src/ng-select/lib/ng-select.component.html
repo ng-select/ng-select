@@ -1,11 +1,14 @@
 <div
-    (mousedown)="handleMousedown($event)"
+    class="ng-select-container"
     [class.ng-appearance-outline]="appearance === 'outline'"
     [class.ng-has-value]="hasValue"
-    class="ng-select-container">
+    [attr.aria-labelledby]="multiple ? labelForId : null"
+    [attr.aria-multiselectable]="multiple ? 'true' : null"
+    (mousedown)="handleMousedown($event)"
+    >
 
     <div class="ng-value-container">
-        <div class="ng-placeholder">{{placeholder}}</div>
+        <!-- <div class="ng-placeholder" aria-hidden="true">{{placeholder}}</div> -->
 
         <ng-container *ngIf="!multiLabelTemplate && selectedItems.length > 0">
             <div [class.ng-value-disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems; trackBy: trackByOption" tabindex="0" aria-label="{item.label}">
@@ -28,7 +31,9 @@
 
         <div class="ng-input">
             <input #searchInput
+                   role="combobox"
                    [attr.id]="labelForId"
+                   [attr.placeholder]="placeholder"
                    [attr.tabindex]="tabIndex"
                    [readOnly]="!searchable || itemsList.maxItemsSelected"
                    [disabled]="disabled"
@@ -39,10 +44,12 @@
                    (focus)="onInputFocus($event)"
                    (blur)="onInputBlur($event)"
                    (change)="$event.stopPropagation()"
-                   role="combobox"
+                   [attr.aria-autocomplete]="searchable ? 'both' : null"
+                   [attr.aria-haspopup]="true"
+                   [attr.aria-controls]="isOpen ? dropdownId : null"
                    [attr.aria-expanded]="isOpen"
-                   [attr.aria-owns]="isOpen ? dropdownId : null"
-                   [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null">
+                   [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
+                   >
         </div>
     </div>
 
