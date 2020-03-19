@@ -17,7 +17,8 @@ import {
     SimpleChanges,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    HostBinding
 } from '@angular/core';
 import { animationFrameScheduler, asapScheduler, fromEvent, merge, Subject } from 'rxjs';
 import { auditTime, takeUntil } from 'rxjs/operators';
@@ -51,6 +52,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
     `
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
+    @HostBinding('attr.role') dropdownRole = 'listbox';
 
     @Input() items: NgOption[] = [];
     @Input() markedItem: NgOption;
