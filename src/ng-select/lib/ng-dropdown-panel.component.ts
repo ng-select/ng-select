@@ -52,7 +52,6 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
     `
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
-    @HostBinding('attr.role') dropdownRole = 'listbox';
 
     @Input() items: NgOption[] = [];
     @Input() markedItem: NgOption;
@@ -63,6 +62,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     @Input() headerTemplate: TemplateRef<any>;
     @Input() footerTemplate: TemplateRef<any>;
     @Input() filterValue: string = null;
+    @Input() dropdownId: string;
 
     @Output() update = new EventEmitter<any[]>();
     @Output() scroll = new EventEmitter<{ start: number; end: number }>();
@@ -72,6 +72,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     @ViewChild('content', { read: ElementRef, static: true }) contentElementRef: ElementRef;
     @ViewChild('scroll', { read: ElementRef, static: true }) scrollElementRef: ElementRef;
     @ViewChild('padding', { read: ElementRef, static: true }) paddingElementRef: ElementRef;
+
+    @HostBinding('attr.role') role = 'listbox';
+    @HostBinding('attr.id') id = this.dropdownId;
 
     private readonly _destroy$ = new Subject<void>();
     private readonly _dropdown: HTMLElement;

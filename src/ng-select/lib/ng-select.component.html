@@ -105,17 +105,20 @@
                    [id]="dropdownId">
 
     <ng-container>
-        <div class="ng-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)" (mouseover)="onItemHover(item)"
-                *ngFor="let item of viewPortItems; trackBy: trackByOption"
-                [class.ng-option-disabled]="item.disabled"
-                [class.ng-option-selected]="item.selected"
-                [class.ng-optgroup]="item.children"
-                [class.ng-option]="!item.children"
-                [class.ng-option-child]="!!item.parent"
-                [class.ng-option-marked]="item === itemsList.markedItem"
-                [attr.aria-disabled]="item.disabled"
-                [attr.aria-selected]="item.selected"
-                [attr.id]="item?.htmlId">
+        <div class="ng-option"
+             [attr.role]="item.children ? 'group' : 'option'"
+             (click)="toggleItem(item)"
+             (mouseover)="onItemHover(item)"
+             *ngFor="let item of viewPortItems; trackBy: trackByOption"
+             [class.ng-option-disabled]="item.disabled"
+             [class.ng-option-selected]="item.selected"
+             [class.ng-optgroup]="item.children"
+             [class.ng-option]="!item.children"
+             [class.ng-option-child]="!!item.parent"
+             [class.ng-option-marked]="item === itemsList.markedItem"
+             [attr.aria-disabled]="item.disabled"
+             [attr.aria-selected]="item.selected"
+             [attr.id]="item?.htmlId">
 
             <ng-template #defaultOptionTemplate>
                 <span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
