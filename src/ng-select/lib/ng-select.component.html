@@ -1,17 +1,20 @@
-<div
-    class="ng-select-container"
-    [class.ng-appearance-outline]="appearance === 'outline'"
-    [class.ng-has-value]="hasValue"
-    [attr.aria-labelledby]="multiple ? labelForId : null"
-    [attr.aria-multiselectable]="multiple ? 'true' : null"
-    (mousedown)="handleMousedown($event)"
-    >
+<div class="ng-select-container"
+     [class.ng-appearance-outline]="appearance === 'outline'"
+     [class.ng-has-value]="hasValue"
+     [attr.aria-labelledby]="multiple ? labelForId : null"
+     [attr.aria-multiselectable]="multiple ? 'true' : null"
+     (mousedown)="handleMousedown($event)">
 
     <div class="ng-value-container">
-        <!-- <div class="ng-placeholder" aria-hidden="true">{{placeholder}}</div> -->
-
         <ng-container *ngIf="!multiLabelTemplate && selectedItems.length > 0">
-            <div [class.ng-value-disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems; trackBy: trackByOption" tabindex="0" aria-label="{item.label}">
+            <div class="ng-value"
+                 [class.ng-value-disabled]="item.disabled"
+                 [id]="item.htmlId"
+                 *ngFor="let item of selectedItems; trackBy: trackByOption" 
+                 tabindex="0"
+                 role="option"
+                 aria-label="{item.label}"
+                 aria-selected="true">
                 <ng-template #defaultLabelTemplate>
                     <button class="ng-value-icon left" (click)="unselect(item);" aria-label="{'Remove' + item.label}">×</button>
                     <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML" aria-hidden="true"></span>
@@ -64,7 +67,10 @@
     </ng-container>
 
     <span *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
-        <button class="ng-clear" aria-label="Clear option">×</button>
+        <button class="ng-clear"
+                aria-label="Clear option"
+                (keydown.enter)="$event.preventDefault(); $event.stopPropagation(); handleClearClick();"
+                (keydown.space)="$event.preventDefault(); $event.stopPropagation(); handleClearClick();">×</button>
     </span>
 
     <span class="ng-arrow-wrapper">
@@ -100,6 +106,7 @@
                 [class.ng-option]="!item.children"
                 [class.ng-option-child]="!!item.parent"
                 [class.ng-option-marked]="item === itemsList.markedItem"
+                [attr.aria-disabled]="item.disabled"
                 [attr.aria-selected]="item.selected"
                 [attr.id]="item?.htmlId">
 
