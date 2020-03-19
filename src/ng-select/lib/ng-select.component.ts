@@ -71,7 +71,6 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'role': 'listbox',
         '[class.ng-select]': 'useDefaultClass',
         '[class.ng-select-single]': '!multiple',
     }
