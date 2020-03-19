@@ -40,7 +40,7 @@
             <input #searchInput
                    role="combobox"
                    [attr.id]="labelForId"
-                   [attr.placeholder]="placeholder"
+                   [placeholder]="this.selectedItems && this.selectedItems.length ? '' : placeholder"
                    [attr.tabindex]="tabIndex"
                    [readOnly]="!searchable || itemsList.maxItemsSelected"
                    [required]="required"
@@ -52,6 +52,7 @@
                    (focus)="onInputFocus($event)"
                    (blur)="onInputBlur($event)"
                    (change)="$event.stopPropagation()"
+                   [attr.aria-describedby]="describedBy"
                    [attr.aria-autocomplete]="searchable ? 'both' : null"
                    [attr.aria-haspopup]="true"
                    [attr.aria-controls]="isOpen ? dropdownId : null"
