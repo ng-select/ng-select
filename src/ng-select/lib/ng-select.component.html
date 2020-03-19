@@ -1,7 +1,6 @@
 <div class="ng-select-container"
      [class.ng-appearance-outline]="appearance === 'outline'"
      [class.ng-has-value]="hasValue"
-     [attr.role]="multiple ? 'listbox' : null"
      [attr.aria-labelledby]="multiple ? labelForId : null"
      [attr.aria-multiselectable]="multiple ? 'true' : null"
      [tabindex]="(multiple && selectedItems.length > 0 && !focusedTag) ? 0 : -1"
@@ -43,7 +42,7 @@
                    [attr.id]="labelForId"
                    [placeholder]="this.selectedItems && this.selectedItems.length ? '' : placeholder"
                    [attr.tabindex]="tabIndex"
-                   [readOnly]="!searchable || itemsList.maxItemsSelected"
+                   [attr.readonly]="!searchable || itemsList.maxItemsSelected"
                    [required]="required"
                    [disabled]="disabled"
                    [value]="searchTerm ? searchTerm : ''"
@@ -55,9 +54,9 @@
                    (change)="$event.stopPropagation()"
                    [attr.aria-describedby]="describedBy"
                    [attr.aria-autocomplete]="searchable ? 'both' : null"
-                   [attr.aria-haspopup]="true"
+                   aria-haspopup="true"
                    [attr.aria-controls]="isOpen ? dropdownId : null"
-                   [attr.aria-expanded]="isOpen"
+                   [attr.aria-expanded]="isOpen ? 'true' : 'false'"
                    [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
                    [attr.aria-invalid]="invalid">
         </div>
