@@ -322,7 +322,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 this._handleBackspace();
                 break
         }
-      } else {
+      } else if ([KeyCode.Home, KeyCode.ArrowLeft, KeyCode.ArrowRight, KeyCode.End, KeyCode.Delete].includes($event.which)) {
         $event.preventDefault();
         $event.stopPropagation();
         switch ($event.which) {
