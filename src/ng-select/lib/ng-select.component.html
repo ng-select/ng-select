@@ -8,10 +8,10 @@
         <div class="ng-placeholder">{{placeholder}}</div>
 
         <ng-container *ngIf="!multiLabelTemplate && selectedItems.length > 0">
-            <div [class.ng-value-disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems; trackBy: trackByOption">
+            <div [class.ng-value-disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems; trackBy: trackByOption" tabindex="0" aria-label="{item.label}">
                 <ng-template #defaultLabelTemplate>
-                    <span class="ng-value-icon left" (click)="unselect(item);" aria-hidden="true">×</span>
-                    <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
+                    <button class="ng-value-icon left" (click)="unselect(item);" aria-label="{'Remove' + item.label}">×</button>
+                    <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML" aria-hidden="true"></span>
                 </ng-template>
 
                 <ng-template
