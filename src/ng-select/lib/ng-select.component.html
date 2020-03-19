@@ -43,6 +43,7 @@
                    [attr.placeholder]="placeholder"
                    [attr.tabindex]="tabIndex"
                    [readOnly]="!searchable || itemsList.maxItemsSelected"
+                   [required]="required"
                    [disabled]="disabled"
                    [value]="searchTerm ? searchTerm : ''"
                    (input)="filter(searchInput.value)"
