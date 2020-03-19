@@ -109,6 +109,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() tabIndex: number;
     @Input() readonly = false;
     @Input() required = false;
+    @Input() invalid = false;
     @Input() searchWhileComposing = true;
     @Input() minTermLength = 0;
     @Input() editableSearchTerm = false;
