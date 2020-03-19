@@ -1,10 +1,14 @@
 {
-  "name": "@ng-select/ng-select",
-  "version": "3.2.0",
-  "description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
+  "name": "@commonapp/ng-select",
+  "version": "3.0.0",
+  "description": "Common App fork of ng-select",
   "author": "@ng-select/ng-select",
+  "contributors": [
+    "Greg Bruening",
+    "Vamsi Dharmaji"
+  ],
   "license": "MIT",
-  "repository": "ng-select/ng-select",
+  "repository": "commonapp/ng-select",
   "engines": {
     "node": ">= 6.9.0",
     "npm": ">= 3.0.0"
