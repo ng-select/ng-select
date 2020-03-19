@@ -20,7 +20,7 @@
                  [attr.aria-disabled]="item.disabled"
                  aria-selected="true">
                 <ng-template #defaultLabelTemplate>
-                    <span class="ng-value-icon left" (click)="unselect(item);" attr.aria-label="{{ 'Remove' + item.label}} ">×</span>
+                    <span class="ng-value-icon left" (click)="unselect(item);" aria-hidden="true">×</span>
                     <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML" aria-hidden="true"></span>
                 </ng-template>
 
