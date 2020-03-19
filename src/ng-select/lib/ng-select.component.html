@@ -149,7 +149,9 @@
 
     <ng-container *ngIf="showNoItemsFound()">
         <ng-template #defaultNotFoundTemplate>
-            <div class="ng-option ng-option-disabled">{{notFoundText}} for "{{searchTerm}}"</div>
+            <div class="ng-option ng-option-disabled">
+                <span>{{notFoundText}} for "{{searchTerm}}"</span>
+            </div>
         </ng-template>
 
         <ng-template
@@ -160,7 +162,9 @@
 
     <ng-container *ngIf="showTypeToSearch()">
         <ng-template #defaultTypeToSearchTemplate>
-            <div class="ng-option ng-option-disabled">{{typeToSearchText}}</div>
+            <div class="ng-option ng-option-disabled">
+                <span>{{typeToSearchText}}</span>
+            </div>
         </ng-template>
 
         <ng-template
@@ -170,7 +174,9 @@
 
     <ng-container *ngIf="loading && itemsList.filteredItems.length === 0">
         <ng-template #defaultLoadingTextTemplate>
-            <div class="ng-option ng-option-disabled">{{loadingText}}</div>
+            <div class="ng-option ng-option-disabled">
+                {{loadingText}}
+            </div>
         </ng-template>
 
         <ng-template
