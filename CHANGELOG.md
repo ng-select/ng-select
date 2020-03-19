@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 3.0.0
+
+**Major release**
+Continued versioning from last iteration of CA release (2.7.*). This release is considered major as it was fully rolled back prior to CA changes, and a11y and styling changes were introduced manually to resolve merge issues and some poor branch management practices.
+
+
+
+---
+
 ## Since 3.2.0, notable changes are on [Releases Page](https://github.com/ng-select/ng-select/releases)
 
 ### [3.1.1](https://github.com/ng-select/ng-select/compare/v3.1.0...v3.1.1) (2019-10-19)

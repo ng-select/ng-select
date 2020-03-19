@@ -1,3 +1,5 @@
+> This is Common App's forked version of [ng-select](https://ng-select.github.io/). It is _heavily_ modified to meet the needs of the CA development team to ensure compatibility and accessibility of the plugin within our products.
+
  [![npm version](https://badge.fury.io/js/%40ng-select%2Fng-select.svg)](https://badge.fury.io/js/%40ng-select%2Fng-select)
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![gzip bundle size](http://img.badgesize.io/https://unpkg.com/@ng-select/ng-select@latest/bundles/ng-select-ng-select.umd.min.js?compression=gzip&style=flat-square)][ng-select-url]
