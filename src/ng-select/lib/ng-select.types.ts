@@ -12,11 +12,16 @@ export interface NgOption {
 }
 
 export enum KeyCode {
-    Tab = 9,
-    Enter = 13,
-    Esc = 27,
-    Space = 32,
     ArrowUp = 38,
     ArrowDown = 40,
-    Backspace = 8
+    ArrowLeft = 37,
+    ArrowRight = 39,
+    Backspace = 8,
+    Delete = 46,
+    Enter = 13,
+    Esc = 27,
+    End = 35,
+    Home = 36,
+    Space = 32,
+    Tab = 9
 }

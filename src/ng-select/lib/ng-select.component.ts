@@ -21,7 +21,8 @@ import {
     ContentChildren,
     QueryList,
     InjectionToken,
-    Attribute
+    Attribute,
+    ViewChildren
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil, startWith, tap, debounceTime, map, filter } from 'rxjs/operators';
@@ -174,6 +175,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ViewChild(forwardRef(() => NgDropdownPanelComponent), { static: false }) dropdownPanel: NgDropdownPanelComponent;
     @ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
+    @ViewChildren('tag') tagsList: QueryList<ElementRef>;
+
+    focusedTag: HTMLElement;
 
     @HostBinding('class.ng-select-disabled') get disabled() { return this.readonly || this._disabled };
 
@@ -292,6 +296,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     handleKeyCode($event: KeyboardEvent) {
+      if (!this.focusedTag) {
         switch ($event.which) {
             case KeyCode.ArrowDown:
                 this._handleArrowDown($event);
@@ -316,6 +321,27 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 this._handleBackspace();
                 break
         }
+      } else {
+        $event.preventDefault();
+        $event.stopPropagation();
+        switch ($event.which) {
+            case KeyCode.Home:
+                this._focusFirstTag();
+                break;
+            case KeyCode.ArrowLeft:
+                this._focusPreviousTag();
+                break;
+            case KeyCode.ArrowRight:
+                this._focusNextTag();
+                break;
+            case KeyCode.End:
+                this._focusLastTag();
+                break;
+            case KeyCode.Delete:
+                this._handleDelete();
+                break;
+        }
+      }
     }
 
     handleMousedown($event: MouseEvent) {
@@ -380,6 +406,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     writeValue(value: any | any[]): void {
         this.itemsList.clearSelected();
         this._handleWriteValue(value);
+        this._setInputValue();
         this._cd.markForCheck();
     }
 
@@ -465,6 +492,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this._updateNgModel();
             if (this.multiple) {
                 this.addEvent.emit(item.value);
+
+                if (this.clearSearchOnAdd) {
+                  this._clearSearch();
+                } 
             }
         }
 
@@ -611,6 +642,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.itemsList.markItem(item);
     }
 
+    onWidgetFocus() {
+      this._focusFirstTag();
+    }
+
+    onTagBlur($event) {
+      if (!$event.relatedTarget ||
+          ($event.relatedTarget && !$event.relatedTarget.classList.contains('ng-value'))) {
+        this.focusedTag = null;
+      }
+    }
+
     detectChanges() {
         if (!(<any>this._cd).destroyed) {
             this._cd.detectChanges();
@@ -671,6 +713,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 mapNgOptions(options);
                 handleOptionChange();
             });
+    }
+
+    private _setInputValue() {
+      if (!this.multiple && this.selectedItems.length) {
+        this.searchTerm = this.selectedItems[0].label;
+      }
     }
 
     private _isValidWriteValue(value: any): boolean {
@@ -922,6 +970,43 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.unselect(this.itemsList.lastSelectedItem);
         } else {
             this.clearModel();
+        }
+    }
+
+    private _focusFirstTag() {
+        this.focusedTag = this.tagsList.first.nativeElement;
+        this.focusedTag.focus();
+    }
+
+    private _focusPreviousTag() {
+        this.focusedTag = this.focusedTag.previousElementSibling.classList.contains('ng-value') ?
+            this.focusedTag.previousElementSibling : this.tagsList.last.nativeElement;
+        this.focusedTag.focus();
+    }
+
+    private _focusNextTag() {
+        this.focusedTag = this.focusedTag.nextElementSibling.classList.contains('ng-value') ?
+            this.focusedTag.nextElementSibling : this.tagsList.first.nativeElement;
+        this.focusedTag.focus();
+    }
+
+    private _focusLastTag() {
+        this.focusedTag = this.tagsList.last.nativeElement;
+        this.focusedTag.focus();
+    }
+
+    private _handleDelete() {
+        if (this.focusedTag) {
+            const selected = this.selectedItems.find(item => item.htmlId === this.focusedTag.id);
+            this.unselect(selected);
+            this.detectChanges();
+            if (this.tagsList.length) {
+                this.focusedTag = this.tagsList.last.nativeElement;
+                this.focusedTag.focus();
+            } else {
+                this.focus(); // NOTE: unneeded as unselect() does focus the input already?
+            }
+
         }
     }
 
