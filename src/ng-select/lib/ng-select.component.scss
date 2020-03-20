@@ -3,7 +3,8 @@ $ng-select-border-radius: 4px;
 $ng-select-error: #ff0011;
 $ng-select-dropdown-background: #fff;
 
-$ng-value-background-color: #ddd;
+$ng-value-background-color: #ededed;
+$ng-value-border-radius: 999px;
 
 $ng-option-active-background: #333;
 $ng-option-active-color: #fff;
@@ -91,7 +92,7 @@ $ng-option-active-color: #fff;
     flex: 1;
     min-height: 40px;
     height: 100%;
-    padding: .5rem .25rem .5rem .75rem;
+    padding: .6rem .25rem .7rem .75rem;
 
     .ng-input {
       opacity: 0;
@@ -142,7 +143,7 @@ $ng-option-active-color: #fff;
       margin-bottom: .25rem;
       padding: .5rem 2rem .5rem .75rem;
       background-color: $ng-value-background-color;
-      border-radius: $ng-select-border-radius;
+      border-radius: $ng-value-border-radius;
       font-size: 12px;
       line-height: 1.2;
 
@@ -175,9 +176,11 @@ $ng-option-active-color: #fff;
     }
 
     .ng-select-container.ng-has-value {
-      // Remove doubled bottom padding
+      // Magic numbers to prevent multi-selected tags from altering select size
       .ng-value-container {
-        padding-bottom: .25rem;
+        margin-top: -.2rem;
+        margin-left: -.35rem;
+        padding-bottom: .2rem;
       }
 
       // Align input text with selected tags
