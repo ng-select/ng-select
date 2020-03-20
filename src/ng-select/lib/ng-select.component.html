@@ -44,7 +44,7 @@
                    [attr.id]="labelForId"
                    [placeholder]="this.selectedItems && this.selectedItems.length ? '' : placeholder"
                    [attr.tabindex]="tabIndex"
-                   [attr.readonly]="!searchable || itemsList.maxItemsSelected"
+                   [readonly]="!searchable || itemsList.maxItemsSelected"
                    [required]="required"
                    [disabled]="disabled"
                    [value]="searchTerm ? searchTerm : ''"
