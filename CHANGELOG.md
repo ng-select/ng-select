@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file. See [standa
 **Major release**
 Continued versioning from last iteration of CA release (2.7.*). This release is considered major as it was fully rolled back prior to CA changes, and a11y and styling changes were introduced manually to resolve merge issues and some poor branch management practices.
 
+**Features**
+- Improved accessibility
+- Updated styles to match new design system for Rec
+
+**Fixes**
+- Resolve issue where selected values and placeholders would not show up
 
 
 ---
