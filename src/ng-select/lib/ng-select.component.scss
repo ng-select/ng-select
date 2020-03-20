@@ -17,6 +17,8 @@ $ng-option-active-color: #fff;
 
 
 .ng-select {
+  font-family: 'Neutrif Studio', sans-serif;
+
   position: relative;
   display: block;
   background-color: rgb(255, 255, 255);
@@ -96,6 +98,7 @@ $ng-option-active-color: #fff;
 
       > input {
         width: 100%;
+        padding: 0;
         background: transparent;
         border: 0;
         box-shadow: none;
@@ -103,8 +106,6 @@ $ng-option-active-color: #fff;
 
         &[readonly] {
           user-select: none;
-          width: 0;
-          padding: 0;
         }
       }
     }
