@@ -282,9 +282,14 @@ $ng-option-active-color: #fff;
     cursor: pointer;
 
     .ng-option-icon {
+      display: none;
       grid-area: selected-icon;
       width: 100%;
       height: 1.5em;
+
+      &.is-selected {
+        display: block;
+      }
     }
 
     .ng-option-label {
