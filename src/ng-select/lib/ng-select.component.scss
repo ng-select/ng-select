@@ -266,6 +266,19 @@ $ng-option-active-color: #fff;
     min-width: min-content;
   }
 
+  .ng-dropdown-header,
+  .ng-dropdown-footer {
+    padding: .5rem .75rem; // Match option padding as a default
+  }
+
+  .ng-dropdown-header {
+    border-bottom: 1px solid #ededed;
+  }
+
+  .ng-dropdown-footer {
+    border-top: 1px solid #ededed;
+  }
+
   .ng-dropdown-panel-items {
     display: block;
     height: auto;
