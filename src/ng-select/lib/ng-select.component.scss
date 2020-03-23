@@ -88,9 +88,9 @@ $ng-option-active-color: #fff;
     grid-area: value;
     display: flex;
     flex: 1;
-    min-height: 40px;
+    min-height: 43px; // Ensure a minimum height when no value is chosen
     height: 100%;
-    padding: .6rem .25rem .7rem .75rem;
+    padding: .55rem .25rem .65rem .75rem;
 
     .ng-input {
       opacity: 0;
