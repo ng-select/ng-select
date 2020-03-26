@@ -1,7 +1,7 @@
 <div class="ng-select-container"
      [class.ng-appearance-outline]="appearance === 'outline'"
      [class.ng-has-value]="hasValue"
-     [attr.aria-labelledby]="multiple ? labelForId : null"
+     [attr.aria-labelledby]="multiple ? labelledBy : null"
      [attr.aria-multiselectable]="multiple ? 'true' : null"
      [tabindex]="(multiple && selectedItems.length > 0 && !focusedTag) ? 0 : -1"
      (mousedown)="handleMousedown($event)"
