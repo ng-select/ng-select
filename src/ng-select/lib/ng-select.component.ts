@@ -110,7 +110,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() readonly = false;
     @Input() searchWhileComposing = true;
     @Input() minTermLength = 0;
-    @Input() editableSearchTerm = false;
+    @Input() editableSearchTerm = true;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
     @Input() describedBy: string;
     @Input() labelledBy: string;
