@@ -42,27 +42,27 @@
 
         <div class="ng-input">
             <input #searchInput
-                   role="combobox"
                    [attr.id]="labelForId"
                    [placeholder]="this.selectedItems && this.selectedItems.length ? '' : placeholder"
-                   [attr.tabindex]="tabIndex"
-                   [readonly]="!searchable || itemsList.maxItemsSelected"
                    [required]="required"
+                   [readonly]="!searchable || itemsList.maxItemsSelected"
                    [disabled]="disabled"
                    [value]="searchTerm ? searchTerm : ''"
+                   [attr.tabindex]="tabIndex"
+                   role="combobox"
+                   [attr.aria-autocomplete]="searchable ? 'both' : null"
+                   [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
+                   [attr.aria-controls]="isOpen ? dropdownId : null"
+                   [attr.aria-describedby]="describedBy"
+                   [attr.aria-expanded]="isOpen ? 'true' : 'false'"
+                   aria-haspopup="true"
+                   [attr.aria-invalid]="invalid"
                    (input)="filter(searchInput.value)"
                    (compositionstart)="onCompositionStart()"
                    (compositionend)="onCompositionEnd(searchInput.value)"
-                   (focus)="onInputFocus($event)"
                    (blur)="onInputBlur($event)"
                    (change)="$event.stopPropagation()"
-                   [attr.aria-describedby]="describedBy"
-                   [attr.aria-autocomplete]="searchable ? 'both' : null"
-                   aria-haspopup="true"
-                   [attr.aria-controls]="isOpen ? dropdownId : null"
-                   [attr.aria-expanded]="isOpen ? 'true' : 'false'"
-                   [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
-                   [attr.aria-invalid]="invalid">
+                   (focus)="onInputFocus($event)">
         </div>
     </div>
 
