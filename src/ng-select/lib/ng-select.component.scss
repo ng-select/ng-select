@@ -163,6 +163,8 @@ $ng-option-active-color: #fff;
 
       &:hover,
       &:focus-within {
+        outline: 2px solid transparent;
+
         .ng-value-label {
          text-decoration: underline;
         }
