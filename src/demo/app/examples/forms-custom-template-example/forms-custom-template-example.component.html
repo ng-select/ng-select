@@ -1,0 +1,64 @@
+<form [formGroup]="heroForm">
+    <div class="form-group">
+        <label for="photos">Custom templates</label>
+        <ng-select [items]="photos"
+                   bindLabel="title"
+                   bindValue="thumbnailUrl"
+                   placeholder="Select photo"
+                   labelForId="photos"
+                   [virtualScroll]="true"
+                   formControlName="photo">
+            <ng-template ng-label-tmp let-item="item">
+                <img height="15" width="15" [src]="item.thumbnailUrl"/>
+                <span>{{item.title}}</span>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                <img height="15" width="15" [src]="item.thumbnailUrl"/>
+                <span [ngOptionHighlight]="search">{{item.title}}</span>
+            </ng-template>
+        </ng-select>
+        <small class="form-text text-muted">5000 items with virtual scroll</small>
+        <br>
+        <button class="btn btn-secondary btn-sm" (click)="selectFirstPhoto()">Select first photo</button>
+        <button class="btn btn-secondary btn-sm" (click)="openModal(modalContent)">Open in modal</button>
+        <button class="btn btn-secondary btn-sm" (click)="togglePhotoDisabled()">Toggle disabled</button>
+    </div>
+
+    <ng-template #modalContent let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title">Select in modal</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="album">Favorite photo</label>
+                <ng-select [items]="photos"
+                           (change)="changePhoto($event)"
+                           #select
+                           bindLabel="title"
+                           bindValue="thumbnailUrl"
+                           placeholder="Select photo"
+                           (keyup.esc)="$event.preventDefault()"
+                           appendTo="body"
+                           [virtualScroll]="true"
+                           formControlName="photo">
+                    <ng-template ng-label-tmp let-item="item">
+                        <img height="15" width="15" [src]="item.thumbnailUrl"/>
+                        <span>{{item.title}}</span>
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item" let-index="index">
+                        <img height="15" width="15" [src]="item.thumbnailUrl"/>
+                        <span>{{item.title}}</span>
+                    </ng-template>
+                </ng-select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+        </div>
+    </ng-template>
+</form>
+
+

@@ -1,0 +1,21 @@
+<p>Custom header and footer using <b>ng-header-tmp</b> and <b>ng-footer-tmp</b></p>
+
+<ng-select
+    [multiple]="true"
+    [items]="people"
+    [(ngModel)]="selectedPeople"
+    placeholder="Select people"
+    bindLabel="name"
+    bindValue="name">
+    <ng-template ng-header-tmp>
+        <button (click)="selectAll()" class="btn btn-sm btn-secondary">Select all</button>
+        <button (click)="unselectAll()" class="btn btn-sm btn-secondary">Unselect all</button>
+    </ng-template>
+    <ng-template ng-footer-tmp>
+        Selected count: {{selectedPeople.length}}
+    </ng-template>
+</ng-select>
+
+<br>
+
+Selected people: {{selectedPeople}}

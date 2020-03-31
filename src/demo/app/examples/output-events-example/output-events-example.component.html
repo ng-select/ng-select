@@ -1,0 +1,29 @@
+<ng-select placeholder="Select some items"
+           [items]="items"
+           [(ngModel)]="selectedItems"
+           bindLabel="name"
+           bindValue="id"
+           [multiple]="true"
+           (open)="onOpen()"
+           (close)="onClose()"
+           (focus)="onFocus($event)"
+           (search)="onSearch($event)"
+           (blur)="onBlur($event)"
+           (clear)="onClear()"
+           (add)="onAdd($event)"
+           (scrollToEnd)="onScrollToEnd($event)"
+           (remove)="onRemove($event)"
+           (change)="onChange($event)">
+</ng-select>
+
+<div *ngIf="events.length > 0">
+    <br>
+    <button (click)="events = []" class="btn btn-secondary btn-sm">Clear events</button>
+    <br>
+    <br>
+</div>
+
+<div *ngFor="let event of events">
+    <small>{{event.name}} - {{event.value | json}}</small>
+    <hr>
+</div>

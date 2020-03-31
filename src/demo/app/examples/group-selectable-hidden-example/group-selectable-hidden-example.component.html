@@ -1,0 +1,18 @@
+<p>Selecting group will hide all of its items</p>
+
+<ng-select [items]="accounts"
+           bindLabel="name"
+           groupBy="country"
+           [multiple]="true"
+           [hideSelected]="true"
+           [closeOnSelect]="false"
+           [selectableGroup]="true"
+           [compareWith]="compareAccounts"
+           [(ngModel)]="selectedAccounts">
+    <ng-template ng-optgroup-tmp let-item="item">
+        {{item.country || 'Unnamed group'}}
+    </ng-template>
+</ng-select>
+
+<br>
+<small>Selected: {{selectedAccounts | json}}</small>

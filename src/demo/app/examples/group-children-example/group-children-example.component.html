@@ -1,0 +1,21 @@
+<p>
+    Group by children array. Note that when grouping by already grouped items ng-optgroup-tmp is
+    required to display correct headers.
+</p>
+
+<ng-select [items]="projects"
+           bindLabel="title"
+           bindValue="id"
+           groupBy="subprojects"
+           [multiple]="true"
+           [(ngModel)]="selectedProjects">
+    <ng-template ng-optgroup-tmp let-item="item">
+        {{item.title}}
+    </ng-template>
+    <ng-template ng-option-tmp let-item="item">
+        {{item.title}}
+    </ng-template>
+</ng-select>
+
+<br>
+<small>Selected: {{selectedProjects | json}}</small>
