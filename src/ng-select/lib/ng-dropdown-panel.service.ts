@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 export interface ItemsRangeResult {
     scrollHeight: number;
     topPadding: number;
@@ -11,6 +12,7 @@ export interface PanelDimensions {
     itemsPerViewport: number;
 }
 
+@Injectable()
 export class NgDropdownPanelService {
 
     private _dimensions: PanelDimensions = {
