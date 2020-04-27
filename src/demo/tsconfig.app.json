@@ -6,12 +6,11 @@
       "node"
     ]
   },
-  "include": [
-    "**/*.ts"
+  "files": [
+    "main.ts",
+    "polyfills.ts"
   ],
-  "exclude": [
-    "test.ts",
-    "assets",
-    "**/*.spec.ts"
+  "include": [
+    "**/*.d.ts"
   ]
 }

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
+import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ConsoleService } from './console.service';
@@ -2856,6 +2856,66 @@ describe('NgSelectComponent', () => {
                 expect(lastEmittedSearchTerm).toBe(null);
             }));
         });
+
+        describe('edit search query', () => {
+            it('should allow edit search if option selected & input focused', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                        [typeahead]="filter"
+                        [editableSearchTerm]="true"
+                        bindValue="id"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+                expect(fixture.componentInstance.select.editableSearchTerm).toBeTruthy();
+                const select = fixture.componentInstance.select;
+                const input = select.searchInput.nativeElement;
+                const selectedCity = fixture.componentInstance.cities[0];
+                fixture.componentInstance.selectedCity = selectedCity.id;
+                tickAndDetectChanges(fixture);
+                input.focus();
+                tickAndDetectChanges(fixture);
+                expect(select.searchTerm).toEqual(selectedCity.name);
+                expect(input.value).toEqual(selectedCity.name);
+            }));
+
+            it('should display all items if wrong query passed & dropdown reopened', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestCmp,
+                    `<ng-select [items]="cities"
+                        [typeahead]="filter"
+                        [editableSearchTerm]="true"
+                        bindValue="id"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+                const select = fixture.componentInstance.select;
+                const input = select.searchInput.nativeElement;
+                const selectedCity = fixture.componentInstance.cities[0];
+                const wrongSearchTerm = 'some wrong search';
+                const selectConfig = new NgSelectConfig();
+                fixture.componentInstance.selectedCity = selectedCity.id;
+                tickAndDetectChanges(fixture);
+                input.focus();
+                input.value = wrongSearchTerm;
+                input.dispatchEvent(new Event('input'));
+                tickAndDetectChanges(fixture);
+                expect(select.searchTerm).toEqual(wrongSearchTerm);
+                const firstOption = select.element.querySelector('.ng-dropdown-panel .ng-option');
+                expect(firstOption.innerHTML).toEqual(selectConfig.notFoundText);
+                input.blur();
+                select.close();
+                tickAndDetectChanges(fixture);
+                expect(select.isOpen).toBeFalsy();
+                input.value = '';
+                input.focus();
+                input.dispatchEvent(new Event('input'));
+                tickAndDetectChanges(fixture);
+                const allOptions = select.element.querySelectorAll('.ng-dropdown-panel .ng-option');
+                expect(allOptions.length).toEqual(fixture.componentInstance.cities.length);
+            }));
+        });
     });
 
     describe('Accessibility', () => {
@@ -3629,6 +3689,43 @@ describe('NgSelectComponent', () => {
 
             selectOption(fixture, KeyCode.ArrowDown, 0);
             expect(fixture.componentInstance.selectedAccount).toBe('United States');
+        }));
+        it('Should have class ng-select', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindLabel="name"
+                        bindValue="email"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+                fixture.detectChanges();
+                const element = fixture.elementRef.nativeElement;
+                const elClasses: DOMTokenList = element.children[0].classList;
+                const hasClass = elClasses.contains('ng-select')
+
+            
+            expect(hasClass).toBe(true)
+        }));
+        it('Should have class ng-select and test', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindLabel="name"
+                        bindValue="email"
+                        [(ngModel)]="selectedAccount"
+                        [class]="'test'">
+                </ng-select>`);
+
+                fixture.detectChanges();
+                const element = fixture.elementRef.nativeElement;
+                const elClasses: DOMTokenList = element.children[0].classList;
+                const hasClass = elClasses.contains('ng-select') && elClasses.contains('test');
+
+            
+            expect(hasClass).toBe(true);
         }));
     });
 

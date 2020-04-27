@@ -31,3 +31,12 @@ jobs:
       - name: Semantic release
         run: npx semantic-release
 
+      - name: build demo
+        run: npm run-script build:demo
+
+      - name: Deploy demo 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist/demo

@@ -15,11 +15,17 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 | Angular| ng-select|
 | ------|:------:| 
+| >=9.0.0 <10.0.0 | v4.x |
 | >=8.0.0 <9.0.0  | v3.x |
 | >=6.0.0 <8.0.0  | v2.x |
 | v5.x.x  | v1.x |
 
 ---
+
+perf(pencil): remove graphiteWidth option
+
+BREAKING CHANGE: The graphiteWidth option has been removed.
+The default graphite width of 10mm is always used for performance reasons.
 
 Table of contents
 =================
@@ -153,6 +159,7 @@ map: {
 | [searchWhileComposing] | `boolean` | `true` | no | Whether items should be filtered while composition started |
 | [trackByFn] | `(item: any) => any` | `null` | no | Provide custom trackBy function |
 | [clearSearchOnAdd] | `boolean` | `true` | no | Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false` |
+| [editableSearchTerm] | `boolean` |  `false` | no | Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`. |
 | [selectOnTab] | `boolean` | `false` | no | Select marked dropdown item using tab. Default `false`|
 | [openOnEnter] | `boolean` | `true` | no | Open dropdown using enter. Default `true`|
 | [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |
