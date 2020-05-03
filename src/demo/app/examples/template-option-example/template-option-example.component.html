@@ -1,7 +1,8 @@
 <p>Custom dropdown panel option template using <b>ng-option-tmp</b></p>
 
 <ng-select [items]="cities" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
-    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm" let-isLast="isLast" let-isFirst="isFirst">
+    <ng-template 
+        ng-option-tmp let-item="item" let-index="index" let-search="searchTerm" let-isLast="isLast" let-isFirst="isFirst" let-isEven="isEven" let-isOdd="isOdd">
         <div *ngIf="isFirst">{{item.name}}</div>
         <div *ngIf="item.name === 'Kaunas'">{{item.name}}</div>
         <div style="margin: 10px 0;" class="card" *ngIf="item.name !== 'Kaunas'">
@@ -19,5 +20,9 @@
             </div>
         </div>
         <div *ngIf="isLast">{{item.name}}</div>
+
+        <div>index: {{index}}</div>
+        <div>is odd: {{isOdd}}</div>
+        <div>is even: {{isEven}}</div>
     </ng-template>
 </ng-select>
