@@ -8,7 +8,7 @@
         <div class="ng-placeholder">{{placeholder}}</div>
 
         <ng-container *ngIf="!multiLabelTemplate && selectedItems.length > 0">
-            <div [class.ng-value-disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems; trackBy: trackByOption">
+            <div [class.ng-value-disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems; trackBy: trackByOption; first as isFirst; last as isLast">
                 <ng-template #defaultLabelTemplate>
                     <span class="ng-value-icon left" (click)="unselect(item);" aria-hidden="true">×</span>
                     <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
@@ -16,7 +16,7 @@
 
                 <ng-template
                     [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
-                    [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
+                    [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label, isFirst: isFirst, isLast: isLast }">
                 </ng-template>
             </div>
         </ng-container>
@@ -86,7 +86,7 @@
 
     <ng-container>
         <div class="ng-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)" (mouseover)="onItemHover(item)"
-                *ngFor="let item of viewPortItems; trackBy: trackByOption"
+                *ngFor="let item of viewPortItems; trackBy: trackByOption; first as isFirst; last as isLast"
                 [class.ng-option-disabled]="item.disabled"
                 [class.ng-option-selected]="item.selected"
                 [class.ng-optgroup]="item.children"
@@ -102,7 +102,7 @@
 
             <ng-template
                 [ngTemplateOutlet]="item.children ? (optgroupTemplate || defaultOptionTemplate) : (optionTemplate || defaultOptionTemplate)"
-                [ngTemplateOutletContext]="{ item: item.value, item$:item, index: item.index, searchTerm: searchTerm }">
+                [ngTemplateOutletContext]="{ item: item.value, item$:item, index: item.index, searchTerm: searchTerm, isFirst: isFirst, isLast: isLast }">
             </ng-template>
         </div>
 
