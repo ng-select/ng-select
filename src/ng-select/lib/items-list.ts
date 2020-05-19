@@ -166,6 +166,14 @@ export class ItemsList {
                 }
                 this._filteredItems.push(...matchedItems);
             }
+            if (key && this._ngSelect.selectableGroup) {
+                const groupKey = this._ngSelect.groupValue ? this._ngSelect.bindValue : <string>this._ngSelect.groupBy;
+                const optionToCompare = this._items.find(x => x.value[groupKey || <string>groupKey] === key);
+
+                if (!this._filteredItems.includes(optionToCompare) && match(term, optionToCompare)) {
+                    this._filteredItems.push(optionToCompare);
+                }
+            }
         }
     }
 
