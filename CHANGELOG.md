@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 **Bug fixes**
 - Remove hostbinding from dropdown panel which was cancelling out the ID applied directly, causing aria-controls to break
+- Fix incorrect role applied to single-select chosen values
 
 ## 3.0.1
 
