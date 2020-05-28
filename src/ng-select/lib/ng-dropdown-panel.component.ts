@@ -74,7 +74,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     @ViewChild('padding', { read: ElementRef, static: true }) paddingElementRef: ElementRef;
 
     @HostBinding('attr.role') role = 'listbox';
-    @HostBinding('attr.id') id = this.dropdownId;
 
     private readonly _destroy$ = new Subject<void>();
     private readonly _dropdown: HTMLElement;
