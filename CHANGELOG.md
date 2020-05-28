@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 3.0.1
+
+**Bug fixes**
+- Update clear button text to 'Clear selection' for better applications across single or multiselect dropdowns
+- Add non-color-based focus state to clear button
+- Remove outline from input on focus to counter Chromium's new default focus states (active focus styles is handled higher up in the component)
+
 ## 3.0.0
 
 **Major release**
