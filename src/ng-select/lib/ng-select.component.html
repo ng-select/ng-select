@@ -93,6 +93,7 @@
 
 <ng-dropdown-panel *ngIf="isOpen"
                    class="ng-dropdown-panel"
+                   [id]="dropdownId"
                    [virtualScroll]="virtualScroll"
                    [bufferAmount]="bufferAmount"
                    [appendTo]="appendTo"
@@ -107,8 +108,7 @@
                    (scrollToEnd)="scrollToEnd.emit($event)"
                    (outsideClick)="close()"
                    [class.ng-select-multiple]="multiple"
-                   [ngClass]="appendTo ? classes : null"
-                   [id]="dropdownId">
+                   [ngClass]="appendTo ? classes : null">
 
     <ng-container>
         <div class="ng-option"
