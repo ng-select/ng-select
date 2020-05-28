@@ -17,7 +17,7 @@
                  [class.ng-value-disabled]="item.disabled"
                  id="{{item.htmlId}}_selected"
                  tabindex="-1"
-                 role="option"
+                 [attr.role]="multiple ? 'option' : null"
                  [attr.aria-disabled]="item.disabled"
                  aria-selected="true"
                  (blur)="onTagBlur($event)">
@@ -53,7 +53,7 @@
                    [attr.aria-autocomplete]="searchable ? 'both' : null"
                    [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
                    [attr.aria-controls]="isOpen ? dropdownId : null"
-                   [attr.aria-describedby]="describedBy"
+                   [attr.aria-labelledby]="labelledBy"
                    [attr.aria-expanded]="isOpen ? 'true' : 'false'"
                    aria-haspopup="true"
                    [attr.aria-invalid]="invalid"
