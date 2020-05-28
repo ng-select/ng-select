@@ -820,6 +820,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             type: 'text',
             autocorrect: 'off',
             autocapitalize: 'off',
+            autocomplete: this.labelForId ? 'off' : this.dropdownId,
             ...this.inputAttrs
         };
 
