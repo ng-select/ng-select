@@ -4,8 +4,12 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## 3.0.2
 
+**Enhancements**
+- Update focus states to combat new Chromium default focus styles
+
 **Bug fixes**
 - Remove hostbinding from dropdown panel which was cancelling out the ID applied directly, causing aria-controls to break
+- Use aria-labelledby instead of aria-describedby for input labelling
 - Fix incorrect role applied to single-select chosen values
 
 ## 3.0.1
