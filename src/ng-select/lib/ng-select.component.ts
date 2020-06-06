@@ -680,7 +680,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
         const validateBinding = (item: any): boolean => {
             if (!isDefined(this.compareWith) && isObject(item) && this.bindValue) {
-                this._console.warn(`Binding object(${JSON.stringify(item)}) with bindValue is not allowed.`);
+                this._console.warn(`Binding object(${JSON.stringify(item)}) with bindValue is not allowed without a 'compareWith' function.`);
                 return false;
             }
             return true;
