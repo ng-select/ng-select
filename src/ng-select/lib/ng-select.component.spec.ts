@@ -1,4 +1,4 @@
-import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
+import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ConsoleService } from './console.service';
@@ -10,7 +10,6 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 import { NgSelectModule } from './ng-select.module';
 import { Subject } from 'rxjs';
 import { NgSelectConfig } from './config.service';
-import { createComponent } from '@angular/compiler/src/core';
 
 describe('NgSelectComponent', () => {
 

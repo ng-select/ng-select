@@ -23,8 +23,8 @@
     "angular2"
   ],
   "peerDependencies": {
-    "@angular/common": ">=8.0.0 <9.0.0",
-    "@angular/core": ">=8.0.0 <9.0.0",
-    "@angular/forms": ">=8.0.0 <9.0.0"
+    "@angular/common": ">=9.0.0 <10.0.0",
+    "@angular/core": ">=9.0.0 <10.0.0",
+    "@angular/forms": ">=9.0.0 <10.0.0"
   }
 }
