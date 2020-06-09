@@ -13,6 +13,6 @@ npm run build
 # git push --follow-tags origin master
 
 echo push to npm
-cp README.md ./dist/ng-select/
+cp README.md CHANGELOG.md ./dist/ng-select/
 cd ./dist/ng-select/
 npm publish

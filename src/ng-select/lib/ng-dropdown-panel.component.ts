@@ -42,7 +42,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
         </div>
         <div #scroll class="ng-dropdown-panel-items scroll-host">
             <div #padding [class.total-padding]="virtualScroll"></div>
-            <div #content [class.scrollable-content]="virtualScroll && items.length">
+            <div #content [class.scrollable-content]="virtualScroll && items.length" [id]="dropdownId" role="listbox">
                 <ng-content></ng-content>
             </div>
         </div>
@@ -53,6 +53,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
+    @Input() dropdownId: string;
     @Input() items: NgOption[] = [];
     @Input() markedItem: NgOption;
     @Input() position: DropdownPosition = 'auto';

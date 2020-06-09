@@ -76,7 +76,10 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
     }
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
-
+    @Input() invalid = false;
+    @Input() required = false;
+    @Input() describedBy: string;
+    @Input() labelledBy: string;
     @Input() bindLabel: string;
     @Input() bindValue: string;
     @Input() markFirst = true;
@@ -179,7 +182,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
     @ViewChildren('tag') tagsList: QueryList<ElementRef>;
-
     focusedTag: HTMLElement;
 
     @HostBinding('class.ng-select-disabled') get disabled() { return this.readonly || this._disabled };
@@ -287,12 +289,54 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @HostListener('keydown', ['$event'])
     handleKeyDown($event: KeyboardEvent) {
-        const keyCode = KeyCode[$event.which];
-        if (keyCode) {
-            if (this.keyDownFn($event) === false) {
-                return;
+        if (KeyCode[$event.which]) {
+            if (!this.focusedTag) {
+                switch ($event.which) {
+                    case KeyCode.ArrowDown:
+                        this._handleArrowDown($event);
+                        console.log('arrow down')
+                        break;
+                    case KeyCode.ArrowUp:
+                        this._handleArrowUp($event);
+                        break;
+                    case KeyCode.Space:
+                        this._handleSpace($event);
+                        break;
+                    case KeyCode.Enter:
+                        this._handleEnter($event);
+                        break;
+                    case KeyCode.Tab:
+                        this._handleTab($event);
+                        break;
+                    case KeyCode.Esc:
+                        this.close();
+                        $event.preventDefault();
+                        break;
+                    case KeyCode.Backspace:
+                        this._handleBackspace();
+                        break;
+                }
+            } else if ([KeyCode.Home, KeyCode.ArrowLeft, KeyCode.ArrowRight, KeyCode.End, KeyCode.Delete].includes($event.which)) {
+                $event.preventDefault();
+                $event.stopPropagation();
+                switch ($event.which) {
+                    case KeyCode.Home:
+                        this._focusFirstTag();
+                        break;
+                    case KeyCode.ArrowLeft:
+                        this._focusPreviousTag();
+                        break;
+                    case KeyCode.ArrowRight:
+                        this._focusNextTag();
+                        break;
+                    case KeyCode.End:
+                        this._focusLastTag();
+                        break;
+                    case KeyCode.Delete:
+                        this._handleDelete();
+                        break;
+                }
             }
-            this.handleKeyCode($event)
         } else if ($event.key && $event.key.length === 1) {
             this._keyPress$.next($event.key.toLocaleLowerCase());
         }
@@ -456,12 +500,21 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this.isOpen || this._manualOpen) {
             return;
         }
+        
         this.isOpen = false;
+
+        if (this.multiple) {
+            this._clearSearch();
+        } else {
+            this._setInputValue();
+        }
+
         if (!this._editableSearchTerm) {
             this._clearSearch();
         } else {
             this.itemsList.resetFilteredItems();
         }
+
         this.itemsList.unmarkItem();
         this._onTouched();
         this.closeEvent.emit();
@@ -489,11 +542,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     select(item: NgOption) {
         if (!item.selected) {
             this.itemsList.select(item);
-            if (this.clearSearchOnAdd && !this._editableSearchTerm) {
-                this._clearSearch();
-            }
-
-            this._updateNgModel();
             if (this.multiple) {
                 this.addEvent.emit(item.value);
 
@@ -501,6 +549,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                   this._clearSearch();
                 } 
             }
+            this._updateNgModel();
         }
 
         if (this.closeOnSelect || this.itemsList.noItemsToSelect) {
@@ -613,6 +662,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.open();
     }
 
+    onWidgetFocus() {
+        this._focusFirstTag();
+    }
+
+    onTagBlur($event) {
+        if (!$event.relatedTarget ||
+            ($event.relatedTarget && !$event.relatedTarget.classList.contains('ng-value'))) {
+            this.focusedTag = null;
+        }
+    }
+
     onInputFocus($event) {
         if (this.focused) {
             return;
@@ -630,7 +690,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     onInputBlur($event) {
         this.element.classList.remove('ng-select-focused');
         this.blurEvent.emit($event);
-
         // Clear the search input if no value is selected
         if (this.selectedItems && !this.selectedItems.length && this.searchInput.nativeElement.value) {
             this._clearSearch();
@@ -864,6 +923,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
         this._changeSearch(null);
         this.itemsList.resetFilteredItems();
+    }
+
+    private _setInputValue() {
+        if (!this.multiple && this.selectedItems.length) {
+            this.searchTerm = this.selectedItems[0].label;
+        }
     }
 
     private _changeSearch(searchTerm: string) {
