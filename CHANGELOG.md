@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 3.1.0
+
+**Feature**
+- Update forked repo to latest version from ng-select to upgrade ng-select to Angular 9
+
 ## 3.0.2
 
 **Enhancements**
