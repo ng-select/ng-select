@@ -53,7 +53,6 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
-    @Input() dropdownId: string;
     @Input() items: NgOption[] = [];
     @Input() markedItem: NgOption;
     @Input() position: DropdownPosition = 'auto';

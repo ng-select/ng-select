@@ -115,10 +115,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() minTermLength = 0;
     @Input() editableSearchTerm = true;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
-    @Input() describedBy: string;
-    @Input() labelledBy: string;
-    @Input() required = false;
-    @Input() invalid = false;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
@@ -713,17 +709,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.itemsList.markItem(item);
     }
 
-    onWidgetFocus() {
-      this._focusFirstTag();
-    }
-
-    onTagBlur($event) {
-      if (!$event.relatedTarget ||
-          ($event.relatedTarget && !$event.relatedTarget.classList.contains('ng-value'))) {
-        this.focusedTag = null;
-      }
-    }
-
     detectChanges() {
         if (!(<any>this._cd).destroyed) {
             this._cd.detectChanges();
@@ -785,12 +770,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 mapNgOptions(options);
                 handleOptionChange();
             });
-    }
-
-    private _setInputValue() {
-      if (!this.multiple && this.selectedItems.length) {
-        this.searchTerm = this.selectedItems[0].label;
-      }
     }
 
     private _isValidWriteValue(value: any): boolean {
