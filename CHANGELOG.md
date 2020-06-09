@@ -2,25 +2,32 @@
 
 Started to maintain versions made from Common App for forked version.
 
-## 2.5.2
+## 3.0.2
 
-- feat: add wrapping span to non-value options for spanning new grid setup
+### Bug fixes
 
-## 2.5.1
+- Remove hostbinding from dropdown panel which was cancelling out the ID applied directly, causing aria-controls to break
+- Fix incorrect role applied to single-select chosen values
 
-- fix: add utility class to help non-standard options span grid-columns
+## 3.0.1
 
-## 2.5.0
+### Bug fixes
 
-- fix: resolve aria-* attribute issues around incorrect pairings of roles, status, and tagging
-- fix: resolve keyboard issue in NVDA where once in the dropdown it would require focus mode to browser
+- Update clear button text to 'Clear selection' for better applications across single or multiselect dropdowns
+- Add non-color-based focus state to clear button
+- Remove outline from input on focus to counter Chromium's new default focus states (active focus styles is handled higher up in the component)
 
-## 2.4.1
+## 3.0.0
 
-- fix: prevent duplicative ID's when dropdown is open (ng-value and dropdown ng-option ID's were matching)
+### Major release
 
-## 2.4.0
+Continued versioning from last iteration of CA release (2.7.*). This release is considered major as it was fully rolled back prior to CA changes, and a11y and styling changes were introduced manually to resolve merge issues and some poor branch management practices.
 
-- feat: add SVG checkmark that indicates selected option within dropdown panel
+### Features
 
-- fix: remove aria-role of "option" from ng-value when used in single select
+- Improved accessibility
+- Updated styles to match new design system for Rec
+
+### Fixes
+
+- Resolve issue where selected values and placeholders would not show up

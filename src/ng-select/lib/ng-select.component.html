@@ -1,27 +1,31 @@
-<div (mousedown)="handleMousedown($event)"
-     (focus)="onWidgetFocus()"
+<div class="ng-select-container"
      [class.ng-appearance-outline]="appearance === 'outline'"
      [class.ng-has-value]="hasValue"
-     class="ng-select-container"
-     [attr.aria-multiselectable]="multiple ? 'true' : null" 
+     [attr.role]="multiple ? 'listbox' : null"
+     [attr.aria-haspopup]="multiple ? 'listbox' : null"
      [attr.aria-labelledby]="multiple ? labelledBy : null"
-     [tabIndex]="(multiple && selectedItems.length > 0 && !focusedTag) ? 0 : -1">
+     [attr.aria-multiselectable]="multiple ? 'true' : null"
+     [tabindex]="(multiple && selectedItems.length > 0 && !focusedTag) ? 0 : -1"
+     (mousedown)="handleMousedown($event)"
+     (focus)="onWidgetFocus()">
 
     <div class="ng-value-container">
         <ng-container *ngIf="((multiple && !multiLabelTemplate) || !searchable) && selectedItems.length > 0">
-            <div #tag *ngFor="let item of selectedItems; trackBy: trackByOption"
-                 [class.ng-value-disabled]="item.disabled"
+            <div #tag
+                 *ngFor="let item of selectedItems; trackBy: trackByOption" 
                  class="ng-value"
-                 id="{{ item.htmlId }}_selected"
+                 [class.ng-value-disabled]="item.disabled"
+                 id="{{item.htmlId}}_selected"
                  tabindex="-1"
                  [attr.role]="multiple ? 'option' : null"
                  [attr.aria-disabled]="item.disabled"
-                 (blur)="onTagBlur($event)"
-                 aria-selected="true">
-                 
+                 aria-selected="true"
+                 (blur)="onTagBlur($event)">
                 <ng-template #defaultLabelTemplate>
                     <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
-                    <span class="value-remove ng-value-icon left" (click)="unselect(item);" aria-hidden="true">×</span>
+                    <span class="ng-value-icon left" (click)="unselect(item);" aria-hidden="true">
+                        <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M207.6 256l107.72-107.72c6.23-6.23 6.23-16.34 0-22.58l-25.03-25.03c-6.23-6.23-16.34-6.23-22.58 0L160 208.4 52.28 100.68c-6.23-6.23-16.34-6.23-22.58 0L4.68 125.7c-6.23 6.23-6.23 16.34 0 22.58L112.4 256 4.68 363.72c-6.23 6.23-6.23 16.34 0 22.58l25.03 25.03c6.23 6.23 16.34 6.23 22.58 0L160 303.6l107.72 107.72c6.23 6.23 16.34 6.23 22.58 0l25.03-25.03c6.23-6.23 6.23-16.34 0-22.58L207.6 256z"/></svg>
+                    </span>
                 </ng-template>
 
                 <ng-template
@@ -39,26 +43,26 @@
         <div class="ng-input">
             <input #searchInput
                    [attr.id]="labelForId"
-                   [attr.tabindex]="tabIndex"
+                   [placeholder]="this.selectedItems && this.selectedItems.length ? '' : placeholder"
+                   [required]="required"
+                   [readonly]="!searchable || itemsList.maxItemsSelected"
                    [disabled]="disabled"
                    [value]="searchTerm ? searchTerm : ''"
+                   [attr.tabindex]="tabIndex"
+                   role="combobox"
+                   [attr.aria-autocomplete]="searchable ? 'both' : null"
+                   [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
+                   [attr.aria-controls]="isOpen ? dropdownId : null"
+                   [attr.aria-labelledby]="labelledBy"
+                   [attr.aria-expanded]="isOpen ? 'true' : 'false'"
+                   aria-haspopup="true"
+                   [attr.aria-invalid]="invalid"
                    (input)="filter(searchInput.value)"
                    (compositionstart)="onCompositionStart()"
                    (compositionend)="onCompositionEnd(searchInput.value)"
-                   (focus)="onInputFocus($event)"
                    (blur)="onInputBlur($event)"
                    (change)="$event.stopPropagation()"
-                   role="combobox"
-                   aria-haspopup="true"
-                   [required]="required"
-                   [placeholder]="this.selectedItems && this.selectedItems.length ? '':placeholder"
-                   [attr.aria-owns]="isOpen ? dropdownId : null"
-                   [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
-                   [attr.aria-autocomplete]="searchable ? 'list' : null"
-                   [attr.aria-expanded]="isOpen ? true : false"
-                   [attr.aria-invalid]="invalid"
-                   [attr.readonly]="!searchable || itemsList.maxItemsSelected"
-                   [attr.aria-describedby]="describedBy">
+                   (focus)="onInputFocus($event)">
         </div>
     </div>
 
@@ -72,19 +76,24 @@
         </ng-template>
     </ng-container>
 
-    <span *ngIf="showClear()" class="ng-clear-wrapper" title="Clear answer">
-        <button class="ng-clear" aria-label="Clear answer" (keydown.enter)="$event.preventDefault(); $event.stopPropagation(); handleClearClick();" (keydown.space)="$event.preventDefault(); $event.stopPropagation(); handleClearClick();">×</button>
+    <span *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
+        <button
+            class="ng-clear"
+            attr.aria-label="{{clearAllText}}"
+            (keydown.enter)="$event.preventDefault(); $event.stopPropagation(); handleClearClick();"
+            (keydown.space)="$event.preventDefault(); $event.stopPropagation(); handleClearClick();">
+            <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M207.6 256l107.72-107.72c6.23-6.23 6.23-16.34 0-22.58l-25.03-25.03c-6.23-6.23-16.34-6.23-22.58 0L160 208.4 52.28 100.68c-6.23-6.23-16.34-6.23-22.58 0L4.68 125.7c-6.23 6.23-6.23 16.34 0 22.58L112.4 256 4.68 363.72c-6.23 6.23-6.23 16.34 0 22.58l25.03 25.03c6.23 6.23 16.34 6.23 22.58 0L160 303.6l107.72 107.72c6.23 6.23 16.34 6.23 22.58 0l25.03-25.03c6.23-6.23 6.23-16.34 0-22.58L207.6 256z"/></svg>
+        </button>
     </span>
 
     <span class="ng-arrow-wrapper">
-        <svg class="ng-arrow" width="10" height="5" viewBox="0 0 10 5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M10 0H0L5 5L10 0Z"/>
-        </svg>  
+        <svg class="ng-arrow" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"/></svg>
     </span>
 </div>
 
 <ng-dropdown-panel *ngIf="isOpen"
                    class="ng-dropdown-panel"
+                   [id]="dropdownId"
                    [virtualScroll]="virtualScroll"
                    [bufferAmount]="bufferAmount"
                    [appendTo]="appendTo"
@@ -99,27 +108,29 @@
                    (scrollToEnd)="scrollToEnd.emit($event)"
                    (outsideClick)="close()"
                    [class.ng-select-multiple]="multiple"
-                   [ngClass]="appendTo ? classes : null"
-                   [dropdownId]="dropdownId">
+                   [ngClass]="appendTo ? classes : null">
 
     <ng-container>
-        <div class="ng-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)" (mouseover)="onItemHover(item)"
-                *ngFor="let item of viewPortItems; trackBy: trackByOption"
-                [class.ng-option-disabled]="item.disabled"
-                [class.ng-option-selected]="item.selected"
-                [class.ng-optgroup]="item.children"
-                [class.ng-option]="!item.children"
-                [class.ng-option-child]="!!item.parent"
-                [class.ng-option-marked]="item === itemsList.markedItem"
-                [attr.aria-disabled]="item.disabled"
-                [attr.aria-selected]="item.selected"
-                [attr.id]="item?.htmlId">
+        <div class="ng-option"
+             [attr.role]="item.children ? 'group' : 'option'"
+             (click)="toggleItem(item)"
+             (mouseover)="onItemHover(item)"
+             *ngFor="let item of viewPortItems; trackBy: trackByOption"
+             [class.ng-option-disabled]="item.disabled"
+             [class.ng-option-selected]="item.selected"
+             [class.ng-optgroup]="item.children"
+             [class.ng-option]="!item.children"
+             [class.ng-option-child]="!!item.parent"
+             [class.ng-option-marked]="item === itemsList.markedItem"
+             [attr.aria-disabled]="item.disabled"
+             [attr.aria-selected]="item.selected"
+             [attr.id]="item?.htmlId">
 
             <ng-template #defaultOptionTemplate>
-                <svg *ngIf="item.selected" class="ng-option__selected-icon" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" viewBox="0 0 512 512">
-                  <path fill="currentColor" d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/>
+                <svg class="ng-option-icon" [class.is-selected]="item.selected" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" viewBox="0 0 512 512">
+                    <path fill="currentColor" d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/>
                 </svg>
-              
+
                 <span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
             </ng-template>
 

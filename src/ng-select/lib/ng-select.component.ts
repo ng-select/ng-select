@@ -71,7 +71,7 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'class': 'ng-select',
+        '[class.ng-select]': 'useDefaultClass',
         '[class.ng-select-single]': '!multiple',
     }
 })
@@ -113,8 +113,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() readonly = false;
     @Input() searchWhileComposing = true;
     @Input() minTermLength = 0;
-    @Input() editableSearchTerm = false;
+    @Input() editableSearchTerm = true;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
+    @Input() describedBy: string;
+    @Input() labelledBy: string;
+    @Input() required = false;
+    @Input() invalid = false;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
@@ -191,6 +195,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     element: HTMLElement;
     focused: boolean;
     escapeHTML = true;
+    useDefaultClass = true;
 
     private _items = [];
     private _itemsAreUsed: boolean;
@@ -335,6 +340,55 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         } else if ($event.key && $event.key.length === 1) {
             this._keyPress$.next($event.key.toLocaleLowerCase());
         }
+    }
+
+    handleKeyCode($event: KeyboardEvent) {
+      if (!this.focusedTag) {
+        switch ($event.which) {
+            case KeyCode.ArrowDown:
+                this._handleArrowDown($event);
+                break;
+            case KeyCode.ArrowUp:
+                this._handleArrowUp($event);
+                break;
+            case KeyCode.Space:
+                this._handleSpace($event);
+                break;
+            case KeyCode.Enter:
+                this._handleEnter($event);
+                break;
+            case KeyCode.Tab:
+                this._handleTab($event);
+                break;
+            case KeyCode.Esc:
+                this.close();
+                $event.preventDefault();
+                break;
+            case KeyCode.Backspace:
+                this._handleBackspace();
+                break
+        }
+      } else if ([KeyCode.Home, KeyCode.ArrowLeft, KeyCode.ArrowRight, KeyCode.End, KeyCode.Delete].includes($event.which)) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        switch ($event.which) {
+            case KeyCode.Home:
+                this._focusFirstTag();
+                break;
+            case KeyCode.ArrowLeft:
+                this._focusPreviousTag();
+                break;
+            case KeyCode.ArrowRight:
+                this._focusNextTag();
+                break;
+            case KeyCode.End:
+                this._focusLastTag();
+                break;
+            case KeyCode.Delete:
+                this._handleDelete();
+                break;
+        }
+      }
     }
 
     handleMousedown($event: MouseEvent) {
@@ -491,9 +545,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             if (this.multiple) {
                 this.addEvent.emit(item.value);
 
-                if (this.clearSearchOnAdd && !this._editableSearchTerm) {
-                    this._clearSearch();
-                }
+                if (this.clearSearchOnAdd) {
+                  this._clearSearch();
+                } 
             }
             this._updateNgModel();
         }
@@ -636,7 +690,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     onInputBlur($event) {
         this.element.classList.remove('ng-select-focused');
         this.blurEvent.emit($event);
-        
         // Clear the search input if no value is selected
         if (this.selectedItems && !this.selectedItems.length && this.searchInput.nativeElement.value) {
             this._clearSearch();
@@ -645,9 +698,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this.isOpen && !this.disabled) {
             this._onTouched();
         }
+
         if (this._editableSearchTerm) {
             this._setSearchTermFromItems();
         }
+
         this.focused = false;
     }
 
@@ -656,6 +711,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
         this.itemsList.markItem(item);
+    }
+
+    onWidgetFocus() {
+      this._focusFirstTag();
+    }
+
+    onTagBlur($event) {
+      if (!$event.relatedTarget ||
+          ($event.relatedTarget && !$event.relatedTarget.classList.contains('ng-value'))) {
+        this.focusedTag = null;
+      }
     }
 
     detectChanges() {
@@ -719,6 +785,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 mapNgOptions(options);
                 handleOptionChange();
             });
+    }
+
+    private _setInputValue() {
+      if (!this.multiple && this.selectedItems.length) {
+        this.searchTerm = this.selectedItems[0].label;
+      }
     }
 
     private _isValidWriteValue(value: any): boolean {
@@ -807,7 +879,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             type: 'text',
             autocorrect: 'off',
             autocapitalize: 'off',
-            autocomplete: this.labelForId ? 'off' : this.dropdownId,
             ...this.inputAttrs
         };
 

@@ -17,7 +17,8 @@ import {
     SimpleChanges,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
+    HostBinding
 } from '@angular/core';
 import { animationFrameScheduler, asapScheduler, fromEvent, merge, Subject } from 'rxjs';
 import { auditTime, takeUntil } from 'rxjs/operators';
@@ -62,6 +63,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     @Input() headerTemplate: TemplateRef<any>;
     @Input() footerTemplate: TemplateRef<any>;
     @Input() filterValue: string = null;
+    @Input() dropdownId: string;
 
     @Output() update = new EventEmitter<any[]>();
     @Output() scroll = new EventEmitter<{ start: number; end: number }>();
@@ -71,6 +73,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     @ViewChild('content', { read: ElementRef, static: true }) contentElementRef: ElementRef;
     @ViewChild('scroll', { read: ElementRef, static: true }) scrollElementRef: ElementRef;
     @ViewChild('padding', { read: ElementRef, static: true }) paddingElementRef: ElementRef;
+
+    @HostBinding('attr.role') role = 'listbox';
 
     private readonly _destroy$ = new Subject<void>();
     private readonly _dropdown: HTMLElement;

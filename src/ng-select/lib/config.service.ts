@@ -7,7 +7,7 @@ export class NgSelectConfig {
     typeToSearchText = 'Type to search';
     addTagText = 'Add item';
     loadingText = 'Loading...';
-    clearAllText = 'Clear all';
+    clearAllText = 'Clear selection';
     disableVirtualScroll = true;
     openOnEnter = true;
     appendTo: string;
