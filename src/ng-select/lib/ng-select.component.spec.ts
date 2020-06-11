@@ -1194,7 +1194,7 @@ describe('NgSelectComponent', () => {
             })
         }));
 
-        it('should select item with encapsulation = native', fakeAsync(() => {
+        it('should select item with encapsulation = ShadowDom', fakeAsync(() => {
             const fixture = createTestingModule(
                 EncapsulatedTestCmp,
                 `<ng-select [items]="cities"
@@ -3943,7 +3943,7 @@ class NgSelectTestCmp {
         this.visible = !this.visible;
     }
 
-    onChange(_: Event) {
+    onChange(_: any) {
     }
 
     onFocus(_: Event) {
@@ -3958,16 +3958,16 @@ class NgSelectTestCmp {
     onClose() {
     }
 
-    onAdd() {
+    onAdd(_: Event) {
     }
 
-    onRemove() {
+    onRemove(_: Event) {
     }
 
     onClear() {
     }
 
-    onSearch() {
+    onSearch(_: any) {
     }
 
     onScroll() {
@@ -3979,7 +3979,7 @@ class NgSelectTestCmp {
 
 @Component({
     template: ``,
-    encapsulation: ViewEncapsulation.Native,
+    encapsulation: ViewEncapsulation.ShadowDom,
 })
 class EncapsulatedTestCmp extends NgSelectTestCmp {
     @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
