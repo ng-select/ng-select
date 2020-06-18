@@ -2,11 +2,19 @@
 
 Started to maintain versions made from Common App for forked version.
 
+## 3.1.0
+
+### Feature
+
+- Update forked repo to latest version from ng-select to upgrade ng-select to Angular 9
+- Remove theme stylesheets as styles have been ported to direct SCSS files
+
 ## 3.0.2
 
 ### Bug fixes
 
 - Remove hostbinding from dropdown panel which was cancelling out the ID applied directly, causing aria-controls to break
+- Use aria-labelledby instead of aria-describedby for input labelling
 - Fix incorrect role applied to single-select chosen values
 
 ## 3.0.1

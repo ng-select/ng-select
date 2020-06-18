@@ -14,11 +14,12 @@ The CommonApp version is what is used within all CommonApp products via a Github
 
 ## Versions
 
-| Angular        | ng-select |
-| -------------- | :-------: |
-| >=8.0.0 <9.0.0 |   v3.x    |
-| >=6.0.0 <8.0.0 |   v2.x    |
-| v5.x.x         |   v1.x    |
+| Angular| ng-select|
+| ------|:------:| 
+| >=9.0.0 <10.0.0 | v4.x |
+| >=9.0.0 <9.0.0  | v3.x |
+| >=6.0.0 <8.0.0  | v2.x |
+| v5.x.x  | v1.x |
 
 ---
 
