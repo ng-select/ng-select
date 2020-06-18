@@ -1029,6 +1029,66 @@ describe('NgSelectComponent', () => {
                     expect(cmp.select.selectedItems[0].value).toEqual(cmp.cities[1]);
                 }));
 
+                it('should select by label when compareWithLabel is true/unset', fakeAsync(() => {
+                    const fixture = createTestingModule(
+                        NgSelectTestCmp,
+                        `<ng-select
+                            bindLabel="name"
+                            [items]="cities"
+                            [(ngModel)]="selectedCity"
+                            groupBy="state">
+                        </ng-select>`);
+
+                    const cities = [
+                        {id: 1, name: 'Glendale'},
+                        {id: 2, name: 'Pasadena'},
+                    ];
+                    fixture.componentInstance.cities = cities
+                    fixture.componentInstance.selectedCity = {id: -1, name: 'Pasadena'};
+                    tickAndDetectChanges(fixture);
+                    expect(fixture.componentInstance.select.selectedItems[0].value).toEqual(cities[1]);
+                }));
+
+                it('should select by value before label when compareWithLabel is true/unset', fakeAsync(() => {
+                    const fixture = createTestingModule(
+                        NgSelectTestCmp,
+                        `<ng-select
+                            bindLabel="name"
+                            [items]="cities"
+                            [(ngModel)]="selectedCity"
+                            groupBy="state">
+                        </ng-select>`);
+
+                    const glendaleAZ = {id: 1, name: 'Glendale', state: 'Arizona'};
+                    const glendaleCA = {id: 2, name: 'Glendale', state: 'California'};
+                    const cities = [glendaleAZ, glendaleCA];
+                    for (const order of [cities, cities.slice().reverse()]) {
+                        fixture.componentInstance.cities = order
+                        fixture.componentInstance.selectedCity = glendaleCA;
+                        tickAndDetectChanges(fixture);
+                        expect(fixture.componentInstance.select.selectedItems[0].value).toEqual(glendaleCA);
+                    }
+                }));
+
+                it('should select only by value if compareWithLabel is false', fakeAsync(() => {
+                    const fixture = createTestingModule(
+                        NgSelectTestCmp,
+                        `<ng-select
+                            bindLabel="name"
+                            [items]="cities"
+                            [(ngModel)]="selectedCity"
+                            [compareWithLabel]="false">
+                        </ng-select>`);
+
+                    const cities = [
+                        {id: 1, name: 'test'},
+                    ];
+                    fixture.componentInstance.cities = cities
+                    fixture.componentInstance.selectedCity = {id: -1, name: 'test'};
+                    tickAndDetectChanges(fixture);
+                    expect(fixture.componentInstance.select.selectedItems[0].value['id']).toEqual(-1);
+                }));
+
                 it('should select selected when there is no items', fakeAsync(() => {
                     const fixture = createTestingModule(
                         NgSelectTestCmp,

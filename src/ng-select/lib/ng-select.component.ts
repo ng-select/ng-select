@@ -78,6 +78,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     @Input() bindLabel: string;
     @Input() bindValue: string;
+    @Input() compareWithLabel = true;
     @Input() markFirst = true;
     @Input() placeholder: string;
     @Input() notFoundText: string;
