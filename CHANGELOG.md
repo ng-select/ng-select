@@ -7,6 +7,7 @@ Started to maintain versions made from Common App for forked version.
 ### Feature
 
 - Update forked repo to latest version from ng-select to upgrade ng-select to Angular 9
+- Remove theme stylesheets as styles have been ported to direct SCSS files
 
 ## 3.0.2
 
