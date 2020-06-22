@@ -309,10 +309,6 @@ $ng-option-active-color: #fff;
       grid-area: selected-icon;
       width: 100%;
       height: 1.5em;
-
-      &.is-selected {
-        display: block;
-      }
     }
 
     .ng-option-label {
@@ -352,6 +348,11 @@ $ng-option-active-color: #fff;
 
     &:focus {
       text-decoration: underline;
+    }
+
+    // Selected state
+    &.ng-option-selected .ng-option-icon {
+      display: block;
     }
   } // END ng-option
 
