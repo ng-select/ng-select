@@ -53,6 +53,7 @@
                    [attr.aria-autocomplete]="searchable ? 'both' : null"
                    [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
                    [attr.aria-controls]="isOpen ? dropdownId : null"
+                   [attr.aria-describedby]="describedBy"
                    [attr.aria-labelledby]="labelledBy"
                    [attr.aria-expanded]="isOpen ? 'true' : 'false'"
                    aria-haspopup="true"
