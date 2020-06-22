@@ -1,4 +1,10 @@
-# 3.1.3
+# 3.1.4
+
+### Bug Fixes
+
+* :lipstick: fix misalignment issue with default min height ([a5041d7](https://github.com/ng-select/ng-select/commit/a5041d719d2089342fb506e6be12be7aa8727d41))
+
+## 3.1.3
 
 ### Bug Fixes
 
