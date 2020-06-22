@@ -1,4 +1,10 @@
-# 3.1.1
+# 3.1.2
+
+### Bug Fixes
+
+* :wheelchair: add back missing describedBy attribute to input ([ffcbbd3](https://github.com/ng-select/ng-select/commit/ffcbbd322b2028b3d293abce32b9ff0fdf7e57e4))
+
+## 3.1.1
 
 ### Bug Fixes
 
