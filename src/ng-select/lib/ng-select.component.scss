@@ -93,9 +93,9 @@ $ng-option-active-color: #fff;
     grid-area: value;
     display: flex;
     flex: 1;
-    min-height: 43px; // Ensure a minimum height when no value is chosen
+    min-height: 42px; // Ensure a minimum height when no value is chosen
     height: 100%;
-    padding: .55rem .25rem .65rem .75rem;
+    padding: .45rem .25rem .65rem .75rem;
 
     .ng-input {
       opacity: 0;
@@ -309,10 +309,6 @@ $ng-option-active-color: #fff;
       grid-area: selected-icon;
       width: 100%;
       height: 1.5em;
-
-      &.is-selected {
-        display: block;
-      }
     }
 
     .ng-option-label {
@@ -352,6 +348,11 @@ $ng-option-active-color: #fff;
 
     &:focus {
       text-decoration: underline;
+    }
+
+    // Selected state
+    &.ng-option-selected .ng-option-icon {
+      display: block;
     }
   } // END ng-option
 
