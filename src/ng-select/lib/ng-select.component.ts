@@ -744,6 +744,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 if (item) {
                     if (this.isOpen) {
                         this.itemsList.markItem(item);
+                        this._scrollToMarked();
                         this._cd.markForCheck();
                     } else {
                         this.select(item);
