@@ -15,11 +15,17 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 | Angular| ng-select|
 | ------|:------:| 
+| >=9.0.0 <10.0.0 | v4.x |
 | >=8.0.0 <9.0.0  | v3.x |
 | >=6.0.0 <8.0.0  | v2.x |
 | v5.x.x  | v1.x |
 
 ---
+
+perf(pencil): remove graphiteWidth option
+
+BREAKING CHANGE: The graphiteWidth option has been removed.
+The default graphite width of 10mm is always used for performance reasons.
 
 Table of contents
 =================

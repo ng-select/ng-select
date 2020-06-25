@@ -1,4 +1,4 @@
-import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, flush, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
+import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ConsoleService } from './console.service';
@@ -10,7 +10,6 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 import { NgSelectModule } from './ng-select.module';
 import { Subject } from 'rxjs';
 import { NgSelectConfig } from './config.service';
-import { createComponent } from '@angular/compiler/src/core';
 
 describe('NgSelectComponent', () => {
 
@@ -1195,7 +1194,7 @@ describe('NgSelectComponent', () => {
             })
         }));
 
-        it('should select item with encapsulation = native', fakeAsync(() => {
+        it('should select item with encapsulation = ShadowDom', fakeAsync(() => {
             const fixture = createTestingModule(
                 EncapsulatedTestCmp,
                 `<ng-select [items]="cities"
@@ -3944,7 +3943,7 @@ class NgSelectTestCmp {
         this.visible = !this.visible;
     }
 
-    onChange(_: Event) {
+    onChange(_: any) {
     }
 
     onFocus(_: Event) {
@@ -3959,16 +3958,16 @@ class NgSelectTestCmp {
     onClose() {
     }
 
-    onAdd() {
+    onAdd(_: Event) {
     }
 
-    onRemove() {
+    onRemove(_: Event) {
     }
 
     onClear() {
     }
 
-    onSearch() {
+    onSearch(_: any) {
     }
 
     onScroll() {
@@ -3980,7 +3979,7 @@ class NgSelectTestCmp {
 
 @Component({
     template: ``,
-    encapsulation: ViewEncapsulation.Native,
+    encapsulation: ViewEncapsulation.ShadowDom,
 })
 class EncapsulatedTestCmp extends NgSelectTestCmp {
     @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
