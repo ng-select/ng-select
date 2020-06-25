@@ -39,9 +39,7 @@
               "src/ng-select/tsconfig.lib.json",
               "src/ng-select/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -85,16 +83,11 @@
             "main": "src/demo/main.ts",
             "polyfills": "src/demo/polyfills.ts",
             "tsConfig": "src/demo/tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "deployUrl": "/ng-select/",
             "extractCss": true,
-            "assets": [
-              "src/demo/favicon.ico",
-              "src/demo/assets"
-            ],
-            "styles": [
-              "src/demo/styles.scss"
-            ],
+            "assets": ["src/demo/favicon.ico", "src/demo/assets"],
+            "styles": ["src/demo/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -110,7 +103,6 @@
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -119,6 +111,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
@@ -149,6 +145,11 @@
           "options": {
             "tsConfig": "src/ng-option-highlight/tsconfig.lib.json",
             "project": "src/ng-option-highlight/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "src/ng-option-highlight/tsconfig.lib.prod.json"
+            }
           }
         },
         "test": {
@@ -166,9 +167,7 @@
               "src/ng-option-highlight/tsconfig.lib.json",
               "src/ng-option-highlight/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
