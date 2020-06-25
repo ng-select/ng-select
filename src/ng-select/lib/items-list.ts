@@ -164,6 +164,7 @@ export class ItemsList {
                     const head = this._items.find(x => x === last.parent);
                     this._filteredItems.push(head);
                 }
+                matchedItems.sort((a, b) => (a.label.toLowerCase().indexOf(term) > b.label.toLowerCase().indexOf(term) ? 1 : -1))
                 this._filteredItems.push(...matchedItems);
             }
         }
