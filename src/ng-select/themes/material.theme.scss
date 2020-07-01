@@ -74,9 +74,9 @@ $ng-select-bg: #ffffff !default;
         &:after {
             border-bottom: thin solid rgba(0, 0, 0, .42);
             content: '';
-            width: 100%;
             bottom: 0;
             left: 0;
+            right: 0;
             position: absolute;
             transition: border-color .3s cubic-bezier(.55, 0, .55, .2);
         }
