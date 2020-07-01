@@ -384,7 +384,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         this._parent = document.querySelector(this.appendTo);
-        if (!parent) {
+        if (!this._parent) {
             throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`);
         }
         this._parent.appendChild(this._dropdown);
