@@ -26,7 +26,12 @@
                 [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
         </ng-template>
 
-        <div class="ng-input">
+        <div class="ng-input"
+            role="combobox" 
+            [attr.aria-expanded]="isOpen" 
+            [attr.aria-owns]="isOpen ? dropdownId : null" 
+            aria-haspopup="listbox">
+
             <input #searchInput
                    [attr.id]="labelForId"
                    [attr.tabindex]="tabIndex"
@@ -39,10 +44,9 @@
                    (focus)="onInputFocus($event)"
                    (blur)="onInputBlur($event)"
                    (change)="$event.stopPropagation()"
-                   role="combobox"
-                   [attr.aria-expanded]="isOpen"
-                   [attr.aria-owns]="isOpen ? dropdownId : null"
-                   [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null">
+                   [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
+                   aria-autocomplete="list"
+                   [attr.aria-controls]="isOpen ? dropdownId : null">
         </div>
     </div>
 
@@ -82,7 +86,8 @@
                    (outsideClick)="close()"
                    [class.ng-select-multiple]="multiple"
                    [ngClass]="appendTo ? classes : null"
-                   [id]="dropdownId">
+                   [id]="dropdownId"
+                   role="listbox">
 
     <ng-container>
         <div class="ng-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)" (mouseover)="onItemHover(item)"
