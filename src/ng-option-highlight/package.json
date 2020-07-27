@@ -7,5 +7,8 @@
   "peerDependencies": {
     "@angular/common": "^8.0.3",
     "@angular/core": "^8.0.3"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
   }
 }

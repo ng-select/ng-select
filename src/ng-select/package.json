@@ -22,5 +22,8 @@
     "@angular/common": ">=9.0.0 <10.0.0",
     "@angular/core": ">=9.0.0 <10.0.0",
     "@angular/forms": ">=9.0.0 <10.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
   }
 }
