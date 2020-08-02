@@ -10,7 +10,7 @@ describe('NgDropdownPanelService', () => {
             providers: [NgDropdownPanelService]
         });
 
-        service = TestBed.get(NgDropdownPanelService);
+        service = TestBed.inject(NgDropdownPanelService);
     });
 
     describe('calculate items', () => {
@@ -71,5 +71,4 @@ describe('NgDropdownPanelService', () => {
             expect(service.getScrollTo(600, 40, 0)).toBe(400);
         });
     });
-})
-;
+});
