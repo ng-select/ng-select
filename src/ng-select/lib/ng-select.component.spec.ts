@@ -1074,6 +1074,7 @@ describe('NgSelectComponent', () => {
         }));
 
         it('should have div #padding with height other than 0 in dropdown panel when virtual scroll is enabled', fakeAsync(() => {
+
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -1083,6 +1084,20 @@ describe('NgSelectComponent', () => {
 
             const select = fixture.componentInstance.select;
             select.open();
+
+            tickAndDetectChanges(fixture);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.select.dropdownPanel.items.length).toBe(3);
+            let options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+            expect(options.length).toBe(3);
+            expect(options[0].innerText).toBe('Vilnius');
+            expect(options[1].innerText).toBe('Kaunas');
+            expect(options[2].innerText).toBe('Pabrade');
+
+            fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
+            tickAndDetectChanges(fixture);
+            fixture.detectChanges();
 
             const panelItems = document.querySelector('.ng-dropdown-panel-items');
             const firstChild = <HTMLScriptElement>panelItems.firstChild;
