@@ -255,6 +255,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         if (this.virtualScroll) {
             this._updateItemsRange(firstChange);
         } else {
+            this._setVirtualHeight();
             this._updateItems(firstChange);
         }
     }
@@ -301,6 +302,15 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
             this._virtualPadding.style.height = `${height}px`;
             this._updateScrollHeight = false;
         }
+    }
+
+    private _setVirtualHeight() {
+
+        if (!this._virtualPadding) {
+            return;
+        }
+
+        this._virtualPadding.style.height = `0px`;
     }
 
     private _onItemsLengthChanged() {
