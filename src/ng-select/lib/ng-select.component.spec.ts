@@ -2666,6 +2666,25 @@ describe('NgSelectComponent', () => {
             expect(filteredItems[1].label).toBe('Adam');
         }));
 
+        it('should respect selectable groups when filtering if [selectableGroup]="true"', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestCmp,
+                `<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindLabel="name"
+                        [selectableGroup]="true"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.filter('United St');
+            tickAndDetectChanges(fixture);
+
+            const filteredItems = fixture.componentInstance.select.itemsList.filteredItems;
+            expect(filteredItems.length).toBe(1);
+            expect(filteredItems[0].label).toBe('United States');
+        }));
+
         it('should continue filtering items on update of items', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
