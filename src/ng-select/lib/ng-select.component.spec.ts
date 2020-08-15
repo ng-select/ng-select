@@ -74,7 +74,7 @@ describe('NgSelectComponent', () => {
         expect(select.selectedItems[0].value).toEqual(30);
     }));
 
-    it('should update the dropdown value if editableSearchTerm true and multiple to true', fakeAsync(() => {
+    it('should update the dropdown value if editableSearchTerm true and multiple param to true', fakeAsync(() => {
 
         let select: NgSelectComponent;
 
