@@ -19,6 +19,7 @@ $ng-select-marked: #e6f7ff !default;
             }
             .ng-arrow-wrapper {
                 opacity: 1;
+                pointer-events: auto;
             }
         }
 

@@ -1056,6 +1056,55 @@ describe('NgSelectComponent', () => {
             expect(options[0].innerText).toBe('a');
         }));
 
+        it('should always have div #padding with height 0 in dropdown panel when virtual scroll is disabled', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [virtualScroll]="false">
+                </ng-select>`);
+
+            const select = fixture.componentInstance.select;
+            select.open();
+
+            const panelItems = document.querySelector('.ng-dropdown-panel-items');
+            const firstChild = <HTMLScriptElement>panelItems.firstChild;
+
+            expect(firstChild.offsetHeight).toBe(0);
+        }));
+
+        it('should have div #padding with height other than 0 in dropdown panel when virtual scroll is enabled', fakeAsync(() => {
+
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                            bindLabel="name"
+                            [virtualScroll]="true">
+                </ng-select>`);
+
+            const select = fixture.componentInstance.select;
+            select.open();
+
+            tickAndDetectChanges(fixture);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.select.dropdownPanel.items.length).toBe(3);
+            let options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+            expect(options.length).toBe(3);
+            expect(options[0].innerText).toBe('Vilnius');
+            expect(options[1].innerText).toBe('Kaunas');
+            expect(options[2].innerText).toBe('Pabrade');
+
+            fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
+            tickAndDetectChanges(fixture);
+            fixture.detectChanges();
+
+            const panelItems = document.querySelector('.ng-dropdown-panel-items');
+            const firstChild = <HTMLScriptElement>panelItems.firstChild;
+
+            expect(firstChild.offsetHeight).not.toBe(0);
+        }));
+
         it('should set and render items in dropdown panel with virtual scroll', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
@@ -3705,7 +3754,7 @@ describe('NgSelectComponent', () => {
                 const elClasses: DOMTokenList = element.children[0].classList;
                 const hasClass = elClasses.contains('ng-select')
 
-            
+
             expect(hasClass).toBe(true)
         }));
         it('Should have class ng-select and test', fakeAsync(() => {
@@ -3724,7 +3773,7 @@ describe('NgSelectComponent', () => {
                 const elClasses: DOMTokenList = element.children[0].classList;
                 const hasClass = elClasses.contains('ng-select') && elClasses.contains('test');
 
-            
+
             expect(hasClass).toBe(true);
         }));
     });
