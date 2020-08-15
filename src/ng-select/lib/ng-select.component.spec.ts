@@ -15,8 +15,6 @@ describe('NgSelectComponent', () => {
 
     describe('Data source', () => {
 
-        let select: NgSelectComponent;
-
         it('should set items from primitive numbers array', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
@@ -54,6 +52,9 @@ describe('NgSelectComponent', () => {
     });
 
     it('should update the dropdown value if editableSearchTerm true and multiple false', fakeAsync(() => {
+
+        let select: NgSelectComponent;
+
         const fixture = createTestingModule(
             NgSelectTestCmp,
             `<ng-select [items]="[0, 30, 60, 90, 120, 180, 240]" [editableSearchTerm]="true">
@@ -73,7 +74,10 @@ describe('NgSelectComponent', () => {
         expect(select.selectedItems[0].value).toEqual(30);
     }));
 
-    it('should update the dropdown value if editableSearchTerm true and multiple true', fakeAsync(() => {
+    it('should update the dropdown value if editableSearchTerm true and multiple to true', fakeAsync(() => {
+
+        let select: NgSelectComponent;
+
         const fixture = createTestingModule(
             NgSelectTestCmp,
             `<ng-select [items]="[0, 30, 60, 90, 120, 180, 240]" [editableSearchTerm]="true" [multiple]="true">
