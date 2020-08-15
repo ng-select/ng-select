@@ -432,7 +432,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
         this.isOpen = false;
-        console.error('close');
         if (!this._editableSearchTerm) {
             this._clearSearch();
         } else {
@@ -465,7 +464,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     select(item: NgOption) {
         if (!item.selected) {
             this.itemsList.select(item);
-            console.error('selecct');
             if (this.clearSearchOnAdd && !this._editableSearchTerm) {
                 this._clearSearch();
             }
@@ -591,7 +589,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
 
-        console.error('input focus');
         if (this._editableSearchTerm) {
             this._setSearchTermFromItems();
         }
@@ -607,7 +604,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this.isOpen && !this.disabled) {
             this._onTouched();
         }
-        console.error('blur');
         if (this._editableSearchTerm) {
             this._setSearchTermFromItems();
         }

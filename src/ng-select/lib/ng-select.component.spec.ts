@@ -14,6 +14,8 @@ import { NgSelectConfig } from './config.service';
 describe('NgSelectComponent', () => {
 
     describe('Data source', () => {
+        let select: NgSelectComponent;
+
         it('should set items from primitive numbers array', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
@@ -48,6 +50,47 @@ describe('NgSelectComponent', () => {
                 label: 'No', value: false, disabled: false
             }));
         }));
+
+        it('should update the dropdown value if editableSearchTerm true and multiple false', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="[0, 30, 60, 90, 120, 180, 240]" [editableSearchTerm]="true">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            select = fixture.componentInstance.select;
+            const itemsList = fixture.componentInstance.select.itemsList;
+            expect(itemsList.items.length).toBe(7);
+            expect(itemsList.items[0]).toEqual(jasmine.objectContaining({
+                label: '0',
+                value: 0
+            }));
+
+            expect(select.selectedItems[0]).toEqual(undefined);
+            select.writeValue(30);
+            expect(select.selectedItems[0].value).toEqual(30);
+        }));
+
+        it('should update the dropdown value if editableSearchTerm true and multiple true', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="[0, 30, 60, 90, 120, 180, 240]" [editableSearchTerm]="true" [multiple]="true">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            select = fixture.componentInstance.select;
+            const itemsList = fixture.componentInstance.select.itemsList;
+            expect(itemsList.items.length).toBe(7);
+            expect(itemsList.items[0]).toEqual(jasmine.objectContaining({
+                label: '0',
+                value: 0
+            }));
+
+            expect(select.selectedItems).toEqual([]);
+            select.writeValue([30, 60, 90]);
+            expect(select.selectedItems.map(item => item.value)).toEqual([30, 60, 90]);
+        }));
+
     });
 
     describe('Model bindings and data changes', () => {
