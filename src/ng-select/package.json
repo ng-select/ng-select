@@ -25,6 +25,5 @@
   },
   "dependencies": {
     "tslib": "^2.0.0"
-  },
-  "sideEffects": ["*.scss","*.css"]
+  }
 }
