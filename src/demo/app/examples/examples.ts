@@ -14,6 +14,7 @@ import { SearchCustomExampleComponent } from './search-custom-example/search-cus
 import { SearchAutocompleteExampleComponent } from './search-autocomplete-example/search-autocomplete-example.component';
 import { TagsDefaultExampleComponent } from './tags-default-example/tags-default-example.component';
 import { TagsCustomExampleComponent } from './tags-custom-example/tags-custom-example.component';
+import { TagsHighlightExampleComponent } from './tags-highlight-example/tags-highlight-example.component';
 import { TagsBackendExampleComponent } from './tags-backend-example/tags-backend-example.component';
 import { TagsClosedDropdownExampleComponent } from './tags-closed-dropdown-example/tags-closed-dropdown-example.component';
 import { TemplateLabelExampleComponent } from './template-label-example/template-label-example.component';
@@ -115,6 +116,10 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
     'tags-custom-example': {
         component: TagsCustomExampleComponent,
         title: 'Custom tags'
+    },
+    'tags-highlight-example': {
+        component: TagsHighlightExampleComponent,
+        title: 'Hover-only tags effect'
     },
     'tags-backend-example': {
         component: TagsBackendExampleComponent,

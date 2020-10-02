@@ -92,7 +92,9 @@
                 [class.ng-optgroup]="item.children"
                 [class.ng-option]="!item.children"
                 [class.ng-option-child]="!!item.parent"
-                [class.ng-option-marked]="item === itemsList.markedItem"
+                [class.ng-option-marked]="!hoverEffect && item === itemsList.markedItem"
+                [class.ng-option-heavy-marked]="hoverEffect && item === itemsList.markedItem"
+                [class.ng-option-hover-effect]="hoverEffect"
                 [attr.aria-selected]="item.selected"
                 [attr.id]="item?.htmlId">
 

@@ -8,6 +8,7 @@ $ng-select-border: #d9d9d9 !default;
 $ng-select-bg: #ffffff !default;
 $ng-select-selected: rgba(24, 144, 255, 0.2);
 $ng-select-marked: #e6f7ff !default;
+$ng-select-heavy-marked: #8adaff !default;
 
 .ng-select {
     position: relative;
@@ -273,15 +274,24 @@ $ng-select-marked: #e6f7ff !default;
                 cursor: default;
                 color: rgba(0, 0, 0, .45);
             }
-            &.ng-option-marked {
+            &.ng-option-marked, &.ng-option-hover-effect:hover {
                 background-color: $ng-select-marked;
+            }
+            &.ng-option-heavy-marked, &.ng-option-heavy-marked.ng-option-hover-effect:hover {
+                background-color: $ng-select-heavy-marked;
             }
             &.ng-option-selected {
                 background-color: #fafafa;
                 font-weight: 600;
             }
-            &.ng-option-selected.ng-option-marked {
+            &.ng-option-selected.ng-option-marked,
+            &.ng-option-selected.ng-option-hover-effect:hover,
+            &.ng-option-selected.ng-option-marked.ng-option-hover-effect:hover {
                 background-color: $ng-select-marked;
+            }
+            &.ng-option-selected.ng-option-heavy-marked,
+            &.ng-option-selected.ng-option-heavy-marked.ng-option-hover-effect:hover {
+                background-color: $ng-select-heavy-marked;
             }
         }
         .ng-option {

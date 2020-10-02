@@ -93,6 +93,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() closeOnSelect = true;
     @Input() hideSelected = false;
     @Input() selectOnTab = false;
+    @Input() hoverEffect = false;
     @Input() openOnEnter: boolean;
     @Input() maxSelectedItems: number;
     @Input() groupBy: string | Function;
@@ -606,7 +607,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     onItemHover(item: NgOption) {
-        if (item.disabled) {
+        if (item.disabled || this.hoverEffect) {
             return;
         }
         this.itemsList.markItem(item);

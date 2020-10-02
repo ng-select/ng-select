@@ -1,0 +1,16 @@
+<p>
+    By setting <b>[hoverEffect]="true"</b> you will be able to hover over items without
+    marking them for selection. Only arrow key presses will have an effect on marking the
+    selected item.
+</p>
+
+<ng-select [items]="companies"
+           [addTag]="addTagFn"
+           [hoverEffect]="true"
+           multiple="true"
+           bindLabel="name"
+           [(ngModel)]="selectedCompanies">
+</ng-select>
+
+<br>
+Selected value: {{selectedCompanies | json}}
