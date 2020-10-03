@@ -108,7 +108,10 @@
             </ng-template>
         </div>
 
-        <div class="ng-option" [class.ng-option-marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag">
+        <div class="ng-option" (mouseover)="!hoverEffect && itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag"
+                [class.ng-option-marked]="!hoverEffect && !itemsList.markedItem"
+                [class.ng-option-heavy-marked]="hoverEffect && !itemsList.markedItem"
+                [class.ng-option-hover-effect]="hoverEffect">
             <ng-template #defaultTagTemplate>
                 <span><span class="ng-tag-label">{{addTagText}}</span>"{{searchTerm}}"</span>
             </ng-template>
