@@ -3889,6 +3889,23 @@ describe('NgSelectComponent', () => {
             expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length)
         }))
     })
+
+    describe('Hover Effect', () => {
+        it('should not mark items on hover', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities" [hoverEffect]="true" [(ngModel)]="selectedCity" [addTag]="true">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+
+            const select = fixture.componentInstance.select;
+            expect(select.itemsList.markedItem).toBeUndefined();
+
+            select.onItemHover(select.itemsList.items[0]);
+            expect(select.itemsList.markedItem).toBeUndefined();
+        }));
+    });
 });
 
 
