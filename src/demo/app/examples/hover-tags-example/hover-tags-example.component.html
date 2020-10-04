@@ -1,12 +1,12 @@
 <p>
-    By setting <b>[hoverEffect]="true"</b> you will be able to hover over items without
-    marking them for selection. Only arrow key presses will have an effect on marking the
-    selected item.
+    Using the hover effect with tags enabled allows the <b>addTag</b> item to remain selected
+    even when the mouse hovers over other items.
 </p>
 
 <ng-select [items]="companies"
            [addTag]="addTagFn"
            [hoverEffect]="true"
+           [markFirst]="false"
            multiple="true"
            bindLabel="name"
            [(ngModel)]="selectedCompanies">

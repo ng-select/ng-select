@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'tags-highlight-example',
-    templateUrl: './tags-highlight-example.component.html',
-    styleUrls: ['./tags-highlight-example.component.scss']
+    selector: 'hover-tags-example',
+    templateUrl: './hover-tags-example.component.html',
+    styleUrls: ['./hover-tags-example.component.scss']
 })
-export class TagsHighlightExampleComponent implements OnInit {
+export class HoverTagsExampleComponent implements OnInit {
 
     selectedCompanies;
     companies: any[] = [];
-    companiesNames = ['Uber', 'Microsoft', 'Flexigen'];
+    companiesNames = ['Uber', 'Microsoft', 'Flexigen', 'Company A', 'Company B'];
 
     ngOnInit() {
         this.companiesNames.forEach((c, i) => {

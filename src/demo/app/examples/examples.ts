@@ -14,7 +14,6 @@ import { SearchCustomExampleComponent } from './search-custom-example/search-cus
 import { SearchAutocompleteExampleComponent } from './search-autocomplete-example/search-autocomplete-example.component';
 import { TagsDefaultExampleComponent } from './tags-default-example/tags-default-example.component';
 import { TagsCustomExampleComponent } from './tags-custom-example/tags-custom-example.component';
-import { TagsHighlightExampleComponent } from './tags-highlight-example/tags-highlight-example.component';
 import { TagsBackendExampleComponent } from './tags-backend-example/tags-backend-example.component';
 import { TagsClosedDropdownExampleComponent } from './tags-closed-dropdown-example/tags-closed-dropdown-example.component';
 import { TemplateLabelExampleComponent } from './template-label-example/template-label-example.component';
@@ -42,6 +41,9 @@ import { GroupSelectableExampleComponent } from './group-selectable-example/grou
 import { GroupSelectableHiddenExampleComponent } from './group-selectable-hidden-example/group-selectable-hidden-example.component';
 import { GroupChildrenExampleComponent } from './group-children-example/group-children-example.component';
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
+import { HoverEffectExampleComponent } from './hover-effect-example/hover-effect-example.component';
+import { HoverGroupExampleComponent } from './hover-group-example/hover-group-example.component';
+import { HoverTagsExampleComponent } from './hover-tags-example/hover-tags-example.component';
 
 export interface Example {
     component: any;
@@ -116,10 +118,6 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
     'tags-custom-example': {
         component: TagsCustomExampleComponent,
         title: 'Custom tags'
-    },
-    'tags-highlight-example': {
-        component: TagsHighlightExampleComponent,
-        title: 'Hover-only tags effect'
     },
     'tags-backend-example': {
         component: TagsBackendExampleComponent,
@@ -224,5 +222,17 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
     'group-children-example': {
         component: GroupChildrenExampleComponent,
         title: 'Items with already grouped children array'
-    }
+    },
+    'hover-effect-example': {
+        component: HoverEffectExampleComponent,
+        title: 'Hover effect'
+    },
+    'hover-tags-example': {
+        component: HoverTagsExampleComponent,
+        title: 'Hover with tags'
+    },
+    'hover-group-example': {
+        component: HoverGroupExampleComponent,
+        title: 'Hover with groups'
+    },
 };

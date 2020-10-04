@@ -266,10 +266,16 @@ $ng-select-value-font-size: 0.9em !default;
             &.ng-option-disabled {
                 cursor: default;
             }
-            &.ng-option-marked {
+            &.ng-option-marked, &.ng-option-hover-effect:hover {
                 background-color: $ng-select-marked;
             }
-            &.ng-option-selected, &.ng-option-selected.ng-option-marked {
+            &.ng-option-heavy-marked,
+            &.ng-option-heavy-marked.ng-option-hover-effect:hover {
+                background-color: $ng-select-heavy-marked;
+            }
+            &.ng-option-selected,
+            &.ng-option-selected.ng-option-hover-effect:hover,
+            &.ng-option-selected.ng-option-marked {
                 background-color: $ng-select-selected;
                 font-weight: 600;
             }
@@ -278,10 +284,6 @@ $ng-select-value-font-size: 0.9em !default;
             background-color: $ng-select-bg;
             color: rgba(0, 0, 0, .87);
             padding: 8px 10px;
-            &.ng-option-hover-effect:hover {
-                background-color: $ng-select-marked;
-                color: $ng-select-primary-text;
-            }
             &.ng-option-selected,
             &.ng-option-selected.ng-option-hover-effect:hover,
             &.ng-option-selected.ng-option-marked {
@@ -291,7 +293,7 @@ $ng-select-value-font-size: 0.9em !default;
                     font-weight: 600;
                 }
             }
-            &.ng-option-marked {
+            &.ng-option-marked, &.ng-option-hover-effect:hover {
                 background-color: $ng-select-marked;
                 color: $ng-select-primary-text;
             }
@@ -300,8 +302,9 @@ $ng-select-value-font-size: 0.9em !default;
                 background-color: $ng-select-heavy-marked;
                 color: $ng-select-primary-text;
             }
-            &.ng-option-disabled {
+            &.ng-option-disabled, &.ng-option-disabled.ng-option-hover-effect:hover {
                 color: lighten($ng-select-primary-text, 60);
+                background-color: $ng-select-bg;
             }
             &.ng-option-child {
                 padding-left: 22px;

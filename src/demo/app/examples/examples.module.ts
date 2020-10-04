@@ -36,7 +36,6 @@ import { SearchDefaultExampleComponent } from './search-default-example/search-d
 import { TagsBackendExampleComponent } from './tags-backend-example/tags-backend-example.component';
 import { TagsClosedDropdownExampleComponent } from './tags-closed-dropdown-example/tags-closed-dropdown-example.component';
 import { TagsCustomExampleComponent } from './tags-custom-example/tags-custom-example.component';
-import { TagsHighlightExampleComponent } from './tags-highlight-example/tags-highlight-example.component';
 import { TagsDefaultExampleComponent } from './tags-default-example/tags-default-example.component';
 import { TemplateDisplayExampleComponent } from './template-display-example/template-display-example.component';
 import { TemplateHeaderFooterExampleComponent } from './template-header-footer-example/template-header-footer-example.component';
@@ -47,6 +46,9 @@ import { TemplateOptionExampleComponent } from './template-option-example/templa
 import { TemplateSearchExampleComponent } from './template-search-example/template-search-example.component';
 import { VirtualScrollExampleComponent } from './virtual-scroll-example/virtual-scroll-example.component';
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
+import { HoverEffectExampleComponent } from './hover-effect-example/hover-effect-example.component';
+import { HoverGroupExampleComponent } from './hover-group-example/hover-group-example.component';
+import { HoverTagsExampleComponent } from './hover-tags-example/hover-tags-example.component';
 
 
 const examples = [DataSourceBackendExampleComponent,
@@ -65,7 +67,6 @@ const examples = [DataSourceBackendExampleComponent,
     SearchAutocompleteExampleComponent,
     TagsDefaultExampleComponent,
     TagsCustomExampleComponent,
-    TagsHighlightExampleComponent,
     TagsBackendExampleComponent,
     TagsClosedDropdownExampleComponent,
     TemplateLabelExampleComponent,
@@ -93,6 +94,9 @@ const examples = [DataSourceBackendExampleComponent,
     GroupSelectableHiddenExampleComponent,
     GroupChildrenExampleComponent,
     SearchEditableExampleComponent,
+    HoverEffectExampleComponent,
+    HoverGroupExampleComponent,
+    HoverTagsExampleComponent,
 ];
 
 @NgModule({

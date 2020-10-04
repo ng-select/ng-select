@@ -280,13 +280,16 @@ $ng-select-bg: #ffffff !default;
             padding: 0 16px;
             color: $ng-select-secondary-text;
             font-weight: 500;
-            &.ng-option-marked {
+            &.ng-option-marked, &.ng-option-hover-effect:hover {
                 background: rgba(0, 0, 0, .04);
             }
-            &.ng-option-disabled {
+            &.ng-option-heavy-marked, &.ng-option-heavy-marked.ng-option-hover-effect:hover {
+                background: $ng-select-divider;
+            }
+            &.ng-option-disabled, &.ng-option-disabled.ng-option-hover-effect:hover {
                 cursor: default;
             }
-            &.ng-option-selected {
+            &.ng-option-selected, &.ng-option-selected.ng-option-hover-effect:hover {
                 background: $ng-select-divider;
                 color: $ng-select-highlight;
             }
@@ -305,16 +308,21 @@ $ng-select-bg: #ffffff !default;
             @include rtl {
                 text-align: right;
             }
-            &.ng-option-marked {
+            &.ng-option-marked, &.ng-option-hover-effect:hover {
                 background: rgba(0, 0, 0, .04);
                 color: $ng-select-primary-text;
             }
-            &.ng-option-selected {
+            &.ng-option-heavy-marked, &.ng-option-heavy-marked.ng-option-hover-effect:hover {
+                background: $ng-select-divider;
+                color: $ng-select-primary-text;
+            }
+            &.ng-option-selected, &.ng-option-selected.ng-option-hover-effect:hover {
                 background: $ng-select-divider;
                 color: $ng-select-highlight;
             }
-            &.ng-option-disabled {
+            &.ng-option-disabled, &.ng-option-disabled.ng-option-hover-effect:hover {
                 color: $ng-select-disabled-text;
+                background: $ng-select-bg;
             }
             &.ng-option-child {
                 padding-left: 32px;

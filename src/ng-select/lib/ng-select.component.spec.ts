@@ -3905,6 +3905,39 @@ describe('NgSelectComponent', () => {
             select.onItemHover(select.itemsList.items[0]);
             expect(select.itemsList.markedItem).toBeUndefined();
         }));
+
+        it('should mark items with arrow key presses only', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities" [hoverEffect]="true" [(ngModel)]="selectedCity" [addTag]="true">
+                </ng-select>`);
+
+            const select = fixture.componentInstance.select;
+
+            select.open();
+            tickAndDetectChanges(fixture);
+
+            // Auto marks first item
+            expect(select.itemsList.markedItem).toBe(select.itemsList.items[0]);
+
+            select.onItemHover(select.itemsList.items[1]);
+            expect(select.itemsList.markedItem).toBe(select.itemsList.items[0]); // Same as before
+
+            const marked = fixture.debugElement.nativeElement.querySelector('.ng-option-marked');
+            let heavyMarked = fixture.debugElement.nativeElement.querySelector('.ng-option-heavy-marked');
+
+            expect(marked).toBeNull(); // With `hoverEffect` enabled, only `ng-option-heavy-marked` is used
+            expect(heavyMarked.innerText).toBe(select.itemsList.items[0].label);
+
+            // Press down arrow to heavy-mark next item
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
+
+            expect(select.itemsList.markedItem).toBe(select.itemsList.items[1]); // Second item
+
+            heavyMarked = fixture.debugElement.nativeElement.querySelector('.ng-option-heavy-marked');
+
+            expect(heavyMarked.innerText).toBe(select.itemsList.items[1].label);
+        }));
     });
 });
 

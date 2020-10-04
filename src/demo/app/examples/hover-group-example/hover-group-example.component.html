@@ -1,0 +1,19 @@
+<p>
+    It also works with selectable groups.
+</p>
+
+<ng-select [items]="accounts"
+           [hoverEffect]="true"
+           bindLabel="name"
+           [multiple]="true"
+           bindValue="name"
+           groupBy="country"
+           [selectableGroup]="true"
+           [(ngModel)]="selectedAccount">
+    <ng-template ng-optgroup-tmp let-item="item">
+        {{item.country || 'Unnamed group'}}
+    </ng-template>
+</ng-select>
+
+<br>
+<small>Selected: {{selectedAccount | json}}</small>
