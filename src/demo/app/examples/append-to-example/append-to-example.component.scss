@@ -1,3 +1,6 @@
+// as we are using ViewEncapsulation.ShadowDom we need to make sure all styles are accessible within this component
+// @import "~@ng-select/ng-select/themes/default.theme.css";
+
 .overflow-box {
     padding: 5px;
     height: 100px;
