@@ -3477,6 +3477,31 @@ describe('NgSelectComponent', () => {
             });
         }));
 
+        it('should set correct dropdown panel horizontal position and width when appended to custom selector', async(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `
+                <div class="container" style="position: relative; overflow: auto; width: 200px; height: 200px">
+                    <div style="height: 100%">
+                        <ng-select [items]="cities"
+                            appendTo=".container"
+                            bindLabel="name"
+                            style="width: 50%; margin-left: auto"
+                            [(ngModel)]="selectedCity">
+                        </ng-select>
+                    </div>
+                </div>`);
+
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
+                expect(dropdown.style.left).toBe('100px');
+                expect(dropdown.style.width).toBe('100px');
+            });
+        }));
+
         it('should apply global appendTo from NgSelectConfig', async(() => {
             const config = new NgSelectConfig();
             config.appendTo = 'body';
