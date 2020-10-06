@@ -107,6 +107,36 @@ typically in your root component, and customize the values of its properties in 
       this.config.bindValue = 'value';
   }
 ```
+
+### Usage
+Define options in your consuming component:
+```js
+@Component({...})
+export class ExampleComponent {
+
+    selectedCar: number;
+
+    cars = [
+        { id: 1, name: 'Volvo' },
+        { id: 2, name: 'Saab' },
+        { id: 3, name: 'Opel' },
+        { id: 4, name: 'Audi' },
+    ];
+}
+```
+In template use `ng-select` component with your options
+
+```html
+<!--Using ng-option and for loop-->
+<ng-select [(ngModel)]="selectedCar">
+   <ng-option *ngFor="let car of cars" [value]="car.id">{{car.name}}</ng-option>
+</ng-select>
+
+<!--Using items input-->
+<ng-select [items]="cars" [(ngModel)]="selectedCar"></ng-select>
+```
+For more detailed examples see [Demo](https://https://ng-select.github.io/ng-select#/data-sources) page
+
 ### SystemJS
 If you are using SystemJS, you should also adjust your configuration to point to the UMD bundle.
 
