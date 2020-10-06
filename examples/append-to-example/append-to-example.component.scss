@@ -7,3 +7,19 @@
     border: 1px solid #999;
     overflow: hidden;
 }
+
+.scrollable-box {
+    position: relative;
+    height: 400px;
+    overflow: auto;
+}
+
+.wrapper {
+    display:flex;
+    justify-content: space-between;
+    column-gap: 5px;
+}
+
+.wrapper > ng-select {
+    flex: 1 0 auto;
+}
