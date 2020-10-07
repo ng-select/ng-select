@@ -133,9 +133,13 @@ In template use `ng-select` component with your options
 </ng-select>
 
 <!--Using items input-->
-<ng-select [items]="cars" [(ngModel)]="selectedCar"></ng-select>
+<ng-select [items]="cars" 
+           bindLabel="name" 
+           bindValue="id" 
+           [(ngModel)]="selectedCar">
+</ng-select>
 ```
-For more detailed examples see [Demo](https://https://ng-select.github.io/ng-select#/data-sources) page
+For more detailed examples see [Demo](https://ng-select.github.io/ng-select#/data-sources) page
 
 ### SystemJS
 If you are using SystemJS, you should also adjust your configuration to point to the UMD bundle.
