@@ -3801,6 +3801,39 @@ describe('NgSelectComponent', () => {
 
             expect(hasClass).toBe(true);
         }));
+
+        it('should select "tag" when pressing UP arrow key when groups are active', fakeAsync(() => {
+          const fixture = createTestingModule(
+            NgSelectGroupingTestCmp,
+            `<ng-select [items]="accounts"
+                    bindLabel="name"
+                    [addTag]="true"
+                    placeholder="select value"
+                    [(ngModel)]="selectedAccount">
+                </ng-select>`
+          );
+    
+          spyOn(fixture.componentInstance.select, "handleClearClick");
+          fixture.componentInstance.selectedAccount =
+            fixture.componentInstance.accounts[0].name;
+          tickAndDetectChanges(fixture);
+          fixture.componentInstance.select.handleClearClick();
+          tickAndDetectChanges(fixture);
+    
+          expect(
+            fixture.componentInstance.select.handleClearClick
+          ).toHaveBeenCalled();
+    
+          fixture.componentInstance.select.filter("a");
+          tickAndDetectChanges(fixture);
+          triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowUp);
+          tickAndDetectChanges(fixture);
+          const marked = fixture.debugElement.nativeElement.querySelector(
+            '.ng-option-marked'
+          );
+          expect(marked.innerText).toContain('Add item"a"');
+        }));
+        
     });
 
     describe('Input method composition', () => {

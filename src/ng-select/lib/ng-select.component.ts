@@ -913,7 +913,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         const nextIndex = this.itemsList.markedIndex + nextStep;
         return this.addTag && this.searchTerm
             && this.itemsList.markedItem
-            && (nextIndex < 0 || nextIndex === this.itemsList.filteredItems.length)
+            && (nextIndex <=  0 || nextIndex === this.itemsList.filteredItems.length)
     }
 
     private _handleBackspace() {
