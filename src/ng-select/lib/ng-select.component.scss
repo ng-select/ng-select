@@ -112,6 +112,12 @@ $ng-option-active-color: #fff;
           user-select: none;
         }
 
+        &::placeholder {
+          color: rgb(85, 85, 85);
+          font-style: italic;
+          opacity: 1;
+        }
+
         // Combat new Chromium focus outline, other styles are used to indicate focus farther up in the component tree
         &:focus {
           outline: none;
@@ -133,10 +139,6 @@ $ng-option-active-color: #fff;
       }
     }
 
-    ::placeholder{
-      color: #555;
-    }
-
     .ng-value-icon {
       display: none;
     }
@@ -145,10 +147,6 @@ $ng-option-active-color: #fff;
   &.ng-select-multiple {
     .ng-value-container {
       flex-wrap: wrap;
-    }
-
-    ::placeholder{
-      color: #555;
     }
 
     .ng-value {
