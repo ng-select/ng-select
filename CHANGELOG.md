@@ -1,3 +1,13 @@
+# 3.2.0
+
+### Enhancement
+
+* 🔥 remove small addition to angular json ([1f85b90](https://github.com/ng-select/ng-select/commit/1f85b90f90599d16888c1a63689eb2a7bd3bf1c5))
+* 🔖 bump to version 3.2.0 ([d5dcef6](https://github.com/ng-select/ng-select/commit/d5dcef61a5b74a0e615d575116996a92dbdf2cd1))
+* 💄 consolidate styles to a single selector ([7762c6d](https://github.com/ng-select/ng-select/commit/7762c6d1418cd07a12c566d43e8b70a71e53f013))
+* PTS-12669: added new placeholder styling under ng-select-single ([0fc3b6d](https://github.com/ng-select/ng-select/commit/0fc3b6d3dd1d604f2ac3085850bbbb8bd4ca54df))
+* PTS-12668: added new placeholder styling under ng-select-multiple ([56ff1c1](https://github.com/ng-select/ng-select/commit/56ff1c16441178d0e88657876a195a39b682f851))
+
 # 3.1.4
 
 ### Bug Fixes
