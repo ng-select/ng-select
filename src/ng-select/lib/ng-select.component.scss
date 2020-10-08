@@ -133,6 +133,10 @@ $ng-option-active-color: #fff;
       }
     }
 
+    ::placeholder{
+      color: #555;
+    }
+
     .ng-value-icon {
       display: none;
     }
