@@ -182,8 +182,5 @@
       }
     }
   },
-  "defaultProject": "demo",
-  "cli": {
-    "analytics": "5ef5646d-f57b-4b4f-b921-2194633e1345"
-  }
+  "defaultProject": "demo"
 }
