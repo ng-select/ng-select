@@ -143,6 +143,10 @@ $ng-option-active-color: #fff;
       flex-wrap: wrap;
     }
 
+    ::placeholder{
+      color: #555;
+    }
+
     .ng-value {
       position: relative;
       display: flex;

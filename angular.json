@@ -39,7 +39,9 @@
               "src/ng-select/tsconfig.lib.json",
               "src/ng-select/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -86,8 +88,13 @@
             "aot": true,
             "deployUrl": "/ng-select/",
             "extractCss": true,
-            "assets": ["src/demo/favicon.ico", "src/demo/assets"],
-            "styles": ["src/demo/styles.scss"],
+            "assets": [
+              "src/demo/favicon.ico",
+              "src/demo/assets"
+            ],
+            "styles": [
+              "src/demo/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -167,11 +174,16 @@
               "src/ng-option-highlight/tsconfig.lib.json",
               "src/ng-option-highlight/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
     }
   },
-  "defaultProject": "demo"
+  "defaultProject": "demo",
+  "cli": {
+    "analytics": "5ef5646d-f57b-4b4f-b921-2194633e1345"
+  }
 }
