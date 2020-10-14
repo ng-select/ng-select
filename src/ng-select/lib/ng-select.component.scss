@@ -61,6 +61,7 @@
             flex: 1;
             .ng-input {
                 opacity: 0;
+                position: absolute;
                 > input {
                     box-sizing: content-box;
                     background: none transparent;
