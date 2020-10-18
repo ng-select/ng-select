@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 
-@mixin wrapt-text() {
+@mixin wrap-text() {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -90,9 +90,9 @@
         }
         .ng-select-container {
             .ng-value-container {
-                @include wrapt-text;
+                @include wrap-text;
                 .ng-value {
-                    @include wrapt-text;
+                    @include wrap-text;
                     .ng-value-icon {
                         display: none;
                     }
@@ -224,14 +224,14 @@
         overflow-y: auto;
 
         .ng-optgroup {
-            @include wrapt-text();
+            @include wrap-text();
         }
 
         .ng-option {
             box-sizing: border-box;
             cursor: pointer;
             display: block;
-            @include wrapt-text();
+            @include wrap-text();
 
             .highlighted {
                 font-weight: bold;
