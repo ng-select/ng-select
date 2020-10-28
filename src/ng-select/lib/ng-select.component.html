@@ -76,6 +76,7 @@
                    [filterValue]="searchTerm"
                    [items]="itemsList.filteredItems"
                    [markedItem]="itemsList.markedItem"
+                   [showAddTag]="showAddTag"
                    (update)="viewPortItems = $event"
                    (scroll)="scroll.emit($event)"
                    (scrollToEnd)="scrollToEnd.emit($event)"

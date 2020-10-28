@@ -61,6 +61,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     @Input() headerTemplate: TemplateRef<any>;
     @Input() footerTemplate: TemplateRef<any>;
     @Input() filterValue: string = null;
+    @Input() showAddTag: boolean;
 
     @Output() update = new EventEmitter<any[]>();
     @Output() scroll = new EventEmitter<{ start: number; end: number }>();
@@ -325,7 +326,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         scrollTop = scrollTop || this._scrollablePanel.scrollTop;
-        const range = this._panelService.calculateItems(scrollTop, this.itemsLength, this.bufferAmount);
+        const itemsLength = this.showAddTag ? this.itemsLength + 1 : this.itemsLength;
+        const range = this._panelService.calculateItems(scrollTop, itemsLength, this.bufferAmount);
         this._updateVirtualHeight(range.scrollHeight);
         this._contentPanel.style.transform = `translateY(${range.topPadding}px)`;
 
