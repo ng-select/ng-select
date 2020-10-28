@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-``
 export interface ItemsRangeResult {
     scrollHeight: number;
     topPadding: number;
