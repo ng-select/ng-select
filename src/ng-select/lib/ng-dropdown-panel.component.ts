@@ -186,9 +186,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     adjustPosition() {
-        const parent = this._parent.getBoundingClientRect();
-        const select = this._select.getBoundingClientRect();
-        this._setOffset(parent, select);
+        this._updateYPosition();
     }
 
     private _handleDropdownPosition() {
@@ -206,7 +204,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (this.appendTo) {
-            this._updatePosition();
+            this._updateYPosition();
         }
 
         this._dropdown.style.opacity = '1';
@@ -216,7 +214,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         this._zone.runOutsideAngular(() => {
             fromEvent(this.scrollElementRef.nativeElement, 'scroll')
                 .pipe(takeUntil(this._destroy$), auditTime(0, SCROLL_SCHEDULER))
-                .subscribe((e: { target: HTMLElement }) => this._onContentScrolled(e.target.scrollTop));
+                .subscribe((e: { path, composedPath, target }) => {
+                    const path = e.path || (e.composedPath && e.composedPath());
+                    const scrollTop = path.length === 0 ? e.target.scrollTop : path[0].scrollTop
+                    this._onContentScrolled(scrollTop);
+                });
         });
     }
 
@@ -230,7 +232,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
                 fromEvent(this._document, 'touchstart', { capture: true }),
                 fromEvent(this._document, 'mousedown', { capture: true })
             ).pipe(takeUntil(this._destroy$))
-             .subscribe($event => this._checkToClose($event));
+                .subscribe($event => this._checkToClose($event));
         });
     }
 
@@ -397,22 +399,23 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         if (!this._parent) {
             throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`);
         }
+        this._updateXPosition();
         this._parent.appendChild(this._dropdown);
     }
 
-    private _updatePosition() {
+    private _updateXPosition() {
         const select = this._select.getBoundingClientRect();
         const parent = this._parent.getBoundingClientRect();
         const offsetLeft = select.left - parent.left;
-
-        this._setOffset(parent, select);
 
         this._dropdown.style.left = offsetLeft + 'px';
         this._dropdown.style.width = select.width + 'px';
         this._dropdown.style.minWidth = select.width + 'px';
     }
 
-    private _setOffset(parent: ClientRect, select: ClientRect) {
+    private _updateYPosition() {
+        const select = this._select.getBoundingClientRect();
+        const parent = this._parent.getBoundingClientRect();
         const delta = select.height;
 
         if (this._currentPosition === 'top') {

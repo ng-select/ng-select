@@ -24,3 +24,15 @@
                [(ngModel)]="selected2">
     </ng-select>
 </div>
+
+<br>
+<div class="scrollable-box">
+    <div class="overflow-box">
+        <ng-select [items]="people | async"
+                   bindLabel="company"
+                   placeholder="Select item"
+                   appendTo=".scrollable-box"
+                   [(ngModel)]="selected3">
+        </ng-select>
+    </div>
+</div>
