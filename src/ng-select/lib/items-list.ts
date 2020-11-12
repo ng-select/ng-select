@@ -291,7 +291,7 @@ export class ItemsList {
 
     private _getNextItemIndex(steps: number) {
         if (steps > 0) {
-            return (this._markedIndex === this._filteredItems.length - 1) ? 0 : (this._markedIndex + 1);
+            return (this._markedIndex >= this._filteredItems.length - 1) ? 0 : (this._markedIndex + 1);
         }
         return (this._markedIndex <= 0) ? (this._filteredItems.length - 1) : (this._markedIndex - 1);
     }
