@@ -63,14 +63,12 @@ describe('ItemsList', () => {
             });
 
             it('should mark first item when last item has being selected', () => {
-                cmp.hideSelected = true;
                 list.setItems([
                     { label: 'T1', val: 'V1' },
                     { label: 'T2', val: 'V2' },
                     { label: 'T3', val: 'V3' }
                 ]);
                 const lastIndex = list.items.length - 1;
-                console.log(list.items.length, list.items[lastIndex]);
                 list.markNextItem();
                 list.markNextItem();
                 list.markNextItem();
