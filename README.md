@@ -53,9 +53,6 @@ Table of contents
 - [x] Good base functionality test coverage
 - [x] Themes
 
-## Warning
-Library is under active development and may have API breaking changes for subsequent major versions after 1.0.0.
-
 ## Getting started
 ### Step 1: Install `ng-select`:
 
