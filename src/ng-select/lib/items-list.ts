@@ -365,7 +365,10 @@ export class ItemsList {
             let i = items.length;
             if (key === undefined) {
                 const withoutGroup = groups.get(undefined) || [];
-                items.push(...withoutGroup.map(x => ({ ...x, index: i++ })));
+                items.push(...withoutGroup.map(x => {
+                    x.index = i++;
+                    return x;
+                }));
                 continue;
             }
 

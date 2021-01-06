@@ -3829,6 +3829,35 @@ describe('NgSelectComponent', () => {
 
             expect(hasClass).toBe(true);
         }));
+
+        it('should correctly update ng option selected property when groups map has undefined key', fakeAsync(() => {
+            const fixture = createTestingModule(
+              NgSelectGroupingTestCmp,
+              `<ng-select [items]="accounts"
+                        groupBy="group"
+                        bindLabel="name"
+                        bindValue="email"
+                        [(ngModel)]="selectedAccount"
+                        [class]="'test'">
+                </ng-select>`);
+
+            const select = fixture.componentInstance.select;
+            const nativeElement: HTMLElement = fixture.nativeElement as HTMLElement;
+
+            select.filter('Adam');
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            expect(fixture.componentInstance.selectedAccount).toBe('adam@email.com');
+
+            select.filter('Amalie');
+            selectOption(fixture, KeyCode.ArrowDown, 0);
+            expect(fixture.componentInstance.selectedAccount).toBe('amalie@email.com');
+
+            select.filter('A');
+            expect(nativeElement.querySelectorAll('.ng-option-selected').length).toBe(1, 2);
+            expect(select.viewPortItems.filter((opt => opt.selected)).length).toBe(1, 2);
+            expect(select.viewPortItems.find((opt => opt.selected)).index).toBe(2, 0);
+            expect(select.itemsList.selectedItems.length).toBe(1);
+        }));
     });
 
     describe('Input method composition', () => {
