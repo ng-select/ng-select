@@ -3576,6 +3576,60 @@ describe('NgSelectComponent', () => {
             });
         }));
 
+        it('should pass static classes into dropdown panel when appendTo is specified', async(() => {
+            const config = new NgSelectConfig();
+            config.appendTo = 'body';
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `
+                <div class="container"></div>
+                <ng-select [items]="cities"
+                        class="someClass"
+                        appendTo=".container"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+                config);
+
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+
+                const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
+                expect(dropdown.classList.contains('someClass')).toBe(true);
+            });
+        }));
+
+        it('should pass ngClass classes into dropdown panel when appendTo is specified', async(() => {
+            const config = new NgSelectConfig();
+            config.appendTo = 'body';
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `
+                <div class="container"></div>
+                <ng-select [items]="cities"
+                        [ngClass]="{ someClass: visible }"
+                        appendTo=".container"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+                config);
+
+            fixture.componentInstance.visible = true;
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+
+                const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
+                expect(dropdown.classList.contains('someClass')).toBe(true);
+
+                fixture.componentInstance.visible = false;
+                fixture.detectChanges();
+
+                expect(dropdown.classList.contains('someClass')).toBe(false);
+            });
+        }));
+
     });
 
     describe('Grouping', () => {

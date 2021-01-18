@@ -110,6 +110,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() searchWhileComposing = true;
     @Input() minTermLength = 0;
     @Input() editableSearchTerm = false;
+    @Input() ngClass = null;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
@@ -243,6 +244,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return this.dropdownPanel.currentPosition;
         }
         return undefined;
+    }
+
+    get dropdownPanelStaticClasses() {
+
+        return this.appendTo && this.classes
+            ? `ng-dropdown-panel ${this.classes}`
+            : 'ng-dropdown-panel';
     }
 
     ngOnInit() {
