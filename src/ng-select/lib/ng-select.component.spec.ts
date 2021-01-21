@@ -717,6 +717,70 @@ describe('NgSelectComponent', () => {
             discardPeriodicTasks();
         }));
 
+        it('should use bindLabel from NgSelectConfig when bindLabel is not provided in template', fakeAsync(() => {
+            const config = new NgSelectConfig();
+            config.bindLabel = 'name';
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+                config
+            );
+
+            fixture.componentInstance.cities = [{ id: 1, name: 'Vilnius', label: '' }];
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+
+            select = fixture.componentInstance.select;
+            expect(select.selectedItems).toEqual([jasmine.objectContaining({
+                label: 'Vilnius'
+            })]);
+        }));
+
+        it('should override bindLabel from NgSelectConfig by template-provided bindLabel property', fakeAsync(() => {
+            const config = new NgSelectConfig();
+            config.bindLabel = 'label';
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+                config
+            );
+
+            fixture.componentInstance.cities = [{ id: 1, name: 'Vilnius', label: 'the capital of Lithuania' }];
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+
+            select = fixture.componentInstance.select;
+            expect(select.selectedItems).toEqual([jasmine.objectContaining({
+                label: 'Vilnius'
+            })]);
+        }));
+
+        it('should bind option label to "label" property when bindLabel is not provided', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities"
+                        [clearable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+            );
+
+            fixture.componentInstance.cities = [{ id: 1, name: 'Vilnius', label: 'the capital of Lithuania' }];
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+
+            select = fixture.componentInstance.select;
+            expect(select.selectedItems).toEqual([jasmine.objectContaining({
+                label: 'the capital of Lithuania'
+            })]);
+        }));
+
         describe('ng-option', () => {
             it('should reset to empty array', fakeAsync(() => {
                 const fixture = createTestingModule(

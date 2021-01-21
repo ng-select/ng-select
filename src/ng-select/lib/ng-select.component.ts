@@ -951,6 +951,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.openOnEnter = isDefined(this.openOnEnter) ? this.openOnEnter : config.openOnEnter;
         this.appendTo = this.appendTo || config.appendTo;
         this.bindValue = this.bindValue || config.bindValue;
+        this.bindLabel = this.bindLabel || config.bindLabel;
         this.appearance = this.appearance || config.appearance;
     }
 }
