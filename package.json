@@ -76,7 +76,6 @@
     "semantic-release": "^17.2.3",
     "standard-version": "^8.0.1",
     "ts-node": "~8.3.0",
-    "tsickle": "^0.39.1",
     "tslint": "~6.1.0",
     "typescript": "~3.9.7"
   }
