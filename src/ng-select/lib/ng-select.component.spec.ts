@@ -1,4 +1,4 @@
-import { async, ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ConsoleService } from './console.service';
@@ -1374,7 +1374,7 @@ describe('NgSelectComponent', () => {
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
         }));
 
-        it('should remove appended dropdown when it is destroyed', async(() => {
+        it('should remove appended dropdown when it is destroyed', waitForAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `
@@ -1899,7 +1899,7 @@ describe('NgSelectComponent', () => {
             tick();
         }));
 
-        it('should display custom dropdown option template', async(() => {
+        it('should display custom dropdown option template', waitForAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities" [(ngModel)]="selectedCity">
@@ -1934,7 +1934,7 @@ describe('NgSelectComponent', () => {
             expect(el.innerHTML).toBe('selected 1');
         }));
 
-        it('should display custom footer and header template', async(() => {
+        it('should display custom footer and header template', waitForAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities" [(ngModel)]="selectedCity">
@@ -1958,7 +1958,7 @@ describe('NgSelectComponent', () => {
             });
         }));
 
-        it('should display custom tag template', async(() => {
+        it('should display custom tag template', waitForAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities" [(ngModel)]="selectedCity" [addTag]="true">
@@ -2478,7 +2478,7 @@ describe('NgSelectComponent', () => {
                 </ng-select>`);
         });
 
-        it('should be visible when no value selected', async(() => {
+        it('should be visible when no value selected', waitForAsync(() => {
             fixture.detectChanges();
             fixture.whenStable().then(() => {
                 const element = fixture.componentInstance.select.element;
@@ -3530,7 +3530,7 @@ describe('NgSelectComponent', () => {
     });
 
     describe('Append to', () => {
-        it('should append dropdown to body', async(() => {
+        it('should append dropdown to body', waitForAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -3549,7 +3549,7 @@ describe('NgSelectComponent', () => {
             })
         }));
 
-        it('should append dropdown to custom selector', async(() => {
+        it('should append dropdown to custom selector', waitForAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `
@@ -3569,7 +3569,7 @@ describe('NgSelectComponent', () => {
             });
         }));
 
-        it('should set correct dropdown panel horizontal position and width when appended to custom selector', async(() => {
+        it('should set correct dropdown panel horizontal position and width when appended to custom selector', waitForAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `
@@ -3594,7 +3594,7 @@ describe('NgSelectComponent', () => {
             });
         }));
 
-        it('should apply global appendTo from NgSelectConfig', async(() => {
+        it('should apply global appendTo from NgSelectConfig', waitForAsync(() => {
             const config = new NgSelectConfig();
             config.appendTo = 'body';
             const fixture = createTestingModule(
@@ -3617,7 +3617,7 @@ describe('NgSelectComponent', () => {
             });
         }));
 
-        it('should not apply global appendTo from NgSelectConfig if appendTo prop explicitly provided in template', async(() => {
+        it('should not apply global appendTo from NgSelectConfig if appendTo prop explicitly provided in template', waitForAsync(() => {
             const config = new NgSelectConfig();
             config.appendTo = 'body';
             const fixture = createTestingModule(
