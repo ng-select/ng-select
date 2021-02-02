@@ -158,17 +158,73 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Output('scrollToEnd') scrollToEnd = new EventEmitter();
 
     // custom templates
-    @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
-    @ContentChild(NgOptgroupTemplateDirective, { read: TemplateRef }) optgroupTemplate: TemplateRef<any>;
-    @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
-    @ContentChild(NgMultiLabelTemplateDirective, { read: TemplateRef }) multiLabelTemplate: TemplateRef<any>;
-    @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerTemplate: TemplateRef<any>;
-    @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;
-    @ContentChild(NgNotFoundTemplateDirective, { read: TemplateRef }) notFoundTemplate: TemplateRef<any>;
-    @ContentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef }) typeToSearchTemplate: TemplateRef<any>;
-    @ContentChild(NgLoadingTextTemplateDirective, { read: TemplateRef }) loadingTextTemplate: TemplateRef<any>;
-    @ContentChild(NgTagTemplateDirective, { read: TemplateRef }) tagTemplate: TemplateRef<any>;
-    @ContentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef }) loadingSpinnerTemplate: TemplateRef<any>;
+    @Input() optionTemplate: TemplateRef<any>;
+    @Input() optgroupTemplate: TemplateRef<any>;
+    @Input() labelTemplate: TemplateRef<any>;
+    @Input() multiLabelTemplate: TemplateRef<any>;
+    @Input() headerTemplate: TemplateRef<any>;
+    @Input() footerTemplate: TemplateRef<any>;
+    @Input() notFoundTemplate: TemplateRef<any>;
+    @Input() typeToSearchTemplate: TemplateRef<any>;
+    @Input() loadingTextTemplate: TemplateRef<any>;
+    @Input() tagTemplate: TemplateRef<any>;
+    @Input() loadingSpinnerTemplate: TemplateRef<any>;
+
+    @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionContentChildTemplate: TemplateRef<any>;
+    @ContentChild(NgOptgroupTemplateDirective, { read: TemplateRef }) optgroupContentChildTemplate: TemplateRef<any>;
+    @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelContentChildTemplate: TemplateRef<any>;
+    @ContentChild(NgMultiLabelTemplateDirective, { read: TemplateRef }) multiLabelContentChildTemplate: TemplateRef<any>;
+    @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerContentChildTemplate: TemplateRef<any>;
+    @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerContentChildTemplate: TemplateRef<any>;
+    @ContentChild(NgNotFoundTemplateDirective, { read: TemplateRef }) notFoundContentChildTemplate: TemplateRef<any>;
+    @ContentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef }) typeToSearchContentChildTemplate: TemplateRef<any>;
+    @ContentChild(NgLoadingTextTemplateDirective, { read: TemplateRef }) loadingTextContentChildTemplate: TemplateRef<any>;
+    @ContentChild(NgTagTemplateDirective, { read: TemplateRef }) tagContentChildTemplate: TemplateRef<any>;
+    @ContentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef }) loadingSpinnerContentChildTemplate: TemplateRef<any>;
+
+    get providedOptionTemplate(): TemplateRef<any> {
+        return this.optionContentChildTemplate || this.optionTemplate;
+    }
+
+    get providedOptgroupTemplate(): TemplateRef<any> {
+        return this.optgroupContentChildTemplate || this.optgroupTemplate;
+    }
+
+    get providedLabelTemplate(): TemplateRef<any> {
+        return this.labelContentChildTemplate || this.labelTemplate;
+    }
+
+    get providedMultiLabelTemplate(): TemplateRef<any> {
+        return this.multiLabelContentChildTemplate || this.multiLabelTemplate;
+    }
+
+    get providedHeaderTemplate(): TemplateRef<any> {
+        return this.headerContentChildTemplate || this.headerTemplate;
+    }
+
+    get providedFooterTemplate(): TemplateRef<any> {
+        return this.footerContentChildTemplate || this.footerTemplate;
+    }
+
+    get providedNotFoundTemplate(): TemplateRef<any> {
+        return this.notFoundContentChildTemplate || this.notFoundTemplate;
+    }
+
+    get providedTypeToSearchTemplate(): TemplateRef<any> {
+        return this.typeToSearchContentChildTemplate || this.typeToSearchTemplate;
+    }
+
+    get providedLoadingTextTemplate(): TemplateRef<any> {
+        return this.loadingTextContentChildTemplate || this.loadingTextTemplate;
+    }
+
+    get providedTagTemplate(): TemplateRef<any> {
+        return this.tagContentChildTemplate || this.tagTemplate;
+    }
+
+    get providedLoadingSpinnerTemplate(): TemplateRef<any> {
+        return this.loadingSpinnerContentChildTemplate || this.loadingSpinnerTemplate;
+    }
 
     @ViewChild(forwardRef(() => NgDropdownPanelComponent)) dropdownPanel: NgDropdownPanelComponent;
     @ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
