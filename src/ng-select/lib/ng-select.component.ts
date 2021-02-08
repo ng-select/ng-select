@@ -131,7 +131,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     get compareWith() { return this._compareWith; }
 
     set compareWith(fn: CompareWithFn) {
-        if (!isFunction(fn)) {
+        if (fn !== undefined && fn !== null && !isFunction(fn)) {
             throw Error('`compareWith` must be a function.');
         }
         this._compareWith = fn;
