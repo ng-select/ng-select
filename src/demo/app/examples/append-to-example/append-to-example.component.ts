@@ -13,7 +13,6 @@ export class AppendToExampleComponent implements OnInit {
     selected: any;
     selected2: any;
     selected3: any;
-    selected4: any;
 
     constructor(private dataService: DataService) {
     }

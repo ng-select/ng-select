@@ -15,6 +15,8 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 | Angular| ng-select|
 | ------|:------:| 
+| >=11.0.0 <12.0.0 | v6.x |
+| >=10.0.0 <11.0.0 | v5.x |
 | >=9.0.0 <10.0.0 | v4.x |
 | >=8.0.0 <9.0.0  | v3.x |
 | >=6.0.0 <8.0.0  | v2.x |
@@ -133,9 +135,13 @@ In template use `ng-select` component with your options
 </ng-select>
 
 <!--Using items input-->
-<ng-select [items]="cars" [(ngModel)]="selectedCar"></ng-select>
+<ng-select [items]="cars" 
+           bindLabel="name" 
+           bindValue="id" 
+           [(ngModel)]="selectedCar">
+</ng-select>
 ```
-For more detailed examples see [Demo](https://https://ng-select.github.io/ng-select#/data-sources) page
+For more detailed examples see [Demo](https://ng-select.github.io/ng-select#/data-sources) page
 
 ### SystemJS
 If you are using SystemJS, you should also adjust your configuration to point to the UMD bundle.

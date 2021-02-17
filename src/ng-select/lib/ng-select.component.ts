@@ -70,7 +70,6 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'role': 'listbox',
         '[class.ng-select]': 'useDefaultClass',
         '[class.ng-select-single]': '!multiple',
     }
@@ -133,7 +132,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     get compareWith() { return this._compareWith; }
 
     set compareWith(fn: CompareWithFn) {
-        if (!isFunction(fn)) {
+        if (fn !== undefined && fn !== null && !isFunction(fn)) {
             throw Error('`compareWith` must be a function.');
         }
         this._compareWith = fn;
@@ -428,6 +427,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
         this.isOpen = false;
+        this._isComposing = false;
         if (!this._editableSearchTerm) {
             this._clearSearch();
         } else {
@@ -748,6 +748,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 if (item) {
                     if (this.isOpen) {
                         this.itemsList.markItem(item);
+                        this._scrollToMarked();
                         this._cd.markForCheck();
                     } else {
                         this.select(item);
@@ -951,6 +952,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.openOnEnter = isDefined(this.openOnEnter) ? this.openOnEnter : config.openOnEnter;
         this.appendTo = this.appendTo || config.appendTo;
         this.bindValue = this.bindValue || config.bindValue;
+        this.bindLabel = this.bindLabel || config.bindLabel;
         this.appearance = this.appearance || config.appearance;
     }
 }
