@@ -1844,12 +1844,12 @@ describe('NgSelectComponent', () => {
     });
 
     describe('Custom templates', () => {
-        it('should display custom header template', fakeAsync(() => {
+        it('should display custom label template provided as content child', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities" [(ngModel)]="selectedCity">
                     <ng-template ng-label-tmp let-item="item">
-                        <div class="custom-header">{{item.name}}</div>
+                        <div class="custom-label">{{item.name}}</div>
                     </ng-template>
                 </ng-select>`);
 
@@ -1857,7 +1857,26 @@ describe('NgSelectComponent', () => {
             tickAndDetectChanges(fixture);
             tickAndDetectChanges(fixture);
 
-            const el = fixture.debugElement.query(By.css('.custom-header'));
+            const el = fixture.debugElement.query(By.css('.custom-label'));
+            expect(el).not.toBeNull();
+            expect(el.nativeElement).not.toBeNull();
+        }));
+
+        it('should display custom label template provided as attribute', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-template #labelTemplate let-item="item">
+                    <div class="custom-label">{{item.name}}</div>
+                </ng-template>
+
+                <ng-select [items]="cities" [(ngModel)]="selectedCity" [labelTemplate]="labelTemplate">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+            tickAndDetectChanges(fixture);
+
+            const el = fixture.debugElement.query(By.css('.custom-label'));
             expect(el).not.toBeNull();
             expect(el.nativeElement).not.toBeNull();
         }));
@@ -1899,7 +1918,7 @@ describe('NgSelectComponent', () => {
             tick();
         }));
 
-        it('should display custom dropdown option template', waitForAsync(() => {
+        it('should display custom dropdown option template provided as content child', waitForAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities" [(ngModel)]="selectedCity">
@@ -1917,7 +1936,26 @@ describe('NgSelectComponent', () => {
             });
         }));
 
-        it('should display custom multiple label template', fakeAsync(() => {
+        it('should display custom dropdown option template provided as attribute', waitForAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-template #optionTemplate let-item="item">
+                    <div class="custom-option">{{item.name}}</div>
+                </ng-template>
+
+                <ng-select [items]="cities" [(ngModel)]="selectedCity" [optionTemplate]="optionTemplate">
+                </ng-select>`);
+
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const el = fixture.debugElement.query(By.css('.custom-option')).nativeElement;
+                expect(el).not.toBeNull();
+            });
+        }));
+
+        it('should display custom multiple label template provided as content child', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities" [multiple]="true" [(ngModel)]="selectedCities">
@@ -1934,7 +1972,25 @@ describe('NgSelectComponent', () => {
             expect(el.innerHTML).toBe('selected 1');
         }));
 
-        it('should display custom footer and header template', waitForAsync(() => {
+        it('should display custom multiple label template provided as attribute', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-template #multiLabelTemplate let-items="items">
+                    <div class="custom-multi-label">selected {{items.length}}</div>
+                </ng-template>
+
+                <ng-select [items]="cities" [multiple]="true" [(ngModel)]="selectedCities" [multiLabelTemplate]="multiLabelTemplate">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
+            tickAndDetectChanges(fixture);
+            tickAndDetectChanges(fixture);
+
+            const el = fixture.debugElement.query(By.css('.custom-multi-label')).nativeElement;
+            expect(el.innerHTML).toBe('selected 1');
+        }));
+
+        it('should display custom footer and header template provided as content children', waitForAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities" [(ngModel)]="selectedCity">
@@ -1958,7 +2014,32 @@ describe('NgSelectComponent', () => {
             });
         }));
 
-        it('should display custom tag template', waitForAsync(() => {
+        it('should display custom footer and header template provided as attributes', waitForAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-template #headerTemplate>
+                    <span class="header-label">header</span>
+                </ng-template>
+                <ng-template #footerTemplate>
+                    <span class="footer-label">footer</span>
+                </ng-template>
+
+                <ng-select [items]="cities" [(ngModel)]="selectedCity" [headerTemplate]="headerTemplate" [footerTemplate]="footerTemplate">
+                </ng-select>`);
+
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const header = fixture.debugElement.query(By.css('.header-label')).nativeElement;
+                expect(header.innerHTML).toBe('header');
+
+                const footer = fixture.debugElement.query(By.css('.footer-label')).nativeElement;
+                expect(footer.innerHTML).toBe('footer');
+            });
+        }));
+
+        it('should display custom tag template provided as content child', waitForAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities" [(ngModel)]="selectedCity" [addTag]="true">
@@ -1977,7 +2058,27 @@ describe('NgSelectComponent', () => {
             });
         }));
 
-        it('should display custom loading and no data found template', fakeAsync(() => {
+        it('should display custom tag template provided as attribute', waitForAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-template #tagTemplate let-search="searchTerm">
+                    <span class="tag-template">{{searchTerm}}</span>
+                </ng-template>
+
+                <ng-select [items]="cities" [(ngModel)]="selectedCity" [addTag]="true" [tagTemplate]="tagTemplate">
+                </ng-select>`);
+
+            fixture.componentInstance.select.searchTerm = 'tag';
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const template = fixture.debugElement.query(By.css('.tag-template')).nativeElement;
+                expect(template).toBeDefined();
+            });
+        }));
+
+        it('should display custom loading and no data found template provided as content children', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -2015,7 +2116,47 @@ describe('NgSelectComponent', () => {
             });
         }));
 
-        it('should display custom type for search template', fakeAsync(() => {
+        it('should display custom loading and no data found template provided as attributes', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-template #notFoundTemplate let-searchTerm="searchTerm">
+                    <div class="custom-notfound">
+                        No data found for "{{searchTerm}}"
+                    </div>
+                </ng-template>
+                <ng-template #loadingTextTemplate let-searchTerm="searchTerm">
+                    <div class="custom-loading">
+                        Fetching Data for "{{searchTerm}}"
+                    </div>
+                </ng-template>
+
+                <ng-select [items]="cities"
+                            [loading]="citiesLoading"
+                            [(ngModel)]="selectedCity"
+                            [notFoundTemplate]="notFoundTemplate"
+                            [loadingTextTemplate]="loadingTextTemplate">
+                </ng-select>`);
+
+            fixture.whenStable().then(() => {
+                fixture.componentInstance.cities = [];
+                fixture.componentInstance.citiesLoading = true;
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+                const loadingOption = fixture.debugElement.queryAll(By.css('.custom-loading'));
+                expect(loadingOption.length).toBe(1);
+
+
+                fixture.componentInstance.citiesLoading = false;
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+                const notFoundOptions = fixture.debugElement.queryAll(By.css('.custom-notfound'));
+                expect(notFoundOptions.length).toBe(1);
+            });
+        }));
+
+        it('should display custom type for search template provided as content child', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -2041,7 +2182,34 @@ describe('NgSelectComponent', () => {
             });
         }));
 
-        it('should display custom loading spinner template', fakeAsync(() => {
+        it('should display custom type for search template provided as attribute', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-template #typeToSearchTemplate>
+                    <div class="custom-typeforsearch">
+                        Start typing...
+                    </div>
+                </ng-template>
+
+                <ng-select [items]="cities"
+                            [typeahead]="filter"
+                            [(ngModel)]="selectedCity"
+                            [typeToSearchTemplate]="typeToSearchTemplate">
+                </ng-select>`);
+
+            fixture.whenStable().then(() => {
+                fixture.componentInstance.cities = [];
+                fixture.componentInstance.select.open();
+                fixture.componentInstance.filter.subscribe();
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+                tickAndDetectChanges(fixture);
+                const loadingOption = fixture.debugElement.queryAll(By.css('.custom-typeforsearch'));
+                expect(loadingOption.length).toBe(1);
+            });
+        }));
+
+        it('should display custom loading spinner template provided as content child', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
                 `<ng-select [items]="cities"
@@ -2053,6 +2221,28 @@ describe('NgSelectComponent', () => {
                             Custom loading spinner
                         </div>
                     </ng-template>
+                </ng-select>`);
+
+            fixture.whenStable().then(() => {
+                tickAndDetectChanges(fixture);
+                const spinner = fixture.debugElement.queryAll(By.css('.custom-loadingspinner'));
+                expect(spinner.length).toBe(1);
+            });
+        }));
+
+        it('should display custom loading spinner template provided as attribute', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-template #loadingSpinnerTemplate>
+                    <div class="custom-loadingspinner">
+                        Custom loading spinner
+                    </div>
+                </ng-template>
+
+                <ng-select [items]="cities"
+                            [loading]="true"
+                            [(ngModel)]="selectedCity"
+                            [loadingSpinnerTemplate]="loadingSpinnerTemplate">
                 </ng-select>`);
 
             fixture.whenStable().then(() => {
