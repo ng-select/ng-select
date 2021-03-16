@@ -12,6 +12,8 @@ Original and current documentation for ng-select can be found [in the parent rep
 
 The CommonApp version is what is used within all CommonApp products via a Github package. In order to update, release, and use the latest updates made to the forked version, follow these instructions:
 
+---
+
 ## Versions
 
 | Angular| ng-select|
@@ -22,8 +24,6 @@ The CommonApp version is what is used within all CommonApp products via a Github
 | >=9.0.0 <9.0.0  | v3.x |
 | >=6.0.0 <8.0.0  | v2.x |
 | v5.x.x  | v1.x |
-
----
 
 Table of contents
 =================

@@ -1,3 +1,8 @@
+# 4.0.0
+
+* **Breaking**: Update to Angular 11 compatible version
+* Reintroduce ng-value for displaying values (to allow for templated value display)
+
 # 3.2.0
 
 ### Enhancement
