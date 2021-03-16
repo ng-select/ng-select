@@ -135,7 +135,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     get compareWith() { return this._compareWith; }
 
     set compareWith(fn: CompareWithFn) {
-        if (!isFunction(fn)) {
+        if (fn !== undefined && fn !== null && !isFunction(fn)) {
             throw Error('`compareWith` must be a function.');
         }
         this._compareWith = fn;
@@ -203,6 +203,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     private _compareWith: CompareWithFn;
     private _clearSearchOnAdd: boolean;
     private _isComposing = false;
+
     private get _editableSearchTerm(): boolean {
         return this.editableSearchTerm && !this.multiple;
     }
@@ -498,6 +499,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
         
         this.isOpen = false;
+        this._isComposing = false;
 
         if (this.multiple) {
             this._clearSearch();
@@ -779,7 +781,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
         const validateBinding = (item: any): boolean => {
             if (!isDefined(this.compareWith) && isObject(item) && this.bindValue) {
-                this._console.warn(`Binding object(${JSON.stringify(item)}) with bindValue is not allowed.`);
+                this._console.warn(
+                    `Setting object(${JSON.stringify(item)}) as your model with bindValue is not allowed unless [compareWith] is used.`
+                );
                 return false;
             }
             return true;
@@ -843,6 +847,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 if (item) {
                     if (this.isOpen) {
                         this.itemsList.markItem(item);
+                        this._scrollToMarked();
                         this._cd.markForCheck();
                     } else {
                         this.select(item);
@@ -1088,6 +1093,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.openOnEnter = isDefined(this.openOnEnter) ? this.openOnEnter : config.openOnEnter;
         this.appendTo = this.appendTo || config.appendTo;
         this.bindValue = this.bindValue || config.bindValue;
+        this.bindLabel = this.bindLabel || config.bindLabel;
         this.appearance = this.appearance || config.appearance;
     }
 }

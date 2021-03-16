@@ -16,6 +16,8 @@ The CommonApp version is what is used within all CommonApp products via a Github
 
 | Angular| ng-select|
 | ------|:------:| 
+| >=11.0.0 <12.0.0 | v6.x |
+| >=10.0.0 <11.0.0 | v5.x |
 | >=9.0.0 <10.0.0 | v4.x |
 | >=9.0.0 <9.0.0  | v3.x |
 | >=6.0.0 <8.0.0  | v2.x |
@@ -23,7 +25,8 @@ The CommonApp version is what is used within all CommonApp products via a Github
 
 ---
 
-## Table of contents
+Table of contents
+=================
 
 - [Features](#features)
 - [Getting started](#getting-started)
@@ -114,6 +117,39 @@ typically in your root component, and customize the values of its properties in 
       this.config.bindValue = 'value';
   }
 ```
+
+### Usage
+Define options in your consuming component:
+```js
+@Component({...})
+export class ExampleComponent {
+
+    selectedCar: number;
+
+    cars = [
+        { id: 1, name: 'Volvo' },
+        { id: 2, name: 'Saab' },
+        { id: 3, name: 'Opel' },
+        { id: 4, name: 'Audi' },
+    ];
+}
+```
+In template use `ng-select` component with your options
+
+```html
+<!--Using ng-option and for loop-->
+<ng-select [(ngModel)]="selectedCar">
+   <ng-option *ngFor="let car of cars" [value]="car.id">{{car.name}}</ng-option>
+</ng-select>
+
+<!--Using items input-->
+<ng-select [items]="cars" 
+           bindLabel="name" 
+           bindValue="id" 
+           [(ngModel)]="selectedCar">
+</ng-select>
+```
+For more detailed examples see [Demo](https://ng-select.github.io/ng-select#/data-sources) page
 
 ### SystemJS
 

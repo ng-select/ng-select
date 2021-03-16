@@ -10,17 +10,8 @@
      (focus)="onWidgetFocus()">
 
     <div class="ng-value-container">
-        <ng-container *ngIf="((multiple && !multiLabelTemplate) || !searchable) && selectedItems.length > 0">
-            <div #tag
-                 *ngFor="let item of selectedItems; trackBy: trackByOption" 
-                 class="ng-value"
-                 [class.ng-value-disabled]="item.disabled"
-                 id="{{item.htmlId}}_selected"
-                 tabindex="-1"
-                 [attr.role]="multiple ? 'option' : null"
-                 [attr.aria-disabled]="item.disabled"
-                 aria-selected="true"
-                 (blur)="onTagBlur($event)">
+        <ng-container *ngIf="(!multiLabelTemplate  || !multiple ) && selectedItems.length > 0">
+            <div [class.ng-value-disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems; trackBy: trackByOption">
                 <ng-template #defaultLabelTemplate>
                     <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
                     <span class="ng-value-icon left" (click)="unselect(item);" aria-hidden="true">
@@ -35,12 +26,17 @@
             </div>
         </ng-container>
 
-        <ng-template *ngIf="multiLabelTemplate && selectedValues.length > 0"
+        <ng-template *ngIf="multiple && multiLabelTemplate && selectedValues.length > 0"
                 [ngTemplateOutlet]="multiLabelTemplate"
                 [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
         </ng-template>
 
-        <div class="ng-input">
+        <div class="ng-input"
+            role="combobox" 
+            [attr.aria-expanded]="isOpen" 
+            [attr.aria-owns]="isOpen ? dropdownId : null" 
+            aria-haspopup="listbox">
+
             <input #searchInput
                    [attr.id]="labelForId"
                    [placeholder]="this.selectedItems && this.selectedItems.length ? '' : placeholder"
@@ -50,7 +46,7 @@
                    [value]="searchTerm ? searchTerm : ''"
                    [attr.tabindex]="tabIndex"
                    role="combobox"
-                   [attr.aria-autocomplete]="searchable ? 'both' : null"
+                   [attr.aria-autocomplete]="searchable ? 'list' : null"
                    [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
                    [attr.aria-controls]="isOpen ? dropdownId : null"
                    [attr.aria-describedby]="describedBy"
@@ -109,7 +105,9 @@
                    (scrollToEnd)="scrollToEnd.emit($event)"
                    (outsideClick)="close()"
                    [class.ng-select-multiple]="multiple"
-                   [ngClass]="appendTo ? classes : null">
+                   [ngClass]="appendTo ? classes : null"
+                   role="listbox"
+                   aria-label="Options list">
 
     <ng-container>
         <div class="ng-option"

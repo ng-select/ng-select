@@ -10,7 +10,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "src/ng-select/tsconfig.lib.json",
             "project": "src/ng-select/ng-package.json"
@@ -108,7 +108,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -148,15 +147,10 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "src/ng-option-highlight/tsconfig.lib.json",
             "project": "src/ng-option-highlight/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "src/ng-option-highlight/tsconfig.lib.prod.json"
-            }
           }
         },
         "test": {
@@ -164,7 +158,8 @@
           "options": {
             "main": "src/ng-option-highlight/test.ts",
             "tsConfig": "src/ng-option-highlight/tsconfig.spec.json",
-            "karmaConfig": "src/ng-option-highlight/karma.conf.js"
+            "karmaConfig": "src/ng-option-highlight/karma.conf.js",
+            "watch": false
           }
         },
         "lint": {
