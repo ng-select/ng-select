@@ -43,17 +43,8 @@ $ng-option-active-color: #fff;
       justify-content: center;
       width: 2.5rem; // Click area affordance
 
-      button {
-        width: 100%;
+      svg {
         height: 100%;
-        background: none;
-        border: 0;
-        box-shadow: none;
-        pointer-events: none;
-
-        svg {
-          height: 100%;
-        }
       }
     }
 
@@ -62,11 +53,23 @@ $ng-option-active-color: #fff;
       user-select: none;
       cursor: pointer;
 
+      button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background: none;
+        border: 0;
+        box-shadow: none;
+        pointer-events: none;
+      }
+
       .ng-clear:hover,
       .ng-clear:focus {
         color: $ng-select-error;
       }
-    
+
       .ng-clear:focus {
         outline: 1px dotted $ng-select-error;
         outline-offset: -1px;
