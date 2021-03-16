@@ -1,3 +1,8 @@
+# 4.0.1
+
+* Fix visible ng-value
+* Fix centering of clear button within wrapper
+
 # 4.0.0
 
 * **Breaking**: Update to Angular 11 compatible version
