@@ -10,7 +10,7 @@
      (focus)="onWidgetFocus()">
 
     <div class="ng-value-container">
-        <ng-container *ngIf="(!multiLabelTemplate  || !multiple ) && selectedItems.length > 0">
+        <ng-container *ngIf="((multiple && !multiLabelTemplate) || !searchable) && selectedItems.length > 0">
           <div #tag
               *ngFor="let item of selectedItems; trackBy: trackByOption"
               class="ng-value"
