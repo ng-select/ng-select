@@ -194,7 +194,6 @@ $ng-option-active-color: #fff;
     .ng-select-container.ng-has-value {
       // Magic numbers to prevent multi-selected tags from altering select size
       .ng-value-container {
-        margin-top: -.2rem;
         margin-left: -.35rem;
         padding-bottom: .2rem;
       }
