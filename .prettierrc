@@ -1,0 +1,30 @@
+{
+  "bracketSpacing": true,
+  "quoteProps": "consistent",
+  "semi": true,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "useTabs": false,
+  "overrides": [
+    {
+      "files": [
+        "*.html"
+      ],
+      "options": {
+        "parser": "angular",
+        "printWidth": 999,
+        "singleQuote": false
+      }
+    },
+    {
+      "files": [
+        "*.ts"
+      ],
+      "options": {
+        "parser": "typescript",
+        "printWidth": 120
+      }
+    }
+  ]
+}
