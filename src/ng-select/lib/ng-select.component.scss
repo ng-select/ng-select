@@ -205,7 +205,7 @@ $ng-option-active-color: #fff;
       .ng-input {
           padding-top: 2px;
       }
-    } 
+    }
   } // END ng-select-multiple
 
 
@@ -309,6 +309,7 @@ $ng-option-active-color: #fff;
     display: grid;
     grid-template: "selected-icon value-text" auto / 1rem 1fr;
     gap: 0 .5rem;
+    min-height: 44px;
     padding: .5rem .75rem;
     cursor: pointer;
 
@@ -365,6 +366,13 @@ $ng-option-active-color: #fff;
   } // END ng-option
 
 
+  .ng-optgroup {
+    padding: .5rem .75rem;
+    color: #555;
+    font-size: .875rem;
+  }
+
+
   // Positioning
   &.ng-select-top {
     bottom: 100%;
@@ -406,9 +414,9 @@ $ng-option-active-color: #fff;
 
 // Loading animation
 @keyframes sk-bouncedelay {
-  0%, 80%, 100% { 
+  0%, 80%, 100% {
     transform: scale(0);
-  } 40% { 
+  } 40% {
     transform: scale(1);
   }
 }
