@@ -1,18 +1,21 @@
 #!/bin/bash
 git pull
 
-# echo update changelog
-# cd ./src/ng-select/
-# node ../../node_modules/standard-version/bin/cli.js --infile ../../CHANGELOG.md
-# cd ../..
+echo Update changelog
+cd ./src/ng-select/
+node ../../node_modules/standard-version/bin/cli.js --infile ../../CHANGELOG.md
+cd ../..
 
-echo build lib
+echo Build lib
 npm run build
 
-# echo push tags
-# git push --follow-tags origin master
+echo Copy styles
+mkdir -p dist/ng-select/scss
+cp src/ng-select/**/*.scss dist/ng-select/scss
 
-echo push to npm
+echo Copy documentation
 cp README.md CHANGELOG.md ./dist/ng-select/
+
+echo Publish to npm
 cd ./dist/ng-select/
 npm publish
