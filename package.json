@@ -5,9 +5,8 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
-    "build": "ng build ng-select && npm run build:themes && npm run copy-sass",
+    "build": "ng build ng-select && npm run copy-sass",
     "build:demo": "ng build demo --prod --baseHref=/ng-select && npm copy-examples",
-    "build:themes": "node-sass --output-style compressed src/ng-select/themes/ -o dist/ng-select/themes",
     "copy-sass": "mkdir -p dist/ng-select/scss && cp src/ng-select/**/*.scss dist/ng-select/scss",
     "copy-examples": "cp -r src/demo/app/examples dist/demo",
     "start": "ng serve",

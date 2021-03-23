@@ -1,3 +1,7 @@
+# 4.0.2
+
+* Fix new styles not being included in package
+
 # 4.0.1
 
 * Fix visible ng-value
