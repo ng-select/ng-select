@@ -27,5 +27,5 @@ jobs:
       - name: Copy README
         run: cp README.md ./dist/ng-select/
 
-      - name: Semantic release
-        run: npx semantic-release
+      # - name: Semantic release
+      #   run: npx semantic-release
