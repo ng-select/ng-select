@@ -368,7 +368,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
             this._virtualPadding :
             this._contentPanel;
 
-        if (scrollTop + this._dropdown.clientHeight >= padding.clientHeight) {
+        if (scrollTop + this._dropdown.clientHeight >= padding.clientHeight - 1) {
             this._zone.run(() => this.scrollToEnd.emit());
             this._scrollToEndFired = true;
         }
