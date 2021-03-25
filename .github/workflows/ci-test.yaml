@@ -5,19 +5,27 @@ on:
     branches: [DEVOPS-CI-CD-test]
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v1
 
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: '10.x'
+          node-version: '12.x'
 
       - name: Install dependencies
-        run: yarn install
+        run: npm install
 
-      - name: Run lint
-        run: yarn lint
-        
+      - name: Build ng-select
+        run: npm run-script build
+
+      - name: Copy README
+        run: cp README.md ./dist/ng-select/
+
+      - name: Semantic release
+        run: npx semantic-release
