@@ -14,7 +14,7 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 ## Versions
 
 | Angular| ng-select|
-| ------|:------:| 
+| ------|:------:|
 | >=11.0.0 <12.0.0 | v6.x |
 | >=10.0.0 <11.0.0 | v5.x |
 | >=9.0.0 <10.0.0 | v4.x |
@@ -81,18 +81,18 @@ import { FormsModule } from '@angular/forms';
 export class AppModule {}
 ```
 
-### Step 3: Include a theme: 
+### Step 3: Include a theme:
 To allow customization and theming, `ng-select` bundle includes only generic styles that are necessary for correct layout and positioning. To get full look of the control, include one of the themes in your application. If you're using the Angular CLI, you can add this to your `styles.scss` or include it in `.angular-cli.json` (Angular v5 and below) or `angular.json` (Angular v6 onwards).
 
 ```scss
 @import "~@ng-select/ng-select/themes/default.theme.css";
-// ... or 
+// ... or
 @import "~@ng-select/ng-select/themes/material.theme.css";
 
 ```
 
 
-### Step 4 (Optional): Configuration 
+### Step 4 (Optional): Configuration
 
 You can also set global configuration and localization messages by injecting NgSelectConfig service,
 typically in your root component, and customize the values of its properties in order to provide default values.
@@ -101,9 +101,9 @@ typically in your root component, and customize the values of its properties in 
   constructor(private config: NgSelectConfig) {
       this.config.notFoundText = 'Custom not found';
       this.config.appendTo = 'body';
-      // set the bindValue to global config when you use the same 
-      // bindValue in most of the place. 
-      // You can also override bindValue for the specified template 
+      // set the bindValue to global config when you use the same
+      // bindValue in most of the place.
+      // You can also override bindValue for the specified template
       // by defining `bindValue` as property
       // Eg : <ng-select bindValue="some-new-value"></ng-select>
       this.config.bindValue = 'value';
@@ -135,9 +135,9 @@ In template use `ng-select` component with your options
 </ng-select>
 
 <!--Using items input-->
-<ng-select [items]="cars" 
-           bindLabel="name" 
-           bindValue="id" 
+<ng-select [items]="cars"
+           bindLabel="name"
+           bindValue="id"
            [(ngModel)]="selectedCar">
 </ng-select>
 ```
@@ -253,12 +253,12 @@ export class CustomSelectionModel implements SelectionModel {
 ```
 
 ## Change Detection
-Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable 
+Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable
 data types. That means if you do object mutations like:
 
 ```javascript
 this.items.push({id: 1, name: 'New item'})
-``` 
+```
 
 Component will not detect a change. Instead you need to do:
 
@@ -338,3 +338,5 @@ To release to npm just run `./release.sh`, of course if you have permissions ;)
 
 ## Inspiration
 This component is inspired by [React select](https://github.com/JedWatson/react-select) and [Virtual scroll](https://github.com/rintoj/angular2-virtual-scroll). Check theirs amazing work and components :)
+
+Some changes
