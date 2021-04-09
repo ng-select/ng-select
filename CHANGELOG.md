@@ -1,3 +1,11 @@
+# 4.0.3
+
+* Fix disappearing dropdown on search/typeahead
+* Remove incorrect ARIA role on text input within combobox div
+* Remove invalid aria-expanded attribute from text input
+* Fix border-radius disappearing on item hover
+* Remove console logs on keypresses
+
 # 4.0.2
 
 * Fix new styles not being included in package
