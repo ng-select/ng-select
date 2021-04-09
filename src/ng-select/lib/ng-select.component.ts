@@ -291,6 +291,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 switch ($event.which) {
                     case KeyCode.ArrowDown:
                         this._handleArrowDown($event);
+                        console.log('arrow down')
                         break;
                     case KeyCode.ArrowUp:
                         this._handleArrowUp($event);
@@ -862,6 +863,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             type: 'text',
             autocorrect: 'off',
             autocapitalize: 'off',
+            autocomplete: this.labelForId ? 'off' : this.dropdownId,
             ...this.inputAttrs
         };
 
