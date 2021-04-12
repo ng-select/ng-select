@@ -497,7 +497,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this.isOpen || this._manualOpen) {
             return;
         }
-        
+
         this.isOpen = false;
         this._isComposing = false;
 
@@ -545,7 +545,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
                 if (this.clearSearchOnAdd) {
                   this._clearSearch();
-                } 
+                }
             }
             this._updateNgModel();
         }
