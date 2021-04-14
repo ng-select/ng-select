@@ -38,7 +38,8 @@ import {
     NgLoadingTextTemplateDirective,
     NgMultiLabelTemplateDirective,
     NgTagTemplateDirective,
-    NgLoadingSpinnerTemplateDirective
+    NgLoadingSpinnerTemplateDirective,
+    NgLabelValueTemplateDirective
 } from './ng-templates.directive';
 
 import { ConsoleService } from './console.service';
@@ -161,6 +162,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() optionTemplate: TemplateRef<any>;
     @Input() optgroupTemplate: TemplateRef<any>;
     @Input() labelTemplate: TemplateRef<any>;
+    @Input() labelValueTemplate: TemplateRef<any>;
     @Input() multiLabelTemplate: TemplateRef<any>;
     @Input() headerTemplate: TemplateRef<any>;
     @Input() footerTemplate: TemplateRef<any>;
@@ -173,6 +175,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionContentChildTemplate: TemplateRef<any>;
     @ContentChild(NgOptgroupTemplateDirective, { read: TemplateRef }) optgroupContentChildTemplate: TemplateRef<any>;
     @ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelContentChildTemplate: TemplateRef<any>;
+    @ContentChild(NgLabelValueTemplateDirective, { read: TemplateRef }) labelValueContentChildTemplate: TemplateRef<any>;
     @ContentChild(NgMultiLabelTemplateDirective, { read: TemplateRef }) multiLabelContentChildTemplate: TemplateRef<any>;
     @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerContentChildTemplate: TemplateRef<any>;
     @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerContentChildTemplate: TemplateRef<any>;
@@ -192,6 +195,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     get providedLabelTemplate(): TemplateRef<any> {
         return this.labelContentChildTemplate || this.labelTemplate;
+    }
+
+    get providedLabelValueTemplate(): TemplateRef<any> {
+        return this.labelValueContentChildTemplate || this.labelValueTemplate;
     }
 
     get providedMultiLabelTemplate(): TemplateRef<any> {

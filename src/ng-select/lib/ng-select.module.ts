@@ -15,7 +15,8 @@ import {
     NgOptionTemplateDirective,
     NgTagTemplateDirective,
     NgItemLabelDirective,
-    NgTypeToSearchTemplateDirective
+    NgTypeToSearchTemplateDirective,
+    NgLabelValueTemplateDirective
 } from './ng-templates.directive';
 import { DefaultSelectionModelFactory } from './selection-model';
 
@@ -27,6 +28,7 @@ import { DefaultSelectionModelFactory } from './selection-model';
         NgOptgroupTemplateDirective,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
+        NgLabelValueTemplateDirective,
         NgMultiLabelTemplateDirective,
         NgHeaderTemplateDirective,
         NgFooterTemplateDirective,
@@ -46,6 +48,7 @@ import { DefaultSelectionModelFactory } from './selection-model';
         NgOptgroupTemplateDirective,
         NgOptionTemplateDirective,
         NgLabelTemplateDirective,
+        NgLabelValueTemplateDirective,
         NgMultiLabelTemplateDirective,
         NgHeaderTemplateDirective,
         NgFooterTemplateDirective,
