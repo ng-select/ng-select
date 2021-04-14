@@ -30,6 +30,11 @@ export class NgLabelTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
+@Directive({ selector: '[ng-label-value-tmp]' })
+export class NgLabelValueTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
+
 @Directive({ selector: '[ng-multi-label-tmp]' })
 export class NgMultiLabelTemplateDirective {
     constructor(public template: TemplateRef<any>) { }

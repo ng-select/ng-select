@@ -1881,6 +1881,43 @@ describe('NgSelectComponent', () => {
             expect(el.nativeElement).not.toBeNull();
         }));
 
+        it('should display custom label template provided as content child', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities" [(ngModel)]="selectedCity">
+                    <ng-template ng-label-value-tmp let-item="item">
+                        <div class="custom-label">{{item.name}}</div>
+                    </ng-template>
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+            tickAndDetectChanges(fixture);
+
+            const el = fixture.debugElement.query(By.css('.custom-label'));
+            expect(el).not.toBeNull();
+            expect(el.nativeElement).not.toBeNull();
+        }));
+
+        it('should display custom label value template provided as attribute', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-template #labelValueTemplate let-item="item">
+                    <div class="custom-label">{{item.name}}</div>
+                </ng-template>
+
+                <ng-select [items]="cities" [(ngModel)]="selectedCity" [labelValueTemplate]="labelValueTemplate">
+                </ng-select>`);
+
+            fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+            tickAndDetectChanges(fixture);
+            tickAndDetectChanges(fixture);
+
+            const el = fixture.debugElement.query(By.css('.custom-label'));
+            expect(el).not.toBeNull();
+            expect(el.nativeElement).not.toBeNull();
+        }));
+
         it('should clear item using value', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
