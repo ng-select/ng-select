@@ -24,8 +24,8 @@ import {
     Attribute
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { takeUntil, startWith, tap, debounceTime, map, filter } from 'rxjs/operators';
-import { Subject, merge } from 'rxjs';
+import { takeUntil, startWith, tap, debounceTime, map, filter, take } from 'rxjs/operators';
+import { Subject, merge, Observable, isObservable } from 'rxjs';
 
 import {
     NgOptionTemplateDirective,
@@ -144,6 +144,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     set clearSearchOnAdd(value) {
         this._clearSearchOnAdd = value;
     };
+
+    @Input() getMissingItemLabelFn: (value: any) => string | Observable<string> = () => null;
 
     // output events
     @Output('blur') blurEvent = new EventEmitter();
@@ -778,11 +780,27 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 if ((isValObject || isPrimitive)) {
                     this.itemsList.select(this.itemsList.mapItem(val, null));
                 } else if (this.bindValue) {
-                    item = {
-                        [this.bindLabel]: null,
-                        [this.bindValue]: val
+                    const selectItemWithLabelFn = (itemValue: any, itemLabel: string) => {
+                        const selectedItem = {
+                            [this.bindLabel]: itemLabel,
+                            [this.bindValue]: itemValue,
+                        };
+
+                        this.itemsList.select(this.itemsList.mapItem(selectedItem, null));
                     };
-                    this.itemsList.select(this.itemsList.mapItem(item, null));
+
+                    const label = this.getMissingItemLabelFn(val);
+
+                    if (isObservable(label)) {
+                        label.pipe(
+                            take(1),
+                            takeUntil(this._destroy$),
+                            tap(resolvedLabel => selectItemWithLabelFn(val, resolvedLabel)),
+                        )
+                        .subscribe();
+                    } else {
+                        selectItemWithLabelFn(val, label);
+                    }
                 }
             }
         };
