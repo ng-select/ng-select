@@ -8,8 +8,9 @@ import { KeyCode, NgOption } from './ng-select.types';
 import { MockConsole, MockNgZone } from '../testing/mocks';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { NgSelectModule } from './ng-select.module';
-import { Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { NgSelectConfig } from './config.service';
+import { delay } from 'rxjs/operators';
 
 describe('NgSelectComponent', () => {
 
@@ -4262,6 +4263,62 @@ describe('NgSelectComponent', () => {
             expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length)
         }))
     })
+
+    describe('Get missing item label', () => {
+        let fixture: ComponentFixture<NgSelectTestCmp>;
+        let select: NgSelectComponent;
+
+        beforeEach(() => {
+            fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select bindValue="id"
+                            bindLabel="name"
+                            [(ngModel)]="selectedCityId">
+                </ng-select>`);
+            select = fixture.componentInstance.select;
+            fixture.componentInstance.selectedCityId = 0;
+        });
+
+        const labelText = 'Vilnius';
+
+        function checkLabel(
+            getMissingItemLabelFn: () => string | Observable<string>,
+            shouldCheckText: boolean,
+            delayBeforeCheck: number): void {
+            select.getMissingItemLabelFn = getMissingItemLabelFn;
+
+            fixture.detectChanges();
+            tick(delayBeforeCheck);
+            fixture.detectChanges();
+
+            const labelElement = fixture.debugElement
+                .query(By.css('.ng-value-label'))
+                ?.query(By.css('span'))
+                ?.nativeElement;
+
+            expect(labelElement).toBeDefined();
+
+            if (shouldCheckText) {
+                expect(labelElement.innerText).toBe(labelText);
+            }
+        };
+
+        it('should work with async function', fakeAsync(() => {
+            const timeout = 200;
+            const method = () => of(labelText).pipe(delay(timeout));
+            checkLabel(method, true, timeout);
+        }));
+
+        it('should work with sync function', fakeAsync(() => {
+            const method = () => labelText;
+            checkLabel(method, true, 1);
+        }));
+
+        it('should not fail with not defined function', fakeAsync(() => {
+            checkLabel(null, false, 1);
+            checkLabel(undefined, false, 1);
+        }));
+    });
 });
 
 

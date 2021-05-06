@@ -145,7 +145,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this._clearSearchOnAdd = value;
     };
 
-    @Input() getMissingItemLabelFn: (value: any) => string | Observable<string> = () => null;
+    @Input() getMissingItemLabelFn: (value: any) => string | Observable<string>;
 
     // output events
     @Output('blur') blurEvent = new EventEmitter();
@@ -789,13 +789,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                         this.itemsList.select(this.itemsList.mapItem(selectedItem, null));
                     };
 
-                    const label = this.getMissingItemLabelFn(val);
+                    const label = this.getMissingItemLabelFn ? this.getMissingItemLabelFn(val) : null;
 
                     if (isObservable(label)) {
                         label.pipe(
                             take(1),
                             takeUntil(this._destroy$),
                             tap(resolvedLabel => selectItemWithLabelFn(val, resolvedLabel)),
+                            tap(() => this._cd.markForCheck()),
                         )
                         .subscribe();
                     } else {
