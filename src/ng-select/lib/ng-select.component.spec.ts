@@ -50,14 +50,41 @@ describe('NgSelectComponent', () => {
             }));
         }));
 
+        it('should set items async', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="cities$ | async"
+                            bindLabel="name">
+                </ng-select>`);
+
+            tick(fixture.componentInstance.asyncTimeout);
+
+            fixture.componentInstance.select.open();
+
+            tickAndDetectChanges(fixture);
+
+            const cities = fixture.componentInstance.cities;
+            const options = fixture.debugElement
+                .queryAll(By.css('.ng-option'));
+
+            expect(options.length).toBe(cities.length);
+
+            const firstOptionLabel = options[0]
+                ?.query(By.css('span'))
+                ?.nativeElement;
+
+            expect(firstOptionLabel).toBeDefined();
+            expect(firstOptionLabel.innerText).toBe(cities[0].name);
+        }));
+
         it('should refresh items manually', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestCmp,
-                `<ng-select>
+                `<ng-select bindLabel="name">
                 </ng-select>`);
 
-            const items = [1, 30, 60, 90, 120, 180, 240];
-            fixture.componentInstance.select.items = items;
+            const cities = fixture.componentInstance.cities;
+            fixture.componentInstance.select.items = cities;
             fixture.componentInstance.select.refreshItems();
             fixture.componentInstance.select.open();
 
@@ -66,14 +93,14 @@ describe('NgSelectComponent', () => {
             const options = fixture.debugElement
                 .queryAll(By.css('.ng-option'));
 
-            expect(options.length).toBe(items.length);
+            expect(options.length).toBe(cities.length);
 
             const firstOptionLabel = options[0]
                 ?.query(By.css('span'))
                 ?.nativeElement;
 
             expect(firstOptionLabel).toBeDefined();
-            expect(firstOptionLabel.innerText).toBe(items[0].toString());
+            expect(firstOptionLabel.innerText).toBe(cities[0].name);
         }));
     });
 
@@ -4410,6 +4437,7 @@ class NgSelectTestCmp {
     selectOnTab = true;
     hideSelected = false;
 
+    asyncTimeout = 1000;
     citiesLoading = false;
     selectedCityId: number;
     selectedCityIds: number[];
@@ -4420,6 +4448,7 @@ class NgSelectTestCmp {
         { id: 2, name: 'Kaunas' },
         { id: 3, name: 'Pabrade' },
     ];
+    cities$ = of(this.cities).pipe(delay(this.asyncTimeout));
     citiesNames = this.cities.map(x => x.name);
 
     selectedCountry: any;

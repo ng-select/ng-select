@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil, startWith, tap, debounceTime, map, filter, take } from 'rxjs/operators';
-import { Subject, merge, Observable, isObservable } from 'rxjs';
+import { Subject, merge, Observable, isObservable, of } from 'rxjs';
 
 import {
     NgOptionTemplateDirective,
@@ -735,8 +735,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
                 });
         };
 
-        this.ngOptions.changes
-            .pipe(startWith(this.ngOptions), takeUntil(this._destroy$))
+        merge(
+            this.ngOptions.changes,
+            of(this.ngOptions).pipe(filter(items => !!items.length)),
+        )
+            .pipe(takeUntil(this._destroy$))
             .subscribe(options => {
                 this.bindLabel = this._defaultLabel;
                 mapNgOptions(options);
