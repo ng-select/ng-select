@@ -49,6 +49,32 @@ describe('NgSelectComponent', () => {
                 label: 'No', value: false, disabled: false
             }));
         }));
+
+        it('should refresh items manually', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select>
+                </ng-select>`);
+
+            const items = [1, 30, 60, 90, 120, 180, 240];
+            fixture.componentInstance.select.items = items;
+            fixture.componentInstance.select.refreshItems();
+            fixture.componentInstance.select.open();
+
+            tickAndDetectChanges(fixture);
+
+            const options = fixture.debugElement
+                .queryAll(By.css('.ng-option'));
+
+            expect(options.length).toBe(items.length);
+
+            const firstOptionLabel = options[0]
+                ?.query(By.css('span'))
+                ?.nativeElement;
+
+            expect(firstOptionLabel).toBeDefined();
+            expect(firstOptionLabel.innerText).toBe(items[0].toString());
+        }));
     });
 
     describe('Model bindings and data changes', () => {
