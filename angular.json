@@ -83,7 +83,6 @@
             "main": "src/demo/main.ts",
             "polyfills": "src/demo/polyfills.ts",
             "tsConfig": "src/demo/tsconfig.app.json",
-            "aot": true,
             "deployUrl": "/ng-select/",
             "assets": [
               "src/demo/favicon.ico",
@@ -92,7 +91,13 @@
             "styles": [
               "src/demo/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
