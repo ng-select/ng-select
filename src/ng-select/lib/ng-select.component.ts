@@ -491,6 +491,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.focus();
         this._updateNgModel();
         this.removeEvent.emit(item);
+        // Adjust dropdown panel position
+        this._onSelectionChanged();
     }
 
     selectTag() {
