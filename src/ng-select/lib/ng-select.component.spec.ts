@@ -48,6 +48,17 @@ describe('NgSelectComponent', () => {
                 label: 'No', value: false, disabled: false
             }));
         }));
+
+        it('should create empty items list when initialzied with null', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select [items]="null">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            const itemsList = fixture.componentInstance.select.itemsList;
+            expect(itemsList.items.length).toBe(0);
+        }));
     });
 
     describe('Model bindings and data changes', () => {
