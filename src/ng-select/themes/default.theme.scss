@@ -265,10 +265,10 @@ $ng-select-value-font-size: 0.9em !default;
             &.ng-option-disabled {
                 cursor: default;
             }
-            &.ng-option-marked {
+            &.ng-option:hover {
                 background-color: $ng-select-marked;
             }
-            &.ng-option-selected, &.ng-option-selected.ng-option-marked {
+            &.ng-option-selected, &.ng-option-selected.ng-option:hover {
                 background-color: $ng-select-selected;
                 font-weight: 600;
             }
@@ -277,14 +277,18 @@ $ng-select-value-font-size: 0.9em !default;
             background-color: $ng-select-bg;
             color: rgba(0, 0, 0, .87);
             padding: 8px 10px;
-            &.ng-option-selected, &.ng-option-selected.ng-option-marked {
+            &.ng-option-selected, &.ng-option-selected.ng-option:hover {
                 color: $ng-select-primary-text;
                 background-color: $ng-select-selected;
                 .ng-option-label {
                     font-weight: 600;
                 }
             }
-            &.ng-option-marked {
+            &.ng-option:hover.ng-option-disabled {
+                background-color: $ng-select-bg;
+                color: lighten($ng-select-primary-text, 60);
+            }
+            &.ng-option:hover {
                 background-color: $ng-select-marked;
                 color: $ng-select-primary-text;
             }
