@@ -91,7 +91,7 @@
                    aria-label="Options list">
 
     <ng-container>
-        <div class="ng-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)" (mouseover)="onItemHover(item)"
+        <div class="ng-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)"
                 *ngFor="let item of viewPortItems; trackBy: trackByOption"
                 [class.ng-option-disabled]="item.disabled"
                 [class.ng-option-selected]="item.selected"
@@ -112,7 +112,7 @@
             </ng-template>
         </div>
 
-        <div class="ng-option" [class.ng-option-marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag">
+        <div class="ng-option" [class.ng-option-marked]="!itemsList.markedItem" role="option" (click)="selectTag()" *ngIf="showAddTag">
             <ng-template #defaultTagTemplate>
                 <span><span class="ng-tag-label">{{addTagText}}</span>"{{searchTerm}}"</span>
             </ng-template>
