@@ -19,7 +19,7 @@
       "dom"
     ],
     "paths": {
-      "@ng-select/ng-select": [
+      "@sviluppo/ng-select": [
         "src/ng-select/public-api.ts"
       ],
       "@ng-select/ng-option-highlight": [

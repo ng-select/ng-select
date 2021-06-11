@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
-import { NgSelectModule } from '@ng-select/ng-select';
+import { NgSelectModule } from '@sviluppo/ng-select';
 import { AppendToExampleComponent } from './append-to-example/append-to-example.component';
 import { BindingsCustomExampleComponent } from './bindings-custom-example/bindings-custom-example.component';
 import { BindingsDefaultExampleComponent } from './bindings-default-example/bindings-default-example.component';

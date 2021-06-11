@@ -1,8 +1,8 @@
 {
-  "name": "@ng-select/ng-select",
+  "name": "@sviluppo/ng-select",
   "version": "3.2.0",
   "description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
-  "author": "@ng-select/ng-select",
+  "author": "@sviluppo/ng-select",
   "license": "MIT",
   "repository": "ng-select/ng-select",
   "engines": {
