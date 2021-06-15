@@ -1,5 +1,8 @@
 {
-  "repository": "ng-select/ng-select",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ng-select/ng-select.git"
+  },
   "engines": {
     "node": ">= 10.0.0",
     "npm": ">= 3.0.0"
@@ -77,5 +80,15 @@
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~4.2.4"
-  }
+  },
+  "name": "ng-select",
+  "description": "[![npm version](https://badge.fury.io/js/%40ng-select%2Fng-select.svg)](https://badge.fury.io/js/%40ng-select%2Fng-select) [![Coverage Status][coveralls-image]][coveralls-url] [![gzip bundle size](http://img.badgesize.io/https://unpkg.com/@ng-select/ng-select@latest/bundles/ng-select-ng-select.umd.min.js?compression=gzip&style=flat-square)][ng-select-url]",
+  "bugs": {
+    "url": "https://github.com/ng-select/ng-select/issues"
+  },
+  "homepage": "https://github.com/ng-select/ng-select#readme",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
 }
