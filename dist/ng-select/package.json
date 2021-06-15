@@ -1,0 +1,37 @@
+{
+  "name": "@ng-select/ng-select",
+  "version": "3.2.0",
+  "description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
+  "author": "@ng-select/ng-select",
+  "license": "MIT",
+  "repository": "ng-select/ng-select",
+  "engines": {
+    "node": ">= 10.0.0",
+    "npm": ">= 3.0.0"
+  },
+  "keywords": [
+    "angular",
+    "select",
+    "ui-select",
+    "dropdown",
+    "multiselect",
+    "autocomplete",
+    "angular2"
+  ],
+  "peerDependencies": {
+    "@angular/common": ">=11.0.0 <12.0.0",
+    "@angular/core": ">=11.0.0 <12.0.0",
+    "@angular/forms": ">=11.0.0 <12.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
+  "main": "bundles/ng-select-ng-select.umd.js",
+  "module": "fesm2015/ng-select-ng-select.js",
+  "es2015": "fesm2015/ng-select-ng-select.js",
+  "esm2015": "esm2015/ng-select-ng-select.js",
+  "fesm2015": "fesm2015/ng-select-ng-select.js",
+  "typings": "ng-select-ng-select.d.ts",
+  "metadata": "ng-select-ng-select.metadata.json",
+  "sideEffects": false
+}
