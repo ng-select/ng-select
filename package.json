@@ -1,5 +1,8 @@
 {
-  "repository": "ng-select/ng-select",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ng-select/ng-select.git"
+  },
   "engines": {
     "node": ">= 10.0.0",
     "npm": ">= 3.0.0"
@@ -35,15 +38,15 @@
     ]
   },
   "dependencies": {
-    "@angular/animations": "~12.0.0",
-    "@angular/common": "~12.0.0",
-    "@angular/compiler": "~12.0.0",
-    "@angular/core": "~12.0.0",
-    "@angular/forms": "~12.0.0",
-    "@angular/localize": "^12.0.0",
-    "@angular/platform-browser": "~12.0.0",
-    "@angular/platform-browser-dynamic": "~12.0.0",
-    "@angular/router": "~12.0.0",
+    "@angular/animations": "~11.0.9",
+    "@angular/common": "~11.0.9",
+    "@angular/compiler": "~11.0.9",
+    "@angular/core": "~11.0.9",
+    "@angular/forms": "~11.0.9",
+    "@angular/localize": "^11.0.9",
+    "@angular/platform-browser": "~11.0.9",
+    "@angular/platform-browser-dynamic": "~11.0.9",
+    "@angular/router": "~11.0.9",
     "@ng-bootstrap/ng-bootstrap": "^9.0.2",
     "bootstrap": "^4.5.0",
     "rxjs": "~6.5.5",
@@ -77,5 +80,15 @@
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~4.2.4"
-  }
+  },
+  "name": "ng-select",
+  "description": "[![npm version](https://badge.fury.io/js/%40ng-select%2Fng-select.svg)](https://badge.fury.io/js/%40ng-select%2Fng-select) [![Coverage Status][coveralls-image]][coveralls-url] [![gzip bundle size](http://img.badgesize.io/https://unpkg.com/@ng-select/ng-select@latest/bundles/ng-select-ng-select.umd.min.js?compression=gzip&style=flat-square)][ng-select-url]",
+  "bugs": {
+    "url": "https://github.com/ng-select/ng-select/issues"
+  },
+  "homepage": "https://github.com/ng-select/ng-select#readme",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
 }

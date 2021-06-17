@@ -60,8 +60,8 @@
         </ng-template>
     </ng-container>
 
-    <span *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
-        <span class="ng-clear" aria-hidden="true">×</span>
+    <span *ngIf="showClear()" (click)="close()" class="ng-clear-wrapper">
+        <span class="ng-clear">×</span>
     </span>
 
     <span class="ng-arrow-wrapper">
@@ -91,7 +91,7 @@
                    aria-label="Options list">
 
     <ng-container>
-        <div class="ng-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)" (mouseover)="onItemHover(item)"
+        <div class="ng-option item-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)" (mouseover)="onItemHover(item)"
                 *ngFor="let item of viewPortItems; trackBy: trackByOption"
                 [class.ng-option-disabled]="item.disabled"
                 [class.ng-option-selected]="item.selected"
@@ -112,9 +112,9 @@
             </ng-template>
         </div>
 
-        <div class="ng-option" [class.ng-option-marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag">
+        <div class="ng-option ng-option-add-tag" [class.ng-option-marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag">
             <ng-template #defaultTagTemplate>
-                <span><span class="ng-tag-label">{{addTagText}}</span>"{{searchTerm}}"</span>
+                <span><span class="ng-tag-label">{{addTagText}}</span> <span class="tag-text-two-point">:</span> "{{searchTerm}}"</span>
             </ng-template>
 
             <ng-template
