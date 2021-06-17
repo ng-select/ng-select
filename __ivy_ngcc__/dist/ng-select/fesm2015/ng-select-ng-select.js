@@ -2488,7 +2488,6 @@ class NgSelectComponent {
             this._updateNgModel();
         }
         this._clearSearch();
-        console.log("pasó por aquí -> handleClearClick()");
         this.focus();
         this.clearEvent.emit();
         this._onSelectionChanged();
@@ -2545,12 +2544,10 @@ class NgSelectComponent {
         this.isOpen = false;
         this._isComposing = false;
         if (!this._editableSearchTerm) {
-            console.log("pasó por aquí True-> close()");
             if (!this.notCloseIfSearching && this.searchTerm)
                 this._clearSearch();
         }
         else {
-            console.log("pasó por aquí False-> close()");
             this.itemsList.resetFilteredItems();
         }
         this.itemsList.unmarkItem();

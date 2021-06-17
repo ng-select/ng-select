@@ -26,5 +26,8 @@
         "src/ng-option-highlight/public-api.ts"
       ]
     }
+  },
+  "angularCompilerOptions": {
+    "enableIvy": false,
   }
 }

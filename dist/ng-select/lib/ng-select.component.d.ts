@@ -54,6 +54,8 @@ export declare class NgSelectComponent implements OnDestroy, OnChanges, AfterVie
     searchWhileComposing: boolean;
     minTermLength: number;
     editableSearchTerm: boolean;
+    maxTermLength: number;
+    notCloseIfSearching: boolean;
     keyDownFn: (_: KeyboardEvent) => boolean;
     typeahead: Subject<string>;
     multiple: boolean;
@@ -84,6 +86,7 @@ export declare class NgSelectComponent implements OnDestroy, OnChanges, AfterVie
         end: number;
     }>;
     scrollToEnd: EventEmitter<any>;
+    searchLengthError: EventEmitter<any>;
     optionTemplate: TemplateRef<any>;
     optgroupTemplate: TemplateRef<any>;
     labelTemplate: TemplateRef<any>;

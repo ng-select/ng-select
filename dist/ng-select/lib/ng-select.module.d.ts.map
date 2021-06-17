@@ -1,1 +1,0 @@
-{"version":3,"file":"ng-select.module.d.ts","sources":["ng-select.module.d.ts"],"names":[],"mappings":";;;;;;AAAA;;;AACA","sourcesContent":["export declare class NgSelectModule {\n}\n"]}
