@@ -159,6 +159,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Output('scroll') scroll = new EventEmitter<{ start: number; end: number }>();
     @Output('scrollToEnd') scrollToEnd = new EventEmitter();
     @Output('searchLengthError') searchLengthError = new EventEmitter();
+    @Output('clearText') clearTextEvent = new EventEmitter();
 
     // custom templates
     @ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
@@ -630,6 +631,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
     }
 
+    clearFromX(){
+        this._clearSearch();
+    }
+
     private _setSearchTermFromItems() {
         const selected = this.selectedItems && this.selectedItems[0];
         this.searchTerm = (selected && selected.label) || null;
@@ -818,8 +823,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
 
+        this.clearTextEvent.emit();
         this._changeSearch(null);
         this.itemsList.resetFilteredItems();
+
     }
 
     private _changeSearch(searchTerm: string) {
