@@ -1,4 +1,3 @@
-import * as ɵngcc0 from '@angular/core';
 export interface ItemsRangeResult {
     scrollHeight: number;
     topPadding: number;
@@ -16,8 +15,4 @@ export declare class NgDropdownPanelService {
     calculateItems(scrollPos: number, itemsLength: number, buffer: number): ItemsRangeResult;
     setDimensions(itemHeight: number, panelHeight: number): void;
     getScrollTo(itemTop: number, itemHeight: number, lastScroll: number): number;
-    static ɵfac: ɵngcc0.ɵɵFactoryDef<NgDropdownPanelService, never>;
-    static ɵprov: ɵngcc0.ɵɵInjectableDef<NgDropdownPanelService>;
 }
-
-//# sourceMappingURL=ng-dropdown-panel.service.d.ts.map

@@ -27,11 +27,23 @@
     "tslib": "^2.0.0"
   },
   "main": "bundles/ng-select-ng-select.umd.js",
+  "module_ivy_ngcc": "../../__ivy_ngcc__/dist/ng-select/fesm2015/ng-select-ng-select.js",
   "module": "fesm2015/ng-select-ng-select.js",
+  "es2015_ivy_ngcc": "../../__ivy_ngcc__/dist/ng-select/fesm2015/ng-select-ng-select.js",
   "es2015": "fesm2015/ng-select-ng-select.js",
   "esm2015": "esm2015/ng-select-ng-select.js",
+  "fesm2015_ivy_ngcc": "../../__ivy_ngcc__/dist/ng-select/fesm2015/ng-select-ng-select.js",
   "fesm2015": "fesm2015/ng-select-ng-select.js",
   "typings": "ng-select-ng-select.d.ts",
   "metadata": "ng-select-ng-select.metadata.json",
-  "sideEffects": false
+  "sideEffects": false,
+  "__processed_by_ivy_ngcc__": {
+    "es2015": "11.0.9",
+    "fesm2015": "11.0.9",
+    "module": "11.0.9",
+    "typings": "11.0.9"
+  },
+  "scripts": {
+    "prepublishOnly": "node --eval \"console.error('ERROR: Trying to publish a package that has been compiled by NGCC. This is not allowed.\\nPlease delete and rebuild the package, without compiling with NGCC, before attempting to publish.\\nNote that NGCC may have been run by importing this package into another project that is being built with Ivy enabled.\\n')\" && exit 1"
+  }
 }
