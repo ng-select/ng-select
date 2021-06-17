@@ -1,0 +1,22 @@
+{
+  "name": "@ng-select/ng-option-highlight",
+  "version": "0.0.6",
+  "author": "@ng-select/ng-select",
+  "license": "MIT",
+  "repository": "ng-select/ng-select",
+  "peerDependencies": {
+    "@angular/common": ">=12.0.0 <13.0.0",
+    "@angular/core": "^>=12.0.0 <13.0.0"
+  },
+  "main": "bundles/ng-select-ng-option-highlight.umd.js",
+  "module": "fesm2015/ng-select-ng-option-highlight.js",
+  "es2015": "fesm2015/ng-select-ng-option-highlight.js",
+  "esm2015": "esm2015/ng-select-ng-option-highlight.js",
+  "fesm2015": "fesm2015/ng-select-ng-option-highlight.js",
+  "typings": "ng-select-ng-option-highlight.d.ts",
+  "metadata": "ng-select-ng-option-highlight.metadata.json",
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}

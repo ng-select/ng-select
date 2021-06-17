@@ -1,0 +1,11 @@
+import { NgModule } from '@angular/core';
+import { NgOptionHighlightDirective } from './ng-option-highlight.directive';
+export class NgOptionHighlightModule {
+}
+NgOptionHighlightModule.decorators = [
+    { type: NgModule, args: [{
+                declarations: [NgOptionHighlightDirective],
+                exports: [NgOptionHighlightDirective]
+            },] }
+];
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibmctb3B0aW9uLWhpZ2hsaWdodC5tb2R1bGUuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi9zcmMvbmctb3B0aW9uLWhpZ2hsaWdodC9saWIvbmctb3B0aW9uLWhpZ2hsaWdodC5tb2R1bGUudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsT0FBTyxFQUFFLFFBQVEsRUFBRSxNQUFNLGVBQWUsQ0FBQztBQUN6QyxPQUFPLEVBQUUsMEJBQTBCLEVBQUUsTUFBTSxpQ0FBaUMsQ0FBQztBQU03RSxNQUFNLE9BQU8sdUJBQXVCOzs7WUFKbkMsUUFBUSxTQUFDO2dCQUNOLFlBQVksRUFBRSxDQUFDLDBCQUEwQixDQUFDO2dCQUMxQyxPQUFPLEVBQUUsQ0FBQywwQkFBMEIsQ0FBQzthQUN4QyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IE5nTW9kdWxlIH0gZnJvbSAnQGFuZ3VsYXIvY29yZSc7XG5pbXBvcnQgeyBOZ09wdGlvbkhpZ2hsaWdodERpcmVjdGl2ZSB9IGZyb20gJy4vbmctb3B0aW9uLWhpZ2hsaWdodC5kaXJlY3RpdmUnO1xuXG5ATmdNb2R1bGUoe1xuICAgIGRlY2xhcmF0aW9uczogW05nT3B0aW9uSGlnaGxpZ2h0RGlyZWN0aXZlXSxcbiAgICBleHBvcnRzOiBbTmdPcHRpb25IaWdobGlnaHREaXJlY3RpdmVdXG59KVxuZXhwb3J0IGNsYXNzIE5nT3B0aW9uSGlnaGxpZ2h0TW9kdWxlIHt9XG4iXX0=

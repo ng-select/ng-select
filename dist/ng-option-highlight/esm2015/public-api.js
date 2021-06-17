@@ -1,0 +1,6 @@
+/*
+ * Public API Surface of ng-option-highlight
+ */
+export * from './lib/ng-option-highlight.directive';
+export * from './lib/ng-option-highlight.module';
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHVibGljLWFwaS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uL3NyYy9uZy1vcHRpb24taGlnaGxpZ2h0L3B1YmxpYy1hcGkudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7O0dBRUc7QUFFSCxjQUFjLHFDQUFxQyxDQUFDO0FBQ3BELGNBQWMsa0NBQWtDLENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyIvKlxuICogUHVibGljIEFQSSBTdXJmYWNlIG9mIG5nLW9wdGlvbi1oaWdobGlnaHRcbiAqL1xuXG5leHBvcnQgKiBmcm9tICcuL2xpYi9uZy1vcHRpb24taGlnaGxpZ2h0LmRpcmVjdGl2ZSc7XG5leHBvcnQgKiBmcm9tICcuL2xpYi9uZy1vcHRpb24taGlnaGxpZ2h0Lm1vZHVsZSc7XG4iXX0=
