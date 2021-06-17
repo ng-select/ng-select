@@ -2291,8 +2291,8 @@ class NgSelectComponent {
             }
         }
         this.searchEvent.emit({ term, items: this.itemsList.filteredItems.map(x => x.value) });
-        if (this.maxTermLength > 0 && term.length > this.maxTermLength) {
-            this.searchLengthError.emit({ "error": `${this.maxTermLength} characters allowed` });
+        if ((this.minTermLength > 0 && term.length < this.minTermLength) || (this.maxTermLength > 0 && term.length > this.maxTermLength)) {
+            this.searchLengthError.emit({ "error": `Min ${this.minTermLength} Max ${this.maxTermLength} characters allowed` });
             return;
         }
         this.searchLengthError.emit(false);

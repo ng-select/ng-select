@@ -8,7 +8,6 @@ import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
 import { SelectionModelFactory } from './selection-model';
 import { NgSelectConfig } from './config.service';
-import * as ɵngcc0 from '@angular/core';
 export declare const SELECTION_MODEL_FACTORY: InjectionToken<SelectionModelFactory>;
 export declare type DropdownPosition = 'bottom' | 'top' | 'auto';
 export declare type AddTagFn = ((term: string) => any | Promise<any>);
@@ -193,8 +192,4 @@ export declare class NgSelectComponent implements OnDestroy, OnChanges, AfterVie
     private get _isTypeahead();
     private get _validTerm();
     private _mergeGlobalConfig;
-    static ɵfac: ɵngcc0.ɵɵFactoryDef<NgSelectComponent, [{ attribute: "class"; }, { attribute: "autofocus"; }, null, null, null, null, null]>;
-    static ɵcmp: ɵngcc0.ɵɵComponentDefWithMeta<NgSelectComponent, "ng-select", never, { "markFirst": "markFirst"; "dropdownPosition": "dropdownPosition"; "loading": "loading"; "closeOnSelect": "closeOnSelect"; "hideSelected": "hideSelected"; "selectOnTab": "selectOnTab"; "bufferAmount": "bufferAmount"; "selectableGroup": "selectableGroup"; "selectableGroupAsModel": "selectableGroupAsModel"; "searchFn": "searchFn"; "trackByFn": "trackByFn"; "clearOnBackspace": "clearOnBackspace"; "labelForId": "labelForId"; "inputAttrs": "inputAttrs"; "readonly": "readonly"; "searchWhileComposing": "searchWhileComposing"; "minTermLength": "minTermLength"; "editableSearchTerm": "editableSearchTerm"; "maxTermLength": "maxTermLength"; "notCloseIfSearching": "notCloseIfSearching"; "keyDownFn": "keyDownFn"; "multiple": "multiple"; "addTag": "addTag"; "searchable": "searchable"; "clearable": "clearable"; "isOpen": "isOpen"; "items": "items"; "compareWith": "compareWith"; "clearSearchOnAdd": "clearSearchOnAdd"; "bindLabel": "bindLabel"; "placeholder": "placeholder"; "notFoundText": "notFoundText"; "typeToSearchText": "typeToSearchText"; "addTagText": "addTagText"; "loadingText": "loadingText"; "clearAllText": "clearAllText"; "virtualScroll": "virtualScroll"; "openOnEnter": "openOnEnter"; "appendTo": "appendTo"; "bindValue": "bindValue"; "appearance": "appearance"; "maxSelectedItems": "maxSelectedItems"; "groupBy": "groupBy"; "groupValue": "groupValue"; "tabIndex": "tabIndex"; "typeahead": "typeahead"; }, { "blurEvent": "blur"; "focusEvent": "focus"; "changeEvent": "change"; "openEvent": "open"; "closeEvent": "close"; "searchEvent": "search"; "clearEvent": "clear"; "addEvent": "add"; "removeEvent": "remove"; "scroll": "scroll"; "scrollToEnd": "scrollToEnd"; "searchLengthError": "searchLengthError"; "clearTextEvent": "clearText"; }, ["optionTemplate", "optgroupTemplate", "labelTemplate", "multiLabelTemplate", "headerTemplate", "footerTemplate", "notFoundTemplate", "typeToSearchTemplate", "loadingTextTemplate", "tagTemplate", "loadingSpinnerTemplate", "ngOptions"], never>;
 }
-
-//# sourceMappingURL=ng-select.component.d.ts.map

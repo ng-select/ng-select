@@ -1,4 +1,3 @@
-import * as ɵngcc0 from '@angular/core';
 export declare class NgSelectConfig {
     placeholder: string;
     notFoundText: string;
@@ -12,7 +11,4 @@ export declare class NgSelectConfig {
     bindValue: string;
     bindLabel: string;
     appearance: string;
-    static ɵfac: ɵngcc0.ɵɵFactoryDef<NgSelectConfig, never>;
 }
-
-//# sourceMappingURL=config.service.d.ts.map

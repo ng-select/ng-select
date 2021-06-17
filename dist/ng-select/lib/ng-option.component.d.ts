@@ -1,6 +1,5 @@
 import { AfterViewChecked, ElementRef, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
-import * as ɵngcc0 from '@angular/core';
 export declare class NgOptionComponent implements OnChanges, AfterViewChecked, OnDestroy {
     elementRef: ElementRef<HTMLElement>;
     value: any;
@@ -19,8 +18,4 @@ export declare class NgOptionComponent implements OnChanges, AfterViewChecked, O
     ngAfterViewChecked(): void;
     ngOnDestroy(): void;
     private _isDisabled;
-    static ɵfac: ɵngcc0.ɵɵFactoryDef<NgOptionComponent, never>;
-    static ɵcmp: ɵngcc0.ɵɵComponentDefWithMeta<NgOptionComponent, "ng-option", never, { "disabled": "disabled"; "value": "value"; }, {}, never, ["*"]>;
 }
-
-//# sourceMappingURL=ng-option.component.d.ts.map
