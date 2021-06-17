@@ -2,7 +2,6 @@ import { ElementRef, EventEmitter, NgZone, OnChanges, OnDestroy, OnInit, Rendere
 import { NgDropdownPanelService } from './ng-dropdown-panel.service';
 import { DropdownPosition } from './ng-select.component';
 import { NgOption } from './ng-select.types';
-import * as ɵngcc0 from '@angular/core';
 export declare class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     private _renderer;
     private _zone;
@@ -69,8 +68,4 @@ export declare class NgDropdownPanelComponent implements OnInit, OnChanges, OnDe
     private _appendDropdown;
     private _updateXPosition;
     private _updateYPosition;
-    static ɵfac: ɵngcc0.ɵɵFactoryDef<NgDropdownPanelComponent, [null, null, null, null, { optional: true; }]>;
-    static ɵcmp: ɵngcc0.ɵɵComponentDefWithMeta<NgDropdownPanelComponent, "ng-dropdown-panel", never, { "items": "items"; "position": "position"; "virtualScroll": "virtualScroll"; "filterValue": "filterValue"; "markedItem": "markedItem"; "appendTo": "appendTo"; "bufferAmount": "bufferAmount"; "headerTemplate": "headerTemplate"; "footerTemplate": "footerTemplate"; }, { "update": "update"; "scroll": "scroll"; "scrollToEnd": "scrollToEnd"; "outsideClick": "outsideClick"; }, never, ["*"]>;
 }
-
-//# sourceMappingURL=ng-dropdown-panel.component.d.ts.map
