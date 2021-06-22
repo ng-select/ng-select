@@ -14,7 +14,8 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 ## Versions
 
 | Angular| ng-select|
-| ------|:------:|
+| ------|:------:| 
+| >=12.0.0 <13.0.0 | v7.x |
 | >=11.0.0 <12.0.0 | v6.x |
 | >=10.0.0 <11.0.0 | v5.x |
 | >=9.0.0 <10.0.0 | v4.x |
