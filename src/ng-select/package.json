@@ -6,8 +6,8 @@
   "license": "MIT",
   "repository": "ng-select/ng-select",
   "engines": {
-    "node": ">= 10.0.0",
-    "npm": ">= 3.0.0"
+    "node": ">= 12.14.0",
+    "npm": ">= 6.0.0"
   },
   "keywords": [
     "angular",
