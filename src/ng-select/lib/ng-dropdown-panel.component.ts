@@ -4,7 +4,6 @@ import {
     Component,
     ElementRef,
     EventEmitter,
-    HostListener,
     Inject,
     Input,
     NgZone,
@@ -120,15 +119,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         return 0;
     }
 
-    @HostListener('mousedown', ['$event'])
-    handleMousedown($event: MouseEvent) {
-        const target = $event.target as HTMLElement;
-        if (target.tagName === 'INPUT') {
-            return;
-        }
-        $event.preventDefault();
-    }
-
     ngOnInit() {
         this._select = this._dropdown.parentElement;
         this._virtualPadding = this.paddingElementRef.nativeElement;
@@ -137,6 +127,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         this._handleScroll();
         this._handleOutsideClick();
         this._appendDropdown();
+        this._setupMousedownListener();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -427,5 +418,19 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
             this._dropdown.style.top = offsetTop + delta + 'px';
             this._dropdown.style.bottom = 'auto';
         }
+    }
+
+    private _setupMousedownListener(): void {
+        this._zone.runOutsideAngular(() => {
+            fromEvent(this._dropdown, 'mousedown')
+                .pipe(takeUntil(this._destroy$))
+                .subscribe((event: MouseEvent) => {
+                    const target = event.target as HTMLElement;
+                    if (target.tagName === 'INPUT') {
+                        return;
+                    }
+                    event.preventDefault();
+                });
+        });
     }
 }
