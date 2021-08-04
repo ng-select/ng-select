@@ -374,7 +374,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         const offsetTop = selectRect.top + window.pageYOffset;
         const height = selectRect.height;
         const dropdownHeight = dropdownEl.getBoundingClientRect().height;
-        if (offsetTop + height + dropdownHeight > scrollTop + document.documentElement.clientHeight && offsetTop - dropdownHeight > 0) {
+        if (offsetTop + height + dropdownHeight > scrollTop + document.documentElement.clientHeight && offsetTop - dropdownHeight >= 0) {
             return 'top';
         } else {
             return 'bottom';
