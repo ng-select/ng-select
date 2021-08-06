@@ -566,7 +566,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
 
-        this.searchTerm = term;
+        this.searchTerm = term.trim();
         if (this._isTypeahead && (this._validTerm || this.minTermLength === 0)) {
             this.typeahead.next(term);
         }
