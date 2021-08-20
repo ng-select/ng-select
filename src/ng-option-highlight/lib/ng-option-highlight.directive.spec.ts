@@ -11,6 +11,7 @@ import { By } from '@angular/platform-browser';
         <span id="test4" [ngOptionHighlight]="term">My ťëxť is highlighted text</span>
         <span id="test5" *ngIf="showNew" [ngOptionHighlight]="term">New label</span>
         <span id="test6" [ngOptionHighlight]="term">+My text is) high\\lighted</span>
+        <span id="test7" [ngOptionHighlight]="term">My&text is highlighted</span>
     `
 })
 class TestComponent {
@@ -30,9 +31,9 @@ describe('NgOptionHighlightDirective', () => {
         fixture.detectChanges();
     });
 
-    it('should have five elements with highlight directive', () => {
+    it('should have six elements with highlight directive', () => {
         const highlightDirectives = fixture.debugElement.queryAll(By.directive(NgOptionHighlightDirective));
-        expect(highlightDirectives.length).toBe(5);
+        expect(highlightDirectives.length).toBe(6);
     });
 
     it('should have one element with highlighted text when term matching', () => {
@@ -105,5 +106,13 @@ describe('NgOptionHighlightDirective', () => {
         fixture.detectChanges();
         expect(span.nativeElement.querySelectorAll('.highlighted')[0].innerHTML).toBe('high\\l');
         expect(span.nativeElement.textContent).toBe('+My text is) high\\lighted');
+    });
+
+    it(`should highlight text with HTML character references correctly`, () => {
+        const span = fixture.debugElement.query(By.css('#test7'));
+
+        fixture.componentInstance.term = 'My&';
+        fixture.detectChanges();
+        expect(span.nativeElement.innerHTML).toBe('<span class="highlighted">My&amp;</span>text is highlighted');
     });
 });

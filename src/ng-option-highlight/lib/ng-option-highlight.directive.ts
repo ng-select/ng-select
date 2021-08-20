@@ -31,7 +31,7 @@ export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.label = this.element.innerHTML;
+        this.label = this.element.innerText;
         if (this._canHighlight) {
             this._highlightLabel();
         }
