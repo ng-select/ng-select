@@ -141,7 +141,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     @Input()
-    get clearSearchOnAdd() { return isDefined(this._clearSearchOnAdd) ? this._clearSearchOnAdd : this.closeOnSelect; };
+    get clearSearchOnAdd() {
+        if (isDefined(this._clearSearchOnAdd)) {
+            return this._clearSearchOnAdd;
+        } else if (isDefined(this.config.clearSearchOnAdd)) {
+            return this.config.clearSearchOnAdd;
+        }
+        return this.closeOnSelect;
+    };
 
     set clearSearchOnAdd(value) {
         this._clearSearchOnAdd = value;
@@ -218,7 +225,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     constructor(
         @Attribute('class') public classes: string,
         @Attribute('autofocus') private autoFocus: any,
-        config: NgSelectConfig,
+        public config: NgSelectConfig,
         @Inject(SELECTION_MODEL_FACTORY) newSelectionModel: SelectionModelFactory,
         _elementRef: ElementRef<HTMLElement>,
         private _cd: ChangeDetectorRef,
