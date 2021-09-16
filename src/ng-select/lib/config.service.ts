@@ -14,4 +14,5 @@ export class NgSelectConfig {
     bindValue: string;
     bindLabel: string;
     appearance = 'underline';
+    clearSearchOnAdd: boolean;
 }
