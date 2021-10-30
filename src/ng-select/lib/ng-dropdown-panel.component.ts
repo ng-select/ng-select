@@ -181,7 +181,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     private _handleDropdownPosition() {
         this._currentPosition = this._calculateCurrentPosition(this._dropdown);
-        if(CSS_POSITIONS.includes(this._currentPosition)) {
+        if (CSS_POSITIONS.includes(this._currentPosition)) {
             this._updateDropdownClass(this._currentPosition);
         } else {
             this._updateDropdownClass('bottom');
@@ -197,14 +197,14 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     private _updateDropdownClass(currentPosition: string) {
         CSS_POSITIONS.forEach((position) => {
-            const CSS_CLASS = `ng-select-${position}`;
-            this._renderer.removeClass(this._dropdown, CSS_CLASS);
-            this._renderer.removeClass(this._select, CSS_CLASS);
+            const REMOVE_CSS_CLASS = `ng-select-${position}`;
+            this._renderer.removeClass(this._dropdown, REMOVE_CSS_CLASS);
+            this._renderer.removeClass(this._select, REMOVE_CSS_CLASS);
         });
 
-        const CSS_CLASS = `ng-select-${currentPosition}`;
-        this._renderer.addClass(this._dropdown, CSS_CLASS);
-        this._renderer.addClass(this._select, CSS_CLASS);
+        const ADD_CSS_CLASS = `ng-select-${currentPosition}`;
+        this._renderer.addClass(this._dropdown, ADD_CSS_CLASS);
+        this._renderer.addClass(this._select, ADD_CSS_CLASS);
     }
 
     private _handleScroll() {
