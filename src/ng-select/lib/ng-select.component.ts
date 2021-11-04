@@ -53,7 +53,7 @@ import { NgSelectConfig } from './config.service';
 import { NgDropdownPanelService } from './ng-dropdown-panel.service';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
-export type DropdownPosition = 'bottom' | 'top' | 'auto';
+export type DropdownPosition = 'top' | 'right' | 'bottom' | 'left' | 'auto';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
 export type GroupValueFn = (key: string | object, children: any[]) => string | object;
