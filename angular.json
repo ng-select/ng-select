@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": false
+  },
   "version": 1,
   "newProjectRoot": "src",
   "projects": {
@@ -30,16 +33,6 @@
               "src/ng-select/lib/search-helper.ts",
               "src/ng-select/lib/ng-templates.directive.ts"
             ]
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "src/ng-select/tsconfig.lib.json",
-              "src/ng-select/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -131,8 +124,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "demo:build",
-            "deployUrl": "/"
+            "browserTarget": "demo:build"
           },
           "configurations": {
             "production": {
@@ -162,16 +154,6 @@
             "tsConfig": "src/ng-option-highlight/tsconfig.spec.json",
             "karmaConfig": "src/ng-option-highlight/karma.conf.js",
             "watch": false
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "src/ng-option-highlight/tsconfig.lib.json",
-              "src/ng-option-highlight/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
           }
         }
       }
