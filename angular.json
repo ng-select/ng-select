@@ -1,7 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "defaultCollection": "@angular-eslint/schematics"
   },
   "version": 1,
   "newProjectRoot": "src",
@@ -32,6 +33,15 @@
               "src/ng-select/lib/console.service.ts",
               "src/ng-select/lib/search-helper.ts",
               "src/ng-select/lib/ng-templates.directive.ts"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/ng-select/**/*.ts",
+              "src/ng-select/**/*.html"
             ]
           }
         }
@@ -154,6 +164,15 @@
             "tsConfig": "src/ng-option-highlight/tsconfig.spec.json",
             "karmaConfig": "src/ng-option-highlight/karma.conf.js",
             "watch": false
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/ng-option-highlight/**/*.ts",
+              "src/ng-option-highlight/**/*.html"
+            ]
           }
         }
       }
