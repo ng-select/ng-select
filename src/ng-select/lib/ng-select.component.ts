@@ -160,7 +160,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Output('change') changeEvent = new EventEmitter();
     @Output('open') openEvent = new EventEmitter();
     @Output('close') closeEvent = new EventEmitter();
-    @Output('search') searchEvent = new EventEmitter<{ term: string, items: any[] }>();
+    @Output('search') searchEvent = new EventEmitter<{ searchQuery: string, items: any[] }>();
     @Output('clear') clearEvent = new EventEmitter();
     @Output('add') addEvent = new EventEmitter();
     @Output('remove') removeEvent = new EventEmitter();
