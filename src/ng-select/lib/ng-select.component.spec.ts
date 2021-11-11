@@ -865,7 +865,7 @@ describe('NgSelectComponent', () => {
 
             const invalidValues = [undefined, null];
 
-            for (let v of invalidValues) {
+            for (const v of invalidValues) {
                 fixture.componentInstance.selectedCity = <any>v;
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.select.selectedItems.length).toBe(0);
@@ -884,7 +884,7 @@ describe('NgSelectComponent', () => {
 
             const invalidValues = [{}, '', undefined, 0, 1, 'false', 'true', false];
 
-            for (let v of invalidValues) {
+            for (const v of invalidValues) {
                 fixture.componentInstance.selectedCity = <any>v;
                 tickAndDetectChanges(fixture);
                 expect(fixture.componentInstance.select.selectedItems.length).toBe(0);
@@ -1164,7 +1164,7 @@ describe('NgSelectComponent', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.select.dropdownPanel.items.length).toBe(3);
-            let options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+            const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
             expect(options.length).toBe(3);
             expect(options[0].innerText).toBe('Vilnius');
             expect(options[1].innerText).toBe('Kaunas');
@@ -1243,7 +1243,7 @@ describe('NgSelectComponent', () => {
             const select = fixture.componentInstance.select;
             const cmp = fixture.componentInstance;
             cmp.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
-            cmp['city'] = cmp.cities[10];
+            cmp.city = cmp.cities[10];
             tickAndDetectChanges(fixture);
 
             select.open();
@@ -1745,7 +1745,7 @@ describe('NgSelectComponent', () => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
             document.getElementById('outside').click();
-            let event = new MouseEvent('mousedown', { bubbles: true });
+            const event = new MouseEvent('mousedown', { bubbles: true });
             document.getElementById('outside').dispatchEvent(event);
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBeFalsy();
@@ -1754,7 +1754,7 @@ describe('NgSelectComponent', () => {
         it('should close dropdown if opened and touched outside dropdown container', fakeAsync(() => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
-            let event = new TouchEvent('touchstart', { bubbles: true });
+            const event = new TouchEvent('touchstart', { bubbles: true });
             document.getElementById('outside').dispatchEvent(event);
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.isOpen).toBeFalsy();
@@ -1764,7 +1764,7 @@ describe('NgSelectComponent', () => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(select.isOpen).toBeTruthy();
             document.getElementById('select').click();
-            let event = new MouseEvent('mousedown', { bubbles: true });
+            const event = new MouseEvent('mousedown', { bubbles: true });
             document.getElementById('select').dispatchEvent(event);
             tickAndDetectChanges(fixture);
             expect(select.isOpen).toBeTruthy();
@@ -2277,7 +2277,7 @@ describe('NgSelectComponent', () => {
 
     describe('Tagging', () => {
         it('should select default tag', fakeAsync(() => {
-            let fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectTestComponent,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -2294,7 +2294,7 @@ describe('NgSelectComponent', () => {
         }));
 
         it('should add tag as string', fakeAsync(() => {
-            let fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectTestComponent,
                 `<ng-select [items]="citiesNames"
                     [addTag]="true"
@@ -2310,7 +2310,7 @@ describe('NgSelectComponent', () => {
         }));
 
         it('should add tag as string when there are no items', fakeAsync(() => {
-            let fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectTestComponent,
                 `<ng-select [items]="[]"
                     [addTag]="true"
@@ -2326,7 +2326,7 @@ describe('NgSelectComponent', () => {
         }));
 
         it('should not add item to list when select is closed', fakeAsync(() => {
-            let fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectTestComponent,
                 `<ng-select [items]="[]"
                     [isOpen]="false"
@@ -2342,7 +2342,7 @@ describe('NgSelectComponent', () => {
         }));
 
         it('should add tag as string when tab pressed', fakeAsync(() => {
-            let fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectTestComponent,
                 `<ng-select [items]="citiesNames"
                     [addTag]="true"
@@ -2359,7 +2359,7 @@ describe('NgSelectComponent', () => {
         }));
 
         it('should select tag even if there are filtered items that matches search term', fakeAsync(() => {
-            let fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectTestComponent,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -2377,7 +2377,7 @@ describe('NgSelectComponent', () => {
         }));
 
         it('should select custom tag', fakeAsync(() => {
-            let fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectTestComponent,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -2396,7 +2396,7 @@ describe('NgSelectComponent', () => {
         }));
 
         it('should select custom tag with promise', fakeAsync(() => {
-            let fixture = createTestingModule(
+            const fixture = createTestingModule(
                 NgSelectTestComponent,
                 `<ng-select [items]="cities"
                     bindLabel="name"
@@ -3813,9 +3813,9 @@ describe('NgSelectComponent', () => {
 
             expect(items.length).toBe(12);
             expect(items[0].children).toBeDefined();
-            expect(items[0].value['name']).toBe('c1');
+            expect(items[0].value.name).toBe('c1');
             expect(items[6].children).toBeDefined();
-            expect(items[6].value['name']).toBe('c2');
+            expect(items[6].value.name).toBe('c2');
         }));
 
         it('should set group value using custom fn', fakeAsync(() => {
@@ -3834,9 +3834,9 @@ describe('NgSelectComponent', () => {
 
             expect(items.length).toBe(12);
             expect(items[0].children).toBeDefined();
-            expect(items[0].value['group']).toBe('c1');
+            expect(items[0].value.group).toBe('c1');
             expect(items[6].children).toBeDefined();
-            expect(items[6].value['group']).toBe('c2');
+            expect(items[6].value.group).toBe('c2');
         }));
 
         it('should not mark optgroup item as marked', fakeAsync(() => {
@@ -4113,7 +4113,7 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
     })
         .overrideComponent(cmp, {
             set: {
-                template: template
+                template
             }
         });
 

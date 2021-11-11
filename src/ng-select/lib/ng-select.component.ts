@@ -57,7 +57,7 @@ export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>
 export type DropdownPosition = 'top' | 'right' | 'bottom' | 'left' | 'auto';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
-export type GroupValueFn = (key: string | object, children: any[]) => string | object;
+export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 
 @Component({
     selector: 'ng-select',
@@ -91,7 +91,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() selectOnTab = false;
     @Input() openOnEnter: boolean;
     @Input() maxSelectedItems: number;
-    @Input() groupBy: string | Function;
+    @Input() groupBy: string | ((value: any) => any);
     @Input() groupValue: GroupValueFn;
     @Input() bufferAmount = 4;
     @Input() virtualScroll: boolean;

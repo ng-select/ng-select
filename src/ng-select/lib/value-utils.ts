@@ -8,10 +8,10 @@ const htmlEscapes = {
     '\'': '&#39;'
 };
 
-export function escapeHTML(string: string) {
-    return (string && hasUnescapedHTMLExp.test(string)) ?
-        string.replace(unescapedHTMLExp, chr => htmlEscapes[chr]) :
-        string;
+export function escapeHTML(value: string) {
+    return (value && hasUnescapedHTMLExp.test(value)) ?
+        value.replace(unescapedHTMLExp, chr => htmlEscapes[chr]) :
+        value;
 }
 
 export function isDefined(value: any) {
