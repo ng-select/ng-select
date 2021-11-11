@@ -15,57 +15,7 @@
         ],
         "createDefaultProgram": true
       },
-      "rules": {
-        "@angular-eslint/component-selector": [
-          "error",
-          {
-            "type": "element",
-            "prefix": "lib",
-            "style": "kebab-case"
-          }
-        ],
-        "@angular-eslint/directive-selector": [
-          "error",
-          {
-            "type": "attribute",
-            "prefix": "lib",
-            "style": "camelCase"
-          }
-        ],
-        "@typescript-eslint/dot-notation": "off",
-        "@typescript-eslint/explicit-member-accessibility": [
-          "off",
-          {
-            "accessibility": "explicit"
-          }
-        ],
-        "@typescript-eslint/member-delimiter-style": [
-          "off",
-          {
-            "multiline": {
-              "delimiter": "none",
-              "requireLast": true
-            },
-            "singleline": {
-              "delimiter": "semi",
-              "requireLast": false
-            }
-          }
-        ],
-        "@typescript-eslint/semi": [
-          "off",
-          null
-        ],
-        "brace-style": [
-          "error",
-          "1tbs"
-        ],
-        "id-blacklist": "off",
-        "id-match": "off",
-        "no-redeclare": "error",
-        "no-trailing-spaces": "off",
-        "no-underscore-dangle": "off"
-      }
+      "rules": {}
     },
     {
       "files": [
