@@ -459,9 +459,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             this.select(item);
         }
 
-        if (this._editableSearchTerm) {
-            this._setSearchTermFromItems();
-        }
+        this._setSearchTermFromItems();
 
         this._onSelectionChanged();
     }
@@ -594,9 +592,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return;
         }
 
-        if (this._editableSearchTerm) {
-            this._setSearchTermFromItems();
-        }
+        this._setSearchTermFromItems();
 
         this.element.classList.add('ng-select-focused');
         this.focusEvent.emit($event);
@@ -609,9 +605,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (!this.isOpen && !this.disabled) {
             this._onTouched();
         }
-        if (this._editableSearchTerm) {
-            this._setSearchTermFromItems();
-        }
+
+        this._setSearchTermFromItems();
+
         this.focused = false;
     }
 
@@ -629,6 +625,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     }
 
     private _setSearchTermFromItems() {
+        if (!this._editableSearchTerm) {
+            return;
+        }
+
         const selected = this.selectedItems && this.selectedItems[0];
         this.searchTerm = (selected && selected.label) || null;
     }
@@ -739,6 +739,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         } else {
             select(ngModel);
         }
+
+        this._setSearchTermFromItems();
     }
 
     private _handleKeyPresses() {
