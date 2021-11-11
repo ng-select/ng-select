@@ -23,7 +23,7 @@
         "@angular-eslint/component-selector": [
           "error",
           {
-            "prefix": "lib",
+            "prefix": "ng",
             "style": "kebab-case",
             "type": "element"
           }
@@ -31,7 +31,7 @@
         "@angular-eslint/directive-selector": [
           "error",
           {
-            "prefix": "lib",
+            "prefix": "ng",
             "style": "camelCase",
             "type": "attribute"
           }
