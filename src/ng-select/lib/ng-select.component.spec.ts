@@ -2555,9 +2555,9 @@ describe('NgSelectComponent', () => {
                     [(ngModel)]="selectedCity">
                 </ng-select>`);
 
-            fixture.componentInstance.searchFn = (term: string, item: any) => {
-                return item.name.indexOf(term) > -1 || item.id === 2;
-            };
+            fixture.componentInstance.searchFn = (term: string, item: any) => (
+                item.name.indexOf(term) > -1 || item.id === 2
+            );
             const select = fixture.componentInstance.select;
             tickAndDetectChanges(fixture);
             select.filter('Vilnius');

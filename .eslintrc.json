@@ -17,6 +17,7 @@
       },
       "extends": [
         "plugin:@angular-eslint/ng-cli-compat",
+        "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
@@ -38,10 +39,13 @@
           }
         ],
         "@typescript-eslint/consistent-type-assertions": "off",
+        "@typescript-eslint/member-delimiter-style": "off",
         "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/semi": "off",
         "no-underscore-dangle": "off",
-        "prefer-arrow/prefer-arrow-functions": "off"
+        "prefer-arrow/prefer-arrow-functions": "off",
+        "quote-props": "off"
       }
     },
     {

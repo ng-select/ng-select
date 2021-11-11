@@ -9,7 +9,7 @@ export class MockNgZone extends NgZone {
     run(fn: () => any): any {
         return fn();
     }
-    
+
     runOutsideAngular(fn: () => any): any {
         return fn();
     }
