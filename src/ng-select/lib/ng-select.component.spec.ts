@@ -3928,10 +3928,10 @@ describe('NgSelectComponent', () => {
                         [(ngModel)]="selectedAccount">
                 </ng-select>`);
 
-                fixture.detectChanges();
-                const element = fixture.elementRef.nativeElement;
-                const elClasses: DOMTokenList = element.children[0].classList;
-                const hasClass = elClasses.contains('ng-select')
+            fixture.detectChanges();
+            const element = fixture.elementRef.nativeElement;
+            const elClasses: DOMTokenList = element.children[0].classList;
+            const hasClass = elClasses.contains('ng-select')
 
 
             expect(hasClass).toBe(true)
@@ -3947,10 +3947,10 @@ describe('NgSelectComponent', () => {
                         [class]="'test'">
                 </ng-select>`);
 
-                fixture.detectChanges();
-                const element = fixture.elementRef.nativeElement;
-                const elClasses: DOMTokenList = element.children[0].classList;
-                const hasClass = elClasses.contains('ng-select') && elClasses.contains('test');
+            fixture.detectChanges();
+            const element = fixture.elementRef.nativeElement;
+            const elClasses: DOMTokenList = element.children[0].classList;
+            const hasClass = elClasses.contains('ng-select') && elClasses.contains('test');
 
 
             expect(hasClass).toBe(true);
@@ -3958,8 +3958,8 @@ describe('NgSelectComponent', () => {
 
         it('should correctly update ng option selected property when groups map has undefined key', fakeAsync(() => {
             const fixture = createTestingModule(
-              NgSelectGroupingTestComponent,
-              `<ng-select [items]="accounts"
+                NgSelectGroupingTestComponent,
+                `<ng-select [items]="accounts"
                         groupBy="group"
                         bindLabel="name"
                         bindValue="email"

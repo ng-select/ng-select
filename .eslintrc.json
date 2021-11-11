@@ -43,8 +43,10 @@
         "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/naming-convention": "off",
         "@typescript-eslint/semi": "off",
+        "indent": "error",
         "no-underscore-dangle": "off",
         "prefer-arrow/prefer-arrow-functions": "off",
+        "spaced-comment": "error",
         "quote-props": "off"
       }
     },
@@ -55,7 +57,14 @@
       "extends": [
         "plugin:@angular-eslint/template/recommended"
       ],
-      "rules": {}
+      "rules": {
+        "@angular-eslint/template/eqeqeq": [
+          "error",
+          {
+            "allowNullOrUndefined": true
+          }
+        ]
+      }
     }
   ]
 }
