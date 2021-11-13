@@ -24,5 +24,5 @@ export class NgSelectConfig {
     clearSearchOnAdd: boolean;
 
     /**Gets and set a value that indicates whether the selected items should appear as an option. */
-    hideSelected: boolean = false;
+    hideSelected = false;
 }
