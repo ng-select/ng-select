@@ -76,7 +76,10 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
 
+    /**Gets and set the property name that should be used for select item label */
     @Input() bindLabel: string;
+    
+    /**Gets and set the property name that should be used for select item value */
     @Input() bindValue: string;
     @Input() markFirst = true;
     @Input() placeholder: string;
@@ -90,6 +93,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() appendTo: string;
     @Input() loading = false;
     @Input() closeOnSelect = true;
+    /**Gets and set a value that indicates whether the selected items should appear as an option. */
     @Input() hideSelected = false;
     @Input() selectOnTab = false;
     @Input() openOnEnter: boolean;
@@ -140,6 +144,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this._compareWith = fn;
     }
 
+    /**Gets and set a value that indicates if text should be remove after item be added*/
     @Input()
     get clearSearchOnAdd() {
         if (isDefined(this._clearSearchOnAdd)) {
@@ -149,7 +154,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         }
         return this.closeOnSelect;
     };
-
+    /**Gets and set a value that indicates if text should be remove after item be added*/
     set clearSearchOnAdd(value) {
         this._clearSearchOnAdd = value;
     };
@@ -963,5 +968,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         this.bindValue = this.bindValue || config.bindValue;
         this.bindLabel = this.bindLabel || config.bindLabel;
         this.appearance = this.appearance || config.appearance;
+        this.hideSelected = this.hideSelected || config.hideSelected;
     }
 }
