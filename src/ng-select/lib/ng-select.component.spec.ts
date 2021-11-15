@@ -1,15 +1,15 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ConsoleService } from './console.service';
-import { FormsModule } from '@angular/forms';
-import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
-import { KeyCode, NgOption } from './ng-select.types';
-import { MockConsole, MockNgZone } from '../testing/mocks';
-import { NgSelectComponent } from '@ng-select/ng-select';
-import { NgSelectModule } from './ng-select.module';
-import { Subject } from 'rxjs';
-import { NgSelectConfig } from './config.service';
+import {ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation} from '@angular/core';
+import {ConsoleService} from './console.service';
+import {FormsModule} from '@angular/forms';
+import {getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent} from '../testing/helpers';
+import {KeyCode, NgOption} from './ng-select.types';
+import {MockConsole, MockNgZone} from '../testing/mocks';
+import {NgSelectComponent} from '@ng-select/ng-select';
+import {NgSelectModule} from './ng-select.module';
+import {Subject} from 'rxjs';
+import {NgSelectConfig} from './config.service';
 
 describe('NgSelectComponent', () => {
 
@@ -4167,10 +4167,11 @@ class NgSelectTestComponent {
     selectedCityIds: number[];
     selectedCity: { id: number; name: string };
     selectedCities: { id: number; name: string }[];
+    city: { id: number; name: string };
     cities: any[] = [
-        { id: 1, name: 'Vilnius' },
-        { id: 2, name: 'Kaunas' },
-        { id: 3, name: 'Pabrade' },
+        {id: 1, name: 'Vilnius'},
+        {id: 2, name: 'Kaunas'},
+        {id: 3, name: 'Pabrade'},
     ];
     citiesNames = this.cities.map(x => x.name);
 
