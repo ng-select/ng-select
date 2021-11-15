@@ -3050,6 +3050,7 @@ describe('NgSelectComponent', () => {
                 fixture.componentInstance.selectedCity = selectedCity.id;
                 tickAndDetectChanges(fixture);
                 input.focus();
+                tick(2000);
                 tickAndDetectChanges(fixture);
                 expect(select.searchTerm).toEqual(selectedCity.name);
                 expect(input.value).toEqual(selectedCity.name);
