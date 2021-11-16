@@ -16,8 +16,9 @@ module.exports = function (config) {
             clearContext: false // leave Jasmine Spec Runner output visible in browser
         },
         coverageReporter: {
-            dir: require('path').join(__dirname, '../../coverage/ng-option-highlight'),
-            reporters: ['lcovonly'],
+            dir: require('path').join(__dirname, '../../coverage/'),
+            subdir:'ng-option-highlight',
+            type: 'lcovonly',
             fixWebpackSourcePaths: true
         },
         reporters: ['progress', 'kjhtml'],

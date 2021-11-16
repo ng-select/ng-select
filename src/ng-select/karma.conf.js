@@ -15,10 +15,10 @@ module.exports = function (config) {
         client: {
             clearContext: false // leave Jasmine Spec Runner output visible in browser
         },
-        coverageIstanbulReporter: {
-            dir: require('path').join(__dirname, '../../coverage/ng-select'),
-            reports: ['lcovonly'],
-            fixWebpackSourcePaths: true
+        coverageReporter: {
+            dir: require('path').join(__dirname, '../../coverage/'),
+            subdir:'ng-select',
+            type: 'lcovonly',
         },
         reporters: ['progress', 'kjhtml'],
         port: 9876,
