@@ -45,7 +45,7 @@ import {
 import { ConsoleService } from './console.service';
 import { isDefined, isFunction, isPromise, isObject } from './value-utils';
 import { ItemsList } from './items-list';
-import { NgOption, KeyCode } from './ng-select.types';
+import { NgOption, KeyCode, DropdownPosition } from './ng-select.types';
 import { newId } from './id';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
@@ -54,7 +54,6 @@ import { NgSelectConfig } from './config.service';
 import { NgDropdownPanelService } from './ng-dropdown-panel.service';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
-export type DropdownPosition = 'top' | 'right' | 'bottom' | 'left' | 'auto';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
 export type GroupValueFn = (key: string | any, children: any[]) => string | any;
@@ -182,9 +181,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
 
     @HostBinding('class.ng-select') useDefaultClass = true;
+
     @HostBinding('class.ng-select-disabled') get disabled() { return this.readonly || this._disabled };
 
     @HostBinding('class.ng-select-filtered') get filtered() { return (!!this.searchTerm && this.searchable || this._isComposing) };
+
     @HostBinding('class.ng-select-single') get single() { return !this.multiple };
 
     itemsList: ItemsList;
@@ -301,28 +302,28 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     handleKeyCode($event: KeyboardEvent) {
         switch ($event.which) {
-        case KeyCode.ArrowDown:
-            this._handleArrowDown($event);
-            break;
-        case KeyCode.ArrowUp:
-            this._handleArrowUp($event);
-            break;
-        case KeyCode.Space:
-            this._handleSpace($event);
-            break;
-        case KeyCode.Enter:
-            this._handleEnter($event);
-            break;
-        case KeyCode.Tab:
-            this._handleTab($event);
-            break;
-        case KeyCode.Esc:
-            this.close();
-            $event.preventDefault();
-            break;
-        case KeyCode.Backspace:
-            this._handleBackspace();
-            break
+            case KeyCode.ArrowDown:
+                this._handleArrowDown($event);
+                break;
+            case KeyCode.ArrowUp:
+                this._handleArrowUp($event);
+                break;
+            case KeyCode.Space:
+                this._handleSpace($event);
+                break;
+            case KeyCode.Enter:
+                this._handleEnter($event);
+                break;
+            case KeyCode.Tab:
+                this._handleTab($event);
+                break;
+            case KeyCode.Esc:
+                this.close();
+                $event.preventDefault();
+                break;
+            case KeyCode.Backspace:
+                this._handleBackspace();
+                break
         }
     }
 
