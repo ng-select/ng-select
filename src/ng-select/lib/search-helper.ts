@@ -841,8 +841,6 @@ const diacritics = {
 };
 
 export function stripSpecialChars(text: string): string {
-    const match = (a: string): string => {
-        return diacritics[a] || a;
-    };
+    const match = (a: string): string => diacritics[a] || a;
     return text.replace(/[^\u0000-\u007E]/g, match);
 }

@@ -1,7 +1,8 @@
 import {
     Component,
-    OnDestroy,
     OnChanges,
+    OnDestroy,
+    OnInit,
     AfterViewInit,
     forwardRef,
     ChangeDetectorRef,
@@ -56,7 +57,7 @@ export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>
 export type DropdownPosition = 'top' | 'right' | 'bottom' | 'left' | 'auto';
 export type AddTagFn = ((term: string) => any | Promise<any>);
 export type CompareWithFn = (a: any, b: any) => boolean;
-export type GroupValueFn = (key: string | object, children: any[]) => string | object;
+export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 
 @Component({
     selector: 'ng-select',
@@ -69,12 +70,8 @@ export type GroupValueFn = (key: string | object, children: any[]) => string | o
     }, NgDropdownPanelService],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        '[class.ng-select]': 'useDefaultClass',
-        '[class.ng-select-single]': '!multiple',
-    }
 })
-export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, ControlValueAccessor {
+export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
 
     @Input() bindLabel: string;
     @Input() bindValue: string;
@@ -94,7 +91,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @Input() selectOnTab = false;
     @Input() openOnEnter: boolean;
     @Input() maxSelectedItems: number;
-    @Input() groupBy: string | Function;
+    @Input() groupBy: string | ((value: any) => any);
     @Input() groupValue: GroupValueFn;
     @Input() bufferAmount = 4;
     @Input() virtualScroll: boolean;
@@ -184,9 +181,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
 
+    @HostBinding('class.ng-select') useDefaultClass = true;
     @HostBinding('class.ng-select-disabled') get disabled() { return this.readonly || this._disabled };
 
     @HostBinding('class.ng-select-filtered') get filtered() { return (!!this.searchTerm && this.searchable || this._isComposing) };
+    @HostBinding('class.ng-select-single') get single() { return !this.multiple };
 
     itemsList: ItemsList;
     viewPortItems: NgOption[] = [];
@@ -195,7 +194,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     element: HTMLElement;
     focused: boolean;
     escapeHTML = true;
-    useDefaultClass = true;
 
     private _items = [];
     private _itemsAreUsed: boolean;
@@ -303,28 +301,28 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
 
     handleKeyCode($event: KeyboardEvent) {
         switch ($event.which) {
-            case KeyCode.ArrowDown:
-                this._handleArrowDown($event);
-                break;
-            case KeyCode.ArrowUp:
-                this._handleArrowUp($event);
-                break;
-            case KeyCode.Space:
-                this._handleSpace($event);
-                break;
-            case KeyCode.Enter:
-                this._handleEnter($event);
-                break;
-            case KeyCode.Tab:
-                this._handleTab($event);
-                break;
-            case KeyCode.Esc:
-                this.close();
-                $event.preventDefault();
-                break;
-            case KeyCode.Backspace:
-                this._handleBackspace();
-                break
+        case KeyCode.ArrowDown:
+            this._handleArrowDown($event);
+            break;
+        case KeyCode.ArrowUp:
+            this._handleArrowUp($event);
+            break;
+        case KeyCode.Space:
+            this._handleSpace($event);
+            break;
+        case KeyCode.Enter:
+            this._handleEnter($event);
+            break;
+        case KeyCode.Tab:
+            this._handleTab($event);
+            break;
+        case KeyCode.Esc:
+            this.close();
+            $event.preventDefault();
+            break;
+        case KeyCode.Backspace:
+            this._handleBackspace();
+            break
         }
     }
 

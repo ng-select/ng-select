@@ -95,7 +95,6 @@ describe('ItemsList', () => {
                 expect(list.selectedItems.length).toBe(2);
             });
 
-            
             it('should not select disabled items when selecting group', () => {
                 cmp.groupBy = 'groupKey';
                 list.setItems([
