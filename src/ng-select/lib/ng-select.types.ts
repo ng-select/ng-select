@@ -1,5 +1,6 @@
 export interface NgOption {
     [name: string]: any;
+
     index?: number;
     htmlId?: string;
     selected?: boolean;
@@ -20,3 +21,5 @@ export enum KeyCode {
     ArrowDown = 40,
     Backspace = 8
 }
+
+export type DropdownPosition = 'top' | 'right' | 'bottom' | 'left' | 'auto';
