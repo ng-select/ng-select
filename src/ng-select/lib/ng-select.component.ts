@@ -116,9 +116,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() @HostBinding('class.ng-select-opened') isOpen = false;
 
     @Input()
-    get items() { return this._items };
+    get items(): any { return this._items };
 
-    set items(value: any[] | null) {
+    set items(value: any[] | any) {
         if (value === null) {
             value = [];
         }
