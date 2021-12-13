@@ -1900,7 +1900,10 @@ describe('NgSelectComponent', () => {
 
 		describe('enter', () => {
 			it('should open dropdown when it is closed', () => {
+				const input = select.searchInput.nativeElement;
+				input.focus();
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+				expect(select.focused).toBe(true);
 				expect(select.isOpen).toBe(true);
 			});
 
@@ -5015,12 +5018,12 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
 
 function createEvent(target = {}) {
 	return {
-		preventDefault: () => {},
+		preventDefault: () => { },
 		target: {
 			className: '',
 			tagName: '',
 			classList: {
-				contains: () => {},
+				contains: () => { },
 			},
 			...target,
 		},
@@ -5076,7 +5079,7 @@ class NgSelectTestComponent {
 		},
 		{ id: 3, description: { name: 'Australia', id: 'c' } },
 	];
-	keyDownFn = () => {};
+	keyDownFn = () => { };
 
 	tagFunc(term: string) {
 		return { id: term, name: term, custom: true };
@@ -5098,27 +5101,27 @@ class NgSelectTestComponent {
 		this.visible = !this.visible;
 	}
 
-	onChange(_: any) {}
+	onChange(_: any) { }
 
-	onFocus(_: Event) {}
+	onFocus(_: Event) { }
 
-	onBlur(_: Event) {}
+	onBlur(_: Event) { }
 
-	onOpen() {}
+	onOpen() { }
 
-	onClose() {}
+	onClose() { }
 
-	onAdd(_: Event) {}
+	onAdd(_: Event) { }
 
-	onRemove(_: Event) {}
+	onRemove(_: Event) { }
 
-	onClear() {}
+	onClear() { }
 
-	onSearch(_: any) {}
+	onSearch(_: any) { }
 
-	onScroll() {}
+	onScroll() { }
 
-	onScrollToEnd() {}
+	onScrollToEnd() { }
 }
 
 @Component({

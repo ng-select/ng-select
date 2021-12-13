@@ -97,6 +97,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() addTagText: string;
 	@Input() loadingText: string;
 	@Input() clearAllText: string;
+	@Input() removeText: string;
 	@Input() appearance: string;
 	@Input() dropdownPosition: DropdownPosition = 'auto';
 	@Input() appendTo: string;
@@ -116,6 +117,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() trackByFn = null;
 	@Input({ transform: booleanAttribute }) clearOnBackspace = true;
 	@Input() labelForId = null;
+	@Input() labelId = null;
 	@Input() inputAttrs: { [key: string]: string } = {};
 	@Input({ transform: numberAttribute }) tabIndex: number;
 	tabFocusOnClearButton = input<boolean | undefined>();
@@ -608,7 +610,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 		const handleTag = (item) => (this._isTypeahead || !this.isOpen ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item));
 		if (isPromise(tag)) {
-			tag.then((item) => this.select(handleTag(item))).catch(() => {});
+			tag.then((item) => this.select(handleTag(item))).catch(() => { });
 		} else if (tag) {
 			this.select(handleTag(tag));
 		}
@@ -719,9 +721,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 	}
 
-	private _onChange = (_: any) => {};
+	private _onChange = (_: any) => { };
 
-	private _onTouched = () => {};
+	private _onTouched = () => { };
 
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];
@@ -981,7 +983,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			} else if (this.showAddTag) {
 				this.selectTag();
 			}
-		} else if (this.openOnEnter) {
+		} else if (this.openOnEnter && this.focused) {
 			this.open();
 		} else {
 			return;
@@ -1058,7 +1060,30 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.bindValue = this.bindValue || config.bindValue;
 		this.bindLabel = this.bindLabel || config.bindLabel;
 		this.appearance = this.appearance || config.appearance;
+		this.removeText = this.removeText || config.removeText;
 		this._setTabFocusOnClear();
+	}
+
+	triggerClick(event: KeyboardEvent, element: HTMLElement): void {
+		const isClick =
+			['Enter', 'Space'].includes(event.code) || [KeyCode.Enter, KeyCode.Space].includes(event.keyCode);
+
+		if (isClick) {
+			element.click();
+			event.preventDefault();
+			event.stopPropagation();
+		}
+	}
+
+	clearAllItems(event: KeyboardEvent): void {
+		const isClick =
+			['Enter', 'Space'].includes(event.code) || [KeyCode.Enter, KeyCode.Space].includes(event.keyCode);
+
+		if (isClick) {
+			this.handleClearClick();
+			event.preventDefault();
+			event.stopPropagation();
+		}
 	}
 
 	/**

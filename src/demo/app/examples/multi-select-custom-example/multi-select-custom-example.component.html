@@ -11,7 +11,9 @@
 		@for (item of items | slice: 0 : 2; track item) {
 			<div class="ng-value">
 				<span class="ng-value-label"><img [src]="item.avatar_url" width="20px" height="20px" /> {{ item.login }}</span>
-				<span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                <span #removeItem role="button"
+                 tabindex="0" attr.aria-label="{{removeTranslated}} {{item.login}}" 
+                 class="ng-value-icon right" (click)="clear(item)" (keydown)="triggerClick($event, removeItem)">×</span>
 			</div>
 		}
 		@if (items.length > 2) {

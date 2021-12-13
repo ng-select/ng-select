@@ -18,4 +18,5 @@ export class NgSelectConfig {
 	clearSearchOnAdd: boolean;
 	deselectOnClick: boolean;
 	tabFocusOnClear = true;
+	removeText = 'Remove';
 }
