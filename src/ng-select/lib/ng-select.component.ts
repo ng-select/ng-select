@@ -81,6 +81,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() addTagText: string;
     @Input() loadingText: string;
     @Input() clearAllText: string;
+    @Input() removeText: string;
     @Input() appearance: string;
     @Input() dropdownPosition: DropdownPosition = 'auto';
     @Input() appendTo: string;
@@ -875,7 +876,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             } else if (this.showAddTag) {
                 this.selectTag();
             }
-        } else if (this.openOnEnter) {
+        } else if (this.openOnEnter && this.focused) {
             this.open();
         } else {
             return;
@@ -962,5 +963,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
         this.bindValue = this.bindValue || config.bindValue;
         this.bindLabel = this.bindLabel || config.bindLabel;
         this.appearance = this.appearance || config.appearance;
+        this.removeText = this.removeText || config.removeText;
+    }
+
+    triggerClick(event: KeyboardEvent, element: HTMLElement): void {
+        const isClick =
+        ['Enter', 'Space'].includes(event.code) || [KeyCode.Enter, KeyCode.Space].includes(event.keyCode);
+
+        if (isClick) {
+            element.click();
+            event.preventDefault();
+            event.stopPropagation();
+        }
     }
 }

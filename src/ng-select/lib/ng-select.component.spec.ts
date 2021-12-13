@@ -1705,7 +1705,10 @@ describe('NgSelectComponent', () => {
 
         describe('enter', () => {
             it('should open dropdown when it is closed', () => {
+                const input = select.searchInput.nativeElement;
+                input.focus();
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+                expect(select.focused).toBe(true);
                 expect(select.isOpen).toBe(true);
             });
 
