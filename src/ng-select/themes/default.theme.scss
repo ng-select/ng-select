@@ -120,6 +120,9 @@ $ng-select-input-text: #000000 !default;
                         padding-right: $ng-select-value-padding-left;
                         padding-left: 50px;
                     }
+                    > input {
+                        color: $ng-select-input-text;
+                    }
                 }
             }
         }
