@@ -1,13 +1,15 @@
-<p>Select multiple elements</p>
+<p id="LabelID">Select multiple elements</p>
 
 <ng-select
-	[items]="people$ | async"
-	[multiple]="true"
-	[closeOnSelect]="false"
-	[searchable]="false"
-	bindLabel="name"
-	placeholder="Select people"
-	[(ngModel)]="selectedPeople">
+    [items]="people$ | async"
+    [multiple]="true"
+    [closeOnSelect]="false"
+    [searchable]="false"
+    bindLabel="name"
+    placeholder="Select people"
+    [(ngModel)]="selectedPeople"
+    labelId="LabelID"
+    labelForId="InputID">
 </ng-select>
 
 <div class="mt-3">
