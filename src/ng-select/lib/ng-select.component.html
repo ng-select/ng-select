@@ -46,7 +46,9 @@
                    (change)="$event.stopPropagation()"
                    [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
                    aria-autocomplete="list"
-                   [attr.aria-controls]="isOpen ? dropdownId : null">
+                   [attr.aria-controls]="isOpen ? dropdownId : null"
+                   attr.aria-labelledby="{{labelId}} {{labelForId}}"
+                   attr.aria-label="{{placeholder}}">
         </div>
     </div>
 
@@ -60,7 +62,7 @@
         </ng-template>
     </ng-container>
 
-    <span #removeAllItem role="button" tabindex="0" attr.aria-label="{{clearAllText}}" (keydown)="triggerClick($event ,removeItem)" *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
+    <span role="button" tabindex="0" attr.aria-label="{{clearAllText}}" (keydown)="clearAllItems($event)" *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
         <span class="ng-clear" aria-hidden="true">×</span>
     </span>
 

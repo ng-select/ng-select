@@ -101,6 +101,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() trackByFn = null;
     @Input() clearOnBackspace = true;
     @Input() labelForId = null;
+    @Input() labelId = null;
     @Input() inputAttrs: { [key: string]: string } = {};
     @Input() tabIndex: number;
     @Input() readonly = false;
@@ -972,6 +973,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
         if (isClick) {
             element.click();
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
+
+    clearAllItems(event: KeyboardEvent): void {
+        const isClick =
+        ['Enter', 'Space'].includes(event.code) || [KeyCode.Enter, KeyCode.Space].includes(event.keyCode);
+
+        if (isClick) {
+            this.handleClearClick();
             event.preventDefault();
             event.stopPropagation();
         }
