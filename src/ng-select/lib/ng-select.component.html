@@ -10,7 +10,7 @@
         <ng-container *ngIf="(!multiLabelTemplate  || !multiple ) && selectedItems.length > 0">
             <div [class.ng-value-disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems; trackBy: trackByOption">
                 <ng-template #defaultLabelTemplate>
-                    <span #removeItem role="button" tabindex="0" attr.aria-label="{{removeText}} {{item.label}}" class="ng-value-icon left" (click)="unselect(item);" (keydown)="triggerClick($event ,removeItem)">×</span>
+                    <span #removeItem role="button" tabindex="0" attr.aria-label="{{ removeText }} {{ item.label }}" class="ng-value-icon left" (click)="unselect(item);" (keydown)="triggerClick($event ,removeItem)">×</span>
                     <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
                 </ng-template>
 
@@ -47,8 +47,8 @@
                    [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
                    aria-autocomplete="list"
                    [attr.aria-controls]="isOpen ? dropdownId : null"
-                   attr.aria-labelledby="{{labelId}} {{labelForId}}"
-                   attr.aria-label="{{placeholder}}">
+                   attr.aria-labelledby="{{ labelId }} {{ labelForId }}"
+                   attr.aria-label="{{ multiple || selectedItems.length < 1 ? placeholder : selectedItems[0]?.label }}">
         </div>
     </div>
 
@@ -62,7 +62,7 @@
         </ng-template>
     </ng-container>
 
-    <span role="button" tabindex="0" attr.aria-label="{{clearAllText}}" (keydown)="clearAllItems($event)" *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
+    <span role="button" tabindex="0" attr.aria-label="{{ clearAllText }}" (keydown)="clearAllItems($event)" *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
         <span class="ng-clear" aria-hidden="true">×</span>
     </span>
 
