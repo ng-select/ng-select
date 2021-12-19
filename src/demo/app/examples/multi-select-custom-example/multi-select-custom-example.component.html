@@ -10,7 +10,7 @@
     <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
         <div class="ng-value" *ngFor="let item of items | slice:0:2">
             <span class="ng-value-label"><img [src]="item.avatar_url" width="20px" height="20px"> {{item.login}}</span>
-            <span #removeItem role="button" tabindex="0" attr.aria-label="{{removeTranslated}} {{item.login}}" class="ng-value-icon right" (click)="clear(item)" (keydown)="triggerClick($event, removeItem)">×</span>
+            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
         </div>
         <div class="ng-value" *ngIf="items.length > 2">
             <span class="ng-value-label">{{items.length - 2}} more...</span>

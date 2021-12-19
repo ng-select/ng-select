@@ -49,6 +49,8 @@ import { SearchEditableExampleComponent } from './search-editable-example/search
 import { AccessibilityTestExampleComponent } from './accessibility-test-example/accessibility-test-example.component';
 // eslint-disable-next-line max-len
 import { AccessibilityCustomLabelExampleComponent } from './accessibility-custom-label-example/accessibility-custom-label-example.component';
+// eslint-disable-next-line max-len
+import { AccessibilityCustomMultiSelectExampleComponent } from './accessibility-custom-multi-select-example/accessibility-custom-multi-select-example.component';
 
 
 const examples = [DataSourceBackendExampleComponent,
@@ -95,7 +97,8 @@ const examples = [DataSourceBackendExampleComponent,
     GroupChildrenExampleComponent,
     SearchEditableExampleComponent,
     AccessibilityTestExampleComponent,
-    AccessibilityCustomLabelExampleComponent
+    AccessibilityCustomLabelExampleComponent,
+    AccessibilityCustomMultiSelectExampleComponent
 ];
 
 @NgModule({

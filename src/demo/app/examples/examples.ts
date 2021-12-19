@@ -43,6 +43,8 @@ import { GroupChildrenExampleComponent } from './group-children-example/group-ch
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
 import { AccessibilityCustomLabelExampleComponent } from'./accessibility-custom-label-example/accessibility-custom-label-example.component';
 import { AccessibilityTestExampleComponent } from './accessibility-test-example/accessibility-test-example.component';
+// eslint-disable-next-line max-len
+import { AccessibilityCustomMultiSelectExampleComponent } from './accessibility-custom-multi-select-example/accessibility-custom-multi-select-example.component';
 
 export interface Example {
     component: any;
@@ -229,5 +231,9 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
     'accessibility-custom-label-example': {
         component: AccessibilityCustomLabelExampleComponent,
         title: 'NG Select with a custom Label'
+    },
+    'accessibility-custom-multi-select-example': {
+        component: AccessibilityCustomMultiSelectExampleComponent,
+        title: 'NG Select Using custom multi select'
     }
 };
