@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { KeyCode } from 'src/ng-select/lib/ng-select.types';
 import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
 import { NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
@@ -22,16 +21,5 @@ export class MultiSelectTemplateExampleComponent implements OnInit {
 
     ngOnInit() {
         this.githubUsers$ = this.dataService.getGithubAccounts('anjm');
-    }
-
-    triggerClick(event, element: HTMLElement): void {
-        const isClick =
-        ['Enter', 'Space'].includes(event.code) || [KeyCode.Enter, KeyCode.Space].includes(event.keyCode);
-
-        if (isClick) {
-            element.click();
-            event.preventDefault();
-            event.stopPropagation();
-        }
     }
 }
