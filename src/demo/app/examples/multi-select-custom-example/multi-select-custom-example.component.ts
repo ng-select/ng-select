@@ -11,7 +11,6 @@ export class MultiSelectCustomExampleComponent implements OnInit {
 
     githubUsers$: Observable<any[]>;
     selectedUsers = ['anjmao', 'anjmittu', 'anjmendoza'];
-    removeTranslated = 'Remove';
 
     constructor(private dataService: DataService) {
     }
