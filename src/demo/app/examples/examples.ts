@@ -44,6 +44,10 @@ import { SearchEditableExampleComponent } from './search-editable-example/search
 import { TemplatePlaceholderExampleComponent } from './template-placeholder-example/template-placeholder-example.component';
 import { FixedPlaceholderExampleComponent } from './fixed-placeholder-example/fixed-placeholder-example.component';
 import { TemplateClearExampleComponent } from './template-clear-example/template-clear-example.component';
+import { AccessibilityCustomLabelExampleComponent } from './accessibility-custom-label-example/accessibility-custom-label-example.component';
+import { AccessibilityTestExampleComponent } from './accessibility-test-example/accessibility-test-example.component';
+// eslint-disable-next-line max-len
+import { AccessibilityCustomMultiSelectExampleComponent } from './accessibility-custom-multi-select-example/accessibility-custom-multi-select-example.component';
 
 export interface Example {
 	component: any;
@@ -234,5 +238,17 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
 	'group-children-example': {
 		component: GroupChildrenExampleComponent,
 		title: 'Items with already grouped children array',
+	},
+	'accessibility-test-example': {
+		component: AccessibilityTestExampleComponent,
+		title: 'How to test Ng-Select Accessibility'
+	},
+	'accessibility-custom-label-example': {
+		component: AccessibilityCustomLabelExampleComponent,
+		title: 'NG Select with a custom Label'
+	},
+	'accessibility-custom-multi-select-example': {
+		component: AccessibilityCustomMultiSelectExampleComponent,
+		title: 'NG Select Using custom multi select'
 	},
 };

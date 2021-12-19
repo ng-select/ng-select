@@ -1,0 +1,29 @@
+<p><strong>Steps for Custom Label</strong>:</p>
+<ul>
+    <li>Set <strong>labelId</strong> on Ng-Select to the required label id.</li>
+    <li>
+        Set <strong>labelForId</strong> on Ng-Select to set the Ng-Select input
+        id.
+    </li>
+</ul>
+<hr>
+<p><strong>Other testing areas</strong>:</p>
+<p>Using Scren Readers and Keyboard navigation you can also test the following;</p>
+<ul>
+    <li>Remove item button.</li>
+    <li>Clear all text button.</li>
+    <li>Dropdown navigation.</li>
+</ul>
+
+<label id="LabelID"><strong>Custom Ng-Select Label</strong></label>
+<ng-select
+    [items]="people$ | async"
+    [multiple]="true"
+    [closeOnSelect]="false"
+    [hideSelected]="true"
+    bindLabel="name"
+    placeholder="Select people"
+    [(ngModel)]="selectedPeople"
+    labelId="LabelID"
+    labelForId="InputID">
+</ng-select>
