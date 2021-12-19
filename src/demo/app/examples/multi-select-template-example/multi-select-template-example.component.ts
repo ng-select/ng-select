@@ -14,7 +14,6 @@ import { AsyncPipe } from '@angular/common';
 export class MultiSelectTemplateExampleComponent implements OnInit {
 	githubUsers$: Observable<any[]>;
 	selectedUsers = ['anjmao'];
-    removeTranslated = 'Remove';
 
     constructor(private dataService: DataService) {
     }
