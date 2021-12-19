@@ -41,6 +41,8 @@ import { GroupSelectableExampleComponent } from './group-selectable-example/grou
 import { GroupSelectableHiddenExampleComponent } from './group-selectable-hidden-example/group-selectable-hidden-example.component';
 import { GroupChildrenExampleComponent } from './group-children-example/group-children-example.component';
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
+import { AccessibilityCustomLabelExampleComponent } from'./accessibility-custom-label-example/accessibility-custom-label-example.component';
+import { AccessibilityTestExampleComponent } from './accessibility-test-example/accessibility-test-example.component';
 
 export interface Example {
     component: any;
@@ -219,5 +221,13 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
     'group-children-example': {
         component: GroupChildrenExampleComponent,
         title: 'Items with already grouped children array'
+    },
+    'accessibility-test-example': {
+        component: AccessibilityTestExampleComponent,
+        title: 'How to test Ng-Select Accessibility'
+    },
+    'accessibility-custom-label-example': {
+        component: AccessibilityCustomLabelExampleComponent,
+        title: 'NG Select with a custom Label'
     }
 };

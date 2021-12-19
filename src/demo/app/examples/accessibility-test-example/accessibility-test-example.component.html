@@ -1,0 +1,65 @@
+<p><strong>Ng-Select supports the follwoing accessibility in mind</strong>:</p>
+<ul>
+    <li><strong> Dropdown Keyboard Interaction: </strong>
+        <ul>
+            <li><strong>Enter</strong>: If the menu is Closed will Open it (If openOnEnter isn't false), also to choose an elmenet from the dropdown.</li>
+            <li><strong>ESC</strong>: Closes the menu if it is opened.</li>
+            <li><strong>Space</strong>: Opens the menu if it is closed first time use, after that just moving the key couror.</li>
+            <li><strong>BackSpace</strong>: Clears the menu items one by one if it is multiple, or just clear the existing item if it is not multiple</li>
+            <li><strong>Key Up</strong>: Moving inside the menu from bottom to top, also continue cycling from bottom to top</li>
+            <li><strong>Key down</strong>: Moving inside the menu from top to bottom, also continue cycling from top to bottom</li>
+        </ul>
+    </li>
+    <li><strong>Menu items Keyboard Interaction:</strong>
+        <ul>
+            <li>Clear item X button is keyboard access:</li>
+            <li><strong>Enter or Space</strong>: Removes the item then sets the focus back to the ng-select input</li>
+        </ul>
+    </li>
+    <li><strong>Clear all items Keyboard Interaction:</strong>
+        <ul>
+            <li>Clear all item X button is keyboard access:</li>
+            <li><strong>Enter or Space</strong>: Removes all the items then sets the focus back to the ng-select input</li>
+        </ul>
+    </li>
+</ul>
+<hr>
+<p><strong>Labeling for Screen Readers</strong>:</p>
+<ul>
+    <li><strong>Input Field</strong>:
+        <ul>
+            <li>If there is no items, the place holder will be announced if it is exists. </li>
+            <li>If There are multible items , also the place holder will be announced if it is exists. </li>
+            <li>If there is only one item will be announced.</li>
+            <li>If there is a custom label, the label will be announced first then the input field</li>
+        </ul>
+    </li>
+    <li><strong>Dropdown</strong>:
+        <ul>
+            <li>If it is a checkbox will be announced the visible label of it and it is states. </li>
+            <li>If it is not a checkbox will be announced the visible label of it. </li>
+        </ul>
+    </li>
+    <li><strong>Multi items with clear x button</strong>:
+        <ul>
+            <li>If you did not provide a custom [removeText], when the focus gets on the remove button, will be announced Remove then the item visible title </li>
+        </ul>
+    </li>
+    <li><strong>Clear all text x button</strong>:
+        <ul>
+            <li>If you did not provide a custom [clearAllText] word, when the focus gets on the clearAllText button, will be announced Clear all </li>
+        </ul>
+    </li>
+</ul>
+<hr>
+<p><strong>Alerting for Screen Readers</strong>:</p>
+<ul>
+    <li>If there is <strong>No Result Found</strong>. </li>
+    <li>In Case of <strong>type To Search Text</strong>. </li>
+    <li>If there is <strong>loading Text</strong>. </li>
+</ul>
+<hr>
+<p><strong>Tool you can use for testing accessibility</strong>:</p>
+<ul>
+    <li>Free tool: <strong><a target="_blank" href="https://www.nvaccess.org/download/">NVDA</a></strong></li>
+</ul>

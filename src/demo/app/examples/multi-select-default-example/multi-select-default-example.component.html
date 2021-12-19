@@ -1,4 +1,4 @@
-<p id="LabelID">Select multiple elements</p>
+<p>Select multiple elements</p>
 
 <ng-select
     [items]="people$ | async"
@@ -7,9 +7,7 @@
     [searchable]="false"
     bindLabel="name"
     placeholder="Select people"
-    [(ngModel)]="selectedPeople"
-    labelId="LabelID"
-    labelForId="InputID">
+    [(ngModel)]="selectedPeople">
 </ng-select>
 
 <div class="mt-3">

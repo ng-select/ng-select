@@ -46,6 +46,9 @@ import { TemplateOptionExampleComponent } from './template-option-example/templa
 import { TemplateSearchExampleComponent } from './template-search-example/template-search-example.component';
 import { VirtualScrollExampleComponent } from './virtual-scroll-example/virtual-scroll-example.component';
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
+import { AccessibilityTestExampleComponent } from './accessibility-test-example/accessibility-test-example.component';
+// eslint-disable-next-line max-len
+import { AccessibilityCustomLabelExampleComponent } from './accessibility-custom-label-example/accessibility-custom-label-example.component';
 
 
 const examples = [DataSourceBackendExampleComponent,
@@ -91,6 +94,8 @@ const examples = [DataSourceBackendExampleComponent,
     GroupSelectableHiddenExampleComponent,
     GroupChildrenExampleComponent,
     SearchEditableExampleComponent,
+    AccessibilityTestExampleComponent,
+    AccessibilityCustomLabelExampleComponent
 ];
 
 @NgModule({
