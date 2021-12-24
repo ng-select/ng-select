@@ -413,7 +413,8 @@ describe('NgSelectComponent', () => {
             fixture.componentInstance.cities = [{ id: 1, name: 'Vilnius' }, { id: 2, name: 'Kaunas' }];
             tickAndDetectChanges(fixture);
             expect(fixture.componentInstance.select.selectedItems[0]).toEqual(jasmine.objectContaining({
-                value: cities[0]
+                value: cities[0],
+                label: '',
             }));
         }));
 
@@ -4354,7 +4355,7 @@ describe('NgSelectComponent', () => {
             if (shouldCheckText) {
                 expect(labelElement.innerText).toBe(labelText);
             }
-        };
+        }
 
         it('should work with async function', fakeAsync(() => {
             const timeout = 200;
@@ -4370,6 +4371,63 @@ describe('NgSelectComponent', () => {
         it('should not fail with not defined function', fakeAsync(() => {
             checkLabel(null, false, 1);
             checkLabel(undefined, false, 1);
+        }));
+
+        it('should work with null bindValue', fakeAsync(() => {
+
+        }))
+    });
+
+    describe('Get missing item label for null bindValue', () => {
+        let fixture: ComponentFixture<NgSelectTestCmp>;
+        let select: NgSelectComponent;
+        let cities: any[];
+
+        beforeEach(() => {
+            fixture = createTestingModule(
+                NgSelectTestCmp,
+                `<ng-select 
+                            bindLabel="name"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+            cities = fixture.componentInstance.cities;
+            select = fixture.componentInstance.select;
+            fixture.componentInstance.selectedCity = cities[0];
+        });
+
+        const labelText = 'Vilnius';
+
+        function checkLabel(
+            getMissingItemLabelFn: (val: any) => string | Observable<string>,
+            shouldCheckText: boolean,
+            delayBeforeCheck: number): void {
+            select.getMissingItemLabelFn = getMissingItemLabelFn;
+
+            fixture.detectChanges();
+            tick(delayBeforeCheck);
+            fixture.detectChanges();
+
+            const labelElement = fixture.debugElement
+                .query(By.css('.ng-value-label'))
+                ?.query(By.css('span'))
+                ?.nativeElement;
+
+            expect(labelElement).toBeDefined();
+
+            if (shouldCheckText) {
+                expect(labelElement.innerText).toBe(labelText);
+            }
+        }
+
+        it('should fill bindLabel from value object with sync function', fakeAsync(() => {
+            const method = val => val.name;
+            checkLabel(method, true, 1);
+        }));
+
+        it('should fill bindLabel from value object with async function', fakeAsync(() => {
+            const timeout = 200;
+            const method = val => of(val.name).pipe(delay(timeout));
+            checkLabel(method, true, timeout);
         }));
     });
 });
