@@ -24,7 +24,7 @@ import {
     Attribute
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { takeUntil, startWith, tap, debounceTime, map, filter, take } from 'rxjs/operators';
+import { takeUntil, tap, debounceTime, map, filter, take } from 'rxjs/operators';
 import { Subject, merge, Observable, isObservable, of } from 'rxjs';
 
 import {
@@ -778,38 +778,51 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
             return
         }
 
+        const withResolvedLabel = (initialVal: any, initialLabel: string, fn: (val: any, label: string) => void) => {
+            if (initialLabel != null) {
+                fn(initialVal, initialLabel);
+            } else {
+                const resolvedLabel = this.getMissingItemLabelFn ? this.getMissingItemLabelFn(initialVal) : null;
+                if (isObservable(resolvedLabel)) {
+                    resolvedLabel.pipe(
+                        take(1),
+                        tap(l => fn(initialVal, l)),
+                        tap(() => this._cd.markForCheck()),
+                        takeUntil(this._destroy$),
+                    ).subscribe();
+                } else {
+                    fn(initialVal, resolvedLabel);
+                }
+            }
+        }
+
         const select = (val: any) => {
             let item = this.itemsList.findItem(val);
             if (item) {
                 this.itemsList.select(item);
             } else {
+                const selectItemWithLabelFn = (itemObject: any, itemLabel: string) => {
+                    const selectedItem = {
+                        ...itemObject,
+                        [this.bindLabel]: itemLabel ?? itemObject[this.bindLabel],
+                    };
+                    this.itemsList.select(this.itemsList.mapItem(selectedItem, null));
+                };
+                const selectItemWithValueFn = (itemValue: any, itemLabel: string) => {
+                    const selectedItem = {
+                        [this.bindValue]: itemValue,
+                    };
+                    selectItemWithLabelFn(selectedItem, itemLabel);
+                };
+
                 const isValObject = isObject(val);
                 const isPrimitive = !isValObject && !this.bindValue;
-                if ((isValObject || isPrimitive)) {
+                if (isPrimitive) {
                     this.itemsList.select(this.itemsList.mapItem(val, null));
+                } else if (isValObject) {
+                    withResolvedLabel(val, this.itemsList.resolveNested(val, this.bindLabel), selectItemWithLabelFn.bind(this));
                 } else if (this.bindValue) {
-                    const selectItemWithLabelFn = (itemValue: any, itemLabel: string) => {
-                        const selectedItem = {
-                            [this.bindLabel]: itemLabel,
-                            [this.bindValue]: itemValue,
-                        };
-
-                        this.itemsList.select(this.itemsList.mapItem(selectedItem, null));
-                    };
-
-                    const label = this.getMissingItemLabelFn ? this.getMissingItemLabelFn(val) : null;
-
-                    if (isObservable(label)) {
-                        label.pipe(
-                            take(1),
-                            takeUntil(this._destroy$),
-                            tap(resolvedLabel => selectItemWithLabelFn(val, resolvedLabel)),
-                            tap(() => this._cd.markForCheck()),
-                        )
-                        .subscribe();
-                    } else {
-                        selectItemWithLabelFn(val, label);
-                    }
+                    withResolvedLabel(val, null, selectItemWithValueFn.bind(this));
                 }
             }
         };
