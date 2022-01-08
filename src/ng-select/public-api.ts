@@ -17,6 +17,7 @@ export {
     NgLabelTemplateDirective,
     NgLoadingSpinnerTemplateDirective,
     NgLoadingTextTemplateDirective,
+    NgLabelValueTemplateDirective,
     NgMultiLabelTemplateDirective,
     NgNotFoundTemplateDirective,
     NgTagTemplateDirective,

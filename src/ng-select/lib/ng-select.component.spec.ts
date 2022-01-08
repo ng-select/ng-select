@@ -63,7 +63,7 @@ describe('NgSelectComponent', () => {
 
         it('should set items async', fakeAsync(() => {
             const fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `<ng-select [items]="cities$ | async"
                             bindLabel="name">
                 </ng-select>`);
@@ -90,7 +90,7 @@ describe('NgSelectComponent', () => {
 
         it('should refresh items manually', fakeAsync(() => {
             const fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `<ng-select bindLabel="name">
                 </ng-select>`);
 
@@ -1930,7 +1930,7 @@ describe('NgSelectComponent', () => {
 
         it('should display custom label template provided as attribute', fakeAsync(() => {
             const fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `<ng-template #labelTemplate let-item="item">
                     <div class="custom-label">{{item.name}}</div>
                 </ng-template>
@@ -1949,7 +1949,7 @@ describe('NgSelectComponent', () => {
 
         it('should display custom label template provided as content child', fakeAsync(() => {
             const fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `<ng-select [items]="cities" [(ngModel)]="selectedCity">
                     <ng-template ng-label-value-tmp let-item="item">
                         <div class="custom-label">{{item.name}}</div>
@@ -1967,7 +1967,7 @@ describe('NgSelectComponent', () => {
 
         it('should display custom label value template provided as attribute', fakeAsync(() => {
             const fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `<ng-template #labelValueTemplate let-item="item">
                     <div class="custom-label">{{item.name}}</div>
                 </ng-template>
@@ -2041,7 +2041,7 @@ describe('NgSelectComponent', () => {
 
         it('should display custom dropdown option template provided as attribute', waitForAsync(() => {
             const fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `<ng-template #optionTemplate let-item="item">
                     <div class="custom-option">{{item.name}}</div>
                 </ng-template>
@@ -2077,7 +2077,7 @@ describe('NgSelectComponent', () => {
 
         it('should display custom multiple label template provided as attribute', fakeAsync(() => {
             const fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `<ng-template #multiLabelTemplate let-items="items">
                     <div class="custom-multi-label">selected {{items.length}}</div>
                 </ng-template>
@@ -2119,7 +2119,7 @@ describe('NgSelectComponent', () => {
 
         it('should display custom footer and header template provided as attributes', waitForAsync(() => {
             const fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `<ng-template #headerTemplate>
                     <span class="header-label">header</span>
                 </ng-template>
@@ -2163,7 +2163,7 @@ describe('NgSelectComponent', () => {
 
         it('should display custom tag template provided as attribute', waitForAsync(() => {
             const fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `<ng-template #tagTemplate let-search="searchTerm">
                     <span class="tag-template">{{searchTerm}}</span>
                 </ng-template>
@@ -2221,7 +2221,7 @@ describe('NgSelectComponent', () => {
 
         it('should display custom loading and no data found template provided as attributes', fakeAsync(() => {
             const fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `<ng-template #notFoundTemplate let-searchTerm="searchTerm">
                     <div class="custom-notfound">
                         No data found for "{{searchTerm}}"
@@ -2287,7 +2287,7 @@ describe('NgSelectComponent', () => {
 
         it('should display custom type for search template provided as attribute', fakeAsync(() => {
             const fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `<ng-template #typeToSearchTemplate>
                     <div class="custom-typeforsearch">
                         Start typing...
@@ -2335,7 +2335,7 @@ describe('NgSelectComponent', () => {
 
         it('should display custom loading spinner template provided as attribute', fakeAsync(() => {
             const fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `<ng-template #loadingSpinnerTemplate>
                     <div class="custom-loadingspinner">
                         Custom loading spinner
@@ -4382,12 +4382,12 @@ describe('NgSelectComponent', () => {
     })
 
     describe('Get missing item label', () => {
-        let fixture: ComponentFixture<NgSelectTestCmp>;
+        let fixture: ComponentFixture<NgSelectTestComponent>;
         let select: NgSelectComponent;
 
         beforeEach(() => {
             fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `<ng-select bindValue="id"
                             bindLabel="name"
                             [(ngModel)]="selectedCityId">
@@ -4442,13 +4442,13 @@ describe('NgSelectComponent', () => {
     });
 
     describe('Get missing item label for null bindValue', () => {
-        let fixture: ComponentFixture<NgSelectTestCmp>;
+        let fixture: ComponentFixture<NgSelectTestComponent>;
         let select: NgSelectComponent;
         let cities: any[];
 
         beforeEach(() => {
             fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `<ng-select 
                             bindLabel="name"
                             [(ngModel)]="selectedCity">
