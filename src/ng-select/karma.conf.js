@@ -8,17 +8,17 @@ module.exports = function (config) {
         plugins: [
             require('karma-jasmine'),
             require('karma-chrome-launcher'),
+            require('karma-coverage'),
             require('karma-jasmine-html-reporter'),
-            require('karma-coverage-istanbul-reporter'),
             require('@angular-devkit/build-angular/plugins/karma')
         ],
         client: {
             clearContext: false // leave Jasmine Spec Runner output visible in browser
         },
-        coverageIstanbulReporter: {
-            dir: require('path').join(__dirname, '../../coverage/ng-select'),
-            reports: ['lcovonly'],
-            fixWebpackSourcePaths: true
+        coverageReporter: {
+            dir: require('path').join(__dirname, '../../coverage/'),
+            subdir:'ng-select',
+            type: 'lcovonly',
         },
         reporters: ['progress', 'kjhtml'],
         port: 9876,

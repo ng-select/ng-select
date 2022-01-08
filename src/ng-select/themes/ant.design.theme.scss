@@ -247,13 +247,26 @@ $ng-select-marked: #e6f7ff !default;
     margin-top: 4px;
     margin-bottom: 4px;
     left: 0;
+    &.ng-select-top {
+        bottom: 100%;
+        border-bottom-color: lighten($ng-select-border, 10);
+    }
+    &.ng-select-right {
+        left: 100%;
+        top: 0;
+        border-bottom-color: lighten($ng-select-border, 10);
+        margin-top: 0;
+        margin-left: 4px;
+    }
     &.ng-select-bottom {
         top: 100%;
         border-top-color: lighten($ng-select-border, 10);
     }
-    &.ng-select-top {
-        bottom: 100%;
+    &.ng-select-left {
+        left: calc(-100% - 4px);
+        top: 0;
         border-bottom-color: lighten($ng-select-border, 10);
+        margin-top: 0;
     }
     .ng-dropdown-header {
         border-bottom: 1px solid $ng-select-border;

@@ -64,4 +64,4 @@ export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
     private _isDefined(value: any) {
         return value !== undefined && value !== null;
     }
-}   
+}

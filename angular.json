@@ -1,5 +1,9 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": false,
+    "defaultCollection": "@angular-eslint/schematics"
+  },
   "version": 1,
   "newProjectRoot": "src",
   "projects": {
@@ -33,13 +37,12 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "src/ng-select/tsconfig.lib.json",
-              "src/ng-select/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": [
+              "src/ng-select/**/*.ts",
+              "src/ng-select/**/*.html"
+            ]
           }
         }
       }
@@ -131,8 +134,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "demo:build",
-            "deployUrl": "/"
+            "browserTarget": "demo:build"
           },
           "configurations": {
             "production": {
@@ -165,13 +167,12 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "src/ng-option-highlight/tsconfig.lib.json",
-              "src/ng-option-highlight/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": [
+              "src/ng-option-highlight/**/*.ts",
+              "src/ng-option-highlight/**/*.html"
+            ]
           }
         }
       }

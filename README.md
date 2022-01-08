@@ -14,7 +14,8 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 ## Versions
 
 | Angular| ng-select|
-| ------|:------:| 
+| ------|:------:|
+| >=13.0.0 <14.0.0 | v8.x |
 | >=12.0.0 <13.0.0 | v7.x |
 | >=11.0.0 <12.0.0 | v6.x |
 | >=10.0.0 <11.0.0 | v5.x |
@@ -171,7 +172,7 @@ map: {
 | [compareWith] | `(a: any, b: any) => boolean` | `(a, b) => a === b` | no | A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. |
 | dropdownPosition | `bottom` \| `top` \| `auto` |  `auto` | no | Set the dropdown position on open |
 | [groupBy] | `string` \| `Function` | null | no | Allow to group items by key or function expression |
-| [groupValue] |  `(groupKey: string, cildren: any[]) => Object` | - | no | Function expression to provide group value |
+| [groupValue] |  `(groupKey: string, children: any[]) => Object` | - | no | Function expression to provide group value |
 | [selectableGroup] | `boolean` | false | no | Allow to select group when groupBy is used |
 | [selectableGroupAsModel] | `boolean` | true | no | Indicates whether to select all children or group itself  |
 | [items] | `Array<any>` | `[]` | yes | Items array |
