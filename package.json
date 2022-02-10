@@ -81,7 +81,7 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
     "ng-packagr": "^13.0.3",
-    "node-sass": "^4.12.0",
+    "node-sass": "^7.0.0",
     "semantic-release": "^17.2.3",
     "standard-version": "^8.0.1",
     "ts-node": "~8.3.0",
