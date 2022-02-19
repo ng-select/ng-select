@@ -14,7 +14,11 @@ export function escapeHTML(value: string) {
         value;
 }
 
-export function isDefined(value: any) {
+export function isDefined(value: any, allowNull = false) {
+    if (allowNull) {
+        return value !== undefined;
+    }
+
     return value !== undefined && value !== null;
 }
 

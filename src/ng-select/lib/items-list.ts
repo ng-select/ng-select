@@ -102,10 +102,22 @@ export class ItemsList {
         if (this._ngSelect.compareWith) {
             findBy = item => this._ngSelect.compareWith(item.value, value)
         } else if (this._ngSelect.bindValue) {
-            findBy = item => !item.children && this.resolveNested(item.value, this._ngSelect.bindValue) === value
+            findBy = item => {
+                if (this._ngSelect.allowNullValue && value === null) {
+                    return item.value?.value === null || item.value?.$ngOptionValue === null;
+                }
+
+                return !item.children && this.resolveNested(item.value, this._ngSelect.bindValue) === value
+            }
         } else {
-            findBy = item => item.value === value ||
-                !item.children && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel)
+            findBy = item => {
+                if (this._ngSelect.allowNullValue && value === null) {
+                    return item.value === null || item.value?.$ngOptionValue === null;
+                }
+
+                return item.value === value ||
+                    !item.children && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel)
+            }
         }
         return this._items.find(item => findBy(item));
     }
@@ -230,13 +242,13 @@ export class ItemsList {
     }
 
     mapItem(item: any, index: number): NgOption {
-        const label = isDefined(item.$ngOptionLabel) ? item.$ngOptionLabel : this.resolveNested(item, this._ngSelect.bindLabel);
-        const value = isDefined(item.$ngOptionValue) ? item.$ngOptionValue : item;
+        const label = isDefined(item?.$ngOptionLabel) ? item.$ngOptionLabel : this.resolveNested(item, this._ngSelect.bindLabel);
+        const value = isDefined(item?.$ngOptionValue) ? item.$ngOptionValue : item;
         return {
             index,
             label: isDefined(label) ? label.toString() : '',
             value,
-            disabled: item.disabled,
+            disabled: item?.disabled,
             htmlId: `${this._ngSelect.dropdownId}-${index}`,
         };
     }
@@ -245,7 +257,7 @@ export class ItemsList {
         const multiple = this._ngSelect.multiple;
         for (const selected of this.selectedItems) {
             const value = this._ngSelect.bindValue ? this.resolveNested(selected.value, this._ngSelect.bindValue) : selected.value;
-            const item = isDefined(value) ? this.findItem(value) : null;
+            const item = isDefined(value, this._ngSelect.allowNullValue) ? this.findItem(value) : null;
             this._selectionModel.unselect(selected, multiple);
             this._selectionModel.select(item || selected, multiple, this._ngSelect.selectableGroupAsModel);
         }

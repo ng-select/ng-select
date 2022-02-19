@@ -1,6 +1,9 @@
 import { DataSourceBackendExampleComponent } from './data-source-backend-example/data-source-backend-example.component';
 import { DataSourceArrayExampleComponent } from './data-source-array-example/data-source-array-example.component';
 import { DataSourceOptionsExampleComponent } from './data-source-options-example/data-source-options-example.component';
+import {
+    FormsSingleSelectOptionNullExampleComponent
+} from './forms-single-select-option-null-example/forms-single-select-option-null-example.component';
 import { FormsWithOptionsExampleComponent } from './forms-with-options-example/forms-with-options-example.component';
 import { FormsSingleSelectExampleComponent } from './forms-single-select-example/forms-single-select-example.component';
 import { FormsMultiSelectExampleComponent } from './forms-multi-select-example/forms-multi-select-example.component';
@@ -67,6 +70,10 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
     'forms-single-select-example': {
         component: FormsSingleSelectExampleComponent,
         title: 'Single select with required validation'
+    },
+    'null-single-select-example-option-null': {
+        component: FormsSingleSelectOptionNullExampleComponent,
+        title: 'Single select with option null'
     },
     'forms-multi-select-example': {
         component: FormsMultiSelectExampleComponent,

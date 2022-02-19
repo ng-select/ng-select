@@ -15,6 +15,9 @@ import { FormsAsyncDataExampleComponent } from './forms-async-data-example/forms
 import { FormsCustomTemplateExampleComponent } from './forms-custom-template-example/forms-custom-template-example.component';
 import { FormsMultiSelectExampleComponent } from './forms-multi-select-example/forms-multi-select-example.component';
 import { FormsSingleSelectExampleComponent } from './forms-single-select-example/forms-single-select-example.component';
+import {
+    FormsSingleSelectOptionNullExampleComponent
+} from './forms-single-select-option-null-example/forms-single-select-option-null-example.component';
 import { FormsWithOptionsExampleComponent } from './forms-with-options-example/forms-with-options-example.component';
 import { GroupChildrenExampleComponent } from './group-children-example/group-children-example.component';
 import { GroupDefaultExampleComponent } from './group-default-example/group-default-example.component';
@@ -53,6 +56,7 @@ const examples = [DataSourceBackendExampleComponent,
     DataSourceOptionsExampleComponent,
     FormsWithOptionsExampleComponent,
     FormsSingleSelectExampleComponent,
+    FormsSingleSelectOptionNullExampleComponent,
     FormsMultiSelectExampleComponent,
     FormsAsyncDataExampleComponent,
     FormsCustomTemplateExampleComponent,

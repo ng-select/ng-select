@@ -1,0 +1,73 @@
+<form [formGroup]="heroForm1" novalidate>
+
+    <div class="form-group">
+        <label for="age1">Age</label>
+        <ng-select [selectOnTab]="true"
+                   labelForId="age1"
+                   placeholder="Select age"
+                   formControlName="age"
+                   [multiple]="false"
+                   bindLabel="label"
+                   bindValue="value"
+                   [items]="ages"
+                   [allowNullValue]="true"
+        >
+        </ng-select>
+    </div>
+
+</form>
+
+<form [formGroup]="heroForm2" novalidate>
+
+    <div class="form-group">
+        <label for="age2">Age</label>
+        <ng-select [selectOnTab]="true"
+                   labelForId="age2"
+                   placeholder="Select age"
+                   formControlName="age"
+                   [multiple]="false"
+                   [allowNullValue]="true"
+        >
+            <ng-option *ngFor="let age of ages" [value]="age.value">{{ age.label }}</ng-option>
+        </ng-select>
+    </div>
+
+</form>
+
+<form [formGroup]="heroForm3" novalidate>
+
+    <div class="form-group">
+        <label for="age3">Age</label>
+        <ng-select [selectOnTab]="true"
+                   labelForId="age3"
+                   placeholder="Select age"
+                   formControlName="age"
+                   [multiple]="true"
+                   bindLabel="label"
+                   bindValue="value"
+                   [items]="ages"
+                   [allowNullValue]="true"
+        >
+        </ng-select>
+    </div>
+
+</form>
+
+<form [formGroup]="heroForm4" novalidate>
+
+    <div class="form-group">
+        <label for="age4">Age</label>
+        <ng-select [selectOnTab]="true"
+                   labelForId="age4"
+                   placeholder="Select age"
+                   formControlName="age"
+                   [multiple]="true"
+                   [allowNullValue]="true"
+        >
+            <ng-option *ngFor="let age of ages"
+                       [value]="age.value">{{ age.label }}</ng-option>
+        </ng-select>
+    </div>
+
+</form>
+

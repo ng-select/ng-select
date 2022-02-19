@@ -4195,7 +4195,7 @@ class NgSelectTestComponent {
     }
 
     compareWith(a, b) {
-        return a.name === b.name && a.district === b.district
+        return a?.name === b?.name && a?.district === b?.district
     }
 
     toggleVisible() {

@@ -106,6 +106,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() searchWhileComposing = true;
     @Input() minTermLength = 0;
     @Input() editableSearchTerm = false;
+    @Input() allowNullValue = false;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
@@ -684,7 +685,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     private _isValidWriteValue(value: any): boolean {
-        if (!isDefined(value) || (this.multiple && value === '') || Array.isArray(value) && value.length === 0) {
+        if (!isDefined(value, this.allowNullValue) || (this.multiple && value === '') || Array.isArray(value) && value.length === 0) {
             return false;
         }
 
@@ -719,6 +720,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             if (item) {
                 this.itemsList.select(item);
             } else {
+                if (!this.allowNullValue && val === null) {
+                    return;
+                }
+
                 const isValObject = isObject(val);
                 const isPrimitive = !isValObject && !this.bindValue;
                 if ((isValObject || isPrimitive)) {
@@ -803,7 +808,15 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             this._onChange(model);
             this.changeEvent.emit(selected);
         } else {
-            this._onChange(isDefined(model[0]) ? model[0] : null);
+            let value = isDefined(model[0], this.allowNullValue)
+              ? model[0]
+              : (this.allowNullValue ? undefined : null);
+
+            if (value?.$ngOptionValue === null) {
+                value = null;
+            }
+
+            this._onChange(value);
             this.changeEvent.emit(selected[0]);
         }
 
