@@ -118,8 +118,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input()
     get items() { return this._items };
 
-    set items(value: any[] | null) {
-        if (value === null) {
+    set items(value: any[] | null | undefined) {
+        if (value === null || value === undefined) {
             value = [];
         }
         this._itemsAreUsed = true;

@@ -59,6 +59,17 @@ describe('NgSelectComponent', () => {
             const itemsList = fixture.componentInstance.select.itemsList;
             expect(itemsList.items.length).toBe(0);
         }));
+
+        it('should create empty items list when initialzied with undefined', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestComponent,
+                `<ng-select [items]="undefined">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            const itemsList = fixture.componentInstance.select.itemsList;
+            expect(itemsList.items.length).toBe(0);
+        }));
     });
 
     describe('Model bindings and data changes', () => {
