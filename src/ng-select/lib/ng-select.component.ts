@@ -107,7 +107,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() minTermLength = 0;
     @Input() editableSearchTerm = false;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
-    @Input() allowOpenOnMaxItemsSelected: boolean;
+    @Input() openOnMaxItemsSelected: boolean;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input() @HostBinding('class.ng-select-multiple') multiple = false;
@@ -416,7 +416,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     open() {
 
-        if (this.disabled || this.isOpen || (this.itemsList.maxItemsSelected && !this.allowOpenOnMaxItemsSelected) || this._manualOpen) {
+        if (this.disabled || this.isOpen || (this.itemsList.maxItemsSelected && !this.openOnMaxItemsSelected) || this._manualOpen) {
             return;
         }
 
@@ -964,8 +964,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
         this.bindValue = this.bindValue || config.bindValue;
         this.bindLabel = this.bindLabel || config.bindLabel;
         this.appearance = this.appearance || config.appearance;
-        this.allowOpenOnMaxItemsSelected = isDefined(this.allowOpenOnMaxItemsSelected)
-            ? this.allowOpenOnMaxItemsSelected
-            : config.allowOpenOnMaxItemsSelected
+        this.openOnMaxItemsSelected = isDefined(this.openOnMaxItemsSelected)
+            ? this.openOnMaxItemsSelected
+            : config.openOnMaxItemsSelected
     }
 }
