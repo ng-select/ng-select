@@ -41,6 +41,7 @@ import { GroupSelectableExampleComponent } from './group-selectable-example/grou
 import { GroupSelectableHiddenExampleComponent } from './group-selectable-hidden-example/group-selectable-hidden-example.component';
 import { GroupChildrenExampleComponent } from './group-children-example/group-children-example.component';
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
+import { MultiSelectLimitAllowOpenExampleComponent } from './multi-select-limit-allowOpen-example/multi-select-limit-allowOpen-example.component';
 
 export interface Example {
     component: any;
@@ -163,6 +164,10 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
     'multi-select-limit-example': {
         component: MultiSelectLimitExampleComponent,
         title: 'Multi select with limited number of selections'
+    },
+    'multi-select-limit-allow-open-example': {
+        component: MultiSelectLimitAllowOpenExampleComponent,
+        title: 'Multi select with limited number of selections, allow Open if limit reached'
     },
     'multi-select-disabled-example': {
         component: MultiSelectDisabledExampleComponent,
