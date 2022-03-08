@@ -182,6 +182,7 @@ map: {
 | [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. |
 | [isOpen] | `boolean` | `-` | no | Allows manual control of dropdown opening and closing. `True` - won't close. `False` - won't open. |
 | maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
+| [openOnMaxItemsSelected] | `boolean` | `false` | no | Allows to open the menu, even if the maxSelectedItems limit is reached. |
 | [hideSelected] | `boolean` | `false` | no | Allows to hide selected items. |
 | [multiple] | `boolean` | `false` | no | Allows to select multiple items. |
 | notFoundText | `string` | `No items found` | no | Set custom text when filter returns empty result |
