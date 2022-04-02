@@ -15,5 +15,4 @@ export class NgSelectConfig {
     bindLabel: string;
     appearance = 'underline';
     clearSearchOnAdd: boolean;
-    openOnMaxItemsSelected = false;
 }
