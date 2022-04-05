@@ -27,7 +27,8 @@
     },
     "./scss/material.theme": {
       "style": "./scss/material.theme.scss"
-    }
+    },
+    "./themes/": "./themes/"
   },
   "peerDependencies": {
     "@angular/common": ">=13.0.0 <14.0.0",
