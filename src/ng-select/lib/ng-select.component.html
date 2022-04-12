@@ -57,7 +57,13 @@
     </ng-container>
 
     <span *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
-        <span class="ng-clear" aria-hidden="true">×</span>
+        <ng-template #defaultClearButtonTemplate>
+            <span class="ng-clear">×</span>
+        </ng-template>
+
+        <ng-template
+            [ngTemplateOutlet]="clearButtonTemplate || defaultClearButtonTemplate">
+        </ng-template>
     </span>
 
     <span class="ng-arrow-wrapper">

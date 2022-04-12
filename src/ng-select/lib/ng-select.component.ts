@@ -38,7 +38,8 @@ import {
     NgLoadingTextTemplateDirective,
     NgMultiLabelTemplateDirective,
     NgTagTemplateDirective,
-    NgLoadingSpinnerTemplateDirective
+    NgLoadingSpinnerTemplateDirective,
+    NgClearButtonTemplateDirective
 } from './ng-templates.directive';
 
 import { ConsoleService } from './console.service';
@@ -170,6 +171,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
     @ContentChild(NgLoadingTextTemplateDirective, { read: TemplateRef, static: false }) loadingTextTemplate: TemplateRef<any>;
     @ContentChild(NgTagTemplateDirective, { read: TemplateRef, static: false }) tagTemplate: TemplateRef<any>;
     @ContentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef, static: false }) loadingSpinnerTemplate: TemplateRef<any>;
+    @ContentChild(NgClearButtonTemplateDirective, { read: TemplateRef, static: false }) clearButtonTemplate: TemplateRef<any>;
 
     @ViewChild(forwardRef(() => NgDropdownPanelComponent), { static: false }) dropdownPanel: NgDropdownPanelComponent;
     @ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
@@ -323,7 +325,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, AfterViewInit, C
         if (target.tagName !== 'INPUT') {
             $event.preventDefault();
         }
-
+        
         if (target.classList.contains('ng-clear-wrapper')) {
             this.handleClearClick();
             return;
