@@ -39,7 +39,8 @@ import {
     NgLoadingTextTemplateDirective,
     NgMultiLabelTemplateDirective,
     NgTagTemplateDirective,
-    NgLoadingSpinnerTemplateDirective
+    NgLoadingSpinnerTemplateDirective,
+    NgClearButtonTemplateDirective
 } from './ng-templates.directive';
 
 import { ConsoleService } from './console.service';
@@ -189,6 +190,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @ContentChild(NgLoadingTextTemplateDirective, { read: TemplateRef }) loadingTextTemplate: TemplateRef<any>;
     @ContentChild(NgTagTemplateDirective, { read: TemplateRef }) tagTemplate: TemplateRef<any>;
     @ContentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef }) loadingSpinnerTemplate: TemplateRef<any>;
+    @ContentChild(NgClearButtonTemplateDirective, { read: TemplateRef }) clearButtonTemplate: TemplateRef<any>;
 
     @ViewChild(forwardRef(() => NgDropdownPanelComponent)) dropdownPanel: NgDropdownPanelComponent;
     @ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;

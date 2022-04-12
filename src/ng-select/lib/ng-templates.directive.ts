@@ -80,3 +80,8 @@ export class NgTagTemplateDirective {
 export class NgLoadingSpinnerTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
+
+@Directive({ selector: '[ng-clearbutton-tmp]' })
+export class NgClearButtonTemplateDirective {
+    constructor(public template: TemplateRef<any>) { }
+}

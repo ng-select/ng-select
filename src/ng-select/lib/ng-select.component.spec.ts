@@ -2103,6 +2103,29 @@ describe('NgSelectComponent', () => {
             });
         }));
 
+        it('should display custom clear button template when selected city', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestComponent,
+                `<ng-select [items]="cities"
+                            [loading]="true"
+                            [(ngModel)]="selectedCity">
+
+                    <ng-template ng-clearbutton-tmp>
+                        <div class="custom-clearbutton">
+                            Custom clear button
+                        </div>
+                    </ng-template>
+                </ng-select>`);
+
+            fixture.whenStable().then(() => {
+                fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+                tickAndDetectChanges(fixture);
+                tickAndDetectChanges(fixture);
+                const clear = fixture.debugElement.queryAll(By.css('.custom-clearbutton'));
+                expect(clear.length).toBe(1);
+            });
+        }));
+
         it('should update ng-option state', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestComponent,

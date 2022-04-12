@@ -46,6 +46,7 @@ import { TemplateOptionExampleComponent } from './template-option-example/templa
 import { TemplateSearchExampleComponent } from './template-search-example/template-search-example.component';
 import { VirtualScrollExampleComponent } from './virtual-scroll-example/virtual-scroll-example.component';
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
+import { TemplateClearExampleComponent } from './template-clear-example/template-clear-example.component';
 
 
 const examples = [DataSourceBackendExampleComponent,
@@ -73,6 +74,7 @@ const examples = [DataSourceBackendExampleComponent,
     TemplateDisplayExampleComponent,
     TemplateSearchExampleComponent,
     TemplateLoadingExampleComponent,
+    TemplateClearExampleComponent,
     MultiSelectDefaultExampleComponent,
     MultiSelectHiddenExampleComponent,
     MultiSelectLimitExampleComponent,
