@@ -271,12 +271,15 @@
                 content: "\200b";
             }
 
+            &.disabled {
+                cursor: default;
+            }
+        }
+
+        .ng-optgroup, .ng-option {
             .highlighted {
                 font-weight: bold;
                 text-decoration: underline;
-            }
-            &.disabled {
-                cursor: default;
             }
         }
     }
