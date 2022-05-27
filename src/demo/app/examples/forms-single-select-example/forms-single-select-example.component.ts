@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -9,14 +9,14 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class FormsSingleSelectExampleComponent implements OnInit {
 
-    heroForm: FormGroup;
+    heroForm: UntypedFormGroup;
     ages: any[] = [
         { value: '<18', label: 'Under 18' },
         { value: '18', label: '18' },
         { value: '>18', label: 'More than 18' },
     ];
 
-    constructor(private fb: FormBuilder, private modalService: NgbModal) {
+    constructor(private fb: UntypedFormBuilder, private modalService: NgbModal) {
     }
 
     ngOnInit() {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select'
 import { delay } from 'rxjs/operators';
 import { DataService } from '../data.service';
@@ -11,12 +11,12 @@ import { DataService } from '../data.service';
 })
 export class FormsAsyncDataExampleComponent implements OnInit {
 
-    heroForm: FormGroup;
+    heroForm: UntypedFormGroup;
     albums = [];
     allAlbums = [];
 
     constructor(
-        private fb: FormBuilder,
+        private fb: UntypedFormBuilder,
         private dataService: DataService) {
     }
 
