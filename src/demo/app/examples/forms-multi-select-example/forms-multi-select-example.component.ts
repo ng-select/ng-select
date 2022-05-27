@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 @Component({
     selector: 'forms-multi-select-example',
@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class FormsMultiSelectExampleComponent implements OnInit {
 
-    heroForm: FormGroup;
+    heroForm: UntypedFormGroup;
     isCitiesControlVisible = true;
     cities: any[] = [
         { id: 1, name: 'Vilnius' },
@@ -17,7 +17,7 @@ export class FormsMultiSelectExampleComponent implements OnInit {
         { id: 4, name: 'Pabradė' },
     ];
 
-    constructor(private fb: FormBuilder) {
+    constructor(private fb: UntypedFormBuilder) {
     }
 
     ngOnInit() {
