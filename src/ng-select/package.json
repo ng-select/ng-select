@@ -1,6 +1,6 @@
 {
   "name": "@ng-select/ng-select",
-  "version": "3.2.0",
+  "version": "9.0.0",
   "description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
   "author": "@ng-select/ng-select",
   "license": "MIT",
@@ -30,9 +30,9 @@
     }
   },
   "peerDependencies": {
-    "@angular/common": "^13.0.0",
-    "@angular/core": "^13.0.0",
-    "@angular/forms": "^13.0.0"
+    "@angular/common": "^14.0.0",
+    "@angular/core": "^14.0.0",
+    "@angular/forms": "^14.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.1"
