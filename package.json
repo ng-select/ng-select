@@ -1,7 +1,7 @@
 {
   "repository": "ng-select/ng-select",
   "engines": {
-    "node": ">= 12.20.0",
+    "node": ">= 14.15.0",
     "npm": ">= 6.0.0"
   },
   "scripts": {
@@ -46,9 +46,9 @@
     "@angular/router": "^14.0.0",
     "@ng-bootstrap/ng-bootstrap": "^9.0.2",
     "bootstrap": "^4.5.0",
-    "rxjs": "~6.5.5",
+    "rxjs": "^7.5.5",
     "tslib": "^2.3.1",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.11.5"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^14.0.0",
@@ -80,7 +80,7 @@
     "karma-coverage": "^2.2.0",
     "karma-jasmine": "~5.0.1",
     "karma-jasmine-html-reporter": "^2.0.0",
-    "ng-packagr": "^14.0.0-rc.0",
+    "ng-packagr": "^14.0.0",
     "node-sass": "^7.0.1",
     "semantic-release": "^19.0.2",
     "standard-version": "^9.5.0",
