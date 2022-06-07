@@ -44,7 +44,7 @@
     "@angular/platform-browser": "^14.0.0",
     "@angular/platform-browser-dynamic": "^14.0.0",
     "@angular/router": "^14.0.0",
-    "@ng-bootstrap/ng-bootstrap": "^9.0.2",
+    "@ng-bootstrap/ng-bootstrap": "^11.0.1",
     "bootstrap": "^4.6.1",
     "rxjs": "^7.5.5",
     "tslib": "^2.3.1",
