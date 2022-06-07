@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'forms-with-options-example',
@@ -9,10 +9,10 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 export class FormsWithOptionsExampleComponent implements OnInit {
 
     basePath;
-    heroForm: UntypedFormGroup;
+    heroForm: FormGroup;
 
     constructor(
-        private fb: UntypedFormBuilder) {
+        private fb: FormBuilder) {
     }
 
     ngOnInit() {

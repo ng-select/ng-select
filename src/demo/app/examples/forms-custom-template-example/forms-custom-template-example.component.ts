@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataService } from '../data.service';
 
@@ -10,11 +10,11 @@ import { DataService } from '../data.service';
 })
 export class FormsCustomTemplateExampleComponent implements OnInit {
 
-    heroForm: UntypedFormGroup;
+    heroForm: FormGroup;
     photos = [];
 
     constructor(
-        private fb: UntypedFormBuilder,
+        private fb: FormBuilder,
         private modalService: NgbModal,
         private dataService: DataService) {
     }
