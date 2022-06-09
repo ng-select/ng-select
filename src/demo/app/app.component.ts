@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { filter, map, mergeMap } from 'rxjs/operators';
@@ -7,6 +7,7 @@ import { NgSelectConfig } from '@ng-select/ng-select';
 @Component({
     selector: 'demo-app',
     templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
     changeDetection: ChangeDetectionStrategy.Default,
 })
 export class AppComponent {
@@ -15,6 +16,9 @@ export class AppComponent {
     version: string = window['ngSelectVersion'];
     exampleSourceUrl: string;
     dir: 'ltr' | 'rtl' = 'ltr';
+    theme: 'default' | 'ant' | 'material' = 'default';
+
+    @HostBinding('class') get themeClass() { return `${this.theme}-theme`; }
 
     constructor(
         private router: Router,
