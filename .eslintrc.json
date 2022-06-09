@@ -22,6 +22,8 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
+        "@angular-eslint/no-output-rename": "off",
+        "@angular-eslint/no-output-native": "off",
         "@angular-eslint/component-selector": [
           "error",
           {
