@@ -87,6 +87,7 @@
             "main": "src/demo/main.ts",
             "polyfills": "src/demo/polyfills.ts",
             "tsConfig": "src/demo/tsconfig.app.json",
+            "deployUrl": "/ng-select/",
             "assets": [
               "src/demo/favicon.ico",
               "src/demo/assets"
