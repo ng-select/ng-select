@@ -1,7 +1,7 @@
 <p><b>[addTag]</b> also accepts promise if you need to verify new option with backend</p>
 
 <ng-select [items]="companies"
-           [addTag]="addTagPromise"
+           [addTag]="hardBoundAddTagPromiseFunction"
            multiple="true"
            bindLabel="name"
            [loading]="loading"
