@@ -85,6 +85,10 @@ export class ItemsList {
         if (this._ngSelect.hideSelected) {
             this._hideSelected(item);
         }
+        
+        if (this._ngSelect.editableSearchTerm && !multiple) {
+            this._ngSelect.setSearchTermFromItems();
+        }
     }
 
     unselect(item: NgOption) {
