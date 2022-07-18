@@ -59,6 +59,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     @Input() headerTemplate: TemplateRef<any>;
     @Input() footerTemplate: TemplateRef<any>;
     @Input() filterValue: string = null;
+    @Input() closeTriggers: string[] = ['touchstart', 'mousedown'];
 
     @Output() update = new EventEmitter<any[]>();
     @Output() scroll = new EventEmitter<{ start: number; end: number }>();
@@ -224,10 +225,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         this._zone.runOutsideAngular(() => {
-            merge(
-                fromEvent(this._document, 'touchstart', { capture: true }),
-                fromEvent(this._document, 'mousedown', { capture: true })
-            ).pipe(takeUntil(this._destroy$))
+            const triggers$ =  this.closeTriggers.map(eventName => fromEvent(this._document, eventName, { capture: true }));
+
+            merge(...triggers$)
+                .pipe(takeUntil(this._destroy$))
                 .subscribe($event => this._checkToClose($event));
         });
     }

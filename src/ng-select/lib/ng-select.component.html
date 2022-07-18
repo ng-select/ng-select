@@ -80,6 +80,7 @@
                    [filterValue]="searchTerm"
                    [items]="itemsList.filteredItems"
                    [markedItem]="itemsList.markedItem"
+                   [closeTriggers]="closeTriggers"
                    (update)="viewPortItems = $event"
                    (scroll)="scroll.emit($event)"
                    (scrollToEnd)="scrollToEnd.emit($event)"

@@ -203,6 +203,7 @@ map: {
 | [inputAttrs] | `{ [key: string]: string }` |  `-` | no | Pass custom attributes to underlying `input` element |
 | [tabIndex] | `number` |  `-` | no | Set tabindex on ng-select |
 | [keyDownFn] | `($event: KeyboardEvent) => bool` |  `true` | no | Provide custom keyDown function. Executed before default handler. Return false to suppress execution of default key down handlers  |
+| [closeTriggers] | `string[]` |  `['touchstart', 'mousedown']` | no | List of events outside component that will close dropdown panel |
 
 ### Outputs
 

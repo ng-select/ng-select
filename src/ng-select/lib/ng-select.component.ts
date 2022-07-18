@@ -106,6 +106,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() searchWhileComposing = true;
     @Input() minTermLength = 0;
     @Input() editableSearchTerm = false;
+    @Input() closeTriggers: string[];
     @Input() keyDownFn = (_: KeyboardEvent) => true;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
@@ -962,5 +963,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
         this.bindValue = this.bindValue || config.bindValue;
         this.bindLabel = this.bindLabel || config.bindLabel;
         this.appearance = this.appearance || config.appearance;
+        this.closeTriggers = this.closeTriggers || config.closeTriggers;
     }
 }

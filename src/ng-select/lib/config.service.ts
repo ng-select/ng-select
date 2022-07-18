@@ -15,4 +15,5 @@ export class NgSelectConfig {
     bindLabel: string;
     appearance = 'underline';
     clearSearchOnAdd: boolean;
+    closeTriggers: string[] = ['touchstart', 'mousedown'];
 }
