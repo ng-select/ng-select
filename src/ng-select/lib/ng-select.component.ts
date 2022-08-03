@@ -584,6 +584,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             }
         }
 
+        if (!this.searchTerm) {
+            this.clearModel();
+        }
+
         this.searchEvent.emit({ term, items: this.itemsList.filteredItems.map(x => x.value) });
         this.open();
     }

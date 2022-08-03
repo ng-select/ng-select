@@ -2270,7 +2270,7 @@ describe('NgSelectComponent', () => {
                 expect(select.itemsList.filteredItems[0].label).toBe('Kaunas');
                 select.filter('');
                 tickAndDetectChanges(fixture);
-                expect(select.itemsList.filteredItems.length).toBe(2);
+                expect(select.itemsList.filteredItems.length).toBe(3);
             }));
         });
     });
@@ -2775,6 +2775,31 @@ describe('NgSelectComponent', () => {
                 })
             ];
             expect(fixture.componentInstance.select.itemsList.filteredItems).toEqual(result);
+        }));
+
+        it('should clear the model if search term is empty', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectGroupingTestComponent,
+                `<ng-select [items]="accounts"
+                    groupBy="country"
+                    bindLabel="name"
+                    [(ngModel)]="selectedAccount">
+                </ng-select>`
+            );
+
+            const spy = spyOn(fixture.componentInstance.select, 'clearModel');
+
+            tickAndDetectChanges(fixture);
+            fixture.componentInstance.select.filter('adam');
+            tickAndDetectChanges(fixture);
+
+            const filteredItems = fixture.componentInstance.select.itemsList.filteredItems;
+            expect(filteredItems.length).toBe(2);
+
+            fixture.componentInstance.select.filter('');
+            tickAndDetectChanges(fixture);
+
+            expect(spy).toHaveBeenCalled();
         }));
 
         describe('with typeahead', () => {
