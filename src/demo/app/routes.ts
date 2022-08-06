@@ -35,5 +35,10 @@ export const appRoutes: Routes = [
         component: RouteViewerComponent,
         data: { title: 'Append to element', examples: 'append-to' }
     },
+    {
+        path: 'append-to-shadow-root',
+        component: RouteViewerComponent,
+        data: { title: 'Append to shadow root', examples: 'append-to-shadow-root' }
+    },
     { path: 'grouping', component: RouteViewerComponent, data: { title: 'Grouping', examples: 'group' } },
 ];

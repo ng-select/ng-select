@@ -53,6 +53,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     @Input() items: NgOption[] = [];
     @Input() markedItem: NgOption;
     @Input() position: DropdownPosition = 'auto';
+    @Input() appendToShadowRoot: string;
     @Input() appendTo: string;
     @Input() bufferAmount;
     @Input() virtualScroll = false;
@@ -238,7 +239,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         const path = $event.path || ($event.composedPath && $event.composedPath());
-        if ($event.target && $event.target.shadowRoot && path && path[0] && this._select.contains(path[0])) {
+        if ($event.target && $event.target.shadowRoot && path && path[0] && (
+            this._select.contains(path[0]) || this.appendToShadowRoot && this._parent.contains(path[0]))) {
             return;
         }
 
@@ -391,7 +393,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
-        this._parent = document.querySelector(this.appendTo);
+        const queryContext = this.appendToShadowRoot ?
+            document.querySelector(this.appendToShadowRoot).shadowRoot :
+            document;
+        this._parent = queryContext.querySelector(this.appendTo);
         if (!this._parent) {
             throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`);
         }

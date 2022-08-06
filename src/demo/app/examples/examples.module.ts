@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AppendToExampleComponent } from './append-to-example/append-to-example.component';
+import { AppendToShadowRootExampleComponent } from './append-to-shadow-root-example/append-to-shadow-root-example.component';
 import { BindingsCustomExampleComponent } from './bindings-custom-example/bindings-custom-example.component';
 import { BindingsDefaultExampleComponent } from './bindings-default-example/bindings-default-example.component';
 import { BindingsNestedExampleComponent } from './bindings-nested-example/bindings-nested-example.component';
@@ -30,6 +31,7 @@ import { MultiSelectHiddenExampleComponent } from './multi-select-hidden-example
 import { MultiSelectLimitExampleComponent } from './multi-select-limit-example/multi-select-limit-example.component';
 import { MultiSelectTemplateExampleComponent } from './multi-select-template-example/multi-select-template-example.component';
 import { OutputEventsExampleComponent } from './output-events-example/output-events-example.component';
+import { SampleShadowComponentComponent } from './append-to-shadow-root-example/sample-shadow-component/sample-shadow-component.component';
 import { SearchAutocompleteExampleComponent } from './search-autocomplete-example/search-autocomplete-example.component';
 import { SearchCustomExampleComponent } from './search-custom-example/search-custom-example.component';
 import { SearchDefaultExampleComponent } from './search-default-example/search-default-example.component';
@@ -85,6 +87,8 @@ const examples = [DataSourceBackendExampleComponent,
     VirtualScrollExampleComponent,
     DropdownPositionExampleComponent,
     AppendToExampleComponent,
+    AppendToShadowRootExampleComponent,
+    SampleShadowComponentComponent,
     GroupDefaultExampleComponent,
     GroupFunctionExampleComponent,
     GroupSelectableExampleComponent,

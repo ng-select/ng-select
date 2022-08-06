@@ -41,6 +41,7 @@ import { GroupSelectableExampleComponent } from './group-selectable-example/grou
 import { GroupSelectableHiddenExampleComponent } from './group-selectable-hidden-example/group-selectable-hidden-example.component';
 import { GroupChildrenExampleComponent } from './group-children-example/group-children-example.component';
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
+import { AppendToShadowRootExampleComponent } from './append-to-shadow-root-example/append-to-shadow-root-example.component';
 
 export interface Example {
     component: any;
@@ -199,6 +200,11 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
     'append-to-example': {
         component: AppendToExampleComponent,
         title: 'Append to position'
+    },
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    'append-to-shadow-root-example': {
+        component: AppendToShadowRootExampleComponent,
+        title: 'Append to shadow root'
     },
     'group-default-example': {
         component: GroupDefaultExampleComponent,

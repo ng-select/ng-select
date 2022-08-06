@@ -3705,6 +3705,104 @@ describe('NgSelectComponent', () => {
 
     });
 
+    describe('Append to shadow root', () => {
+        it('should append dropdown to custom selector', waitForAsync(() => {
+            const fixture = createTestingModule(
+                [NgSelectTestComponent, EncapsulatedTestComponent],
+                `<encapsulated-test-component>
+                    <div class="container"></div>
+                    <ng-select [items]="cities"
+                        appendToShadowRoot="encapsulated-test-component"
+                        appendTo=".container"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>
+                </encapsulated-test-component>`);
+
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const dropdown = <HTMLElement>document
+                    .querySelector('encapsulated-test-component').shadowRoot
+                    .querySelector('.container .ng-dropdown-panel');
+                expect(dropdown.style.top).not.toBe('0px');
+                expect(dropdown.style.left).toBe('0px');
+            });
+        }));
+
+        it('should set correct dropdown panel horizontal position and width when appended to custom selector', waitForAsync(() => {
+            const fixture = createTestingModule(
+                [NgSelectTestComponent, EncapsulatedTestComponent],
+                `
+                <encapsulated-test-component>
+                    <div class="container" style="position: relative; overflow: auto; width: 200px; height: 200px">
+                        <div style="height: 100%">
+                            <ng-select [items]="cities"
+                                appendToShadowRoot="encapsulated-test-component"
+                                appendTo=".container"
+                                bindLabel="name"
+                                style="width: 50%; margin-left: auto"
+                                [(ngModel)]="selectedCity">
+                            </ng-select>
+                        </div>
+                    </div>
+                </encapsulated-test-component>`);
+
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                const dropdown = <HTMLElement>document
+                    .querySelector('encapsulated-test-component').shadowRoot
+                    .querySelector('.container .ng-dropdown-panel');
+                expect(dropdown.style.left).toBe('100px');
+                expect(dropdown.style.width).toBe('100px');
+            });
+        }));
+
+        it('should select item', fakeAsync(() => {
+            const fixture = createTestingModule(
+                [NgSelectTestComponent, EncapsulatedTestComponent],
+                `
+                <encapsulated-test-component>
+                    <div class="container">
+                        <ng-select [items]="cities"
+                                appendToShadowRoot="encapsulated-test-component"
+                                appendTo=".container"
+                                bindLabel="name"
+                                [(ngModel)]="city"></ng-select>
+                    </div>
+                </encapsulated-test-component>
+                `);
+            expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(0);
+            expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+
+            const cmp = fixture.componentInstance;
+
+            cmp.select.open();
+            tickAndDetectChanges(fixture);
+
+            expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(0);
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+
+            const outsideClick = spyOn(cmp.select.dropdownPanel.outsideClick, 'emit');
+            expect(outsideClick).not.toHaveBeenCalled();
+
+            const listItem = fixture.debugElement.query(By.css('.ng-option'));
+            let event = new MouseEvent('mousedown', { bubbles: true });
+            listItem.nativeElement.dispatchEvent(event);
+            event = new MouseEvent('click', { bubbles: true });
+            listItem.nativeElement.dispatchEvent(event);
+            tickAndDetectChanges(fixture);
+
+            fixture.whenStable().then(() => {
+                expect(outsideClick).not.toHaveBeenCalled();
+                expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(1);
+            })
+        }));
+    });
+
     describe('Grouping', () => {
         it('should group flat items list by group key', fakeAsync(() => {
             const fixture = createTestingModule(
@@ -4101,8 +4199,10 @@ describe('NgSelectComponent', () => {
 });
 
 
-function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectConfig: NgSelectConfig | null = null): ComponentFixture<T> {
+function createTestingModule<T>(cmp: Type<T> | Type<T>[],
+    template: string, customNgSelectConfig: NgSelectConfig | null = null): ComponentFixture<T> {
 
+    const rootComponent = Array.isArray(cmp) ? cmp[0] : cmp;
     TestBed.configureTestingModule({
         imports: [FormsModule, NgSelectModule],
         declarations: [cmp],
@@ -4112,7 +4212,7 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
             { provide: ConsoleService, useFactory: () => new MockConsole() }
         ]
     })
-        .overrideComponent(cmp, {
+        .overrideComponent(rootComponent, {
             set: {
                 template
             }
@@ -4124,7 +4224,7 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
 
     TestBed.compileComponents();
 
-    const fixture = TestBed.createComponent(cmp);
+    const fixture = TestBed.createComponent(rootComponent);
     fixture.detectChanges();
     return fixture;
 }
@@ -4237,7 +4337,9 @@ class NgSelectTestComponent {
 }
 
 @Component({
-    template: ``,
+    template: `<ng-content></ng-content>`,
+    // eslint-disable-next-line @angular-eslint/component-selector
+    selector: 'encapsulated-test-component',
     encapsulation: ViewEncapsulation.ShadowDom,
 })
 class EncapsulatedTestComponent extends NgSelectTestComponent {

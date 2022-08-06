@@ -83,6 +83,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() clearAllText: string;
     @Input() appearance: string;
     @Input() dropdownPosition: DropdownPosition = 'auto';
+    @Input() appendToShadowRoot: string;
     @Input() appendTo: string;
     @Input() loading = false;
     @Input() closeOnSelect = true;
@@ -958,6 +959,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             ? this.virtualScroll
             : isDefined(config.disableVirtualScroll) ? !config.disableVirtualScroll : false;
         this.openOnEnter = isDefined(this.openOnEnter) ? this.openOnEnter : config.openOnEnter;
+        this.appendToShadowRoot = this.appendToShadowRoot || config.appendToShadowRoot;
         this.appendTo = this.appendTo || config.appendTo;
         this.bindValue = this.bindValue || config.bindValue;
         this.bindLabel = this.bindLabel || config.bindLabel;

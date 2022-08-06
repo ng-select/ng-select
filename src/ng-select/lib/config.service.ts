@@ -10,6 +10,7 @@ export class NgSelectConfig {
     clearAllText = 'Clear all';
     disableVirtualScroll = true;
     openOnEnter = true;
+    appendToShadowRoot: string;
     appendTo: string;
     bindValue: string;
     bindLabel: string;

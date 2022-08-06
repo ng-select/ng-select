@@ -1,0 +1,14 @@
+<p>By default <b>appendTo</b> is used to append dropdown into document scope.
+    However when working with ShadowDom isolation - that doesn't work well.</p>
+<p>ShadowDom has shadowRoot inside which it makes sense to append dropdown - to apply ng-select styles injected into shadow dom.</p>
+<p>Using <b>appendToShadowRoot</b> it's possible to set shadowRoot parent to append dropdown in. 
+    Usually that will be web component name or just name of element where ShadowDom isolation is enabled</p>
+<sample-shadow-component>
+    <ng-select [items]="people | async"
+               appendToShadowRoot="sample-shadow-component"
+               appendTo=".shadow-container"
+               bindLabel="company"
+               placeholder="Select item"
+               [(ngModel)]="selected">
+    </ng-select>
+</sample-shadow-component>
