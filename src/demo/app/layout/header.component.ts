@@ -1,12 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
-// @ts-ignore
-import antDesignTheme from '../../../ng-select/themes/ant.design.theme.scss';
-// @ts-ignore
-import defaultTheme from '../../../ng-select/themes/default.theme.scss';
-// @ts-ignore
-import materialTheme from '../../../ng-select/themes/material.theme.scss';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 type langDir = 'ltr' | 'rtl';
+type theme = 'default' | 'ant' | 'material';
 
 @Component({
     selector: 'layout-header',
@@ -31,10 +26,10 @@ type langDir = 'ltr' | 'rtl';
                     <button class="btn btn-outline-secondary btn-sm" style="width: 150px;"
                             ngbDropdownToggle>{{theme}}</button>
                     <div ngbDropdownMenu>
-                        <button (click)="setTheme('Default theme')" class="dropdown-item btn-sm">Default theme</button>
-                        <button (click)="setTheme('Material theme')" class="dropdown-item btn-sm">Material theme
+                        <button (click)="setTheme('default')" class="dropdown-item btn-sm">Default theme</button>
+                        <button (click)="setTheme('material')" class="dropdown-item btn-sm">Material theme
                         </button>
-                        <button (click)="setTheme('Ant Design theme')" class="dropdown-item btn-sm">Ant Design theme
+                        <button (click)="setTheme('ant')" class="dropdown-item btn-sm">Ant Design theme
                         </button>
                     </div>
                 </div>
@@ -63,33 +58,16 @@ type langDir = 'ltr' | 'rtl';
         </nav>
     `
 })
-export class LayoutHeaderComponent implements AfterViewInit {
-    theme = 'Default theme';
-    @Input() version: string;
+export class LayoutHeaderComponent {
     @Input() dir: langDir;
+    @Input() theme = 'default';
+    @Input() version: string;
     @Output() dirChange = new EventEmitter<langDir>();
+    @Output() themeChange = new EventEmitter<theme>();
 
-    private style: HTMLStyleElement;
-
-    ngAfterViewInit() {
-        setTimeout(() => {
-            this.style = document.createElement('style');
-            this.style.type = 'text/css';
-            this.style.id = 'MyStyleTag'
-            this.style.innerHTML = defaultTheme;
-            document.getElementsByTagName('head')[0].appendChild(this.style);
-        }, 100);
-    }
-
-    setTheme(theme) {
+    setTheme(theme: theme) {
         this.theme = theme;
-        if (this.theme === 'Default theme') {
-            this.style.innerHTML = defaultTheme;
-        } else if (this.theme === 'Material theme') {
-            this.style.innerHTML = materialTheme;
-        } else {
-            this.style.innerHTML = antDesignTheme;
-        }
+        this.themeChange.emit(theme);
     }
 
     changeDirTo(dir: langDir) {
