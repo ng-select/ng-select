@@ -124,7 +124,7 @@
 
         <div class="ng-option" [class.ng-option-marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag">
             <ng-template #defaultTagTemplate>
-                <span><span class="ng-tag-label">{{addTagText}}</span>"{{searchTerm.trim()}}"</span>
+                <span><span class="ng-tag-label">{{addTagText}}</span>"{{searchTerm}}"</span>
             </ng-template>
 
             <ng-template
