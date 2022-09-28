@@ -569,6 +569,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     selectTag() {
         let tag;
+        this.searchTerm = this.searchTerm.trim();
         if (isFunction(this.addTag)) {
             tag = (<AddTagFn>this.addTag)(this.searchTerm);
         } else {
@@ -637,7 +638,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             return;
         }
 
-        this.searchTerm = term;
+        this.searchTerm = term.trim();
         if (this._isTypeahead && (this._validTerm || this.minTermLength === 0)) {
             this.typeahead.next(term);
         }
