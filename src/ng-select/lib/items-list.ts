@@ -130,6 +130,9 @@ export class ItemsList {
         if (this._ngSelect.hideSelected) {
             this.resetFilteredItems();
         }
+        if (this._ngSelect.editableSearchTerm) {
+            this._ngSelect.searchTerm = null;
+        }
     }
 
     findByLabel(term: string) {
