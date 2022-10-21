@@ -1,0 +1,11 @@
+:host.ant-theme ::ng-deep {
+    @import '../../ng-select/themes/ant.design.theme.scss';
+}
+
+:host.default-theme ::ng-deep {
+    @import '../../ng-select/themes/default.theme.scss';
+}
+
+:host.material-theme ::ng-deep {
+    @import '../../ng-select/themes/material.theme.scss';
+}

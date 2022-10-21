@@ -2,7 +2,9 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
     "analytics": false,
-    "defaultCollection": "@angular-eslint/schematics"
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   },
   "version": 1,
   "newProjectRoot": "src",
@@ -81,7 +83,6 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/demo",
-            "showCircularDependencies": false,
             "index": "src/demo/index.html",
             "main": "src/demo/main.ts",
             "polyfills": "src/demo/polyfills.ts",
@@ -177,6 +178,5 @@
         }
       }
     }
-  },
-  "defaultProject": "demo"
+  }
 }

@@ -479,7 +479,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     open() {
-        if (this.disabled || this.isOpen || this.itemsList.maxItemsSelected || this._manualOpen) {
+        if (this.disabled || this.isOpen || this._manualOpen) {
             return;
         }
 
