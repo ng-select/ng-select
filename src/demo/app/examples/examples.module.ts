@@ -108,8 +108,7 @@ const examples = [DataSourceBackendExampleComponent,
         FormsModule,
         CommonModule,
         ReactiveFormsModule
-    ],
-    entryComponents: examples
+    ]
 })
 export class ExamplesModule {
 }
