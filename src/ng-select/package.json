@@ -27,6 +27,15 @@
     },
     "./scss/material.theme": {
       "style": "./scss/material.theme.scss"
+    },
+    "./themes/ant.design.theme.css": {
+      "style": "./themes/ant.design.theme.css"
+    },
+    "./themes/default.theme.css": {
+      "style": "./themes/default.theme.css"
+    },
+    "./themes/material.theme.css": {
+      "style": "./themes/material.theme.css"
     }
   },
   "peerDependencies": {
