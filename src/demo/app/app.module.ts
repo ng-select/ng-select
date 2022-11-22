@@ -21,9 +21,8 @@ import { RouteViewerComponent } from './shared/route-viewer/route-viewer.compone
         ExamplesModule,
         NgbModule,
         RouterModule.forRoot(appRoutes, {
-            useHash: true,
-            relativeLinkResolution: 'legacy'
-        })
+    useHash: true
+})
     ],
     providers: [
         DataService,

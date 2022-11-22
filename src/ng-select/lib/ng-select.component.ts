@@ -63,13 +63,13 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
     templateUrl: './ng-select.component.html',
     styleUrls: ['./ng-select.component.scss'],
     providers: [{
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => NgSelectComponent),
-        multi: true
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => NgSelectComponent),
+    multi: true
     }, NgDropdownPanelService],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-})
+    })
 export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
 
     @Input() bindLabel: string;
