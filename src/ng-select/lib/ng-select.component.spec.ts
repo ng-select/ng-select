@@ -4247,7 +4247,7 @@ function createEvent(target = {}) {
 
 @Component({
     template: ``
-})
+    })
 class NgSelectTestComponent {
     @ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
     multiple = false;
@@ -4341,14 +4341,14 @@ class NgSelectTestComponent {
     // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'encapsulated-test-component',
     encapsulation: ViewEncapsulation.ShadowDom,
-})
+    })
 class EncapsulatedTestComponent extends NgSelectTestComponent {
     @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 }
 
 @Component({
     template: ``,
-})
+    })
 class NgSelectGroupingTestComponent {
     @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
     selectedAccountName = 'Adam';
