@@ -10,7 +10,7 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2020",
+    "target": "ES2022",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -25,6 +25,7 @@
       "@ng-select/ng-option-highlight": [
         "src/ng-option-highlight/public-api.ts"
       ]
-    }
+    },
+    "useDefineForClassFields": false
   }
 }
