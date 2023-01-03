@@ -21,7 +21,6 @@ const dependencies = {
     '@angular/animations': angularVersion,
     '@angular/common': angularVersion,
     '@angular/compiler': angularVersion,
-    '@angular/compiler-cli': angularVersion,
     '@angular/core': angularVersion,
     '@angular/forms': angularVersion,
     '@angular/http': angularVersion,
@@ -32,14 +31,8 @@ const dependencies = {
     '@ng-select/ng-select': '*',
     '@ng-select/ng-option-highlight': '*',
     '@ng-bootstrap/ng-bootstrap': '*',
-    '@popperjs/core': "^2.11.6",
-    'core-js': '^3.27.1',
-    'rxjs': '^7.8.0',
-    'web-animations-js': '^2.3.2',
-    'zone.js': '^0.12.0',
-    'hammerjs': '^2.0.8',
-    'tslib': '^2.4.1',
-    'typescript': '>=4.8.2 <4.9'
+    'rxjs': '^6.5.3 || ^7.4.0',
+    'zone.js': '^0.12.0'
 };
 
 
