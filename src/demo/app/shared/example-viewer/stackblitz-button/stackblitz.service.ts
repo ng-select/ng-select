@@ -16,25 +16,30 @@ const TEMPLATE_FILES = [
     'angular.json',
 ];
 
-const angularVersion = '>=7.0.0';
+const angularVersion = '>=15.0.0';
 const dependencies = {
     '@angular/animations': angularVersion,
     '@angular/common': angularVersion,
     '@angular/compiler': angularVersion,
+    '@angular/compiler-cli': angularVersion,
     '@angular/core': angularVersion,
     '@angular/forms': angularVersion,
     '@angular/http': angularVersion,
+    '@angular/localize': angularVersion,
     '@angular/platform-browser': angularVersion,
     '@angular/platform-browser-dynamic': angularVersion,
     '@angular/router': angularVersion,
     '@ng-select/ng-select': '*',
     '@ng-select/ng-option-highlight': '*',
     '@ng-bootstrap/ng-bootstrap': '*',
-    'core-js': '^2.4.1',
-    'rxjs': '>=6.0.0-beta.0 <7.0.0',
-    'web-animations-js': '^2.3.1',
-    'zone.js': '^0.8.14',
-    'hammerjs': '^2.0.8'
+    '@popperjs/core': "^2.11.6",
+    'core-js': '^3.27.1',
+    'rxjs': '^7.8.0',
+    'web-animations-js': '^2.3.2',
+    'zone.js': '^0.12.0',
+    'hammerjs': '^2.0.8',
+    'tslib': '^2.4.1',
+    'typescript': '>=4.8.2 <4.9'
 };
 
 
