@@ -15,6 +15,7 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 | Angular          | ng-select |
 |------------------|:---------:|
+| >=15.0.0 <16.0.0 |   v10.x   |
 | >=14.0.0 <15.0.0 |   v9.x    |
 | >=13.0.0 <14.0.0 |   v8.x    |
 | >=12.0.0 <13.0.0 |   v7.x    |

@@ -40,7 +40,7 @@ import { DefaultSelectionModelFactory } from './selection-model';
         NgItemLabelDirective
     ],
     imports: [
-        CommonModule
+    CommonModule
     ],
     exports: [
         NgSelectComponent,
@@ -59,7 +59,7 @@ import { DefaultSelectionModelFactory } from './selection-model';
         NgLoadingSpinnerTemplateDirective
     ],
     providers: [
-        { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory }
+    { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory }
     ]
-})
+    })
 export class NgSelectModule {}

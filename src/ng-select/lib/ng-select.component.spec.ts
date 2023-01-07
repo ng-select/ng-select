@@ -4542,7 +4542,7 @@ function createEvent(target = {}) {
 
 @Component({
     template: ``
-})
+    })
 class NgSelectTestComponent {
     @ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
     multiple = false;
@@ -4636,14 +4636,14 @@ class NgSelectTestComponent {
 @Component({
     template: ``,
     encapsulation: ViewEncapsulation.ShadowDom,
-})
+    })
 class EncapsulatedTestComponent extends NgSelectTestComponent {
     @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 }
 
 @Component({
     template: ``,
-})
+    })
 class NgSelectGroupingTestComponent {
     @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
     selectedAccountName = 'Adam';
