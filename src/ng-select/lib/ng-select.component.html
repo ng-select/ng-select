@@ -85,6 +85,7 @@
                    (scrollToEnd)="scrollToEnd.emit($event)"
                    (outsideClick)="close()"
                    [class.ng-select-multiple]="multiple"
+                   [class.has-append-to]="appendTo"
                    [ngClass]="appendTo ? classes : null"
                    [id]="dropdownId"
                    role="listbox"
