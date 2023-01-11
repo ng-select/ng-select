@@ -22,4 +22,4 @@ export enum KeyCode {
     Backspace = 8
 }
 
-export type DropdownPosition = 'top' | 'right' | 'bottom' | 'left' | 'auto';
+export type DropdownPosition = 'top' | 'right' | 'bottom' | 'left' | 'auto' | 'end-above' | 'end-below';

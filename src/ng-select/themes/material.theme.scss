@@ -241,7 +241,7 @@ $ng-select-bg: #ffffff !default;
 .ng-dropdown-panel {
     background: $ng-select-bg;
     left: 0;
-    &.ng-select-top {
+    &.ng-select-top, &.ng-select-end-above {
         bottom: calc(100% - .84375em);
         box-shadow: 0 -5px 5px -3px rgba(0, 0, 0, .2), 0 -8px 10px 1px rgba(0, 0, 0, .14), 0 -3px 14px 2px $ng-select-divider;
     }
@@ -251,7 +251,7 @@ $ng-select-bg: #ffffff !default;
         box-shadow: 0 -5px 5px -3px rgba(0, 0, 0, .2), 0 -8px 10px 1px rgba(0, 0, 0, .14), 0 -3px 14px 2px $ng-select-divider;
         margin-left: 4px;
     }
-    &.ng-select-bottom {
+    &.ng-select-bottom, &.ng-select-end-below {
         top: calc(100% - 1.25em);
         box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px $ng-select-divider;
     }

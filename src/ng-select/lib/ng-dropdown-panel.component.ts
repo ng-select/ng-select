@@ -26,7 +26,7 @@ import { DropdownPosition } from './ng-select.types';
 import { NgOption } from './ng-select.types';
 import { isDefined } from './value-utils';
 
-const CSS_POSITIONS: Readonly<string[]> = ['top', 'right', 'bottom', 'left'];
+const CSS_POSITIONS: Readonly<string[]> = ['top', 'right', 'bottom', 'left', 'end-above', 'end-below'];
 const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
 
 @Component({
@@ -47,7 +47,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
             <ng-container [ngTemplateOutlet]="footerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }"></ng-container>
         </div>
     `
-    })
+})
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() items: NgOption[] = [];
@@ -380,10 +380,22 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         const height = selectRect.height;
         const dropdownHeight = dropdownEl.getBoundingClientRect().height;
         if (offsetTop + height + dropdownHeight > scrollTop + document.documentElement.clientHeight) {
-            return 'top';
+            return this._isDropdownExceededRight(dropdownEl) ? 'end-above' : 'top';
         } else {
-            return 'bottom';
+            return this._isDropdownExceededRight(dropdownEl) ? 'end-below' : 'bottom';
         }
+    }
+
+    private _isDropdownExceededRight(dropdownEl: HTMLElement): boolean {
+        const selectWidth = this._select.getBoundingClientRect().width;
+        const dropdown = dropdownEl.getBoundingClientRect();
+
+        if (dropdown.width === selectWidth) {
+            return;
+        }
+
+        const result = document.body.clientWidth - dropdown.left < dropdown.width;
+        return result;
     }
 
     private _appendDropdown() {
@@ -403,10 +415,16 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         const select = this._select.getBoundingClientRect();
         const parent = this._parent.getBoundingClientRect();
         const offsetLeft = select.left - parent.left;
+        const offsetRight = parent.right - select.right;
 
-        this._dropdown.style.left = offsetLeft + 'px';
         this._dropdown.style.width = select.width + 'px';
         this._dropdown.style.minWidth = select.width + 'px';
+        if (this._isDropdownExceededRight(this._dropdown)) {
+            this._dropdown.style.left = 'auto';
+            this._dropdown.style.right = offsetRight + 'px';
+        } else {
+            this._dropdown.style.left = offsetLeft + 'px';
+        };
     }
 
     private _updateYPosition() {
@@ -414,11 +432,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         const parent = this._parent.getBoundingClientRect();
         const delta = select.height;
 
-        if (this._currentPosition === 'top') {
+        if (this._currentPosition === 'top' || this._currentPosition === 'end-above') {
             const offsetBottom = parent.bottom - select.bottom;
             this._dropdown.style.bottom = offsetBottom + delta + 'px';
             this._dropdown.style.top = 'auto';
-        } else if (this._currentPosition === 'bottom') {
+        } else if (this._currentPosition === 'bottom' || this._currentPosition === 'end-below') {
             const offsetTop = select.top - parent.top;
             this._dropdown.style.top = offsetTop + delta + 'px';
             this._dropdown.style.bottom = 'auto';
