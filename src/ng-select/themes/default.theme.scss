@@ -248,7 +248,7 @@ $ng-select-input-text: #000000 !default;
     border: 1px solid $ng-select-dropdown-border;
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
     left: 0;
-    &.ng-select-top, &.ng-select-end-above {
+    &.ng-select-top {
         bottom: 100%;
         border-top-right-radius: $ng-select-border-radius;
         border-top-left-radius: $ng-select-border-radius;
@@ -279,7 +279,7 @@ $ng-select-input-text: #000000 !default;
             }
         }
     }
-    &.ng-select-bottom, &.ng-select-end-below {
+    &.ng-select-bottom {
         top: 100%;
         border-bottom-right-radius: $ng-select-border-radius;
         border-bottom-left-radius: $ng-select-border-radius;
