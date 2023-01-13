@@ -386,6 +386,18 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
+    private _isDropdownExceededRight(dropdownEl: HTMLElement): boolean {
+        const selectWidth = this._select.getBoundingClientRect().width;
+        const dropdown = dropdownEl.getBoundingClientRect();
+
+        if (dropdown.width === selectWidth) {
+            return;
+        }
+
+        const result = document.body.clientWidth - dropdown.left < dropdown.width;
+        return result;
+    }
+
     private _appendDropdown() {
         if (!this.appendTo) {
             return;
@@ -403,10 +415,16 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         const select = this._select.getBoundingClientRect();
         const parent = this._parent.getBoundingClientRect();
         const offsetLeft = select.left - parent.left;
+        const offsetRight = parent.right - select.right;
 
-        this._dropdown.style.left = offsetLeft + 'px';
         this._dropdown.style.width = select.width + 'px';
         this._dropdown.style.minWidth = select.width + 'px';
+        if (this._isDropdownExceededRight(this._dropdown)) {
+            this._dropdown.style.left = 'auto';
+            this._dropdown.style.right = offsetRight + 'px';
+        } else {
+            this._dropdown.style.left = offsetLeft + 'px';
+        };
     }
 
     private _updateYPosition() {
