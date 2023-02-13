@@ -85,18 +85,18 @@ import { FormsModule } from '@angular/forms';
 export class AppModule {}
 ```
 
-### Step 3: Include a theme: 
+### Step 3: Include a theme:
 To allow customization and theming, `ng-select` bundle includes only generic styles that are necessary for correct layout and positioning. To get full look of the control, include one of the themes in your application. If you're using the Angular CLI, you can add this to your `styles.scss` or include it in `.angular-cli.json` (Angular v5 and below) or `angular.json` (Angular v6 onwards).
 
 ```scss
 @import "~@ng-select/ng-select/themes/default.theme.css";
-// ... or 
+// ... or
 @import "~@ng-select/ng-select/themes/material.theme.css";
 
 ```
 
 
-### Step 4 (Optional): Configuration 
+### Step 4 (Optional): Configuration
 
 You can also set global configuration and localization messages by injecting NgSelectConfig service,
 typically in your root component, and customize the values of its properties in order to provide default values.
@@ -105,9 +105,9 @@ typically in your root component, and customize the values of its properties in 
   constructor(private config: NgSelectConfig) {
       this.config.notFoundText = 'Custom not found';
       this.config.appendTo = 'body';
-      // set the bindValue to global config when you use the same 
-      // bindValue in most of the place. 
-      // You can also override bindValue for the specified template 
+      // set the bindValue to global config when you use the same
+      // bindValue in most of the place.
+      // You can also override bindValue for the specified template
       // by defining `bindValue` as property
       // Eg : <ng-select bindValue="some-new-value"></ng-select>
       this.config.bindValue = 'value';
@@ -139,9 +139,9 @@ In template use `ng-select` component with your options
 </ng-select>
 
 <!--Using items input-->
-<ng-select [items]="cars" 
-           bindLabel="name" 
-           bindValue="id" 
+<ng-select [items]="cars"
+           bindLabel="name"
+           bindValue="id"
            [(ngModel)]="selectedCar">
 </ng-select>
 ```
@@ -257,12 +257,12 @@ export class CustomSelectionModel implements SelectionModel {
 ```
 
 ## Change Detection
-Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable 
+Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable
 data types. That means if you do object mutations like:
 
 ```javascript
 this.items.push({id: 1, name: 'New item'})
-``` 
+```
 
 Component will not detect a change. Instead you need to do:
 
@@ -287,7 +287,7 @@ If you are not happy with default styles you can easily override them with incre
     min-height: 0px;
     border-radius: 0;
 }
-.ng-select.custom .ng-select-container  {            
+.ng-select.custom .ng-select-container  {
     min-height: 0px;
     border-radius: 0;
 }
@@ -296,7 +296,7 @@ If you are not happy with default styles you can easily override them with incre
 If you are using `ViewEncapsulation`, you could use special `::ng-deep` selector which will prevent scoping for nested selectors altough this is more of a workaround and we recommend using solution described above.
 
 ```css
-.ng-select.custom ::ng-deep .ng-select-container  {            
+.ng-select.custom ::ng-deep .ng-select-container  {
     min-height: 0px;
     border-radius: 0;
 }
@@ -327,13 +327,13 @@ Perform the _clone-to-launch_ steps with these terminal commands.
 git clone https://github.com/ng-select/ng-select
 cd ng-select
 yarn
-yarn run start
+yarn start
 ```
 ### Testing
 ```
-yarn run test
+yarn test
 or
-yarn run test:watch
+yarn test:watch
 ```
 
 ### Release

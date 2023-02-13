@@ -35,5 +35,9 @@ export const appRoutes: Routes = [
         component: RouteViewerComponent,
         data: { title: 'Append to element', examples: 'append-to' }
     },
-    { path: 'grouping', component: RouteViewerComponent, data: { title: 'Grouping', examples: 'group' } },
+    {
+        path: 'grouping',
+        component: RouteViewerComponent,
+        data: { title: 'Grouping', examples: 'group' }
+    },
 ];

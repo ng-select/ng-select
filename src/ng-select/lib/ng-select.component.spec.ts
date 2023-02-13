@@ -2073,6 +2073,26 @@ describe('NgSelectComponent', () => {
             });
         }));
 
+        it('should display custom arrow template', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestComponent,
+                `<ng-select [items]="cities"
+                            [(ngModel)]="selectedCity">
+
+                    <ng-template ng-arrow-tmp>
+                        <div class="custom-arrow">
+                            ⬇︎
+                        </div>
+                    </ng-template>
+                </ng-select>`);
+
+            fixture.whenStable().then(() => {
+                tickAndDetectChanges(fixture);
+                const arrow = fixture.debugElement.queryAll(By.css('.custom-arrow'));
+                expect(arrow.length).toBe(1);
+            });
+        }));
+
         it('should update ng-option state', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestComponent,
