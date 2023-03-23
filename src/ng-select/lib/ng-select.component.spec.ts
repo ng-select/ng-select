@@ -1725,23 +1725,20 @@ describe('NgSelectComponent', () => {
     });
 
     describe('Outside click', () => {
-        let fixture: ComponentFixture<NgSelectTestComponent>;
-        let select: NgSelectComponent;
-        beforeEach(() => {
-            fixture = createTestingModule(
+
+        it('should close dropdown if opened and clicked outside dropdown container', fakeAsync(() => {
+
+            const fixture = createTestingModule(
                 NgSelectTestComponent,
                 `<div id="outside">Outside</div><br />
                 <ng-select id="select" [items]="cities"
-                    bindLabel="name"
-                    multiple="true"
-                    [closeOnSelect]="false"
-                    appendTo="body"
-                    [(ngModel)]="selectedCity">
-                </ng-select>`);
-            select = fixture.componentInstance.select;
-        });
+                            bindLabel="name"
+                            multiple="true"
+                            [closeOnSelect]="false"
+                            appendTo="body"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);   
 
-        it('should close dropdown if opened and clicked outside dropdown container', fakeAsync(() => {
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
             document.getElementById('outside').click();
@@ -1752,6 +1749,18 @@ describe('NgSelectComponent', () => {
         }));
 
         it('should close dropdown if opened and touched outside dropdown container', fakeAsync(() => {
+
+            const fixture = createTestingModule(
+                NgSelectTestComponent,
+                `<div id="outside">Outside</div><br />
+                <ng-select id="select" [items]="cities"
+                            bindLabel="name"
+                            multiple="true"
+                            [closeOnSelect]="false"
+                            appendTo="body"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);   
+
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
             const event = new TouchEvent('touchstart', { bubbles: true });
@@ -1761,6 +1770,20 @@ describe('NgSelectComponent', () => {
         }));
 
         it('should prevent dropdown close if clicked on select', fakeAsync(() => {
+
+            const fixture = createTestingModule(
+                NgSelectTestComponent,
+                `<div id="outside">Outside</div><br />
+                <ng-select id="select" [items]="cities"
+                            bindLabel="name"
+                            multiple="true"
+                            [closeOnSelect]="false"
+                            appendTo="body"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+            const select = fixture.componentInstance.select;
+            
+
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(select.isOpen).toBeTruthy();
             document.getElementById('select').click();
@@ -1768,6 +1791,51 @@ describe('NgSelectComponent', () => {
             document.getElementById('select').dispatchEvent(event);
             tickAndDetectChanges(fixture);
             expect(select.isOpen).toBeTruthy();
+        }));
+
+        it('should not close dropdown if opened and clicked outside dropdown container and [closeOnClickOutside]="false"', fakeAsync(() => {
+
+            const fixture = createTestingModule(
+                NgSelectTestComponent,
+                `<div id="outside">Outside</div><br />
+                <ng-select id="select" [items]="cities"
+                            bindLabel="name"
+                            multiple="true"
+                            [closeOnSelect]="false"
+                            [closeOnClickOutside]="false"
+                            appendTo="body"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+            document.getElementById('outside').click();
+            const event = new MouseEvent('mousedown', { bubbles: true });
+            document.getElementById('outside').dispatchEvent(event);
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+        }));
+
+        it('should not close dropdown if opened and touched outside dropdown container and [closeOnClickOutside]="false"', fakeAsync(() => {
+
+            const fixture = createTestingModule(
+                NgSelectTestComponent,
+                `<div id="outside">Outside</div><br />
+                <ng-select id="select" [items]="cities"
+                            bindLabel="name"
+                            multiple="true"
+                            [closeOnSelect]="false"
+                            [closeOnClickOutside]="false"
+                            appendTo="body"
+                            [(ngModel)]="selectedCity">
+                </ng-select>`);
+
+            triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+            const event = new TouchEvent('touchstart', { bubbles: true });
+            document.getElementById('outside').dispatchEvent(event);
+            tickAndDetectChanges(fixture);
+            expect(fixture.componentInstance.select.isOpen).toBeTruthy();
         }));
 
     });

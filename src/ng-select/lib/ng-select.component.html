@@ -83,7 +83,7 @@
                    (update)="viewPortItems = $event"
                    (scroll)="scroll.emit($event)"
                    (scrollToEnd)="scrollToEnd.emit($event)"
-                   (outsideClick)="close()"
+                   (outsideClick)="onClickOutSide()"
                    [class.ng-select-multiple]="multiple"
                    [ngClass]="appendTo ? classes : null"
                    [id]="dropdownId"
