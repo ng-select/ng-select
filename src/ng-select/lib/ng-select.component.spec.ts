@@ -1732,12 +1732,12 @@ describe('NgSelectComponent', () => {
                 NgSelectTestComponent,
                 `<div id="outside">Outside</div><br />
                 <ng-select id="select" [items]="cities"
-                            bindLabel="name"
-                            multiple="true"
-                            [closeOnSelect]="false"
-                            appendTo="body"
-                            [(ngModel)]="selectedCity">
-                </ng-select>`);   
+                        bindLabel="name"
+                        multiple="true"
+                        [closeOnSelect]="false"
+                        appendTo="body"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
 
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
@@ -1754,12 +1754,12 @@ describe('NgSelectComponent', () => {
                 NgSelectTestComponent,
                 `<div id="outside">Outside</div><br />
                 <ng-select id="select" [items]="cities"
-                            bindLabel="name"
-                            multiple="true"
-                            [closeOnSelect]="false"
-                            appendTo="body"
-                            [(ngModel)]="selectedCity">
-                </ng-select>`);   
+                        bindLabel="name"
+                        multiple="true"
+                        [closeOnSelect]="false"
+                        appendTo="body"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`);
 
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(fixture.componentInstance.select.isOpen).toBeTruthy();
@@ -1775,14 +1775,14 @@ describe('NgSelectComponent', () => {
                 NgSelectTestComponent,
                 `<div id="outside">Outside</div><br />
                 <ng-select id="select" [items]="cities"
-                            bindLabel="name"
-                            multiple="true"
-                            [closeOnSelect]="false"
-                            appendTo="body"
-                            [(ngModel)]="selectedCity">
+                        bindLabel="name"
+                        multiple="true"
+                        [closeOnSelect]="false"
+                        appendTo="body"
+                        [(ngModel)]="selectedCity">
                 </ng-select>`);
+
             const select = fixture.componentInstance.select;
-            
 
             triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
             expect(select.isOpen).toBeTruthy();
