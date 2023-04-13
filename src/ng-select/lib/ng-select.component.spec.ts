@@ -29,6 +29,36 @@ describe('NgSelectComponent', () => {
             }));
         }));
 
+        it('should set items from array', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestComponent,
+                `<ng-select [items]=cities bindLabel="name">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            const itemsList = fixture.componentInstance.select.itemsList;
+            expect(itemsList.items.length).toBe(3);
+            expect(itemsList.items[0]).toEqual(jasmine.objectContaining({
+                label: 'Vilnius',
+                value:{ id: 1, name: 'Vilnius'}
+            }));
+        }));
+
+        it('should set items from readonly array', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestComponent,
+                `<ng-select [items]=readonlyCities bindLabel="name">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            const itemsList = fixture.componentInstance.select.itemsList;
+            expect(itemsList.items.length).toBe(3);
+            expect(itemsList.items[0]).toEqual(jasmine.objectContaining({
+                label: 'Vilnius',
+                value:{ id: 1, name: 'Vilnius'}
+            }));
+        }));
+
         it('should create items from ng-option', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestComponent,
@@ -4174,6 +4204,11 @@ class NgSelectTestComponent {
         {id: 2, name: 'Kaunas'},
         {id: 3, name: 'Pabrade'},
     ];
+    readonlyCities: readonly any[] = [
+        {id: 1, name: 'Vilnius'},
+        {id: 2, name: 'Kaunas'},
+        {id: 3, name: 'Pabrade'},
+    ] as const;
     citiesNames = this.cities.map(x => x.name);
 
     selectedCountry: any;
