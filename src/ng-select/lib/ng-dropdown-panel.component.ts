@@ -225,8 +225,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
         this._zone.runOutsideAngular(() => {
             merge(
-                fromEvent(this._document, 'touchstart', { capture: true }),
-                fromEvent(this._document, 'mousedown', { capture: true })
+                fromEvent(this._document, 'touchend', { capture: true }),
+                fromEvent(this._document, 'mouseup', { capture: true })
             ).pipe(takeUntil(this._destroy$))
                 .subscribe($event => this._checkToClose($event));
         });
