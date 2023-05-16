@@ -1253,7 +1253,7 @@ describe('NgSelectComponent', () => {
             const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
             const marked = fixture.debugElement.nativeElement.querySelector('.ng-option-marked');
 
-            expect(options.length).toBe(17);
+            expect(options.length).toBe(18);
             expect(marked.innerText).toBe('k');
             expect(marked.offsetTop).toBe(185);
         }));
@@ -1299,7 +1299,7 @@ describe('NgSelectComponent', () => {
             tickAndDetectChanges(fixture);
 
             const panelItems = el.querySelector('.ng-dropdown-panel-items');
-            expect(panelItems.scrollTop).toBe(57);
+            expect(panelItems.scrollTop).toBe(48);
         }));
 
         it('should close on option select by default', fakeAsync(() => {
