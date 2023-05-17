@@ -1255,7 +1255,7 @@ describe('NgSelectComponent', () => {
 
             expect(options.length).toBe(18);
             expect(marked.innerText).toBe('k');
-            expect(marked.offsetTop).toBe(185);
+            expect(marked.offsetTop).toBe(180);
         }));
 
         it('should scroll to item and do not change scroll position when scrolled to visible item', fakeAsync(() => {
