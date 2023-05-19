@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import sdk from '@stackblitz/sdk';
-import { Project } from '@stackblitz/sdk/typings/interfaces';
+import sdk, {Project} from '@stackblitz/sdk';
 
 const EXAMPLE_PATH = '/ng-select/examples/';
 const TEMPLATE_PATH = '/ng-select/assets/stackblitz/';
