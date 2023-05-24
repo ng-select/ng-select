@@ -16,7 +16,7 @@
     ],
     "lib": [
       "es2018",
-      "dom"
+      "dom",
     ],
     "paths": {
       "@ng-select/ng-select": [
