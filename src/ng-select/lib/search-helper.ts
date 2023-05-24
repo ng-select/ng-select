@@ -842,5 +842,6 @@ const diacritics = {
 
 export function stripSpecialChars(text: string): string {
     const match = (a: string): string => diacritics[a] || a;
+    // eslint-disable-next-line no-control-regex
     return text.replace(/[^\u0000-\u007E]/g, match);
 }

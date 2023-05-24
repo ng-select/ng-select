@@ -21,42 +21,42 @@ import { DefaultSelectionModelFactory } from './selection-model';
 
 @NgModule({
     declarations: [
-    NgDropdownPanelComponent,
-    NgOptionComponent,
-    NgSelectComponent,
-    NgOptgroupTemplateDirective,
-    NgOptionTemplateDirective,
-    NgLabelTemplateDirective,
-    NgMultiLabelTemplateDirective,
-    NgHeaderTemplateDirective,
-    NgFooterTemplateDirective,
-    NgNotFoundTemplateDirective,
-    NgTypeToSearchTemplateDirective,
-    NgLoadingTextTemplateDirective,
-    NgTagTemplateDirective,
-    NgLoadingSpinnerTemplateDirective,
-    NgItemLabelDirective
+        NgDropdownPanelComponent,
+        NgOptionComponent,
+        NgSelectComponent,
+        NgOptgroupTemplateDirective,
+        NgOptionTemplateDirective,
+        NgLabelTemplateDirective,
+        NgMultiLabelTemplateDirective,
+        NgHeaderTemplateDirective,
+        NgFooterTemplateDirective,
+        NgNotFoundTemplateDirective,
+        NgTypeToSearchTemplateDirective,
+        NgLoadingTextTemplateDirective,
+        NgTagTemplateDirective,
+        NgLoadingSpinnerTemplateDirective,
+        NgItemLabelDirective
     ],
     imports: [
-    CommonModule
+        CommonModule
     ],
     exports: [
-    NgSelectComponent,
-    NgOptionComponent,
-    NgOptgroupTemplateDirective,
-    NgOptionTemplateDirective,
-    NgLabelTemplateDirective,
-    NgMultiLabelTemplateDirective,
-    NgHeaderTemplateDirective,
-    NgFooterTemplateDirective,
-    NgNotFoundTemplateDirective,
-    NgTypeToSearchTemplateDirective,
-    NgLoadingTextTemplateDirective,
-    NgTagTemplateDirective,
-    NgLoadingSpinnerTemplateDirective
+        NgSelectComponent,
+        NgOptionComponent,
+        NgOptgroupTemplateDirective,
+        NgOptionTemplateDirective,
+        NgLabelTemplateDirective,
+        NgMultiLabelTemplateDirective,
+        NgHeaderTemplateDirective,
+        NgFooterTemplateDirective,
+        NgNotFoundTemplateDirective,
+        NgTypeToSearchTemplateDirective,
+        NgLoadingTextTemplateDirective,
+        NgTagTemplateDirective,
+        NgLoadingSpinnerTemplateDirective
     ],
     providers: [
-    { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory }
+        { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory }
     ]
-    })
+})
 export class NgSelectModule {}

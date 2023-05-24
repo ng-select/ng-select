@@ -12,7 +12,7 @@ import { By } from '@angular/platform-browser';
         <span id="test5" *ngIf="showNew" [ngOptionHighlight]="term">New label</span>
         <span id="test6" [ngOptionHighlight]="term">+My text is) high\\lighted</span>
     `
-    })
+})
 class TestComponent {
     term: string;
     showNew = false;

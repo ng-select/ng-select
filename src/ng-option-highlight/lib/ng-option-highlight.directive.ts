@@ -10,7 +10,7 @@ import {
 
 @Directive({
     selector: '[ngOptionHighlight]'
-    })
+})
 export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
 
     @Input('ngOptionHighlight') term: string;
@@ -50,7 +50,7 @@ export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
 
         const alternationString = this._escapeRegExp(this.term).replace(' ', '|');
         const termRegex = new RegExp(alternationString, 'gi');
-        this._setInnerHtml(label.replace(termRegex, `<span class=\"highlighted\">$&</span>`))
+        this._setInnerHtml(label.replace(termRegex, `<span class="highlighted">$&</span>`))
     }
 
     private get _canHighlight() {

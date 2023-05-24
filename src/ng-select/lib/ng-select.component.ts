@@ -63,13 +63,13 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
     templateUrl: './ng-select.component.html',
     styleUrls: ['./ng-select.component.scss'],
     providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => NgSelectComponent),
-    multi: true
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => NgSelectComponent),
+        multi: true
     }, NgDropdownPanelService],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    })
+})
 export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
 
     @Input() bindLabel: string;
@@ -116,7 +116,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() @HostBinding('class.ng-select-opened') isOpen = false;
 
     @Input()
-    get items() { return this._items };
+    get items() { return this._items }
 
     set items(value: any[] | null) {
         if (value === null) {
@@ -124,7 +124,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
         }
         this._itemsAreUsed = true;
         this._items = value;
-    };
+    }
 
     @Input()
     get compareWith() { return this._compareWith; }
@@ -144,11 +144,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             return this.config.clearSearchOnAdd;
         }
         return this.closeOnSelect;
-    };
+    }
 
     set clearSearchOnAdd(value) {
         this._clearSearchOnAdd = value;
-    };
+    }
 
     // output events
     @Output('blur') blurEvent = new EventEmitter();
@@ -182,11 +182,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     @HostBinding('class.ng-select') useDefaultClass = true;
 
-    @HostBinding('class.ng-select-disabled') get disabled() { return this.readonly || this._disabled };
+    @HostBinding('class.ng-select-disabled') get disabled() { return this.readonly || this._disabled }
 
-    @HostBinding('class.ng-select-filtered') get filtered() { return (!!this.searchTerm && this.searchable || this._isComposing) };
+    @HostBinding('class.ng-select-filtered') get filtered() { return (!!this.searchTerm && this.searchable || this._isComposing) }
 
-    @HostBinding('class.ng-select-single') get single() { return !this.multiple };
+    @HostBinding('class.ng-select-single') get single() { return !this.multiple }
 
     itemsList: ItemsList;
     viewPortItems: NgOption[] = [];
@@ -486,7 +486,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     focus() {
         if(!this.searchInput.nativeElement.readOnly){
             this.searchInput.nativeElement.focus();
-        };
+        }
     }
 
     blur() {
