@@ -31,6 +31,17 @@ jobs:
       - name: Semantic release
         run: npx semantic-release
 
+      - name: copy @ng-select/ng-select version to @ng-select/ng-option-highlight
+        run: |
+          TEMPFILE=$(mktemp)
+
+          jq ".version = $(jq .version ./dist/ng-select/package.json)" \
+            ./dist/ng-option-highlight/package.json > "$TEMPFILE"
+          mv "$TEMPFILE" ./dist/ng-option-highlight/package.json
+
+      - name: publish @ng-select/ng-option-highlight
+        run: yarn publish ./dist/ng-option-highlight
+
       - name: build demo
         run: yarn run build:demo
 
