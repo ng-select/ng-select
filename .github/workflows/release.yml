@@ -20,10 +20,10 @@ jobs:
           node-version: '18.x'
 
       - name: Install dependencies
-        run: npm install
+        run: yarn
 
       - name: Build packages
-        run: npm run-script build
+        run: yarn run build
 
       - name: Copy README
         run: cp README.md ./dist/ng-select/
@@ -32,7 +32,7 @@ jobs:
         run: npx semantic-release
 
       - name: build demo
-        run: npm run-script build:demo
+        run: yarn run build:demo
 
       - name: Deploy demo 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v4
