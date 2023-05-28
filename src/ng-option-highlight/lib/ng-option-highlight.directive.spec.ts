@@ -24,7 +24,8 @@ describe('NgOptionHighlightDirective', () => {
 
     beforeEach(() => {
         fixture = TestBed.configureTestingModule({
-            declarations: [NgOptionHighlightDirective, TestComponent]
+            declarations: [TestComponent],
+            imports: [NgOptionHighlightDirective]
         }).createComponent(TestComponent);
 
         fixture.detectChanges();
