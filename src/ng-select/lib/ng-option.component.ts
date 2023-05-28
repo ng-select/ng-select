@@ -6,15 +6,17 @@ import {
     Input,
     OnChanges,
     OnDestroy,
-    SimpleChanges
+    SimpleChanges,
+    inject
 } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
     selector: 'ng-option',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
     template: `<ng-content></ng-content>`
-    })
+})
 export class NgOptionComponent implements OnChanges, AfterViewChecked, OnDestroy {
 
     @Input() value: any;
@@ -26,8 +28,7 @@ export class NgOptionComponent implements OnChanges, AfterViewChecked, OnDestroy
 
     private _disabled = false;
     private _previousLabel: string;
-
-    constructor(public elementRef: ElementRef<HTMLElement>) { }
+    public elementRef = inject(ElementRef<HTMLElement>);
 
     get label(): string {
         return (this.elementRef.nativeElement.textContent || '').trim();

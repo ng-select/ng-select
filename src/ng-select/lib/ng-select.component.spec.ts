@@ -1,15 +1,17 @@
-import {ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation} from '@angular/core';
-import {ConsoleService} from './console.service';
-import {FormsModule} from '@angular/forms';
-import {getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent} from '../testing/helpers';
-import {KeyCode, NgOption} from './ng-select.types';
-import {MockConsole, MockNgZone} from '../testing/mocks';
-import {NgSelectComponent} from '@ng-select/ng-select';
-import {NgSelectModule} from './ng-select.module';
-import {Subject} from 'rxjs';
-import {NgSelectConfig} from './config.service';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ConsoleService } from './console.service';
+import { FormsModule } from '@angular/forms';
+import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
+import { KeyCode, NgOption } from './ng-select.types';
+import { MockConsole, MockNgZone } from '../testing/mocks';
+import { NgFooterTemplateDirective, NgHeaderTemplateDirective, NgItemLabelDirective, NgLabelTemplateDirective, NgLoadingSpinnerTemplateDirective, NgLoadingTextTemplateDirective, NgMultiLabelTemplateDirective, NgNotFoundTemplateDirective, NgOptgroupTemplateDirective, NgOptionComponent, NgOptionTemplateDirective, NgSelectComponent, NgTagTemplateDirective, NgTypeToSearchTemplateDirective, SELECTION_MODEL_FACTORY } from '@ng-select/ng-select';
+import { NgSelectModule } from './ng-select.module';
+import { Subject } from 'rxjs';
+import { NgSelectConfig } from './config.service';
+import { DefaultSelectionModelFactory } from './selection-model';
+import { provideCustomSelectionModelFactory } from './selection-model.provider';
 
 describe('NgSelectComponent', () => {
 
@@ -4104,12 +4106,29 @@ describe('NgSelectComponent', () => {
 function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectConfig: NgSelectConfig | null = null): ComponentFixture<T> {
 
     TestBed.configureTestingModule({
-        imports: [FormsModule, NgSelectModule],
+        imports: [
+            FormsModule,
+            NgSelectComponent,
+            NgOptionComponent,
+            NgItemLabelDirective,
+            NgOptgroupTemplateDirective,
+            NgOptionTemplateDirective,
+            NgLabelTemplateDirective,
+            NgMultiLabelTemplateDirective,
+            NgHeaderTemplateDirective,
+            NgFooterTemplateDirective,
+            NgNotFoundTemplateDirective,
+            NgTypeToSearchTemplateDirective,
+            NgLoadingTextTemplateDirective,
+            NgTagTemplateDirective,
+            NgLoadingSpinnerTemplateDirective
+        ],
         declarations: [cmp],
         providers: [
             { provide: ErrorHandler, useClass: TestsErrorHandler },
             { provide: NgZone, useFactory: () => new MockNgZone() },
-            { provide: ConsoleService, useFactory: () => new MockConsole() }
+            { provide: ConsoleService, useFactory: () => new MockConsole() },
+            provideCustomSelectionModelFactory()
         ]
     })
         .overrideComponent(cmp, {
@@ -4147,7 +4166,7 @@ function createEvent(target = {}) {
 
 @Component({
     template: ``
-    })
+})
 class NgSelectTestComponent {
     @ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
     multiple = false;
@@ -4170,9 +4189,9 @@ class NgSelectTestComponent {
     selectedCities: { id: number; name: string }[];
     city: { id: number; name: string };
     cities: any[] = [
-        {id: 1, name: 'Vilnius'},
-        {id: 2, name: 'Kaunas'},
-        {id: 3, name: 'Pabrade'},
+        { id: 1, name: 'Vilnius' },
+        { id: 2, name: 'Kaunas' },
+        { id: 3, name: 'Pabrade' },
     ];
     citiesNames = this.cities.map(x => x.name);
 
@@ -4182,7 +4201,7 @@ class NgSelectTestComponent {
         { id: 2, description: { name: 'USA', id: 'b' } },
         { id: 3, description: { name: 'Australia', id: 'c' } }
     ];
-    keyDownFn = () => {};
+    keyDownFn = () => { };
 
     tagFunc(term: string) {
         return { id: term, name: term, custom: true }
@@ -4239,14 +4258,14 @@ class NgSelectTestComponent {
 @Component({
     template: ``,
     encapsulation: ViewEncapsulation.ShadowDom,
-    })
+})
 class EncapsulatedTestComponent extends NgSelectTestComponent {
     @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 }
 
 @Component({
     template: ``,
-    })
+})
 class NgSelectGroupingTestComponent {
     @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
     selectedAccountName = 'Adam';
