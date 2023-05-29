@@ -1,6 +1,6 @@
-import { EnvironmentProviders, Provider, makeEnvironmentProviders } from "@angular/core";
-import { SELECTION_MODEL_FACTORY } from "./ng-select.component";
-import { DefaultSelectionModelFactory, SelectionModelFactory } from "./selection-model";
+import { EnvironmentProviders, Provider, makeEnvironmentProviders } from '@angular/core';
+import { SELECTION_MODEL_FACTORY } from './ng-select.component';
+import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
 
 /**
  * @description

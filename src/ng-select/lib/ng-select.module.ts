@@ -20,39 +20,39 @@ import { provideCustomSelectionModelFactory } from './selection-model.provider';
 
 @NgModule({
     imports: [
-        NgDropdownPanelComponent,
-        NgOptionComponent,
-        NgSelectComponent,
-        NgItemLabelDirective,
-        NgOptgroupTemplateDirective,
-        NgOptionTemplateDirective,
-        NgLabelTemplateDirective,
-        NgMultiLabelTemplateDirective,
-        NgHeaderTemplateDirective,
-        NgFooterTemplateDirective,
-        NgNotFoundTemplateDirective,
-        NgTypeToSearchTemplateDirective,
-        NgLoadingTextTemplateDirective,
-        NgTagTemplateDirective,
-        NgLoadingSpinnerTemplateDirective
+    NgDropdownPanelComponent,
+    NgOptionComponent,
+    NgSelectComponent,
+    NgItemLabelDirective,
+    NgOptgroupTemplateDirective,
+    NgOptionTemplateDirective,
+    NgLabelTemplateDirective,
+    NgMultiLabelTemplateDirective,
+    NgHeaderTemplateDirective,
+    NgFooterTemplateDirective,
+    NgNotFoundTemplateDirective,
+    NgTypeToSearchTemplateDirective,
+    NgLoadingTextTemplateDirective,
+    NgTagTemplateDirective,
+    NgLoadingSpinnerTemplateDirective
     ],
     exports: [
-        NgSelectComponent,
-        NgOptionComponent,
-        NgOptgroupTemplateDirective,
-        NgOptionTemplateDirective,
-        NgLabelTemplateDirective,
-        NgMultiLabelTemplateDirective,
-        NgHeaderTemplateDirective,
-        NgFooterTemplateDirective,
-        NgNotFoundTemplateDirective,
-        NgTypeToSearchTemplateDirective,
-        NgLoadingTextTemplateDirective,
-        NgTagTemplateDirective,
-        NgLoadingSpinnerTemplateDirective
+    NgSelectComponent,
+    NgOptionComponent,
+    NgOptgroupTemplateDirective,
+    NgOptionTemplateDirective,
+    NgLabelTemplateDirective,
+    NgMultiLabelTemplateDirective,
+    NgHeaderTemplateDirective,
+    NgFooterTemplateDirective,
+    NgNotFoundTemplateDirective,
+    NgTypeToSearchTemplateDirective,
+    NgLoadingTextTemplateDirective,
+    NgTagTemplateDirective,
+    NgLoadingSpinnerTemplateDirective
     ],
     providers: [
-        provideCustomSelectionModelFactory()
+    provideCustomSelectionModelFactory()
     ]
-})
+    })
 export class NgSelectModule { }

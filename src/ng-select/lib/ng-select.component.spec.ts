@@ -6,11 +6,14 @@ import { FormsModule } from '@angular/forms';
 import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
 import { KeyCode, NgOption } from './ng-select.types';
 import { MockConsole, MockNgZone } from '../testing/mocks';
-import { NgFooterTemplateDirective, NgHeaderTemplateDirective, NgItemLabelDirective, NgLabelTemplateDirective, NgLoadingSpinnerTemplateDirective, NgLoadingTextTemplateDirective, NgMultiLabelTemplateDirective, NgNotFoundTemplateDirective, NgOptgroupTemplateDirective, NgOptionComponent, NgOptionTemplateDirective, NgSelectComponent, NgTagTemplateDirective, NgTypeToSearchTemplateDirective, SELECTION_MODEL_FACTORY } from '@ng-select/ng-select';
-import { NgSelectModule } from './ng-select.module';
+import {
+    NgFooterTemplateDirective, NgHeaderTemplateDirective, NgItemLabelDirective, NgLabelTemplateDirective,
+    NgLoadingSpinnerTemplateDirective, NgLoadingTextTemplateDirective, NgMultiLabelTemplateDirective,
+    NgNotFoundTemplateDirective, NgOptgroupTemplateDirective, NgOptionComponent, NgOptionTemplateDirective,
+    NgSelectComponent, NgTagTemplateDirective, NgTypeToSearchTemplateDirective
+} from '@ng-select/ng-select';
 import { Subject } from 'rxjs';
 import { NgSelectConfig } from './config.service';
-import { DefaultSelectionModelFactory } from './selection-model';
 import { provideCustomSelectionModelFactory } from './selection-model.provider';
 
 describe('NgSelectComponent', () => {
@@ -4166,7 +4169,7 @@ function createEvent(target = {}) {
 
 @Component({
     template: ``
-})
+    })
 class NgSelectTestComponent {
     @ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
     multiple = false;
@@ -4258,14 +4261,14 @@ class NgSelectTestComponent {
 @Component({
     template: ``,
     encapsulation: ViewEncapsulation.ShadowDom,
-})
+    })
 class EncapsulatedTestComponent extends NgSelectTestComponent {
     @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 }
 
 @Component({
     template: ``,
-})
+    })
 class NgSelectGroupingTestComponent {
     @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
     selectedAccountName = 'Adam';
