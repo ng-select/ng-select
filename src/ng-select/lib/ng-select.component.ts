@@ -178,6 +178,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     @ViewChild(forwardRef(() => NgDropdownPanelComponent)) dropdownPanel: NgDropdownPanelComponent;
     @ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
+    @ViewChild('clearButton') clearButton: ElementRef<HTMLSpanElement>;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
 
     @HostBinding('class.ng-select') useDefaultClass = true;
@@ -301,6 +302,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     handleKeyCode($event: KeyboardEvent) {
+        let target = $event.target
+
+        if(target == this.searchInput.nativeElement) {
+            this.handleKeyCodeInput($event);
+        } else if(target == this.clearButton.nativeElement) {
+            this.handleKeyCodeClear($event);
+        }
+    }
+
+    handleKeyCodeInput($event: KeyboardEvent) {
         switch ($event.which) {
         case KeyCode.ArrowDown:
             this._handleArrowDown($event);
@@ -324,6 +335,15 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
         case KeyCode.Backspace:
             this._handleBackspace();
             break
+        }
+    }
+
+    handleKeyCodeClear($event: KeyboardEvent) {
+        switch ($event.which) {
+            case KeyCode.Enter:
+                this.handleClearClick();
+                $event.preventDefault();
+                break
         }
     }
 
@@ -522,6 +542,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     showClear() {
         return this.clearable && (this.hasValue || this.searchTerm) && !this.disabled;
+    }
+
+    focusOnClear() {
+        this.blur();
+        this.clearButton.nativeElement.focus();
     }
 
     trackByOption = (_: number, item: NgOption) => {
@@ -851,8 +876,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     private _handleTab($event: KeyboardEvent) {
-        if (this.isOpen === false && !this.addTag) {
-            return;
+        if (this.isOpen === false) {
+            if(this.showClear()) {
+                this.focusOnClear();
+                $event.preventDefault();
+            } else if(!this.addTag) {
+                return
+            }
         }
 
         if (this.selectOnTab) {
