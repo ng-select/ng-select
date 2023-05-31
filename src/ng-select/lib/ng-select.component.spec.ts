@@ -1594,7 +1594,6 @@ describe('NgSelectComponent', () => {
             it('should focus on clear button when tab pressed while not opened and clear showing', fakeAsync(() => {
                 selectOption(fixture, KeyCode.ArrowDown, 0);
                 tickAndDetectChanges(fixture);
-                let select = fixture.componentInstance.select;
                 expect(select.showClear()).toBeTruthy();
 
                 select.searchInput.nativeElement.focus();
@@ -4166,9 +4165,7 @@ function createEvent(target = {}) {
     }
 }
 
-@Component({
-    template: ``
-})
+@Component({template: ``})
 class NgSelectTestComponent {
     @ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
     multiple = false;
@@ -4257,17 +4254,12 @@ class NgSelectTestComponent {
     }
 }
 
-@Component({
-    template: ``,
-    encapsulation: ViewEncapsulation.ShadowDom,
-})
+@Component({template: ``, encapsulation: ViewEncapsulation.ShadowDom})
 class EncapsulatedTestComponent extends NgSelectTestComponent {
     @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 }
 
-@Component({
-    template: ``,
-})
+@Component({template: ``})
 class NgSelectGroupingTestComponent {
     @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
     selectedAccountName = 'Adam';

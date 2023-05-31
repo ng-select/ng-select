@@ -302,9 +302,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     handleKeyCode($event: KeyboardEvent) {
-        let target = $event.target
+        const target = $event.target
 
-        if(this.clearButton && this.clearButton.nativeElement == target) {
+        if(this.clearButton && this.clearButton.nativeElement === target) {
             this.handleKeyCodeClear($event)
         } else {
             this.handleKeyCodeInput($event);
@@ -340,10 +340,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     handleKeyCodeClear($event: KeyboardEvent) {
         switch ($event.which) {
-            case KeyCode.Enter:
-                this.handleClearClick();
-                $event.preventDefault();
-                break
+        case KeyCode.Enter:
+            this.handleClearClick();
+            $event.preventDefault();
+            break
         }
     }
 
