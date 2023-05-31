@@ -304,10 +304,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     handleKeyCode($event: KeyboardEvent) {
         let target = $event.target
 
-        if(target == this.searchInput.nativeElement) {
+        if(this.clearButton && this.clearButton.nativeElement == target) {
+            this.handleKeyCodeClear($event)
+        } else {
             this.handleKeyCodeInput($event);
-        } else if(target == this.clearButton.nativeElement) {
-            this.handleKeyCodeClear($event);
         }
     }
 
@@ -546,7 +546,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     focusOnClear() {
         this.blur();
-        this.clearButton.nativeElement.focus();
+        if(this.clearButton) {
+            this.clearButton.nativeElement.focus();
+        }
     }
 
     trackByOption = (_: number, item: NgOption) => {
