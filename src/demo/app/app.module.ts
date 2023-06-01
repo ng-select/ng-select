@@ -20,13 +20,9 @@ import { RouteViewerComponent } from './shared/route-viewer/route-viewer.compone
         HttpClientModule,
         ExamplesModule,
         NgbModule,
-        RouterModule.forRoot(
-            appRoutes,
-            {
-    useHash: true,
-    relativeLinkResolution: 'legacy'
-}
-        )
+        RouterModule.forRoot(appRoutes, {
+    useHash: true
+})
     ],
     providers: [
         DataService,
@@ -40,7 +36,6 @@ import { RouteViewerComponent } from './shared/route-viewer/route-viewer.compone
         StackblitzButtonComponent,
         RouteViewerComponent,
     ],
-    entryComponents: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {

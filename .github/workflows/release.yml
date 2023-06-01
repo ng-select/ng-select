@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Build packages
+        run: yarn run build
+
+      - name: Copy README
+        run: cp README.md ./dist/ng-select/
+
+      - name: Semantic release
+        run: npx semantic-release
+
+      - name: copy @ng-select/ng-select version to @ng-select/ng-option-highlight
+        run: |
+          TEMPFILE=$(mktemp)
+
+          jq ".version = $(jq .version ./dist/ng-select/package.json)" \
+            ./dist/ng-option-highlight/package.json > "$TEMPFILE"
+          mv "$TEMPFILE" ./dist/ng-option-highlight/package.json
+
+      - name: publish @ng-select/ng-option-highlight
+        run: yarn publish ./dist/ng-option-highlight
+
+      - name: build demo
+        run: yarn run build:demo
+
+      - name: Deploy demo 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v4
+        with:
+          branch: gh-pages
+          folder: dist/demo

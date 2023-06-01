@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 type langDir = 'ltr' | 'rtl';
+type theme = 'default' | 'ant' | 'material';
 
 @Component({
     selector: 'layout-header',
@@ -21,6 +22,18 @@ type langDir = 'ltr' | 'rtl';
             </button>
 
             <div class="collapse navbar-collapse">
+                <div ngbDropdown class="d-inline-block">
+                    <button class="btn btn-outline-secondary btn-sm" style="width: 150px;"
+                            ngbDropdownToggle>{{theme}}</button>
+                    <div ngbDropdownMenu>
+                        <button (click)="setTheme('default')" class="dropdown-item btn-sm">Default theme</button>
+                        <button (click)="setTheme('material')" class="dropdown-item btn-sm">Material theme
+                        </button>
+                        <button (click)="setTheme('ant')" class="dropdown-item btn-sm">Ant Design theme
+                        </button>
+                    </div>
+                </div>
+
                 <div ngbDropdown class="d-inline-block ml-2">
                     <button class="btn btn-outline-secondary btn-sm text-uppercase" style="width: 60px;"
                             ngbDropdownToggle>{{dir}}</button>
@@ -46,11 +59,16 @@ type langDir = 'ltr' | 'rtl';
     `
 })
 export class LayoutHeaderComponent {
-    @Input() version: string;
     @Input() dir: langDir;
+    @Input() theme = 'default';
+    @Input() version: string;
     @Output() dirChange = new EventEmitter<langDir>();
+    @Output() themeChange = new EventEmitter<theme>();
 
-    private style: HTMLStyleElement;
+    setTheme(theme: theme) {
+        this.theme = theme;
+        this.themeChange.emit(theme);
+    }
 
     changeDirTo(dir: langDir) {
         this.dir = dir;

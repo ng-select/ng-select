@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { filter, map, mergeMap } from 'rxjs/operators';
@@ -7,6 +7,7 @@ import { NgSelectConfig } from '@ng-select/ng-select';
 @Component({
     selector: 'demo-app',
     templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
     changeDetection: ChangeDetectionStrategy.Default,
 })
 export class AppComponent {
@@ -15,6 +16,9 @@ export class AppComponent {
     version: string = window['ngSelectVersion'];
     exampleSourceUrl: string;
     dir: 'ltr' | 'rtl' = 'ltr';
+    theme: 'default' | 'ant' | 'material' = 'default';
+
+    @HostBinding('class') get themeClass() { return `${this.theme}-theme`; }
 
     constructor(
         private router: Router,
@@ -24,8 +28,8 @@ export class AppComponent {
     ) {
         this.config.placeholder = 'Select item';
         // This could be useful if you want to use appendTo in entire application without explicitly defining it. (eg: appendTo = 'body')
-        this.config.appendTo = null; 
-        // set the bindValue to global config when you use the same bindValue in most of the place. 
+        this.config.appendTo = null;
+        // set the bindValue to global config when you use the same bindValue in most of the place.
         // You can also override bindValue for the specified template by defining `bindValue` as property
         // Eg : <ng-select bindValue="some-new-value"></ng-select>
         // this.config.bindValue = 'value';

@@ -14,7 +14,7 @@ import { Subject } from 'rxjs';
     selector: 'ng-option',
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `<ng-content></ng-content>`
-})
+    })
 export class NgOptionComponent implements OnChanges, AfterViewChecked, OnDestroy {
 
     @Input() value: any;
