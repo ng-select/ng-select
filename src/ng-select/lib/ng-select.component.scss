@@ -399,30 +399,3 @@ $ng-option-active-color: #fff;
     opacity: 0;
   }
 } // END ng-dropdown-panel
-
-
-// Loading animation
-@keyframes sk-bouncedelay {
-  0%, 80%, 100% {
-    transform: scale(0);
-  } 40% {
-    transform: scale(1);
-  }
-}
-
-.ng-loading-spinner {
-  width: 90%;
-  height: 90%;
-
-  [class*="bounce"] {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    background-color: #666;
-    border-radius: 50%;
-    animation: bounce 1.4s infinite ease-in-out both;
-  }
-
-  .bounce1 { animation-delay: -.32s; }
-  .bounce2 { animation-delay: -.16s; }
-}
