@@ -90,9 +90,9 @@ $ng-option-active-color: #fff;
     grid-area: value;
     display: flex;
     flex: 1;
+    align-items: center;
     min-height: 42px; // Ensure a minimum height when no value is chosen
     height: 100%;
-    padding: .45rem .25rem .65rem .75rem;
 
     .ng-input {
       opacity: 0;
@@ -104,6 +104,7 @@ $ng-option-active-color: #fff;
         border: 0;
         box-shadow: none;
         cursor: default;
+        padding-left: .75rem;
 
         &[readonly] {
           user-select: none;
@@ -130,10 +131,6 @@ $ng-option-active-color: #fff;
       position: absolute;
       left: 0;
       width: 100%;
-
-      input {
-        padding-left: .75rem;
-      }
     }
 
     .ng-value-icon {
@@ -150,8 +147,6 @@ $ng-option-active-color: #fff;
       position: relative;
       display: flex;
       align-items: center;
-      margin-right: .25rem;
-      margin-bottom: .25rem;
       padding: .5rem 2rem .5rem .75rem;
       background-color: $ng-value-background-color;
       border-radius: $ng-value-border-radius;
@@ -189,10 +184,9 @@ $ng-option-active-color: #fff;
     }
 
     .ng-select-container.ng-has-value {
-      // Magic numbers to prevent multi-selected tags from altering select size
       .ng-value-container {
-        margin-left: -.35rem;
-        padding-bottom: .2rem;
+        padding: .25rem;
+        gap: .25rem;
       }
 
       // Align input text with selected tags
