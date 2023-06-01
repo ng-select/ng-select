@@ -421,7 +421,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             $event.preventDefault();
         }
 
-        if (target.classList.contains('ng-clear-wrapper')) {
+        if (target.classList.contains('ng-clear')) {
             this.handleClearClick();
             return;
         }

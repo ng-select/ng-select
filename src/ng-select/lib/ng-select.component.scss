@@ -94,6 +94,7 @@ $ng-option-active-color: #fff;
     align-items: center;
     min-height: 42px; // Ensure a minimum height when no value is chosen
     height: 100%;
+    padding-left: .75rem;
 
     .ng-input {
       opacity: 0;
@@ -105,7 +106,6 @@ $ng-option-active-color: #fff;
         border: 0;
         box-shadow: none;
         cursor: default;
-        padding-left: .75rem;
 
         &[readonly] {
           user-select: none;
@@ -130,7 +130,7 @@ $ng-option-active-color: #fff;
   &.ng-select-single {
     .ng-input {
       position: absolute;
-      left: 0;
+      left: .75rem;
       width: 100%;
     }
 
