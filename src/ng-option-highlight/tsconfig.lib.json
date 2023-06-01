@@ -4,7 +4,7 @@
     "outDir": "../../out-tsc/lib",
     "declaration": true,
     "inlineSources": true,
-    "types": ["node"],
+    "types": [],
     "lib": [
       "dom",
       "es2018"
