@@ -35,7 +35,7 @@ $ng-option-active-color: #fff;
     transition: border-color .15s;
     cursor: default;
 
-    .ng-clear-wrapper,
+    .ng-clear,
     .ng-arrow-wrapper {
       position: relative;
       display: inline-flex;
@@ -48,29 +48,23 @@ $ng-option-active-color: #fff;
       }
     }
 
-    .ng-clear-wrapper {
+    .ng-clear {
       grid-area: clear;
-      user-select: none;
-      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background: none;
+      border: 0;
+      box-shadow: none;
 
-      button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        background: none;
-        border: 0;
-        box-shadow: none;
-        pointer-events: none;
-      }
-
-      .ng-clear:hover,
-      .ng-clear:focus {
+      &:hover,
+      &:focus {
         color: $ng-select-error;
       }
 
-      .ng-clear:focus {
+      &:focus {
         outline: 1px dotted $ng-select-error;
         outline-offset: -1px;
       }
