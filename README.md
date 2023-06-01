@@ -244,7 +244,10 @@ Ng-select allows to provide custom selection implementation using `SELECTION_MOD
 ```javascript
 // app.module.ts
 providers: [
+    // pre-v15
     { provide: SELECTION_MODEL_FACTORY, useValue: <SelectionModelFactory>CustomSelectionFactory }
+    // v15: using provider function
+    provideCustomSelectionModelFactory(<SelectionModelFactory>CustomSelectionFactory)
 ]
 
 // selection-model.ts
