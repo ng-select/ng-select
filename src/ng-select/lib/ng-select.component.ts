@@ -314,7 +314,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
                 switch ($event.which) {
                 case KeyCode.ArrowDown:
                     this._handleArrowDown($event);
-                    console.log('arrow down');
                     break;
                 case KeyCode.ArrowUp:
                     this._handleArrowUp($event);
@@ -337,7 +336,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
                     break;
                 }
             } else if (
-                [KeyCode.Home, KeyCode.ArrowLeft, KeyCode.ArrowRight, KeyCode.End, KeyCode.Delete].includes($event.which)
+                [KeyCode.Home, KeyCode.ArrowLeft, KeyCode.ArrowRight, KeyCode.End, KeyCode.Delete, KeyCode.Backspace].includes($event.which)
             ) {
                 $event.preventDefault();
                 $event.stopPropagation();
@@ -355,63 +354,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
                     this._focusLastTag();
                     break;
                 case KeyCode.Delete:
+                case KeyCode.Backspace:
                     this._handleDelete();
                     break;
                 }
             }
         } else if ($event.key && $event.key.length === 1) {
             this._keyPress$.next($event.key.toLocaleLowerCase());
-        }
-    }
-
-    handleKeyCode($event: KeyboardEvent) {
-        if (!this.focusedTag) {
-            switch ($event.which) {
-            case KeyCode.ArrowDown:
-                this._handleArrowDown($event);
-                break;
-            case KeyCode.ArrowUp:
-                this._handleArrowUp($event);
-                break;
-            case KeyCode.Space:
-                this._handleSpace($event);
-                break;
-            case KeyCode.Enter:
-                this._handleEnter($event);
-                break;
-            case KeyCode.Tab:
-                this._handleTab($event);
-                break;
-            case KeyCode.Esc:
-                this.close();
-                $event.preventDefault();
-                break;
-            case KeyCode.Backspace:
-                this._handleBackspace();
-                break;
-            }
-        } else if (
-            [KeyCode.Home, KeyCode.ArrowLeft, KeyCode.ArrowRight, KeyCode.End, KeyCode.Delete].includes($event.which)
-        ) {
-            $event.preventDefault();
-            $event.stopPropagation();
-            switch ($event.which) {
-            case KeyCode.Home:
-                this._focusFirstTag();
-                break;
-            case KeyCode.ArrowLeft:
-                this._focusPreviousTag();
-                break;
-            case KeyCode.ArrowRight:
-                this._focusNextTag();
-                break;
-            case KeyCode.End:
-                this._focusLastTag();
-                break;
-            case KeyCode.Delete:
-                this._handleDelete();
-                break;
-            }
         }
     }
 
@@ -1099,16 +1048,15 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     private _handleDelete() {
-        if (this.focusedTag) {
-            const selected = this.selectedItems.find((item) => item.htmlId === this.focusedTag.id);
-            this.unselect(selected);
-            this.detectChanges();
-            if (this.tagsList.length) {
-                this.focusedTag = this.tagsList.last.nativeElement;
-                this.focusedTag.focus();
-            } else {
-                this.focus(); // NOTE: unneeded as unselect() does focus the input already?
-            }
+        // TODO - `selected` always returns undefined here, preventing deletion from working
+        const selected = this.selectedItems.find((item) => `${item.htmlId}_selected`);
+        this.unselect(selected);
+        this.detectChanges();
+
+        if (this.tagsList.length) {
+            this._focusPreviousTag();
+        } else {
+            this.element.focus();
         }
     }
 
