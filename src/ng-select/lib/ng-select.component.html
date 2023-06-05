@@ -40,12 +40,7 @@
                 [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
         </ng-template>
 
-        <div class="ng-input"
-            role="combobox"
-            [attr.aria-expanded]="isOpen"
-            [attr.aria-owns]="isOpen ? dropdownId : null"
-            aria-haspopup="listbox">
-
+        <div class="ng-input">
             <input #searchInput
                    [attr.id]="labelForId"
                    [placeholder]="this.selectedItems && this.selectedItems.length ? '' : placeholder"
@@ -53,14 +48,17 @@
                    [readonly]="!searchable || itemsList.maxItemsSelected"
                    [disabled]="disabled"
                    [value]="searchTerm ? searchTerm : ''"
+                   role="combobox"
                    [attr.tabindex]="tabIndex"
                    [attr.aria-autocomplete]="searchable ? 'list' : null"
                    [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
                    [attr.aria-controls]="isOpen ? dropdownId : null"
                    [attr.aria-describedby]="describedBy"
-                   [attr.aria-labelledby]="labelledBy"
-                   aria-haspopup="true"
+                   [attr.aria-expanded]="isOpen"
+                   aria-haspopup="listbox"
                    [attr.aria-invalid]="invalid"
+                   [attr.aria-labelledby]="labelledBy"
+                   [attr.aria-owns]="isOpen ? dropdownId : null"
                    (input)="filter(searchInput.value)"
                    (compositionstart)="onCompositionStart()"
                    (compositionend)="onCompositionEnd(searchInput.value)"
@@ -114,8 +112,7 @@
                    (outsideClick)="close()"
                    [class.ng-select-multiple]="multiple"
                    [ngClass]="appendTo ? classes : null"
-                   role="listbox"
-                   aria-label="Options list">
+                   role="listbox">
 
     <ng-container>
         <div class="ng-option"
