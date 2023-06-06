@@ -6,11 +6,8 @@
   (mousedown)="handleMousedown($event)"
   (focus)="onWidgetFocus()"
 >
-  <div class="ng-value-container">
-    <ng-container
-      *ngIf="((multiple && !multiLabelTemplate) || !searchable) && selectedItems.length > 0"
-      role="listbox"
-    >
+  <div class="ng-value-container" role="listbox" [attr.aria-labelledby]="labelledBy">
+    <ng-container *ngIf="((multiple && !multiLabelTemplate) || !searchable) && selectedItems.length > 0">
       <div
         #tag
         *ngFor="let item of selectedItems; trackBy: trackByOption"
@@ -55,7 +52,6 @@
         [attr.aria-expanded]="isOpen"
         aria-haspopup="listbox"
         [attr.aria-invalid]="invalid"
-        [attr.aria-labelledby]="labelledBy"
         [attr.aria-multiselectable]="multiple ? 'true' : null"
         [attr.aria-owns]="isOpen ? dropdownId : null"
         [attr.aria-required]="required ? 'true' : null"
