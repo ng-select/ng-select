@@ -300,9 +300,7 @@ $ng-option-active-color: #fff;
     display: grid;
     grid-template: "selected-icon value-text" auto / 1rem 1fr;
     gap: 0 .5rem;
-    min-height: 44px;
-    padding: .5rem .75rem;
-    cursor: pointer;
+    padding: .6rem .75rem .7rem;
 
     .ng-option-icon {
       display: none;
