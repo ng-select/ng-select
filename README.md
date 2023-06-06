@@ -2,15 +2,13 @@
 
 > This is Common App's forked version of [ng-select](https://ng-select.github.io/). It is _heavily_ modified to meet the needs of the CA development team to ensure compatibility and accessibility of the plugin within our products.
 
-[![npm version](https://badge.fury.io/js/%40ng-select%2Fng-select.svg)](https://badge.fury.io/js/%40ng-select%2Fng-select)
-[![Coverage Status][coveralls-image]][coveralls-url]
-[![gzip bundle size](http://img.badgesize.io/https://unpkg.com/@ng-select/ng-select@latest/bundles/ng-select-ng-select.umd.min.js?compression=gzip&style=flat-square)][ng-select-url]
+[![npm version](https://badge.fury.io/js/%40commonapp%2Fng-select.svg)](https://badge.fury.io/js/%40commonapp%2Fng-select)
 
-It was originally forked to work on improving the accessibility of the plugin through proper aria tags, improved screen reader support, and increased key command support.
+It was forked to improve the accessibility of the plugin through proper ARIA roles, improved screen reader support, and increased key command support.
 
 Original and current documentation for ng-select can be found [in the parent repo](https://github.com/ng-select/ng-select).
 
-The CommonApp version is what is used within all CommonApp products via a Github package. In order to update, release, and use the latest updates made to the forked version, follow these instructions:
+The CommonApp version is what is used within all CommonApp products via a Github package.
 
 ---
 

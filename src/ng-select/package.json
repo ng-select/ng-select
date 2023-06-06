@@ -1,6 +1,6 @@
 {
-  "name": "@ng-select/ng-select",
-  "version": "11.0.0",
+  "name": "@commonapp/ng-select",
+  "version": "5.0.0-rc1",
   "description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
   "author": "@ng-select/ng-select",
   "contributors": [
@@ -13,35 +13,6 @@
   "engines": {
     "node": ">= 12.20.0",
     "npm": ">= 6.0.0"
-  },
-  "keywords": [
-    "angular",
-    "select",
-    "ui-select",
-    "dropdown",
-    "multiselect",
-    "autocomplete",
-    "angular2"
-  ],
-  "exports": {
-    "./scss/ant.design.theme": {
-      "style": "./scss/ant.design.theme.scss"
-    },
-    "./scss/default.theme": {
-      "style": "./scss/default.theme.scss"
-    },
-    "./scss/material.theme": {
-      "style": "./scss/material.theme.scss"
-    },
-    "./themes/ant.design.theme.css": {
-      "style": "./themes/ant.design.theme.css"
-    },
-    "./themes/default.theme.css": {
-      "style": "./themes/default.theme.css"
-    },
-    "./themes/material.theme.css": {
-      "style": "./themes/material.theme.css"
-    }
   },
   "peerDependencies": {
     "@angular/common": "<16.0.0",

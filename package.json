@@ -1,38 +1,17 @@
 {
-  "repository": "ng-select/ng-select",
+  "repository": "@commonapp/ng-select",
   "engines": {
     "node": ">= 14.20.0",
     "npm": ">= 6.14.17"
   },
   "scripts": {
-    "build": "ng build ng-select && ng build ng-option-highlight && yarn build:themes && yarn copy-sass",
-    "build:demo": "ng build demo --configuration production --base-href=/ng-select && yarn copy-examples",
-    "build:themes": "node-sass --output-style compressed src/ng-select/themes/ -o dist/ng-select/themes",
-    "copy-sass": "mkdir -p dist/ng-select/scss && cp src/ng-select/**/*.scss dist/ng-select/scss",
-    "copy-examples": "cp -r src/demo/app/examples dist/demo",
+    "build": "ng build ng-select && ng build ng-option-highlight",
+    "build:demo": "ng build demo --configuration production --base-href=/ng-select",
     "start": "ng serve",
     "test:watch": "ng test ng-select --watch",
     "test": "ng test ng-select --code-coverage && ng test ng-option-highlight --code-coverage",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless --code-coverage",
-    "coveralls": "cat ./coverage/ng-select/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "lint": "ng lint ng-select && ng lint ng-option-highlight",
-    "postpublish": "cp dist/ng-select/package.json src/ng-select && cp dist/ng-option-highlight/package.json src/ng-option-highlight",
-    "release": "semantic-release"
-  },
-  "release": {
-    "branch": "master",
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/changelog",
-      "@semantic-release/github",
-      [
-        "@semantic-release/npm",
-        {
-          "pkgRoot": "dist/ng-select"
-        }
-      ],
-      "@semantic-release/release-notes-generator"
-    ]
+    "lint": "ng lint ng-select && ng lint ng-option-highlight"
   },
   "dependencies": {
     "@angular/animations": "^15.0.0",
