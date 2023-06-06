@@ -1,3 +1,14 @@
+# 5.0.0-rc1
+
+## 🔥 BREAKING CHANGES
+
+- Updated ng-select Angular version to 15.x
+
+## 🔧 Changes
+
+- Updated spacing method of multi-select chip lists (margins to gaps)
+- Fixed line-height issues in dropdown options
+
 # 4.0.3
 
 * Fix disappearing dropdown on search/typeahead
