@@ -92,7 +92,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() hideSelected = false;
     @Input() inputAttrs: { [key: string]: string } = {};
     @Input() invalid: boolean;
-    @Input() labelForId = null;
+    @Input() labelForId: string;
     @Input() labelledBy: string;
     @Input() loading = false;
     @Input() loadingText: string;
