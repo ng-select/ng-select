@@ -1,15 +1,27 @@
-# 5.0.0-rc1
+# Changelog
 
-## 🔥 BREAKING CHANGES
+## 5.0.0-rc2
+
+### 🐛 Fixes
+
+- Remove invalid ARIA properties from wrapper and input
+- Remove unnecessary `aria-owns` from input
+- Add back accessible name for listbox dropdown panel
+- Fix missing spaces in multi-select inputs between chips and other elements
+- Fix input value overlap with clear icon
+
+## 5.0.0-rc1
+
+### 🔥 BREAKING CHANGES
 
 - Updated ng-select Angular version to 15.x
 
-## 🔧 Changes
+### 🔧 Changes
 
 - Updated spacing method of multi-select chip lists (margins to gaps)
 - Fixed line-height issues in dropdown options
 
-# 4.0.3
+## 4.0.3
 
 * Fix disappearing dropdown on search/typeahead
 * Remove incorrect ARIA role on text input within combobox div
@@ -17,21 +29,21 @@
 * Fix border-radius disappearing on item hover
 * Remove console logs on keypresses
 
-# 4.0.2
+## 4.0.2
 
 * Fix new styles not being included in package
 
-# 4.0.1
+## 4.0.1
 
 * Fix visible ng-value
 * Fix centering of clear button within wrapper
 
-# 4.0.0
+## 4.0.0
 
 * **Breaking**: Update to Angular 11 compatible version
 * Reintroduce ng-value for displaying values (to allow for templated value display)
 
-# 3.2.0
+## 3.2.0
 
 ### Enhancement
 
@@ -41,7 +53,7 @@
 * PTS-12669: added new placeholder styling under ng-select-single ([0fc3b6d](https://github.com/ng-select/ng-select/commit/0fc3b6d3dd1d604f2ac3085850bbbb8bd4ca54df))
 * PTS-12668: added new placeholder styling under ng-select-multiple ([56ff1c1](https://github.com/ng-select/ng-select/commit/56ff1c16441178d0e88657876a195a39b682f851))
 
-# 3.1.4
+## 3.1.4
 
 ### Bug Fixes
 
