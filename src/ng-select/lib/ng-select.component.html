@@ -52,8 +52,6 @@
         [attr.aria-expanded]="isOpen"
         aria-haspopup="listbox"
         [attr.aria-invalid]="invalid"
-        [attr.aria-multiselectable]="multiple ? 'true' : null"
-        [attr.aria-owns]="isOpen ? dropdownId : null"
         [attr.aria-required]="required ? 'true' : null"
         (input)="filter(searchInput.value)"
         (compositionstart)="onCompositionStart()"
