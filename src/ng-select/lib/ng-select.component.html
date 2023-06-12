@@ -2,34 +2,33 @@
   class="ng-select-container"
   [class.ng-appearance-outline]="appearance === 'outline'"
   [class.ng-has-value]="hasValue"
+  [attr.aria-multiselectable]="multiple ? 'true' : null"
   [tabindex]="multiple && selectedItems.length > 0 && !focusedTag ? 0 : -1"
   (mousedown)="handleMousedown($event)"
   (focus)="onWidgetFocus()"
 >
-  <div class="ng-value-container" [attr.aria-labelledby]="labelledBy">
+  <div class="ng-value-container" [attr.role]="multiple ? 'listbox' : null" [attr.aria-labelledby]="labelledBy">
     <ng-container *ngIf="((multiple && !multiLabelTemplate) || !searchable) && selectedItems.length > 0">
-      <div class="ng-tag-container" role="listbox" [attr.aria-labelledby]="labelledBy">
-        <div
-          #tag
-          *ngFor="let item of selectedItems; trackBy: trackByOption"
-          class="ng-value"
-          [class.ng-value-disabled]="item.disabled"
-          id="{{ item.htmlId }}_selected"
-          tabindex="-1"
-          role="option"
-          [attr.aria-disabled]="item.disabled"
-          aria-selected="true"
-          (blur)="onTagBlur($event)"
-        >
-          <ng-template #defaultLabelTemplate>
-            <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
-            <span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">
-              <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M207.6 256l107.72-107.72c6.23-6.23 6.23-16.34 0-22.58l-25.03-25.03c-6.23-6.23-16.34-6.23-22.58 0L160 208.4 52.28 100.68c-6.23-6.23-16.34-6.23-22.58 0L4.68 125.7c-6.23 6.23-6.23 16.34 0 22.58L112.4 256 4.68 363.72c-6.23 6.23-6.23 16.34 0 22.58l25.03 25.03c6.23 6.23 16.34 6.23 22.58 0L160 303.6l107.72 107.72c6.23 6.23 16.34 6.23 22.58 0l25.03-25.03c6.23-6.23 6.23-16.34 0-22.58L207.6 256z" /></svg>
-            </span>
-          </ng-template>
+      <div
+        #tag
+        *ngFor="let item of selectedItems; trackBy: trackByOption"
+        class="ng-value"
+        [class.ng-value-disabled]="item.disabled"
+        id="{{ item.htmlId }}_selected"
+        tabindex="-1"
+        role="option"
+        [attr.aria-disabled]="item.disabled"
+        aria-selected="true"
+        (blur)="onTagBlur($event)"
+      >
+        <ng-template #defaultLabelTemplate>
+          <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
+          <span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">
+            <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M207.6 256l107.72-107.72c6.23-6.23 6.23-16.34 0-22.58l-25.03-25.03c-6.23-6.23-16.34-6.23-22.58 0L160 208.4 52.28 100.68c-6.23-6.23-16.34-6.23-22.58 0L4.68 125.7c-6.23 6.23-6.23 16.34 0 22.58L112.4 256 4.68 363.72c-6.23 6.23-6.23 16.34 0 22.58l25.03 25.03c6.23 6.23 16.34 6.23 22.58 0L160 303.6l107.72 107.72c6.23 6.23 16.34 6.23 22.58 0l25.03-25.03c6.23-6.23 6.23-16.34 0-22.58L207.6 256z" /></svg>
+          </span>
+        </ng-template>
 
-          <ng-template [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate" [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }"> </ng-template>
-        </div>
+        <ng-template [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate" [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }"> </ng-template>
       </div>
     </ng-container>
 
