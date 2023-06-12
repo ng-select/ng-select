@@ -102,7 +102,7 @@ $ng-option-active-color: #fff;
 
       > input {
         width: 100%;
-        padding: 0;
+        padding: 0 1rem 0 0;
         background: transparent;
         border: 0;
         box-shadow: none;
@@ -125,6 +125,13 @@ $ng-option-active-color: #fff;
       }
     }
   } // END ng-value-container
+
+
+  .ng-tag-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 
 
   // Type-based styles
@@ -183,18 +190,15 @@ $ng-option-active-color: #fff;
 
     .ng-input {
       flex: 1;
+
+      input {
+        padding-left: .25rem;
+      }
     }
 
-    .ng-select-container.ng-has-value {
-      .ng-value-container {
-        padding: .25rem;
-        gap: .25rem;
-      }
-
-      // Align input text with selected tags
-      .ng-input {
-          padding-top: 2px;
-      }
+    .ng-select-container.ng-has-value .ng-value-container {
+      padding: .25rem;
+      gap: .25rem;
     }
   } // END ng-select-multiple
 

@@ -6,7 +6,7 @@
   (mousedown)="handleMousedown($event)"
   (focus)="onWidgetFocus()"
 >
-  <div class="ng-value-container" role="listbox" [attr.aria-labelledby]="labelledBy">
+  <div class="ng-value-container" [attr.role]="multiple ? 'listbox' : null" [attr.aria-labelledby]="labelledBy">
     <ng-container *ngIf="((multiple && !multiLabelTemplate) || !searchable) && selectedItems.length > 0">
       <div
         #tag
@@ -52,8 +52,6 @@
         [attr.aria-expanded]="isOpen"
         aria-haspopup="listbox"
         [attr.aria-invalid]="invalid"
-        [attr.aria-multiselectable]="multiple ? 'true' : null"
-        [attr.aria-owns]="isOpen ? dropdownId : null"
         [attr.aria-required]="required ? 'true' : null"
         (input)="filter(searchInput.value)"
         (compositionstart)="onCompositionStart()"
@@ -93,29 +91,30 @@
 <ng-dropdown-panel
   *ngIf="isOpen"
   class="ng-dropdown-panel"
+  [class.ng-select-multiple]="multiple"
   [id]="dropdownId"
-  [virtualScroll]="virtualScroll"
-  [bufferAmount]="bufferAmount"
+  role="listbox"
+  aria-label="Options"
   [appendTo]="appendTo"
-  [position]="dropdownPosition"
-  [headerTemplate]="headerTemplate"
-  [footerTemplate]="footerTemplate"
+  [bufferAmount]="bufferAmount"
   [filterValue]="searchTerm"
+  [footerTemplate]="footerTemplate"
+  [headerTemplate]="headerTemplate"
   [items]="itemsList.filteredItems"
   [markedItem]="itemsList.markedItem"
-  (update)="viewPortItems = $event"
+  [ngClass]="appendTo ? classes : null"
+  [position]="dropdownPosition"
+  [virtualScroll]="virtualScroll"
+  (outsideClick)="close()"
   (scroll)="scroll.emit($event)"
   (scrollToEnd)="scrollToEnd.emit($event)"
-  (outsideClick)="close()"
-  [class.ng-select-multiple]="multiple"
-  [ngClass]="appendTo ? classes : null"
-  role="listbox"
+  (update)="viewPortItems = $event"
 >
   <ng-container>
     <div
       class="ng-option"
-      [attr.role]="item.children ? 'group' : 'option'"
       *ngFor="let item of viewPortItems; trackBy: trackByOption"
+      [attr.role]="item.children ? 'group' : 'option'"
       [class.ng-option-disabled]="item.disabled"
       [class.ng-option-selected]="item.selected"
       [class.ng-optgroup]="item.children"
