@@ -1,5 +1,24 @@
 # Changelog
 
+## 5.0.0
+
+### 🔥 BREAKING CHANGES
+
+- Updated ng-select Angular version to 15.x
+
+### 🔧 Changes
+
+- Updated spacing method of multi-select chip lists (margins to gaps)
+- Fixed line-height issues in dropdown options
+
+### 🐛 Fixes
+
+- Remove invalid ARIA properties from wrapper and input
+- Remove unnecessary `aria-owns` from input
+- Add back accessible name for listbox dropdown panel
+- Fix missing spaces in multi-select inputs between chips and other elements
+- Fix input value overlap with clear icon
+
 ## 5.0.0-rc2
 
 ### 🐛 Fixes
