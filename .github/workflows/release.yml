@@ -11,7 +11,6 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v3
 
@@ -19,9 +18,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
+          cache: yarn
+          cache-dependency-path: yarn.lock
+          # set the registry to generate an authToken config
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: yarn
+        run: yarn install --frozen-lockfile
 
       - name: Build packages
         run: yarn run build
@@ -42,6 +45,8 @@ jobs:
 
       - name: publish @ng-select/ng-option-highlight
         run: yarn publish ./dist/ng-option-highlight
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: build demo
         run: yarn run build:demo
