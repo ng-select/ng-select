@@ -20,8 +20,6 @@ jobs:
           node-version: '18.x'
           cache: yarn
           cache-dependency-path: yarn.lock
-          # set the registry to generate an authToken config
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
