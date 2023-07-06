@@ -1,13 +1,13 @@
 {
   "name": "@natlex/ng-select",
-  "version": "10.0.0",
+  "version": "11.0.0",
   "description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
   "author": "@natlex/ng-select",
   "license": "MIT",
   "repository": "natlex/ng-select",
   "engines": {
-    "node": ">= 12.20.0",
-    "npm": ">= 6.0.0"
+    "node": ">= 16",
+    "npm": ">= 8"
   },
   "keywords": [
     "angular",
@@ -39,9 +39,9 @@
     }
   },
   "peerDependencies": {
-    "@angular/common": "<16.0.0",
-    "@angular/core": "<16.0.0",
-    "@angular/forms": "<16.0.0"
+    "@angular/common": "^16.0.0",
+    "@angular/core": "^16.0.0",
+    "@angular/forms": "^16.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.1"
