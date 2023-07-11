@@ -1048,6 +1048,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
         this.focusedTag.focus();
     }
 
+    /**
+     * This method delete/unselect the chip in the Multi Select Element and set the focus on the next element, as follows:
+     * - If there are still chips on the left side, focus the left side chip.
+     * - If there are not chips on the left side, select the first chip in the list, that is the one on the right side of the deleted chip.
+     * - If there are not more chips in the list, focus on the Multi Select Element.
+     *
+     * @remarks
+     *
+     * Change riquired by PTS-24475
+     * @param id - The event target html id of the chip we want to delete/unselect
+     */
     private _handleDelete(id: string) {
         const selected = this.selectedItems.find(({ htmlId }) => htmlId === id.replace('_selected', ''));
         const deletedIndex = this.selectedItems.indexOf(selected);
