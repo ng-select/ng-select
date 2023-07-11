@@ -64,12 +64,12 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
     templateUrl: './ng-select.component.html',
     styleUrls: ['./ng-select.component.scss'],
     providers: [
-      {
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => NgSelectComponent),
-        multi: true,
-      },
-      NgDropdownPanelService,
+    {
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => NgSelectComponent),
+    multi: true,
+    },
+    NgDropdownPanelService,
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -355,7 +355,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
                     break;
                 case KeyCode.Delete:
                 case KeyCode.Backspace:
-                    this._handleDelete();
+                    const target =  (($event.target) as HTMLInputElement).id;
+                    this._handleDelete(target);
                     break;
                 }
             }
@@ -1047,14 +1048,28 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
         this.focusedTag.focus();
     }
 
-    private _handleDelete() {
-        // TODO - `selected` always returns undefined here, preventing deletion from working
-        const selected = this.selectedItems.find((item) => `${item.htmlId}_selected`);
+    /**
+     * This method delete/unselect the chip in the Multi Select Element and set the focus on the next element, as follows:
+     * - If there are still chips on the left side, focus the left side chip.
+     * - If there are not chips on the left side, select the first chip in the list, that is the one on the right side of the deleted chip.
+     * - If there are not more chips in the list, focus on the Multi Select Element.
+     *
+     * @remarks
+     *
+     * Change riquired by PTS-24475
+     * @param id - The event target html id of the chip we want to delete/unselect
+     */
+    private _handleDelete(id: string) {
+        const selected = this.selectedItems.find(({ htmlId }) => htmlId === id.replace('_selected', ''));
+        const deletedIndex = this.selectedItems.indexOf(selected);
         this.unselect(selected);
         this.detectChanges();
-
         if (this.tagsList.length) {
-            this._focusPreviousTag();
+            this.focusedTag = deletedIndex > 0
+                ? this.tagsList.filter((element, index) => index === deletedIndex-1)[0].nativeElement
+                : this.tagsList.first.nativeElement;
+
+            this.focusedTag.focus();
         } else {
             this.element.focus();
         }
