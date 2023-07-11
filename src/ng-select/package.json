@@ -1,12 +1,13 @@
 {
   "name": "@commonapp/ng-select",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
   "author": "@ng-select/ng-select",
   "contributors": [
     "Greg Bruening",
     "Vamsi Dharmaji",
-    "Nick Boober"
+    "Nick Boober",
+    "Mauro Escalante"
   ],
   "license": "MIT",
   "repository": "commonapp/ng-select",

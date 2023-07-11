@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.0.1
+
+### 🔧 Changes
+
+- Updated handle key deletion method of multi-select chip lists (chip deletion and set focus on next chip or element)
+
 ## 5.0.0
 
 ### 🔥 BREAKING CHANGES
