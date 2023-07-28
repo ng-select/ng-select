@@ -739,7 +739,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             }
         }
 
-        if (this._editableSearchTerm) {
+        if (this._editableSearchTerm && !this.isOpen) {
             this._setSearchTermFromItems();
         }
     }
