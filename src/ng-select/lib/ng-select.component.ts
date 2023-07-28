@@ -712,33 +712,35 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     private _handleWriteValue(ngModel: any | any[]) {
-        if (!this._isValidWriteValue(ngModel)) {
-            return
+        if (this._isValidWriteValue(ngModel)) {
+            const select = (val: any) => {
+                let item = this.itemsList.findItem(val);
+                if (item) {
+                    this.itemsList.select(item);
+                } else {
+                    const isValObject = isObject(val);
+                    const isPrimitive = !isValObject && !this.bindValue;
+                    if ((isValObject || isPrimitive)) {
+                        this.itemsList.select(this.itemsList.mapItem(val, null));
+                    } else if (this.bindValue) {
+                        item = {
+                            [this.bindLabel]: null,
+                            [this.bindValue]: val
+                        };
+                        this.itemsList.select(this.itemsList.mapItem(item, null));
+                    }
+                }
+            };
+
+            if (this.multiple) {
+                (<any[]>ngModel).forEach(item => select(item));
+            } else {
+                select(ngModel);
+            }
         }
 
-        const select = (val: any) => {
-            let item = this.itemsList.findItem(val);
-            if (item) {
-                this.itemsList.select(item);
-            } else {
-                const isValObject = isObject(val);
-                const isPrimitive = !isValObject && !this.bindValue;
-                if ((isValObject || isPrimitive)) {
-                    this.itemsList.select(this.itemsList.mapItem(val, null));
-                } else if (this.bindValue) {
-                    item = {
-                        [this.bindLabel]: null,
-                        [this.bindValue]: val
-                    };
-                    this.itemsList.select(this.itemsList.mapItem(item, null));
-                }
-            }
-        };
-
-        if (this.multiple) {
-            (<any[]>ngModel).forEach(item => select(item));
-        } else {
-            select(ngModel);
+        if (this._editableSearchTerm) {
+            this._setSearchTermFromItems();
         }
     }
 
