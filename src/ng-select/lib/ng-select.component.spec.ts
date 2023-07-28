@@ -3134,6 +3134,45 @@ describe('NgSelectComponent', () => {
                 tickAndDetectChanges(fixture);
                 expect(input.value).toBe('');
             }));
+
+            it('should not reflect changes to model value while dropdown is open', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestComponent,
+                    `<ng-select [items]="cities"
+                        [typeahead]="filter"
+                        [editableSearchTerm]="true"
+                        bindValue="id"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+                const select = fixture.componentInstance.select;
+                const input = select.searchInput.nativeElement;
+                const selectedCity = fixture.componentInstance.cities[0];
+                const searchTerm = selectedCity.name;
+                tickAndDetectChanges(fixture);
+                input.focus();
+                input.value = searchTerm;
+                input.dispatchEvent(new Event('input'));
+                tickAndDetectChanges(fixture);
+                expect(select.searchTerm).toEqual(searchTerm);
+                const firstOption = select.element.querySelector('.ng-dropdown-panel .ng-option');
+                expect(firstOption.textContent).toEqual(selectedCity.name);
+                let event = new MouseEvent('mousedown', { bubbles: true });
+                firstOption.dispatchEvent(event);
+                event = new MouseEvent('click', { bubbles: true });
+                firstOption.dispatchEvent(event);
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.selectedCity).toBe(selectedCity.id);
+                input.value = 'test';
+                input.focus();
+                input.dispatchEvent(new Event('input'));
+                tickAndDetectChanges(fixture);
+                fixture.componentInstance.selectedCity = null;
+                tickAndDetectChanges(fixture);
+                expect(select.selectedValues.length).toBe(0);
+                tickAndDetectChanges(fixture);
+                expect(input.value).toBe('test');
+            }));
         });
     });
 
