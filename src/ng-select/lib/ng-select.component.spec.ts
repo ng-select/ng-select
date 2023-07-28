@@ -3091,6 +3091,49 @@ describe('NgSelectComponent', () => {
                 const allOptions = select.element.querySelectorAll('.ng-dropdown-panel .ng-option');
                 expect(allOptions.length).toEqual(fixture.componentInstance.cities.length);
             }));
+
+            it('should reflect changes to model value', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestComponent,
+                    `<ng-select [items]="cities"
+                        [typeahead]="filter"
+                        [editableSearchTerm]="true"
+                        bindValue="id"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`);
+                const select = fixture.componentInstance.select;
+                const input = select.searchInput.nativeElement;
+                const selectedCity = fixture.componentInstance.cities[0];
+                const searchTerm = selectedCity.name;
+                tickAndDetectChanges(fixture);
+                input.focus();
+                input.value = searchTerm;
+                input.dispatchEvent(new Event('input'));
+                tickAndDetectChanges(fixture);
+                expect(select.searchTerm).toEqual(searchTerm);
+                const firstOption = select.element.querySelector('.ng-dropdown-panel .ng-option');
+                expect(firstOption.textContent).toEqual(selectedCity.name);
+                let event = new MouseEvent('mousedown', { bubbles: true });
+                firstOption.dispatchEvent(event);
+                event = new MouseEvent('click', { bubbles: true });
+                firstOption.dispatchEvent(event);
+                tickAndDetectChanges(fixture);
+                expect(fixture.componentInstance.selectedCity).toBe(selectedCity.id);
+                const newSelectedCity = fixture.componentInstance.cities[1];
+                fixture.componentInstance.selectedCity = newSelectedCity.id;
+                tickAndDetectChanges(fixture);
+                expect(select.selectedValues[0].id).toBe(newSelectedCity.id);
+                tickAndDetectChanges(fixture);
+                const valueLabel = select.element.querySelector('.ng-value-label');
+                expect(valueLabel.textContent).toBe(newSelectedCity.name);
+                expect(input.value).toBe(newSelectedCity.name);
+                fixture.componentInstance.selectedCity = null;
+                tickAndDetectChanges(fixture);
+                expect(select.selectedValues.length).toBe(0);
+                tickAndDetectChanges(fixture);
+                expect(input.value).toBe('');
+            }));
         });
     });
 
