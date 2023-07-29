@@ -118,7 +118,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input()
     get items() { return this._items };
 
-    set items(value: any[] | null) {
+    set items(value: readonly any[] | null) {
         if (value === null) {
             value = [];
         }
@@ -196,7 +196,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     focused: boolean;
     escapeHTML = true;
 
-    private _items = [];
+    private _items: readonly any[] = [];
     private _itemsAreUsed: boolean;
     private _defaultLabel = 'label';
     private _primitive;
