@@ -18,8 +18,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-          registry-url: 'https://registry.npmjs.org'
-          always-auth: true
           cache: yarn
           cache-dependency-path: yarn.lock
 
@@ -42,7 +40,10 @@ jobs:
           jq ".version = $(jq .version ./dist/ng-select/package.json)" \
             ./dist/ng-option-highlight/package.json > "$TEMPFILE"
           mv "$TEMPFILE" ./dist/ng-option-highlight/package.json
-
+      - name: Set up npm registry
+        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: publish @ng-select/ng-option-highlight
         run: yarn publish ./dist/ng-option-highlight
         env:
