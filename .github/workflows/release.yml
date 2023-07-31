@@ -46,7 +46,6 @@ jobs:
       - name: publish @ng-select/ng-option-highlight
         run: yarn publish ./dist/ng-option-highlight
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
