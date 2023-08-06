@@ -60,7 +60,7 @@ export class ItemsList {
         return null;
     }
 
-    setItems(items: any[]) {
+    setItems(items: readonly any[]) {
         this._items = items.map((item, index) => this.mapItem(item, index));
         if (this._ngSelect.groupBy) {
             this._groups = this._groupBy(this._items, this._ngSelect.groupBy);
