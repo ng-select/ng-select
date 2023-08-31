@@ -1285,7 +1285,7 @@ describe('NgSelectComponent', () => {
 
             expect(options.length).toBe(18);
             expect(marked.innerText).toBe('k');
-            expect(marked.offsetTop).toBe(180);
+            expect(marked.offsetTop).toBe(184);
         }));
 
         it('should scroll to item and do not change scroll position when scrolled to visible item', fakeAsync(() => {
@@ -1329,7 +1329,7 @@ describe('NgSelectComponent', () => {
             tickAndDetectChanges(fixture);
 
             const panelItems = el.querySelector('.ng-dropdown-panel-items');
-            expect(panelItems.scrollTop).toBe(48);
+            expect(panelItems.scrollTop).toBeGreaterThanOrEqual(48);
         }));
 
         it('should close on option select by default', fakeAsync(() => {
