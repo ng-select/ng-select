@@ -6,9 +6,9 @@
 
 <ng-select [items]="people$ | async"
            bindLabel="name"
-           autofocus
            bindValue="id"
-           [(ngModel)]="selectedPersonId">
+           [(ngModel)]="selectedPersonId"
+           autofocus>
 </ng-select>
 
 <br/>Selected: {{selectedPersonId}}
