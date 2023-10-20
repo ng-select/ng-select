@@ -194,6 +194,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     @ViewChild(forwardRef(() => NgDropdownPanelComponent)) dropdownPanel: NgDropdownPanelComponent;
     @ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
+    @ViewChild('clearButton') clearButton: ElementRef<HTMLSpanElement>;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
 
     @HostBinding('class.ng-select') useDefaultClass = true;
@@ -318,6 +319,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     handleKeyCode($event: KeyboardEvent) {
+        const target = $event.target
+
+        if(this.clearButton && this.clearButton.nativeElement === target) {
+            this.handleKeyCodeClear($event)
+        } else {
+            this.handleKeyCodeInput($event);
+        }
+    }
+
+    handleKeyCodeInput($event: KeyboardEvent) {
         switch ($event.which) {
         case KeyCode.ArrowDown:
             this._handleArrowDown($event);
@@ -340,6 +351,15 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             break;
         case KeyCode.Backspace:
             this._handleBackspace();
+            break
+        }
+    }
+
+    handleKeyCodeClear($event: KeyboardEvent) {
+        switch ($event.which) {
+        case KeyCode.Enter:
+            this.handleClearClick();
+            $event.preventDefault();
             break
         }
     }
@@ -501,9 +521,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     focus() {
-        if(!this.searchInput.nativeElement.readOnly){
-            this.searchInput.nativeElement.focus();
-        };
+        this.searchInput.nativeElement.focus();
     }
 
     blur() {
@@ -539,6 +557,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     showClear() {
         return this.clearable && (this.hasValue || this.searchTerm) && !this.disabled;
+    }
+
+    focusOnClear() {
+        this.blur();
+        if(this.clearButton) {
+            this.clearButton.nativeElement.focus();
+        }
     }
 
     trackByOption = (_: number, item: NgOption) => {
@@ -868,8 +893,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     private _handleTab($event: KeyboardEvent) {
-        if (this.isOpen === false && !this.addTag) {
-            return;
+        if (this.isOpen === false) {
+            if(this.showClear()) {
+                this.focusOnClear();
+                $event.preventDefault();
+            } else if(!this.addTag) {
+                return
+            }
         }
 
         if (this.selectOnTab) {

@@ -1,15 +1,15 @@
-import {ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation} from '@angular/core';
-import {ConsoleService} from './console.service';
-import {FormsModule} from '@angular/forms';
-import {getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent} from '../testing/helpers';
-import {KeyCode, NgOption} from './ng-select.types';
-import {MockConsole, MockNgZone} from '../testing/mocks';
-import {NgSelectComponent} from '@ng-select/ng-select';
-import {NgSelectModule} from './ng-select.module';
-import {Subject} from 'rxjs';
-import {NgSelectConfig} from './config.service';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ConsoleService } from './console.service';
+import { FormsModule } from '@angular/forms';
+import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
+import { KeyCode, NgOption } from './ng-select.types';
+import { MockConsole, MockNgZone } from '../testing/mocks';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { NgSelectModule } from './ng-select.module';
+import { Subject } from 'rxjs';
+import { NgSelectConfig } from './config.service';
 
 describe('NgSelectComponent', () => {
 
@@ -1621,6 +1621,16 @@ describe('NgSelectComponent', () => {
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
                 expect(fixture.componentInstance.select.selectedItems).toEqual([result]);
             }));
+            it('should focus on clear button when tab pressed while not opened and clear showing', fakeAsync(() => {
+                selectOption(fixture, KeyCode.ArrowDown, 0);
+                tickAndDetectChanges(fixture);
+                expect(select.showClear()).toBeTruthy();
+
+                select.searchInput.nativeElement.focus();
+                const focusOnClear = spyOn(select, 'focusOnClear');
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+                expect(focusOnClear).toHaveBeenCalled();
+            }))
         });
 
         describe('backspace', () => {
@@ -1751,6 +1761,16 @@ describe('NgSelectComponent', () => {
                 triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
                 expect(select.isOpen).toBe(false);
             }));
+            it('should clear input when enter pressed while clear button focused', fakeAsync(() => {
+                selectOption(fixture, KeyCode.ArrowDown, 0);
+                select.searchInput.nativeElement.focus();
+                tickAndDetectChanges(fixture);
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+
+                const handleClearClick = spyOn(select, 'handleClearClick');
+                triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter, '', select.clearButton.nativeElement );
+                expect(handleClearClick).toHaveBeenCalled();
+            }))
         });
     });
 
@@ -4322,9 +4342,7 @@ function createEvent(target = {}) {
     }
 }
 
-@Component({
-    template: ``
-    })
+@Component({template: ``})
 class NgSelectTestComponent {
     @ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
     multiple = false;
@@ -4418,17 +4436,12 @@ class NgSelectTestComponent {
     }
 }
 
-@Component({
-    template: ``,
-    encapsulation: ViewEncapsulation.ShadowDom,
-    })
+@Component({template: ``, encapsulation: ViewEncapsulation.ShadowDom})
 class EncapsulatedTestComponent extends NgSelectTestComponent {
     @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 }
 
-@Component({
-    template: ``,
-    })
+@Component({template: ``})
 class NgSelectGroupingTestComponent {
     @ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
     selectedAccountName = 'Adam';
