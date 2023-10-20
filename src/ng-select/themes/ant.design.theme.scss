@@ -208,6 +208,10 @@ $ng-select-marked: #e6f7ff !default;
         &:hover {
             background: rgba(0, 0, 0, 0.45);
         }
+        &:focus {
+            background: rgba(0, 0, 0, 0.45);
+            outline: none;
+        }
         .ng-clear {
             color: #fff;
             font-size: 9px;
