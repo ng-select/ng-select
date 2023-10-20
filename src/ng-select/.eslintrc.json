@@ -8,14 +8,24 @@
       "files": [
         "*.ts"
       ],
-      "parserOptions": {
-        "project": [
-          "src/ng-select/tsconfig.lib.json",
-          "src/ng-select/tsconfig.spec.json"
+      "rules": {
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "lib",
+            "style": "camelCase"
+          }
         ],
-        "createDefaultProgram": true
-      },
-      "rules": {}
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "type": "element",
+            "prefix": "lib",
+            "style": "kebab-case"
+          }
+        ]
+      }
     },
     {
       "files": [
