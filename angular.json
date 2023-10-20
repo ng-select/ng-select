@@ -142,6 +142,15 @@
               "buildTarget": "demo:build:production"
             }
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/demo/**/*.ts",
+              "src/demo/**/*.html"
+            ]
+          }
         }
       }
     },
