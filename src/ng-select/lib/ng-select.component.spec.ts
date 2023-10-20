@@ -29,6 +29,36 @@ describe('NgSelectComponent', () => {
             }));
         }));
 
+        it('should set items from array', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestComponent,
+                `<ng-select [items]=cities bindLabel="name">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            const itemsList = fixture.componentInstance.select.itemsList;
+            expect(itemsList.items.length).toBe(3);
+            expect(itemsList.items[0]).toEqual(jasmine.objectContaining({
+                label: 'Vilnius',
+                value:{ id: 1, name: 'Vilnius'}
+            }));
+        }));
+
+        it('should set items from readonly array', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestComponent,
+                `<ng-select [items]=readonlyCities bindLabel="name">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            const itemsList = fixture.componentInstance.select.itemsList;
+            expect(itemsList.items.length).toBe(3);
+            expect(itemsList.items[0]).toEqual(jasmine.objectContaining({
+                label: 'Vilnius',
+                value:{ id: 1, name: 'Vilnius'}
+            }));
+        }));
+
         it('should create items from ng-option', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestComponent,
@@ -2295,6 +2325,133 @@ describe('NgSelectComponent', () => {
         });
     });
 
+    describe('Deselecting items', () => {
+        describe('Multiple', () => {
+            it('should not toggle selected item when deselectOnClick is false', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestComponent,
+                    `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [multiple]="true"
+                        [deselectOnClick]="false">
+                    </ng-select>`);
+
+                selectOption(fixture, KeyCode.ArrowDown, 0);
+                selectOption(fixture, KeyCode.ArrowDown, 2);
+                tickAndDetectChanges(fixture);
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(2);
+
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                tickAndDetectChanges(fixture);
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(2);
+                expect(fixture.componentInstance.select.selectedItems[0]).toEqual(jasmine.objectContaining({
+                    value: { id: 1, name: 'Vilnius' }
+                }));
+            }));
+
+            it('should toggle selected item when deselectOnClick is true', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestComponent,
+                    `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [multiple]="true"
+                        [deselectOnClick]="true">
+                    </ng-select>`);
+
+                selectOption(fixture, KeyCode.ArrowDown, 0);
+                selectOption(fixture, KeyCode.ArrowDown, 2);
+                tickAndDetectChanges(fixture);
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(2);
+
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                tickAndDetectChanges(fixture);
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(1);
+                expect(fixture.componentInstance.select.selectedItems[0]).toEqual(jasmine.objectContaining({
+                    value: { id: 3, name: 'Pabrade' }
+                }));
+            }));
+
+            it('should toggle selected item when deselectOnClick is undefined', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestComponent,
+                    `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [multiple]="true">
+                    </ng-select>`);
+
+                selectOption(fixture, KeyCode.ArrowDown, 0);
+                selectOption(fixture, KeyCode.ArrowDown, 2);
+                tickAndDetectChanges(fixture);
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(2);
+
+                selectOption(fixture, KeyCode.ArrowDown, 1);
+                tickAndDetectChanges(fixture);
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(1);
+                expect(fixture.componentInstance.select.selectedItems[0]).toEqual(jasmine.objectContaining({
+                    value: { id: 3, name: 'Pabrade' }
+                }));
+            }));
+        });
+
+        describe('Single', () => {
+            it('should not toggle selected item when deselectOnClick is false', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestComponent,
+                    `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [deselectOnClick]="false">
+                    </ng-select>`);
+
+                selectOption(fixture, KeyCode.ArrowDown, 0);
+                tickAndDetectChanges(fixture);
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(1);
+
+                selectOption(fixture, KeyCode.ArrowDown, 0);
+                tickAndDetectChanges(fixture);
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(1);
+                expect(fixture.componentInstance.select.selectedItems[0]).toEqual(jasmine.objectContaining({
+                    value: { id: 1, name: 'Vilnius' }
+                }));
+            }));
+
+            it('should toggle selected item when deselectOnClick is true', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestComponent,
+                    `<ng-select [items]="cities"
+                        bindLabel="name"
+                        [deselectOnClick]="true">
+                    </ng-select>`);
+
+                selectOption(fixture, KeyCode.ArrowDown, 0);
+                tickAndDetectChanges(fixture);
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(1);
+
+                selectOption(fixture, KeyCode.ArrowDown, 0);
+                tickAndDetectChanges(fixture);
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(0);
+            }));
+
+            it('should not toggle selected item when deselectOnClick is undefined', fakeAsync(() => {
+                const fixture = createTestingModule(
+                    NgSelectTestComponent,
+                    `<ng-select [items]="cities"
+                        bindLabel="name">
+                    </ng-select>`);
+
+                selectOption(fixture, KeyCode.ArrowDown, 0);
+                tickAndDetectChanges(fixture);
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(1);
+
+                selectOption(fixture, KeyCode.ArrowDown, 0);
+                tickAndDetectChanges(fixture);
+                expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(1);
+                expect(fixture.componentInstance.select.selectedItems[0]).toEqual(jasmine.objectContaining({
+                    value: { id: 1, name: 'Vilnius' }
+                }));
+            }));
+        })
+    })
+
     describe('Tagging', () => {
         it('should select default tag', fakeAsync(() => {
             const fixture = createTestingModule(
@@ -4192,6 +4349,11 @@ class NgSelectTestComponent {
         {id: 2, name: 'Kaunas'},
         {id: 3, name: 'Pabrade'},
     ];
+    readonlyCities: readonly any[] = [
+        {id: 1, name: 'Vilnius'},
+        {id: 2, name: 'Kaunas'},
+        {id: 3, name: 'Pabrade'},
+    ] as const;
     citiesNames = this.cities.map(x => x.name);
 
     selectedCountry: any;

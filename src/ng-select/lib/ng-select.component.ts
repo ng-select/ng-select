@@ -118,7 +118,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input()
     get items() { return this._items };
 
-    set items(value: any[] | null) {
+    set items(value: readonly any[] | null) {
         if (value === null) {
             value = [];
         }
@@ -148,6 +148,20 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     set clearSearchOnAdd(value) {
         this._clearSearchOnAdd = value;
+    };
+
+    @Input()
+    get deselectOnClick() {
+        if (isDefined(this._deselectOnClick)) {
+            return this._deselectOnClick;
+        } else if (isDefined(this.config.deselectOnClick)) {
+            return this.config.deselectOnClick;
+        }
+        return this.multiple;
+    };
+
+    set deselectOnClick(value) {
+        this._deselectOnClick = value;
     };
 
     // output events
@@ -197,7 +211,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     focused: boolean;
     escapeHTML = true;
 
-    private _items = [];
+    private _items: readonly any[] = [];
     private _itemsAreUsed: boolean;
     private _defaultLabel = 'label';
     private _primitive;
@@ -206,6 +220,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     private _pressedKeys: string[] = [];
     private _compareWith: CompareWithFn;
     private _clearSearchOnAdd: boolean;
+    private _deselectOnClick: boolean;
     private _isComposing = false;
 
     private get _editableSearchTerm(): boolean {
@@ -472,7 +487,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             return;
         }
 
-        if (this.multiple && item.selected) {
+        if (this.deselectOnClick && item.selected) {
             this.unselect(item);
         } else {
             this.select(item);
@@ -870,7 +885,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     private _onSelectionChanged() {
-        if (this.isOpen && this.multiple && this.appendTo) {
+        if (this.isOpen && this.deselectOnClick && this.appendTo) {
             // Make sure items are rendered.
             this._cd.detectChanges();
             this.dropdownPanel.adjustPosition();
