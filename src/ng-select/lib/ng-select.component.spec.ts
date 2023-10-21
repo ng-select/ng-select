@@ -3528,7 +3528,7 @@ describe('NgSelectComponent', () => {
 
             fixture.componentInstance.select.unselect(fixture.componentInstance.cities[0]);
 
-            expect(fixture.componentInstance.onRemove).toHaveBeenCalledWith(fixture.componentInstance.cities[0]);
+            expect(fixture.componentInstance.onRemove).toHaveBeenCalledWith(fixture.componentInstance.cities[0].value);
         }));
 
         it('should fire clear when model is cleared using clear icon', fakeAsync(() => {
