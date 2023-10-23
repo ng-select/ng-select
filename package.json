@@ -2,7 +2,7 @@
   "repository": "ng-select/ng-select",
   "engines": {
     "node": ">= 18.12.0",
-    "npm": ">= 8.19.4"
+    "npm": ">= 8.19.2"
   },
   "scripts": {
     "build": "ng build ng-select && ng build ng-option-highlight && yarn build:themes && yarn copy-sass",
