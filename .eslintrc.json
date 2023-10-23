@@ -20,6 +20,7 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
+        "@angular-eslint/no-empty-lifecycle-method": "off",
         "@angular-eslint/no-output-rename": "off",
         "@angular-eslint/no-output-native": "off",
         "@typescript-eslint/consistent-type-assertions": "off",
