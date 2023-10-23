@@ -22,22 +22,6 @@
       "rules": {
         "@angular-eslint/no-output-rename": "off",
         "@angular-eslint/no-output-native": "off",
-        "@angular-eslint/component-selector": [
-          "error",
-          {
-            "prefix": "ng",
-            "style": "kebab-case",
-            "type": "element"
-          }
-        ],
-        "@angular-eslint/directive-selector": [
-          "error",
-          {
-            "prefix": "ng",
-            "style": "camelCase",
-            "type": "attribute"
-          }
-        ],
         "@typescript-eslint/consistent-type-assertions": "off",
         "@typescript-eslint/member-delimiter-style": "off",
         "@typescript-eslint/member-ordering": "off",
