@@ -8,24 +8,14 @@
       "files": [
         "*.ts"
       ],
-      "rules": {
-        "@angular-eslint/directive-selector": [
-          "warn",
-          {
-            "type": "attribute",
-            "prefix": "lib",
-            "style": "camelCase"
-          }
+      "parserOptions": {
+        "project": [
+          "src/ng-option-highlight/tsconfig.lib.json",
+          "src/ng-option-highlight/tsconfig.spec.json"
         ],
-        "@angular-eslint/component-selector": [
-          "warn",
-          {
-            "type": "element",
-            "prefix": "lib",
-            "style": "kebab-case"
-          }
-        ]
-      }
+        "createDefaultProgram": true
+      },
+      "rules": {}
     },
     {
       "files": [
