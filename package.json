@@ -88,5 +88,6 @@
     "standard-version": "^9.5.0",
     "ts-node": "~10.8.0",
     "typescript": "~5.2.2"
-  }
+  },
+  "packageManager": "yarn@4.0.0"
 }
