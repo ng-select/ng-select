@@ -29,7 +29,7 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 ---
 ## Browser Support
-`ng-select` supports all browsers supported by Angular. For current list, see https://angular.io/guide/browser-support#browser-support. This includes the following specific versions:
+`ng-select` supports all browsers supported by Angular. For current list, see [angular docs](https://angular.io/guide/browser-support#browser-support). This includes the following specific versions:
 ```angular2html
 Chrome	2 most recent versions
 Firefox	latest and extended support release (ESR)
