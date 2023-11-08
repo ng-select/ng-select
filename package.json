@@ -9,7 +9,7 @@
     "build:demo": "ng build demo --configuration production --base-href=/ng-select && yarn copy-examples",
     "build:themes": "node-sass --output-style compressed src/ng-select/themes/ -o dist/ng-select/themes",
     "copy-sass": "mkdir -p dist/ng-select/scss && cp src/ng-select/**/*.scss dist/ng-select/scss",
-    "copy-examples": "cp -r src/demo/app/examples dist/demo",
+    "copy-examples": "cp -r src/demo/app/examples dist/demo/browser",
     "start": "ng serve",
     "test:watch": "ng test ng-select --watch",
     "test": "ng test ng-select --code-coverage && ng test ng-option-highlight --code-coverage",
