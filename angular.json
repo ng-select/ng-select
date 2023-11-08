@@ -80,15 +80,16 @@
       "prefix": "",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "outputPath": "dist/demo",
             "index": "src/demo/index.html",
-            "browser": "src/demo/main.ts",
+            "main": "src/demo/main.ts",
             "polyfills": [
               "zone.js"
             ],
             "tsConfig": "src/demo/tsconfig.app.json",
+            "deployUrl": "/ng-select/",
             "assets": [
               "src/demo/favicon.ico",
               "src/demo/assets"
