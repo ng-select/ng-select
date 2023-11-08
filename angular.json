@@ -80,11 +80,11 @@
       "prefix": "",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser-esbuild",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "outputPath": "dist/demo",
             "index": "src/demo/index.html",
-            "main": "src/demo/main.ts",
+            "browser": "src/demo/main.ts",
             "polyfills": [
               "zone.js"
             ],
