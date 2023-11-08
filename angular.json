@@ -89,6 +89,7 @@
               "zone.js"
             ],
             "tsConfig": "src/demo/tsconfig.app.json",
+            "deployUrl": "/ng-select/",
             "assets": [
               "src/demo/favicon.ico",
               "src/demo/assets"
