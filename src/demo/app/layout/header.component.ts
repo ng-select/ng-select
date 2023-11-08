@@ -9,7 +9,7 @@ type theme = 'default' | 'ant' | 'material';
         <nav class="navbar navbar-expand flex-column flex-md-row bd-navbar">
             <a class="navbar-brand" href="#">
                 <img src="https://angular.io/assets/images/logos/angular/angular.svg" width="32px" height="32px"/>
-                @ng-select/ng-select
+                &#64;ng-select/ng-select
             </a>
             <button class="navbar-toggler"
                     type="button"
