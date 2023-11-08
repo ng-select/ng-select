@@ -10,3 +10,4 @@ travis_rsa
 travis_rsa.pub
 .vscode/**
 dist.tgz
+.yarn
