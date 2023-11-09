@@ -6,7 +6,7 @@
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
-    "module": "es2020",
+    "module": "ESNext",
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "importHelpers": true,
@@ -15,8 +15,9 @@
       "node_modules/@types"
     ],
     "lib": [
-      "es2018",
+      "ES2022",
       "dom",
+      "esnext"
     ],
     "paths": {
       "@ng-select/ng-select": [
