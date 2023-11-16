@@ -71,9 +71,17 @@
     <ng-template [ngTemplateOutlet]="loadingSpinnerTemplate || defaultLoadingSpinnerTemplate"> </ng-template>
   </ng-container>
 
-    <span *ngIf="showClear()" class="ng-clear-wrapper" tabindex="0" title="{{clearAllText}}" #clearButton>
-        <span class="ng-clear" aria-hidden="true">×</span>
-    </span>
+  <button
+    *ngIf="showClear()"
+    class="ng-clear"
+    attr.aria-label="{{ clearAllText }}"
+    title="{{ clearAllText }}"
+    (click)="handleClearClick()"
+    (keydown.enter)="$event.preventDefault(); $event.stopPropagation(); handleClearClick()"
+    (keydown.space)="$event.preventDefault(); $event.stopPropagation(); handleClearClick()"
+  >
+    <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M207.6 256l107.72-107.72c6.23-6.23 6.23-16.34 0-22.58l-25.03-25.03c-6.23-6.23-16.34-6.23-22.58 0L160 208.4 52.28 100.68c-6.23-6.23-16.34-6.23-22.58 0L4.68 125.7c-6.23 6.23-6.23 16.34 0 22.58L112.4 256 4.68 363.72c-6.23 6.23-6.23 16.34 0 22.58l25.03 25.03c6.23 6.23 16.34 6.23 22.58 0L160 303.6l107.72 107.72c6.23 6.23 16.34 6.23 22.58 0l25.03-25.03c6.23-6.23 6.23-16.34 0-22.58L207.6 256z" /></svg>
+  </button>
 
   <span class="ng-arrow-wrapper">
     <svg class="ng-arrow" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z" /></svg>
