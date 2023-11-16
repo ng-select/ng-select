@@ -128,7 +128,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
         return this._items;
     }
 
-    set items(value: any[] | null) {
+    set items(value: readonly any[] | null) {
         if (value === null) {
             value = [];
         }
@@ -160,7 +160,21 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     set clearSearchOnAdd(value) {
         this._clearSearchOnAdd = value;
-    }
+    };
+
+    @Input()
+    get deselectOnClick() {
+        if (isDefined(this._deselectOnClick)) {
+            return this._deselectOnClick;
+        } else if (isDefined(this.config.deselectOnClick)) {
+            return this.config.deselectOnClick;
+        }
+        return this.multiple;
+    };
+
+    set deselectOnClick(value) {
+        this._deselectOnClick = value;
+    };
 
     // output events
     @Output('blur') blurEvent = new EventEmitter();
@@ -190,6 +204,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     @ViewChild(forwardRef(() => NgDropdownPanelComponent)) dropdownPanel: NgDropdownPanelComponent;
     @ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
+    @ViewChild('clearButton') clearButton: ElementRef<HTMLSpanElement>;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
     @ViewChildren('tag') tagsList: QueryList<ElementRef>;
     focusedTag: HTMLElement;
@@ -216,7 +231,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     focused: boolean;
     escapeHTML = true;
 
-    private _items = [];
+    private _items: readonly any[] = [];
     private _itemsAreUsed: boolean;
     private _defaultLabel = 'label';
     private _primitive;
@@ -225,6 +240,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     private _pressedKeys: string[] = [];
     private _compareWith: CompareWithFn;
     private _clearSearchOnAdd: boolean;
+    private _deselectOnClick: boolean;
     private _isComposing = false;
 
     private get _editableSearchTerm(): boolean {
@@ -309,59 +325,60 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     @HostListener('keydown', ['$event'])
     handleKeyDown($event: KeyboardEvent) {
-        if (KeyCode[$event.which]) {
-            if (!this.focusedTag) {
-                switch ($event.which) {
-                case KeyCode.ArrowDown:
-                    this._handleArrowDown($event);
-                    break;
-                case KeyCode.ArrowUp:
-                    this._handleArrowUp($event);
-                    break;
-                case KeyCode.Space:
-                    this._handleSpace($event);
-                    break;
-                case KeyCode.Enter:
-                    this._handleEnter($event);
-                    break;
-                case KeyCode.Tab:
-                    this._handleTab($event);
-                    break;
-                case KeyCode.Esc:
-                    this.close();
-                    $event.preventDefault();
-                    break;
-                case KeyCode.Backspace:
-                    this._handleBackspace();
-                    break;
-                }
-            } else if (
-                [KeyCode.Home, KeyCode.ArrowLeft, KeyCode.ArrowRight, KeyCode.End, KeyCode.Delete, KeyCode.Backspace].includes($event.which)
-            ) {
-                $event.preventDefault();
-                $event.stopPropagation();
-                switch ($event.which) {
-                case KeyCode.Home:
-                    this._focusFirstTag();
-                    break;
-                case KeyCode.ArrowLeft:
-                    this._focusPreviousTag();
-                    break;
-                case KeyCode.ArrowRight:
-                    this._focusNextTag();
-                    break;
-                case KeyCode.End:
-                    this._focusLastTag();
-                    break;
-                case KeyCode.Delete:
-                case KeyCode.Backspace:
-                    const target =  (($event.target) as HTMLInputElement).id;
-                    this._handleDelete(target);
-                    break;
-                }
+        const keyCode = KeyCode[$event.which];
+        if (keyCode) {
+            if (this.keyDownFn($event) === false) {
+                return;
             }
+            this.handleKeyCode($event)
         } else if ($event.key && $event.key.length === 1) {
             this._keyPress$.next($event.key.toLocaleLowerCase());
+        }
+    }
+
+    handleKeyCode($event: KeyboardEvent) {
+        const target = $event.target
+
+        if(this.clearButton && this.clearButton.nativeElement === target) {
+            this.handleKeyCodeClear($event)
+        } else {
+            this.handleKeyCodeInput($event);
+        }
+    }
+
+    handleKeyCodeInput($event: KeyboardEvent) {
+        switch ($event.which) {
+        case KeyCode.ArrowDown:
+            this._handleArrowDown($event);
+            break;
+        case KeyCode.ArrowUp:
+            this._handleArrowUp($event);
+            break;
+        case KeyCode.Space:
+            this._handleSpace($event);
+            break;
+        case KeyCode.Enter:
+            this._handleEnter($event);
+            break;
+        case KeyCode.Tab:
+            this._handleTab($event);
+            break;
+        case KeyCode.Esc:
+            this.close();
+            $event.preventDefault();
+            break;
+        case KeyCode.Backspace:
+            this._handleBackspace();
+            break
+        }
+    }
+
+    handleKeyCodeClear($event: KeyboardEvent) {
+        switch ($event.which) {
+        case KeyCode.Enter:
+            this.handleClearClick();
+            $event.preventDefault();
+            break
         }
     }
 
@@ -501,7 +518,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             return;
         }
 
-        if (this.multiple && item.selected) {
+        if (this.deselectOnClick && item.selected) {
             this.unselect(item);
         } else {
             this.select(item);
@@ -533,9 +550,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     focus() {
-        if (!this.searchInput.nativeElement.readOnly) {
+        if(!this.searchInput.nativeElement.readOnly){
             this.searchInput.nativeElement.focus();
-        }
+        };
     }
 
     blur() {
@@ -550,7 +567,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
         this.itemsList.unselect(item);
         this.focus();
         this._updateNgModel();
-        this.removeEvent.emit(item);
+        this.removeEvent.emit(item.value);
     }
 
     selectTag() {
@@ -572,6 +589,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     showClear() {
         return this.clearable && (this.hasValue || this.searchTerm) && !this.disabled;
+    }
+
+    focusOnClear() {
+        this.blur();
+        if(this.clearButton) {
+            this.clearButton.nativeElement.focus();
+        }
     }
 
     trackByOption = (_: number, item: NgOption) => {
@@ -924,7 +948,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     private _onSelectionChanged() {
-        if (this.isOpen && this.multiple && this.appendTo) {
+        if (this.isOpen && this.deselectOnClick && this.appendTo) {
             // Make sure items are rendered.
             this._cd.detectChanges();
             this.dropdownPanel.adjustPosition();
@@ -932,8 +956,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     private _handleTab($event: KeyboardEvent) {
-        if (this.isOpen === false && !this.addTag) {
-            return;
+        if (this.isOpen === false) {
+            if(this.showClear()) {
+                this.focusOnClear();
+                $event.preventDefault();
+            } else if(!this.addTag) {
+                return
+            }
         }
 
         if (this.selectOnTab) {
