@@ -325,57 +325,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     @HostListener('keydown', ['$event'])
     handleKeyDown($event: KeyboardEvent) {
-        if (KeyCode[$event.which]) {
-            if (!this.focusedTag) {
-                switch ($event.which) {
-                case KeyCode.ArrowDown:
-                    this._handleArrowDown($event);
-                    break;
-                case KeyCode.ArrowUp:
-                    this._handleArrowUp($event);
-                    break;
-                case KeyCode.Space:
-                    this._handleSpace($event);
-                    break;
-                case KeyCode.Enter:
-                    this._handleEnter($event);
-                    break;
-                case KeyCode.Tab:
-                    this._handleTab($event);
-                    break;
-                case KeyCode.Esc:
-                    this.close();
-                    $event.preventDefault();
-                    break;
-                case KeyCode.Backspace:
-                    this._handleBackspace();
-                    break;
-                }
-            } else if (
-                [KeyCode.Home, KeyCode.ArrowLeft, KeyCode.ArrowRight, KeyCode.End, KeyCode.Delete, KeyCode.Backspace].includes($event.which)
-            ) {
-                $event.preventDefault();
-                $event.stopPropagation();
-                switch ($event.which) {
-                case KeyCode.Home:
-                    this._focusFirstTag();
-                    break;
-                case KeyCode.ArrowLeft:
-                    this._focusPreviousTag();
-                    break;
-                case KeyCode.ArrowRight:
-                    this._focusNextTag();
-                    break;
-                case KeyCode.End:
-                    this._focusLastTag();
-                    break;
-                case KeyCode.Delete:
-                case KeyCode.Backspace:
-                    const target =  (($event.target) as HTMLInputElement).id;
-                    this._handleDelete(target);
-                    break;
-                }
+        const keyCode = KeyCode[$event.which];
+        if (keyCode) {
+            if (this.keyDownFn($event) === false) {
+                return;
             }
+            this.handleKeyCode($event)
         } else if ($event.key && $event.key.length === 1) {
             this._keyPress$.next($event.key.toLocaleLowerCase());
         }
@@ -412,9 +367,29 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             this.close();
             $event.preventDefault();
             break;
+        case KeyCode.Home:
+            this._focusFirstTag();
+            $event.preventDefault();
+            break;
+        case KeyCode.ArrowLeft:
+            this._focusPreviousTag();
+            break;
+        case KeyCode.ArrowRight:
+            this._focusNextTag();
+            break;
+        case KeyCode.End:
+            $event.preventDefault();
+            this._focusLastTag();
+            break;
+        case KeyCode.Delete:
         case KeyCode.Backspace:
-            this._handleBackspace();
-            break
+            if (!this.focusedTag) {
+                this._handleBackspace();
+            } else {
+                const target =  (($event.target) as HTMLInputElement).id;
+                this._handleDelete(target);
+            }
+            break;
         }
     }
 
