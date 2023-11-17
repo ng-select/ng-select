@@ -364,12 +364,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             this._handleTab($event);
             break;
         case KeyCode.Esc:
-            this.close();
             $event.preventDefault();
+            this.close();
             break;
         case KeyCode.Home:
-            this._focusFirstTag();
             $event.preventDefault();
+            this._focusFirstTag();
             break;
         case KeyCode.ArrowLeft:
             this._focusPreviousTag();
@@ -976,13 +976,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     private _handleTab($event: KeyboardEvent) {
-        if (this.isOpen === false) {
-            if(this.showClear()) {
-                this.focusOnClear();
-                $event.preventDefault();
-            } else if(!this.addTag) {
-                return
-            }
+        // if (this.isOpen === false) {
+        //     if(this.showClear()) {
+        //         this.focusOnClear();
+        //         $event.preventDefault();
+        //     } else if(!this.addTag) {
+        //         return
+        //     }
+        // }
+        if (this.isOpen === false && !this.addTag) {
+            return;
         }
 
         if (this.selectOnTab) {
