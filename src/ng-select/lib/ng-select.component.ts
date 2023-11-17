@@ -1108,7 +1108,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
      *
      * @remarks
      *
-     * Change riquired by PTS-24475
+     * Change required by PTS-24475
      * @param id - The event target html id of the chip we want to delete/unselect
      */
     private _handleDelete(id: string) {
