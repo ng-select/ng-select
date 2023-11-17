@@ -1,5 +1,15 @@
 # Changelog
 
+## 6.0.0-rc1
+
+### 🔥 BREAKING CHANGES
+
+- Update ng-select to be compatible with Angular 16
+
+### 🔧 Changes
+
+- Reworked keyboard controls to use new divided methods provided by ng-select
+
 ## 5.0.2
 
 ### 🔧 Changes
