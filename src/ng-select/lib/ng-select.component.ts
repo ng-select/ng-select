@@ -368,26 +368,34 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             this.close();
             break;
         case KeyCode.Home:
-            $event.preventDefault();
-            this._focusFirstTag();
+            if (this.focusedTag) {
+                $event.preventDefault();
+                this._focusFirstTag();
+            }
             break;
         case KeyCode.ArrowLeft:
-            this._focusPreviousTag();
+            if (this.focusedTag) {
+                this._focusPreviousTag();
+            }
             break;
         case KeyCode.ArrowRight:
-            this._focusNextTag();
+            if (this.focusedTag) {
+                this._focusNextTag();
+            }
             break;
         case KeyCode.End:
-            $event.preventDefault();
-            this._focusLastTag();
+            if (this.focusedTag) {
+                $event.preventDefault();
+                this._focusLastTag();
+            }
             break;
         case KeyCode.Delete:
         case KeyCode.Backspace:
-            if (!this.focusedTag) {
-                this._handleBackspace();
-            } else {
+            if (this.focusedTag) {
                 const target =  (($event.target) as HTMLInputElement).id;
                 this._handleDelete(target);
+            } else {
+                this._handleBackspace();
             }
             break;
         }
@@ -976,14 +984,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     private _handleTab($event: KeyboardEvent) {
-        // if (this.isOpen === false) {
-        //     if(this.showClear()) {
-        //         this.focusOnClear();
-        //         $event.preventDefault();
-        //     } else if(!this.addTag) {
-        //         return
-        //     }
-        // }
         if (this.isOpen === false && !this.addTag) {
             return;
         }
@@ -1082,14 +1082,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     private _focusPreviousTag() {
-        this.focusedTag = this.focusedTag.previousElementSibling.classList.contains('ng-value')
+        this.focusedTag = this.focusedTag.previousElementSibling && this.focusedTag.previousElementSibling.classList.contains('ng-value')
             ? this.focusedTag.previousElementSibling
             : this.tagsList.last.nativeElement;
         this.focusedTag.focus();
     }
 
     private _focusNextTag() {
-        this.focusedTag = this.focusedTag.nextElementSibling.classList.contains('ng-value')
+        this.focusedTag = this.focusedTag.nextElementSibling && this.focusedTag.nextElementSibling.classList.contains('ng-value')
             ? this.focusedTag.nextElementSibling
             : this.tagsList.first.nativeElement;
         this.focusedTag.focus();
