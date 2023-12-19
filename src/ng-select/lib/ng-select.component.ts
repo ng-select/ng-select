@@ -153,6 +153,20 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     @Input() getMissingItemLabelFn: (value: any) => string | Observable<string>;
 
+    @Input()
+    get deselectOnClick() {
+        if (isDefined(this._deselectOnClick)) {
+            return this._deselectOnClick;
+        } else if (isDefined(this.config.deselectOnClick)) {
+            return this.config.deselectOnClick;
+        }
+        return this.multiple;
+    };
+
+    set deselectOnClick(value) {
+        this._deselectOnClick = value;
+    };
+
     // output events
     @Output('blur') blurEvent = new EventEmitter();
     @Output('focus') focusEvent = new EventEmitter();
@@ -243,6 +257,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     @ViewChild(forwardRef(() => NgDropdownPanelComponent)) dropdownPanel: NgDropdownPanelComponent;
     @ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
+    @ViewChild('clearButton') clearButton: ElementRef<HTMLSpanElement>;
     @ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
 
     @HostBinding('class.ng-select') useDefaultClass = true;
@@ -261,7 +276,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     focused: boolean;
     escapeHTML = true;
 
-    private _items = [];
+    private _items: any[] = [];
     private _itemsAreUsed: boolean;
     private _defaultLabel = 'label';
     private _primitive;
@@ -270,6 +285,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     private _pressedKeys: string[] = [];
     private _compareWith: CompareWithFn;
     private _clearSearchOnAdd: boolean;
+    private _deselectOnClick: boolean;
     private _isComposing = false;
 
     private get _editableSearchTerm(): boolean {
@@ -366,6 +382,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     handleKeyCode($event: KeyboardEvent) {
+        const target = $event.target
+
+        if(this.clearButton && this.clearButton.nativeElement === target) {
+            this.handleKeyCodeClear($event)
+        } else {
+            this.handleKeyCodeInput($event);
+        }
+    }
+
+    handleKeyCodeInput($event: KeyboardEvent) {
         switch ($event.which) {
         case KeyCode.ArrowDown:
             this._handleArrowDown($event);
@@ -388,6 +414,15 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             break;
         case KeyCode.Backspace:
             this._handleBackspace();
+            break
+        }
+    }
+
+    handleKeyCodeClear($event: KeyboardEvent) {
+        switch ($event.which) {
+        case KeyCode.Enter:
+            this.handleClearClick();
+            $event.preventDefault();
             break
         }
     }
@@ -517,7 +552,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
             return;
         }
 
-        if (this.multiple && item.selected) {
+        if (this.deselectOnClick && item.selected) {
             this.unselect(item);
         } else {
             this.select(item);
@@ -549,9 +584,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     focus() {
-        if(!this.searchInput.nativeElement.readOnly){
-            this.searchInput.nativeElement.focus();
-        };
+        this.searchInput.nativeElement.focus();
     }
 
     blur() {
@@ -566,7 +599,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
         this.itemsList.unselect(item);
         this.focus();
         this._updateNgModel();
-        this.removeEvent.emit(item);
+        this.removeEvent.emit(item.value);
     }
 
     selectTag() {
@@ -588,6 +621,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     showClear() {
         return this.clearable && (this.hasValue || this.searchTerm) && !this.disabled;
+    }
+
+    focusOnClear() {
+        this.blur();
+        if(this.clearButton) {
+            this.clearButton.nativeElement.focus();
+        }
     }
 
     trackByOption = (_: number, item: NgOption) => {
@@ -947,7 +987,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     private _onSelectionChanged() {
-        if (this.isOpen && this.multiple && this.appendTo) {
+        if (this.isOpen && this.deselectOnClick && this.appendTo) {
             // Make sure items are rendered.
             this._cd.detectChanges();
             this.dropdownPanel.adjustPosition();
@@ -955,8 +995,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     }
 
     private _handleTab($event: KeyboardEvent) {
-        if (this.isOpen === false && !this.addTag) {
-            return;
+        if (this.isOpen === false) {
+            if(this.showClear()) {
+                this.focusOnClear();
+                $event.preventDefault();
+            } else if(!this.addTag) {
+                return
+            }
         }
 
         if (this.selectOnTab) {
