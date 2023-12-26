@@ -536,7 +536,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
         this.itemsList.unselect(item);
         this.focus();
         this._updateNgModel();
-        this.removeEvent.emit(item);
+        this.removeEvent.emit(item.value);
     }
 
     selectTag() {

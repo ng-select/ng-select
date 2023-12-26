@@ -15,6 +15,7 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 | Angular          | ng-select |
 |------------------|:---------:|
+| >=17.0.0 <18.0.0 |   v12.x   |
 | >=16.0.0 <17.0.0 |   v11.x   |
 | >=15.0.0 <16.0.0 |   v10.x   |
 | >=14.0.0 <15.0.0 |   v9.x    |
@@ -28,7 +29,16 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 | v5.x.x           |   v1.x    |
 
 ---
-
+## Browser Support
+`ng-select` supports all browsers supported by Angular. For current list, see https://angular.io/guide/browser-support#browser-support. This includes the following specific versions:
+```angular2html
+Chrome	2 most recent versions
+Firefox	latest and extended support release (ESR)
+Edge	2 most recent major versions
+Safari	2 most recent major versions
+iOS	2 most recent major versions
+Android	2 most recent major versions
+```
 Table of contents
 =================
 

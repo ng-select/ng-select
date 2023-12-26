@@ -1672,6 +1672,7 @@ describe('NgSelectComponent', () => {
 
             it('should remove last selected value when multiple', fakeAsync(() => {
                 const remove = spyOn(select.removeEvent, 'emit');
+                const removedItem = fixture.componentInstance.cities[2];
                 fixture.componentInstance.multiple = true;
                 fixture.componentInstance.cities = [...fixture.componentInstance.cities];
                 tickAndDetectChanges(fixture);
@@ -1683,7 +1684,7 @@ describe('NgSelectComponent', () => {
                     value: fixture.componentInstance.cities[1]
                 })];
                 expect(select.selectedItems).toEqual(result);
-                expect(remove).toHaveBeenCalled();
+                expect(remove).toHaveBeenCalledWith(removedItem);
             }));
 
             it('should not remove last selected if it is disabled', fakeAsync(() => {
@@ -3547,7 +3548,7 @@ describe('NgSelectComponent', () => {
 
             fixture.componentInstance.select.unselect(fixture.componentInstance.cities[0]);
 
-            expect(fixture.componentInstance.onRemove).toHaveBeenCalledWith(fixture.componentInstance.cities[0]);
+            expect(fixture.componentInstance.onRemove).toHaveBeenCalledWith(fixture.componentInstance.cities[0].value);
         }));
 
         it('should fire clear when model is cleared using clear icon', fakeAsync(() => {
