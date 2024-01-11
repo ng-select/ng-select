@@ -1,13 +1,15 @@
-$ng-select-border: #333;
+$ng-select-border: var(--forge-color-gray-900, hsl(0, 0%, 22%));
 $ng-select-border-radius: 4px;
 $ng-select-error: #ff0011;
-$ng-select-dropdown-background: #fff;
+$ng-select-dropdown-background: var(--forge-color-neutral-light, hsl(0, 0%, 100%));
 
 $ng-value-background-color: #ededed;
 $ng-value-border-radius: 999px;
 
-$ng-option-active-background: #333;
-$ng-option-active-color: #fff;
+$ng-option-active-background: var(--forge-color-gray-800, hsl(0, 0%, 31%));
+$ng-option-active-color: var(--forge-color-neutral-light, hsl(0, 0%, 100%));
+
+
 
 
 @mixin truncate() {
@@ -18,9 +20,10 @@ $ng-option-active-color: #fff;
 
 
 .ng-select {
-  position: relative;
-  display: block;
   background-color: rgb(255, 255, 255);
+  display: block;
+  font-family: inherit; // Ensure ng-select uses the current system UI
+  position: relative;
 
   // Container for value, clear, and arrow
   .ng-select-container {
@@ -297,13 +300,12 @@ $ng-option-active-color: #fff;
     display: grid;
     grid-template: "selected-icon value-text" auto / 1rem 1fr;
     gap: 0 .5rem;
-    padding: .6rem .75rem .7rem;
+    padding: .75rem;
 
     .ng-option-icon {
       display: none;
       grid-area: selected-icon;
       width: 100%;
-      height: 1.5em;
     }
 
     .ng-option-label {
