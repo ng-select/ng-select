@@ -70,7 +70,7 @@
         </ng-template>
     </ng-container>
 
-    <span *ngIf="showClear()" class="ng-clear-wrapper" title="{{clearAllText}}">
+    <span *ngIf="showClear()" class="ng-clear-wrapper" tabindex="0" title="{{clearAllText}}" #clearButton>
         <span class="ng-clear" aria-hidden="true">×</span>
     </span>
 
