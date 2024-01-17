@@ -98,9 +98,8 @@ $ng-option-active-color: var(--forge-color-neutral-light, hsl(0, 0%, 100%));
     display: flex;
     flex: 1;
     align-items: center;
-    min-height: 42px; // Ensure a minimum height when no value is chosen
-    height: 100%;
     padding-left: .75rem;
+    padding-block: .75rem;
 
     .ng-input {
       opacity: 0;
@@ -135,7 +134,6 @@ $ng-option-active-color: var(--forge-color-neutral-light, hsl(0, 0%, 100%));
   // Type-based styles
   &.ng-select-single {
     .ng-input {
-      position: absolute;
       left: .75rem;
       width: 100%;
     }
@@ -194,8 +192,10 @@ $ng-option-active-color: var(--forge-color-neutral-light, hsl(0, 0%, 100%));
       }
     }
 
+    // Reduce overall padding to bring chips closer to ng-select edges
     .ng-select-container.ng-has-value .ng-value-container {
-      padding: .25rem;
+      padding-block: .35rem;
+      padding-inline-start: .35rem;
       gap: .25rem;
     }
   } // END ng-select-multiple
@@ -307,8 +307,9 @@ $ng-option-active-color: var(--forge-color-neutral-light, hsl(0, 0%, 100%));
     .ng-option-icon {
       display: none;
       grid-area: selected-icon;
-      width: 100%;
-      padding-top: 1px; // Text alignment
+      height: 1rem;
+      margin-top: 1px; // Text alignment
+      width: 1rem;
     }
 
     .ng-option-label {
