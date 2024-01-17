@@ -307,8 +307,9 @@ $ng-option-active-color: var(--forge-color-neutral-light, hsl(0, 0%, 100%));
     .ng-option-icon {
       display: none;
       grid-area: selected-icon;
-      width: 100%;
-      padding-top: 1px; // Text alignment
+      height: 1rem;
+      margin-top: 1px; // Text alignment
+      width: 1rem;
     }
 
     .ng-option-label {
