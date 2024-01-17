@@ -192,8 +192,10 @@ $ng-option-active-color: var(--forge-color-neutral-light, hsl(0, 0%, 100%));
       }
     }
 
+    // Reduce overall padding to bring chips closer to ng-select edges
     .ng-select-container.ng-has-value .ng-value-container {
-      padding: .25rem;
+      padding-block: .35rem;
+      padding-inline-start: .35rem;
       gap: .25rem;
     }
   } // END ng-select-multiple
