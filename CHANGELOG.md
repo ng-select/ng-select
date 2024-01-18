@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.1.0-rc3
+
+### 🔧 Changes
+
+- Reduce input container padding .05rem to bring it even closer to CA form field height
+
 ## 6.1.0-rc2
 
 ### 🔧 Changes
