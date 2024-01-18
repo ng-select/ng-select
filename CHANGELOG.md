@@ -1,28 +1,16 @@
 # Changelog
 
-## 6.1.0-rc3
+## 6.1.0
 
 ### 🔧 Changes
 
-- Reduce input container padding .05rem to bring it even closer to CA form field height
-
-## 6.1.0-rc2
-
-### 🔧 Changes
-
-- Remove min-heights and refactor container to use padding to better match CA system form fields
 - Add a sizing constraint to option icons to avoid external global influences
-
-## 6.1.0-rc1
-
-### 🔧 Changes
-
 - Updated colors to rely on Forge colors with backups
+- Remove min-heights and refactor container to use padding to better match CA system form fields
 
 ### 🐛 Fixes
 
 - Removed custom padding values related to old Neutrif line-height issues
-- Adjusted icon sizing in options to better match Figtree brand font changes
 
 ## 6.0.0
 
