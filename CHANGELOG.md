@@ -1,16 +1,17 @@
 # Changelog
 
-## 6.0.0
-
-### 🔥 BREAKING CHANGES
-
-- Update ng-select to be compatible with Angular 16
+## 6.1.0-rc1
 
 ### 🔧 Changes
 
-- Reworked keyboard controls to use new divided methods provided by ng-select
+- Updated colors to rely on Forge colors with backups
 
-## 6.0.0-rc1
+### 🐛 Fixes
+
+- Removed custom padding values related to old Neutrif line-height issues
+- Adjusted icon sizing in options to better match Figtree brand font changes
+
+## 6.0.0
 
 ### 🔥 BREAKING CHANGES
 
