@@ -99,7 +99,7 @@ $ng-option-active-color: var(--forge-color-neutral-light, hsl(0, 0%, 100%));
     flex: 1;
     align-items: center;
     padding-left: .75rem;
-    padding-block: .75rem;
+    padding-block: .7rem; // Creates a sub-pixel similar height to CA inputs
 
     .ng-input {
       opacity: 0;
