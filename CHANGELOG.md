@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.1.0-rc2
+
+### 🔧 Changes
+
+- Remove min-heights and refactor container to use padding to better match CA system form fields
+- Add a sizing constraint to option icons to avoid external global influences
+
 ## 6.1.0-rc1
 
 ### 🔧 Changes
