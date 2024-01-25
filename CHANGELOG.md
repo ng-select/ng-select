@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.1.1
+
+### 🐛 Fixes
+
+- Fixed ng-input elements taking up space even when selects weren't searchable
+
 ## 6.1.0
 
 ### 🔧 Changes
