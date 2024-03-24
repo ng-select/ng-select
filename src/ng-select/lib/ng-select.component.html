@@ -27,9 +27,9 @@
         </ng-template>
 
         <div class="ng-input"
-            role="combobox" 
-            [attr.aria-expanded]="isOpen" 
-            [attr.aria-owns]="isOpen ? dropdownId : null" 
+            role="combobox"
+            [attr.aria-expanded]="isOpen"
+            [attr.aria-owns]="isOpen ? dropdownId : null"
             aria-haspopup="listbox">
 
             <input #searchInput
@@ -65,7 +65,13 @@
     </span>
 
     <span class="ng-arrow-wrapper">
-        <span class="ng-arrow"></span>
+        <ng-template #defaultArrowTemplate>
+            <span class="ng-arrow"></span>
+        </ng-template>
+
+        <ng-template
+            [ngTemplateOutlet]="arrowTemplate || defaultArrowTemplate">
+        </ng-template>
     </span>
 </div>
 

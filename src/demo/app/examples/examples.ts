@@ -41,6 +41,7 @@ import { GroupSelectableExampleComponent } from './group-selectable-example/grou
 import { GroupSelectableHiddenExampleComponent } from './group-selectable-hidden-example/group-selectable-hidden-example.component';
 import { GroupChildrenExampleComponent } from './group-children-example/group-children-example.component';
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
+import { TemplateArrowExampleComponent } from './template-arrow-example/template-arrow-example.component';
 
 export interface Example {
     component: any;
@@ -151,6 +152,10 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
     'template-loading-example': {
         component: TemplateLoadingExampleComponent,
         title: 'Custom loading spinner'
+    },
+    'template-arrow-example': {
+        component: TemplateArrowExampleComponent,
+        title: 'Custom arrow'
     },
     'multi-select-default-example': {
         component: MultiSelectDefaultExampleComponent,

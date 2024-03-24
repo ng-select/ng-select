@@ -1,0 +1,7 @@
+.custom-arrow > svg {
+    transform: translateY(-2px);
+}
+
+.ng-select-opened .custom-arrow {
+    transform: rotate(180deg);
+}
