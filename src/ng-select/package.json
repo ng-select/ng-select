@@ -13,13 +13,42 @@
   "license": "MIT",
   "repository": "commonapp/ng-select",
   "engines": {
-    "node": ">= 12.20.0",
-    "npm": ">= 6.0.0"
+    "node": ">= 18",
+    "npm": ">= 8"
+  },
+  "keywords": [
+    "angular",
+    "select",
+    "ui-select",
+    "dropdown",
+    "multiselect",
+    "autocomplete",
+    "angular2"
+  ],
+  "exports": {
+    "./scss/ant.design.theme": {
+      "style": "./scss/ant.design.theme.scss"
+    },
+    "./scss/default.theme": {
+      "style": "./scss/default.theme.scss"
+    },
+    "./scss/material.theme": {
+      "style": "./scss/material.theme.scss"
+    },
+    "./themes/ant.design.theme.css": {
+      "style": "./themes/ant.design.theme.css"
+    },
+    "./themes/default.theme.css": {
+      "style": "./themes/default.theme.css"
+    },
+    "./themes/material.theme.css": {
+      "style": "./themes/material.theme.css"
+    }
   },
   "peerDependencies": {
-    "@angular/common": "^17.0.0-rc.0",
-    "@angular/core": "^17.0.0-rc.0",
-    "@angular/forms": "^17.0.0-rc.0"
+    "@angular/common": "^18.0.0",
+    "@angular/core": "^18.0.0",
+    "@angular/forms": "^18.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.1"
