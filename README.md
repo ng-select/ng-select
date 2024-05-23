@@ -15,6 +15,7 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 | Angular          | ng-select |
 |------------------|:---------:|
+| >=18.0.0 <19.0.0 |   v13.x   |
 | >=17.0.0 <18.0.0 |   v12.x   |
 | >=16.0.0 <17.0.0 |   v11.x   |
 | >=15.0.0 <16.0.0 |   v10.x   |
@@ -356,3 +357,4 @@ To release to npm just run `./release.sh`, of course if you have permissions ;)
 
 ## Inspiration
 This component is inspired by [React select](https://github.com/JedWatson/react-select) and [Virtual scroll](https://github.com/rintoj/angular2-virtual-scroll). Check theirs amazing work and components :)
+
