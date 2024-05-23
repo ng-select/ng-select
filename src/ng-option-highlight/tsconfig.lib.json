@@ -4,10 +4,11 @@
     "outDir": "../../out-tsc/lib",
     "declaration": true,
     "inlineSources": true,
-    "types": [],
+    "types": ["node"],
     "lib": [
+      "ES2022",
       "dom",
-      "es2018"
+      "esnext"
     ]
   },
   "angularCompilerOptions": {
