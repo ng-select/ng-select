@@ -15,6 +15,7 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 | Angular          | ng-select |
 |------------------|:---------:|
+| >=18.0.0 <19.0.0 |   v13.x   |
 | >=17.0.0 <18.0.0 |   v12.x   |
 | >=16.0.0 <17.0.0 |   v11.x   |
 | >=15.0.0 <16.0.0 |   v10.x   |
@@ -193,7 +194,7 @@ map: {
 | loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
 | labelForId | `string` | `-` | no | Id to associate control with label. |
 | [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. |
-| [isOpen] | `boolean` | `-` | no | Allows manual control of dropdown opening and closing. `True` - won't close. `False` - won't open. |
+| [isOpen] | `boolean` | `-` | no | Allows manual control of dropdown opening and closing. `true` - won't close. `false` - won't open. |
 | maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
 | [hideSelected] | `boolean` | `false` | no | Allows to hide selected items. |
 | [multiple] | `boolean` | `false` | no | Allows to select multiple items. |
@@ -354,3 +355,4 @@ To release to npm just run `./release.sh`, of course if you have permissions ;)
 
 ## Inspiration
 This component is inspired by [React select](https://github.com/JedWatson/react-select) and [Virtual scroll](https://github.com/rintoj/angular2-virtual-scroll). Check theirs amazing work and components :)
+

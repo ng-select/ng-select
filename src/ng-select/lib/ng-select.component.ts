@@ -113,17 +113,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
     @Input() @HostBinding('class.ng-select-searchable') searchable = true;
     @Input() @HostBinding('class.ng-select-clearable') clearable = true;
-    @Input() @HostBinding('class.ng-select-opened') isOpen = false;
+    @Input() @HostBinding('class.ng-select-opened') isOpen?: boolean = false;
 
     @Input()
     get items() { return this._items };
 
-    set items(value: readonly any[] | null) {
-        if (value === null) {
-            value = [];
-        }
+    set items(value: readonly any[] | null | undefined) {
         this._itemsAreUsed = true;
-        this._items = value;
+        this._items = value ?? [];
     };
 
     @Input()
