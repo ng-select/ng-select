@@ -12,18 +12,20 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
+          node-version: '18.x'
+          cache: yarn
+          cache-dependency-path: yarn.lock
 
       - name: Install dependencies
-        run: npm install
+        run: yarn install --frozen-lockfile
 
-      - name: Build ng-select
-        run: npm run-script build
+      - name: Build packages
+        run: yarn run build
 
       - name: Copy README
         run: cp README.md ./dist/ng-select/
@@ -31,12 +33,28 @@ jobs:
       - name: Semantic release
         run: npx semantic-release
 
+      - name: copy @ng-select/ng-select version to @ng-select/ng-option-highlight
+        run: |
+          TEMPFILE=$(mktemp)
+
+          jq ".version = $(jq .version ./dist/ng-select/package.json)" \
+            ./dist/ng-option-highlight/package.json > "$TEMPFILE"
+          mv "$TEMPFILE" ./dist/ng-option-highlight/package.json
+      - name: Set up npm registry
+        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: publish @ng-select/ng-option-highlight
+        run: yarn publish ./dist/ng-option-highlight
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: build demo
-        run: npm run-script build:demo
+        run: yarn run build:demo
 
       - name: Deploy demo 🚀
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+        uses: JamesIves/github-pages-deploy-action@releases/v4
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: dist/demo
+          branch: gh-pages
+          folder: dist/demo

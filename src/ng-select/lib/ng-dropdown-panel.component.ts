@@ -37,7 +37,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
         <div *ngIf="headerTemplate" class="ng-dropdown-header">
             <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }"></ng-container>
         </div>
-        <div #scroll class="ng-dropdown-panel-items scroll-host">
+        <div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host">
             <div #padding [class.total-padding]="virtualScroll"></div>
             <div #content [class.scrollable-content]="virtualScroll && items.length">
                 <ng-content></ng-content>
@@ -212,6 +212,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
                 .pipe(takeUntil(this._destroy$), auditTime(0, SCROLL_SCHEDULER))
                 .subscribe((e: { path, composedPath, target }) => {
                     const path = e.path || (e.composedPath && e.composedPath());
+                    if (!path || path.length === 0 && !e.target) {return;}
                     const scrollTop = !path || path.length === 0 ? e.target.scrollTop : path[0].scrollTop
                     this._onContentScrolled(scrollTop);
                 });
@@ -226,7 +227,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         this._zone.runOutsideAngular(() => {
             merge(
                 fromEvent(this._document, 'touchstart', { capture: true }),
-                fromEvent(this._document, 'mousedown', { capture: true })
+                fromEvent(this._document, 'click', { capture: true })
             ).pipe(takeUntil(this._destroy$))
                 .subscribe($event => this._checkToClose($event));
         });
