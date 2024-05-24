@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
@@ -56,7 +57,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     @Input() position: DropdownPosition = 'auto';
     @Input() appendTo: string;
     @Input() bufferAmount;
-    @Input() virtualScroll = false;
+    @Input({transform: booleanAttribute}) virtualScroll = false;
     @Input() headerTemplate: TemplateRef<any>;
     @Input() footerTemplate: TemplateRef<any>;
     @Input() filterValue: string = null;
