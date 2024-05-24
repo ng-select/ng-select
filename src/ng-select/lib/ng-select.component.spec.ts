@@ -79,10 +79,20 @@ describe('NgSelectComponent', () => {
             }));
         }));
 
-        it('should create empty items list when initialzied with null', fakeAsync(() => {
+        it('should create empty items list when initialized with null', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestComponent,
                 `<ng-select [items]="null">
+                </ng-select>`);
+
+            tickAndDetectChanges(fixture);
+            const itemsList = fixture.componentInstance.select.itemsList;
+            expect(itemsList.items.length).toBe(0);
+        }));
+        it('should create empty items list when initialized with undefined', fakeAsync(() => {
+            const fixture = createTestingModule(
+                NgSelectTestComponent,
+                `<ng-select [items]="undefined">
                 </ng-select>`);
 
             tickAndDetectChanges(fixture);

@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
@@ -55,7 +56,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
     @Input() position: DropdownPosition = 'auto';
     @Input() appendTo: string;
     @Input() bufferAmount;
-    @Input() virtualScroll = false;
+    @Input({transform: booleanAttribute}) virtualScroll = false;
     @Input() headerTemplate: TemplateRef<any>;
     @Input() footerTemplate: TemplateRef<any>;
     @Input() filterValue: string = null;
@@ -227,7 +228,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
         this._zone.runOutsideAngular(() => {
             merge(
                 fromEvent(this._document, 'touchstart', { capture: true }),
-                fromEvent(this._document, 'mousedown', { capture: true })
+                fromEvent(this._document, 'click', { capture: true })
             ).pipe(takeUntil(this._destroy$))
                 .subscribe($event => this._checkToClose($event));
         });
