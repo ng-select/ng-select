@@ -36,18 +36,22 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
     encapsulation: ViewEncapsulation.None,
     selector: 'ng-dropdown-panel',
     template: `
-        <div *ngIf="headerTemplate" class="ng-dropdown-header">
+        @if (headerTemplate) {
+          <div class="ng-dropdown-header">
             <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }"></ng-container>
-        </div>
-        <div #scroll class="ng-dropdown-panel-items scroll-host">
+          </div>
+        }
+        <div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host">
             <div #padding [class.total-padding]="virtualScroll"></div>
             <div #content [class.scrollable-content]="virtualScroll && items.length">
                 <ng-content></ng-content>
             </div>
         </div>
-        <div *ngIf="footerTemplate" class="ng-dropdown-footer">
+        @if (footerTemplate) {
+          <div class="ng-dropdown-footer">
             <ng-container [ngTemplateOutlet]="footerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }"></ng-container>
-        </div>
+          </div>
+        }
     `
     })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {

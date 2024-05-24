@@ -80,6 +80,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() addTagText: string;
     @Input() appearance: string;
     @Input() appendTo: string;
+    @Input() bindLabel: string;
+    @Input() bindValue: string;
 
     @Input({transform: booleanAttribute}) loading = false;
     @Input({transform: booleanAttribute}) closeOnSelect = true;
@@ -94,6 +96,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input({transform: booleanAttribute}) selectableGroup = false;
     @Input() inputAttrs: { [key: string]: string } = {};
     @Input({transform: booleanAttribute}) clearOnBackspace = true;
+    @Input() clearAllText: string;
+    @Input() describedBy: string;
     @Input() invalid: boolean;
     @Input() labelForId: string;
     @Input() labelledBy: string;
@@ -114,6 +118,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     @Input() keyDownFn = (_: KeyboardEvent) => true;
 
+    @Input() dropdownPosition: DropdownPosition = 'auto';
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input({transform: booleanAttribute}) @HostBinding('class.ng-select-multiple') multiple = false;
     @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;

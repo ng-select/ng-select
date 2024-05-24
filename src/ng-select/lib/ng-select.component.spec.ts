@@ -148,15 +148,18 @@ describe('NgSelectComponent', () => {
             discardPeriodicTasks();
         }));
 
-        it('should update internal model after it was toggled with *ngIf', fakeAsync(() => {
+        it('should update internal model after it was toggled with @if()', fakeAsync(() => {
             const fixture = createTestingModule(
                 NgSelectTestComponent,
-                `<ng-select *ngIf="visible"
-                        [items]="cities"
-                        bindLabel="name"
-                        [clearable]="true"
-                        [(ngModel)]="selectedCity">
-                </ng-select>`);
+                `
+                @if (visible) {
+                    <ng-select
+                            [items]="cities"
+                            bindLabel="name"
+                            [clearable]="true"
+                            [(ngModel)]="selectedCity">
+                    </ng-select>
+                }`);
 
             // select first city
             fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
@@ -837,7 +840,9 @@ describe('NgSelectComponent', () => {
                 const fixture = createTestingModule(
                     NgSelectTestComponent,
                     `<ng-select [(ngModel)]="selectedCityId">
-                        <ng-option *ngFor="let city of cities" [value]="city.id">{{city.name}}</ng-option>
+                        @for (city of cities; track city) {
+                            <ng-option [value]="city.id">{{city.name}}</ng-option>
+                        }
                     </ng-select>`);
 
                 select = fixture.componentInstance.select;

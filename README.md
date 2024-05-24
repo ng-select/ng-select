@@ -155,7 +155,9 @@ In template use `ng-select` component with your options
 ```html
 <!--Using ng-option and for loop-->
 <ng-select [(ngModel)]="selectedCar">
-   <ng-option *ngFor="let car of cars" [value]="car.id">{{car.name}}</ng-option>
+    @for (car of cars; track car.id) {
+        <ng-option [value]="car.id">{{car.name}}</ng-option>
+    }
 </ng-select>
 
 <!--Using items input-->
