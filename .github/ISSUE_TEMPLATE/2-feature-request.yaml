@@ -1,5 +1,5 @@
 name: 'Feature Request'
-description: Suggest a feature for Ngx Cookie Service library
+description: Suggest a feature for ng-select library
 
 body:
   - type: textarea
