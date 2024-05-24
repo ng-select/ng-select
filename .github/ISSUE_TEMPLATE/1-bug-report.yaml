@@ -1,0 +1,98 @@
+name: Bug Report
+description: Report a bug in the ng-select
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+    validations:
+      required: true
+      placeholder: |
+        Steps to reproduce the behavior:
+        Go to '...'
+        Click on '....'
+        Scroll down to '....'
+        See error
+  - type: input
+    id: reproduction-link
+    attributes:
+      label: Please provide a link to a minimal reproduction of the bug. StackBlitz, CodePen or CodeSanBox
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behaviour
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+
+  - type: input
+    id: library-version
+    attributes:
+      label: What version of the library you see this issue?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: angular-version
+    attributes:
+      label: What version of Angular are you using?
+      options:
+        - Angular 20
+        - Angular 19
+        - Angular 18
+        - Angular 17
+        - Angular 16
+        - Angular 15
+        - Angular 14
+        - Angular 13
+        - Angular 12
+        - Angular 11
+        - Angular 10
+        - Angular 9
+        - Angular 8
+        - Angular 7
+        - Angular 6
+        - Angular 4
+        - Angular 2
+      multiple: true
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      placeholder: |
+        If applicable, add screenshots to help explain your problem.
+
+  - type: textarea
+    id: desktop
+    attributes:
+      label: Desktop? Please complete the following information
+      placeholder: |
+        OS: [e.g. macOS Big Sur, Windows 10]
+        Browser [e.g. Google Chrome, Mozilla Firefox, Micro Soft Edge, Safari]
+        Version [e.g. 92]
+
+  - type: textarea
+    id: mobile
+    attributes:
+      label: Mobile? Please complete the following information
+      placeholder: |
+        Device: [e.g. iPhone 12 Pro, Google Pixel 5]
+        OS: [e.g. iOS]
+        Browser [e.g. Google Chrome, Mozilla Firefox, Micro Soft Edge, Safari]
+        Version [e.g. 91]
+
+  - type: textarea
+    id: other
+    attributes:
+      label: Anything else?
