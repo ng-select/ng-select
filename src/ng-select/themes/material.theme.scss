@@ -222,6 +222,10 @@ $ng-select-bg: #ffffff !default;
         &:hover {
             color: $ng-select-primary-text;
         }
+        &:focus {
+            color: $ng-select-primary-text;
+            outline: none;
+        }
     }
     .ng-arrow-wrapper {
         bottom: 2px;
