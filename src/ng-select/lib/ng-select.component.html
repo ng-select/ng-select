@@ -63,10 +63,17 @@
     }
 
     @if (showClear()) {
-        <span class="ng-clear-wrapper" tabindex="0" title="{{clearAllText}}" #clearButton>
-            <span class="ng-clear" aria-hidden="true">×</span>
+        <span class="ng-clear-wrapper" tabindex="0" title="{{clearAllText}}">
+            <ng-template #clearButton>
+                <span class="ng-clear" aria-hidden="true">×</span>
+            </ng-template>
+
+            <ng-template
+                [ngTemplateOutlet]="clearButtonTemplate || clearButton">
+            </ng-template>
         </span>
     }
+
 
     <span class="ng-arrow-wrapper">
         <span class="ng-arrow"></span>
