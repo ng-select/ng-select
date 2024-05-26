@@ -13,7 +13,9 @@
 <div class="mt-3">
     Selected value: <br/>
     <ul>
-        <li *ngFor="let item of selectedPeople">{{item.name}}</li>
+        @for (item of selectedPeople; track item.name) {
+          <li>{{item.name}}</li>
+        }
     </ul>
     <button (click)="clearModel()" class="btn btn-secondary btn-sm">Clear model</button>
     <button (click)="changeModel()" class="btn btn-secondary btn-sm">Change model</button>

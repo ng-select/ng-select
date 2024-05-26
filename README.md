@@ -15,6 +15,8 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 | Angular          | ng-select |
 |------------------|:---------:|
+| >=18.0.0 <19.0.0 |   v13.x   |
+| >=17.0.0 <18.0.0 |   v12.x   |
 | >=16.0.0 <17.0.0 |   v11.x   |
 | >=15.0.0 <16.0.0 |   v10.x   |
 | >=14.0.0 <15.0.0 |   v9.x    |
@@ -28,7 +30,16 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 | v5.x.x           |   v1.x    |
 
 ---
-
+## Browser Support
+`ng-select` supports all browsers supported by Angular. For current list, see https://angular.io/guide/browser-support#browser-support. This includes the following specific versions:
+```angular2html
+Chrome	2 most recent versions
+Firefox	latest and extended support release (ESR)
+Edge	2 most recent major versions
+Safari	2 most recent major versions
+iOS	2 most recent major versions
+Android	2 most recent major versions
+```
 Table of contents
 =================
 
@@ -136,7 +147,9 @@ In template use `ng-select` component with your options
 ```html
 <!--Using ng-option and for loop-->
 <ng-select [(ngModel)]="selectedCar">
-   <ng-option *ngFor="let car of cars" [value]="car.id">{{car.name}}</ng-option>
+    @for (car of cars; track car.id) {
+        <ng-option [value]="car.id">{{car.name}}</ng-option>
+    }
 </ng-select>
 
 <!--Using items input-->
@@ -183,7 +196,7 @@ map: {
 | loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
 | labelForId | `string` | `-` | no | Id to associate control with label. |
 | [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. |
-| [isOpen] | `boolean` | `-` | no | Allows manual control of dropdown opening and closing. `True` - won't close. `False` - won't open. |
+| [isOpen] | `boolean` | `-` | no | Allows manual control of dropdown opening and closing. `true` - won't close. `false` - won't open. |
 | maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
 | [hideSelected] | `boolean` | `false` | no | Allows to hide selected items. |
 | [multiple] | `boolean` | `false` | no | Allows to select multiple items. |
@@ -344,3 +357,4 @@ To release to npm just run `./release.sh`, of course if you have permissions ;)
 
 ## Inspiration
 This component is inspired by [React select](https://github.com/JedWatson/react-select) and [Virtual scroll](https://github.com/rintoj/angular2-virtual-scroll). Check theirs amazing work and components :)
+
