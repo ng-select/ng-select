@@ -4,16 +4,18 @@ import { NgOptionHighlightDirective } from './ng-option-highlight.directive';
 import { By } from '@angular/platform-browser';
 
 @Component({
-	template: `
-		<span id="test1" [ngOptionHighlight]="term">My text is highlighted</span>
-		<span id="test2" [ngOptionHighlight]="term">My text is not highlighted</span>
-		<span id="test3" [ngOptionHighlight]="term">My text is highlighted</span>
-		<span id="test4" [ngOptionHighlight]="term">My ťëxť is highlighted text</span>
-		@if (showNew) {
-			<span id="test5" [ngOptionHighlight]="term">New label</span>
-		}
-		<span id="test6" [ngOptionHighlight]="term">+My text is) high\\lighted</span>
-	`,
+    template: `
+        <span id="test1" [ngOptionHighlight]="term">My text is highlighted</span>
+        <span id="test2" [ngOptionHighlight]="term">My text is not highlighted</span>
+        <span id="test3" [ngOptionHighlight]="term">My text is highlighted</span>
+        <span id="test4" [ngOptionHighlight]="term">My ťëxť is highlighted text</span>
+        @if (showNew) {
+            <span id="test5" [ngOptionHighlight]="term">New label</span>
+        }
+        <span id="test6" [ngOptionHighlight]="term">+My text is) high\\lighted</span>
+    `,
+    imports: [NgOptionHighlightDirective],
+    standalone: true
 })
 class TestComponent {
 	term: string;
@@ -23,10 +25,10 @@ class TestComponent {
 describe('NgOptionHighlightDirective', () => {
 	let fixture: ComponentFixture<TestComponent>;
 
-	beforeEach(() => {
-		fixture = TestBed.configureTestingModule({
-			declarations: [NgOptionHighlightDirective, TestComponent],
-		}).createComponent(TestComponent);
+    beforeEach(() => {
+        fixture = TestBed.configureTestingModule({
+    imports: [TestComponent],
+}).createComponent(TestComponent);
 
 		fixture.detectChanges();
 	});
