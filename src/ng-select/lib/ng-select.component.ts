@@ -117,6 +117,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() typeToSearchText: string;
 
     @Input() keyDownFn = (_: KeyboardEvent) => true;
+    @Input() ngClass = null;
 
     @Input() dropdownPosition: DropdownPosition = 'auto';
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
@@ -175,6 +176,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     set deselectOnClick(value) {
         this._deselectOnClick = value;
     };
+
+    get dropdownPanelStaticClasses() {
+        return this.appendTo && this.classes
+            ? `ng-dropdown-panel ${this.classes}`
+            : 'ng-dropdown-panel';
+    }
 
     // output events
     @Output('blur') blurEvent = new EventEmitter();
