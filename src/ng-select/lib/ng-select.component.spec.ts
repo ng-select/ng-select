@@ -3896,11 +3896,11 @@ describe('NgSelectComponent', () => {
             });
         }));
 
-        it('should pass static classes into dropdown panel when appendTo is specified', async(() => {
+        it('should pass static classes into dropdown panel when appendTo is specified', waitForAsync(() => {
             const config = new NgSelectConfig();
             config.appendTo = 'body';
             const fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `
                 <div class="container"></div>
                 <ng-select [items]="cities"
@@ -3920,11 +3920,11 @@ describe('NgSelectComponent', () => {
             });
         }));
 
-        it('should pass ngClass classes into dropdown panel when appendTo is specified', async(() => {
+        it('should pass ngClass classes into dropdown panel when appendTo is specified', waitForAsync(() => {
             const config = new NgSelectConfig();
             config.appendTo = 'body';
             const fixture = createTestingModule(
-                NgSelectTestCmp,
+                NgSelectTestComponent,
                 `
                 <div class="container"></div>
                 <ng-select [items]="cities"
@@ -3951,7 +3951,61 @@ describe('NgSelectComponent', () => {
         }));
 
     });
+    it('should pass static classes into dropdown panel when appendTo is specified', waitForAsync(() => {
+        const config = new NgSelectConfig();
+        config.appendTo = 'body';
+        const fixture = createTestingModule(
+            NgSelectTestComponent,
+            `
+                <div class="container"></div>
+                <ng-select [items]="cities"
+                        class="someClass"
+                        appendTo=".container"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+            config);
 
+        fixture.componentInstance.select.open();
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+
+            const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
+            expect(dropdown.classList.contains('someClass')).toBe(true);
+        });
+    }));
+
+    it('should pass ngClass classes into dropdown panel when appendTo is specified', waitForAsync(() => {
+        const config = new NgSelectConfig();
+        config.appendTo = 'body';
+        const fixture = createTestingModule(
+            NgSelectTestComponent,
+            `
+                <div class="container"></div>
+                <ng-select [items]="cities"
+                        [ngClass]="{ someClass: visible }"
+                        appendTo=".container"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+            config);
+
+        fixture.componentInstance.visible = true;
+        fixture.componentInstance.select.open();
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+
+            const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
+            expect(dropdown.classList.contains('someClass')).toBe(true);
+
+            fixture.componentInstance.visible = false;
+            fixture.detectChanges();
+
+            expect(dropdown.classList.contains('someClass')).toBe(false);
+        });
+    }));
+
+});
     describe('Grouping', () => {
         it('should group flat items list by group key', fakeAsync(() => {
             const fixture = createTestingModule(
@@ -4344,8 +4398,7 @@ describe('NgSelectComponent', () => {
             const spy = spyOn(fixture.componentInstance.select, 'handleKeyCode');
             expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length)
         }))
-    })
-});
+    });
 
 
 function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectConfig: NgSelectConfig | null = null): ComponentFixture<T> {

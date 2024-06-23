@@ -75,7 +75,7 @@
 
 @if (isOpen) {
     <ng-dropdown-panel
-        class="ng-dropdown-panel"
+        [class]="dropdownPanelStaticClasses"
         [virtualScroll]="virtualScroll"
         [bufferAmount]="bufferAmount"
         [appendTo]="appendTo"
@@ -90,7 +90,7 @@
         (scrollToEnd)="scrollToEnd.emit($event)"
         (outsideClick)="close()"
         [class.ng-select-multiple]="multiple"
-        [ngClass]="appendTo ? classes : null"
+        [ngClass]="appendTo ? ngClass : null"
         [id]="dropdownId"
         role="listbox"
         aria-label="Options list">
