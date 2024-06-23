@@ -16,14 +16,18 @@
            (change)="onChange($event)">
 </ng-select>
 
-<div *ngIf="events.length > 0">
-    <br>
-    <button (click)="events = []" class="btn btn-secondary btn-sm">Clear events</button>
-    <br>
-    <br>
-</div>
+@if (events.length > 0) {
+    <div>
+        <br>
+        <button (click)="events = []" class="btn btn-secondary btn-sm">Clear events</button>
+        <br>
+        <br>
+    </div>
+}
 
-<div *ngFor="let event of events">
-    <small>{{event.name}} - {{event.value | json}}</small>
-    <hr>
-</div>
+@for (event of events; track event) {
+    <div>
+        <small>{{ event.name }} - {{ event.value | json }}</small>
+        <hr>
+    </div>
+}
