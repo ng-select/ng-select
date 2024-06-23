@@ -1,5 +1,6 @@
 import {
     AfterViewChecked,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
@@ -14,17 +15,14 @@ import { Subject } from 'rxjs';
     selector: 'ng-option',
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `<ng-content></ng-content>`
-})
+    })
 export class NgOptionComponent implements OnChanges, AfterViewChecked, OnDestroy {
 
     @Input() value: any;
-    @Input()
-    get disabled() { return this._disabled; }
-    set disabled(value: any) { this._disabled = this._isDisabled(value) }
+    @Input({transform: booleanAttribute}) disabled: boolean = false;
 
     readonly stateChange$ = new Subject<{ value: any, disabled: boolean, label?: string }>();
 
-    private _disabled = false;
     private _previousLabel: string;
 
     constructor(public elementRef: ElementRef<HTMLElement>) { }
@@ -37,7 +35,7 @@ export class NgOptionComponent implements OnChanges, AfterViewChecked, OnDestroy
         if (changes.disabled) {
             this.stateChange$.next({
                 value: this.value,
-                disabled: this._disabled
+                disabled: this.disabled
             });
         }
     }
@@ -47,7 +45,7 @@ export class NgOptionComponent implements OnChanges, AfterViewChecked, OnDestroy
             this._previousLabel = this.label;
             this.stateChange$.next({
                 value: this.value,
-                disabled: this._disabled,
+                disabled: this.disabled,
                 label: this.elementRef.nativeElement.innerHTML
             });
         }
@@ -55,9 +53,5 @@ export class NgOptionComponent implements OnChanges, AfterViewChecked, OnDestroy
 
     ngOnDestroy() {
         this.stateChange$.complete();
-    }
-
-    private _isDisabled(value) {
-        return value != null && `${value}` !== 'false';
     }
 }

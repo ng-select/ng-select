@@ -13,6 +13,7 @@ import { appRoutes } from './routes';
 import { ExampleHostDirective, ExampleViewerComponent } from './shared/example-viewer/example-viewer.component';
 import { StackblitzButtonComponent } from './shared/example-viewer/stackblitz-button/stackblitz-button.component';
 import { RouteViewerComponent } from './shared/route-viewer/route-viewer.component';
+import {APP_BASE_HREF} from '@angular/common';
 
 @NgModule({
     imports: [
@@ -20,15 +21,13 @@ import { RouteViewerComponent } from './shared/route-viewer/route-viewer.compone
         HttpClientModule,
         ExamplesModule,
         NgbModule,
-        RouterModule.forRoot(
-            appRoutes,
-            {
-                useHash: true
-            }
-        )
+        RouterModule.forRoot(appRoutes, {
+    useHash: true
+})
     ],
     providers: [
         DataService,
+       // {provide: APP_BASE_HREF, useValue: '/ng-select/'}
     ],
     declarations: [
         ExampleHostDirective,
@@ -39,7 +38,6 @@ import { RouteViewerComponent } from './shared/route-viewer/route-viewer.compone
         StackblitzButtonComponent,
         RouteViewerComponent,
     ],
-    entryComponents: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {

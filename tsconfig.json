@@ -1,26 +1,32 @@
-/*
-  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
-  It is not intended to be used to perform a compilation.
-
-  To learn more about this file see: https://angular.io/config/solution-tsconfig.
-*/
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./src/ng-select/tsconfig.lib.json"
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "ES2022",
+      "dom",
+      "esnext"
+    ],
+    "paths": {
+      "@ng-select/ng-select": [
+        "src/ng-select/public-api.ts"
+      ],
+      "@ng-select/ng-option-highlight": [
+        "src/ng-option-highlight/public-api.ts"
+      ]
     },
-    {
-      "path": "./src/ng-select/tsconfig.spec.json"
-    },
-    {
-      "path": "./src/demo/tsconfig.app.json"
-    },
-    {
-      "path": "./src/ng-option-highlight/tsconfig.lib.json"
-    },
-    {
-      "path": "./src/ng-option-highlight/tsconfig.spec.json"
-    }
-  ]
+    "useDefineForClassFields": false
+  }
 }

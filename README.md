@@ -13,16 +13,33 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 ## Versions
 
-| Angular| ng-select|
-| ------|:------:| 
-| >=10.0.0 <11.0.0 | v5.x |
-| >=9.0.0 <10.0.0 | v4.x |
-| >=8.0.0 <9.0.0  | v3.x |
-| >=6.0.0 <8.0.0  | v2.x |
-| v5.x.x  | v1.x |
+| Angular          | ng-select |
+|------------------|:---------:|
+| >=18.0.0 <19.0.0 |   v13.x   |
+| >=17.0.0 <18.0.0 |   v12.x   |
+| >=16.0.0 <17.0.0 |   v11.x   |
+| >=15.0.0 <16.0.0 |   v10.x   |
+| >=14.0.0 <15.0.0 |   v9.x    |
+| >=13.0.0 <14.0.0 |   v8.x    |
+| >=12.0.0 <13.0.0 |   v7.x    |
+| >=11.0.0 <12.0.0 |   v6.x    |
+| >=10.0.0 <11.0.0 |   v5.x    |
+| >=9.0.0 <10.0.0  |   v4.x    |
+| >=8.0.0 <9.0.0   |   v3.x    |
+| >=6.0.0 <8.0.0   |   v2.x    |
+| v5.x.x           |   v1.x    |
 
 ---
-
+## Browser Support
+`ng-select` supports all browsers supported by Angular. For current list, see https://angular.io/guide/browser-support#browser-support. This includes the following specific versions:
+```angular2html
+Chrome	2 most recent versions
+Firefox	latest and extended support release (ESR)
+Edge	2 most recent major versions
+Safari	2 most recent major versions
+iOS	2 most recent major versions
+Android	2 most recent major versions
+```
 Table of contents
 =================
 
@@ -130,7 +147,9 @@ In template use `ng-select` component with your options
 ```html
 <!--Using ng-option and for loop-->
 <ng-select [(ngModel)]="selectedCar">
-   <ng-option *ngFor="let car of cars" [value]="car.id">{{car.name}}</ng-option>
+    @for (car of cars; track car.id) {
+        <ng-option [value]="car.id">{{car.name}}</ng-option>
+    }
 </ng-select>
 
 <!--Using items input-->
@@ -169,7 +188,7 @@ map: {
 | [compareWith] | `(a: any, b: any) => boolean` | `(a, b) => a === b` | no | A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. |
 | dropdownPosition | `bottom` \| `top` \| `auto` |  `auto` | no | Set the dropdown position on open |
 | [groupBy] | `string` \| `Function` | null | no | Allow to group items by key or function expression |
-| [groupValue] |  `(groupKey: string, cildren: any[]) => Object` | - | no | Function expression to provide group value |
+| [groupValue] |  `(groupKey: string, children: any[]) => Object` | - | no | Function expression to provide group value |
 | [selectableGroup] | `boolean` | false | no | Allow to select group when groupBy is used |
 | [selectableGroupAsModel] | `boolean` | true | no | Indicates whether to select all children or group itself  |
 | [items] | `Array<any>` | `[]` | yes | Items array |
@@ -177,7 +196,7 @@ map: {
 | loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
 | labelForId | `string` | `-` | no | Id to associate control with label. |
 | [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. |
-| [isOpen] | `boolean` | `-` | no | Allows manual control of dropdown opening and closing. `True` - won't close. `False` - won't open. |
+| [isOpen] | `boolean` | `-` | no | Allows manual control of dropdown opening and closing. `true` - won't close. `false` - won't open. |
 | maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
 | [hideSelected] | `boolean` | `false` | no | Allows to hide selected items. |
 | [multiple] | `boolean` | `false` | no | Allows to select multiple items. |
@@ -189,6 +208,7 @@ map: {
 | [searchWhileComposing] | `boolean` | `true` | no | Whether items should be filtered while composition started |
 | [trackByFn] | `(item: any) => any` | `null` | no | Provide custom trackBy function |
 | [clearSearchOnAdd] | `boolean` | `true` | no | Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false` |
+| [deselectOnClick] | `boolean` | `false` | no | Deselects a selected item when it is clicked in the dropdown. Default `false`. Default `true` when **multiple** is `true` |
 | [editableSearchTerm] | `boolean` |  `false` | no | Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`. |
 | [selectOnTab] | `boolean` | `false` | no | Select marked dropdown item using tab. Default `false`|
 | [openOnEnter] | `boolean` | `true` | no | Open dropdown using enter. Default `true`|
@@ -337,3 +357,4 @@ To release to npm just run `./release.sh`, of course if you have permissions ;)
 
 ## Inspiration
 This component is inspired by [React select](https://github.com/JedWatson/react-select) and [Virtual scroll](https://github.com/rintoj/angular2-virtual-scroll). Check theirs amazing work and components :)
+

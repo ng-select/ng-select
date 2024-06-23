@@ -12,5 +12,8 @@ export class NgSelectConfig {
     openOnEnter = true;
     appendTo: string;
     bindValue: string;
+    bindLabel: string;
     appearance = 'underline';
+    clearSearchOnAdd: boolean;
+    deselectOnClick: boolean;
 }

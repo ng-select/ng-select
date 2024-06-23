@@ -8,8 +8,10 @@
 </div>
 <br>
 <ng-select [multiple]="true" [(ngModel)]="selectedCars">
-    <ng-option *ngFor="let car of cars" [value]="car.id" [disabled]="car.disabled">{{car.name}}</ng-option>
-    <ng-option [value]="'custom'">Custom</ng-option>
+    @for (car of cars; track car) {
+      <ng-option [value]="car.id" [disabled]="car.disabled">{{car.name}}</ng-option>
+    }
+    <ng-option value="custom">Custom</ng-option>
 </ng-select>
 
 <br/>Selected car ID: {{selectedCars | json}}

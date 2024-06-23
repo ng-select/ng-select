@@ -10,7 +10,7 @@ import {
 
 @Directive({
     selector: '[ngOptionHighlight]'
-})
+    })
 export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
 
     @Input('ngOptionHighlight') term: string;
@@ -64,4 +64,4 @@ export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
     private _isDefined(value: any) {
         return value !== undefined && value !== null;
     }
-}   
+}
