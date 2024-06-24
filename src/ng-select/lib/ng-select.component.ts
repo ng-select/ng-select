@@ -109,13 +109,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input({transform: numberAttribute}) minTermLength = 0;
     @Input({transform: booleanAttribute}) editableSearchTerm = false;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
+    @Input() ngClass = null;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
     @Input({transform: booleanAttribute}) @HostBinding('class.ng-select-multiple') multiple = false;
     @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
     @Input({transform: booleanAttribute}) @HostBinding('class.ng-select-searchable') searchable = true;
     @Input({transform: booleanAttribute}) @HostBinding('class.ng-select-clearable') clearable = true;
-    @Input({transform: booleanAttribute}) @HostBinding('class.ng-select-opened') isOpen? = false;
+    @Input() @HostBinding('class.ng-select-opened') isOpen?: boolean = false;
 
     @Input()
     get items() { return this._items };
@@ -162,6 +163,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     set deselectOnClick(value) {
         this._deselectOnClick = value;
     };
+
+    get dropdownPanelStaticClasses() {
+        return this.appendTo && this.classes
+            ? `ng-dropdown-panel ${this.classes}`
+            : 'ng-dropdown-panel';
+    }
 
     // output events
     @Output('blur') blurEvent = new EventEmitter();
@@ -891,7 +898,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     private _handleTab($event: KeyboardEvent) {
         if (this.isOpen === false) {
-            if(this.showClear()) {
+            if(this.showClear() && !$event.shiftKey) {
                 this.focusOnClear();
                 $event.preventDefault();
             } else if(!this.addTag) {
