@@ -22,7 +22,9 @@ import {
     ContentChildren,
     QueryList,
     InjectionToken,
-    Attribute
+    Attribute,
+    booleanAttribute,
+    numberAttribute
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil, startWith, tap, debounceTime, map, filter } from 'rxjs/operators';
@@ -74,7 +76,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     @Input() bindLabel: string;
     @Input() bindValue: string;
-    @Input() markFirst = true;
+    @Input({transform: booleanAttribute}) markFirst = true;
     @Input() placeholder: string;
     @Input() notFoundText: string;
     @Input() typeToSearchText: string;
@@ -84,35 +86,36 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() appearance: string;
     @Input() dropdownPosition: DropdownPosition = 'auto';
     @Input() appendTo: string;
-    @Input() loading = false;
-    @Input() closeOnSelect = true;
-    @Input() hideSelected = false;
-    @Input() selectOnTab = false;
-    @Input() openOnEnter: boolean;
-    @Input() maxSelectedItems: number;
+    @Input({transform: booleanAttribute}) loading = false;
+    @Input({transform: booleanAttribute}) closeOnSelect = true;
+    @Input({transform: booleanAttribute}) hideSelected = false;
+    @Input({transform: booleanAttribute}) selectOnTab = false;
+    @Input({transform: booleanAttribute}) openOnEnter: boolean;
+    @Input({transform: numberAttribute}) maxSelectedItems: number;
     @Input() groupBy: string | ((value: any) => any);
     @Input() groupValue: GroupValueFn;
-    @Input() bufferAmount = 4;
-    @Input() virtualScroll: boolean;
-    @Input() selectableGroup = false;
-    @Input() selectableGroupAsModel = true;
+    @Input({transform: numberAttribute}) bufferAmount = 4;
+    @Input({transform: booleanAttribute}) virtualScroll: boolean;
+    @Input({transform: booleanAttribute}) selectableGroup = false;
+    @Input({transform: booleanAttribute}) selectableGroupAsModel = true;
     @Input() searchFn = null;
     @Input() trackByFn = null;
-    @Input() clearOnBackspace = true;
+    @Input({transform: booleanAttribute}) clearOnBackspace = true;
     @Input() labelForId = null;
     @Input() inputAttrs: { [key: string]: string } = {};
-    @Input() tabIndex: number;
-    @Input() readonly = false;
-    @Input() searchWhileComposing = true;
-    @Input() minTermLength = 0;
-    @Input() editableSearchTerm = false;
+    @Input({transform: numberAttribute}) tabIndex: number;
+    @Input({transform: booleanAttribute}) readonly = false;
+    @Input({transform: booleanAttribute}) searchWhileComposing = true;
+    @Input({transform: numberAttribute}) minTermLength = 0;
+    @Input({transform: booleanAttribute}) editableSearchTerm = false;
     @Input() keyDownFn = (_: KeyboardEvent) => true;
+    @Input() ngClass = null;
 
     @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
-    @Input() @HostBinding('class.ng-select-multiple') multiple = false;
+    @Input({transform: booleanAttribute}) @HostBinding('class.ng-select-multiple') multiple = false;
     @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
-    @Input() @HostBinding('class.ng-select-searchable') searchable = true;
-    @Input() @HostBinding('class.ng-select-clearable') clearable = true;
+    @Input({transform: booleanAttribute}) @HostBinding('class.ng-select-searchable') searchable = true;
+    @Input({transform: booleanAttribute}) @HostBinding('class.ng-select-clearable') clearable = true;
     @Input() @HostBinding('class.ng-select-opened') isOpen?: boolean = false;
 
     @Input()
@@ -160,6 +163,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     set deselectOnClick(value) {
         this._deselectOnClick = value;
     };
+
+    get dropdownPanelStaticClasses() {
+        return this.appendTo && this.classes
+            ? `ng-dropdown-panel ${this.classes}`
+            : 'ng-dropdown-panel';
+    }
 
     // output events
     @Output('blur') blurEvent = new EventEmitter();
@@ -889,7 +898,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
     private _handleTab($event: KeyboardEvent) {
         if (this.isOpen === false) {
-            if(this.showClear()) {
+            if(this.showClear() && !$event.shiftKey) {
                 this.focusOnClear();
                 $event.preventDefault();
             } else if(!this.addTag) {
