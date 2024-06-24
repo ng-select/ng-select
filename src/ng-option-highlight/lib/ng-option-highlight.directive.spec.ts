@@ -10,11 +10,13 @@ import { By } from '@angular/platform-browser';
         <span id="test3" [ngOptionHighlight]="term">My text is highlighted</span>
         <span id="test4" [ngOptionHighlight]="term">My ťëxť is highlighted text</span>
         @if (showNew) {
-          <span id="test5" [ngOptionHighlight]="term">New label</span>
+            <span id="test5" [ngOptionHighlight]="term">New label</span>
         }
         <span id="test6" [ngOptionHighlight]="term">+My text is) high\\lighted</span>
-        `
-    })
+    `,
+    imports: [NgOptionHighlightDirective],
+    standalone: true
+})
 class TestComponent {
     term: string;
     showNew = false;
@@ -26,8 +28,8 @@ describe('NgOptionHighlightDirective', () => {
 
     beforeEach(() => {
         fixture = TestBed.configureTestingModule({
-            declarations: [NgOptionHighlightDirective, TestComponent]
-        }).createComponent(TestComponent);
+    imports: [TestComponent]
+}).createComponent(TestComponent);
 
         fixture.detectChanges();
     });

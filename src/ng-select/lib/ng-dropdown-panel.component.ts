@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import {DOCUMENT, NgTemplateOutlet} from '@angular/common';
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -34,6 +34,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     selector: 'ng-dropdown-panel',
+    standalone: true,
     template: `
         @if (headerTemplate) {
           <div class="ng-dropdown-header">
@@ -51,8 +52,11 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
             <ng-container [ngTemplateOutlet]="footerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }"></ng-container>
           </div>
         }
-    `
-    })
+    `,
+    imports: [
+        NgTemplateOutlet,
+    ],
+})
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() items: NgOption[] = [];

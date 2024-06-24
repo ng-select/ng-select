@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 
 @Directive({
-    selector: '[ngOptionHighlight]'
+    selector: '[ngOptionHighlight]',
+    standalone: true,
     })
 export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
 
