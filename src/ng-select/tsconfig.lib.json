@@ -1,26 +1,19 @@
 {
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../../out-tsc/lib",
-    "declaration": true,
-    "inlineSources": true,
-    "types": ["node"],
-    "lib": [
-      "ES2022",
-      "dom",
-      "esnext"
-    ]
-  },
-  "angularCompilerOptions": {
-    "compilationMode": "partial",
-    "skipTemplateCodegen": true,
-    "strictMetadataEmit": true,
-    "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true,
-    "enableResourceInlining": true
-  },
-  "exclude": [
-    "test.ts",
-    "**/*.spec.ts"
-  ]
+	"extends": "../../tsconfig.json",
+	"compilerOptions": {
+		"outDir": "../../out-tsc/lib",
+		"declaration": true,
+		"inlineSources": true,
+		"types": ["node"],
+		"lib": ["ES2022", "dom", "esnext"]
+	},
+	"angularCompilerOptions": {
+		"compilationMode": "partial",
+		"skipTemplateCodegen": true,
+		"strictMetadataEmit": true,
+		"fullTemplateTypeCheck": true,
+		"strictInjectionParameters": true,
+		"enableResourceInlining": true
+	},
+	"exclude": ["test.ts", "**/*.spec.ts"]
 }
