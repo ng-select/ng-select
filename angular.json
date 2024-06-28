@@ -89,7 +89,7 @@
               "zone.js"
             ],
             "tsConfig": "src/demo/tsconfig.app.json",
-            "baseHref": "/ng-select/",
+            "deployUrl": "/ng-select/",
             "assets": [
               "src/demo/favicon.ico",
               "src/demo/assets"
