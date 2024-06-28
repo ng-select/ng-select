@@ -1,11 +1,6 @@
-<p>
-    By default ng-select binds to default <b>label</b> property for display, and keeps whole <b>object</b> as selected
-    value
-</p>
+<p>By default ng-select binds to default <b>label</b> property for display, and keeps whole <b>object</b> as selected value</p>
 
-<ng-select [items]="defaultBindingsList"
-           [(ngModel)]="selectedCity">
-</ng-select>
+<ng-select [items]="defaultBindingsList" [(ngModel)]="selectedCity"> </ng-select>
 
-<br>
-Selected city object: {{selectedCity | json}}
+<br />
+Selected city object: {{ selectedCity | json }}
