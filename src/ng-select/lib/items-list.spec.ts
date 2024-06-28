@@ -1,6 +1,6 @@
 import { NgSelectConfig } from './config.service';
 import { ItemsList } from './items-list';
-import { NgSelectComponent } from '@ng-select/ng-select';
+import { NgSelectComponent } from './ng-select.component';
 import { DefaultSelectionModel } from './selection-model';
 
 describe('ItemsList', () => {
