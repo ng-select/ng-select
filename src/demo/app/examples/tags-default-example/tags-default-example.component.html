@@ -1,10 +1,7 @@
 <p>If option doesn't exist among items you can add new one using <b>[addTag]="true"</b></p>
 
-<ng-select [items]="[]"
-           [addTag]="true"
-           [(ngModel)]="selectedCompany">
-</ng-select>
+<ng-select [items]="[]" [addTag]="true" [(ngModel)]="selectedCompany"> </ng-select>
 
-<br>
+<br />
 
-Selected value: {{selectedCompany | json}}
+Selected value: {{ selectedCompany | json }}

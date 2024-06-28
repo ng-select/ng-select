@@ -35,51 +35,51 @@
             }
         }
 
-        @if (multiple && multiLabelTemplate && selectedValues.length > 0) {
-            <ng-template
-                [ngTemplateOutlet]="multiLabelTemplate"
-                [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
-            </ng-template>
-        }
+		@if (multiple && multiLabelTemplate && selectedValues.length > 0) {
+			<ng-template [ngTemplateOutlet]="multiLabelTemplate" [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
+			</ng-template>
+		}
 
-    <div class="ng-input">
-      <input
-        #searchInput
-        [attr.id]="labelForId"
-        [placeholder]="this.selectedItems && this.selectedItems.length ? '' : placeholder"
-        [required]="required"
-        [readonly]="!searchable || itemsList.maxItemsSelected"
-        [disabled]="disabled"
-        [value]="searchTerm ? searchTerm : ''"
-        role="combobox"
-        type="text"
-        [attr.tabindex]="tabIndex"
-        [attr.aria-autocomplete]="searchable ? 'list' : null"
-        [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
-        [attr.aria-controls]="isOpen ? dropdownId : null"
-        [attr.aria-describedby]="describedBy"
-        [attr.aria-expanded]="isOpen"
-        aria-haspopup="listbox"
-        [attr.aria-invalid]="invalid"
-        [attr.aria-required]="required ? 'true' : null"
-        (input)="filter(searchInput.value)"
-        (compositionstart)="onCompositionStart()"
-        (compositionend)="onCompositionEnd(searchInput.value)"
-        (blur)="onInputBlur($event)"
-        (change)="$event.stopPropagation()"
-        (focus)="onInputFocus($event)"
-      />
+        <div
+            class="ng-input"
+            role="combobox"
+            [attr.aria-expanded]="isOpen"
+            [attr.aria-owns]="isOpen ? dropdownId : null"
+            aria-haspopup="listbox">
+
+            <input #searchInput
+                  [attr.id]="labelForId"
+                  [attr.tabindex]="tabIndex"
+                  [placeholder]="this.selectedItems && this.selectedItems.length ? '' : placeholder"
+                  [required]="required"
+                  [readonly]="!searchable || itemsList.maxItemsSelected"
+                  [disabled]="disabled"
+                  [value]="searchTerm ? searchTerm : ''"
+                  role="combobox"
+                  type="text"
+                  [attr.aria-autocomplete]="searchable ? 'list' : null"
+                  [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
+                  [attr.aria-controls]="isOpen ? dropdownId : null"
+                  [attr.aria-describedby]="describedBy"
+                  [attr.aria-expanded]="isOpen"
+                  aria-haspopup="listbox"
+                  [attr.aria-invalid]="invalid"
+                  [attr.aria-required]="required ? 'true' : null"
+                  (input)="filter(searchInput.value)"
+                  (compositionstart)="onCompositionStart()"
+                  (compositionend)="onCompositionEnd(searchInput.value)"
+                  (blur)="onInputBlur($event)"
+                  (change)="$event.stopPropagation()"
+                  (focus)="onInputFocus($event)">
+        </div>
     </div>
-  </div>
 
-    @if (loading) {
-        <ng-template #defaultLoadingSpinnerTemplate>
-            <div class="ng-spinner-loader"></div>
-        </ng-template>
-        <ng-template
-            [ngTemplateOutlet]="loadingSpinnerTemplate || defaultLoadingSpinnerTemplate">
-        </ng-template>
-    }
+	@if (loading) {
+		<ng-template #defaultLoadingSpinnerTemplate>
+			<div class="ng-spinner-loader"></div>
+		</ng-template>
+		<ng-template [ngTemplateOutlet]="loadingSpinnerTemplate || defaultLoadingSpinnerTemplate"> </ng-template>
+	}
 
     @if (showClear()) {
       <button
@@ -151,8 +151,13 @@
                 </div>
             }
             @if (showAddTag) {
-                <div class="ng-option" [class.ng-option-marked]="!itemsList.markedItem"
-                     (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()">
+                <div
+                    class="ng-option"
+                    [class.ng-option-marked]="!itemsList.markedItem"
+                    (mouseover)="itemsList.unmarkItem()"
+                    role="option"
+                    (click)="selectTag()"
+                    >
                     <ng-template #defaultTagTemplate>
                         <span><span class="ng-tag-label">{{ addTagText }}</span>"{{ searchTerm }}"</span>
                     </ng-template>

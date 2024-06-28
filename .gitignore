@@ -12,3 +12,5 @@ travis_rsa.pub
 dist.tgz
 /.vs
 .yarn
+.nx/cache
+.nx/workspace-data
