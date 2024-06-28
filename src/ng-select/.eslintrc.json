@@ -1,27 +1,18 @@
 {
-  "extends": "../../.eslintrc.json",
-  "ignorePatterns": [
-    "!**/*"
-  ],
-  "overrides": [
-    {
-      "files": [
-        "*.ts"
-      ],
-      "parserOptions": {
-        "project": [
-          "src/ng-select/tsconfig.lib.json",
-          "src/ng-select/tsconfig.spec.json"
-        ],
-        "createDefaultProgram": true
-      },
-      "rules": {}
-    },
-    {
-      "files": [
-        "*.html"
-      ],
-      "rules": {}
-    }
-  ]
+	"extends": "../../.eslintrc.json",
+	"ignorePatterns": ["!**/*"],
+	"overrides": [
+		{
+			"files": ["*.ts"],
+			"parserOptions": {
+				"project": ["src/ng-select/tsconfig.lib.json", "src/ng-select/tsconfig.spec.json"],
+				"createDefaultProgram": true
+			},
+			"rules": {}
+		},
+		{
+			"files": ["*.html"],
+			"rules": {}
+		}
+	]
 }
