@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { NgDropdownPanelService } from './ng-dropdown-panel.service';
+import { NgDropdownPanelService } from '@ng-select/ng-select';
 
 describe('NgDropdownPanelService', () => {
 
