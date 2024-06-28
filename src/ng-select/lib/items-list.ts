@@ -1,5 +1,5 @@
 import { newId } from './id';
-import { NgSelectComponent } from '@ng-select/ng-select';
+import { NgSelectComponent } from './ng-select.component';
 import { NgOption } from './ng-select.types';
 import * as searchHelper from './search-helper';
 import { SelectionModel } from './selection-model';

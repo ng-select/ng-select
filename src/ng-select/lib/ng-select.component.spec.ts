@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
 import { KeyCode, NgOption } from './ng-select.types';
 import { MockConsole, MockNgZone } from '../testing/mocks';
-import { NgSelectComponent } from '@ng-select/ng-select';
+import { NgSelectComponent } from './ng-select.component';
 import { NgSelectModule } from './ng-select.module';
 import { Subject } from 'rxjs';
 import { NgSelectConfig } from './config.service';
@@ -387,7 +387,12 @@ describe('NgSelectComponent', () => {
 			select = fixture.componentInstance.select;
 			fixture.componentInstance.selectedCity = { id: 1, name: 'Vilnius' };
 			tickAndDetectChanges(fixture);
-			expect(select.selectedItems).toEqual([jasmine.objectContaining({ label: 'Vilnius', value: { id: 1, name: 'Vilnius' } })]);
+			expect(select.selectedItems).toEqual([
+				jasmine.objectContaining({
+					label: 'Vilnius',
+					value: { id: 1, name: 'Vilnius' },
+				}),
+			]);
 
 			fixture.componentInstance.cities = [
 				{ id: 1, name: 'Vilnius' },
@@ -816,7 +821,12 @@ describe('NgSelectComponent', () => {
 			expect(fixture.componentInstance.selectedCity).toBe(<any>'Vilnius');
 			fixture.componentInstance.selectedCity = <any>'Kaunas';
 			tickAndDetectChanges(fixture);
-			expect(fixture.componentInstance.select.selectedItems).toEqual([jasmine.objectContaining({ label: 'Kaunas', value: 'Kaunas' })]);
+			expect(fixture.componentInstance.select.selectedItems).toEqual([
+				jasmine.objectContaining({
+					label: 'Kaunas',
+					value: 'Kaunas',
+				}),
+			]);
 		}));
 
 		it('should bind to object', fakeAsync(() => {
@@ -1279,7 +1289,10 @@ describe('NgSelectComponent', () => {
 			expect(options[1].innerText).toBe('Kaunas');
 			expect(options[2].innerText).toBe('Pabrade');
 
-			fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
+			fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({
+				id: i,
+				name: String.fromCharCode(97 + i),
+			}));
 			tickAndDetectChanges(fixture);
 			options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
 			expect(options.length).toBe(30);
@@ -1326,7 +1339,10 @@ describe('NgSelectComponent', () => {
 			expect(options[1].innerText).toBe('Kaunas');
 			expect(options[2].innerText).toBe('Pabrade');
 
-			fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
+			fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({
+				id: i,
+				name: String.fromCharCode(97 + i),
+			}));
 			tickAndDetectChanges(fixture);
 			fixture.detectChanges();
 
@@ -1359,7 +1375,10 @@ describe('NgSelectComponent', () => {
 			expect(options[1].innerText).toBe('Kaunas');
 			expect(options[2].innerText).toBe('Pabrade');
 
-			fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({ id: i, name: String.fromCharCode(97 + i) }));
+			fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({
+				id: i,
+				name: String.fromCharCode(97 + i),
+			}));
 			tickAndDetectChanges(fixture);
 			fixture.detectChanges();
 			options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
@@ -3898,7 +3917,12 @@ describe('NgSelectComponent', () => {
 				triggerMousedown();
 				tickAndDetectChanges(fixture);
 				expect(fixture.componentInstance.selectedCities.length).toBe(1);
-				expect(fixture.componentInstance.selectedCities[0]).toEqual(jasmine.objectContaining({ id: 2, name: 'Kaunas' }));
+				expect(fixture.componentInstance.selectedCities[0]).toEqual(
+					jasmine.objectContaining({
+						id: 2,
+						name: 'Kaunas',
+					}),
+				);
 				expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
 			}));
 
@@ -4777,8 +4801,6 @@ class NgSelectGroupingTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 	selectedAccountName = 'Adam';
 	selectedAccount = null;
-	groupByFn = (item) => item.child.name;
-	groupValueFn = (key, _) => ({ group: key });
 	accounts = [
 		{ name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { name: 'c1' } },
 		{ name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States', child: { name: 'c1' } },
@@ -4791,7 +4813,6 @@ class NgSelectGroupingTestComponent {
 		{ name: 'Michael', email: 'michael@email.com', age: 15, country: 'Colombia', child: { name: 'c2' } },
 		{ name: 'Nicolás', email: 'nicole@email.com', age: 43, country: 'Colombia', child: { name: 'c2' } },
 	];
-
 	groupedAccounts = [
 		{
 			country: 'United States',
@@ -4824,4 +4845,8 @@ class NgSelectGroupingTestComponent {
 			],
 		},
 	];
+
+	groupByFn = (item) => item.child.name;
+
+	groupValueFn = (key, _) => ({ group: key });
 }
