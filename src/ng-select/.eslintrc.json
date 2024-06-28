@@ -10,8 +10,8 @@
       ],
       "parserOptions": {
         "project": [
-          "tsconfig.lib.json",
-          "tsconfig.spec.json"
+          "src/ng-select/tsconfig.lib.json",
+          "src/ng-select/tsconfig.spec.json"
         ],
         "createDefaultProgram": true
       },
