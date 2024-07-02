@@ -4,8 +4,13 @@
 	[class.ng-has-value]="hasValue"
 	class="ng-select-container">
 	<div class="ng-value-container">
-		<div class="ng-placeholder">{{ placeholder }}</div>
-
+        <ng-template #defaultPlaceholderTemplate>
+            <div class="ng-placeholder">{{ placeholder }}</div>
+        </ng-template>
+        <ng-template
+			[ngTemplateOutlet]="placeholderTemplate || defaultPlaceholderTemplate">
+        </ng-template>
+		
 		@if ((!multiLabelTemplate || !multiple) && selectedItems.length > 0) {
 			@for (item of selectedItems; track trackByOption($index, item)) {
 				<div [class.ng-value-disabled]="item.disabled" class="ng-value">
