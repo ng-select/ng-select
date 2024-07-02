@@ -2316,6 +2316,22 @@ describe('NgSelectComponent', () => {
 			expect(items[0].disabled).toBeTruthy();
 		}));
 
+		it('should display ng-placeholder template', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [(ngModel)]="selectedCity">
+					<ng-template ng-placeholder-tmp>
+						<div class="placeholder-template">Select your city</div>
+					</ng-template>
+                </ng-select>`,
+			);
+
+			fixture.componentInstance.selectedCity = undefined;
+			tickAndDetectChanges(fixture);
+			expect(fixture.debugElement.query(By.css('.placeholder-template')).nativeElement.innerHTML).toBe('Select your city');
+			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeFalsy();
+		}));
+
 		it('should update ng-option label', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
