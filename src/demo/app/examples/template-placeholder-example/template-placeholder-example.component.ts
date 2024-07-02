@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 	templateUrl: './template-placeholder-example.component.html',
 	styleUrls: ['./template-placeholder-example.component.scss'],
 })
-export class TemplatePlaceholderExampleComponent implements OnInit {
+export class TemplatePlaceholderExampleComponent {
 	cities = [
 		{
 			id: 1,
@@ -29,5 +29,4 @@ export class TemplatePlaceholderExampleComponent implements OnInit {
 
 	placeholderAvatar = '//www.gravatar.com/avatar/b0d8c6e5ea589e6fc3d3e08afb1873bb?d=retro&r=g&s=30 2x'
 
-	ngOnInit() {}
 }
