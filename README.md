@@ -218,6 +218,7 @@ map: {
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
 | [inputAttrs] | `{ [key: string]: string }` |  `-` | no | Pass custom attributes to underlying `input` element |
 | [tabIndex] | `number` |  `-` | no | Set tabindex on ng-select |
+| [preventToggleOnRightClick] | `boolean` |  `false` | no | Prevent opening of ng-select on right mouse click |
 | [keyDownFn] | `($event: KeyboardEvent) => bool` |  `true` | no | Provide custom keyDown function. Executed before default handler. Return false to suppress execution of default key down handlers  |
 
 ### Outputs
