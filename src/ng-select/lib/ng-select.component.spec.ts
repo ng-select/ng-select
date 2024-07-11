@@ -3851,6 +3851,14 @@ describe('NgSelectComponent', () => {
 				tickAndDetectChanges(fixture);
 				expect(focus).toHaveBeenCalled();
 			}));
+
+			it('shouldnt focus dropdown, because prevent flag is true for right mouse click', fakeAsync(() => {
+				select.preventToggleOnRightClick = true;
+				const preventDefault = spyOn(event, 'preventDefault');
+				triggerMousedown();
+				tickAndDetectChanges(fixture);
+				expect(preventDefault).not.toHaveBeenCalled();
+			}));
 		});
 
 		describe('input click', () => {
