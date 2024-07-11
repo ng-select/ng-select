@@ -82,6 +82,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() placeholder: string;
 	@Input() notFoundText: string;
 	@Input() typeToSearchText: string;
+	@Input() preventToggleOnRightClick: boolean = false;
 	@Input() addTagText: string;
 	@Input() loadingText: string;
 	@Input() clearAllText: string;
@@ -379,6 +380,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	handleMousedown($event: MouseEvent) {
+		if (this.preventToggleOnRightClick && $event.button === 2) {
+			return false;
+		}
 		const target = $event.target as HTMLElement;
 		if (target.tagName !== 'INPUT') {
 			$event.preventDefault();
