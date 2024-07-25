@@ -58,7 +58,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() markedItem: NgOption;
 	@Input() position: DropdownPosition = 'auto';
 	@Input() appendTo: string;
-	@Input() bufferAmount;
+	@Input() bufferAmount:number;
 	@Input({ transform: booleanAttribute }) virtualScroll = false;
 	@Input() headerTemplate: TemplateRef<any>;
 	@Input() footerTemplate: TemplateRef<any>;
