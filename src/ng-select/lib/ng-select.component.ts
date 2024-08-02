@@ -11,7 +11,7 @@ import {
 	forwardRef,
 	HostBinding,
 	HostListener,
-	inject,
+	Inject,
 	InjectionToken,
 	Input,
 	numberAttribute,
@@ -75,7 +75,6 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
-	public config = inject(NgSelectConfig);
 	@Input() bindLabel: string;
 	@Input() bindValue: string;
 	@Input({ transform: booleanAttribute }) markFirst = true;
@@ -154,8 +153,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	element: HTMLElement;
 	focused: boolean;
 	escapeHTML = true;
-	private _cd = inject(ChangeDetectorRef);
-	private _console = inject(ConsoleService);
 	private _itemsAreUsed: boolean;
 	private _defaultLabel = 'label';
 	private _primitive;
@@ -168,11 +165,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	constructor(
 		@Attribute('class') public classes: string,
 		@Attribute('autofocus') private autoFocus: any,
+		public config: NgSelectConfig,
+		@Inject(SELECTION_MODEL_FACTORY) newSelectionModel: SelectionModelFactory,
+		_elementRef: ElementRef<HTMLElement>,
+		private _cd: ChangeDetectorRef,
+		private _console: ConsoleService,
 	) {
-		const _elementRef = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>);
-		const newSelectionModel = inject<SelectionModelFactory>(SELECTION_MODEL_FACTORY);
-
-		this._mergeGlobalConfig(this.config);
+		this._mergeGlobalConfig(config);
 		this.itemsList = new ItemsList(this, newSelectionModel());
 		this.element = _elementRef.nativeElement;
 	}
