@@ -5,6 +5,7 @@ import {
 	Component,
 	ElementRef,
 	inject,
+	input,
 	Input,
 	NgZone,
 	OnChanges,
@@ -31,35 +32,36 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	encapsulation: ViewEncapsulation.None,
 	selector: 'ng-dropdown-panel',
+
 	template: `
-		@if (headerTemplate) {
+		@if (headerTemplate()) {
 			<div class="ng-dropdown-header">
-				<ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }" />
+				<ng-container [ngTemplateOutlet]="headerTemplate()" [ngTemplateOutletContext]="{ searchTerm: filterValue() }" />
 			</div>
 		}
 		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host">
-			<div #padding [class.total-padding]="virtualScroll"></div>
-			<div #content [class.scrollable-content]="virtualScroll && items.length">
+			<div #padding [class.total-padding]="virtualScroll()"></div>
+			<div #content [class.scrollable-content]="virtualScroll() && items.length">
 				<ng-content />
 			</div>
 		</div>
-		@if (footerTemplate) {
+		@if (footerTemplate()) {
 			<div class="ng-dropdown-footer">
-				<ng-container [ngTemplateOutlet]="footerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }" />
+				<ng-container [ngTemplateOutlet]="footerTemplate()" [ngTemplateOutletContext]="{ searchTerm: filterValue() }" />
 			</div>
 		}
 	`,
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() items: NgOption[] = [];
-	@Input() markedItem: NgOption;
-	@Input() position: DropdownPosition = 'auto';
-	@Input() appendTo: string;
-	@Input() bufferAmount: number;
-	@Input({ transform: booleanAttribute }) virtualScroll = false;
-	@Input() headerTemplate: TemplateRef<any>;
-	@Input() footerTemplate: TemplateRef<any>;
-	@Input() filterValue: string = null;
+	markedItem = input<NgOption>();
+	position = input<DropdownPosition>('auto');
+	appendTo = input<string>();
+	bufferAmount = input<number>();
+	virtualScroll = input(booleanAttribute(false), { transform: booleanAttribute });
+	headerTemplate = input<TemplateRef<any>>();
+	footerTemplate = input<TemplateRef<any>>();
+	filterValue = input<string>(null);
 	update = output<any[]>();
 	scroll = output<{ start: number; end: number }>();
 	scrollToEnd = output<void>();
@@ -108,9 +110,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	private get _startOffset() {
-		if (this.markedItem) {
+		if (this.markedItem()) {
 			const { itemHeight, panelHeight } = this._panelService.dimensions;
-			const offset = this.markedItem.index * itemHeight;
+			const offset = this.markedItem()!.index * itemHeight;
 			return panelHeight > offset ? 0 : offset;
 		}
 		return 0;
@@ -138,7 +140,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		this._destroy$.next();
 		this._destroy$.complete();
 		this._destroy$.unsubscribe();
-		if (this.appendTo) {
+		if (this.appendTo()) {
 			this._renderer.removeChild(this._dropdown.parentNode, this._dropdown);
 		}
 	}
@@ -154,7 +156,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		}
 
 		let scrollTo;
-		if (this.virtualScroll) {
+		if (this.virtualScroll()) {
 			const itemHeight = this._panelService.dimensions.itemHeight;
 			scrollTo = this._panelService.getScrollTo(index * itemHeight, itemHeight, this._lastScrollPosition);
 		} else {
@@ -185,7 +187,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 			this._updateDropdownClass('bottom');
 		}
 
-		if (this.appendTo) {
+		if (this.appendTo()) {
 			this._updateYPosition();
 		}
 
@@ -249,7 +251,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		this._scrollToEndFired = false;
 		this.itemsLength = items.length;
 
-		if (this.virtualScroll) {
+		if (this.virtualScroll()) {
 			this._updateItemsRange(firstChange);
 		} else {
 			this._setVirtualHeight();
@@ -268,7 +270,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 				const panelHeight = this._scrollablePanel.clientHeight;
 				this._panelService.setDimensions(0, panelHeight);
 				this._handleDropdownPosition();
-				this.scrollTo(this.markedItem, firstChange);
+				this.scrollTo(this.markedItem()!, firstChange);
 			});
 		});
 	}
@@ -287,7 +289,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	private _onContentScrolled(scrollTop: number) {
-		if (this.virtualScroll) {
+		if (this.virtualScroll()) {
 			this._renderItemsRange(scrollTop);
 		}
 		this._lastScrollPosition = scrollTop;
@@ -319,7 +321,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		}
 
 		scrollTop = scrollTop || this._scrollablePanel.scrollTop;
-		const range = this._panelService.calculateItems(scrollTop, this.itemsLength, this.bufferAmount);
+		const range = this._panelService.calculateItems(scrollTop, this.itemsLength, this.bufferAmount());
 		this._updateVirtualHeight(range.scrollHeight);
 		this._contentPanel.style.transform = `translateY(${range.topPadding}px)`;
 
@@ -358,7 +360,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 			return;
 		}
 
-		const padding = this.virtualScroll ? this._virtualPadding : this._contentPanel;
+		const padding = this.virtualScroll() ? this._virtualPadding : this._contentPanel;
 
 		if (scrollTop + this._dropdown.clientHeight >= padding.clientHeight - 1) {
 			this._zone.run(() => this.scrollToEnd.emit());
@@ -367,8 +369,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	private _calculateCurrentPosition(dropdownEl: HTMLElement) {
-		if (this.position !== 'auto') {
-			return this.position;
+		if (this.position() !== 'auto') {
+			return this.position();
 		}
 		const selectRect: ClientRect = this._select.getBoundingClientRect();
 		const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
@@ -383,13 +385,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	private _appendDropdown() {
-		if (!this.appendTo) {
+		if (!this.appendTo()!) {
 			return;
 		}
 
-		this._parent = document.querySelector(this.appendTo);
+		this._parent = document.querySelector(this.appendTo()!);
 		if (!this._parent) {
-			throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`);
+			throw new Error(`appendTo selector ${this.appendTo()!} did not found any parent element`);
 		}
 		this._updateXPosition();
 		this._parent.appendChild(this._dropdown);

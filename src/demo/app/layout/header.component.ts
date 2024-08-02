@@ -1,10 +1,11 @@
-import { Component, Input, output } from '@angular/core';
+import { Component, input, Input, output } from '@angular/core';
 
 type langDir = 'ltr' | 'rtl';
 type theme = 'default' | 'ant' | 'material';
 
 @Component({
 	selector: 'layout-header',
+
 	template: `
 		<nav class="navbar navbar-expand flex-column flex-md-row bd-navbar">
 			<a class="navbar-brand" href="#">
@@ -60,7 +61,7 @@ type theme = 'default' | 'ant' | 'material';
 export class LayoutHeaderComponent {
 	@Input() dir: langDir;
 	@Input() theme = 'default';
-	@Input() version: string;
+	version = input<string>();
 	dirChange = output<langDir>();
 	themeChange = output<theme>();
 

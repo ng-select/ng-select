@@ -1,19 +1,21 @@
-import * as searchHelper from './search-helper';
-import { AfterViewInit, Directive, ElementRef, Input, OnChanges, Renderer2, inject } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, inject, input, OnChanges, Renderer2 } from '@angular/core';
 
 @Directive({
 	selector: '[ngOptionHighlight]',
 })
 export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
+	term = input<string>(undefined, { alias: 'ngOptionHighlight' });
 	private elementRef = inject(ElementRef);
 	private renderer = inject(Renderer2);
-	@Input('ngOptionHighlight') term: string;
-
 	private element: HTMLElement;
 	private label: string;
 
 	constructor() {
 		this.element = this.elementRef.nativeElement;
+	}
+
+	private get _canHighlight() {
+		return this._isDefined(this.term()) && this._isDefined(this.label);
 	}
 
 	ngOnChanges() {
@@ -35,18 +37,14 @@ export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
 
 	private _highlightLabel() {
 		const label = this.label;
-		if (!this.term) {
+		if (!this.term()) {
 			this._setInnerHtml(label);
 			return;
 		}
 
-		const alternationString = this._escapeRegExp(this.term).replace(' ', '|');
+		const alternationString = this._escapeRegExp(this.term()).replace(' ', '|');
 		const termRegex = new RegExp(alternationString, 'gi');
 		this._setInnerHtml(label.replace(termRegex, `<span class=\"highlighted\">$&</span>`));
-	}
-
-	private get _canHighlight() {
-		return this._isDefined(this.term) && this._isDefined(this.label);
 	}
 
 	private _setInnerHtml(html) {

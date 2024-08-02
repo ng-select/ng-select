@@ -1,14 +1,14 @@
-import { Directive, ElementRef, inject, Input, OnChanges, SimpleChanges, TemplateRef } from '@angular/core';
+import { Directive, ElementRef, inject, OnChanges, SimpleChanges, TemplateRef, input } from '@angular/core';
 import { escapeHTML } from './value-utils';
 
 @Directive({ selector: '[ngItemLabel]' })
 export class NgItemLabelDirective implements OnChanges {
-	@Input() ngItemLabel: string;
-	@Input() escape = true;
+	ngItemLabel = input<string>();
+	escape = input(true);
 	private element = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>);
 
 	ngOnChanges(changes: SimpleChanges) {
-		this.element.nativeElement.innerHTML = this.escape ? escapeHTML(this.ngItemLabel) : this.ngItemLabel;
+		this.element.nativeElement.innerHTML = this.escape() ? escapeHTML(this.ngItemLabel()) : this.ngItemLabel();
 	}
 }
 

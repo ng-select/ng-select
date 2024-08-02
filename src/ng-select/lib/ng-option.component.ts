@@ -4,11 +4,11 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	Input,
 	OnChanges,
 	OnDestroy,
 	SimpleChanges,
 	inject,
+	input,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -19,8 +19,8 @@ import { Subject } from 'rxjs';
 })
 export class NgOptionComponent implements OnChanges, AfterViewChecked, OnDestroy {
 	public elementRef = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>);
-	@Input() value: any;
-	@Input({ transform: booleanAttribute }) disabled: boolean = false;
+	value = input<any>();
+	disabled = input<boolean, boolean | string>(booleanAttribute(false), { transform: booleanAttribute });
 
 	readonly stateChange$ = new Subject<{ value: any; disabled: boolean; label?: string }>();
 
@@ -33,8 +33,8 @@ export class NgOptionComponent implements OnChanges, AfterViewChecked, OnDestroy
 	ngOnChanges(changes: SimpleChanges) {
 		if (changes.disabled) {
 			this.stateChange$.next({
-				value: this.value,
-				disabled: this.disabled,
+				value: this.value(),
+				disabled: this.disabled(),
 			});
 		}
 	}
@@ -43,8 +43,8 @@ export class NgOptionComponent implements OnChanges, AfterViewChecked, OnDestroy
 		if (this.label !== this._previousLabel) {
 			this._previousLabel = this.label;
 			this.stateChange$.next({
-				value: this.value,
-				disabled: this.disabled,
+				value: this.value(),
+				disabled: this.disabled(),
 				label: this.elementRef.nativeElement.innerHTML,
 			});
 		}
