@@ -3,7 +3,6 @@
 	<b>true</b>. It's useful when you want to modify part of a long search query
 </p>
 
-<ng-select [items]="people$ | async" bindLabel="name" bindValue="id" [editableSearchTerm]="true" [(ngModel)]="selectedPersonId">
-</ng-select>
+<ng-select [items]="people$ | async" bindLabel="name" bindValue="id" [editableSearchTerm]="true" [(ngModel)]="selectedPersonId" />
 
 <br />Selected: {{ selectedPersonId }}

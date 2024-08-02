@@ -1,7 +1,6 @@
 <p>By providing custom function to <b>[addTag]</b> you can modify result of new tag</p>
 
-<ng-select [items]="companies" [addTag]="addTagFn" [hideSelected]="true" multiple="true" bindLabel="name" [(ngModel)]="selectedCompanies">
-</ng-select>
+<ng-select [items]="companies" [addTag]="addTagFn" [hideSelected]="true" multiple="true" bindLabel="name" [(ngModel)]="selectedCompanies" />
 
 <br />
 Selected value: {{ selectedCompanies | json }}
