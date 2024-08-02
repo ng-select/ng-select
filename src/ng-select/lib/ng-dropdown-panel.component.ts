@@ -4,26 +4,24 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
-	EventEmitter,
+	inject,
 	Input,
 	NgZone,
 	OnChanges,
 	OnDestroy,
 	OnInit,
-	Output,
+	output,
 	Renderer2,
 	SimpleChanges,
 	TemplateRef,
 	ViewChild,
 	ViewEncapsulation,
-	inject,
 } from '@angular/core';
 import { animationFrameScheduler, asapScheduler, fromEvent, merge, Subject } from 'rxjs';
 import { auditTime, takeUntil } from 'rxjs/operators';
 import { NgDropdownPanelService, PanelDimensions } from './ng-dropdown-panel.service';
 
-import { DropdownPosition } from './ng-select.types';
-import { NgOption } from './ng-select.types';
+import { DropdownPosition, NgOption } from './ng-select.types';
 import { isDefined } from './value-utils';
 
 const CSS_POSITIONS: Readonly<string[]> = ['top', 'right', 'bottom', 'left'];
@@ -53,11 +51,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 	`,
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
-	private _renderer = inject(Renderer2);
-	private _zone = inject(NgZone);
-	private _panelService = inject(NgDropdownPanelService);
 	@Input() items: NgOption[] = [];
-	private _document = inject<any>(DOCUMENT, { optional: true });
 	@Input() markedItem: NgOption;
 	@Input() position: DropdownPosition = 'auto';
 	@Input() appendTo: string;
@@ -66,16 +60,17 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() headerTemplate: TemplateRef<any>;
 	@Input() footerTemplate: TemplateRef<any>;
 	@Input() filterValue: string = null;
-
-	@Output() update = new EventEmitter<any[]>();
-	@Output() scroll = new EventEmitter<{ start: number; end: number }>();
-	@Output() scrollToEnd = new EventEmitter<void>();
-	@Output() outsideClick = new EventEmitter<void>();
-
+	update = output<any[]>();
+	scroll = output<{ start: number; end: number }>();
+	scrollToEnd = output<void>();
+	outsideClick = output<void>();
 	@ViewChild('content', { read: ElementRef, static: true }) contentElementRef: ElementRef;
 	@ViewChild('scroll', { read: ElementRef, static: true }) scrollElementRef: ElementRef;
 	@ViewChild('padding', { read: ElementRef, static: true }) paddingElementRef: ElementRef;
-
+	private _renderer = inject(Renderer2);
+	private _zone = inject(NgZone);
+	private _panelService = inject(NgDropdownPanelService);
+	private _document = inject<any>(DOCUMENT, { optional: true });
 	private readonly _destroy$ = new Subject<void>();
 	private readonly _dropdown: HTMLElement;
 	private _virtualPadding: HTMLElement;

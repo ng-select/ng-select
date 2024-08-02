@@ -8,7 +8,6 @@ import {
 	ContentChild,
 	ContentChildren,
 	ElementRef,
-	EventEmitter,
 	forwardRef,
 	HostBinding,
 	HostListener,
@@ -19,7 +18,7 @@ import {
 	OnChanges,
 	OnDestroy,
 	OnInit,
-	Output,
+	output,
 	QueryList,
 	SimpleChanges,
 	TemplateRef,
@@ -120,17 +119,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input({ transform: booleanAttribute }) @HostBinding('class.ng-select-clearable') clearable = true;
 	@Input() @HostBinding('class.ng-select-opened') isOpen?: boolean = false;
 	// output events
-	@Output('blur') blurEvent = new EventEmitter();
-	@Output('focus') focusEvent = new EventEmitter();
-	@Output('change') changeEvent = new EventEmitter();
-	@Output('open') openEvent = new EventEmitter();
-	@Output('close') closeEvent = new EventEmitter();
-	@Output('search') searchEvent = new EventEmitter<{ term: string; items: any[] }>();
-	@Output('clear') clearEvent = new EventEmitter();
-	@Output('add') addEvent = new EventEmitter();
-	@Output('remove') removeEvent = new EventEmitter();
-	@Output('scroll') scroll = new EventEmitter<{ start: number; end: number }>();
-	@Output('scrollToEnd') scrollToEnd = new EventEmitter();
+	blurEvent = output({ alias: 'blur' });
+	focusEvent = output({ alias: 'focus' });
+	changeEvent = output<any[]>({ alias: 'change' });
+	openEvent = output({ alias: 'open' });
+	closeEvent = output({ alias: 'close' });
+	searchEvent = output<{ term: string; items: any[] }>({ alias: 'search' });
+	clearEvent = output({ alias: 'clear' });
+	addEvent = output({ alias: 'add' });
+	removeEvent = output({ alias: 'remove' });
+	scroll = output<{ start: number; end: number }>({ alias: 'scroll' });
+	scrollToEnd = output({ alias: 'scrollToEnd' });
 	// custom templates
 	@ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
 	@ContentChild(NgOptgroupTemplateDirective, { read: TemplateRef }) optgroupTemplate: TemplateRef<any>;

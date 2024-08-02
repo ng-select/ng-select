@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input, output } from '@angular/core';
 
 type langDir = 'ltr' | 'rtl';
 type theme = 'default' | 'ant' | 'material';
@@ -61,8 +61,8 @@ export class LayoutHeaderComponent {
 	@Input() dir: langDir;
 	@Input() theme = 'default';
 	@Input() version: string;
-	@Output() dirChange = new EventEmitter<langDir>();
-	@Output() themeChange = new EventEmitter<theme>();
+	dirChange = output<langDir>();
+	themeChange = output<theme>();
 
 	setTheme(theme: theme) {
 		this.theme = theme;
