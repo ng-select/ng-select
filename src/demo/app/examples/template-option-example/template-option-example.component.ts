@@ -27,7 +27,5 @@ export class TemplateOptionExampleComponent implements OnInit {
 
 	selectedCity = this.cities[1].name;
 
-	constructor() {}
-
 	ngOnInit() {}
 }

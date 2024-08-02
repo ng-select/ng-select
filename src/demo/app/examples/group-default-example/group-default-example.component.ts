@@ -21,7 +21,5 @@ export class GroupDefaultExampleComponent implements OnInit {
 		{ name: 'Nicolás', email: 'nicole@email.com', age: 43, country: 'Colombia', child: { state: 'Inactive' } },
 	];
 
-	constructor() {}
-
 	ngOnInit() {}
 }

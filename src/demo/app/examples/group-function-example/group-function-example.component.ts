@@ -28,7 +28,5 @@ export class GroupFunctionExampleComponent implements OnInit {
 
 	groupValueFn = (_: string, children: any[]) => ({ name: children[0].child.state, total: children.length });
 
-	constructor() {}
-
 	ngOnInit() {}
 }

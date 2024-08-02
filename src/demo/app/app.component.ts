@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, inject } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { filter, map, mergeMap } from 'rxjs/operators';
@@ -11,6 +11,10 @@ import { NgSelectConfig } from '@ng-select/ng-select';
 	changeDetection: ChangeDetectionStrategy.Default,
 })
 export class AppComponent {
+	private router = inject(Router);
+	private activatedRoute = inject(ActivatedRoute);
+	private titleService = inject(Title);
+	private config = inject(NgSelectConfig);
 	title: string;
 	version: string = window['ngSelectVersion'];
 	exampleSourceUrl: string;
@@ -21,12 +25,7 @@ export class AppComponent {
 		return `${this.theme}-theme`;
 	}
 
-	constructor(
-		private router: Router,
-		private activatedRoute: ActivatedRoute,
-		private titleService: Title,
-		private config: NgSelectConfig,
-	) {
+	constructor() {
 		this.config.placeholder = 'Select item';
 		// This could be useful if you want to use appendTo in entire application without explicitly defining it. (eg: appendTo = 'body')
 		this.config.appendTo = null;

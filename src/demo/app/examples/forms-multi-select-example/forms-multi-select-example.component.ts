@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 	styleUrls: ['./forms-multi-select-example.component.scss'],
 })
 export class FormsMultiSelectExampleComponent implements OnInit {
+	private fb = inject(FormBuilder);
 	heroForm: FormGroup;
 	isCitiesControlVisible = true;
 	cities: any[] = [
@@ -15,8 +16,6 @@ export class FormsMultiSelectExampleComponent implements OnInit {
 		{ id: 3, name: 'Pavilnys (Disabled)', disabled: true },
 		{ id: 4, name: 'Pabradė' },
 	];
-
-	constructor(private fb: FormBuilder) {}
 
 	ngOnInit() {
 		this.heroForm = this.fb.group({

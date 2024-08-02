@@ -5,19 +5,18 @@ import {
 	Component,
 	ElementRef,
 	EventEmitter,
-	Inject,
 	Input,
 	NgZone,
 	OnChanges,
 	OnDestroy,
 	OnInit,
-	Optional,
 	Output,
 	Renderer2,
 	SimpleChanges,
 	TemplateRef,
 	ViewChild,
 	ViewEncapsulation,
+	inject,
 } from '@angular/core';
 import { animationFrameScheduler, asapScheduler, fromEvent, merge, Subject } from 'rxjs';
 import { auditTime, takeUntil } from 'rxjs/operators';
@@ -54,11 +53,15 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 	`,
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
+	private _renderer = inject(Renderer2);
+	private _zone = inject(NgZone);
+	private _panelService = inject(NgDropdownPanelService);
 	@Input() items: NgOption[] = [];
+	private _document = inject<any>(DOCUMENT, { optional: true });
 	@Input() markedItem: NgOption;
 	@Input() position: DropdownPosition = 'auto';
 	@Input() appendTo: string;
-	@Input() bufferAmount:number;
+	@Input() bufferAmount: number;
 	@Input({ transform: booleanAttribute }) virtualScroll = false;
 	@Input() headerTemplate: TemplateRef<any>;
 	@Input() footerTemplate: TemplateRef<any>;
@@ -84,13 +87,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	private _updateScrollHeight = false;
 	private _lastScrollPosition = 0;
 
-	constructor(
-		private _renderer: Renderer2,
-		private _zone: NgZone,
-		private _panelService: NgDropdownPanelService,
-		_elementRef: ElementRef,
-		@Optional() @Inject(DOCUMENT) private _document: any,
-	) {
+	constructor() {
+		const _elementRef = inject(ElementRef);
+
 		this._dropdown = _elementRef.nativeElement;
 	}
 

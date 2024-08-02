@@ -25,8 +25,6 @@ export class GroupSelectableHiddenExampleComponent implements OnInit {
 
 	selectedAccounts = [{ country: 'Argentina' }, { name: 'Samantha' }];
 
-	constructor() {}
-
 	ngOnInit() {}
 
 	compareAccounts = (item, selected) => {

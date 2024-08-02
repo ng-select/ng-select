@@ -8,6 +8,7 @@ import {
 	OnChanges,
 	OnDestroy,
 	SimpleChanges,
+	inject,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -17,14 +18,13 @@ import { Subject } from 'rxjs';
 	template: `<ng-content></ng-content>`,
 })
 export class NgOptionComponent implements OnChanges, AfterViewChecked, OnDestroy {
+	public elementRef = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>);
 	@Input() value: any;
 	@Input({ transform: booleanAttribute }) disabled: boolean = false;
 
 	readonly stateChange$ = new Subject<{ value: any; disabled: boolean; label?: string }>();
 
 	private _previousLabel: string;
-
-	constructor(public elementRef: ElementRef<HTMLElement>) {}
 
 	get label(): string {
 		return (this.elementRef.nativeElement.textContent || '').trim();

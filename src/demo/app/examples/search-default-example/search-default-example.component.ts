@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { DataService, Person } from '../data.service';
 
 @Component({
@@ -7,10 +7,9 @@ import { DataService, Person } from '../data.service';
 	styleUrls: ['./search-default-example.component.scss'],
 })
 export class SearchDefaultExampleComponent implements OnInit {
+	private dataService = inject(DataService);
 	people: Person[] = [];
 	peopleLoading = false;
-
-	constructor(private dataService: DataService) {}
 
 	ngOnInit() {
 		this.loadPeople();

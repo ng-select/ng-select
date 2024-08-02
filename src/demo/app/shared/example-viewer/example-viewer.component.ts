@@ -1,11 +1,11 @@
-import { Component, ComponentFactoryResolver, Directive, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentFactoryResolver, Directive, inject, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { EXAMPLE_COMPONENTS } from '../../examples/examples';
 
 @Directive({
 	selector: '[example-host]',
 })
 export class ExampleHostDirective {
-	constructor(public viewContainerRef: ViewContainerRef) {}
+	public viewContainerRef = inject(ViewContainerRef);
 }
 
 @Component({
@@ -33,12 +33,9 @@ export class ExampleHostDirective {
 })
 export class ExampleViewerComponent implements OnInit {
 	@Input() example: string;
-
 	@ViewChild(ExampleHostDirective, { static: true }) exampleHost: ExampleHostDirective;
-
 	title: string;
-
-	constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
+	private componentFactoryResolver = inject(ComponentFactoryResolver);
 
 	get sourcePath() {
 		return `https://github.com/ng-select/ng-select/tree/master/src/demo/app/examples/${this.example}`;

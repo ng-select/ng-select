@@ -1,19 +1,18 @@
 import * as searchHelper from './search-helper';
-import { AfterViewInit, Directive, ElementRef, Input, OnChanges, Renderer2 } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnChanges, Renderer2, inject } from '@angular/core';
 
 @Directive({
 	selector: '[ngOptionHighlight]',
 })
 export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
+	private elementRef = inject(ElementRef);
+	private renderer = inject(Renderer2);
 	@Input('ngOptionHighlight') term: string;
 
 	private element: HTMLElement;
 	private label: string;
 
-	constructor(
-		private elementRef: ElementRef,
-		private renderer: Renderer2,
-	) {
+	constructor() {
 		this.element = this.elementRef.nativeElement;
 	}
 

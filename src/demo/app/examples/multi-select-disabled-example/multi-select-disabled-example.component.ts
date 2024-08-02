@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataService } from '../data.service';
 
@@ -8,11 +8,10 @@ import { DataService } from '../data.service';
 	styleUrls: ['./multi-select-disabled-example.component.scss'],
 })
 export class MultiSelectDisabledExampleComponent implements OnInit {
+	private dataService = inject(DataService);
 	people$: Observable<any[]>;
 	selectedPeople = [];
 	disable = true;
-
-	constructor(private dataService: DataService) {}
 
 	ngOnInit() {
 		this.people$ = this.dataService.getPeople();

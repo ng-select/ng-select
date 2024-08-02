@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { DataService, Person } from '../data.service';
 import { map } from 'rxjs/operators';
 
@@ -8,10 +8,9 @@ import { map } from 'rxjs/operators';
 	styleUrls: ['./multi-checkbox-example.component.scss'],
 })
 export class MultiCheckboxExampleComponent implements OnInit {
+	private dataService = inject(DataService);
 	people: Person[] = [];
 	selectedPeople = [];
-
-	constructor(private dataService: DataService) {}
 
 	ngOnInit() {
 		this.dataService
