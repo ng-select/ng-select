@@ -539,7 +539,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	focus() {
-		this.searchInput.nativeElement.focus();
+		//this.searchInput.nativeElement.focus();
+		this.searchInput.nativeElement.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 	}
 
 	blur() {
