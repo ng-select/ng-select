@@ -177,10 +177,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this._deselectOnClick = value;
 	}
 
-	get dropdownPanelStaticClasses() {
-		return this.appendTo && this.classes ? `ng-dropdown-panel ${this.classes}` : 'ng-dropdown-panel';
-	}
-
 	// output events
 	@Output('blur') blurEvent = new EventEmitter();
 	@Output('focus') focusEvent = new EventEmitter();

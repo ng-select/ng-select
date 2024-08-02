@@ -35,10 +35,11 @@
             }
         }
 
-		@if (multiple && multiLabelTemplate && selectedValues.length > 0) {
-			<ng-template [ngTemplateOutlet]="multiLabelTemplate" [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
-			</ng-template>
-		}
+        @if (multiple && multiLabelTemplate && selectedValues.length > 0) {
+            <ng-template [ngTemplateOutlet]="multiLabelTemplate"
+                         [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
+            </ng-template>
+        }
 
         <div
             class="ng-input"
@@ -74,12 +75,12 @@
         </div>
     </div>
 
-	@if (loading) {
-		<ng-template #defaultLoadingSpinnerTemplate>
-			<div class="ng-spinner-loader"></div>
-		</ng-template>
-		<ng-template [ngTemplateOutlet]="loadingSpinnerTemplate || defaultLoadingSpinnerTemplate"> </ng-template>
-	}
+    @if (loading) {
+        <ng-template #defaultLoadingSpinnerTemplate>
+            <div class="ng-spinner-loader"></div>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="loadingSpinnerTemplate || defaultLoadingSpinnerTemplate"></ng-template>
+    }
 
     @if (showClear()) {
       <button
@@ -102,7 +103,7 @@
 
 @if (isOpen) {
     <ng-dropdown-panel
-      class="dropdownPanelStaticClasses"
+      class="ng-dropdown-panel"
       [class.ng-select-multiple]="multiple"
       [id]="dropdownId"
       role="listbox"
@@ -114,7 +115,7 @@
       [headerTemplate]="headerTemplate"
       [items]="itemsList.filteredItems"
       [markedItem]="itemsList.markedItem"
-      [ngClass]="appendTo ? classes : null"
+      [ngClass]="appendTo ? (ngClass ? ngClass : classes) : null"
       [position]="dropdownPosition"
       [virtualScroll]="virtualScroll"
       (outsideClick)="close()"
