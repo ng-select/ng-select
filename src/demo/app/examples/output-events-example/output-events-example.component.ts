@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { DataService } from '../data.service';
 
 interface Event {
@@ -12,12 +12,13 @@ interface Event {
 	styleUrls: ['./output-events-example.component.scss'],
 })
 export class OutputEventsExampleComponent implements OnInit {
+	private dataService = inject(DataService);
 	selectedItems: any;
 	items = [];
 
 	events: Event[] = [];
 
-	constructor(private dataService: DataService) {
+	constructor() {
 		this.dataService.getPeople().subscribe((items) => {
 			this.items = items;
 		});

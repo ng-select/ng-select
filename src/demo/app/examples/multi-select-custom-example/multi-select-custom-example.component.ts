@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataService } from '../data.service';
 
@@ -8,10 +8,9 @@ import { DataService } from '../data.service';
 	styleUrls: ['./multi-select-custom-example.component.scss'],
 })
 export class MultiSelectCustomExampleComponent implements OnInit {
+	private dataService = inject(DataService);
 	githubUsers$: Observable<any[]>;
 	selectedUsers = ['anjmao', 'anjmittu', 'anjmendoza'];
-
-	constructor(private dataService: DataService) {}
 
 	ngOnInit() {
 		this.githubUsers$ = this.dataService.getGithubAccounts('anjm');

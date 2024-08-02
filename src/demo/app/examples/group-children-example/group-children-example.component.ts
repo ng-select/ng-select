@@ -26,7 +26,5 @@ export class GroupChildrenExampleComponent implements OnInit {
 		},
 	];
 
-	constructor() {}
-
 	ngOnInit() {}
 }

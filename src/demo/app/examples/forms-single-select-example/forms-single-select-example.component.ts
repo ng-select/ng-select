@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -8,17 +8,14 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 	styleUrls: ['./forms-single-select-example.component.scss'],
 })
 export class FormsSingleSelectExampleComponent implements OnInit {
+	private fb = inject(FormBuilder);
+	private modalService = inject(NgbModal);
 	heroForm: FormGroup;
 	ages: any[] = [
 		{ value: '<18', label: 'Under 18' },
 		{ value: '18', label: '18' },
 		{ value: '>18', label: 'More than 18' },
 	];
-
-	constructor(
-		private fb: FormBuilder,
-		private modalService: NgbModal,
-	) {}
 
 	ngOnInit() {
 		this.heroForm = this.fb.group({

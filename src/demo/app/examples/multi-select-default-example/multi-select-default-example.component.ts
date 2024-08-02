@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataService } from '../data.service';
 
@@ -8,10 +8,9 @@ import { DataService } from '../data.service';
 	styleUrls: ['./multi-select-default-example.component.scss'],
 })
 export class MultiSelectDefaultExampleComponent implements OnInit {
+	private dataService = inject(DataService);
 	people$: Observable<any[]>;
 	selectedPeople = [{ name: 'Karyn Wright' }];
-
-	constructor(private dataService: DataService) {}
 
 	ngOnInit() {
 		this.people$ = this.dataService.getPeople();

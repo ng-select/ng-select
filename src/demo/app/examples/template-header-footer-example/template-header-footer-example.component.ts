@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { DataService } from '../data.service';
 
 @Component({
@@ -7,10 +7,9 @@ import { DataService } from '../data.service';
 	styleUrls: ['./template-header-footer-example.component.scss'],
 })
 export class TemplateHeaderFooterExampleComponent implements OnInit {
+	private dataService = inject(DataService);
 	people = [];
 	selectedPeople = [];
-
-	constructor(private dataService: DataService) {}
 
 	ngOnInit() {
 		this.dataService.getPeople().subscribe((items) => {

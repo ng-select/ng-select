@@ -48,6 +48,7 @@
     "@ng-bootstrap/ng-bootstrap": "^17.0.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
+    "ngxtension": "4.0.0",
     "rxjs": "^7.8.1",
     "tslib": "^2.6.2",
     "zone.js": "~0.14.2"
@@ -85,10 +86,10 @@
     "karma-jasmine-html-reporter": "^2.1.0",
     "ng-packagr": "^18.0.0",
     "node-sass": "^9.0.0",
+    "prettier": "^3.2.5",
     "semantic-release": "^22.0.12",
     "standard-version": "^9.5.0",
     "ts-node": "~10.9.2",
-    "prettier": "^3.2.5",
     "typescript": "~5.4.5"
   }
 }

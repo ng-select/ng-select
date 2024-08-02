@@ -27,7 +27,5 @@ export class TemplateSearchExampleComponent implements OnInit {
 
 	selectedCity = this.cities[0].name;
 
-	constructor() {}
-
 	ngOnInit() {}
 }

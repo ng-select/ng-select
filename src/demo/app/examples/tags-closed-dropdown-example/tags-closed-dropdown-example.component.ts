@@ -6,7 +6,5 @@ import { Component, OnInit } from '@angular/core';
 	styleUrls: ['./tags-closed-dropdown-example.component.scss'],
 })
 export class TagsClosedDropdownExampleComponent implements OnInit {
-	constructor() {}
-
 	ngOnInit() {}
 }

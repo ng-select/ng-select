@@ -1,11 +1,11 @@
-import { Component, ComponentFactoryResolver, Directive, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentFactoryResolver, Directive, inject, OnInit, ViewChild, ViewContainerRef, input } from '@angular/core';
 import { EXAMPLE_COMPONENTS } from '../../examples/examples';
 
 @Directive({
 	selector: '[example-host]',
 })
 export class ExampleHostDirective {
-	constructor(public viewContainerRef: ViewContainerRef) {}
+	public viewContainerRef = inject(ViewContainerRef);
 }
 
 @Component({
@@ -32,16 +32,13 @@ export class ExampleHostDirective {
 	],
 })
 export class ExampleViewerComponent implements OnInit {
-	@Input() example: string;
-
+	example = input<string>();
 	@ViewChild(ExampleHostDirective, { static: true }) exampleHost: ExampleHostDirective;
-
 	title: string;
-
-	constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
+	private componentFactoryResolver = inject(ComponentFactoryResolver);
 
 	get sourcePath() {
-		return `https://github.com/ng-select/ng-select/tree/master/src/demo/app/examples/${this.example}`;
+		return `https://github.com/ng-select/ng-select/tree/master/src/demo/app/examples/${this.example()}`;
 	}
 
 	ngOnInit() {
@@ -49,7 +46,7 @@ export class ExampleViewerComponent implements OnInit {
 	}
 
 	private loadComponent() {
-		const example = EXAMPLE_COMPONENTS[this.example];
+		const example = EXAMPLE_COMPONENTS[this.example()];
 		this.title = example.title;
 		const componentFactory = this.componentFactoryResolver.resolveComponentFactory(example.component);
 

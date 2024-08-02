@@ -1,12 +1,12 @@
-<layout-header [version]="version" [(dir)]="dir" [(theme)]="theme"></layout-header>
+<layout-header [version]="version" [(dir)]="dir" [(theme)]="theme" />
 <div class="container fill" [attr.dir]="dir">
 	<div class="row">
 		<div class="col-12 col-md-3 col-xl-3 py-3 py-md-4 bd-sidebar">
-			<layout-sidenav></layout-sidenav>
+			<layout-sidenav />
 		</div>
 		<main class="col-12 col-md-9 col-xl-8 py-3 py-md-4 pl-md-4 bd-content">
 			<div>
-				<router-outlet></router-outlet>
+				<router-outlet />
 			</div>
 		</main>
 	</div>

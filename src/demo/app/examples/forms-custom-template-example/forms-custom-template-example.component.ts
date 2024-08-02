@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataService } from '../data.service';
@@ -9,14 +9,11 @@ import { DataService } from '../data.service';
 	styleUrls: ['./forms-custom-template-example.component.scss'],
 })
 export class FormsCustomTemplateExampleComponent implements OnInit {
+	private fb = inject(FormBuilder);
+	private modalService = inject(NgbModal);
+	private dataService = inject(DataService);
 	heroForm: FormGroup;
 	photos = [];
-
-	constructor(
-		private fb: FormBuilder,
-		private modalService: NgbModal,
-		private dataService: DataService,
-	) {}
 
 	ngOnInit() {
 		this.loadPhotos();
