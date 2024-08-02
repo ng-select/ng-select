@@ -1,32 +1,23 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "declaration": false,
-    "downlevelIteration": true,
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "ES2022",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "ES2022",
-      "dom",
-      "esnext"
-    ],
-    "paths": {
-      "@ng-select/ng-select": [
-        "src/ng-select/public-api.ts"
-      ],
-      "@ng-select/ng-option-highlight": [
-        "src/ng-option-highlight/public-api.ts"
-      ]
-    },
-    "useDefineForClassFields": false
-  }
+	"compileOnSave": false,
+	"compilerOptions": {
+		"baseUrl": "./",
+		"outDir": "./dist/out-tsc",
+		"sourceMap": true,
+		"declaration": false,
+		"downlevelIteration": true,
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"experimentalDecorators": true,
+		"importHelpers": true,
+		"target": "ES2022",
+		"typeRoots": ["node_modules/@types"],
+		"lib": ["ES2022", "dom", "esnext"],
+		"paths": {
+			"@ng-select/ng-option-highlight": ["src/ng-option-highlight/public-api.ts"],
+			"@ng-select/ng-select": ["src/ng-select/public-api.ts"]
+		},
+		"useDefineForClassFields": false,
+		"skipLibCheck": true
+	}
 }
