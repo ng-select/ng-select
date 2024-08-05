@@ -87,7 +87,7 @@
 					}
 
 					&[readonly] {
-						user-select: none;
+						user-select: unset;
 						width: 0;
 						padding: 0;
 					}

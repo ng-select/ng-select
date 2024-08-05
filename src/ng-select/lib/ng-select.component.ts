@@ -83,6 +83,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() placeholder: string;
 	@Input() notFoundText: string;
 	@Input() typeToSearchText: string;
+	@Input() preventToggleOnRightClick: boolean = false;
 	@Input() addTagText: string;
 	@Input() loadingText: string;
 	@Input() clearAllText: string;
@@ -169,10 +170,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	set deselectOnClick(value) {
 		this._deselectOnClick = value;
-	}
-
-	get dropdownPanelStaticClasses() {
-		return this.appendTo && this.classes ? `ng-dropdown-panel ${this.classes}` : 'ng-dropdown-panel';
 	}
 
 	// output events
@@ -381,6 +378,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	handleMousedown($event: MouseEvent) {
+		if (this.preventToggleOnRightClick && $event.button === 2) {
+			return false;
+		}
 		const target = $event.target as HTMLElement;
 		if (target.tagName !== 'INPUT') {
 			$event.preventDefault();
@@ -537,7 +537,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	focus() {
-		this.searchInput.nativeElement.focus();
+		 this.searchInput.nativeElement.focus();
 	}
 
 	blur() {
