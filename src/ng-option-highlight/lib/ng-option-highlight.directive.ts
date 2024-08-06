@@ -1,4 +1,3 @@
-import * as searchHelper from './search-helper';
 import { AfterViewInit, Directive, ElementRef, Input, OnChanges, Renderer2 } from '@angular/core';
 
 @Directive({

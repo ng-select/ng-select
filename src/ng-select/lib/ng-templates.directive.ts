@@ -79,8 +79,11 @@ export class NgNotFoundTemplateDirective {
 	constructor(public template: TemplateRef<any>) {}
 }
 
-// eslint-disable-next-line @angular-eslint/directive-selector
-@Directive({ selector: '[ng-placeholder-tmp]' })
+@Directive({
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: '[ng-placeholder-tmp]',
+    standalone: true,
+})
 export class NgPlaceholderTemplateDirective {
 	constructor(public template: TemplateRef<any>) {}
 }
