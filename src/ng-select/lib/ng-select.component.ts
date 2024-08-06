@@ -25,24 +25,26 @@ import {
 	Attribute,
 	booleanAttribute,
 	numberAttribute,
+    Optional,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil, startWith, tap, debounceTime, map, filter } from 'rxjs/operators';
 import { Subject, merge } from 'rxjs';
 
 import {
-	NgOptionTemplateDirective,
-	NgLabelTemplateDirective,
-	NgHeaderTemplateDirective,
-	NgFooterTemplateDirective,
-	NgOptgroupTemplateDirective,
-	NgNotFoundTemplateDirective,
-	NgTypeToSearchTemplateDirective,
-	NgLoadingTextTemplateDirective,
-	NgMultiLabelTemplateDirective,
-	NgTagTemplateDirective,
-	NgLoadingSpinnerTemplateDirective,
-	NgPlaceholderTemplateDirective,
+    NgOptionTemplateDirective,
+    NgLabelTemplateDirective,
+    NgHeaderTemplateDirective,
+    NgFooterTemplateDirective,
+    NgOptgroupTemplateDirective,
+    NgNotFoundTemplateDirective,
+    NgTypeToSearchTemplateDirective,
+    NgLoadingTextTemplateDirective,
+    NgMultiLabelTemplateDirective,
+    NgTagTemplateDirective,
+    NgLoadingSpinnerTemplateDirective,
+    NgPlaceholderTemplateDirective,
+    NgItemLabelDirective,
 } from './ng-templates.directive';
 
 import { ConsoleService } from './console.service';
@@ -52,9 +54,10 @@ import { NgOption, KeyCode, DropdownPosition } from './ng-select.types';
 import { newId } from './id';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
-import { SelectionModelFactory } from './selection-model';
+import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
 import { NgSelectConfig } from './config.service';
 import { NgDropdownPanelService } from './ng-dropdown-panel.service';
+import {NgClass, NgTemplateOutlet} from "@angular/common";
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type AddTagFn = (term: string) => any | Promise<any>;
@@ -63,9 +66,10 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 
 @Component({
 	selector: 'ng-select',
-	templateUrl: './ng-select.component.html',
-	styleUrls: ['./ng-select.component.scss'],
-	providers: [
+	standalone: true,
+    templateUrl: './ng-select.component.html',
+    styleUrls: ['./ng-select.component.scss'],
+    providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,
 			useExisting: forwardRef(() => NgSelectComponent),
@@ -75,6 +79,12 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 	],
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        NgTemplateOutlet,
+        NgItemLabelDirective,
+        NgDropdownPanelComponent,
+        NgClass,
+    ],
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
 	@Input() bindLabel: string;
@@ -256,13 +266,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		@Attribute('class') public classes: string,
 		@Attribute('autofocus') private autoFocus: any,
 		public config: NgSelectConfig,
-		@Inject(SELECTION_MODEL_FACTORY) newSelectionModel: SelectionModelFactory,
+		@Inject(SELECTION_MODEL_FACTORY) @Optional() newSelectionModel: SelectionModelFactory | undefined,
 		_elementRef: ElementRef<HTMLElement>,
 		private _cd: ChangeDetectorRef,
 		private _console: ConsoleService,
 	) {
 		this._mergeGlobalConfig(config);
-		this.itemsList = new ItemsList(this, newSelectionModel());
+		this.itemsList = new ItemsList(this, newSelectionModel ? newSelectionModel() : DefaultSelectionModelFactory());
 		this.element = _elementRef.nativeElement;
 	}
 

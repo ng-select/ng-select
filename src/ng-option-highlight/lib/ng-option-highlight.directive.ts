@@ -1,8 +1,8 @@
-import * as searchHelper from './search-helper';
 import { AfterViewInit, Directive, ElementRef, Input, OnChanges, Renderer2 } from '@angular/core';
 
 @Directive({
 	selector: '[ngOptionHighlight]',
+    standalone: true,
 })
 export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
 	@Input('ngOptionHighlight') term: string;
