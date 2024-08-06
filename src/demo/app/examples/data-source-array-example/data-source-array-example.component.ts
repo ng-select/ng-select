@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataService, Person } from '../data.service';
 
 @Component({
-	selector: 'data-source-array-example',
+	selector: 'ng-data-source-array-example',
 	templateUrl: './data-source-array-example.component.html',
 	styleUrls: ['./data-source-array-example.component.scss'],
 })

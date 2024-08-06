@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'template-loading-example',
+	selector: 'ng-template-loading-example',
 	templateUrl: './template-loading-example.component.html',
 	styleUrls: ['./template-loading-example.component.scss'],
 })

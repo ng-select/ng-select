@@ -41,6 +41,7 @@ import { GroupSelectableExampleComponent } from './group-selectable-example/grou
 import { GroupSelectableHiddenExampleComponent } from './group-selectable-hidden-example/group-selectable-hidden-example.component';
 import { GroupChildrenExampleComponent } from './group-children-example/group-children-example.component';
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
+import { TemplatePlaceholderExampleComponent } from './template-placeholder-example/template-placeholder-example.component';
 
 export interface Example {
 	component: any;
@@ -127,6 +128,10 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
 	'template-label-example': {
 		component: TemplateLabelExampleComponent,
 		title: 'Custom label template',
+	},
+	'template-placeholder-example': {
+		component: TemplatePlaceholderExampleComponent,
+		title: 'Custom placeholder template',
 	},
 	'template-option-example': {
 		component: TemplateOptionExampleComponent,

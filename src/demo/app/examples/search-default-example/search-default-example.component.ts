@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataService, Person } from '../data.service';
 
 @Component({
-	selector: 'search-default-example',
+	selector: 'ng-search-default-example',
 	templateUrl: './search-default-example.component.html',
 	styleUrls: ['./search-default-example.component.scss'],
 })

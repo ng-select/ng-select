@@ -32,17 +32,18 @@ import { takeUntil, startWith, tap, debounceTime, map, filter } from 'rxjs/opera
 import { Subject, merge } from 'rxjs';
 
 import {
-    NgOptionTemplateDirective,
-    NgLabelTemplateDirective,
-    NgHeaderTemplateDirective,
-    NgFooterTemplateDirective,
-    NgOptgroupTemplateDirective,
-    NgNotFoundTemplateDirective,
-    NgTypeToSearchTemplateDirective,
-    NgLoadingTextTemplateDirective,
-    NgMultiLabelTemplateDirective,
-    NgTagTemplateDirective,
-    NgLoadingSpinnerTemplateDirective,
+	NgOptionTemplateDirective,
+	NgLabelTemplateDirective,
+	NgHeaderTemplateDirective,
+	NgFooterTemplateDirective,
+	NgOptgroupTemplateDirective,
+	NgNotFoundTemplateDirective,
+	NgTypeToSearchTemplateDirective,
+	NgLoadingTextTemplateDirective,
+	NgMultiLabelTemplateDirective,
+	NgTagTemplateDirective,
+	NgLoadingSpinnerTemplateDirective,
+	NgPlaceholderTemplateDirective,
 } from './ng-templates.directive';
 
 import { ConsoleService } from './console.service';
@@ -198,6 +199,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerTemplate: TemplateRef<any>;
 	@ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;
 	@ContentChild(NgNotFoundTemplateDirective, { read: TemplateRef }) notFoundTemplate: TemplateRef<any>;
+	@ContentChild(NgPlaceholderTemplateDirective, { read: TemplateRef }) placeholderTemplate: TemplateRef<any>;
 	@ContentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef }) typeToSearchTemplate: TemplateRef<any>;
 	@ContentChild(NgLoadingTextTemplateDirective, { read: TemplateRef }) loadingTextTemplate: TemplateRef<any>;
 	@ContentChild(NgTagTemplateDirective, { read: TemplateRef }) tagTemplate: TemplateRef<any>;

@@ -3,7 +3,7 @@ import { DataService, Person } from '../data.service';
 import { Observable } from 'rxjs';
 
 @Component({
-	selector: 'data-source-backend-example',
+	selector: 'ng-data-source-backend-example',
 	templateUrl: './data-source-backend-example.component.html',
 	styleUrls: ['./data-source-backend-example.component.scss'],
 })

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { DataService } from '../data.service';
 
 @Component({
-	selector: 'multi-select-hidden-example',
+	selector: 'ng-multi-select-hidden-example',
 	templateUrl: './multi-select-hidden-example.component.html',
 	styleUrls: ['./multi-select-hidden-example.component.scss'],
 })

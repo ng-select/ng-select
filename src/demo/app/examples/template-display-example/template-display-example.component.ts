@@ -3,7 +3,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { DataService } from '../data.service';
 
 @Component({
-	selector: 'template-display-example',
+	selector: 'ng-template-display-example',
 	templateUrl: './template-display-example.component.html',
 	styleUrls: ['./template-display-example.component.scss'],
 })

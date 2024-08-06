@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
-	selector: 'forms-multi-select-example',
+	selector: 'ng-forms-multi-select-example',
 	templateUrl: './forms-multi-select-example.component.html',
 	styleUrls: ['./forms-multi-select-example.component.scss'],
 })

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { DataService } from '../data.service';
 
 @Component({
-	selector: 'multi-select-disabled-example',
+	selector: 'ng-multi-select-disabled-example',
 	templateUrl: './multi-select-disabled-example.component.html',
 	styleUrls: ['./multi-select-disabled-example.component.scss'],
 })

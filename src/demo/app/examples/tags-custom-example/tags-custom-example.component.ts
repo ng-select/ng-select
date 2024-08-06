@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'tags-custom-example',
+	selector: 'ng-tags-custom-example',
 	templateUrl: './tags-custom-example.component.html',
 	styleUrls: ['./tags-custom-example.component.scss'],
 })
