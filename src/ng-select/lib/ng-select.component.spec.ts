@@ -2914,13 +2914,14 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 			const element = fixture.componentInstance.select.element;
 			const ngControl = element.querySelector('.ng-select-container');
-			const placeholder = element.querySelector('.ng-placeholder');
+			
 			expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
 
 			select.handleClearClick();
 			tickAndDetectChanges(fixture);
 			tickAndDetectChanges(fixture);
-
+			
+			const placeholder = element.querySelector('.ng-placeholder');
 			expect(ngControl.classList.contains('ng-has-value')).toBeFalsy();
 			expect(getComputedStyle(placeholder).display).toBe('block');
 		}));
