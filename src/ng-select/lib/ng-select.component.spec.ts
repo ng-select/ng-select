@@ -2316,6 +2316,30 @@ describe('NgSelectComponent', () => {
 			expect(items[0].disabled).toBeTruthy();
 		}));
 
+		it('should display custom clear button template when selected city', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+                            [loading]="true"
+                            [(ngModel)]="selectedCity">
+
+                    <ng-template ng-clearbutton-tmp>
+                        <div class="custom-clearbutton">
+                            Custom clear button
+                        </div>
+                    </ng-template>
+                </ng-select>`,
+			);
+
+			fixture.whenStable().then(() => {
+				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+				tickAndDetectChanges(fixture);
+				tickAndDetectChanges(fixture);
+				const clear = fixture.debugElement.queryAll(By.css('.custom-clearbutton'));
+				expect(clear.length).toBe(1);
+			});
+		}));
+
 		it('should display ng-placeholder template', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
@@ -2914,13 +2938,13 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 			const element = fixture.componentInstance.select.element;
 			const ngControl = element.querySelector('.ng-select-container');
-			
+
 			expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
 
 			select.handleClearClick();
 			tickAndDetectChanges(fixture);
 			tickAndDetectChanges(fixture);
-			
+
 			const placeholder = element.querySelector('.ng-placeholder');
 			expect(ngControl.classList.contains('ng-has-value')).toBeFalsy();
 			expect(getComputedStyle(placeholder).display).toBe('block');
