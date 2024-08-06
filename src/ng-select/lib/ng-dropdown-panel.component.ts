@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import {DOCUMENT, NgTemplateOutlet} from '@angular/common';
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -35,24 +35,28 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	encapsulation: ViewEncapsulation.None,
 	selector: 'ng-dropdown-panel',
-	template: `
-		@if (headerTemplate) {
-			<div class="ng-dropdown-header">
-				<ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }"></ng-container>
-			</div>
-		}
-		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host">
-			<div #padding [class.total-padding]="virtualScroll"></div>
-			<div #content [class.scrollable-content]="virtualScroll && items.length">
-				<ng-content></ng-content>
-			</div>
-		</div>
-		@if (footerTemplate) {
-			<div class="ng-dropdown-footer">
-				<ng-container [ngTemplateOutlet]="footerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }"></ng-container>
-			</div>
-		}
-	`,
+	standalone: true,
+    template: `
+        @if (headerTemplate) {
+          <div class="ng-dropdown-header">
+            <ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }"/>
+          </div>
+        }
+        <div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host">
+            <div #padding [class.total-padding]="virtualScroll"></div>
+            <div #content [class.scrollable-content]="virtualScroll && items.length">
+                <ng-content/>
+            </div>
+        </div>
+        @if (footerTemplate) {
+          <div class="ng-dropdown-footer">
+            <ng-container [ngTemplateOutlet]="footerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }"/>
+          </div>
+        }
+    `,
+    imports: [
+        NgTemplateOutlet,
+    ],
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() items: NgOption[] = [];
