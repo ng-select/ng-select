@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'group-selectable-example',
+	selector: 'ng-group-selectable-example',
 	templateUrl: './group-selectable-example.component.html',
 	styleUrls: ['./group-selectable-example.component.scss'],
 })

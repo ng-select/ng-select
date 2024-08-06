@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-	selector: 'forms-single-select-example',
+	selector: 'ng-forms-single-select-example',
 	templateUrl: './forms-single-select-example.component.html',
 	styleUrls: ['./forms-single-select-example.component.scss'],
 })

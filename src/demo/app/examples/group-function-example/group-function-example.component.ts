@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'group-function-example',
+	selector: 'ng-group-function-example',
 	templateUrl: './group-function-example.component.html',
 	styleUrls: ['./group-function-example.component.scss'],
 })
@@ -24,11 +24,11 @@ export class GroupFunctionExampleComponent implements OnInit {
 		{ name: 'Nicolás', email: 'nicole@email.com', age: 43, country: 'Colombia', child: { state: 'Inactive' } },
 	];
 
+	constructor() {}
+
 	groupByFn = (item) => item.child.state;
 
 	groupValueFn = (_: string, children: any[]) => ({ name: children[0].child.state, total: children.length });
-
-	constructor() {}
 
 	ngOnInit() {}
 }

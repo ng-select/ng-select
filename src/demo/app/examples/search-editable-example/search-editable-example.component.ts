@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Person, DataService } from '../data.service';
+import { DataService, Person } from '../data.service';
 import { Observable } from 'rxjs';
 
 @Component({
-	selector: 'app-search-editable-example',
+	selector: 'ng-app-search-editable-example',
 	templateUrl: './search-editable-example.component.html',
 	styleUrls: ['./search-editable-example.component.scss'],
 })

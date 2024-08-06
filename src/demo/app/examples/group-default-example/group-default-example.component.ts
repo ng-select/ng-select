@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'group-default-example',
+	selector: 'ng-group-default-example',
 	templateUrl: './group-default-example.component.html',
 	styleUrls: ['./group-default-example.component.scss'],
 })

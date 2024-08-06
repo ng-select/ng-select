@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'dropdown-position-example',
+	selector: 'ng-dropdown-position-example',
 	templateUrl: './dropdown-position-example.component.html',
 	styleUrls: ['./dropdown-position-example.component.scss'],
 })
