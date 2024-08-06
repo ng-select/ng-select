@@ -179,6 +179,7 @@ map: {
 | addTagText | `string` | `Add item` | no | Set custom text when using tagging |
 | appearance | `string` | `underline` | no | Allows to select dropdown appearance. Set to `outline` to add border instead of underline (applies only to Material theme) |
 | appendTo | `string` |  null | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative` |
+| bufferAmount | `string` |  null | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative` |
 | bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
 | bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |
 | [closeOnSelect] | `boolean` |  true | no | Whether to close the menu when a value is selected |
@@ -218,6 +219,7 @@ map: {
 | [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
 | [inputAttrs] | `{ [key: string]: string }` |  `-` | no | Pass custom attributes to underlying `input` element |
 | [tabIndex] | `number` |  `-` | no | Set tabindex on ng-select |
+| [preventToggleOnRightClick] | `boolean` |  `false` | no | Prevent opening of ng-select on right mouse click |
 | [keyDownFn] | `($event: KeyboardEvent) => bool` |  `true` | no | Provide custom keyDown function. Executed before default handler. Return false to suppress execution of default key down handlers  |
 
 ### Outputs
