@@ -160,7 +160,7 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
 	},
 	'template-clear-example': {
 		component: TemplateClearExampleComponent,
-		title: 'Custom clear button'
+		title: 'Custom clear button',
 	},
 	'multi-select-default-example': {
 		component: MultiSelectDefaultExampleComponent,

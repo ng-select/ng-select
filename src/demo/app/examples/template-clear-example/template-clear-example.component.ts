@@ -1,33 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-    selector: 'template-clear-example',
-    templateUrl: './template-clear-example.component.html',
-    styleUrls: ['./template-clear-example.component.scss']
+	selector: 'ng-template-clear-example',
+	templateUrl: './template-clear-example.component.html',
+	styleUrls: ['./template-clear-example.component.scss'],
 })
-export class TemplateClearExampleComponent implements OnInit {
+export class TemplateClearExampleComponent {
+	cities = [
+		{
+			id: 1,
+			name: 'Clermont-Ferrand',
+		},
+		{
+			id: 2,
+			name: 'Chamalières',
+		},
+		{
+			id: 3,
+			name: 'Lyon',
+		},
+		{
+			id: 4,
+			name: 'Compiègne',
+		},
+	];
 
-    cities = [
-        {
-            id: 1,
-            name: 'Clermont-Ferrand',
-        },
-        { 
-            id: 2, 
-            name: 'Chamalières',
-        },
-        {
-            id: 3,
-            name: 'Lyon',
-        },
-        {
-            id: 4,
-            name: 'Compiègne',
-        },
-    ];
-
-    selectedCity = this.cities[0].name;
-
-    ngOnInit() {
-    }
+	selectedCity = this.cities[0].name;
 }
