@@ -56,6 +56,12 @@ export class NgNotFoundTemplateDirective {
 }
 
 // eslint-disable-next-line @angular-eslint/directive-selector
+@Directive({ selector: '[ng-placeholder-tmp]' })
+export class NgPlaceholderTemplateDirective {
+	constructor(public template: TemplateRef<any>) {}
+}
+
+// eslint-disable-next-line @angular-eslint/directive-selector
 @Directive({ selector: '[ng-typetosearch-tmp]' })
 export class NgTypeToSearchTemplateDirective {
 	constructor(public template: TemplateRef<any>) {}

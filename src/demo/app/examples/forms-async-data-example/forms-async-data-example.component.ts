@@ -5,7 +5,7 @@ import { delay } from 'rxjs/operators';
 import { DataService } from '../data.service';
 
 @Component({
-	selector: 'forms-async-data-example',
+	selector: 'ng-forms-async-data-example',
 	templateUrl: './forms-async-data-example.component.html',
 	styleUrls: ['./forms-async-data-example.component.scss'],
 })

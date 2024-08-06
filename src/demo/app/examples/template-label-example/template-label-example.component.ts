@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'template-label-example',
+	selector: 'ng-template-label-example',
 	templateUrl: './template-label-example.component.html',
 	styleUrls: ['./template-label-example.component.scss'],
 })

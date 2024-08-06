@@ -1,25 +1,32 @@
 <div
-    (mousedown)="handleMousedown($event)"
-    [class.ng-appearance-outline]="appearance === 'outline'"
-    [class.ng-has-value]="hasValue"
-    class="ng-select-container">
-    <div class="ng-value-container">
-        <div class="ng-placeholder">{{ placeholder }}</div>
-
-        @if ((!multiLabelTemplate || !multiple) && selectedItems.length > 0) {
-            @for (item of selectedItems; track trackByOption($index, item)) {
-                <div [class.ng-value-disabled]="item.disabled" class="ng-value">
-                    <ng-template #defaultLabelTemplate>
-                        <span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">×</span>
-                        <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
-                    </ng-template>
-                    <ng-template
-                        [ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
-                        [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
-                    </ng-template>
-                </div>
-            }
-        }
+	(mousedown)="handleMousedown($event)"
+	[class.ng-appearance-outline]="appearance === 'outline'"
+	[class.ng-has-value]="hasValue"
+	class="ng-select-container">
+	<div class="ng-value-container">
+		@if(selectedItems.length === 0 && !searchTerm) {
+        <ng-template #defaultPlaceholderTemplate>
+            <div class="ng-placeholder">{{ placeholder }}</div>
+        </ng-template>
+        <ng-template
+			[ngTemplateOutlet]="placeholderTemplate || defaultPlaceholderTemplate">
+        </ng-template>
+		}
+		
+		@if ((!multiLabelTemplate || !multiple) && selectedItems.length > 0) {
+			@for (item of selectedItems; track trackByOption($index, item)) {
+				<div [class.ng-value-disabled]="item.disabled" class="ng-value">
+					<ng-template #defaultLabelTemplate>
+						<span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">×</span>
+						<span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
+					</ng-template>
+					<ng-template
+						[ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
+						[ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
+					</ng-template>
+				</div>
+			}
+		}
 
         @if (multiple && multiLabelTemplate && selectedValues.length > 0) {
             <ng-template [ngTemplateOutlet]="multiLabelTemplate"

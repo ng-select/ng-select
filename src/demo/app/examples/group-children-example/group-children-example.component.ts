@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'group-children-example',
+	selector: 'ng-group-children-example',
 	templateUrl: './group-children-example.component.html',
 	styleUrls: ['./group-children-example.component.scss'],
 })

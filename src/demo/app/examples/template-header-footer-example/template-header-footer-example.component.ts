@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 
 @Component({
-	selector: 'template-header-footer-example',
+	selector: 'ng-template-header-footer-example',
 	templateUrl: './template-header-footer-example.component.html',
 	styleUrls: ['./template-header-footer-example.component.scss'],
 })

@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-	selector: 'ng-template-search-example',
-	templateUrl: './template-search-example.component.html',
-	styleUrls: ['./template-search-example.component.scss'],
+	selector: 'ng-template-placeholder-example',
+	templateUrl: './template-placeholder-example.component.html',
+	styleUrls: ['./template-placeholder-example.component.scss'],
 })
-export class TemplateSearchExampleComponent implements OnInit {
+export class TemplatePlaceholderExampleComponent {
 	cities = [
 		{
 			id: 1,
@@ -25,9 +25,7 @@ export class TemplateSearchExampleComponent implements OnInit {
 		},
 	];
 
-	selectedCity = this.cities[0].name;
+	selectedCity = undefined;
 
-	constructor() {}
-
-	ngOnInit() {}
+	placeholderAvatar = '//www.gravatar.com/avatar/b0d8c6e5ea589e6fc3d3e08afb1873bb?d=retro&r=g&s=30 2x';
 }

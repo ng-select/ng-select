@@ -3,7 +3,7 @@ import { DataService, Person } from '../data.service';
 import { map } from 'rxjs/operators';
 
 @Component({
-	selector: 'multi-checkbox-group-example',
+	selector: 'ng-multi-checkbox-group-example',
 	templateUrl: './multi-checkbox-group-example.component.html',
 	styleUrls: ['./multi-checkbox-group-example.component.scss'],
 })

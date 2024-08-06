@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'template-option-example',
+	selector: 'ng-template-option-example',
 	templateUrl: './template-option-example.component.html',
 	styleUrls: ['./template-option-example.component.scss'],
 })

@@ -7,7 +7,7 @@ interface Event {
 }
 
 @Component({
-	selector: 'output-events-example',
+	selector: 'ng-output-events-example',
 	templateUrl: './output-events-example.component.html',
 	styleUrls: ['./output-events-example.component.scss'],
 })
