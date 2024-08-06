@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'tags-backend-example',
+	selector: 'ng-tags-backend-example',
 	templateUrl: './tags-backend-example.component.html',
 	styleUrls: ['./tags-backend-example.component.scss'],
 })

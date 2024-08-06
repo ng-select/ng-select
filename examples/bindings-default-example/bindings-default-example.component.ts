@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'bindings-default-example',
+	selector: 'ng-bindings-default-example',
 	templateUrl: './bindings-default-example.component.html',
 	styleUrls: ['./bindings-default-example.component.scss'],
 })

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'template-optgroup-example',
+	selector: 'ng-template-optgroup-example',
 	templateUrl: './template-optgroup-example.component.html',
 	styleUrls: ['./template-optgroup-example.component.scss'],
 })

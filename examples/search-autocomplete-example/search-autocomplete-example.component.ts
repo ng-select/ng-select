@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { concat, Observable, of, Subject } from 'rxjs';
 import { DataService, Person } from '../data.service';
-import { catchError, debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 
 @Component({
-	selector: 'search-autocomplete-example',
+	selector: 'ng-search-autocomplete-example',
 	templateUrl: './search-autocomplete-example.component.html',
 	styleUrls: ['./search-autocomplete-example.component.scss'],
 })

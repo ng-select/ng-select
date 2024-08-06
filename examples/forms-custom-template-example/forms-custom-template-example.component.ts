@@ -4,7 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataService } from '../data.service';
 
 @Component({
-	selector: 'forms-custom-template-example',
+	selector: 'ng-forms-custom-template-example',
 	templateUrl: './forms-custom-template-example.component.html',
 	styleUrls: ['./forms-custom-template-example.component.scss'],
 })

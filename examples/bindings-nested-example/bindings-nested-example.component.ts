@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'bindings-nested-example',
+	selector: 'ng-bindings-nested-example',
 	templateUrl: './bindings-nested-example.component.html',
 	styleUrls: ['./bindings-nested-example.component.scss'],
 })
