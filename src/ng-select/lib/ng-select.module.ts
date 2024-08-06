@@ -17,6 +17,7 @@ import {
 	NgItemLabelDirective,
 	NgTypeToSearchTemplateDirective,
 	NgPlaceholderTemplateDirective,
+	NgClearButtonTemplateDirective
 } from './ng-templates.directive';
 import { DefaultSelectionModelFactory } from './selection-model';
 
@@ -32,6 +33,7 @@ import { DefaultSelectionModelFactory } from './selection-model';
 		NgHeaderTemplateDirective,
 		NgFooterTemplateDirective,
 		NgPlaceholderTemplateDirective,
+		NgClearButtonTemplateDirective,
 		NgNotFoundTemplateDirective,
 		NgTypeToSearchTemplateDirective,
 		NgLoadingTextTemplateDirective,
@@ -55,6 +57,7 @@ import { DefaultSelectionModelFactory } from './selection-model';
 		NgLoadingTextTemplateDirective,
 		NgTagTemplateDirective,
 		NgLoadingSpinnerTemplateDirective,
+		NgClearButtonTemplateDirective
 	],
 	providers: [{ provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory }],
 })
