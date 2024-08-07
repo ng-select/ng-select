@@ -34,7 +34,7 @@
               "src/ng-select/*.ts",
               "src/ng-select/lib/console.service.ts",
               "src/ng-select/lib/search-helper.ts",
-              "src/ng-select/lib/ng-templates.directive.ts"
+              "src/ng-select/ng-templates-directives/*.ts"
             ]
           }
         },
