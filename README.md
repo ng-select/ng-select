@@ -95,7 +95,7 @@ yarn add @ng-select/ng-select
 
 #### Standalone: Import NgSelectComponent and other necessary directives directly:
 ```typescript
-import { NgSelectModule, NgLabelTemplateDirective, NgOptionTemplateDirective } from '@ng-select/ng-select';
+import { NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -104,9 +104,9 @@ import { FormsModule } from '@angular/forms';
   template: './example.component.html',
   styleUrl: './example.component.scss',
   imports: [
-    NgSelectComponent,
-    NgOptionTemplateDirective,
     NgLabelTemplateDirective,
+    NgOptionTemplateDirective,
+    NgSelectComponent,
   ],
 })
 export class ExampleComponent {}
