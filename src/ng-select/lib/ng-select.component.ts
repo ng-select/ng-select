@@ -524,8 +524,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (this._editableSearchTerm) {
 			this._setSearchTermFromItems();
 		}
-
-		this._onSelectionChanged();
 	}
 
 	select(item: NgOption) {
@@ -544,7 +542,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (this.closeOnSelect || this.itemsList.noItemsToSelect) {
 			this.close();
 		}
-	}
+
+        this._onSelectionChanged();
+    }
 
 	focus() {
 		 this.searchInput.nativeElement.focus();
@@ -563,6 +563,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.focus();
 		this._updateNgModel();
 		this.removeEvent.emit(item.value);
+        this._onSelectionChanged();
 	}
 
 	selectTag() {
