@@ -31,7 +31,7 @@
 			</ng-template>
 		}
 
-		<div [attr.aria-expanded]="isOpen" [attr.aria-owns]="isOpen ? dropdownId : null" aria-haspopup="listbox" class="ng-input">
+		<div class="ng-input">
 			<input
 				#searchInput
 				(blur)="onInputBlur($event)"
@@ -42,6 +42,7 @@
 				(input)="filter(searchInput.value)"
 				[attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
 				[attr.aria-controls]="isOpen ? dropdownId : null"
+				[attr.aria-expanded]="isOpen"
 				[attr.id]="labelForId"
 				[attr.tabindex]="tabIndex"
 				[disabled]="disabled"
