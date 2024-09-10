@@ -71,6 +71,7 @@ $ng-select-bg: #ffffff !default;
 		color: $ng-select-primary-text;
 		align-items: baseline;
 		min-height: 51.5px;
+		position: relative;
 		&:after {
 			border-bottom: thin solid rgba(0, 0, 0, 0.42);
 			content: '';

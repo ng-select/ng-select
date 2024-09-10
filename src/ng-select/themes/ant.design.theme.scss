@@ -40,6 +40,12 @@ $ng-select-marked: #e6f7ff !default;
 		.ng-select-container {
 			border-color: $ng-select-highlight;
 		}
+		.ng-value-container .ng-placeholder {
+			&.ng-float-placeholder {
+				transform: translateY(-1.27em) scale(0.75) perspective(100px) translateZ(0.001px);
+				color: $ng-select-highlight;
+			}
+		}
 	}
 	&.ng-select-disabled {
 		> .ng-select-container {
@@ -57,6 +63,23 @@ $ng-select-marked: #e6f7ff !default;
 	}
 	.ng-has-value .ng-placeholder {
 		display: none;
+	}
+
+	.ng-has-value,
+	&.ng-select-filtered .ng-select-container {
+		.ng-placeholder {
+			&.ng-float-placeholder {
+				display: initial;
+			}
+		}
+	}
+	.ng-has-value,
+	&.ng-select-opened {
+		.ng-placeholder {
+			&.ng-float-placeholder {
+				transform: translateY(-1.27em) scale(0.75) perspective(100px) translateZ(0.001px);
+			}
+		}
 	}
 
 	&.ng-select-clearable .ng-select-container.ng-has-value:hover {
@@ -96,6 +119,19 @@ $ng-select-marked: #e6f7ff !default;
 			.ng-placeholder {
 				font-size: 14px;
 				color: lighten($ng-select-primary-text, 60);
+				&.ng-float-placeholder {
+					position: absolute;
+					transform-origin: left 0;
+					padding-inline: 6px;
+					background-color: #ffffff;
+					transition:
+						transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+						color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+						width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+					@include rtl {
+						transform-origin: right 0;
+					}
+				}
 			}
 		}
 	}
@@ -114,6 +150,13 @@ $ng-select-marked: #e6f7ff !default;
 					@include rtl {
 						padding-right: 10px;
 						padding-left: 50px;
+					}
+				}
+				.ng-placeholder {
+					font-size: 14px;
+					color: lighten($ng-select-primary-text, 60);
+					&.ng-float-placeholder {
+						transform: translateY(-1em) scale(0.75) perspective(100px) translateZ(0.001px);
 					}
 				}
 			}
@@ -180,6 +223,11 @@ $ng-select-marked: #e6f7ff !default;
 					height: 20px;
 					margin-top: -10px;
 					margin-left: 6px;
+
+					&.ng-float-placeholder {
+						padding-inline: 6px;
+						padding-bottom: 0;
+					}
 				}
 				.ng-input {
 					height: 24px;

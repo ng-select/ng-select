@@ -32,6 +32,7 @@ $ng-select-dropdown-option-disabled: lighten($ng-select-primary-text, 60) !defau
 $ng-select-input-text: #000000 !default;
 
 .ng-select {
+	position: relative;
 	&.ng-select-opened {
 		> .ng-select-container {
 			background: $ng-select-bg;
@@ -78,6 +79,12 @@ $ng-select-input-text: #000000 !default;
 			border-color: $ng-select-highlight;
 			box-shadow: $ng-select-box-shadow;
 		}
+		.ng-value-container .ng-placeholder {
+			&.ng-float-placeholder {
+				transform: translateY(-1.1em) scale(0.75) perspective(100px) translateZ(0.001px);
+				color: $ng-select-highlight;
+			}
+		}
 	}
 	&.ng-select-disabled {
 		> .ng-select-container {
@@ -87,6 +94,24 @@ $ng-select-input-text: #000000 !default;
 	.ng-has-value .ng-placeholder {
 		display: none;
 	}
+
+	.ng-has-value,
+	&.ng-select-filtered .ng-select-container {
+		.ng-placeholder {
+			&.ng-float-placeholder {
+				display: initial;
+			}
+		}
+	}
+	.ng-has-value,
+	&.ng-select-opened {
+		.ng-placeholder {
+			&.ng-float-placeholder {
+				transform: translateY(-1.1em) scale(0.75) perspective(100px) translateZ(0.001px);
+			}
+		}
+	}
+
 	.ng-select-container {
 		color: $ng-select-primary-text;
 		background-color: $ng-select-bg;
@@ -106,6 +131,19 @@ $ng-select-input-text: #000000 !default;
 			}
 			.ng-placeholder {
 				color: $ng-select-placeholder;
+				&.ng-float-placeholder {
+					position: absolute;
+					transform-origin: left 0;
+					padding-inline: 6px;
+					background-color: #ffffff;
+					transition:
+						transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+						color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+						width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+					@include rtl {
+						transform-origin: right 0;
+					}
+				}
 			}
 		}
 	}
@@ -204,6 +242,10 @@ $ng-select-input-text: #000000 !default;
 					top: 5px;
 					padding-bottom: 5px;
 					padding-left: 3px;
+					&.ng-float-placeholder {
+						padding-inline: 6px;
+						padding-bottom: 0;
+					}
 					@include rtl {
 						padding-right: 3px;
 						padding-left: 0;

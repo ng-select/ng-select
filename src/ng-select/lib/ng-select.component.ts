@@ -91,6 +91,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() bindValue: string;
 	@Input({ transform: booleanAttribute }) markFirst = true;
 	@Input() placeholder: string;
+	@Input() floatPlaceholder: boolean = false;
 	@Input() notFoundText: string;
 	@Input() typeToSearchText: string;
 	@Input() preventToggleOnRightClick: boolean = false;
