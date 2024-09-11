@@ -2329,7 +2329,7 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.selectedCity = undefined;
 			tickAndDetectChanges(fixture);
 			expect(fixture.debugElement.query(By.css('.placeholder-template')).nativeElement.innerHTML).toBe('Select your city');
-			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeFalsy();
+			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeTruthy();
 		}));
 
 		it('should update ng-option label', fakeAsync(() => {
