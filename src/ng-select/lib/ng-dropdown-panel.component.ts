@@ -253,7 +253,19 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			return;
 		}
 
+		if (this._coordinatesWithin($event, this._dropdown) || this._coordinatesWithin($event, this._select)) {
+			return;
+		}
+
 		this._zone.run(() => this.outsideClick.emit());
+	}
+
+	private _coordinatesWithin($event: MouseEvent, element: HTMLElement): boolean {
+		const clickX = $event.clientX;
+		const clickY = $event.clientY;
+
+		const rect = element.getBoundingClientRect();
+		return clickX >= rect.left && clickX <= rect.right && clickY >= rect.top && clickY <= rect.bottom;
 	}
 
 	private _onItemsOrShowAddTagChange(items: NgOption[] = [], showAddTag: boolean, firstChange: boolean) {
