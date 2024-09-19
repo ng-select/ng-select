@@ -3,7 +3,7 @@ import { NgSelectModule } from "../../../../ng-select/lib/ng-select.module";
 import { DataService, Person } from '../data.service';
 
 @Component({
-  selector: 'float-placeholder-with-search-example',
+  selector: 'ng-float-placeholder-with-search-example',
   standalone: true,
   imports: [NgSelectModule],
   templateUrl: './float-placeholder-with-search-example.component.html',

@@ -3,7 +3,7 @@ import { NgSelectModule } from "../../../../ng-select/lib/ng-select.module";
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'float-placeholder-with-template-example',
+  selector: 'ng-float-placeholder-with-template-example',
   standalone: true,
   imports: [NgSelectModule, FormsModule],
   templateUrl: './float-placeholder-with-template-example.component.html',

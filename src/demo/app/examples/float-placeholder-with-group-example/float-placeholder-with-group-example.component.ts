@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgSelectModule } from "../../../../ng-select/lib/ng-select.module";
 import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './float-placeholder-with-group-example.component.html',
   styleUrl: './float-placeholder-with-group-example.component.scss'
 })
-export class FloatPlaceholderWithGroupExampleComponent implements OnInit {
+export class FloatPlaceholderWithGroupExampleComponent {
   selectedAccount = 'Adam';
 	accounts = [
 		{ name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { state: 'Active' } },
@@ -27,6 +27,4 @@ export class FloatPlaceholderWithGroupExampleComponent implements OnInit {
 	];
 
 	constructor() {}
-
-	ngOnInit() {}
 }
