@@ -91,6 +91,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() bindValue: string;
 	@Input({ transform: booleanAttribute }) markFirst = true;
 	@Input() placeholder: string;
+	@Input() fixedPlaceholder: boolean;
 	@Input() floatPlaceholder: boolean = false;
 	@Input() notFoundText: string;
 	@Input() typeToSearchText: string;
@@ -1029,6 +1030,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _mergeGlobalConfig(config: NgSelectConfig) {
 		this.placeholder = this.placeholder || config.placeholder;
+		this.fixedPlaceholder = this.fixedPlaceholder || config.fixedPlaceholder
 		this.notFoundText = this.notFoundText || config.notFoundText;
 		this.typeToSearchText = this.typeToSearchText || config.typeToSearchText;
 		this.addTagText = this.addTagText || config.addTagText;

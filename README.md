@@ -195,54 +195,55 @@ map: {
 
 ## API
 ### Inputs
-| Input  | Type | Default | Required | Description |
-| ------------- | ------------- | ------------- | ------------- | ------------- |
-| [addTag] | `boolean \| ((term: string) => any \| Promise<any>)`  | `false` | no | Allows to create custom options. |
-| addTagText | `string` | `Add item` | no | Set custom text when using tagging |
-| appearance | `string` | `underline` | no | Allows to select dropdown appearance. Set to `outline` to add border instead of underline (applies only to Material theme) |
-| appendTo | `string` |  null | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative` |
-| bufferAmount | `string` |  null | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative` |
-| bindValue  | `string` | `-` | no | Object property to use for selected model. By default binds to whole object. |
-| bindLabel  | `string` | `label` | no | Object property to use for label. Default `label`  |
-| [closeOnSelect] | `boolean` |  true | no | Whether to close the menu when a value is selected |
-| clearAllText | `string` | `Clear all` | no | Set custom text for clear all icon title |
-| [clearable] | `boolean` | `true` | no | Allow to clear selected value. Default `true`|
-| [clearOnBackspace] | `boolean` | `true` | no | Clear selected values one by one when clicking backspace. Default `true`|
-| [compareWith] | `(a: any, b: any) => boolean` | `(a, b) => a === b` | no | A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. |
-| dropdownPosition | `bottom` \| `top` \| `auto` |  `auto` | no | Set the dropdown position on open |
-| [groupBy] | `string` \| `Function` | null | no | Allow to group items by key or function expression |
-| [groupValue] |  `(groupKey: string, children: any[]) => Object` | - | no | Function expression to provide group value |
-| [selectableGroup] | `boolean` | false | no | Allow to select group when groupBy is used |
-| [selectableGroupAsModel] | `boolean` | true | no | Indicates whether to select all children or group itself  |
-| [items] | `Array<any>` | `[]` | yes | Items array |
-| [loading] | `boolean` |  `-` | no | You can set the loading state from the outside (e.g. async items loading) |
-| loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
-| labelForId | `string` | `-` | no | Id to associate control with label. |
-| [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. |
-| [isOpen] | `boolean` | `-` | no | Allows manual control of dropdown opening and closing. `true` - won't close. `false` - won't open. |
-| maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
-| [hideSelected] | `boolean` | `false` | no | Allows to hide selected items. |
-| [multiple] | `boolean` | `false` | no | Allows to select multiple items. |
-| notFoundText | `string` | `No items found` | no | Set custom text when filter returns empty result |
-| placeholder | `string` | `-` | no | Placeholder text. |
-| [searchable] | `boolean` | `true` | no | Allow to search for value. Default `true`|
-| [readonly] | `boolean` | `false` | no | Set ng-select as readonly. Mostly used with reactive forms. |
-| [searchFn] | `(term: string, item: any) => boolean` | `null` | no | Allow to filter by custom search function |
-| [searchWhileComposing] | `boolean` | `true` | no | Whether items should be filtered while composition started |
-| [trackByFn] | `(item: any) => any` | `null` | no | Provide custom trackBy function |
-| [clearSearchOnAdd] | `boolean` | `true` | no | Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false` |
-| [deselectOnClick] | `boolean` | `false` | no | Deselects a selected item when it is clicked in the dropdown. Default `false`. Default `true` when **multiple** is `true` |
-| [editableSearchTerm] | `boolean` |  `false` | no | Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`. |
-| [selectOnTab] | `boolean` | `false` | no | Select marked dropdown item using tab. Default `false`|
-| [openOnEnter] | `boolean` | `true` | no | Open dropdown using enter. Default `true`|
-| [typeahead] | `Subject` |  `-` | no | Custom autocomplete or advanced filter. |
-| [minTermLength] | `number` |  `0` | no | Minimum term length to start a search. Should be used with `typeahead` |
-| typeToSearchText | `string` | `Type to search` | no | Set custom text when using Typeahead |
-| [virtualScroll] | `boolean` |  false | no | Enable virtual scroll for better performance when rendering a lot of data |
-| [inputAttrs] | `{ [key: string]: string }` |  `-` | no | Pass custom attributes to underlying `input` element |
-| [tabIndex] | `number` |  `-` | no | Set tabindex on ng-select |
-| [preventToggleOnRightClick] | `boolean` |  `false` | no | Prevent opening of ng-select on right mouse click |
-| [keyDownFn] | `($event: KeyboardEvent) => bool` |  `true` | no | Provide custom keyDown function. Executed before default handler. Return false to suppress execution of default key down handlers  |
+| Input                       | Type                                                 | Default             | Required | Description                                                                                                                                                                                    |
+|-----------------------------|------------------------------------------------------|---------------------| ------------- |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [addTag]                    | `boolean \| ((term: string) => any \| Promise<any>)` | `false`             | no | Allows to create custom options.                                                                                                                                                               |
+| addTagText                  | `string`                                             | `Add item`          | no | Set custom text when using tagging                                                                                                                                                             |
+| appearance                  | `string`                                             | `underline`         | no | Allows to select dropdown appearance. Set to `outline` to add border instead of underline (applies only to Material theme)                                                                     |
+| appendTo                    | `string`                                             | null                | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative`                                                                |
+| bufferAmount                | `string`                                             | null                | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative`                                                                |
+| bindValue                   | `string`                                             | `-`                 | no | Object property to use for selected model. By default binds to whole object.                                                                                                                   |
+| bindLabel                   | `string`                                             | `label`             | no | Object property to use for label. Default `label`                                                                                                                                              |
+| [closeOnSelect]             | `boolean`                                            | true                | no | Whether to close the menu when a value is selected                                                                                                                                             |
+| clearAllText                | `string`                                             | `Clear all`         | no | Set custom text for clear all icon title                                                                                                                                                       |
+| [clearable]                 | `boolean`                                            | `true`              | no | Allow to clear selected value. Default `true`                                                                                                                                                  |
+| [clearOnBackspace]          | `boolean`                                            | `true`              | no | Clear selected values one by one when clicking backspace. Default `true`                                                                                                                       |
+| [compareWith]               | `(a: any, b: any) => boolean`                        | `(a, b) => a === b` | no | A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. |
+| dropdownPosition            | `bottom` \| `top` \| `auto`                          | `auto`              | no | Set the dropdown position on open                                                                                                                                                              |
+| [fixedPlaceholder]          | `boolean`                                            | `false`             | no | Set placeholder visible even when an item is selected                                                                                                                                          |
+| [groupBy]                   | `string` \| `Function`                               | null                | no | Allow to group items by key or function expression                                                                                                                                             |
+| [groupValue]                | `(groupKey: string, children: any[]) => Object`      | -                   | no | Function expression to provide group value                                                                                                                                                     |
+| [selectableGroup]           | `boolean`                                            | false               | no | Allow to select group when groupBy is used                                                                                                                                                     |
+| [selectableGroupAsModel]    | `boolean`                                            | true                | no | Indicates whether to select all children or group itself                                                                                                                                       |
+| [items]                     | `Array<any>`                                         | `[]`                | yes | Items array                                                                                                                                                                                    |
+| [loading]                   | `boolean`                                            | `-`                 | no | You can set the loading state from the outside (e.g. async items loading)                                                                                                                      |
+| loadingText                 | `string`                                             | `Loading...`        | no | Set custom text when for loading items                                                                                                                                                         |
+| labelForId                  | `string`                                             | `-`                 | no | Id to associate control with label.                                                                                                                                                            |
+| [markFirst]                 | `boolean`                                            | `true`              | no | Marks first item as focused when opening/filtering.                                                                                                                                            |
+| [isOpen]                    | `boolean`                                            | `-`                 | no | Allows manual control of dropdown opening and closing. `true` - won't close. `false` - won't open.                                                                                             |
+| maxSelectedItems            | `number`                                             | none                | no | When multiple = true, allows to set a limit number of selection.                                                                                                                               |
+| [hideSelected]              | `boolean`                                            | `false`             | no | Allows to hide selected items.                                                                                                                                                                 |
+| [multiple]                  | `boolean`                                            | `false`             | no | Allows to select multiple items.                                                                                                                                                               |
+| notFoundText                | `string`                                             | `No items found`    | no | Set custom text when filter returns empty result                                                                                                                                               |
+| placeholder                 | `string`                                             | `-`                 | no | Placeholder text.                                                                                                                                                                              |
+| [searchable]                | `boolean`                                            | `true`              | no | Allow to search for value. Default `true`                                                                                                                                                      |
+| [readonly]                  | `boolean`                                            | `false`             | no | Set ng-select as readonly. Mostly used with reactive forms.                                                                                                                                    |
+| [searchFn]                  | `(term: string, item: any) => boolean`               | `null`              | no | Allow to filter by custom search function                                                                                                                                                      |
+| [searchWhileComposing]      | `boolean`                                            | `true`              | no | Whether items should be filtered while composition started                                                                                                                                     |
+| [trackByFn]                 | `(item: any) => any`                                 | `null`              | no | Provide custom trackBy function                                                                                                                                                                |
+| [clearSearchOnAdd]          | `boolean`                                            | `true`              | no | Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false`                                                                                   |
+| [deselectOnClick]           | `boolean`                                            | `false`             | no | Deselects a selected item when it is clicked in the dropdown. Default `false`. Default `true` when **multiple** is `true`                                                                      |
+| [editableSearchTerm]        | `boolean`                                            | `false`             | no | Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`.                                                                                             |
+| [selectOnTab]               | `boolean`                                            | `false`             | no | Select marked dropdown item using tab. Default `false`                                                                                                                                         |
+| [openOnEnter]               | `boolean`                                            | `true`              | no | Open dropdown using enter. Default `true`                                                                                                                                                      |
+| [typeahead]                 | `Subject`                                            | `-`                 | no | Custom autocomplete or advanced filter.                                                                                                                                                        |
+| [minTermLength]             | `number`                                             | `0`                 | no | Minimum term length to start a search. Should be used with `typeahead`                                                                                                                         |
+| typeToSearchText            | `string`                                             | `Type to search`    | no | Set custom text when using Typeahead                                                                                                                                                           |
+| [virtualScroll]             | `boolean`                                            | false               | no | Enable virtual scroll for better performance when rendering a lot of data                                                                                                                      |
+| [inputAttrs]                | `{ [key: string]: string }`                          | `-`                 | no | Pass custom attributes to underlying `input` element                                                                                                                                           |
+| [tabIndex]                  | `number`                                             | `-`                 | no | Set tabindex on ng-select                                                                                                                                                                      |
+| [preventToggleOnRightClick] | `boolean`                                            | `false`             | no | Prevent opening of ng-select on right mouse click                                                                                                                                              |
+| [keyDownFn]                 | `($event: KeyboardEvent) => bool`                    | `true`              | no | Provide custom keyDown function. Executed before default handler. Return false to suppress execution of default key down handlers                                                              |
 | [floatPlaceholder] | `boolean` | `false` | no | Allows the placeholder text to float above the input when the user focuses on the dropdown or selects an option  |
 
 ### Outputs

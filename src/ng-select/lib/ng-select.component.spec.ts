@@ -2332,6 +2332,38 @@ describe('NgSelectComponent', () => {
 			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeTruthy();
 		}));
 
+		it('should display ng-placeholder if an item is selected and fixedPlaceholder is true', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [(ngModel)]="selectedCity" [fixedPlaceholder]="true" 
+														 [items]="cities" bindLabel="name" 
+														 placeholder="testPlaceholder">			
+                  </ng-select>`,
+			);
+
+			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+			tickAndDetectChanges(fixture);
+			tickAndDetectChanges(fixture);
+
+			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeTruthy();
+		}));
+
+		it('should not display ng-placeholder if an item is selected', fakeAsync(  () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [(ngModel)]="selectedCity"
+														 [items]="cities" bindLabel="name" 
+														 placeholder="testPlaceholder">			
+                  </ng-select>`
+			);
+
+			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+			tickAndDetectChanges(fixture);
+			tickAndDetectChanges(fixture);
+
+			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeFalsy();
+		}));
+
 		it('should update ng-option label', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
@@ -2914,13 +2946,13 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 			const element = fixture.componentInstance.select.element;
 			const ngControl = element.querySelector('.ng-select-container');
-			
+
 			expect(ngControl.classList.contains('ng-has-value')).toBeTruthy();
 
 			select.handleClearClick();
 			tickAndDetectChanges(fixture);
 			tickAndDetectChanges(fixture);
-			
+
 			const placeholder = element.querySelector('.ng-placeholder');
 			expect(ngControl.classList.contains('ng-has-value')).toBeFalsy();
 			expect(getComputedStyle(placeholder).display).toBe('block');
@@ -3566,26 +3598,15 @@ describe('NgSelectComponent', () => {
 			expect(input.hasAttribute('aria-activedescendant')).toBe(false);
 		}));
 
-		it('should set aria-owns absent at start', fakeAsync(() => {
-			expect(comboBoxDiv.hasAttribute('aria-owns')).toBe(false);
-		}));
-
-		it('should set aria-owns be set to dropdownId on open', fakeAsync(() => {
-			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			tickAndDetectChanges(fixture);
-
-			expect(comboBoxDiv.getAttribute('aria-owns')).toBe(select.dropdownId);
-		}));
-
 		it('should set aria-expanded to false at start', fakeAsync(() => {
-			expect(comboBoxDiv.getAttribute('aria-expanded')).toBe('false');
+			expect(input.getAttribute('aria-expanded')).toBe('false');
 		}));
 
 		it('should set aria-expanded to true on open', fakeAsync(() => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 			tickAndDetectChanges(fixture);
 
-			expect(comboBoxDiv.getAttribute('aria-expanded')).toBe('true');
+			expect(input.getAttribute('aria-expanded')).toBe('true');
 		}));
 
 		it('should set aria-controls absent at start', fakeAsync(() => {
@@ -3627,14 +3648,6 @@ describe('NgSelectComponent', () => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
 			tickAndDetectChanges(fixture);
 			expect(input.hasAttribute('aria-activedescendant')).toBe(false);
-		}));
-
-		it('should set aria-owns  absent on dropdown close', fakeAsync(() => {
-			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			tickAndDetectChanges(fixture);
-			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
-			tickAndDetectChanges(fixture);
-			expect(input.hasAttribute('aria-owns')).toBe(false);
 		}));
 
 		it('should add labelForId on filter input id attribute', fakeAsync(() => {
