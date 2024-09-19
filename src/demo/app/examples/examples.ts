@@ -42,6 +42,11 @@ import { GroupSelectableHiddenExampleComponent } from './group-selectable-hidden
 import { GroupChildrenExampleComponent } from './group-children-example/group-children-example.component';
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
 import { TemplatePlaceholderExampleComponent } from './template-placeholder-example/template-placeholder-example.component';
+import { FloatPlaceholderWithTemplateExampleComponent } from './float-placeholder-with-template-example/float-placeholder-with-template-example.component';
+import { FloatPlaceholderWithGroupExampleComponent } from './float-placeholder-with-group-example/float-placeholder-with-group-example.component';
+import { FloatPlaceholderWithSearchExampleComponent } from './float-placeholder-with-search-example/float-placeholder-with-search-example.component';
+import { FloatPlaceholderWithMultiselectExampleComponent } from './float-placeholder-with-multiselect-example/float-placeholder-with-multiselect-example.component';
+import { FloatPlaceholderDefaultExampleComponent } from './float-placeholder-default-example/float-placeholder-default-example.component';
 
 export interface Example {
 	component: any;
@@ -225,4 +230,24 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
 		component: GroupChildrenExampleComponent,
 		title: 'Items with already grouped children array',
 	},
+	'float-placeholder-default-example': {
+		component: FloatPlaceholderDefaultExampleComponent,
+		title: 'Basic Floating Placeholder',
+	},
+	'float-placeholder-with-multiselect-example': {
+		component: FloatPlaceholderWithMultiselectExampleComponent,
+		title: 'Floating Placeholder with Multiple Selection',
+	},
+	'float-placeholder-with-search-example': {
+		component: FloatPlaceholderWithSearchExampleComponent,
+		title: 'Floating Placeholder with Search',
+	},
+	'float-placeholder-with-group-example': {
+		component: FloatPlaceholderWithGroupExampleComponent,
+		title: 'Floating Placeholder with Grouped Items',
+	},
+	'float-placeholder-with-template-example': {
+		component: FloatPlaceholderWithTemplateExampleComponent,
+		title: 'Floating Placeholder with Custom Template',
+	}
 };

@@ -152,13 +152,6 @@ $ng-select-marked: #e6f7ff !default;
 						padding-left: 50px;
 					}
 				}
-				.ng-placeholder {
-					font-size: 14px;
-					color: lighten($ng-select-primary-text, 60);
-					&.ng-float-placeholder {
-						transform: translateY(-1em) scale(0.75) perspective(100px) translateZ(0.001px);
-					}
-				}
 			}
 		}
 	}

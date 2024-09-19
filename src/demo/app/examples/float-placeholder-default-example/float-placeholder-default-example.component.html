@@ -1,0 +1,7 @@
+<p class="card-text">
+	To enable the floating placeholder, set the <b>[floatPlaceholder]="true"</b>. This will cause the placeholder to float above the dropdown when the user interacts with it.
+</p>
+
+<ng-select [items]="people$ | async" bindLabel="name" autofocus bindValue="id" [floatPlaceholder]="true" [(ngModel)]="selectedPersonId"> </ng-select>
+
+<br />Selected: {{ selectedPersonId }}

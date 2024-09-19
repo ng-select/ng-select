@@ -243,6 +243,7 @@ map: {
 | [tabIndex] | `number` |  `-` | no | Set tabindex on ng-select |
 | [preventToggleOnRightClick] | `boolean` |  `false` | no | Prevent opening of ng-select on right mouse click |
 | [keyDownFn] | `($event: KeyboardEvent) => bool` |  `true` | no | Provide custom keyDown function. Executed before default handler. Return false to suppress execution of default key down handlers  |
+| [floatPlaceholder] | `boolean` | `false` | no | Allows the placeholder text to float above the input when the user focuses on the dropdown or selects an option  |
 
 ### Outputs
 

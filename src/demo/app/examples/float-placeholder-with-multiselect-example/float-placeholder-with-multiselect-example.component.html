@@ -1,0 +1,21 @@
+<p>Select multiple elements</p>
+
+<ng-select
+	[items]="people$ | async"
+	[multiple]="true"
+	[closeOnSelect]="false"
+	[searchable]="false"
+    [floatPlaceholder]="true"
+	bindLabel="name"
+	placeholder="Select people"
+	[(ngModel)]="selectedPeople">
+</ng-select>
+
+<div class="mt-3">
+	Selected value: <br />
+	<ul>
+		@for (item of selectedPeople; track item.name) {
+			<li>{{ item.name }}</li>
+		}
+	</ul>
+</div>
