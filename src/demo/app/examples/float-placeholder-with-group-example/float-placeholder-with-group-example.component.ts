@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgSelectModule } from "../../../../ng-select/lib/ng-select.module";
 import { JsonPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'float-placeholder-with-group-example',
+  selector: 'ng-float-placeholder-with-group-example',
   standalone: true,
   imports: [NgSelectModule, JsonPipe, FormsModule],
   templateUrl: './float-placeholder-with-group-example.component.html',
   styleUrl: './float-placeholder-with-group-example.component.scss'
 })
-export class FloatPlaceholderWithGroupExampleComponent {
+export class FloatPlaceholderWithGroupExampleComponent implements OnInit {
   selectedAccount = 'Adam';
 	accounts = [
 		{ name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { state: 'Active' } },

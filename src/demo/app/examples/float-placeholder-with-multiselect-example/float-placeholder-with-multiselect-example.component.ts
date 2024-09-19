@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgSelectModule } from "../../../../ng-select/lib/ng-select.module";
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
@@ -6,13 +6,13 @@ import { Observable } from 'rxjs/internal/Observable';
 import { DataService } from '../data.service';
 
 @Component({
-  selector: 'float-placeholder-with-multiselect-example',
+  selector: 'ng-float-placeholder-with-multiselect-example',
   standalone: true,
   imports: [NgSelectModule, FormsModule, AsyncPipe],
   templateUrl: './float-placeholder-with-multiselect-example.component.html',
   styleUrl: './float-placeholder-with-multiselect-example.component.scss'
 })
-export class FloatPlaceholderWithMultiselectExampleComponent {
+export class FloatPlaceholderWithMultiselectExampleComponent implements OnInit {
   people$: Observable<any[]>;
 	selectedPeople = [{ name: 'Karyn Wright' }];
 

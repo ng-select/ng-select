@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'float-placeholder-default-example',
+  selector: 'ng-float-placeholder-default-example',
   standalone: true,
   imports: [NgSelectModule, FormsModule, AsyncPipe],
   templateUrl: './float-placeholder-default-example.component.html',

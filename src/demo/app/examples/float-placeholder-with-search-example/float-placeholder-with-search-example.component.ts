@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgSelectModule } from "../../../../ng-select/lib/ng-select.module";
 import { DataService, Person } from '../data.service';
 
@@ -9,7 +9,7 @@ import { DataService, Person } from '../data.service';
   templateUrl: './float-placeholder-with-search-example.component.html',
   styleUrl: './float-placeholder-with-search-example.component.scss'
 })
-export class FloatPlaceholderWithSearchExampleComponent {
+export class FloatPlaceholderWithSearchExampleComponent implements OnInit {
   people: Person[] = [];
 	peopleLoading = false;
 
