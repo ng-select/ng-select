@@ -7,9 +7,9 @@
   (focus)="onWidgetFocus()">
 
   <div class="ng-value-container" [attr.role]="multiple ? 'listbox' : null" [attr.aria-labelledby]="labelledBy">
-    @if(selectedItems.length === 0 && !searchTerm) {
+    @if(selectedItems.length === 0 && !searchTerm || fixedPlaceholder === true ) {
       <ng-template #defaultPlaceholderTemplate>
-          <div class="ng-placeholder">{{ placeholder }}</div>
+        <div class="ng-placeholder">{{ placeholder }}</div>
       </ng-template>
       <ng-template
     [ngTemplateOutlet]="placeholderTemplate || defaultPlaceholderTemplate">
