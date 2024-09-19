@@ -4,11 +4,13 @@
 	[class.ng-has-value]="hasValue"
 	class="ng-select-container">
 	<div class="ng-value-container">
-		@if (selectedItems.length === 0 && !searchTerm) {
-			<ng-template #defaultPlaceholderTemplate>
-				<div class="ng-placeholder">{{ placeholder }}</div>
-			</ng-template>
-			<ng-template [ngTemplateOutlet]="placeholderTemplate || defaultPlaceholderTemplate"></ng-template>
+		@if((selectedItems.length === 0 && !searchTerm) || fixedPlaceholder === true ) {
+        <ng-template #defaultPlaceholderTemplate>
+            <div class="ng-placeholder">{{ placeholder }}</div>
+        </ng-template>
+        <ng-template
+			[ngTemplateOutlet]="placeholderTemplate || defaultPlaceholderTemplate">
+        </ng-template>
 		}
 
 		@if ((!multiLabelTemplate || !multiple) && selectedItems.length > 0) {
