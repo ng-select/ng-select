@@ -2968,6 +2968,36 @@ describe('NgSelectComponent', () => {
 		}));
 	});
 
+	describe('Float placeholder', () => {
+		let component: NgSelectComponent;
+		let fixture: ComponentFixture<NgSelectComponent>;
+
+		beforeEach(async () => {
+			await TestBed.configureTestingModule({
+				imports: [FormsModule, NgSelectModule],
+			}).compileComponents();
+
+			fixture = TestBed.createComponent(NgSelectComponent);
+			component = fixture.componentInstance;
+		});
+
+		it('should render the floating placeholder when floatPlaceholder is true', () => {
+			component.items = [{ name: 'New York' }, { name: 'Los Angeles' }];
+			component.placeholder = 'Select a city';
+			component.floatPlaceholder = true;
+			component.searchTerm = '';
+
+			fixture.detectChanges();
+
+			const placeholderElement = fixture.debugElement.query(By.css('.ng-placeholder'));
+			const floatPlaceholderClass = placeholderElement.nativeElement.classList.contains('ng-float-placeholder');
+
+			expect(placeholderElement).toBeTruthy();
+			expect(floatPlaceholderClass).toBeTrue();
+			expect(placeholderElement.nativeElement.textContent.trim()).toBe('Select a city');
+		});
+	})
+
 	describe('Filter', () => {
 		it('should filter using default implementation', fakeAsync(() => {
 			const fixture = createTestingModule(
