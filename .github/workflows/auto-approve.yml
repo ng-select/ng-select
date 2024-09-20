@@ -3,6 +3,10 @@ on:
   pull_request:
     types: [opened, reopened]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   dependabot:
     runs-on: ubuntu-latest
