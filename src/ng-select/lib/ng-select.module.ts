@@ -6,18 +6,18 @@ import {
 	NgFooterTemplateDirective,
 	NgHeaderTemplateDirective,
 	NgItemLabelDirective,
-    NgLabelTemplateDirective,
-    NgLoadingSpinnerTemplateDirective,
-    NgLoadingTextTemplateDirective,
-    NgMultiLabelTemplateDirective,
-    NgNotFoundTemplateDirective,
-    NgOptgroupTemplateDirective,
-    NgOptionTemplateDirective,
-    NgTagTemplateDirective,
-	NgTypeToSearchTemplateDirective,
+	NgLabelTemplateDirective,
+	NgLoadingSpinnerTemplateDirective,
+	NgLoadingTextTemplateDirective,
+	NgMultiLabelTemplateDirective,
+	NgNotFoundTemplateDirective,
+	NgOptgroupTemplateDirective,
+	NgOptionTemplateDirective,
 	NgPlaceholderTemplateDirective,
+	NgTagTemplateDirective,
+	NgTypeToSearchTemplateDirective,
 } from './ng-templates.directive';
-import { DefaultSelectionModelFactory } from "./selection-model";
+import { DefaultSelectionModelFactory } from './selection-model';
 
 @NgModule({
 	imports: [
