@@ -1,18 +1,16 @@
 name: Auto Approve PR
-on: pull_request
-
-permissions:
-  contents: write
-  pull-requests: write
+on:
+  pull_request:
+    types: [opened, reopened]
 
 jobs:
   dependabot:
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'pavankjadda' }}
     steps:
+      - uses: actions/checkout@v3
       - name: Approve a PR
         run: gh pr review --approve "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
