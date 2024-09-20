@@ -80,11 +80,12 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
     "ng-packagr": "^18.2.1",
-    "node-sass": "^9.0.0",
-    "semantic-release": "^24.1.1",
+    "node-gyp": "^10.2.0",
+    "prettier": "^3.3.3",
+    "sass": "^1.79.2",
+    "semantic-release": "^22.0.12",
     "standard-version": "^9.5.0",
     "ts-node": "~10.9.2",
-    "prettier": "^3.3.3",
     "typescript": "~5.5.4"
   }
 }
