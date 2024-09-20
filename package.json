@@ -1,9 +1,5 @@
 {
   "repository": "ng-select/ng-select",
-  "engines": {
-    "node": ">= 18.12.0",
-    "npm": ">= 8.19.2"
-  },
   "scripts": {
     "build": "ng build ng-select && ng build ng-option-highlight && yarn build:themes && yarn copy-sass",
     "build:demo": "ng build demo --configuration production --base-href=/ng-select && yarn copy-examples",
