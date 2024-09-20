@@ -1,4 +1,4 @@
-name: Dependabot auto-approve
+name: Auto Approve PR
 on: pull_request
 
 permissions:
