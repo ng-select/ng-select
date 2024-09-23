@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
 import { RouteViewerComponent } from './shared/route-viewer/route-viewer.component';
-import {
-	FixedPlaceholderExampleComponent
-} from './examples/fixed-placeholder-example/fixed-placeholder-example.component';
+import { FixedPlaceholderExampleComponent } from './examples/fixed-placeholder-example/fixed-placeholder-example.component';
 
 export const appRoutes: Routes = [
 	{
