@@ -2332,10 +2332,10 @@ describe('NgSelectComponent', () => {
 			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeFalsy();
 		}));
 
-		it('should display ng-placeholder if an item is selected and fixedPlaceholder is true', fakeAsync(() => {
+		it('should display ng-placeholder if an item is selected and fixedPlaceholder', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
-				`<ng-select [(ngModel)]="selectedCity" [fixedPlaceholder]="true" 
+				`<ng-select [(ngModel)]="selectedCity" 
 														 [items]="cities" bindLabel="name" 
 														 placeholder="testPlaceholder">			
                   </ng-select>`,
@@ -2352,6 +2352,7 @@ describe('NgSelectComponent', () => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [(ngModel)]="selectedCity"
+														 [fixedPlaceholder]="false"
 														 [items]="cities" bindLabel="name" 
 														 placeholder="testPlaceholder">			
                   </ng-select>`,
@@ -2361,7 +2362,7 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 			tickAndDetectChanges(fixture);
 
-			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeTruthy();
+			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeFalsy();
 		}));
 
 		it('should update ng-option label', fakeAsync(() => {
