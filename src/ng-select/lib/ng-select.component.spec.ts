@@ -2332,7 +2332,7 @@ describe('NgSelectComponent', () => {
 			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeFalsy();
 		}));
 
-		it('should display ng-placeholder if an item is selected and fixedPlaceholder', fakeAsync(() => {
+		it('should display ng-placeholder if an item is selected', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [(ngModel)]="selectedCity" 
