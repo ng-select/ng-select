@@ -1,4 +1,5 @@
 @import 'mixins';
+@use 'sass:color';
 
 // Define SCSS variables
 $ng-select-highlight: #40a9ff !default;
@@ -108,7 +109,7 @@ $ng-select-marked: #e6f7ff !default;
 		&.ng-select-disabled {
 			> .ng-select-container .ng-value-container .ng-value {
 				background-color: var(--ng-select-disabled-bg, $ng-select-disabled-bg);
-				border: 1px solid color-mix(in srgb, var(--ng-select-border), white 10%);
+				border: 1px solid color.scale($ng-select-border, $lightness: 10);
 				.ng-value-label {
 					color: var(--ng-select-primary-text, $ng-select-primary-text);
 				}
@@ -136,7 +137,7 @@ $ng-select-marked: #e6f7ff !default;
 		}
 	}
 	.ng-clear-wrapper {
-		color: color-mix(in srgb, var(--ng-select-border), black 20%);
+		color: color.scale($ng-select-border, $blackness: 20);
 
 		&:hover .ng-clear {
 			color: #d0021b;
@@ -163,11 +164,11 @@ $ng-select-marked: #e6f7ff !default;
 		}
 		&:hover {
 			.ng-arrow {
-				border-top-color: color-mix(in srgb, var(--ng-select-border), black 40%);
+				border-top-color: color.scale($ng-select-border, $blackness: 40);
 			}
 		}
 		.ng-arrow {
-			border-color: color-mix(in srgb, var(--ng-select-border), black 20%) transparent transparent;
+			border-color: color.scale($ng-select-border, $blackness: 20) transparent transparent;
 			border-style: solid;
 			border-width: 5px 5px 2.5px;
 		}
@@ -183,7 +184,7 @@ $ng-select-marked: #e6f7ff !default;
 		bottom: 100%;
 		border-top-right-radius: 4px;
 		border-top-left-radius: 4px;
-		border-bottom-color: color-mix(in srgb, var(--ng-select-border), white 10%);
+		border-bottom-color: color.scale($ng-select-border, $lightness: 10);
 		margin-bottom: -1px;
 		.ng-dropdown-panel-items {
 			.ng-option {
@@ -200,7 +201,7 @@ $ng-select-marked: #e6f7ff !default;
 		border-top-right-radius: 4px;
 		border-bottom-right-radius: 4px;
 		border-bottom-left-radius: 4px;
-		border-bottom-color: color-mix(in srgb, var(--ng-select-border), white 10%);
+		border-bottom-color: color.scale($ng-select-border, $lightness: 10);
 		margin-bottom: -1px;
 		.ng-dropdown-panel-items {
 			.ng-option {
@@ -214,7 +215,7 @@ $ng-select-marked: #e6f7ff !default;
 		top: 100%;
 		border-bottom-right-radius: 4px;
 		border-bottom-left-radius: 4px;
-		border-top-color: color-mix(in srgb, var(--ng-select-border), white 10%);
+		border-top-color: color.scale($ng-select-border, $lightness: 10);
 		margin-top: -1px;
 		.ng-dropdown-panel-items {
 			.ng-option {
@@ -231,7 +232,7 @@ $ng-select-marked: #e6f7ff !default;
 		border-top-left-radius: 4px;
 		border-bottom-right-radius: 4px;
 		border-bottom-left-radius: 4px;
-		border-bottom-color: color-mix(in srgb, var(--ng-select-border), white 10%);
+		border-bottom-color: color.scale($ng-select-border, $lightness: 10);
 		margin-bottom: -1px;
 		.ng-dropdown-panel-items {
 			.ng-option {
