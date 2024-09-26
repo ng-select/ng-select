@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
@@ -16,50 +15,50 @@ import {
     NgTagTemplateDirective,
     NgItemLabelDirective,
     NgTypeToSearchTemplateDirective,
-    NgLabelValueTemplateDirective
+    NgLabelValueTemplateDirective,
+    NgPlaceholderTemplateDirective,
 } from './ng-templates.directive';
 import { DefaultSelectionModelFactory } from './selection-model';
 
 @NgModule({
-    declarations: [
-    NgDropdownPanelComponent,
-    NgOptionComponent,
-    NgSelectComponent,
-    NgOptgroupTemplateDirective,
-    NgOptionTemplateDirective,
-    NgLabelTemplateDirective,
-    NgLabelValueTemplateDirective,
-    NgMultiLabelTemplateDirective,
-    NgHeaderTemplateDirective,
-    NgFooterTemplateDirective,
-    NgNotFoundTemplateDirective,
-    NgTypeToSearchTemplateDirective,
-    NgLoadingTextTemplateDirective,
-    NgTagTemplateDirective,
-    NgLoadingSpinnerTemplateDirective,
-    NgItemLabelDirective
-    ],
     imports: [
-    CommonModule
+        NgDropdownPanelComponent,
+		NgOptionComponent,
+		NgSelectComponent,
+		NgOptgroupTemplateDirective,
+		NgOptionTemplateDirective,
+		NgLabelTemplateDirective,
+		NgLabelValueTemplateDirective,
+		NgMultiLabelTemplateDirective,
+		NgHeaderTemplateDirective,
+		NgFooterTemplateDirective,
+		NgPlaceholderTemplateDirective,
+		NgNotFoundTemplateDirective,
+		NgTypeToSearchTemplateDirective,
+		NgLoadingTextTemplateDirective,
+		NgTagTemplateDirective,
+		NgLoadingSpinnerTemplateDirective,
+		NgItemLabelDirective,
     ],
     exports: [
-    NgSelectComponent,
-    NgOptionComponent,
-    NgOptgroupTemplateDirective,
-    NgOptionTemplateDirective,
-    NgLabelTemplateDirective,
-    NgLabelValueTemplateDirective,
-    NgMultiLabelTemplateDirective,
-    NgHeaderTemplateDirective,
-    NgFooterTemplateDirective,
-    NgNotFoundTemplateDirective,
-    NgTypeToSearchTemplateDirective,
-    NgLoadingTextTemplateDirective,
-    NgTagTemplateDirective,
-    NgLoadingSpinnerTemplateDirective
+		NgSelectComponent,
+		NgOptionComponent,
+		NgOptgroupTemplateDirective,
+		NgOptionTemplateDirective,
+		NgLabelTemplateDirective,
+		NgLabelValueTemplateDirective,
+		NgMultiLabelTemplateDirective,
+		NgHeaderTemplateDirective,
+		NgFooterTemplateDirective,
+		NgPlaceholderTemplateDirective,
+		NgNotFoundTemplateDirective,
+		NgTypeToSearchTemplateDirective,
+		NgLoadingTextTemplateDirective,
+		NgTagTemplateDirective,
+		NgLoadingSpinnerTemplateDirective,
     ],
     providers: [
-    { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory }
-    ]
-    })
+        { provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory }
+    ],
+})
 export class NgSelectModule {}

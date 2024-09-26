@@ -1,35 +1,30 @@
 <div
-    (mousedown)="handleMousedown($event)"
-    [class.ng-appearance-outline]="appearance === 'outline'"
-    [class.ng-has-value]="hasValue"
-    class="ng-select-container">
+	(mousedown)="handleMousedown($event)"
+	[class.ng-appearance-outline]="appearance === 'outline'"
+	[class.ng-has-value]="hasValue"
+	class="ng-select-container">
+	<div class="ng-value-container">
+		@if ((selectedItems.length === 0 && !searchTerm) || fixedPlaceholder === true) {
+			<ng-template #defaultPlaceholderTemplate>
+				<div class="ng-placeholder">{{ placeholder }}</div>
+			</ng-template>
+			<ng-template [ngTemplateOutlet]="placeholderTemplate || defaultPlaceholderTemplate"> </ng-template>
+		}
 
-    <div class="ng-value-container">
-        <div class="ng-placeholder">{{placeholder}}</div>
-
-        <ng-container *ngIf="(!providedMultiLabelTemplate  || !multiple ) && selectedItems.length > 0">
-            <div [class.ng-value-disabled]="item.disabled" class="ng-value" *ngFor="let item of selectedItems; trackBy: trackByOption">
-                <ng-template #defaultLabelTemplate>
-                    <span class="ng-value-icon left" (click)="unselect(item);" aria-hidden="true">×</span>
-
-                    <div class="ng-value-label">
-                        <ng-template #defaultLabelValueTemplate>
-                            <span [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
-                        </ng-template>
-
-                        <ng-template
-                            [ngTemplateOutlet]="providedLabelValueTemplate || defaultLabelValueTemplate"
-                            [ngTemplateOutletContext]="{ item: item.value, label: item.label }">
-                        </ng-template>
-                    </div>
-                </ng-template>
-
-                <ng-template
-                    [ngTemplateOutlet]="providedLabelTemplate || defaultLabelTemplate"
-                    [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
-                </ng-template>
-            </div>
-        </ng-container>
+		@if ((!providedMultiLabelTemplate || !multiple) && selectedItems.length > 0) {
+			@for (item of selectedItems; track trackByOption($index, item)) {
+				<div [class.ng-value-disabled]="item.disabled" class="ng-value">
+					<ng-template #defaultLabelTemplate>
+						<span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">×</span>
+						<span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
+					</ng-template>
+					<ng-template
+						[ngTemplateOutlet]="providedLabelTemplate || defaultLabelTemplate"
+						[ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
+					</ng-template>
+				</div>
+			}
+		}
 
         <ng-template *ngIf="multiple && providedMultiLabelTemplate && selectedValues.length > 0"
                 [ngTemplateOutlet]="providedMultiLabelTemplate"
@@ -60,110 +55,114 @@
         </div>
     </div>
 
-    <ng-container *ngIf="loading">
-        <ng-template #defaultLoadingSpinnerTemplate>
-            <div class="ng-spinner-loader"></div>
-        </ng-template>
+	@if (loading) {
+		<ng-template #defaultLoadingSpinnerTemplate>
+			<div class="ng-spinner-loader"></div>
+		</ng-template>
+		<ng-template [ngTemplateOutlet]="providedLoadingSpinnerTemplate || defaultLoadingSpinnerTemplate"></ng-template>
+	}
 
-        <ng-template
-            [ngTemplateOutlet]="providedLoadingSpinnerTemplate || defaultLoadingSpinnerTemplate">
-        </ng-template>
-    </ng-container>
+	@if (showClear()) {
+		<span class="ng-clear-wrapper" tabindex="0" title="{{ clearAllText }}" #clearButton>
+			<span class="ng-clear" aria-hidden="true">×</span>
+		</span>
+	}
 
-    <span *ngIf="showClear()" class="ng-clear-wrapper" tabindex="0" title="{{clearAllText}}" #clearButton>
-        <span class="ng-clear" aria-hidden="true">×</span>
-    </span>
-
-    <span class="ng-arrow-wrapper">
-        <span class="ng-arrow"></span>
-    </span>
+	<span class="ng-arrow-wrapper">
+		<span class="ng-arrow"></span>
+	</span>
 </div>
 
-<ng-dropdown-panel *ngIf="isOpen"
-                   class="ng-dropdown-panel"
-                   [virtualScroll]="virtualScroll"
-                   [bufferAmount]="bufferAmount"
-                   [appendTo]="appendTo"
-                   [position]="dropdownPosition"
-                   [headerTemplate]="providedHeaderTemplate"
-                   [footerTemplate]="providedFooterTemplate"
-                   [filterValue]="searchTerm"
-                   [items]="itemsList.filteredItems"
-                   [markedItem]="itemsList.markedItem"
-                   (update)="viewPortItems = $event"
-                   (scroll)="scroll.emit($event)"
-                   (scrollToEnd)="scrollToEnd.emit($event)"
-                   (outsideClick)="close()"
-                   [class.ng-select-multiple]="multiple"
-                   [ngClass]="appendTo ? classes : null"
-                   [id]="dropdownId"
-                   role="listbox"
-                   aria-label="Options list">
-
-    <ng-container>
-        <div class="ng-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)" (mouseover)="onItemHover(item)"
-                *ngFor="let item of viewPortItems; trackBy: trackByOption"
-                [class.ng-option-disabled]="item.disabled"
-                [class.ng-option-selected]="item.selected"
-                [class.ng-optgroup]="item.children"
-                [class.ng-option]="!item.children"
-                [class.ng-option-child]="!!item.parent"
-                [class.ng-option-marked]="item === itemsList.markedItem"
-                [attr.aria-selected]="item.selected"
-                [attr.id]="item?.htmlId">
-
-            <ng-template #defaultOptionTemplate>
-                <span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
-            </ng-template>
-
-            <ng-template
-                [ngTemplateOutlet]="item.children ? (providedOptgroupTemplate || defaultOptionTemplate) : (providedOptionTemplate || defaultOptionTemplate)"
-                [ngTemplateOutletContext]="{ item: item.value, item$:item, index: item.index, searchTerm: searchTerm }">
-            </ng-template>
-        </div>
-
-        <div class="ng-option" [class.ng-option-marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()" role="option" (click)="selectTag()" *ngIf="showAddTag">
-            <ng-template #defaultTagTemplate>
-                <span><span class="ng-tag-label">{{addTagText}}</span>"{{searchTerm}}"</span>
-            </ng-template>
-
-            <ng-template
-                [ngTemplateOutlet]="providedTagTemplate || defaultTagTemplate"
-                [ngTemplateOutletContext]="{ searchTerm: searchTerm }">
-            </ng-template>
-        </div>
-    </ng-container>
-
-    <ng-container *ngIf="showNoItemsFound()">
-        <ng-template #defaultNotFoundTemplate>
-            <div class="ng-option ng-option-disabled">{{notFoundText}}</div>
-        </ng-template>
-
-        <ng-template
-            [ngTemplateOutlet]="providedNotFoundTemplate || defaultNotFoundTemplate"
-            [ngTemplateOutletContext]="{ searchTerm: searchTerm }">
-        </ng-template>
-    </ng-container>
-
-    <ng-container *ngIf="showTypeToSearch()">
-        <ng-template #defaultTypeToSearchTemplate>
-            <div class="ng-option ng-option-disabled">{{typeToSearchText}}</div>
-        </ng-template>
-
-        <ng-template
-            [ngTemplateOutlet]="providedTypeToSearchTemplate || defaultTypeToSearchTemplate">
-        </ng-template>
-    </ng-container>
-
-    <ng-container *ngIf="loading && itemsList.filteredItems.length === 0">
-        <ng-template #defaultLoadingTextTemplate>
-            <div class="ng-option ng-option-disabled">{{loadingText}}</div>
-        </ng-template>
-
-        <ng-template
-            [ngTemplateOutlet]="providedLoadingTextTemplate || defaultLoadingTextTemplate"
-            [ngTemplateOutletContext]="{ searchTerm: searchTerm }">
-        </ng-template>
-    </ng-container>
-
-</ng-dropdown-panel>
+@if (isOpen) {
+	<ng-dropdown-panel
+		class="ng-dropdown-panel"
+		[virtualScroll]="virtualScroll"
+		[bufferAmount]="bufferAmount"
+		[appendTo]="appendTo"
+		[position]="dropdownPosition"
+		[headerTemplate]="providedHeaderTemplate"
+    [footerTemplate]="providedFooterTemplate"
+		[filterValue]="searchTerm"
+		[items]="itemsList.filteredItems"
+		[markedItem]="itemsList.markedItem"
+		(update)="viewPortItems = $event"
+		(scroll)="scroll.emit($event)"
+		(scrollToEnd)="scrollToEnd.emit($event)"
+		(outsideClick)="close()"
+		[class.ng-select-multiple]="multiple"
+		[ngClass]="appendTo ? (ngClass ? ngClass : classes) : null"
+		[id]="dropdownId"
+		role="listbox"
+		aria-label="Options list">
+		<ng-container>
+			@for (item of viewPortItems; track trackByOption($index, item)) {
+				<div
+					class="ng-option"
+					[attr.role]="item.children ? 'group' : 'option'"
+					(click)="toggleItem(item)"
+					(mouseover)="onItemHover(item)"
+					[class.ng-option-disabled]="item.disabled"
+					[class.ng-option-selected]="item.selected"
+					[class.ng-optgroup]="item.children"
+					[class.ng-option]="!item.children"
+					[class.ng-option-child]="!!item.parent"
+					[class.ng-option-marked]="item === itemsList.markedItem"
+					[attr.aria-selected]="item.selected"
+					[attr.id]="item?.htmlId">
+					<ng-template #defaultOptionTemplate>
+						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
+					</ng-template>
+					<ng-template
+						[ngTemplateOutlet]="
+							item.children ? providedOptgroupTemplate || defaultOptionTemplate : providedOptionTemplate || defaultOptionTemplate
+						"
+						[ngTemplateOutletContext]="{ item: item.value, item$: item, index: item.index, searchTerm: searchTerm }">
+					</ng-template>
+				</div>
+			}
+			@if (showAddTag) {
+				<div
+					class="ng-option"
+					[class.ng-option-marked]="!itemsList.markedItem"
+					(mouseover)="itemsList.unmarkItem()"
+					role="option"
+					(click)="selectTag()">
+					<ng-template #defaultTagTemplate>
+						<span
+							><span class="ng-tag-label">{{ addTagText }}</span
+							>"{{ searchTerm }}"</span
+						>
+					</ng-template>
+					<ng-template
+						[ngTemplateOutlet]="providedTagTemplate || defaultTagTemplate"
+						[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
+					</ng-template>
+				</div>
+			}
+		</ng-container>
+		@if (showNoItemsFound()) {
+			<ng-template #defaultNotFoundTemplate>
+				<div class="ng-option ng-option-disabled">{{ notFoundText }}</div>
+			</ng-template>
+			<ng-template
+				[ngTemplateOutlet]="providedNotFoundTemplate || defaultNotFoundTemplate"
+				[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
+			</ng-template>
+		}
+		@if (showTypeToSearch()) {
+			<ng-template #defaultTypeToSearchTemplate>
+				<div class="ng-option ng-option-disabled">{{ typeToSearchText }}</div>
+			</ng-template>
+			<ng-template [ngTemplateOutlet]="providedTypeToSearchTemplate || defaultTypeToSearchTemplate"></ng-template>
+		}
+		@if (loading && itemsList.filteredItems.length === 0) {
+			<ng-template #defaultLoadingTextTemplate>
+				<div class="ng-option ng-option-disabled">{{ loadingText }}</div>
+			</ng-template>
+			<ng-template
+				[ngTemplateOutlet]="providedLoadingTextTemplate || defaultLoadingTextTemplate"
+				[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
+			</ng-template>
+		}
+	</ng-dropdown-panel>
+}
