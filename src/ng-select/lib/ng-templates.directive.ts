@@ -43,8 +43,8 @@ export class NgLabelTemplateDirective {
 	constructor(public template: TemplateRef<any>) {}
 }
 
-// eslint-disable-next-line @angular-eslint/directive-selector
 @Directive({ 
+	// eslint-disable-next-line @angular-eslint/directive-selector
 	selector: '[ng-label-value-tmp]',
 	standalone: true,
 })
@@ -52,7 +52,6 @@ export class NgLabelValueTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 
-// eslint-disable-next-line @angular-eslint/directive-selector
 @Directive({
 	// eslint-disable-next-line @angular-eslint/directive-selector
 	selector: '[ng-multi-label-tmp]',
