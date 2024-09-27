@@ -145,6 +145,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
   @Input() labelValueTemplate: TemplateRef<any>;
   @Input() multiLabelTemplate: TemplateRef<any>;
   @Input() headerTemplate: TemplateRef<any>;
+  @Input() placeholderTemplate: TemplateRef<any>;
   @Input() footerTemplate: TemplateRef<any>;
   @Input() notFoundTemplate: TemplateRef<any>;
   @Input() typeToSearchTemplate: TemplateRef<any>;
@@ -160,6 +161,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
   @ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerContentChildTemplate: TemplateRef<any>;
   @ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerContentChildTemplate: TemplateRef<any>;
   @ContentChild(NgNotFoundTemplateDirective, { read: TemplateRef }) notFoundContentChildTemplate: TemplateRef<any>;
+	@ContentChild(NgPlaceholderTemplateDirective, { read: TemplateRef }) placeholderContentChildTemplate: TemplateRef<any>;
   @ContentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef }) typeToSearchContentChildTemplate: TemplateRef<any>;
   @ContentChild(NgLoadingTextTemplateDirective, { read: TemplateRef }) loadingTextContentChildTemplate: TemplateRef<any>;
   @ContentChild(NgTagTemplateDirective, { read: TemplateRef }) tagContentChildTemplate: TemplateRef<any>;
@@ -191,6 +193,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
   get providedFooterTemplate(): TemplateRef<any> {
     return this.footerContentChildTemplate || this.footerTemplate;
+  }
+
+	get providedPlaceholderTemplate(): TemplateRef<any> {
+    return this.placeholderContentChildTemplate || this.placeholderTemplate;
   }
 
   get providedNotFoundTemplate(): TemplateRef<any> {
@@ -770,7 +776,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
   refreshItems(): void {
-    this._setItems(this.items || []);
+    this._setItems(this.items ? this.items.slice() : []);
     this._cd.markForCheck();
   }
 

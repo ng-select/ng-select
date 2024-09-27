@@ -8,7 +8,7 @@
 			<ng-template #defaultPlaceholderTemplate>
 				<div class="ng-placeholder">{{ placeholder }}</div>
 			</ng-template>
-			<ng-template [ngTemplateOutlet]="placeholderTemplate || defaultPlaceholderTemplate"> </ng-template>
+			<ng-template [ngTemplateOutlet]="providedPlaceholderTemplate || defaultPlaceholderTemplate"> </ng-template>
 		}
 
 		@if ((!providedMultiLabelTemplate || !multiple) && selectedItems.length > 0) {
