@@ -25,35 +25,36 @@
 				</div>
 			}
 		}
+		@if (multiple && providedMultiLabelTemplate && selectedValues.length > 0) {
+			<ng-template
+				[ngTemplateOutlet]="providedMultiLabelTemplate"
+				[ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
+			</ng-template>
+		}
 
-        <ng-template *ngIf="multiple && providedMultiLabelTemplate && selectedValues.length > 0"
-                [ngTemplateOutlet]="providedMultiLabelTemplate"
-                [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
-        </ng-template>
+		<div class="ng-input"
+			role="combobox" 
+			[attr.aria-expanded]="isOpen" 
+			[attr.aria-owns]="isOpen ? dropdownId : null" 
+			aria-haspopup="listbox">
 
-        <div class="ng-input"
-            role="combobox" 
-            [attr.aria-expanded]="isOpen" 
-            [attr.aria-owns]="isOpen ? dropdownId : null" 
-            aria-haspopup="listbox">
-
-            <input #searchInput
-                   [attr.id]="labelForId"
-                   [attr.tabindex]="tabIndex"
-                   [readOnly]="!searchable || itemsList.maxItemsSelected"
-                   [disabled]="disabled"
-                   [value]="searchTerm ? searchTerm : ''"
-                   (input)="filter(searchInput.value)"
-                   (compositionstart)="onCompositionStart()"
-                   (compositionend)="onCompositionEnd(searchInput.value)"
-                   (focus)="onInputFocus($event)"
-                   (blur)="onInputBlur($event)"
-                   (change)="$event.stopPropagation()"
-                   [attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
-                   aria-autocomplete="list"
-                   [attr.aria-controls]="isOpen ? dropdownId : null">
-        </div>
-    </div>
+			<input #searchInput
+							[attr.id]="labelForId"
+							[attr.tabindex]="tabIndex"
+							[readOnly]="!searchable || itemsList.maxItemsSelected"
+							[disabled]="disabled"
+							[value]="searchTerm ? searchTerm : ''"
+							(input)="filter(searchInput.value)"
+							(compositionstart)="onCompositionStart()"
+							(compositionend)="onCompositionEnd(searchInput.value)"
+							(focus)="onInputFocus($event)"
+							(blur)="onInputBlur($event)"
+							(change)="$event.stopPropagation()"
+							[attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
+							aria-autocomplete="list"
+							[attr.aria-controls]="isOpen ? dropdownId : null">
+		</div>
+	</div>
 
 	@if (loading) {
 		<ng-template #defaultLoadingSpinnerTemplate>
