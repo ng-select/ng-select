@@ -16,7 +16,16 @@
 				<div [class.ng-value-disabled]="item.disabled" class="ng-value">
 					<ng-template #defaultLabelTemplate>
 						<span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">×</span>
-						<span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
+						<span class="ng-value-label">
+							<ng-template #defaultLabelValueTemplate>
+								<span [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
+							</ng-template>
+
+							<ng-template
+									[ngTemplateOutlet]="providedLabelValueTemplate || defaultLabelValueTemplate"
+									[ngTemplateOutletContext]="{ item: item.value, label: item.label }">
+							</ng-template>
+						</span>
 					</ng-template>
 					<ng-template
 						[ngTemplateOutlet]="providedLabelTemplate || defaultLabelTemplate"
