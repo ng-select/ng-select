@@ -11,6 +11,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_CONFIG_REGISTRY: "https://npm.pkg.github.com"
     steps:
       - uses: actions/checkout@v4
 
@@ -31,7 +32,7 @@ jobs:
         run: cp README.md ./dist/ng-select/
 
       - name: Semantic release
-        run: npx semantic-release --registry https://npm.pkg.github.com
+        run: npx semantic-release
 
       - name: copy @ng-select/ng-select version to @ng-select/ng-option-highlight
         run: |
