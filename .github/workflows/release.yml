@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: 'latest'
+          node-version: '18.x'
           cache: yarn
           cache-dependency-path: yarn.lock
 
@@ -31,7 +31,7 @@ jobs:
         run: cp README.md ./dist/ng-select/
 
       - name: Semantic release
-        run: DEBUG=semantic-release:* npx semantic-release
+        run: npx semantic-release
 
       - name: copy @ng-select/ng-select version to @ng-select/ng-option-highlight
         run: |
@@ -40,21 +40,3 @@ jobs:
           jq ".version = $(jq .version ./dist/ng-select/package.json)" \
             ./dist/ng-option-highlight/package.json > "$TEMPFILE"
           mv "$TEMPFILE" ./dist/ng-option-highlight/package.json
-      - name: Set up npm registry
-        run: echo "//npm.pkg.github.com/:_authToken=\${NODE_AUTH_TOKEN}" > ~/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-      - name: publish @ng-select/ng-option-highlight
-        run: yarn publish ./dist/ng-option-highlight
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-
-      - name: build demo
-        run: yarn run build:demo
-
-      - name: Deploy demo 🚀
-        uses: JamesIves/github-pages-deploy-action@releases/v4
-        with:
-          branch: gh-pages
-          folder: dist/demo
