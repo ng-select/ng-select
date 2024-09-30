@@ -3655,6 +3655,15 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 			expect(input.getAttribute('id')).toEqual('lbl');
 		}));
+
+		it('should show undefined for aria-label on input element', () => {
+			expect(input.getAttribute('aria-label')).toBe(null);
+		});
+
+		it('should set aria-label on input element', () => {
+			input.setAttribute('aria-label', 'test');
+			expect(input.getAttribute('aria-label')).toBe('test');
+		});
 	});
 
 	describe('Output events', () => {
