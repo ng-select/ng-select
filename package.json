@@ -28,7 +28,9 @@
       [
         "@semantic-release/npm",
         {
-          "pkgRoot": "dist/ng-select"
+          "pkgRoot": "dist/ng-select",
+          "npmPublish": true,
+          "npmRegistryUrl": "https://npm.pkg.github.com"
         }
       ],
       "@semantic-release/release-notes-generator"
