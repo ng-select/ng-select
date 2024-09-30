@@ -41,7 +41,7 @@ jobs:
             ./dist/ng-option-highlight/package.json > "$TEMPFILE"
           mv "$TEMPFILE" ./dist/ng-option-highlight/package.json
       - name: Set up npm registry
-        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ~/.npmrc
+        run: echo "//npm.pkg.github.com/:_authToken=\${NPM_TOKEN}" > ~/.npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: publish @ng-select/ng-option-highlight
