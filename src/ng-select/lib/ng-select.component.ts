@@ -86,6 +86,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
   @Input() bindLabel: string;
   @Input() bindValue: string;
+	@Input() ariaLabel: string | undefined;
   @Input({ transform: booleanAttribute }) markFirst = true;
   @Input() placeholder: string;
   @Input() fixedPlaceholder: boolean = true;

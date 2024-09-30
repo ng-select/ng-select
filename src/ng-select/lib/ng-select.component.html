@@ -56,6 +56,7 @@
 
       <input
         #searchInput
+				[attr.aria-label]="ariaLabel"
         [attr.id]="labelForId"
         [attr.tabindex]="tabIndex"
         [placeholder]="this.selectedItems && this.selectedItems.length ? '' : placeholder"
