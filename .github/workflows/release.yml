@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -20,8 +20,6 @@ jobs:
           node-version: 'latest'
           cache: yarn
           cache-dependency-path: yarn.lock
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@natlex'
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -42,11 +40,17 @@ jobs:
           jq ".version = $(jq .version ./dist/ng-select/package.json)" \
             ./dist/ng-option-highlight/package.json > "$TEMPFILE"
           mv "$TEMPFILE" ./dist/ng-option-highlight/package.json
+
+      - name: Set up npm registry
+        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: publish @ng-select/ng-option-highlight
         run: yarn publish ./dist/ng-option-highlight
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: build demo
         run: yarn run build:demo

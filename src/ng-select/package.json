@@ -1,10 +1,10 @@
 {
-	"name": "@ng-select/ng-select",
+	"name": "@natlex/ng-select",
 	"version": "13.0.0",
 	"description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
-	"author": "@ng-select/ng-select",
+	"author": "@natlex/ng-select",
 	"license": "MIT",
-	"repository": "ng-select/ng-select",
+	"repository": "natlex/ng-select",
 	"engines": {
 		"node": ">= 18",
 		"npm": ">= 8"
