@@ -40,11 +40,3 @@ jobs:
           jq ".version = $(jq .version ./dist/ng-select/package.json)" \
             ./dist/ng-option-highlight/package.json > "$TEMPFILE"
           mv "$TEMPFILE" ./dist/ng-option-highlight/package.json
-
-      - name: Set up npm registry
-        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ~/.npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: publish @natlex/ng-option-highlight
-        run: yarn publish ./dist/ng-option-highlight
