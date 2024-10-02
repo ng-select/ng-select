@@ -1462,16 +1462,15 @@ describe('NgSelectComponent', () => {
 			expect((<HTMLElement>options[0]).innerText).toBe('No items found');
 		}));
 
-		// TODO: Check test
 		xit('should scroll to selected item on first open when virtual scroll is enabled', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [items]="cities"
-										bindLabel="name"
-										[virtualScroll]="true"
-										[appendTo]="body"
-										[(ngModel)]="city">
-				</ng-select>`,
+                            bindLabel="name"
+                            [virtualScroll]="true"
+                            [appendTo]="body"
+                            [(ngModel)]="city">
+                </ng-select>`,
 			);
 
 			const select = fixture.componentInstance.select;
@@ -2014,13 +2013,13 @@ describe('NgSelectComponent', () => {
 			fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<div id="outside">Outside</div><br />
-						<ng-select id="select" [items]="cities"
-								bindLabel="name"
-								multiple="true"
-								[closeOnSelect]="false"
-								appendTo="body"
-								[(ngModel)]="selectedCity">
-						</ng-select>`,
+                <ng-select id="select" [items]="cities"
+                    bindLabel="name"
+                    multiple="true"
+                    [closeOnSelect]="false"
+                    appendTo="body"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`,
 			);
 			select = fixture.componentInstance.select;
 		});
@@ -3877,10 +3876,10 @@ describe('NgSelectComponent', () => {
 			fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [items]="cities"
-								labelForId="lbl"
-								(change)="onChange($event)"
-								bindLabel="name">
-				</ng-select>`,
+                        labelForId="lbl"
+                        (change)="onChange($event)"
+                        bindLabel="name">
+                </ng-select>`,
 			);
 			select = fixture.componentInstance.select;
 			input = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -5185,7 +5184,7 @@ class NgSelectTestComponent {
 		{ id: 2, name: 'Kaunas' },
 		{ id: 3, name: 'Pabrade' },
 	] as const;
-	citiesNames = this.cities.map(x => x.name);
+	citiesNames = this.cities.map((x) => x.name);
 
 	selectedCountry: any;
 	countries = [

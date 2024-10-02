@@ -414,21 +414,21 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		this._parent.appendChild(this._dropdown);
 	}
 
-    private _updateXPosition() {
-        const select = this._select.getBoundingClientRect();
-        const parent = this._parent.getBoundingClientRect();
-        const offsetLeft = select.left - parent.left;
-				const offsetRight = parent.right - select.right;
+	private _updateXPosition() {
+		const select = this._select.getBoundingClientRect();
+		const parent = this._parent.getBoundingClientRect();
+		const offsetLeft = select.left - parent.left;
+		const offsetRight = parent.right - select.right;
 
-        this._dropdown.style.width = select.width + 'px';
-        this._dropdown.style.minWidth = select.width + 'px';
-				if (this._isDropdownExceededRight(this._dropdown)) {
-					this._dropdown.style.left = 'auto';
-					this._dropdown.style.right = offsetRight + 'px';
-				} else {
-						this._dropdown.style.left = offsetLeft + 'px';
-				};
-    }
+		this._dropdown.style.width = select.width + 'px';
+		this._dropdown.style.minWidth = select.width + 'px';
+		if (this._isDropdownExceededRight(this._dropdown)) {
+			this._dropdown.style.left = 'auto';
+			this._dropdown.style.right = offsetRight + 'px';
+		} else {
+			this._dropdown.style.left = offsetLeft + 'px';
+		};
+	}
 
 	private _updateYPosition() {
 		const select = this._select.getBoundingClientRect();

@@ -12,18 +12,18 @@ export { ConsoleService } from './lib/console.service';
 export { NgDropdownPanelComponent } from './lib/ng-dropdown-panel.component';
 export { NgDropdownPanelService } from './lib/ng-dropdown-panel.service';
 export {
-    NgOptgroupTemplateDirective,
-    NgOptionTemplateDirective,
-    NgFooterTemplateDirective,
-    NgPlaceholderTemplateDirective,
-    NgHeaderTemplateDirective,
-    NgItemLabelDirective,
-    NgLabelTemplateDirective,
-    NgLoadingSpinnerTemplateDirective,
-    NgLoadingTextTemplateDirective,
-    NgLabelValueTemplateDirective,
-    NgMultiLabelTemplateDirective,
-    NgNotFoundTemplateDirective,
-    NgTagTemplateDirective,
-    NgTypeToSearchTemplateDirective
+	NgOptgroupTemplateDirective,
+	NgOptionTemplateDirective,
+	NgFooterTemplateDirective,
+	NgPlaceholderTemplateDirective,
+	NgHeaderTemplateDirective,
+	NgItemLabelDirective,
+	NgLabelTemplateDirective,
+	NgLabelValueTemplateDirective,
+	NgLoadingSpinnerTemplateDirective,
+	NgLoadingTextTemplateDirective,
+	NgMultiLabelTemplateDirective,
+	NgNotFoundTemplateDirective,
+	NgTagTemplateDirective,
+	NgTypeToSearchTemplateDirective,
 } from './lib/ng-templates.directive';

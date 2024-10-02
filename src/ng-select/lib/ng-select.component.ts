@@ -28,24 +28,23 @@ import {
 	ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { debounceTime, filter, map, takeUntil, tap, take } from 'rxjs/operators';
-import { Observable, Subject, isObservable, merge, of } from 'rxjs';
-
+import { debounceTime, filter, map, startWith, take, takeUntil, tap } from 'rxjs/operators';
+import { isObservable, merge, Observable, of, Subject } from 'rxjs';
 import {
-    NgFooterTemplateDirective,
-    NgHeaderTemplateDirective,
-    NgItemLabelDirective,
-    NgLabelTemplateDirective,
-    NgLoadingSpinnerTemplateDirective,
-    NgLoadingTextTemplateDirective,
-    NgMultiLabelTemplateDirective,
-    NgNotFoundTemplateDirective,
-    NgOptgroupTemplateDirective,
-    NgOptionTemplateDirective,
-    NgPlaceholderTemplateDirective,
-    NgTagTemplateDirective,
-    NgTypeToSearchTemplateDirective,
-    NgLabelValueTemplateDirective
+	NgFooterTemplateDirective,
+	NgHeaderTemplateDirective,
+	NgItemLabelDirective,
+	NgLabelTemplateDirective,
+	NgLoadingSpinnerTemplateDirective,
+	NgLoadingTextTemplateDirective,
+	NgMultiLabelTemplateDirective,
+	NgNotFoundTemplateDirective,
+	NgOptgroupTemplateDirective,
+	NgOptionTemplateDirective,
+	NgPlaceholderTemplateDirective,
+	NgTagTemplateDirective,
+	NgTypeToSearchTemplateDirective,
+	NgLabelValueTemplateDirective,
 } from './ng-templates.directive';
 
 import { ConsoleService } from './console.service';
@@ -653,14 +652,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this._onSelectionChanged();
 	}
 
-    selectTag() {
-        let tag;
-        this.searchTerm = this.searchTerm.trim();
-        if (isFunction(this.addTag)) {
-            tag = (<AddTagFn>this.addTag)(this.searchTerm);
-        } else {
-            tag = this._primitive ? this.searchTerm : { [this.bindLabel]: this.searchTerm };
-        }
+	selectTag() {
+		let tag;
+		this.searchTerm = this.searchTerm.trim();
+		if (isFunction(this.addTag)) {
+				tag = (<AddTagFn>this.addTag)(this.searchTerm);
+		} else {
+				tag = this._primitive ? this.searchTerm : { [this.bindLabel]: this.searchTerm };
+		}
 
 		const handleTag = (item) => (this._isTypeahead || !this.isOpen ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item));
 		if (isPromise(tag)) {
@@ -720,10 +719,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			return;
 		}
 
-        this.searchTerm = term.trim();
-        if (this._isTypeahead && (this._validTerm || this.minTermLength === 0)) {
-            this.typeahead.next(term);
-        }
+		this.searchTerm = term.trim();
+		if (this._isTypeahead && (this._validTerm || this.minTermLength === 0)) {
+			this.typeahead.next(term);
+		}
 
 		if (!this._isTypeahead) {
 			this.itemsList.filter(this.searchTerm);
@@ -831,17 +830,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 				});
 		};
 
-        merge(
-            this.ngOptions.changes,
-            of(this.ngOptions).pipe(filter(items => !!items.length)),
-        )
-            .pipe(takeUntil(this._destroy$))
-            .subscribe(options => {
-                this.bindLabel = this._defaultLabel;
-                mapNgOptions(options);
-                handleOptionChange();
-            });
-    }
+		merge(
+			this.ngOptions.changes,
+			of(this.ngOptions).pipe(filter(items => !!items.length)),
+		)
+			.pipe(takeUntil(this._destroy$))
+			.subscribe(options => {
+				this.bindLabel = this._defaultLabel;
+				mapNgOptions(options);
+				handleOptionChange();
+			});
+	}
 
 	private _isValidWriteValue(value: any): boolean {
 		if (!isDefined(value) || (this.multiple && value === '') || (Array.isArray(value) && value.length === 0)) {
@@ -874,23 +873,23 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			return;
 		}
 
-    const withResolvedLabel = (initialVal: any, initialLabel: string, fn: (val: any, label: string) => void) => {
-      if (initialLabel != null) {
-          fn(initialVal, initialLabel);
-      } else {
-          const resolvedLabel = this.getMissingItemLabelFn ? this.getMissingItemLabelFn(initialVal) : null;
-          if (isObservable(resolvedLabel)) {
-              resolvedLabel.pipe(
-                  take(1),
-                  tap(l => fn(initialVal, l)),
-                  tap(() => this._cd.markForCheck()),
-                  takeUntil(this._destroy$),
-              ).subscribe();
-          } else {
-              fn(initialVal, resolvedLabel);
-          }
-      }
-  }
+		const withResolvedLabel = (initialVal: any, initialLabel: string, fn: (val: any, label: string) => void) => {
+			if (initialLabel != null) {
+				fn(initialVal, initialLabel);
+			} else {
+				const resolvedLabel = this.getMissingItemLabelFn ? this.getMissingItemLabelFn(initialVal) : null;
+				if (isObservable(resolvedLabel)) {
+					resolvedLabel.pipe(
+						take(1),
+						tap(l => fn(initialVal, l)),
+						tap(() => this._cd.markForCheck()),
+						takeUntil(this._destroy$),
+					).subscribe();
+				} else {
+					fn(initialVal, resolvedLabel);
+				}
+			}
+		}
 
 		const select = (val: any) => {
 			let item = this.itemsList.findItem(val);
@@ -898,17 +897,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 				this.itemsList.select(item);
 			} else {
         const selectItemWithLabelFn = (itemObject: any, itemLabel: string) => {
-            const selectedItem = { ...itemObject };
-            if (itemLabel || this.bindLabel !== this._defaultLabel) {
-                selectedItem[this.bindLabel] = itemLabel;
-            }
-            this.itemsList.select(this.itemsList.mapItem(selectedItem, null));
+					const selectedItem = { ...itemObject };
+					if (itemLabel || this.bindLabel !== this._defaultLabel) {
+						selectedItem[this.bindLabel] = itemLabel;
+					}
+					this.itemsList.select(this.itemsList.mapItem(selectedItem, null));
         };
         const selectItemWithValueFn = (itemValue: any, itemLabel: string) => {
-            const selectedItem = {
-                [this.bindValue]: itemValue,
-            };
-            selectItemWithLabelFn(selectedItem, itemLabel);
+					const selectedItem = {
+						[this.bindValue]: itemValue,
+					};
+					selectItemWithLabelFn(selectedItem, itemLabel);
         };
 
 				const isValObject = isObject(val);
@@ -916,9 +915,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 				if (isPrimitive) {
           this.itemsList.select(this.itemsList.mapItem(val, null));
         } else if (isValObject) {
-            withResolvedLabel(val, this.itemsList.resolveNested(val, this.bindLabel), selectItemWithLabelFn.bind(this));
+					withResolvedLabel(val, this.itemsList.resolveNested(val, this.bindLabel), selectItemWithLabelFn.bind(this));
         } else if (this.bindValue) {
-            withResolvedLabel(val, null, selectItemWithValueFn.bind(this));
+					withResolvedLabel(val, null, selectItemWithValueFn.bind(this));
         }
 			}
 		};

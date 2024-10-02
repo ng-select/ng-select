@@ -83,11 +83,11 @@ export class ItemsList {
 
 		this._selectionModel.select(item, multiple, this._ngSelect.selectableGroupAsModel);
 		if (this._ngSelect.hideSelected) {
-				this._hideSelected(item);
+			this._hideSelected(item);
 		}
 
 		if (this._ngSelect.editableSearchTerm && !multiple) {
-				this._ngSelect._setSearchTermFromItems();
+			this._ngSelect._setSearchTermFromItems();
 		}
 	}
 
@@ -123,15 +123,15 @@ export class ItemsList {
 
 	clearSelected(keepDisabled = false) {
 		this._selectionModel.clear(keepDisabled);
-		this._items.forEach(item => {
-				item.selected = keepDisabled && item.selected && item.disabled;
-				item.marked = false;
+		this._items.forEach((item) => {
+			item.selected = keepDisabled && item.selected && item.disabled;
+			item.marked = false;
 		});
 		if (this._ngSelect.hideSelected) {
-				this.resetFilteredItems();
+			this.resetFilteredItems();
 		}
 		if (this._ngSelect.editableSearchTerm) {
-				this._ngSelect.searchTerm = null;
+			this._ngSelect.searchTerm = null;
 		}
 	}
 
