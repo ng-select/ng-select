@@ -33,7 +33,7 @@ jobs:
       - name: Semantic release
         run: npx semantic-release
 
-      - name: copy @ng-select/ng-select version to @ng-select/ng-option-highlight
+      - name: copy @natlex/ng-select version to @natlex/ng-option-highlight
         run: |
           TEMPFILE=$(mktemp)
 
@@ -41,5 +41,5 @@ jobs:
             ./dist/ng-option-highlight/package.json > "$TEMPFILE"
           mv "$TEMPFILE" ./dist/ng-option-highlight/package.json
 
-      - name: publish @ng-select/ng-option-highlight
+      - name: publish @natlex/ng-option-highlight
         run: yarn publish ./dist/ng-option-highlight
