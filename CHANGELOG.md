@@ -2,7 +2,152 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## Since 3.2.0, notable changes are on [Releases Page](https://github.com/ng-select/ng-select/releases)
+## [14.0.0](https://github.com/natlex/ng-select/compare/v12.0.6...v14.0.0) (2024-10-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* **release:** + small updates
+
+### Features
+
+* **release:** + small updates ([ffb48d3](https://github.com/natlex/ng-select/commit/ffb48d33b0ce0d9be428e700eee363327a0ac7df))
+
+
+### Bug Fixes
+
+* add placeholer template ([44e0e99](https://github.com/natlex/ng-select/commit/44e0e999177a4415063e51fb974ad323da6dc02e))
+
+## [11.0.0](https://github.com/natlex/ng-select/compare/v10.0.4...v11.0.0) (2023-07-06)
+
+
+### Bug Fixes
+
+* release actions ([6ffa767](https://github.com/natlex/ng-select/commit/6ffa767b79a1ef62d1a837b2c486d71f6c315073))
+
+### [10.0.2](https://github.com/natlex/ng-select/compare/v10.0.1...v10.0.2) (2023-01-13)
+
+
+### Bug Fixes
+
+* indent ([430a740](https://github.com/natlex/ng-select/commit/430a740d5901a9a01294ea97d84ea6392c3e7db0))
+* IRIS-28953 new positions for dropdown ([5bfc637](https://github.com/natlex/ng-select/commit/5bfc6378e61db8f439d40be50a4488e596e57497))
+
+### [10.0.1](https://github.com/natlex/ng-select/compare/v10.0.0...v10.0.1) (2023-01-07)
+
+
+### Bug Fixes
+
+* indent fix ([8397b88](https://github.com/natlex/ng-select/commit/8397b8889612b9d90d736a62377db9a36a168f24))
+
+## [10.0.0](https://github.com/natlex/ng-select/compare/v10.0.3...v10.0.0) (2023-01-07)
+
+## [9.0.0](https://github.com/natlex/ng-select/compare/v8.0.6...v9.0.0) (2022-10-21)
+
+### [8.0.6](https://github.com/natlex/ng-select/compare/v8.0.5...v8.0.6) (2022-10-07)
+
+
+### Bug Fixes
+
+* clear search term on clear selection ([cbdf5f8](https://github.com/natlex/ng-select/commit/cbdf5f899d98345662dca5902877b97b2bedd6d2))
+
+### [8.0.5](https://github.com/natlex/ng-select/compare/v8.0.4...v8.0.5) (2022-09-28)
+
+
+### Bug Fixes
+
+* remove redundant trim in suggestion ([9089f07](https://github.com/natlex/ng-select/commit/9089f0734fbe6457326ea932e16e3388aae9f28b))
+* trim spaces in search ([e5d2b86](https://github.com/natlex/ng-select/commit/e5d2b86ee0dc0d447fb4ded77fb49f568869769b))
+* trim spaces in search again ([e8b5d7b](https://github.com/natlex/ng-select/commit/e8b5d7b531e88668f2285d370857b894b2fd557b))
+
+### [8.0.4](https://github.com/natlex/ng-select/compare/v8.0.3...v8.0.4) (2022-07-02)
+
+
+### Bug Fixes
+
+* linter spaces ([d903332](https://github.com/natlex/ng-select/commit/d903332f8ab4c0e0eb7dd7d34ea9f42c245473d8))
+
+### [8.0.3](https://github.com/natlex/ng-select/compare/v8.0.2...v8.0.3) (2022-07-02)
+
+
+### Bug Fixes
+
+* linter ([0f2bffb](https://github.com/natlex/ng-select/commit/0f2bffb10ec51886a68088e18d919cebdc7451a5))
+
+### [8.0.2](https://github.com/natlex/ng-select/compare/v9.0.2...v8.0.2) (2022-07-02)
+
+
+### Bug Fixes
+
+* actualize editable search term on select ([8b5438f](https://github.com/natlex/ng-select/commit/8b5438fac3674eb32529d0058b8be6e15709417c))
+
+### [8.0.1](https://github.com/natlex/ng-select/compare/v8.0.0...v8.0.1) (2022-01-08)
+
+
+### Bug Fixes
+
+* codestyle linter ([66263dc](https://github.com/natlex/ng-select/commit/66263dc4a56797c3ca96aa3b333bd5c840a8e456))
+
+## [8.0.0](https://github.com/natlex/ng-select/compare/v7.1.1...v8.0.0) (2022-01-08)
+
+### [7.1.1](https://github.com/natlex/ng-select/compare/v7.1.0...v7.1.1) (2021-12-24)
+
+
+### Bug Fixes
+
+* getMissingItemLabelFn tests ([2fae675](https://github.com/natlex/ng-select/commit/2fae6753b4687c750f2d6a938e4c5f6696195b93))
+
+## [7.1.0](https://github.com/natlex/ng-select/compare/v8.1.1...v7.1.0) (2021-12-24)
+
+
+### Features
+
+* getMissingItemLabelFn for null bindValue ([8214b5f](https://github.com/natlex/ng-select/commit/8214b5f1a27eff507257877e546f215b69d07264))
+
+## [7.0.0](https://github.com/natlex/ng-select/compare/v7.0.1...v7.0.0) (2021-06-22)
+
+### [6.5.1](https://github.com/natlex/ng-select/compare/v6.5.0...v6.5.1) (2021-05-12)
+
+
+### Bug Fixes
+
+* problem with 'bindLabel' when 'items' are delayed ([#13](https://github.com/natlex/ng-select/issues/13)) ([655e65f](https://github.com/natlex/ng-select/commit/655e65fbece6f62e8c0a248565d9d9b6671f3585))
+
+## [6.5.0](https://github.com/natlex/ng-select/compare/v6.4.1...v6.5.0) (2021-05-12)
+
+
+### Features
+
+* add possibility to refresh items manually ([#12](https://github.com/natlex/ng-select/issues/12)) ([21ade73](https://github.com/natlex/ng-select/commit/21ade7306afa9e656e1cd632e0f3933cfc80ffa6))
+
+### [6.4.1](https://github.com/natlex/ng-select/compare/v6.4.0...v6.4.1) (2021-05-06)
+
+
+### Bug Fixes
+
+* getMissingItemLabelFn issues with null and change detection ([#11](https://github.com/natlex/ng-select/issues/11)) ([a7c91ec](https://github.com/natlex/ng-select/commit/a7c91ec8a5c484c732a67be617566bcca953f741))
+
+## [6.4.0](https://github.com/natlex/ng-select/compare/v6.3.0...v6.4.0) (2021-05-05)
+
+
+### Features
+
+* add function to get label for ngModel that is missing in current items ([#10](https://github.com/natlex/ng-select/issues/10)) ([71df0f8](https://github.com/natlex/ng-select/commit/71df0f8a8485bb3bb92fc7c76a60294f4843dbbe))
+
+## [6.3.0](https://github.com/natlex/ng-select/compare/v6.2.0...v6.3.0) (2021-04-14)
+
+
+### Features
+
+* support for providing templates for label value ([abbcb5d](https://github.com/natlex/ng-select/commit/abbcb5d52f47abdf562192b35475bda740ff74fa))
+* Test upgrade ([#7](https://github.com/natlex/ng-select/issues/7)) ([2d26d67](https://github.com/natlex/ng-select/commit/2d26d6748485bf29037cfd9be092d8335a7ab47a))
+
+## [6.2.0](https://github.com/natlex/ng-select/compare/v6.1.0...v6.2.0) (2021-03-26)
+
+
+### Features
+
+* support for providing custom templates as attributes ([dbe72ea](https://github.com/natlex/ng-select/commit/dbe72ea4396c9156d615f95365d393d55da343f2))
 
 ### [3.1.1](https://github.com/ng-select/ng-select/compare/v3.1.0...v3.1.1) (2019-10-19)
 
