@@ -103,6 +103,6 @@ export class StackblitzService {
 	}
 
 	private get _exampleTemplate() {
-		return `<${this._exampleName}></${this._exampleName}>`;
+		return `<ng-${this._exampleName}></ng-${this._exampleName}>`;
 	}
 }
