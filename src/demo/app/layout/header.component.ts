@@ -4,8 +4,8 @@ type langDir = 'ltr' | 'rtl';
 type theme = 'default' | 'ant' | 'material';
 
 @Component({
-	selector: 'layout-header',
-	template: `
+    selector: 'layout-header',
+    template: `
 		<nav class="navbar navbar-expand flex-column flex-md-row bd-navbar">
 			<a class="navbar-brand" href="#">
 				<img src="https://angular.io/assets/images/logos/angular/angular.svg" width="32px" height="32px" />
@@ -56,6 +56,7 @@ type theme = 'default' | 'ant' | 'material';
 			</div>
 		</nav>
 	`,
+    standalone: false
 })
 export class LayoutHeaderComponent {
 	@Input() dir: langDir;

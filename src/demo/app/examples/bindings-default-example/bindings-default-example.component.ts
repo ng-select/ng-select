@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-bindings-default-example',
-	templateUrl: './bindings-default-example.component.html',
-	styleUrls: ['./bindings-default-example.component.scss'],
+    selector: 'ng-bindings-default-example',
+    templateUrl: './bindings-default-example.component.html',
+    styleUrls: ['./bindings-default-example.component.scss'],
+    standalone: false
 })
 export class BindingsDefaultExampleComponent implements OnInit {
 	defaultBindingsList = [

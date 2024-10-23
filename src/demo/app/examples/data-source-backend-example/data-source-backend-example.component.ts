@@ -3,9 +3,10 @@ import { DataService, Person } from '../data.service';
 import { Observable } from 'rxjs';
 
 @Component({
-	selector: 'ng-data-source-backend-example',
-	templateUrl: './data-source-backend-example.component.html',
-	styleUrls: ['./data-source-backend-example.component.scss'],
+    selector: 'ng-data-source-backend-example',
+    templateUrl: './data-source-backend-example.component.html',
+    styleUrls: ['./data-source-backend-example.component.scss'],
+    standalone: false
 })
 export class DataSourceBackendExampleComponent implements OnInit {
 	people$: Observable<Person[]>;
