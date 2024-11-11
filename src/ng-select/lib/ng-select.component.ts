@@ -65,21 +65,20 @@ export type CompareWithFn = (a: any, b: any) => boolean;
 export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 
 @Component({
-	selector: 'ng-select',
-	standalone: true,
-	templateUrl: './ng-select.component.html',
-	styleUrls: ['./ng-select.component.scss'],
-	providers: [
-		{
-			provide: NG_VALUE_ACCESSOR,
-			useExisting: forwardRef(() => NgSelectComponent),
-			multi: true,
-		},
-		NgDropdownPanelService,
-	],
-	encapsulation: ViewEncapsulation.None,
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent, NgClass],
+    selector: 'ng-select',
+    templateUrl: './ng-select.component.html',
+    styleUrls: ['./ng-select.component.scss'],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NgSelectComponent),
+            multi: true,
+        },
+        NgDropdownPanelService,
+    ],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent, NgClass]
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
 	@Input() bindLabel: string;
