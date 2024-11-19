@@ -3,9 +3,10 @@ import { Observable } from 'rxjs';
 import { DataService } from '../data.service';
 
 @Component({
-	selector: 'ng-multi-select-disabled-example',
-	templateUrl: './multi-select-disabled-example.component.html',
-	styleUrls: ['./multi-select-disabled-example.component.scss'],
+    selector: 'ng-multi-select-disabled-example',
+    templateUrl: './multi-select-disabled-example.component.html',
+    styleUrls: ['./multi-select-disabled-example.component.scss'],
+    standalone: false
 })
 export class MultiSelectDisabledExampleComponent implements OnInit {
 	people$: Observable<any[]>;

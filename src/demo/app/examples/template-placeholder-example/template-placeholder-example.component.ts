@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-	selector: 'ng-template-placeholder-example',
-	templateUrl: './template-placeholder-example.component.html',
-	styleUrls: ['./template-placeholder-example.component.scss'],
+    selector: 'ng-template-placeholder-example',
+    templateUrl: './template-placeholder-example.component.html',
+    styleUrls: ['./template-placeholder-example.component.scss'],
+    standalone: false
 })
 export class TemplatePlaceholderExampleComponent {
 	cities = [

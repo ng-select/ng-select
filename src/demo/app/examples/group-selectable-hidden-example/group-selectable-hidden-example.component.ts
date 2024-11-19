@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-group-selectable-hidden-example',
-	templateUrl: './group-selectable-hidden-example.component.html',
-	styleUrls: ['./group-selectable-hidden-example.component.scss'],
+    selector: 'ng-group-selectable-hidden-example',
+    templateUrl: './group-selectable-hidden-example.component.html',
+    styleUrls: ['./group-selectable-hidden-example.component.scss'],
+    standalone: false
 })
 export class GroupSelectableHiddenExampleComponent implements OnInit {
 	accounts = [

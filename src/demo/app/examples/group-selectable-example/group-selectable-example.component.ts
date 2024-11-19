@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-group-selectable-example',
-	templateUrl: './group-selectable-example.component.html',
-	styleUrls: ['./group-selectable-example.component.scss'],
+    selector: 'ng-group-selectable-example',
+    templateUrl: './group-selectable-example.component.html',
+    styleUrls: ['./group-selectable-example.component.scss'],
+    standalone: false
 })
 export class GroupSelectableExampleComponent implements OnInit {
 	selectedAccount = [{ country: 'Colombia' }];

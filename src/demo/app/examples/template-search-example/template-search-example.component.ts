@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-template-search-example',
-	templateUrl: './template-search-example.component.html',
-	styleUrls: ['./template-search-example.component.scss'],
+    selector: 'ng-template-search-example',
+    templateUrl: './template-search-example.component.html',
+    styleUrls: ['./template-search-example.component.scss'],
+    standalone: false
 })
 export class TemplateSearchExampleComponent implements OnInit {
 	cities = [

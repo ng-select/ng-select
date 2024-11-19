@@ -4,9 +4,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataService } from '../data.service';
 
 @Component({
-	selector: 'ng-forms-custom-template-example',
-	templateUrl: './forms-custom-template-example.component.html',
-	styleUrls: ['./forms-custom-template-example.component.scss'],
+    selector: 'ng-forms-custom-template-example',
+    templateUrl: './forms-custom-template-example.component.html',
+    styleUrls: ['./forms-custom-template-example.component.scss'],
+    standalone: false
 })
 export class FormsCustomTemplateExampleComponent implements OnInit {
 	heroForm: FormGroup;

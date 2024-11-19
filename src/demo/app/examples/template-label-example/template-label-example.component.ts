@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-template-label-example',
-	templateUrl: './template-label-example.component.html',
-	styleUrls: ['./template-label-example.component.scss'],
+    selector: 'ng-template-label-example',
+    templateUrl: './template-label-example.component.html',
+    styleUrls: ['./template-label-example.component.scss'],
+    standalone: false
 })
 export class TemplateLabelExampleComponent implements OnInit {
 	cities = [

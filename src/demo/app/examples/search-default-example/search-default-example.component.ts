@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { DataService, Person } from '../data.service';
 
 @Component({
-	selector: 'ng-search-default-example',
-	templateUrl: './search-default-example.component.html',
-	styleUrls: ['./search-default-example.component.scss'],
+    selector: 'ng-search-default-example',
+    templateUrl: './search-default-example.component.html',
+    styleUrls: ['./search-default-example.component.scss'],
+    standalone: false
 })
 export class SearchDefaultExampleComponent implements OnInit {
 	people: Person[] = [];

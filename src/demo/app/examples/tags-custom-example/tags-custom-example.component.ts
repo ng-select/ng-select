@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-tags-custom-example',
-	templateUrl: './tags-custom-example.component.html',
-	styleUrls: ['./tags-custom-example.component.scss'],
+    selector: 'ng-tags-custom-example',
+    templateUrl: './tags-custom-example.component.html',
+    styleUrls: ['./tags-custom-example.component.scss'],
+    standalone: false
 })
 export class TagsCustomExampleComponent implements OnInit {
 	selectedCompanies;
