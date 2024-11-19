@@ -3,9 +3,10 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { DataService } from '../data.service';
 
 @Component({
-	selector: 'ng-template-display-example',
-	templateUrl: './template-display-example.component.html',
-	styleUrls: ['./template-display-example.component.scss'],
+    selector: 'ng-template-display-example',
+    templateUrl: './template-display-example.component.html',
+    styleUrls: ['./template-display-example.component.scss'],
+    standalone: false
 })
 export class TemplateDisplayExampleComponent implements OnInit {
 	peopleTypeahead = new EventEmitter<string>();

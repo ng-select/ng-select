@@ -3,9 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-	selector: 'ng-forms-single-select-example',
-	templateUrl: './forms-single-select-example.component.html',
-	styleUrls: ['./forms-single-select-example.component.scss'],
+    selector: 'ng-forms-single-select-example',
+    templateUrl: './forms-single-select-example.component.html',
+    styleUrls: ['./forms-single-select-example.component.scss'],
+    standalone: false
 })
 export class FormsSingleSelectExampleComponent implements OnInit {
 	heroForm: FormGroup;

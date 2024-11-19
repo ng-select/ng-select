@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-group-children-example',
-	templateUrl: './group-children-example.component.html',
-	styleUrls: ['./group-children-example.component.scss'],
+    selector: 'ng-group-children-example',
+    templateUrl: './group-children-example.component.html',
+    styleUrls: ['./group-children-example.component.scss'],
+    standalone: false
 })
 export class GroupChildrenExampleComponent implements OnInit {
 	selectedProjects = [];
