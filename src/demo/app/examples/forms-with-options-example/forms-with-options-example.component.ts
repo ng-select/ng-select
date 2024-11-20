@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
-	selector: 'ng-forms-with-options-example',
-	templateUrl: './forms-with-options-example.component.html',
-	styleUrls: ['./forms-with-options-example.component.scss'],
+    selector: 'ng-forms-with-options-example',
+    templateUrl: './forms-with-options-example.component.html',
+    styleUrls: ['./forms-with-options-example.component.scss'],
+    standalone: false
 })
 export class FormsWithOptionsExampleComponent implements OnInit {
 	basePath;

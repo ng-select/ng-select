@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-group-default-example',
-	templateUrl: './group-default-example.component.html',
-	styleUrls: ['./group-default-example.component.scss'],
+    selector: 'ng-group-default-example',
+    templateUrl: './group-default-example.component.html',
+    styleUrls: ['./group-default-example.component.scss'],
+    standalone: false
 })
 export class GroupDefaultExampleComponent implements OnInit {
 	selectedAccount = 'Adam';

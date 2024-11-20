@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-data-source-options-example',
-	templateUrl: './data-source-options-example.component.html',
-	styleUrls: ['./data-source-options-example.component.scss'],
+    selector: 'ng-data-source-options-example',
+    templateUrl: './data-source-options-example.component.html',
+    styleUrls: ['./data-source-options-example.component.scss'],
+    standalone: false
 })
 export class DataSourceOptionsExampleComponent implements OnInit {
 	selectedCars = [3];

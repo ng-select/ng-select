@@ -3,9 +3,10 @@ import { DataService, Person } from '../data.service';
 import { Observable } from 'rxjs';
 
 @Component({
-	selector: 'ng-app-search-editable-example',
-	templateUrl: './search-editable-example.component.html',
-	styleUrls: ['./search-editable-example.component.scss'],
+    selector: 'ng-app-search-editable-example',
+    templateUrl: './search-editable-example.component.html',
+    styleUrls: ['./search-editable-example.component.scss'],
+    standalone: false
 })
 export class SearchEditableExampleComponent implements OnInit {
 	people$: Observable<Person[]>;

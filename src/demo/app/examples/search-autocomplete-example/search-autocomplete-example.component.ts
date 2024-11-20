@@ -4,9 +4,10 @@ import { DataService, Person } from '../data.service';
 import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 
 @Component({
-	selector: 'ng-search-autocomplete-example',
-	templateUrl: './search-autocomplete-example.component.html',
-	styleUrls: ['./search-autocomplete-example.component.scss'],
+    selector: 'ng-search-autocomplete-example',
+    templateUrl: './search-autocomplete-example.component.html',
+    styleUrls: ['./search-autocomplete-example.component.scss'],
+    standalone: false
 })
 export class SearchAutocompleteExampleComponent implements OnInit {
 	people$: Observable<Person[]>;

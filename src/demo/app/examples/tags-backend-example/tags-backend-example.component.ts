@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-tags-backend-example',
-	templateUrl: './tags-backend-example.component.html',
-	styleUrls: ['./tags-backend-example.component.scss'],
+    selector: 'ng-tags-backend-example',
+    templateUrl: './tags-backend-example.component.html',
+    styleUrls: ['./tags-backend-example.component.scss'],
+    standalone: false
 })
 export class TagsBackendExampleComponent implements OnInit {
 	selectedCompanies;

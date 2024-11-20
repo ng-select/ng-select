@@ -4754,7 +4754,10 @@ function createEvent(target = {}) {
 	};
 }
 
-@Component({ template: `` })
+@Component({
+    template: ``,
+    standalone: false
+})
 class NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
 	multiple = false;
@@ -4839,12 +4842,18 @@ class NgSelectTestComponent {
 	onScrollToEnd() {}
 }
 
-@Component({ template: ``, encapsulation: ViewEncapsulation.ShadowDom })
+@Component({
+    template: ``, encapsulation: ViewEncapsulation.ShadowDom,
+    standalone: false
+})
 class EncapsulatedTestComponent extends NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 }
 
-@Component({ template: `` })
+@Component({
+    template: ``,
+    standalone: false
+})
 class NgSelectGroupingTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 	selectedAccountName = 'Adam';

@@ -3,8 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { EXAMPLE_COMPONENTS } from '../../examples/examples';
 
 @Component({
-	selector: 'ng-route-viewer',
-	templateUrl: './route-viewer.component.html',
+    selector: 'ng-route-viewer',
+    templateUrl: './route-viewer.component.html',
+    standalone: false
 })
 export class RouteViewerComponent implements OnInit {
 	examples: string[];
