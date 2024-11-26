@@ -14,7 +14,6 @@ import {
 	HostListener,
 	Inject,
 	InjectionToken,
-	input,
 	Input,
 	numberAttribute,
 	OnChanges,
@@ -23,7 +22,6 @@ import {
 	Optional,
 	Output,
 	QueryList,
-	signal,
 	SimpleChanges,
 	TemplateRef,
 	ViewChild,
@@ -83,10 +81,10 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 	imports: [NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent, NgClass],
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
+	@Input() ariaLabelDropdown: string = 'Options List';
 	@Input() bindLabel: string;
 	@Input() bindValue: string;
 	@Input() ariaLabel: string | undefined;
-	ariaLabelDropdown = input<string>('Options list');
 	@Input({ transform: booleanAttribute }) markFirst = true;
 	@Input() placeholder: string;
 	@Input() fixedPlaceholder: boolean = true;
