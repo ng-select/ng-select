@@ -3,9 +3,10 @@ import { DataService, Person } from '../data.service';
 import { map } from 'rxjs/operators';
 
 @Component({
-	selector: 'ng-multi-checkbox-example',
-	templateUrl: './multi-checkbox-example.component.html',
-	styleUrls: ['./multi-checkbox-example.component.scss'],
+    selector: 'ng-multi-checkbox-example',
+    templateUrl: './multi-checkbox-example.component.html',
+    styleUrls: ['./multi-checkbox-example.component.scss'],
+    standalone: false
 })
 export class MultiCheckboxExampleComponent implements OnInit {
 	people: Person[] = [];

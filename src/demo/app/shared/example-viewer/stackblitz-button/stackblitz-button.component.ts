@@ -3,16 +3,17 @@ import { environment } from '../../../../environments/environment';
 import { StackblitzService } from './stackblitz.service';
 
 @Component({
-	selector: 'stackblitz-button',
-	templateUrl: './stackblitz-button.component.html',
-	styles: [
-		`
+    selector: 'stackblitz-button',
+    templateUrl: './stackblitz-button.component.html',
+    styles: [
+        `
 			svg {
 				height: 18px;
 				vertical-align: sub;
 			}
 		`,
-	],
+    ],
+    standalone: false
 })
 export class StackblitzButtonComponent {
 	@Input() example: string;

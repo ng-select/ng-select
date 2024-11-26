@@ -3,9 +3,10 @@ import { Observable } from 'rxjs';
 import { DataService } from '../data.service';
 
 @Component({
-	selector: 'ng-multi-select-custom-example',
-	templateUrl: './multi-select-custom-example.component.html',
-	styleUrls: ['./multi-select-custom-example.component.scss'],
+    selector: 'ng-multi-select-custom-example',
+    templateUrl: './multi-select-custom-example.component.html',
+    styleUrls: ['./multi-select-custom-example.component.scss'],
+    standalone: false
 })
 export class MultiSelectCustomExampleComponent implements OnInit {
 	githubUsers$: Observable<any[]>;

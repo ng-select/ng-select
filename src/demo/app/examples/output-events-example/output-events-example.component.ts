@@ -7,9 +7,10 @@ interface Event {
 }
 
 @Component({
-	selector: 'ng-output-events-example',
-	templateUrl: './output-events-example.component.html',
-	styleUrls: ['./output-events-example.component.scss'],
+    selector: 'ng-output-events-example',
+    templateUrl: './output-events-example.component.html',
+    styleUrls: ['./output-events-example.component.scss'],
+    standalone: false
 })
 export class OutputEventsExampleComponent implements OnInit {
 	selectedItems: any;

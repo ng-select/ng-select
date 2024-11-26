@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-bindings-nested-example',
-	templateUrl: './bindings-nested-example.component.html',
-	styleUrls: ['./bindings-nested-example.component.scss'],
+    selector: 'ng-bindings-nested-example',
+    templateUrl: './bindings-nested-example.component.html',
+    styleUrls: ['./bindings-nested-example.component.scss'],
+    standalone: false
 })
 export class BindingsNestedExampleComponent implements OnInit {
 	countries = [
