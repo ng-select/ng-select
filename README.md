@@ -16,6 +16,8 @@ The CommonApp version is what is used within all CommonApp products via a Github
 
 | Angular          | ng-select |
 |------------------|:---------:|
+| >=17.0.0 <18.0.0 |   v12.x   |
+| >=16.0.0 <17.0.0 |   v11.x   |
 | >=15.0.0 <16.0.0 |   v10.x   |
 | >=14.0.0 <15.0.0 |   v9.x    |
 | >=13.0.0 <14.0.0 |   v8.x    |
@@ -202,7 +204,7 @@ map: {
 | loadingText | `string` | `Loading...` | no | Set custom text when for loading items |
 | labelForId | `string` | `-` | no | Id to associate control with label. |
 | [markFirst] | `boolean` | `true` | no | Marks first item as focused when opening/filtering. |
-| [isOpen] | `boolean` | `-` | no | Allows manual control of dropdown opening and closing. `True` - won't close. `False` - won't open. |
+| [isOpen] | `boolean` | `-` | no | Allows manual control of dropdown opening and closing. `true` - won't close. `false` - won't open. |
 | maxSelectedItems | `number` | none | no | When multiple = true, allows to set a limit number of selection. |
 | [hideSelected] | `boolean` | `false` | no | Allows to hide selected items. |
 | [multiple] | `boolean` | `false` | no | Allows to select multiple items. |
