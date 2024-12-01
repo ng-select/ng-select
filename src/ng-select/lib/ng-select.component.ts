@@ -90,6 +90,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() appearance: string;
     @Input() dropdownPosition: DropdownPosition = 'auto';
     @Input() appendTo: string;
+    @Input() required: boolean;
+    @Input() describedBy: string;
+    @Input() invalid: boolean;
     @Input({ transform: booleanAttribute }) loading = false;
     @Input({ transform: booleanAttribute }) closeOnSelect = true;
     @Input({ transform: booleanAttribute }) hideSelected = false;
@@ -106,6 +109,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     @Input() trackByFn = null;
     @Input({ transform: booleanAttribute }) clearOnBackspace = true;
     @Input() labelForId = null;
+    @Input() labelledBy: string;
     @Input() inputAttrs: { [key: string]: string } = {};
     @Input({ transform: numberAttribute }) tabIndex: number;
     @Input({ transform: booleanAttribute }) readonly = false;
