@@ -84,105 +84,55 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
 
-    @Input() bindLabel: string;
-    @Input() bindValue: string;
-    @Input({ transform: booleanAttribute }) markFirst = true;
-    @Input() placeholder: string;
-	  @Input() fixedPlaceholder: boolean = true;
-    @Input() notFoundText: string;
-    @Input() typeToSearchText: string;
-	  @Input() preventToggleOnRightClick: boolean = false;
-    @Input() addTagText: string;
-    @Input() loadingText: string;
-    @Input() clearAllText: string;
-    @Input() appearance: string;
-    @Input() dropdownPosition: DropdownPosition = 'auto';
-    @Input() appendTo: string;
-    @Input() required: boolean;
-    @Input() describedBy: string;
-    @Input() invalid: boolean;
-    @Input({ transform: booleanAttribute }) loading = false;
-    @Input({ transform: booleanAttribute }) closeOnSelect = true;
-    @Input({ transform: booleanAttribute }) hideSelected = false;
-    @Input({ transform: booleanAttribute }) selectOnTab = false;
-    @Input({ transform: booleanAttribute }) openOnEnter: boolean;
-    @Input({ transform: numberAttribute }) maxSelectedItems: number;
-    @Input() groupBy: string | ((value: any) => any);
-    @Input() groupValue: GroupValueFn;
-    @Input({ transform: numberAttribute }) bufferAmount = 4;
-    @Input({ transform: booleanAttribute }) virtualScroll: boolean;
-    @Input({ transform: booleanAttribute }) selectableGroup = false;
-    @Input({ transform: booleanAttribute }) selectableGroupAsModel = true;
-    @Input() searchFn = null;
-    @Input() trackByFn = null;
-    @Input({ transform: booleanAttribute }) clearOnBackspace = true;
-    @Input() labelForId = null;
-    @Input() labelledBy: string;
-    @Input() inputAttrs: { [key: string]: string } = {};
-    @Input({ transform: numberAttribute }) tabIndex: number;
-    @Input({ transform: booleanAttribute }) readonly = false;
-    @Input({ transform: booleanAttribute }) searchWhileComposing = true;
-    @Input({ transform: numberAttribute }) minTermLength = 0;
-    @Input({ transform: booleanAttribute }) editableSearchTerm = false;
-    @Input() keyDownFn = (_: KeyboardEvent) => true;
-    @Input() ngClass = null;
+  @Input() bindLabel: string;
+  @Input() bindValue: string;
+  @Input({ transform: booleanAttribute }) markFirst = true;
+  @Input() placeholder: string;
+  @Input() fixedPlaceholder: boolean = true;
+  @Input() notFoundText: string;
+  @Input() typeToSearchText: string;
+  @Input() preventToggleOnRightClick: boolean = false;
+  @Input() addTagText: string;
+  @Input() loadingText: string;
+  @Input() clearAllText: string;
+  @Input() appearance: string;
+  @Input() dropdownPosition: DropdownPosition = 'auto';
+  @Input() appendTo: string;
+  @Input() required: boolean;
+  @Input() describedBy: string;
+  @Input() invalid: boolean;
+  @Input({ transform: booleanAttribute }) loading = false;
+  @Input({ transform: booleanAttribute }) closeOnSelect = true;
+  @Input({ transform: booleanAttribute }) hideSelected = false;
+  @Input({ transform: booleanAttribute }) selectOnTab = false;
+  @Input({ transform: booleanAttribute }) openOnEnter: boolean;
+  @Input({ transform: numberAttribute }) maxSelectedItems: number;
+  @Input() groupBy: string | ((value: any) => any);
+  @Input() groupValue: GroupValueFn;
+  @Input({ transform: numberAttribute }) bufferAmount = 4;
+  @Input({ transform: booleanAttribute }) virtualScroll: boolean;
+  @Input({ transform: booleanAttribute }) selectableGroup = false;
+  @Input({ transform: booleanAttribute }) selectableGroupAsModel = true;
+  @Input() searchFn = null;
+  @Input() trackByFn = null;
+  @Input({ transform: booleanAttribute }) clearOnBackspace = true;
+  @Input() labelForId = null;
+  @Input() labelledBy: string;
+  @Input() inputAttrs: { [key: string]: string } = {};
+  @Input({ transform: numberAttribute }) tabIndex: number;
+  @Input({ transform: booleanAttribute }) readonly = false;
+  @Input({ transform: booleanAttribute }) searchWhileComposing = true;
+  @Input({ transform: numberAttribute }) minTermLength = 0;
+  @Input({ transform: booleanAttribute }) editableSearchTerm = false;
+  @Input() keyDownFn = (_: KeyboardEvent) => true;
+  @Input() ngClass = null;
 
-    @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
-    @Input({ transform: booleanAttribute }) @HostBinding('class.ng-select-multiple') multiple = false;
-    @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
-    @Input({ transform: booleanAttribute }) @HostBinding('class.ng-select-searchable') searchable = true;
-    @Input({ transform: booleanAttribute }) @HostBinding('class.ng-select-clearable') clearable = true;
-    @Input() @HostBinding('class.ng-select-opened') isOpen?: boolean = false;
-
-	@Input()
-	get items() {
-		return this._items;
-	}
-
-	set items(value: readonly any[] | null | undefined) {
-		this._itemsAreUsed = true;
-		this._items = value ?? [];
-	}
-
-	@Input()
-	get compareWith() {
-		return this._compareWith;
-	}
-
-	set compareWith(fn: CompareWithFn) {
-		if (fn !== undefined && fn !== null && !isFunction(fn)) {
-			throw Error('`compareWith` must be a function.');
-		}
-		this._compareWith = fn;
-	}
-
-	@Input()
-	get clearSearchOnAdd() {
-		if (isDefined(this._clearSearchOnAdd)) {
-			return this._clearSearchOnAdd;
-		} else if (isDefined(this.config.clearSearchOnAdd)) {
-			return this.config.clearSearchOnAdd;
-		}
-		return this.closeOnSelect;
-	}
-
-	set clearSearchOnAdd(value) {
-		this._clearSearchOnAdd = value;
-	}
-
-	@Input()
-	get deselectOnClick() {
-		if (isDefined(this._deselectOnClick)) {
-			return this._deselectOnClick;
-		} else if (isDefined(this.config.deselectOnClick)) {
-			return this.config.deselectOnClick;
-		}
-		return this.multiple;
-	}
-
-	set deselectOnClick(value) {
-		this._deselectOnClick = value;
-	}
+  @Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
+  @Input({ transform: booleanAttribute }) @HostBinding('class.ng-select-multiple') multiple = false;
+  @Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
+  @Input({ transform: booleanAttribute }) @HostBinding('class.ng-select-searchable') searchable = true;
+  @Input({ transform: booleanAttribute }) @HostBinding('class.ng-select-clearable') clearable = true;
+  @Input() @HostBinding('class.ng-select-opened') isOpen?: boolean = false;
 
 	// output events
 	@Output('blur') blurEvent = new EventEmitter();
@@ -364,8 +314,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		const term = this.searchTerm && this.searchTerm.trim();
 		return term && term.length >= this.minTermLength;
 	}
-
-	@Input() keyDownFn = (_: KeyboardEvent) => true;
 
 	clearItem = (item: any) => {
 		const option = this.selectedItems.find((x) => x.value === item);
@@ -1197,15 +1145,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
           this.element.focus();
       }
   }
-
-	private get _isTypeahead() {
-		return this.typeahead && this.typeahead.observers.length > 0;
-	}
-
-	private get _validTerm() {
-		const term = this.searchTerm && this.searchTerm.trim();
-		return term && term.length >= this.minTermLength;
-	}
 
 	private _mergeGlobalConfig(config: NgSelectConfig) {
 		this.placeholder = this.placeholder || config.placeholder;
