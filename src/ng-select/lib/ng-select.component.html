@@ -19,7 +19,6 @@
         @for (item of selectedItems; track trackByOption($index, item)) {
             <div
               #tag
-              *ngFor="let item of selectedItems; trackBy: trackByOption"
               class="ng-value"
               [class.ng-value-disabled]="item.disabled"
               id="{{ item.htmlId }}_selected"
@@ -92,7 +91,6 @@
 
   @if (showClear()) {
     <button
-    *ngIf="showClear()"
     class="ng-clear"
     attr.aria-label="{{ clearAllText }}"
     title="{{ clearAllText }}"
