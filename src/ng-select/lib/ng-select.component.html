@@ -38,13 +38,7 @@
       </ng-template>
     }
 
-    <div
-      class="ng-input"
-      role="combobox"
-      [attr.aria-expanded]="isOpen"
-      [attr.aria-owns]="isOpen ? dropdownId : null"
-      aria-haspopup="listbox">
-
+    <div class="ng-input">
       <input
         #searchInput
 				[attr.aria-label]="ariaLabel"
