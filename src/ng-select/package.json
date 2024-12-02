@@ -25,26 +25,6 @@
     "autocomplete",
     "angular2"
   ],
-  "exports": {
-    "./scss/ant.design.theme": {
-      "style": "./scss/ant.design.theme.scss"
-    },
-    "./scss/default.theme": {
-      "style": "./scss/default.theme.scss"
-    },
-    "./scss/material.theme": {
-      "style": "./scss/material.theme.scss"
-    },
-    "./themes/ant.design.theme.css": {
-      "style": "./themes/ant.design.theme.css"
-    },
-    "./themes/default.theme.css": {
-      "style": "./themes/default.theme.css"
-    },
-    "./themes/material.theme.css": {
-      "style": "./themes/material.theme.css"
-    }
-  },
   "peerDependencies": {
     "@angular/common": "^18.0.0",
     "@angular/core": "^18.0.0",
