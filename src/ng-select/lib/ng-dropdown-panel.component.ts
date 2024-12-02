@@ -41,7 +41,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 				<ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }" />
 			</div>
 		}
-		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host">
+		<div #scroll class="ng-dropdown-panel-items scroll-host">
 			<div #padding [class.total-padding]="virtualScroll"></div>
 			<div #content [class.scrollable-content]="virtualScroll && items.length">
 				<ng-content />
