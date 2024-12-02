@@ -47,13 +47,11 @@ import { TemplateSearchExampleComponent } from './template-search-example/templa
 import { VirtualScrollExampleComponent } from './virtual-scroll-example/virtual-scroll-example.component';
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
 import { TemplatePlaceholderExampleComponent } from './template-placeholder-example/template-placeholder-example.component';
-import { FixedPlaceholderExampleComponent } from './fixed-placeholder-example/fixed-placeholder-example.component';
 
 const examples = [
 	DataSourceBackendExampleComponent,
 	DataSourceArrayExampleComponent,
 	DataSourceOptionsExampleComponent,
-	FixedPlaceholderExampleComponent,
 	FormsWithOptionsExampleComponent,
 	FormsSingleSelectExampleComponent,
 	FormsMultiSelectExampleComponent,

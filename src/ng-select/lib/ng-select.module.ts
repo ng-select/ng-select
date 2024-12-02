@@ -13,7 +13,6 @@ import {
 	NgNotFoundTemplateDirective,
 	NgOptgroupTemplateDirective,
 	NgOptionTemplateDirective,
-	NgPlaceholderTemplateDirective,
 	NgTagTemplateDirective,
 	NgTypeToSearchTemplateDirective,
 } from './ng-templates.directive';
@@ -30,7 +29,6 @@ import { DefaultSelectionModelFactory } from './selection-model';
 		NgMultiLabelTemplateDirective,
 		NgHeaderTemplateDirective,
 		NgFooterTemplateDirective,
-		NgPlaceholderTemplateDirective,
 		NgNotFoundTemplateDirective,
 		NgTypeToSearchTemplateDirective,
 		NgLoadingTextTemplateDirective,
@@ -47,7 +45,6 @@ import { DefaultSelectionModelFactory } from './selection-model';
 		NgMultiLabelTemplateDirective,
 		NgHeaderTemplateDirective,
 		NgFooterTemplateDirective,
-		NgPlaceholderTemplateDirective,
 		NgNotFoundTemplateDirective,
 		NgTypeToSearchTemplateDirective,
 		NgLoadingTextTemplateDirective,

@@ -15,7 +15,6 @@ export {
 	NgOptgroupTemplateDirective,
 	NgOptionTemplateDirective,
 	NgFooterTemplateDirective,
-	NgPlaceholderTemplateDirective,
 	NgHeaderTemplateDirective,
 	NgItemLabelDirective,
 	NgLabelTemplateDirective,

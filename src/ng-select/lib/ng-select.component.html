@@ -7,14 +7,6 @@
   (focus)="onWidgetFocus()">
 
   <div class="ng-value-container" [attr.role]="multiple ? 'listbox' : null" [attr.aria-labelledby]="labelledBy">
-    @if(selectedItems.length === 0 && !searchTerm || fixedPlaceholder === true ) {
-      <ng-template #defaultPlaceholderTemplate>
-        <div class="ng-placeholder">{{ placeholder }}</div>
-      </ng-template>
-      <ng-template
-    [ngTemplateOutlet]="placeholderTemplate || defaultPlaceholderTemplate">
-      </ng-template>
-    }
     @if (((multiple && !multiLabelTemplate) || !searchable) && selectedItems.length > 0) {
         @for (item of selectedItems; track trackByOption($index, item)) {
             <div

@@ -43,7 +43,6 @@ import {
 	NgNotFoundTemplateDirective,
 	NgOptgroupTemplateDirective,
 	NgOptionTemplateDirective,
-	NgPlaceholderTemplateDirective,
 	NgTagTemplateDirective,
 	NgTypeToSearchTemplateDirective,
 } from './ng-templates.directive';
@@ -89,7 +88,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() ariaLabel: string | undefined;
   @Input({ transform: booleanAttribute }) markFirst = true;
   @Input() placeholder: string;
-  @Input() fixedPlaceholder: boolean = true;
   @Input() notFoundText: string;
   @Input() typeToSearchText: string;
   @Input() preventToggleOnRightClick: boolean = false;
@@ -155,7 +153,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerTemplate: TemplateRef<any>;
 	@ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;
 	@ContentChild(NgNotFoundTemplateDirective, { read: TemplateRef }) notFoundTemplate: TemplateRef<any>;
-	@ContentChild(NgPlaceholderTemplateDirective, { read: TemplateRef }) placeholderTemplate: TemplateRef<any>;
 	@ContentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef }) typeToSearchTemplate: TemplateRef<any>;
 	@ContentChild(NgLoadingTextTemplateDirective, { read: TemplateRef }) loadingTextTemplate: TemplateRef<any>;
 	@ContentChild(NgTagTemplateDirective, { read: TemplateRef }) tagTemplate: TemplateRef<any>;
@@ -1149,7 +1146,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _mergeGlobalConfig(config: NgSelectConfig) {
 		this.placeholder = this.placeholder || config.placeholder;
-		this.fixedPlaceholder = this.fixedPlaceholder || config.fixedPlaceholder;
 		this.notFoundText = this.notFoundText || config.notFoundText;
 		this.typeToSearchText = this.typeToSearchText || config.typeToSearchText;
 		this.addTagText = this.addTagText || config.addTagText;
