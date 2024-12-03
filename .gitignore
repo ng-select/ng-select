@@ -11,3 +11,6 @@ travis_rsa.pub
 .vscode/**
 dist.tgz
 /.vs
+.yarn
+.nx/cache
+.nx/workspace-data

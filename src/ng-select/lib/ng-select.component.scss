@@ -115,7 +115,7 @@ $ng-option-active-color: var(--forge-color-neutral-light, hsl(0, 0%, 100%));
 
         &[readonly] {
           padding: 0;
-          user-select: none;
+          user-select: unset;
           width: 0;
         }
 

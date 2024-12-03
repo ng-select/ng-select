@@ -13,31 +13,31 @@ import { appRoutes } from './routes';
 import { ExampleHostDirective, ExampleViewerComponent } from './shared/example-viewer/example-viewer.component';
 import { StackblitzButtonComponent } from './shared/example-viewer/stackblitz-button/stackblitz-button.component';
 import { RouteViewerComponent } from './shared/route-viewer/route-viewer.component';
+import { APP_BASE_HREF } from '@angular/common';
 
 @NgModule({
-    imports: [
-        BrowserModule,
-        HttpClientModule,
-        ExamplesModule,
-        NgbModule,
-        RouterModule.forRoot(appRoutes, {
-    useHash: true
+	imports: [
+		BrowserModule,
+		HttpClientModule,
+		ExamplesModule,
+		NgbModule,
+		RouterModule.forRoot(appRoutes, {
+			useHash: true,
+		}),
+	],
+	providers: [
+		DataService,
+		// {provide: APP_BASE_HREF, useValue: '/ng-select/'}
+	],
+	declarations: [
+		ExampleHostDirective,
+		AppComponent,
+		LayoutHeaderComponent,
+		LayoutSidenavComponent,
+		ExampleViewerComponent,
+		StackblitzButtonComponent,
+		RouteViewerComponent,
+	],
+	bootstrap: [AppComponent],
 })
-    ],
-    providers: [
-        DataService,
-    ],
-    declarations: [
-        ExampleHostDirective,
-        AppComponent,
-        LayoutHeaderComponent,
-        LayoutSidenavComponent,
-        ExampleViewerComponent,
-        StackblitzButtonComponent,
-        RouteViewerComponent,
-    ],
-    bootstrap: [AppComponent]
-})
-export class AppModule {
-}
-
+export class AppModule {}

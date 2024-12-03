@@ -9,29 +9,17 @@ import { HttpClientModule } from '@angular/common/http';
 //example-import
 
 @Component({
-    selector: 'app-component',
-    template: '//example-template'
+	selector: 'app-component',
+	template: '//example-template',
 })
 export class AppComponent {}
 
 @NgModule({
-    imports: [
-        BrowserModule,
-        FormsModule,
-        NgSelectModule,
-        NgOptionHighlightModule,
-        CommonModule,
-        ReactiveFormsModule,
-        HttpClientModule
-    ],
-    declarations: [
-        AppComponent,
-        //example-cmp
-    ],
-    bootstrap: [AppComponent]
+	imports: [BrowserModule, FormsModule, NgSelectModule, NgOptionHighlightModule, CommonModule, ReactiveFormsModule, HttpClientModule],
+	declarations: [
+		AppComponent,
+		//example-cmp
+	],
+	bootstrap: [AppComponent],
 })
-export class AppModule {
-}
-
-
-
+export class AppModule {}

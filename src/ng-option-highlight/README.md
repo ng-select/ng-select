@@ -1,41 +1,43 @@
 ## Getting started
+
 ### Step 1: Install `ng-option-highlight`:
 
 #### NPM
+
 ```shell
 npm install --save @ng-select/ng-option-highlight
 ```
+
 #### YARN
+
 ```shell
 yarn add @ng-select/ng-option-highlight
 ```
+
 ### Step 2: Import the NgOptionHighlightModule:
+
 ```js
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [
-      NgSelectModule, 
-      NgOptionHighlightModule
-  ],
-  bootstrap: [AppComponent]
+	declarations: [AppComponent],
+	imports: [NgSelectModule, NgOptionHighlightModule],
+	bootstrap: [AppComponent],
 })
 export class AppModule {}
 ```
 
-### Step 3: Add directive in your template: 
+### Step 3: Add directive in your template:
 
 ```html
 <ng-select>
-    ...
-    <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
-        <span [ngOptionHighlight]="search">{{item.title}}</span>
-    </ng-template>
+	...
+	<ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+		<span [ngOptionHighlight]="search">{{item.title}}</span>
+	</ng-template>
 </ng-select>
 ```
-
 
 ## Development
 
