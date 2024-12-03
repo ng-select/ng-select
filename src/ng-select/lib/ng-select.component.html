@@ -93,6 +93,7 @@
 		[footerTemplate]="footerTemplate"
 		[filterValue]="searchTerm"
 		[items]="itemsList.filteredItems"
+		[showAddTag]="showAddTag"
 		[markedItem]="itemsList.markedItem"
 		(update)="viewPortItems = $event"
 		(scroll)="scroll.emit($event)"
