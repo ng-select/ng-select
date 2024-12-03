@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.0.1
+
+### 🔥 BREAKING CHANGES
+
+- Update ng-select to be compatible with Angular 18
+
 ## 6.1.1
 
 ### 🐛 Fixes
