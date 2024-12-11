@@ -1804,6 +1804,7 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
 				expect(fixture.componentInstance.select.selectedItems).toEqual([result]);
 			}));
+
 			it('should focus on clear button when tab pressed while not opened and clear showing', fakeAsync(() => {
 				selectOption(fixture, KeyCode.ArrowDown, 0);
 				tickAndDetectChanges(fixture);
@@ -1813,6 +1814,18 @@ describe('NgSelectComponent', () => {
 				const focusOnClear = spyOn(select, 'focusOnClear');
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
 				expect(focusOnClear).toHaveBeenCalled();
+			}));
+
+			it('should not focus on clear button when tab pressed if [tabFocusOnClear]="false"', fakeAsync(() => {
+				select.tabFocusOnClear = false;
+				selectOption(fixture, KeyCode.ArrowDown, 0);
+				tickAndDetectChanges(fixture);
+				expect(select.showClear()).toBeTruthy();
+
+				select.searchInput.nativeElement.focus();
+				const focusOnClear = spyOn(select, 'focusOnClear');
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+				expect(focusOnClear).not.toHaveBeenCalled();
 			}));
 		});
 
@@ -1953,6 +1966,7 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
 				expect(select.isOpen).toBe(false);
 			}));
+
 			it('should clear input when enter pressed while clear button focused', fakeAsync(() => {
 				selectOption(fixture, KeyCode.ArrowDown, 0);
 				select.searchInput.nativeElement.focus();

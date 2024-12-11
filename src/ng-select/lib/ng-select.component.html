@@ -62,7 +62,7 @@
 	}
 
 	@if (showClear()) {
-		<span class="ng-clear-wrapper" role="button" tabindex="0" title="{{ clearAllText }}" #clearButton>
+		<span class="ng-clear-wrapper" role="button" [attr.tabindex]="tabFocusOnClear ? 0 : null" title="{{ clearAllText }}" #clearButton>
 			<span class="ng-clear" aria-hidden="true">×</span>
 		</span>
 	}
