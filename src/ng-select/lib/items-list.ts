@@ -334,7 +334,12 @@ export class ItemsList {
 		if (Array.isArray(items[0].value[<string>prop])) {
 			for (const item of items) {
 				const children = (item.value[<string>prop] || []).map((x, index) => this.mapItem(x, index));
-				groups.set(item, children);
+				if (children.length) {
+					groups.set(item, children);
+				} else {
+					const key = undefined;
+					groups.set(key, [...(groups.get(key) ?? []), item]);
+				}
 			}
 			return groups;
 		}
