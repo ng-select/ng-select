@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 	selector: 'ng-template-clear-example',
 	templateUrl: './template-clear-example.component.html',
 	styleUrls: ['./template-clear-example.component.scss'],
+	standalone: false,
 })
 export class TemplateClearExampleComponent {
 	cities = [
