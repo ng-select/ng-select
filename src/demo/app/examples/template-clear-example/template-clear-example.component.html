@@ -1,0 +1,7 @@
+<p>Custom clear button using <b>ng-clearbutton-tmp</b></p>
+
+<ng-select [(ngModel)]="selectedCity" [items]="cities" bindLabel="name" bindValue="name" class="clb-select">
+	<ng-template ng-clearbutton-tmp>
+		<span class="ng-clear">Clear</span>
+	</ng-template>
+</ng-select>
