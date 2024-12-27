@@ -1589,6 +1589,21 @@ describe('NgSelectComponent', () => {
 				expect(dropdown).toBeNull();
 			});
 		}));
+
+		it('should set aria-label on dropdown panel when ariaLabelDropdown input is provided', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" ariaLabelDropdown="Custom Aria Label">
+    </ng-select>`,
+			);
+
+			const select = fixture.componentInstance.select;
+			select.open();
+			tickAndDetectChanges(fixture);
+
+			const dropdownPanel = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel');
+			expect(dropdownPanel.getAttribute('aria-label')).toBe('Custom Aria Label');
+		}));
 	});
 
 	describe('Keyboard events', () => {
@@ -4755,8 +4770,8 @@ function createEvent(target = {}) {
 }
 
 @Component({
-    template: ``,
-    standalone: false
+	template: ``,
+	standalone: false,
 })
 class NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
@@ -4843,16 +4858,17 @@ class NgSelectTestComponent {
 }
 
 @Component({
-    template: ``, encapsulation: ViewEncapsulation.ShadowDom,
-    standalone: false
+	template: ``,
+	encapsulation: ViewEncapsulation.ShadowDom,
+	standalone: false,
 })
 class EncapsulatedTestComponent extends NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 }
 
 @Component({
-    template: ``,
-    standalone: false
+	template: ``,
+	standalone: false,
 })
 class NgSelectGroupingTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;

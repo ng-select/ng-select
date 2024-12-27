@@ -92,7 +92,7 @@
 		[ngClass]="appendTo ? (ngClass ? ngClass : classes) : null"
 		[id]="dropdownId"
 		role="listbox"
-		aria-label="Options list">
+		[attr.aria-label]="ariaLabelDropdown">
 		<ng-container>
 			@for (item of viewPortItems; track trackByOption($index, item)) {
 				<div
