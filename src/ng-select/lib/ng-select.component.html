@@ -63,15 +63,11 @@
 
 	@if (showClear()) {
 		@if (clearButtonTemplate) {
-			<ng-container>
-				<ng-container [ngTemplateOutlet]="clearButtonTemplate"></ng-container>
-			</ng-container>
+			<ng-container [ngTemplateOutlet]="clearButtonTemplate"></ng-container>
 		} @else {
-			<ng-template>
-				<span class="ng-clear-wrapper" role="button" tabindex="0" title="{{ clearAllText }}" #clearButton>
-					<span class="ng-clear" aria-hidden="true">×</span>
-				</span>
-			</ng-template>
+			<span class="ng-clear-wrapper" role="button" tabindex="0" title="{{ clearAllText }}" #clearButton>
+				<span class="ng-clear" aria-hidden="true">×</span>
+			</span>
 		}
 	}
 
