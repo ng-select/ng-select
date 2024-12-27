@@ -42,6 +42,7 @@ import { GroupSelectableHiddenExampleComponent } from './group-selectable-hidden
 import { GroupChildrenExampleComponent } from './group-children-example/group-children-example.component';
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
 import { TemplatePlaceholderExampleComponent } from './template-placeholder-example/template-placeholder-example.component';
+import { FixedPlaceholderExampleComponent } from './fixed-placeholder-example/fixed-placeholder-example.component';
 import { TemplateClearExampleComponent } from './template-clear-example/template-clear-example.component';
 
 export interface Example {
@@ -205,6 +206,10 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
 	'dropdown-position-example': {
 		component: DropdownPositionExampleComponent,
 		title: 'Dropdown position',
+	},
+	'fixed-placeholder-example': {
+		component: FixedPlaceholderExampleComponent,
+		title: 'Fixed Placeholder',
 	},
 	'append-to-example': {
 		component: AppendToExampleComponent,

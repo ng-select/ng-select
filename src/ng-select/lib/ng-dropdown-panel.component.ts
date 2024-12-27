@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
 	booleanAttribute,
 	ChangeDetectionStrategy,
@@ -23,42 +23,42 @@ import { animationFrameScheduler, asapScheduler, fromEvent, merge, Subject } fro
 import { auditTime, takeUntil } from 'rxjs/operators';
 import { NgDropdownPanelService, PanelDimensions } from './ng-dropdown-panel.service';
 
-import { DropdownPosition } from './ng-select.types';
-import { NgOption } from './ng-select.types';
+import { DropdownPosition, NgOption } from './ng-select.types';
 import { isDefined } from './value-utils';
 
 const CSS_POSITIONS: Readonly<string[]> = ['top', 'right', 'bottom', 'left'];
 const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
 
 @Component({
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	encapsulation: ViewEncapsulation.None,
-	selector: 'ng-dropdown-panel',
-	template: `
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    selector: 'ng-dropdown-panel',
+    template: `
 		@if (headerTemplate) {
 			<div class="ng-dropdown-header">
-				<ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }"></ng-container>
+				<ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }" />
 			</div>
 		}
 		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host">
 			<div #padding [class.total-padding]="virtualScroll"></div>
 			<div #content [class.scrollable-content]="virtualScroll && items.length">
-				<ng-content></ng-content>
+				<ng-content />
 			</div>
 		</div>
 		@if (footerTemplate) {
 			<div class="ng-dropdown-footer">
-				<ng-container [ngTemplateOutlet]="footerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }"></ng-container>
+				<ng-container [ngTemplateOutlet]="footerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }" />
 			</div>
 		}
 	`,
+    imports: [NgTemplateOutlet]
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() items: NgOption[] = [];
 	@Input() markedItem: NgOption;
 	@Input() position: DropdownPosition = 'auto';
 	@Input() appendTo: string;
-	@Input() bufferAmount:number;
+	@Input() bufferAmount: number;
 	@Input({ transform: booleanAttribute }) virtualScroll = false;
 	@Input() headerTemplate: TemplateRef<any>;
 	@Input() footerTemplate: TemplateRef<any>;

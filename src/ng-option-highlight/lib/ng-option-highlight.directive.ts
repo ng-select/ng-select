@@ -1,8 +1,8 @@
-import * as searchHelper from './search-helper';
 import { AfterViewInit, Directive, ElementRef, Input, OnChanges, Renderer2 } from '@angular/core';
 
 @Directive({
 	selector: '[ngOptionHighlight]',
+	standalone: true,
 })
 export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
 	@Input('ngOptionHighlight') term: string;
@@ -15,6 +15,10 @@ export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
 		private renderer: Renderer2,
 	) {
 		this.element = this.elementRef.nativeElement;
+	}
+
+	private get _canHighlight() {
+		return this._isDefined(this.term) && this._isDefined(this.label);
 	}
 
 	ngOnChanges() {
@@ -44,10 +48,6 @@ export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
 		const alternationString = this._escapeRegExp(this.term).replace(' ', '|');
 		const termRegex = new RegExp(alternationString, 'gi');
 		this._setInnerHtml(label.replace(termRegex, `<span class=\"highlighted\">$&</span>`));
-	}
-
-	private get _canHighlight() {
-		return this._isDefined(this.term) && this._isDefined(this.label);
 	}
 
 	private _setInnerHtml(html) {

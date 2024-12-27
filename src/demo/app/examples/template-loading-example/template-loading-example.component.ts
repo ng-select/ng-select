@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-template-loading-example',
-	templateUrl: './template-loading-example.component.html',
-	styleUrls: ['./template-loading-example.component.scss'],
+    selector: 'ng-template-loading-example',
+    templateUrl: './template-loading-example.component.html',
+    styleUrls: ['./template-loading-example.component.scss'],
+    standalone: false
 })
 export class TemplateLoadingExampleComponent implements OnInit {
 	cities = [

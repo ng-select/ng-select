@@ -1,61 +1,64 @@
 import {
+	AfterViewInit,
+	Attribute,
+	booleanAttribute,
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
 	Component,
+	ContentChild,
+	ContentChildren,
+	ElementRef,
+	EventEmitter,
+	forwardRef,
+	HostBinding,
+	HostListener,
+	Inject,
+	InjectionToken,
+	Input,
+	numberAttribute,
 	OnChanges,
 	OnDestroy,
 	OnInit,
-	AfterViewInit,
-	forwardRef,
-	ChangeDetectorRef,
-	Input,
+	Optional,
 	Output,
-	EventEmitter,
-	ContentChild,
-	TemplateRef,
-	ViewEncapsulation,
-	HostListener,
-	HostBinding,
-	ViewChild,
-	ElementRef,
-	ChangeDetectionStrategy,
-	Inject,
-	SimpleChanges,
-	ContentChildren,
 	QueryList,
-	InjectionToken,
-	Attribute,
-	booleanAttribute,
-	numberAttribute,
+	SimpleChanges,
+	TemplateRef,
+	ViewChild,
+	ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { takeUntil, startWith, tap, debounceTime, map, filter } from 'rxjs/operators';
-import { Subject, merge } from 'rxjs';
+import { merge, Subject } from 'rxjs';
+import { debounceTime, filter, map, startWith, takeUntil, tap } from 'rxjs/operators';
 
 import {
-	NgOptionTemplateDirective,
-	NgLabelTemplateDirective,
-	NgHeaderTemplateDirective,
 	NgFooterTemplateDirective,
-	NgOptgroupTemplateDirective,
-	NgNotFoundTemplateDirective,
-	NgTypeToSearchTemplateDirective,
+	NgHeaderTemplateDirective,
+	NgItemLabelDirective,
+	NgLabelTemplateDirective,
+	NgLoadingSpinnerTemplateDirective,
 	NgLoadingTextTemplateDirective,
 	NgMultiLabelTemplateDirective,
-	NgTagTemplateDirective,
-	NgLoadingSpinnerTemplateDirective,
+	NgNotFoundTemplateDirective,
+	NgOptgroupTemplateDirective,
+	NgOptionTemplateDirective,
 	NgPlaceholderTemplateDirective,
+	NgTagTemplateDirective,
+	NgTypeToSearchTemplateDirective,
 	NgClearButtonTemplateDirective
 } from './ng-templates.directive';
 
-import { ConsoleService } from './console.service';
-import { isDefined, isFunction, isPromise, isObject } from './value-utils';
-import { ItemsList } from './items-list';
-import { NgOption, KeyCode, DropdownPosition } from './ng-select.types';
-import { newId } from './id';
-import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
-import { NgOptionComponent } from './ng-option.component';
-import { SelectionModelFactory } from './selection-model';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { NgSelectConfig } from './config.service';
+import { ConsoleService } from './console.service';
+import { newId } from './id';
+import { ItemsList } from './items-list';
+import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgDropdownPanelService } from './ng-dropdown-panel.service';
+import { NgOptionComponent } from './ng-option.component';
+import { DropdownPosition, KeyCode, NgOption } from './ng-select.types';
+import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
+import { isDefined, isFunction, isObject, isPromise } from './value-utils';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type AddTagFn = (term: string) => any | Promise<any>;
@@ -76,12 +79,16 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 	],
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent, NgClass],
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
+	@Input() ariaLabelDropdown: string = 'Options List';
 	@Input() bindLabel: string;
 	@Input() bindValue: string;
+	@Input() ariaLabel: string | undefined;
 	@Input({ transform: booleanAttribute }) markFirst = true;
 	@Input() placeholder: string;
+	@Input() fixedPlaceholder: boolean = true;
 	@Input() notFoundText: string;
 	@Input() typeToSearchText: string;
 	@Input() preventToggleOnRightClick: boolean = false;
@@ -113,66 +120,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input({ transform: booleanAttribute }) searchWhileComposing = true;
 	@Input({ transform: numberAttribute }) minTermLength = 0;
 	@Input({ transform: booleanAttribute }) editableSearchTerm = false;
-	@Input() keyDownFn = (_: KeyboardEvent) => true;
 	@Input() ngClass = null;
-
 	@Input() @HostBinding('class.ng-select-typeahead') typeahead: Subject<string>;
 	@Input({ transform: booleanAttribute }) @HostBinding('class.ng-select-multiple') multiple = false;
 	@Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
 	@Input({ transform: booleanAttribute }) @HostBinding('class.ng-select-searchable') searchable = true;
 	@Input({ transform: booleanAttribute }) @HostBinding('class.ng-select-clearable') clearable = true;
 	@Input() @HostBinding('class.ng-select-opened') isOpen?: boolean = false;
-
-	@Input()
-	get items() {
-		return this._items;
-	}
-
-	set items(value: readonly any[] | null | undefined) {
-		this._itemsAreUsed = true;
-		this._items = value ?? [];
-	}
-
-	@Input()
-	get compareWith() {
-		return this._compareWith;
-	}
-
-	set compareWith(fn: CompareWithFn) {
-		if (fn !== undefined && fn !== null && !isFunction(fn)) {
-			throw Error('`compareWith` must be a function.');
-		}
-		this._compareWith = fn;
-	}
-
-	@Input()
-	get clearSearchOnAdd() {
-		if (isDefined(this._clearSearchOnAdd)) {
-			return this._clearSearchOnAdd;
-		} else if (isDefined(this.config.clearSearchOnAdd)) {
-			return this.config.clearSearchOnAdd;
-		}
-		return this.closeOnSelect;
-	}
-
-	set clearSearchOnAdd(value) {
-		this._clearSearchOnAdd = value;
-	}
-
-	@Input()
-	get deselectOnClick() {
-		if (isDefined(this._deselectOnClick)) {
-			return this._deselectOnClick;
-		} else if (isDefined(this.config.deselectOnClick)) {
-			return this.config.deselectOnClick;
-		}
-		return this.multiple;
-	}
-
-	set deselectOnClick(value) {
-		this._deselectOnClick = value;
-	}
-
 	// output events
 	@Output('blur') blurEvent = new EventEmitter();
 	@Output('focus') focusEvent = new EventEmitter();
@@ -185,7 +139,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Output('remove') removeEvent = new EventEmitter();
 	@Output('scroll') scroll = new EventEmitter<{ start: number; end: number }>();
 	@Output('scrollToEnd') scrollToEnd = new EventEmitter();
-
 	// custom templates
 	@ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
 	@ContentChild(NgOptgroupTemplateDirective, { read: TemplateRef }) optgroupTemplate: TemplateRef<any>;
@@ -205,11 +158,35 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
 	@ViewChild('clearButton') clearButton: ElementRef<HTMLSpanElement>;
 	@ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
-
 	@HostBinding('class.ng-select') useDefaultClass = true;
+	itemsList: ItemsList;
+	viewPortItems: NgOption[] = [];
+	searchTerm: string = null;
+	dropdownId = newId();
+	element: HTMLElement;
+	focused: boolean;
+	escapeHTML = true;
+	private _itemsAreUsed: boolean;
+	private _defaultLabel = 'label';
+	private _primitive;
+	private _manualOpen: boolean;
+	private _pressedKeys: string[] = [];
+	private _isComposing = false;
+	private readonly _destroy$ = new Subject<void>();
+	private readonly _keyPress$ = new Subject<string>();
 
-	@HostBinding('class.ng-select-disabled') get disabled() {
-		return this.readonly || this._disabled;
+	constructor(
+		@Attribute('class') public classes: string,
+		@Attribute('autofocus') private autoFocus: any,
+		public config: NgSelectConfig,
+		@Inject(SELECTION_MODEL_FACTORY) @Optional() newSelectionModel: SelectionModelFactory | undefined,
+		_elementRef: ElementRef<HTMLElement>,
+		private _cd: ChangeDetectorRef,
+		private _console: ConsoleService,
+	) {
+		this._mergeGlobalConfig(config);
+		this.itemsList = new ItemsList(this, newSelectionModel ? newSelectionModel() : DefaultSelectionModelFactory());
+		this.element = _elementRef.nativeElement;
 	}
 
 	@HostBinding('class.ng-select-filtered') get filtered() {
@@ -220,52 +197,68 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		return !this.multiple;
 	}
 
-	itemsList: ItemsList;
-	viewPortItems: NgOption[] = [];
-	searchTerm: string = null;
-	dropdownId = newId();
-	element: HTMLElement;
-	focused: boolean;
-	escapeHTML = true;
-
 	private _items: readonly any[] = [];
-	private _itemsAreUsed: boolean;
-	private _defaultLabel = 'label';
-	private _primitive;
-	private _manualOpen: boolean;
-	private _disabled: boolean;
-	private _pressedKeys: string[] = [];
-	private _compareWith: CompareWithFn;
-	private _clearSearchOnAdd: boolean;
-	private _deselectOnClick: boolean;
-	private _isComposing = false;
 
-	private get _editableSearchTerm(): boolean {
-		return this.editableSearchTerm && !this.multiple;
+	@Input()
+	get items() {
+		return this._items;
 	}
 
-	private readonly _destroy$ = new Subject<void>();
-	private readonly _keyPress$ = new Subject<string>();
-	private _onChange = (_: any) => {};
-	private _onTouched = () => {};
+	set items(value: readonly any[] | null | undefined) {
+		this._itemsAreUsed = true;
+		this._items = value ?? [];
+	}
 
-	clearItem = (item: any) => {
-		const option = this.selectedItems.find((x) => x.value === item);
-		this.unselect(option);
-	};
+	private _disabled: boolean;
 
-	constructor(
-		@Attribute('class') public classes: string,
-		@Attribute('autofocus') private autoFocus: any,
-		public config: NgSelectConfig,
-		@Inject(SELECTION_MODEL_FACTORY) newSelectionModel: SelectionModelFactory,
-		_elementRef: ElementRef<HTMLElement>,
-		private _cd: ChangeDetectorRef,
-		private _console: ConsoleService,
-	) {
-		this._mergeGlobalConfig(config);
-		this.itemsList = new ItemsList(this, newSelectionModel());
-		this.element = _elementRef.nativeElement;
+	@HostBinding('class.ng-select-disabled') get disabled() {
+		return this.readonly || this._disabled;
+	}
+
+	private _compareWith: CompareWithFn;
+
+	@Input()
+	get compareWith() {
+		return this._compareWith;
+	}
+
+	set compareWith(fn: CompareWithFn) {
+		if (fn !== undefined && fn !== null && !isFunction(fn)) {
+			throw Error('`compareWith` must be a function.');
+		}
+		this._compareWith = fn;
+	}
+
+	private _clearSearchOnAdd: boolean;
+
+	@Input()
+	get clearSearchOnAdd() {
+		if (isDefined(this._clearSearchOnAdd)) {
+			return this._clearSearchOnAdd;
+		} else if (isDefined(this.config.clearSearchOnAdd)) {
+			return this.config.clearSearchOnAdd;
+		}
+		return this.closeOnSelect;
+	}
+
+	set clearSearchOnAdd(value) {
+		this._clearSearchOnAdd = value;
+	}
+
+	private _deselectOnClick: boolean;
+
+	@Input()
+	get deselectOnClick() {
+		if (isDefined(this._deselectOnClick)) {
+			return this._deselectOnClick;
+		} else if (isDefined(this.config.deselectOnClick)) {
+			return this.config.deselectOnClick;
+		}
+		return this.multiple;
+	}
+
+	set deselectOnClick(value) {
+		this._deselectOnClick = value;
 	}
 
 	get selectedItems(): NgOption[] {
@@ -286,6 +279,40 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 		return undefined;
 	}
+
+	get showAddTag() {
+		if (!this._validTerm) {
+			return false;
+		}
+
+		const term = this.searchTerm.toLowerCase().trim();
+		return (
+			this.addTag &&
+			!this.itemsList.filteredItems.some((x) => x.label.toLowerCase() === term) &&
+			((!this.hideSelected && this.isOpen) || !this.selectedItems.some((x) => x.label.toLowerCase() === term)) &&
+			!this.loading
+		);
+	}
+
+	private get _editableSearchTerm(): boolean {
+		return this.editableSearchTerm && !this.multiple;
+	}
+
+	private get _isTypeahead() {
+		return this.typeahead && this.typeahead.observers.length > 0;
+	}
+
+	private get _validTerm() {
+		const term = this.searchTerm && this.searchTerm.trim();
+		return term && term.length >= this.minTermLength;
+	}
+
+	@Input() keyDownFn = (_: KeyboardEvent) => true;
+
+	clearItem = (item: any) => {
+		const option = this.selectedItems.find((x) => x.value === item);
+		this.unselect(option);
+	};
 
 	ngOnInit() {
 		this._handleKeyPresses();
@@ -516,8 +543,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (this._editableSearchTerm) {
 			this._setSearchTermFromItems();
 		}
-
-		this._onSelectionChanged();
 	}
 
 	select(item: NgOption) {
@@ -536,10 +561,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (this.closeOnSelect || this.itemsList.noItemsToSelect) {
 			this.close();
 		}
+
+		this._onSelectionChanged();
 	}
 
 	focus() {
-		 this.searchInput.nativeElement.focus();
+		this.searchInput.nativeElement.focus();
 	}
 
 	blur() {
@@ -555,6 +582,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.focus();
 		this._updateNgModel();
 		this.removeEvent.emit(item.value);
+		this._onSelectionChanged();
 	}
 
 	selectTag() {
@@ -591,20 +619,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 		return item;
 	};
-
-	get showAddTag() {
-		if (!this._validTerm) {
-			return false;
-		}
-
-		const term = this.searchTerm.toLowerCase().trim();
-		return (
-			this.addTag &&
-			!this.itemsList.filteredItems.some((x) => x.label.toLowerCase() === term) &&
-			((!this.hideSelected && this.isOpen) || !this.selectedItems.some((x) => x.label.toLowerCase() === term)) &&
-			!this.loading
-		);
-	}
 
 	showNoItemsFound() {
 		const empty = this.itemsList.filteredItems.length === 0;
@@ -691,6 +705,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			this._cd.detectChanges();
 		}
 	}
+
+	private _onChange = (_: any) => {};
+
+	private _onTouched = () => {};
 
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems && this.selectedItems[0];
@@ -1008,17 +1026,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 	}
 
-	private get _isTypeahead() {
-		return this.typeahead && this.typeahead.observers.length > 0;
-	}
-
-	private get _validTerm() {
-		const term = this.searchTerm && this.searchTerm.trim();
-		return term && term.length >= this.minTermLength;
-	}
-
 	private _mergeGlobalConfig(config: NgSelectConfig) {
 		this.placeholder = this.placeholder || config.placeholder;
+		this.fixedPlaceholder = this.fixedPlaceholder || config.fixedPlaceholder;
 		this.notFoundText = this.notFoundText || config.notFoundText;
 		this.typeToSearchText = this.typeToSearchText || config.typeToSearchText;
 		this.addTagText = this.addTagText || config.addTagText;

@@ -1589,6 +1589,21 @@ describe('NgSelectComponent', () => {
 				expect(dropdown).toBeNull();
 			});
 		}));
+
+		it('should set aria-label on dropdown panel when ariaLabelDropdown input is provided', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" ariaLabelDropdown="Custom Aria Label">
+    </ng-select>`,
+			);
+
+			const select = fixture.componentInstance.select;
+			select.open();
+			tickAndDetectChanges(fixture);
+
+			const dropdownPanel = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel');
+			expect(dropdownPanel.getAttribute('aria-label')).toBe('Custom Aria Label');
+		}));
 	});
 
 	describe('Keyboard events', () => {
@@ -2353,6 +2368,39 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.selectedCity = undefined;
 			tickAndDetectChanges(fixture);
 			expect(fixture.debugElement.query(By.css('.placeholder-template')).nativeElement.innerHTML).toBe('Select your city');
+			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeFalsy();
+		}));
+
+		it('should display ng-placeholder if an item is selected', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [(ngModel)]="selectedCity" 
+														 [items]="cities" bindLabel="name" 
+														 placeholder="testPlaceholder">			
+                  </ng-select>`,
+			);
+
+			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+			tickAndDetectChanges(fixture);
+			tickAndDetectChanges(fixture);
+
+			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeTruthy();
+		}));
+
+		it('should not display ng-placeholder if an item is selected', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [(ngModel)]="selectedCity"
+														 [fixedPlaceholder]="false"
+														 [items]="cities" bindLabel="name" 
+														 placeholder="testPlaceholder">			
+                  </ng-select>`,
+			);
+
+			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+			tickAndDetectChanges(fixture);
+			tickAndDetectChanges(fixture);
+
 			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeFalsy();
 		}));
 
@@ -3590,26 +3638,15 @@ describe('NgSelectComponent', () => {
 			expect(input.hasAttribute('aria-activedescendant')).toBe(false);
 		}));
 
-		it('should set aria-owns absent at start', fakeAsync(() => {
-			expect(comboBoxDiv.hasAttribute('aria-owns')).toBe(false);
-		}));
-
-		it('should set aria-owns be set to dropdownId on open', fakeAsync(() => {
-			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			tickAndDetectChanges(fixture);
-
-			expect(comboBoxDiv.getAttribute('aria-owns')).toBe(select.dropdownId);
-		}));
-
 		it('should set aria-expanded to false at start', fakeAsync(() => {
-			expect(comboBoxDiv.getAttribute('aria-expanded')).toBe('false');
+			expect(input.getAttribute('aria-expanded')).toBe('false');
 		}));
 
 		it('should set aria-expanded to true on open', fakeAsync(() => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 			tickAndDetectChanges(fixture);
 
-			expect(comboBoxDiv.getAttribute('aria-expanded')).toBe('true');
+			expect(input.getAttribute('aria-expanded')).toBe('true');
 		}));
 
 		it('should set aria-controls absent at start', fakeAsync(() => {
@@ -3653,18 +3690,19 @@ describe('NgSelectComponent', () => {
 			expect(input.hasAttribute('aria-activedescendant')).toBe(false);
 		}));
 
-		it('should set aria-owns  absent on dropdown close', fakeAsync(() => {
-			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			tickAndDetectChanges(fixture);
-			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
-			tickAndDetectChanges(fixture);
-			expect(input.hasAttribute('aria-owns')).toBe(false);
-		}));
-
 		it('should add labelForId on filter input id attribute', fakeAsync(() => {
 			tickAndDetectChanges(fixture);
 			expect(input.getAttribute('id')).toEqual('lbl');
 		}));
+
+		it('should show undefined for aria-label on input element', () => {
+			expect(input.getAttribute('aria-label')).toBe(null);
+		});
+
+		it('should set aria-label on input element', () => {
+			input.setAttribute('aria-label', 'test');
+			expect(input.getAttribute('aria-label')).toBe('test');
+		});
 	});
 
 	describe('Output events', () => {
@@ -4755,7 +4793,10 @@ function createEvent(target = {}) {
 	};
 }
 
-@Component({ template: `` })
+@Component({
+	template: ``,
+	standalone: false,
+})
 class NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
 	multiple = false;
@@ -4840,12 +4881,19 @@ class NgSelectTestComponent {
 	onScrollToEnd() {}
 }
 
-@Component({ template: ``, encapsulation: ViewEncapsulation.ShadowDom })
+@Component({
+	template: ``,
+	encapsulation: ViewEncapsulation.ShadowDom,
+	standalone: false,
+})
 class EncapsulatedTestComponent extends NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 }
 
-@Component({ template: `` })
+@Component({
+	template: ``,
+	standalone: false,
+})
 class NgSelectGroupingTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 	selectedAccountName = 'Adam';

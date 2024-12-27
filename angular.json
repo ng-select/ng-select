@@ -80,11 +80,12 @@
       "prefix": "",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser-esbuild",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/demo",
+            "outputPath": {
+              "base": "dist/demo"
+            },
             "index": "src/demo/index.html",
-            "main": "src/demo/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -97,7 +98,8 @@
             "styles": [
               "src/demo/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "browser": "src/demo/main.ts"
           },
           "configurations": {
             "production": {
