@@ -62,9 +62,19 @@
 	}
 
 	@if (showClear()) {
-		<span class="ng-clear-wrapper" role="button" [attr.tabindex]="tabFocusOnClear ? 0 : null" title="{{ clearAllText }}" #clearButton>
-			<span class="ng-clear" aria-hidden="true">×</span>
+		@if (clearButtonTemplate) {
+		<ng-container [ngTemplateOutlet]="clearButtonTemplate"></ng-container>
+		} @else {
+		<span class="ng-clear-wrapper"
+			  role="button"
+			  tabindex="0"
+			  [attr.tabindex]="tabFocusOnClear ? 0 : null"
+			  title="{{ clearAllText }}"
+			  #clearButton>
+			<span class="ng-clear"
+				  aria-hidden="true">×</span>
 		</span>
+		}
 	}
 
 	<span class="ng-arrow-wrapper">
