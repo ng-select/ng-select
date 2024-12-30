@@ -1618,6 +1618,7 @@ describe('NgSelectComponent', () => {
                         [loading]="citiesLoading"
                         [selectOnTab]="selectOnTab"
                         [multiple]="multiple"
+						[tabFocusOnClearButton]="tabFocusOnClearButton"
                         [(ngModel)]="selectedCity">
                 </ng-select>`,
 			);
@@ -1817,7 +1818,7 @@ describe('NgSelectComponent', () => {
 			}));
 
 			it('should not focus on clear button when tab pressed if [tabFocusOnClear]="false"', fakeAsync(() => {
-				select.tabFocusOnClear = false;
+				fixture.componentInstance.tabFocusOnClearButton = false;
 				selectOption(fixture, KeyCode.ArrowDown, 0);
 				tickAndDetectChanges(fixture);
 				expect(select.showClear()).toBeTruthy();
@@ -2388,9 +2389,9 @@ describe('NgSelectComponent', () => {
 		it('should display ng-placeholder if an item is selected', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
-				`<ng-select [(ngModel)]="selectedCity" 
-														 [items]="cities" bindLabel="name" 
-														 placeholder="testPlaceholder">			
+				`<ng-select [(ngModel)]="selectedCity"
+														 [items]="cities" bindLabel="name"
+														 placeholder="testPlaceholder">
                   </ng-select>`,
 			);
 
@@ -2406,8 +2407,8 @@ describe('NgSelectComponent', () => {
 				NgSelectTestComponent,
 				`<ng-select [(ngModel)]="selectedCity"
 														 [fixedPlaceholder]="false"
-														 [items]="cities" bindLabel="name" 
-														 placeholder="testPlaceholder">			
+														 [items]="cities" bindLabel="name"
+														 placeholder="testPlaceholder">
                   </ng-select>`,
 			);
 
@@ -4824,6 +4825,7 @@ class NgSelectTestComponent {
 	filter = new Subject<string>();
 	searchFn: (term: string, item: any) => boolean = null;
 	selectOnTab = true;
+	tabFocusOnClearButton = true;
 	hideSelected = false;
 
 	citiesLoading = false;
