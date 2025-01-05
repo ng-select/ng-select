@@ -5,9 +5,10 @@ import { delay } from 'rxjs/operators';
 import { DataService } from '../data.service';
 
 @Component({
-	selector: 'ng-forms-async-data-example',
-	templateUrl: './forms-async-data-example.component.html',
-	styleUrls: ['./forms-async-data-example.component.scss'],
+    selector: 'ng-forms-async-data-example',
+    templateUrl: './forms-async-data-example.component.html',
+    styleUrls: ['./forms-async-data-example.component.scss'],
+    standalone: false
 })
 export class FormsAsyncDataExampleComponent implements OnInit {
 	heroForm: FormGroup;

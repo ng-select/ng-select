@@ -28,8 +28,8 @@ import {
 	ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { debounceTime, filter, map, startWith, takeUntil, tap } from 'rxjs/operators';
 import { merge, Subject } from 'rxjs';
+import { debounceTime, filter, map, startWith, takeUntil, tap } from 'rxjs/operators';
 
 import {
 	NgFooterTemplateDirective,
@@ -45,19 +45,20 @@ import {
 	NgPlaceholderTemplateDirective,
 	NgTagTemplateDirective,
 	NgTypeToSearchTemplateDirective,
+	NgClearButtonTemplateDirective
 } from './ng-templates.directive';
 
-import { ConsoleService } from './console.service';
-import { isDefined, isFunction, isObject, isPromise } from './value-utils';
-import { ItemsList } from './items-list';
-import { DropdownPosition, KeyCode, NgOption } from './ng-select.types';
-import { newId } from './id';
-import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
-import { NgOptionComponent } from './ng-option.component';
-import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
-import { NgSelectConfig } from './config.service';
-import { NgDropdownPanelService } from './ng-dropdown-panel.service';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgSelectConfig } from './config.service';
+import { ConsoleService } from './console.service';
+import { newId } from './id';
+import { ItemsList } from './items-list';
+import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
+import { NgDropdownPanelService } from './ng-dropdown-panel.service';
+import { NgOptionComponent } from './ng-option.component';
+import { DropdownPosition, KeyCode, NgOption } from './ng-select.types';
+import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
+import { isDefined, isFunction, isObject, isPromise } from './value-utils';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type AddTagFn = (term: string) => any | Promise<any>;
@@ -66,7 +67,6 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 
 @Component({
 	selector: 'ng-select',
-	standalone: true,
 	templateUrl: './ng-select.component.html',
 	styleUrls: ['./ng-select.component.scss'],
 	providers: [
@@ -82,6 +82,7 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 	imports: [NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent, NgClass],
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
+	@Input() ariaLabelDropdown: string = 'Options List';
 	@Input() bindLabel: string;
 	@Input() bindValue: string;
 	@Input() ariaLabel: string | undefined;
@@ -151,6 +152,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@ContentChild(NgLoadingTextTemplateDirective, { read: TemplateRef }) loadingTextTemplate: TemplateRef<any>;
 	@ContentChild(NgTagTemplateDirective, { read: TemplateRef }) tagTemplate: TemplateRef<any>;
 	@ContentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef }) loadingSpinnerTemplate: TemplateRef<any>;
+	@ContentChild(NgClearButtonTemplateDirective, { read: TemplateRef }) clearButtonTemplate: TemplateRef<any>;
+
 	@ViewChild(forwardRef(() => NgDropdownPanelComponent)) dropdownPanel: NgDropdownPanelComponent;
 	@ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
 	@ViewChild('clearButton') clearButton: ElementRef<HTMLSpanElement>;

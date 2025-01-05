@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 	selector: 'ng-virtual-scroll-example',
 	templateUrl: './virtual-scroll-example.component.html',
 	styleUrls: ['./virtual-scroll-example.component.scss'],
+	standalone: false,
 })
 export class VirtualScrollExampleComponent implements OnInit {
 	photos = [];

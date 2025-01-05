@@ -1589,6 +1589,21 @@ describe('NgSelectComponent', () => {
 				expect(dropdown).toBeNull();
 			});
 		}));
+
+		it('should set aria-label on dropdown panel when ariaLabelDropdown input is provided', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" ariaLabelDropdown="Custom Aria Label">
+    </ng-select>`,
+			);
+
+			const select = fixture.componentInstance.select;
+			select.open();
+			tickAndDetectChanges(fixture);
+
+			const dropdownPanel = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel');
+			expect(dropdownPanel.getAttribute('aria-label')).toBe('Custom Aria Label');
+		}));
 	});
 
 	describe('Keyboard events', () => {
@@ -2314,6 +2329,30 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.disabled = true;
 			tickAndDetectChanges(fixture);
 			expect(items[0].disabled).toBeTruthy();
+		}));
+
+		it('should display custom clear button template when selected city', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+                            [loading]="true"
+                            [(ngModel)]="selectedCity">
+
+                    <ng-template ng-clearbutton-tmp>
+                        <div class="custom-clearbutton">
+                            Custom clear button
+                        </div>
+                    </ng-template>
+                </ng-select>`,
+			);
+
+			fixture.whenStable().then(() => {
+				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+				tickAndDetectChanges(fixture);
+				tickAndDetectChanges(fixture);
+				const clear = fixture.debugElement.queryAll(By.css('.custom-clearbutton'));
+				expect(clear.length).toBe(1);
+			});
 		}));
 
 		it('should display ng-placeholder template', fakeAsync(() => {
@@ -4754,7 +4793,10 @@ function createEvent(target = {}) {
 	};
 }
 
-@Component({ template: `` })
+@Component({
+	template: ``,
+	standalone: false,
+})
 class NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
 	multiple = false;
@@ -4839,12 +4881,19 @@ class NgSelectTestComponent {
 	onScrollToEnd() {}
 }
 
-@Component({ template: ``, encapsulation: ViewEncapsulation.ShadowDom })
+@Component({
+	template: ``,
+	encapsulation: ViewEncapsulation.ShadowDom,
+	standalone: false,
+})
 class EncapsulatedTestComponent extends NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 }
 
-@Component({ template: `` })
+@Component({
+	template: ``,
+	standalone: false,
+})
 class NgSelectGroupingTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 	selectedAccountName = 'Adam';

@@ -3,9 +3,10 @@ import { Observable } from 'rxjs';
 import { DataService } from '../data.service';
 
 @Component({
-	selector: 'ng-multi-select-default-example',
-	templateUrl: './multi-select-default-example.component.html',
-	styleUrls: ['./multi-select-default-example.component.scss'],
+    selector: 'ng-multi-select-default-example',
+    templateUrl: './multi-select-default-example.component.html',
+    styleUrls: ['./multi-select-default-example.component.scss'],
+    standalone: false
 })
 export class MultiSelectDefaultExampleComponent implements OnInit {
 	people$: Observable<any[]>;

@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 
 @Component({
-	selector: 'ng-append-to-example',
-	templateUrl: './append-to-example.component.html',
-	styleUrls: ['./append-to-example.component.scss'],
-	//     encapsulation: ViewEncapsulation.ShadowDom,
+    selector: 'ng-append-to-example',
+    templateUrl: './append-to-example.component.html',
+    styleUrls: ['./append-to-example.component.scss'],
+    standalone: false
 })
 export class AppendToExampleComponent implements OnInit {
 	people: any = [];

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-group-function-example',
-	templateUrl: './group-function-example.component.html',
-	styleUrls: ['./group-function-example.component.scss'],
+    selector: 'ng-group-function-example',
+    templateUrl: './group-function-example.component.html',
+    styleUrls: ['./group-function-example.component.scss'],
+    standalone: false
 })
 export class GroupFunctionExampleComponent implements OnInit {
 	selectedAccounts = ['Michael'];

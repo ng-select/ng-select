@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-template-optgroup-example',
-	templateUrl: './template-optgroup-example.component.html',
-	styleUrls: ['./template-optgroup-example.component.scss'],
+    selector: 'ng-template-optgroup-example',
+    templateUrl: './template-optgroup-example.component.html',
+    styleUrls: ['./template-optgroup-example.component.scss'],
+    standalone: false
 })
 export class TemplateOptgroupExampleComponent implements OnInit {
 	cities = [

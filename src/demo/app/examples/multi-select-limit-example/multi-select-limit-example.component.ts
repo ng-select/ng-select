@@ -3,9 +3,10 @@ import { Observable } from 'rxjs';
 import { DataService } from '../data.service';
 
 @Component({
-	selector: 'ng-multi-select-limit-example',
-	templateUrl: './multi-select-limit-example.component.html',
-	styleUrls: ['./multi-select-limit-example.component.scss'],
+    selector: 'ng-multi-select-limit-example',
+    templateUrl: './multi-select-limit-example.component.html',
+    styleUrls: ['./multi-select-limit-example.component.scss'],
+    standalone: false
 })
 export class MultiSelectLimitExampleComponent implements OnInit {
 	people$: Observable<any[]>;

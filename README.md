@@ -16,6 +16,7 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 | Angular          | ng-select |
 |------------------|:---------:|
+| >=19.0.0 <20.0.0 |   v14.x   |
 | >=18.0.0 <19.0.0 |   v13.x   |
 | >=17.0.0 <18.0.0 |   v12.x   |
 | >=16.0.0 <17.0.0 |   v11.x   |
@@ -201,7 +202,7 @@ map: {
 | addTagText                  | `string`                                             | `Add item`          | no | Set custom text when using tagging                                                                                                                                                             |
 | appearance                  | `string`                                             | `underline`         | no | Allows to select dropdown appearance. Set to `outline` to add border instead of underline (applies only to Material theme)                                                                     |
 | appendTo                    | `string`                                             | null                | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative`                                                                |
-| bufferAmount                | `string`                                             | null                | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative`                                                                |
+| bufferAmount                | `number`                                             | 4                | no | Used in virtual scrolling, the `bufferAmount` property controls the number of items preloaded in the background to ensure smoother and more seamless scrolling. |
 | bindValue                   | `string`                                             | `-`                 | no | Object property to use for selected model. By default binds to whole object.                                                                                                                   |
 | bindLabel                   | `string`                                             | `label`             | no | Object property to use for label. Default `label`                                                                                                                                              |
 | [closeOnSelect]             | `boolean`                                            | true                | no | Whether to close the menu when a value is selected                                                                                                                                             |
@@ -302,7 +303,7 @@ data types. That means if you do object mutations like:
 
 ```javascript
 this.items.push({id: 1, name: 'New item'})
-``` 
+```
 
 Component will not detect a change. Instead you need to do:
 

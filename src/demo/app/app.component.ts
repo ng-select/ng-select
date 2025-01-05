@@ -5,10 +5,11 @@ import { filter, map, mergeMap } from 'rxjs/operators';
 import { NgSelectConfig } from '@ng-select/ng-select';
 
 @Component({
-	selector: 'demo-app',
-	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.scss'],
-	changeDetection: ChangeDetectionStrategy.Default,
+    selector: 'demo-app',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Default,
+    standalone: false
 })
 export class AppComponent {
 	title: string;

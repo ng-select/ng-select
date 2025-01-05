@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-template-option-example',
-	templateUrl: './template-option-example.component.html',
-	styleUrls: ['./template-option-example.component.scss'],
+    selector: 'ng-template-option-example',
+    templateUrl: './template-option-example.component.html',
+    styleUrls: ['./template-option-example.component.scss'],
+    standalone: false
 })
 export class TemplateOptionExampleComponent implements OnInit {
 	cities = [

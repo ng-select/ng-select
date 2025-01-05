@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'ng-dropdown-position-example',
-	templateUrl: './dropdown-position-example.component.html',
-	styleUrls: ['./dropdown-position-example.component.scss'],
+    selector: 'ng-dropdown-position-example',
+    templateUrl: './dropdown-position-example.component.html',
+    styleUrls: ['./dropdown-position-example.component.scss'],
+    standalone: false
 })
 export class DropdownPositionExampleComponent implements OnInit {
 	cities = [

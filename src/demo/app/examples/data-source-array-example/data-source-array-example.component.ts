@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { DataService, Person } from '../data.service';
 
 @Component({
-	selector: 'ng-data-source-array-example',
-	templateUrl: './data-source-array-example.component.html',
-	styleUrls: ['./data-source-array-example.component.scss'],
+    selector: 'ng-data-source-array-example',
+    templateUrl: './data-source-array-example.component.html',
+    styleUrls: ['./data-source-array-example.component.scss'],
+    standalone: false
 })
 export class DataSourceArrayExampleComponent implements OnInit {
 	people: Person[] = [];

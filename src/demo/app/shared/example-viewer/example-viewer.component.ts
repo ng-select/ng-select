@@ -2,17 +2,18 @@ import { Component, ComponentFactoryResolver, Directive, Input, OnInit, ViewChil
 import { EXAMPLE_COMPONENTS } from '../../examples/examples';
 
 @Directive({
-	selector: '[example-host]',
+    selector: '[example-host]',
+    standalone: false
 })
 export class ExampleHostDirective {
 	constructor(public viewContainerRef: ViewContainerRef) {}
 }
 
 @Component({
-	selector: 'example-viewer',
-	templateUrl: './example-viewer.component.html',
-	styles: [
-		`
+    selector: 'example-viewer',
+    templateUrl: './example-viewer.component.html',
+    styles: [
+        `
 			.card-header {
 				display: flex;
 				align-items: center;
@@ -29,7 +30,8 @@ export class ExampleHostDirective {
 				margin-bottom: 20px;
 			}
 		`,
-	],
+    ],
+    standalone: false
 })
 export class ExampleViewerComponent implements OnInit {
 	@Input() example: string;
