@@ -4417,7 +4417,7 @@ describe('Grouping', () => {
 		expect(items[11].parent).toBe(items[10]);
 	}));
 
-	it('should not group items without key', fakeAsync(() => {
+	it('should not group items (flat items list) without key', fakeAsync(() => {
 		const fixture = createTestingModule(
 			NgSelectGroupingTestComponent,
 			`<ng-select [items]="accounts"
@@ -4447,6 +4447,46 @@ describe('Grouping', () => {
 		expect(items[16].children).toBeTruthy();
 		expect(items[16].label).toBe('');
 		expect(items[17].parent).toBeDefined();
+	}));
+
+	it('should not group items (items with children array) without key', fakeAsync(() => {
+		const fixture = createTestingModule(
+			NgSelectGroupingTestComponent,
+			`<ng-select [items]="groupedAccounts"
+                        groupBy="accounts"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`,
+		);
+
+		tickAndDetectChanges(fixture);
+
+		fixture.componentInstance.groupedAccounts = [{ country: 'Slovakia', accounts: [] }, ...fixture.componentInstance.groupedAccounts];
+		tickAndDetectChanges(fixture);
+
+		const items: NgOption[] = fixture.componentInstance.select.itemsList.items;
+
+		expect(items.length).toBe(15);
+
+		expect(items[0].children).toBeUndefined();
+		expect(items[0].parent).toBeUndefined();
+		expect(items[0].disabled).toBeUndefined();
+		expect(items[0].value).toEqual(jasmine.objectContaining({ country: 'Slovakia' }));
+
+		expect(items[1].children).toBeDefined();
+		expect(items[1].index).toBe(1);
+		expect(items[1].disabled).toBeTruthy();
+		expect(items[1].value).toEqual(jasmine.objectContaining({ country: 'United States' }));
+
+		expect(items[2].children).toBeUndefined();
+		expect(items[2].parent).toBe(items[1]);
+
+		expect(items[3].children).toBeUndefined();
+		expect(items[3].parent).toBe(items[1]);
+
+		expect(items[4].value).toEqual(jasmine.objectContaining({ country: 'Argentina' }));
+
+		expect(items[11].value).toEqual(jasmine.objectContaining({ country: 'Colombia' }));
+		expect(items[12].parent).toBe(items[11]);
 	}));
 
 	it('should group by group fn', fakeAsync(() => {
