@@ -14,7 +14,9 @@ import {
 	HostListener,
 	Inject,
 	InjectionToken,
+	input,
 	Input,
+	InputSignalWithTransform,
 	numberAttribute,
 	OnChanges,
 	OnDestroy,
@@ -126,7 +128,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
 	@Input({ transform: booleanAttribute }) @HostBinding('class.ng-select-searchable') searchable = true;
 	@Input({ transform: booleanAttribute }) @HostBinding('class.ng-select-clearable') clearable = true;
-	@Input({ transform: booleanAttribute }) clearableSelectedDisabledOption = true;
+	readonly clearableSelectedDisabledOption: InputSignalWithTransform<boolean, unknown> = input(true, { transform: booleanAttribute });
 	@Input() @HostBinding('class.ng-select-opened') isOpen?: boolean = false;
 	// output events
 	@Output('blur') blurEvent = new EventEmitter();
