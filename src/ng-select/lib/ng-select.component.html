@@ -46,6 +46,7 @@
 				[attr.aria-label]="ariaLabel"
 				[attr.id]="labelForId"
 				[attr.tabindex]="tabIndex"
+				[attr.aria-placeholder]="placeholderTemplate ? null : placeholder"
 				[disabled]="disabled"
 				[readOnly]="!searchable || itemsList.maxItemsSelected"
 				[value]="searchTerm ? searchTerm : ''"
