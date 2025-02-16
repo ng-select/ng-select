@@ -14,7 +14,9 @@ import {
 	HostListener,
 	Inject,
 	InjectionToken,
+	input,
 	Input,
+	InputSignalWithTransform,
 	numberAttribute,
 	OnChanges,
 	OnDestroy,
@@ -45,7 +47,7 @@ import {
 	NgPlaceholderTemplateDirective,
 	NgTagTemplateDirective,
 	NgTypeToSearchTemplateDirective,
-	NgClearButtonTemplateDirective
+	NgClearButtonTemplateDirective,
 } from './ng-templates.directive';
 
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -126,6 +128,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() @HostBinding('class.ng-select-taggable') addTag: boolean | AddTagFn = false;
 	@Input({ transform: booleanAttribute }) @HostBinding('class.ng-select-searchable') searchable = true;
 	@Input({ transform: booleanAttribute }) @HostBinding('class.ng-select-clearable') clearable = true;
+	readonly clearableSelectedDisabledOption: InputSignalWithTransform<boolean, unknown> = input(true, { transform: booleanAttribute });
 	@Input() @HostBinding('class.ng-select-opened') isOpen?: boolean = false;
 	// output events
 	@Output('blur') blurEvent = new EventEmitter();
@@ -321,7 +324,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	ngOnChanges(changes: SimpleChanges) {
 		if (changes.multiple) {
-			this.itemsList.clearSelected();
+			this.itemsList.clearSelected(!this.clearableSelectedDisabledOption);
 		}
 		if (changes.items) {
 			this._setItems(changes.items.currentValue || []);
@@ -450,7 +453,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	handleClearClick() {
 		if (this.hasValue) {
-			this.itemsList.clearSelected(true);
+			this.itemsList.clearSelected(!this.clearableSelectedDisabledOption);
 			this._updateNgModel();
 		}
 		this._clearSearch();
@@ -464,12 +467,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (!this.clearable) {
 			return;
 		}
-		this.itemsList.clearSelected();
+		this.itemsList.clearSelected(!this.clearableSelectedDisabledOption);
 		this._updateNgModel();
 	}
 
 	writeValue(value: any | any[]): void {
-		this.itemsList.clearSelected();
+		this.itemsList.clearSelected(!this.clearableSelectedDisabledOption);
 		this._handleWriteValue(value);
 		this._cd.markForCheck();
 	}
