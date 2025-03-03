@@ -129,3 +129,9 @@ export class NgLoadingSpinnerTemplateDirective {
 export class NgClearButtonTemplateDirective {
 	constructor(public template: TemplateRef<any>) {}
 }
+
+// eslint-disable-next-line @angular-eslint/directive-selector
+@Directive({ selector: '[ng-collapse-button-tmp]', standalone: true })
+export class NgCollapseButtonTemplateDirective {
+	constructor(public template: TemplateRef<any>) {}
+}

@@ -1,0 +1,16 @@
+<p>Groups can be collapsed for convenience in a large list. The button can be templated with <strong>ng-collapse-button-tmp</strong></p>
+
+<ng-select
+	[items]="accounts"
+	[collapsibleGroup]="true"
+	[collapseGroupByDefault]="true"
+	[multiple]="true"
+	[selectableGroup]="true"
+	bindLabel="name"
+	bindValue="name"
+	groupBy="country"
+	[(ngModel)]="selectedAccount">
+</ng-select>
+
+<br />
+<small>Selected: {{ selectedAccount | json }}</small>

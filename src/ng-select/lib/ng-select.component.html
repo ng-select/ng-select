@@ -114,11 +114,29 @@
 					[attr.aria-selected]="item.selected"
 					[attr.id]="item?.htmlId">
 					<ng-template #defaultOptionTemplate>
-						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
+						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"> </span>
 					</ng-template>
+
+					@if (item.children && collapsibleGroup) {
+						<ng-template #defaultCollapseButtonTemplate let-collapsed="collapsed">
+							<button class="ng-option-collapse-button">{{ collapsed ? '⏷' : '⏶' }}</button>
+						</ng-template>
+
+						<span (click)="toggleItemCollapse($event, item)">
+							<ng-template
+								[ngTemplateOutlet]="collapseButtonTemplate || defaultCollapseButtonTemplate"
+								[ngTemplateOutletContext]="{ collapsed: item.collapsed }">
+							</ng-template>
+						</span>
+					}
+
 					<ng-template
 						[ngTemplateOutlet]="
-							item.children ? optgroupTemplate || defaultOptionTemplate : optionTemplate || defaultOptionTemplate
+							!collapsibleGroup || item.children || !item.parent?.collapsed
+								? item.children
+									? optgroupTemplate || defaultOptionTemplate
+									: optionTemplate || defaultOptionTemplate
+								: null
 						"
 						[ngTemplateOutletContext]="{ item: item.value, item$: item, index: item.index, searchTerm: searchTerm }">
 					</ng-template>

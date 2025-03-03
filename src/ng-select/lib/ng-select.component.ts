@@ -45,7 +45,7 @@ import {
 	NgPlaceholderTemplateDirective,
 	NgTagTemplateDirective,
 	NgTypeToSearchTemplateDirective,
-	NgClearButtonTemplateDirective
+	NgClearButtonTemplateDirective, NgCollapseButtonTemplateDirective,
 } from './ng-templates.directive';
 
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -110,6 +110,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input({ transform: booleanAttribute }) virtualScroll: boolean;
 	@Input({ transform: booleanAttribute }) selectableGroup = false;
 	@Input({ transform: booleanAttribute }) selectableGroupAsModel = true;
+	@Input({ transform: booleanAttribute }) collapsibleGroup = false;
+	@Input({ transform: booleanAttribute }) collapseGroupByDefault = false;
 	@Input() searchFn = null;
 	@Input() trackByFn = null;
 	@Input({ transform: booleanAttribute }) clearOnBackspace = true;
@@ -153,6 +155,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@ContentChild(NgTagTemplateDirective, { read: TemplateRef }) tagTemplate: TemplateRef<any>;
 	@ContentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef }) loadingSpinnerTemplate: TemplateRef<any>;
 	@ContentChild(NgClearButtonTemplateDirective, { read: TemplateRef }) clearButtonTemplate: TemplateRef<any>;
+	@ContentChild(NgCollapseButtonTemplateDirective, { read: TemplateRef }) collapseButtonTemplate: TemplateRef<any>;
 
 	@ViewChild(forwardRef(() => NgDropdownPanelComponent)) dropdownPanel: NgDropdownPanelComponent;
 	@ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
@@ -543,6 +546,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (this._editableSearchTerm) {
 			this._setSearchTermFromItems();
 		}
+	}
+
+	toggleItemCollapse(event: Event, item: NgOption) {
+		event.stopPropagation();
+		item.collapsed = !item.collapsed;
 	}
 
 	select(item: NgOption) {

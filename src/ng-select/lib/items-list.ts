@@ -382,6 +382,7 @@ export class ItemsList {
 				index: i++,
 				disabled: !this._ngSelect.selectableGroup,
 				htmlId: newId(),
+				collapsed: this._ngSelect.collapsibleGroup ? this._ngSelect.collapseGroupByDefault : true,
 			};
 			const groupKey = isGroupByFn ? this._ngSelect.bindLabel : <string>this._ngSelect.groupBy;
 			const groupValue =

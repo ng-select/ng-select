@@ -6,6 +6,7 @@ export interface NgOption {
 	selected?: boolean;
 	disabled?: boolean;
 	marked?: boolean;
+	collapsed?: boolean;
 	label?: string;
 	value?: string | any;
 	parent?: NgOption;
