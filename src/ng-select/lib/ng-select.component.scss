@@ -265,6 +265,10 @@
 				border: none;
 				margin-inline-end: 6px;
 			}
+
+			.ng-option-collapse-wrapper {
+				display: contents;
+			}
 		}
 
 		.ng-option {
