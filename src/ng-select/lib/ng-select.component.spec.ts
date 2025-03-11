@@ -4000,16 +4000,11 @@ describe('NgSelectComponent', () => {
 				};
 			}));
 
-			it('should clear model except disabled', fakeAsync(() => {
+			it('should clear model inlcuding disabled if currently selected', fakeAsync(() => {
 				triggerMousedown();
 				tickAndDetectChanges(fixture);
-				expect(fixture.componentInstance.selectedCities.length).toBe(1);
-				expect(fixture.componentInstance.selectedCities[0]).toEqual(
-					jasmine.objectContaining({
-						id: 2,
-						name: 'Kaunas',
-					}),
-				);
+				expect(fixture.componentInstance.selectedCities.length).toBe(0);
+				expect(fixture.componentInstance.selectedCities[0]).toEqual(undefined);
 				expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
 			}));
 

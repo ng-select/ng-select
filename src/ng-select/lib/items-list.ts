@@ -78,7 +78,7 @@ export class ItemsList {
 		}
 		const multiple = this._ngSelect.multiple;
 		if (!multiple) {
-			this.clearSelected();
+			this.clearSelected(false);
 		}
 
 		this._selectionModel.select(item, multiple, this._ngSelect.selectableGroupAsModel);
@@ -117,7 +117,7 @@ export class ItemsList {
 		return option;
 	}
 
-	clearSelected(keepDisabled = false) {
+	clearSelected(keepDisabled: boolean) {
 		this._selectionModel.clear(keepDisabled);
 		this._items.forEach((item) => {
 			item.selected = keepDisabled && item.selected && item.disabled;
