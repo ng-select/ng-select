@@ -46,6 +46,7 @@
 				[attr.aria-label]="ariaLabel"
 				[attr.id]="labelForId"
 				[attr.tabindex]="tabIndex"
+				[attr.aria-placeholder]="placeholderTemplate ? null : placeholder"
 				[disabled]="disabled"
 				[readOnly]="!searchable || itemsList.maxItemsSelected"
 				[value]="searchTerm ? searchTerm : ''"
@@ -95,7 +96,6 @@
 		[class.ng-select-multiple]="multiple"
 		[ngClass]="appendTo ? (ngClass ? ngClass : classes) : null"
 		[id]="dropdownId"
-		role="listbox"
 		[attr.aria-label]="ariaLabelDropdown">
 		<ng-container>
 			@for (item of viewPortItems; track trackByOption($index, item)) {
