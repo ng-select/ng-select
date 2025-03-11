@@ -1618,6 +1618,7 @@ describe('NgSelectComponent', () => {
                         [loading]="citiesLoading"
                         [selectOnTab]="selectOnTab"
                         [multiple]="multiple"
+						[tabFocusOnClearButton]="tabFocusOnClearButton"
                         [(ngModel)]="selectedCity">
                 </ng-select>`,
 			);
@@ -1804,6 +1805,7 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
 				expect(fixture.componentInstance.select.selectedItems).toEqual([result]);
 			}));
+
 			it('should focus on clear button when tab pressed while not opened and clear showing', fakeAsync(() => {
 				selectOption(fixture, KeyCode.ArrowDown, 0);
 				tickAndDetectChanges(fixture);
@@ -1813,6 +1815,18 @@ describe('NgSelectComponent', () => {
 				const focusOnClear = spyOn(select, 'focusOnClear');
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
 				expect(focusOnClear).toHaveBeenCalled();
+			}));
+
+			it('should not focus on clear button when tab pressed if [tabFocusOnClear]="false"', fakeAsync(() => {
+				fixture.componentInstance.tabFocusOnClearButton = false;
+				selectOption(fixture, KeyCode.ArrowDown, 0);
+				tickAndDetectChanges(fixture);
+				expect(select.showClear()).toBeTruthy();
+
+				select.searchInput.nativeElement.focus();
+				const focusOnClear = spyOn(select, 'focusOnClear');
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+				expect(focusOnClear).not.toHaveBeenCalled();
 			}));
 		});
 
@@ -1953,6 +1967,7 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
 				expect(select.isOpen).toBe(false);
 			}));
+
 			it('should clear input when enter pressed while clear button focused', fakeAsync(() => {
 				selectOption(fixture, KeyCode.ArrowDown, 0);
 				select.searchInput.nativeElement.focus();
@@ -2374,9 +2389,9 @@ describe('NgSelectComponent', () => {
 		it('should display ng-placeholder if an item is selected', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
-				`<ng-select [(ngModel)]="selectedCity" 
-														 [items]="cities" bindLabel="name" 
-														 placeholder="testPlaceholder">			
+				`<ng-select [(ngModel)]="selectedCity"
+														 [items]="cities" bindLabel="name"
+														 placeholder="testPlaceholder">
                   </ng-select>`,
 			);
 
@@ -2392,8 +2407,8 @@ describe('NgSelectComponent', () => {
 				NgSelectTestComponent,
 				`<ng-select [(ngModel)]="selectedCity"
 														 [fixedPlaceholder]="false"
-														 [items]="cities" bindLabel="name" 
-														 placeholder="testPlaceholder">			
+														 [items]="cities" bindLabel="name"
+														 placeholder="testPlaceholder">
                   </ng-select>`,
 			);
 
@@ -4810,6 +4825,7 @@ class NgSelectTestComponent {
 	filter = new Subject<string>();
 	searchFn: (term: string, item: any) => boolean = null;
 	selectOnTab = true;
+	tabFocusOnClearButton = true;
 	hideSelected = false;
 
 	citiesLoading = false;
