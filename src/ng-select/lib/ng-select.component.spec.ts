@@ -2376,6 +2376,7 @@ describe('NgSelectComponent', () => {
 				NgSelectTestComponent,
 				`<ng-select [(ngModel)]="selectedCity" 
 														 [items]="cities" bindLabel="name" 
+														 fixedPlaceholder="true"
 														 placeholder="testPlaceholder">			
                   </ng-select>`,
 			);

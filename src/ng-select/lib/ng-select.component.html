@@ -4,7 +4,7 @@
 	[class.ng-has-value]="hasValue"
 	class="ng-select-container">
 	<div class="ng-value-container">
-		@if ((selectedItems.length === 0 && !searchTerm) || fixedPlaceholder === true) {
+		@if ((selectedItems.length === 0 && !searchTerm) || fixedPlaceholder) {
 			<ng-template #defaultPlaceholderTemplate>
 				<div class="ng-placeholder">{{ placeholder }}</div>
 			</ng-template>
@@ -44,9 +44,9 @@
 				[attr.aria-controls]="isOpen ? dropdownId : null"
 				[attr.aria-expanded]="isOpen"
 				[attr.aria-label]="ariaLabel"
+				[attr.aria-placeholder]="placeholderTemplate ? null : placeholder"
 				[attr.id]="labelForId"
 				[attr.tabindex]="tabIndex"
-				[attr.aria-placeholder]="placeholderTemplate ? null : placeholder"
 				[disabled]="disabled"
 				[readOnly]="!searchable || itemsList.maxItemsSelected"
 				[value]="searchTerm ? searchTerm : ''"
