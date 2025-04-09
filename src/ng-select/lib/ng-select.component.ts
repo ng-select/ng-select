@@ -161,7 +161,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@HostBinding('class.ng-select') useDefaultClass = true;
 	itemsList: ItemsList;
 	viewPortItems: NgOption[] = [];
-	searchTerm: string = null;
+	searchTerm: string = '';
 	dropdownId = newId();
 	element: HTMLElement;
 	focused: boolean;
