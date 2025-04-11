@@ -329,6 +329,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (changes.isOpen) {
 			this._manualOpen = isDefined(changes.isOpen.currentValue);
 		}
+		if (changes.groupBy) {
+			if (!changes.items) {
+				this._setItems([...this.items]);
+			}
+		}
 	}
 
 	ngAfterViewInit() {
