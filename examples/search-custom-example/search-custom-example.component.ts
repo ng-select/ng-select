@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService, Person } from '../data.service';
+import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
+import { NgOptionTemplateDirective } from '../../../../ng-select/lib/ng-templates.directive';
 
 @Component({
-    selector: 'ng-search-custom-example',
-    templateUrl: './search-custom-example.component.html',
-    styleUrls: ['./search-custom-example.component.scss'],
-    standalone: false
+	selector: 'ng-search-custom-example',
+	templateUrl: './search-custom-example.component.html',
+	styleUrls: ['./search-custom-example.component.scss'],
+	imports: [NgSelectComponent, NgOptionTemplateDirective],
 })
 export class SearchCustomExampleComponent implements OnInit {
 	people: Person[] = [];

@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
+import { FormsModule } from '@angular/forms';
+import { JsonPipe } from '@angular/common';
 
 @Component({
-    selector: 'ng-tags-custom-example',
-    templateUrl: './tags-custom-example.component.html',
-    styleUrls: ['./tags-custom-example.component.scss'],
-    standalone: false
+	selector: 'ng-tags-custom-example',
+	templateUrl: './tags-custom-example.component.html',
+	styleUrls: ['./tags-custom-example.component.scss'],
+	imports: [NgSelectComponent, FormsModule, JsonPipe],
 })
 export class TagsCustomExampleComponent implements OnInit {
 	selectedCompanies;
