@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
+
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AppendToExampleComponent } from './append-to-example/append-to-example.component';
 import { BindingsCustomExampleComponent } from './bindings-custom-example/bindings-custom-example.component';
@@ -100,8 +100,7 @@ const examples = [
 ];
 
 @NgModule({
-	declarations: examples,
-	imports: [NgSelectModule, NgOptionHighlightModule, FormsModule, CommonModule, ReactiveFormsModule],
-	exports: [NgSelectModule, NgOptionHighlightModule, FormsModule, CommonModule, ReactiveFormsModule],
+	imports: [NgSelectModule, FormsModule, CommonModule, ReactiveFormsModule, ...examples],
+	exports: [NgSelectModule, FormsModule, CommonModule, ReactiveFormsModule],
 })
 export class ExamplesModule {}

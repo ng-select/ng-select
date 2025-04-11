@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataService } from '../data.service';
+import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
+import { FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'ng-multi-select-default-example',
-    templateUrl: './multi-select-default-example.component.html',
-    styleUrls: ['./multi-select-default-example.component.scss'],
-    standalone: false
+	selector: 'ng-multi-select-default-example',
+	templateUrl: './multi-select-default-example.component.html',
+	styleUrls: ['./multi-select-default-example.component.scss'],
+	imports: [NgSelectComponent, FormsModule, AsyncPipe],
 })
 export class MultiSelectDefaultExampleComponent implements OnInit {
 	people$: Observable<any[]>;
