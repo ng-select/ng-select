@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
+import { FormsModule } from '@angular/forms';
+import { NgHeaderTemplateDirective } from '../../../../ng-select/lib/ng-templates.directive';
 
 @Component({
-    selector: 'ng-template-search-example',
-    templateUrl: './template-search-example.component.html',
-    styleUrls: ['./template-search-example.component.scss'],
-    standalone: false
+	selector: 'ng-template-search-example',
+	templateUrl: './template-search-example.component.html',
+	styleUrls: ['./template-search-example.component.scss'],
+	imports: [NgSelectComponent, FormsModule, NgHeaderTemplateDirective],
 })
 export class TemplateSearchExampleComponent implements OnInit {
 	cities = [

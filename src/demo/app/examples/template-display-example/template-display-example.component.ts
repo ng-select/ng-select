@@ -1,12 +1,19 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { DataService } from '../data.service';
+import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
+import { FormsModule } from '@angular/forms';
+import {
+	NgLoadingTextTemplateDirective,
+	NgNotFoundTemplateDirective,
+	NgTypeToSearchTemplateDirective,
+} from '../../../../ng-select/lib/ng-templates.directive';
 
 @Component({
-    selector: 'ng-template-display-example',
-    templateUrl: './template-display-example.component.html',
-    styleUrls: ['./template-display-example.component.scss'],
-    standalone: false
+	selector: 'ng-template-display-example',
+	templateUrl: './template-display-example.component.html',
+	styleUrls: ['./template-display-example.component.scss'],
+	imports: [NgSelectComponent, FormsModule, NgTypeToSearchTemplateDirective, NgNotFoundTemplateDirective, NgLoadingTextTemplateDirective],
 })
 export class TemplateDisplayExampleComponent implements OnInit {
 	peopleTypeahead = new EventEmitter<string>();

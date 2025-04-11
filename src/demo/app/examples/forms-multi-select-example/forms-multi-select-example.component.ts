@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
 
 @Component({
-    selector: 'ng-forms-multi-select-example',
-    templateUrl: './forms-multi-select-example.component.html',
-    styleUrls: ['./forms-multi-select-example.component.scss'],
-    standalone: false
+	selector: 'ng-forms-multi-select-example',
+	templateUrl: './forms-multi-select-example.component.html',
+	styleUrls: ['./forms-multi-select-example.component.scss'],
+	imports: [FormsModule, ReactiveFormsModule, NgSelectComponent],
 })
 export class FormsMultiSelectExampleComponent implements OnInit {
 	heroForm: FormGroup;
