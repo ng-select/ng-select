@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { appRoutes } from '../routes';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
-    selector: 'layout-sidenav',
-    template: `
+	selector: 'layout-sidenav',
+	template: `
 		<ul class="nav nav-pills flex-column">
 			@for (route of routes; track route) {
 				<li class="nav-item" routerLinkActive="active">
@@ -12,7 +13,7 @@ import { appRoutes } from '../routes';
 			}
 		</ul>
 	`,
-    standalone: false
+	imports: [RouterLinkActive, RouterLink],
 })
 export class LayoutSidenavComponent {
 	routes = [];

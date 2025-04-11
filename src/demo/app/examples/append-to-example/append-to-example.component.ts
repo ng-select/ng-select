@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
+import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
+import { FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'ng-append-to-example',
-    templateUrl: './append-to-example.component.html',
-    styleUrls: ['./append-to-example.component.scss'],
-    standalone: false
+	selector: 'ng-append-to-example',
+	templateUrl: './append-to-example.component.html',
+	styleUrls: ['./append-to-example.component.scss'],
+	imports: [NgSelectComponent, FormsModule, AsyncPipe],
 })
 export class AppendToExampleComponent implements OnInit {
 	people: any = [];

@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
+import { NgLoadingSpinnerTemplateDirective } from '../../../../ng-select/lib/ng-templates.directive';
 
 @Component({
-    selector: 'ng-template-loading-example',
-    templateUrl: './template-loading-example.component.html',
-    styleUrls: ['./template-loading-example.component.scss'],
-    standalone: false
+	selector: 'ng-template-loading-example',
+	templateUrl: './template-loading-example.component.html',
+	styleUrls: ['./template-loading-example.component.scss'],
+	imports: [NgSelectComponent, NgLoadingSpinnerTemplateDirective],
 })
 export class TemplateLoadingExampleComponent implements OnInit {
 	cities = [
