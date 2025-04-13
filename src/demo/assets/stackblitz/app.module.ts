@@ -15,12 +15,16 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 export class AppComponent {}
 
 @NgModule({
-	imports: [BrowserModule, FormsModule, NgSelectModule, CommonModule, ReactiveFormsModule],
-	providers: [provideHttpClient(withFetch())],
-	declarations: [
-		AppComponent,
+	imports: [
+		BrowserModule,
+		FormsModule,
+		NgSelectModule,
+		CommonModule,
+		ReactiveFormsModule,
 		//example-cmp
 	],
+	providers: [provideHttpClient(withFetch())],
+	declarations: [AppComponent],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}
