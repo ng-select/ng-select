@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
@@ -11,12 +11,17 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 	imports: [NgSelectComponent, FormsModule, AsyncPipe],
 })
 export class AppendToExampleComponent implements OnInit {
+	private dataService = inject(DataService);
+
 	people: any = [];
 	selected: any;
 	selected2: any;
 	selected3: any;
 
-	constructor(private dataService: DataService) {}
+	/** Inserted by Angular inject() migration for backwards compatibility */
+	constructor(...args: unknown[]);
+
+	constructor() {}
 
 	ngOnInit() {
 		this.people = this.dataService.getPeople();

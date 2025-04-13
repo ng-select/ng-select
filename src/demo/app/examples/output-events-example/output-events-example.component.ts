@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
@@ -16,12 +16,17 @@ interface Event {
 	imports: [NgSelectComponent, FormsModule, JsonPipe],
 })
 export class OutputEventsExampleComponent implements OnInit {
+	private dataService = inject(DataService);
+
 	selectedItems: any;
 	items = [];
 
 	events: Event[] = [];
 
-	constructor(private dataService: DataService) {
+	/** Inserted by Angular inject() migration for backwards compatibility */
+	constructor(...args: unknown[]);
+
+	constructor() {
 		this.dataService.getPeople().subscribe((items) => {
 			this.items = items;
 		});

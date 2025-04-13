@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, inject } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { filter, map, mergeMap } from 'rxjs/operators';
@@ -14,18 +14,21 @@ import { LayoutSidenavComponent } from './layout/sidenav-component';
 	imports: [LayoutHeaderComponent, LayoutSidenavComponent, RouterOutlet],
 })
 export class AppComponent {
+	private router = inject(Router);
+	private activatedRoute = inject(ActivatedRoute);
+	private titleService = inject(Title);
+	private config = inject(NgSelectConfig);
+
 	title: string;
 	version: string = window['ngSelectVersion'];
 	exampleSourceUrl: string;
 	dir: 'ltr' | 'rtl' = 'ltr';
 	theme: 'default' | 'ant' | 'material' = 'default';
 
-	constructor(
-		private router: Router,
-		private activatedRoute: ActivatedRoute,
-		private titleService: Title,
-		private config: NgSelectConfig,
-	) {
+	/** Inserted by Angular inject() migration for backwards compatibility */
+	constructor(...args: unknown[]);
+
+	constructor() {
 		this.config.placeholder = 'Select item';
 		// This could be useful if you want to use appendTo in entire application without explicitly defining it. (eg: appendTo = 'body')
 		this.config.appendTo = null;

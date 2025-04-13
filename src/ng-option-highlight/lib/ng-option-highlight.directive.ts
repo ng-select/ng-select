@@ -1,24 +1,24 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnChanges, Renderer2 } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, OnChanges, Renderer2, input, inject } from '@angular/core';
 
 @Directive({
 	selector: '[ngOptionHighlight]',
 	standalone: true,
 })
 export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
-	@Input('ngOptionHighlight') term: string;
+	private elementRef = inject(ElementRef);
+	private renderer = inject(Renderer2);
+
+	readonly term = input<string>(undefined, { alias: "ngOptionHighlight" });
 
 	private element: HTMLElement;
 	private label: string;
 
-	constructor(
-		private elementRef: ElementRef,
-		private renderer: Renderer2,
-	) {
+	constructor() {
 		this.element = this.elementRef.nativeElement;
 	}
 
 	private get _canHighlight() {
-		return this._isDefined(this.term) && this._isDefined(this.label);
+		return this._isDefined(this.term()) && this._isDefined(this.label);
 	}
 
 	ngOnChanges() {
@@ -40,12 +40,13 @@ export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
 
 	private _highlightLabel() {
 		const label = this.label;
-		if (!this.term) {
+		const term = this.term();
+		if (!term) {
 			this._setInnerHtml(label);
 			return;
 		}
 
-		const alternationString = this._escapeRegExp(this.term).replace(' ', '|');
+		const alternationString = this._escapeRegExp(term).replace(' ', '|');
 		const termRegex = new RegExp(alternationString, 'gi');
 		this._setInnerHtml(label.replace(termRegex, `<span class=\"highlighted\">$&</span>`));
 	}

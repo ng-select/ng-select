@@ -1282,7 +1282,7 @@ describe('NgSelectComponent', () => {
 			const select = fixture.componentInstance.select;
 			select.open();
 
-			expect(select.dropdownPanel.items.length).toBe(3);
+			expect(select.dropdownPanel.items().length).toBe(3);
 			let options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
 			expect(options.length).toBe(3);
 			expect(options[0].innerText).toBe('Vilnius');
@@ -1332,7 +1332,7 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 			fixture.detectChanges();
 
-			expect(fixture.componentInstance.select.dropdownPanel.items.length).toBe(3);
+			expect(fixture.componentInstance.select.dropdownPanel.items().length).toBe(3);
 			const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
 			expect(options.length).toBe(3);
 			expect(options[0].innerText).toBe('Vilnius');
@@ -1368,7 +1368,7 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 			fixture.detectChanges();
 
-			expect(fixture.componentInstance.select.dropdownPanel.items.length).toBe(3);
+			expect(fixture.componentInstance.select.dropdownPanel.items().length).toBe(3);
 			let options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
 			expect(options.length).toBe(3);
 			expect(options[0].innerText).toBe('Vilnius');
@@ -1495,7 +1495,7 @@ describe('NgSelectComponent', () => {
 			fixture.detectChanges();
 
 			fixture.whenStable().then(() => {
-				expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+				expect(fixture.componentInstance.select.isOpen()).toBeFalsy();
 			});
 		}));
 
@@ -1508,7 +1508,7 @@ describe('NgSelectComponent', () => {
 			);
 
 			expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(0);
-			expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+			expect(fixture.componentInstance.select.isOpen()).toBeFalsy();
 
 			const cmp = fixture.componentInstance;
 
@@ -1516,7 +1516,7 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 
 			expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(0);
-			expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+			expect(fixture.componentInstance.select.isOpen()).toBeTruthy();
 
 			const outsideClick = spyOn(cmp.select.dropdownPanel.outsideClick, 'emit');
 			expect(outsideClick).not.toHaveBeenCalled();
@@ -1530,7 +1530,7 @@ describe('NgSelectComponent', () => {
 
 			fixture.whenStable().then(() => {
 				expect(outsideClick).not.toHaveBeenCalled();
-				expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+				expect(fixture.componentInstance.select.isOpen()).toBeFalsy();
 				expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(1);
 			});
 		}));
@@ -1549,7 +1549,7 @@ describe('NgSelectComponent', () => {
 			fixture.detectChanges();
 
 			fixture.whenStable().then(() => {
-				expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+				expect(fixture.componentInstance.select.isOpen()).toBeTruthy();
 			});
 		}));
 
@@ -1566,7 +1566,7 @@ describe('NgSelectComponent', () => {
 			selectOption(fixture, KeyCode.ArrowDown, 0);
 			tickAndDetectChanges(fixture);
 
-			expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+			expect(fixture.componentInstance.select.isOpen()).toBeTruthy();
 		}));
 
 		it('should remove appended dropdown when it is destroyed', waitForAsync(() => {
@@ -1627,14 +1627,14 @@ describe('NgSelectComponent', () => {
 		describe('space', () => {
 			it('should open dropdown', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-				expect(select.isOpen).toBe(true);
+				expect(select.isOpen()).toBe(true);
 			});
 
 			it('should not open dropdown when isOpen is false', () => {
 				const open = spyOn(select, 'open');
 				select.ngOnChanges(<any>{ isOpen: { currentValue: false } });
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-				expect(select.isOpen).toBeFalsy();
+				expect(select.isOpen()).toBeFalsy();
 				expect(open).not.toHaveBeenCalled();
 			});
 
@@ -1755,7 +1755,7 @@ describe('NgSelectComponent', () => {
 			it('should close opened dropdown', () => {
 				select.isOpen = true;
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Esc);
-				expect(select.isOpen).toBe(false);
+				expect(select.isOpen()).toBe(false);
 			});
 		});
 
@@ -1765,7 +1765,7 @@ describe('NgSelectComponent', () => {
 				tick(200);
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
-				expect(select.isOpen).toBeFalsy();
+				expect(select.isOpen()).toBeFalsy();
 			}));
 
 			it('should close dropdown when [selectOnTab]="false"', fakeAsync(() => {
@@ -1774,7 +1774,7 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
 				expect(select.selectedItems).toEqual([]);
-				expect(select.isOpen).toBeFalsy();
+				expect(select.isOpen()).toBeFalsy();
 			}));
 
 			it('should close dropdown and keep selected value', fakeAsync(() => {
@@ -1789,7 +1789,7 @@ describe('NgSelectComponent', () => {
 					}),
 				];
 				expect(select.selectedItems).toEqual(result);
-				expect(select.isOpen).toBeFalsy();
+				expect(select.isOpen()).toBeFalsy();
 			}));
 
 			it('should mark first item on filter when tab', fakeAsync(() => {
@@ -1938,20 +1938,20 @@ describe('NgSelectComponent', () => {
 		describe('enter', () => {
 			it('should open dropdown when it is closed', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
-				expect(select.isOpen).toBe(true);
+				expect(select.isOpen()).toBe(true);
 			});
 
 			it('should select option and close dropdown', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
 				expect(select.selectedItems[0].value).toEqual(fixture.componentInstance.cities[0]);
-				expect(select.isOpen).toBe(false);
+				expect(select.isOpen()).toBe(false);
 			});
 
 			it('should not open dropdown if [openOnEnter]="false"', fakeAsync(() => {
 				select.openOnEnter = false;
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
-				expect(select.isOpen).toBe(false);
+				expect(select.isOpen()).toBe(false);
 			}));
 			it('should clear input when enter pressed while clear button focused', fakeAsync(() => {
 				selectOption(fixture, KeyCode.ArrowDown, 0);
@@ -1986,31 +1986,31 @@ describe('NgSelectComponent', () => {
 
 		it('should close dropdown if opened and clicked outside dropdown container', fakeAsync(() => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+			expect(fixture.componentInstance.select.isOpen()).toBeTruthy();
 			document.getElementById('outside').click();
 			const event = new MouseEvent('mousedown', { bubbles: true });
 			document.getElementById('outside').dispatchEvent(event);
 			tickAndDetectChanges(fixture);
-			expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+			expect(fixture.componentInstance.select.isOpen()).toBeFalsy();
 		}));
 
 		it('should close dropdown if opened and touched outside dropdown container', fakeAsync(() => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+			expect(fixture.componentInstance.select.isOpen()).toBeTruthy();
 			const event = new TouchEvent('touchstart', { bubbles: true });
 			document.getElementById('outside').dispatchEvent(event);
 			tickAndDetectChanges(fixture);
-			expect(fixture.componentInstance.select.isOpen).toBeFalsy();
+			expect(fixture.componentInstance.select.isOpen()).toBeFalsy();
 		}));
 
 		it('should prevent dropdown close if clicked on select', fakeAsync(() => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			expect(select.isOpen).toBeTruthy();
+			expect(select.isOpen()).toBeTruthy();
 			document.getElementById('select').click();
 			const event = new MouseEvent('mousedown', { bubbles: true });
 			document.getElementById('select').dispatchEvent(event);
 			tickAndDetectChanges(fixture);
-			expect(select.isOpen).toBeTruthy();
+			expect(select.isOpen()).toBeTruthy();
 		}));
 	});
 
@@ -2024,7 +2024,7 @@ describe('NgSelectComponent', () => {
 
 			const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
 			const panelClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-dropdown-panel').classList;
-			expect(select.dropdownPosition).toBe('auto');
+			expect(select.dropdownPosition()).toBe('auto');
 			expect(selectClasses.contains('ng-select-bottom')).toBeTruthy();
 			expect(panelClasses.contains('ng-select-bottom')).toBeTruthy();
 			expect(selectClasses.contains('ng-select-top')).toBeFalsy();
@@ -2040,7 +2040,7 @@ describe('NgSelectComponent', () => {
 
 			const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
 			const panelClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-dropdown-panel').classList;
-			expect(select.dropdownPosition).toBe('top');
+			expect(select.dropdownPosition()).toBe('top');
 			expect(selectClasses.contains('ng-select-bottom')).toBeFalsy();
 			expect(panelClasses.contains('ng-select-bottom')).toBeFalsy();
 			expect(selectClasses.contains('ng-select-top')).toBeTruthy();
@@ -2056,7 +2056,7 @@ describe('NgSelectComponent', () => {
 
 			const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
 			const panelClasses = document.querySelector('.ng-dropdown-panel').classList;
-			expect(select.dropdownPosition).toBe('auto');
+			expect(select.dropdownPosition()).toBe('auto');
 			expect(selectClasses.contains('ng-select-bottom')).toBeTruthy();
 			expect(panelClasses.contains('ng-select-bottom')).toBeTruthy();
 			expect(selectClasses.contains('ng-select-top')).toBeFalsy();
@@ -2489,7 +2489,7 @@ describe('NgSelectComponent', () => {
 				tickAndDetectChanges(fixture);
 				clickArrow();
 				tickAndDetectChanges(fixture);
-				expect(fixture.componentInstance.select.isOpen).toBe(false);
+				expect(fixture.componentInstance.select.isOpen()).toBe(false);
 				expect((<NgOption[]>fixture.componentInstance.select.selectedItems).length).toBe(2);
 			}));
 		});
@@ -2507,7 +2507,7 @@ describe('NgSelectComponent', () => {
 				selectOption(fixture, KeyCode.ArrowDown, 1);
 				expect(select.selectedItems.length).toBe(3);
 				expect(select.itemsList.filteredItems.length).toBe(0);
-				expect(select.isOpen).toBeFalsy();
+				expect(select.isOpen()).toBeFalsy();
 			}));
 
 			it('should not open dropdown when all items are selected', fakeAsync(() => {
@@ -2516,7 +2516,7 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 				expect(select.selectedItems.length).toBe(3);
 				expect(select.itemsList.filteredItems.length).toBe(0);
-				expect(select.isOpen).toBeFalsy();
+				expect(select.isOpen()).toBeFalsy();
 			}));
 
 			it('should open dropdown when all items are selected and tagging is enabled', fakeAsync(() => {
@@ -2524,13 +2524,13 @@ describe('NgSelectComponent', () => {
 				fixture.componentInstance.cities = [];
 				tickAndDetectChanges(fixture);
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-				expect(select.isOpen).toBeTruthy();
+				expect(select.isOpen()).toBeTruthy();
 			}));
 
 			it('should not insert option back to list if it is newly created option', fakeAsync(() => {
 				select.addTag = true;
 				select.typeahead = new Subject();
-				select.typeahead.subscribe();
+				select.typeahead().subscribe();
 				fixture.componentInstance.cities = [];
 				tickAndDetectChanges(fixture);
 				fixture.componentInstance.select.filter('New item');
@@ -3074,12 +3074,12 @@ describe('NgSelectComponent', () => {
 			// open
 			selectInput.triggerEventHandler('mousedown', createEvent());
 			tickAndDetectChanges(fixture);
-			expect(fixture.componentInstance.select.isOpen).toBe(true);
+			expect(fixture.componentInstance.select.isOpen()).toBe(true);
 
 			// close
 			selectInput.triggerEventHandler('mousedown', createEvent());
 			tickAndDetectChanges(fixture);
-			expect(fixture.componentInstance.select.isOpen).toBe(false);
+			expect(fixture.componentInstance.select.isOpen()).toBe(false);
 		}));
 
 		it('should not filter when searchable false', fakeAsync(() => {
@@ -3364,7 +3364,7 @@ describe('NgSelectComponent', () => {
 				tickAndDetectChanges(fixture);
 				fixture.componentInstance.filter.subscribe();
 				fixture.componentInstance.select.open();
-				expect(fixture.componentInstance.select.isOpen).toBeTruthy();
+				expect(fixture.componentInstance.select.isOpen()).toBeTruthy();
 			}));
 
 			describe('search text', () => {
@@ -3451,7 +3451,7 @@ describe('NgSelectComponent', () => {
 				);
 
 				expect(fixture.componentInstance.select.clearSearchOnAdd).toBeFalsy();
-				expect(fixture.componentInstance.select.closeOnSelect).toBeFalsy();
+				expect(fixture.componentInstance.select.closeOnSelect()).toBeFalsy();
 
 				fixture.componentInstance.filter.subscribe();
 				fixture.componentInstance.select.filter('new');
@@ -3478,7 +3478,7 @@ describe('NgSelectComponent', () => {
 				);
 
 				expect(fixture.componentInstance.select.clearSearchOnAdd).toBeTruthy();
-				expect(fixture.componentInstance.select.closeOnSelect).toBeFalsy();
+				expect(fixture.componentInstance.select.closeOnSelect()).toBeFalsy();
 
 				let lastEmittedSearchTerm = '';
 				fixture.componentInstance.filter.subscribe((value) => {
@@ -3563,7 +3563,7 @@ describe('NgSelectComponent', () => {
                         [(ngModel)]="selectedCity">
                     </ng-select>`,
 				);
-				expect(fixture.componentInstance.select.editableSearchTerm).toBeTruthy();
+				expect(fixture.componentInstance.select.editableSearchTerm()).toBeTruthy();
 				const select = fixture.componentInstance.select;
 				const input = select.searchInput.nativeElement;
 				const selectedCity = fixture.componentInstance.cities[0];
@@ -3604,7 +3604,7 @@ describe('NgSelectComponent', () => {
 				input.blur();
 				select.close();
 				tickAndDetectChanges(fixture);
-				expect(select.isOpen).toBeFalsy();
+				expect(select.isOpen()).toBeFalsy();
 				input.value = '';
 				input.focus();
 				input.dispatchEvent(new Event('input'));
@@ -4027,7 +4027,7 @@ describe('NgSelectComponent', () => {
 			it('should not open dropdown', fakeAsync(() => {
 				triggerMousedown();
 				tickAndDetectChanges(fixture);
-				expect(fixture.componentInstance.select.isOpen).toBe(false);
+				expect(fixture.componentInstance.select.isOpen()).toBe(false);
 			}));
 
 			it('clear button should not appear if select is disabled', fakeAsync(() => {
@@ -4076,7 +4076,7 @@ describe('NgSelectComponent', () => {
 			it('should not open dropdown', fakeAsync(() => {
 				triggerMousedown();
 				tickAndDetectChanges(fixture);
-				expect(select.isOpen).toBe(false);
+				expect(select.isOpen()).toBe(false);
 			}));
 
 			it('should focus dropdown while unselecting', fakeAsync(() => {
@@ -4114,17 +4114,17 @@ describe('NgSelectComponent', () => {
 				// open
 				triggerMousedown();
 				tickAndDetectChanges(fixture);
-				expect(fixture.componentInstance.select.isOpen).toBe(true);
+				expect(fixture.componentInstance.select.isOpen()).toBe(true);
 
 				// close
 				triggerMousedown();
 				tickAndDetectChanges(fixture);
-				expect(fixture.componentInstance.select.isOpen).toBe(false);
+				expect(fixture.componentInstance.select.isOpen()).toBe(false);
 
 				// open
 				triggerMousedown();
 				tickAndDetectChanges(fixture);
-				expect(fixture.componentInstance.select.isOpen).toBe(true);
+				expect(fixture.componentInstance.select.isOpen()).toBe(true);
 			}));
 		});
 	});

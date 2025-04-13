@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { DataService, Person } from '../data.service';
 import { NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
@@ -9,10 +9,15 @@ import { NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-sele
 	imports: [NgSelectComponent, NgOptionTemplateDirective],
 })
 export class SearchCustomExampleComponent implements OnInit {
+	private dataService = inject(DataService);
+
 	people: Person[] = [];
 	peopleLoading = false;
 
-	constructor(private dataService: DataService) {}
+	/** Inserted by Angular inject() migration for backwards compatibility */
+	constructor(...args: unknown[]);
+
+	constructor() {}
 
 	ngOnInit() {
 		this.loadPeople();

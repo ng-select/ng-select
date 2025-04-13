@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
@@ -12,10 +12,15 @@ import { AsyncPipe, SlicePipe } from '@angular/common';
 	imports: [NgSelectComponent, FormsModule, NgMultiLabelTemplateDirective, AsyncPipe, SlicePipe],
 })
 export class MultiSelectCustomExampleComponent implements OnInit {
+	private dataService = inject(DataService);
+
 	githubUsers$: Observable<any[]>;
 	selectedUsers = ['anjmao', 'anjmittu', 'anjmendoza'];
 
-	constructor(private dataService: DataService) {}
+	/** Inserted by Angular inject() migration for backwards compatibility */
+	constructor(...args: unknown[]);
+
+	constructor() {}
 
 	ngOnInit() {
 		this.githubUsers$ = this.dataService.getGithubAccounts('anjm');

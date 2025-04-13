@@ -1,15 +1,18 @@
 import {
-	AfterViewChecked,
 	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
+	computed,
 	ElementRef,
-	Input,
-	OnChanges,
-	OnDestroy,
-	SimpleChanges,
+	inject,
+	input,
 } from '@angular/core';
-import { Subject } from 'rxjs';
+
+type StateChange = {
+	value: any;
+	disabled: boolean;
+	label?: string;
+}
 
 @Component({
 	selector: 'ng-option',
@@ -17,41 +20,23 @@ import { Subject } from 'rxjs';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	template: `<ng-content />`,
 })
-export class NgOptionComponent implements OnChanges, AfterViewChecked, OnDestroy {
-	@Input() value: any;
-	@Input({ transform: booleanAttribute }) disabled: boolean = false;
+export class NgOptionComponent {
+	public readonly value = input<any>();
+	public readonly disabled = input(false, {
+		transform: booleanAttribute,
+	});
 
-	readonly stateChange$ = new Subject<{ value: any; disabled: boolean; label?: string }>();
+	public readonly stateChange = computed<StateChange | undefined>(() => {
+		return {
+			value: this.value(),
+			disabled: this.disabled(),
+			label: this.elementRef.nativeElement.innerHTML,
+		}
+	});
 
-	private _previousLabel: string;
-
-	constructor(public elementRef: ElementRef<HTMLElement>) {}
+	public elementRef = inject(ElementRef<HTMLElement>);
 
 	get label(): string {
 		return (this.elementRef.nativeElement.textContent || '').trim();
-	}
-
-	ngOnChanges(changes: SimpleChanges) {
-		if (changes.disabled) {
-			this.stateChange$.next({
-				value: this.value,
-				disabled: this.disabled,
-			});
-		}
-	}
-
-	ngAfterViewChecked() {
-		if (this.label !== this._previousLabel) {
-			this._previousLabel = this.label;
-			this.stateChange$.next({
-				value: this.value,
-				disabled: this.disabled,
-				label: this.elementRef.nativeElement.innerHTML,
-			});
-		}
-	}
-
-	ngOnDestroy() {
-		this.stateChange$.complete();
 	}
 }
