@@ -1,13 +1,13 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { DataService } from '../data.service';
-import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
 import { FormsModule } from '@angular/forms';
 import {
 	NgLoadingTextTemplateDirective,
 	NgNotFoundTemplateDirective,
 	NgTypeToSearchTemplateDirective,
 } from '../../../../ng-select/lib/ng-templates.directive';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-template-display-example',

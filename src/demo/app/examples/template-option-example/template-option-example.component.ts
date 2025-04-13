@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
 import { FormsModule } from '@angular/forms';
 import { NgOptionTemplateDirective } from '../../../../ng-select/lib/ng-templates.directive';
 import { NgOptionHighlightDirective } from '../../../../ng-option-highlight/lib/ng-option-highlight.directive';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-template-option-example',

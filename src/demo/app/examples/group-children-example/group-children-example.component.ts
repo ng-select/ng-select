@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
 import { FormsModule } from '@angular/forms';
 import { NgOptgroupTemplateDirective, NgOptionTemplateDirective } from '../../../../ng-select/lib/ng-templates.directive';
 import { JsonPipe } from '@angular/common';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-group-children-example',

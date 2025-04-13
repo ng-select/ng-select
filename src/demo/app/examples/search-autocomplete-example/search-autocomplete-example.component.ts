@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { concat, Observable, of, Subject } from 'rxjs';
 import { DataService, Person } from '../data.service';
 import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
-import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, JsonPipe } from '@angular/common';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-search-autocomplete-example',
