@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
 import { FormsModule } from '@angular/forms';
 import { NgOptionComponent } from '../../../../ng-select/lib/ng-option.component';
 import { JsonPipe } from '@angular/common';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-data-source-options-example',

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
 import { NgOptionComponent } from '../../../../ng-select/lib/ng-option.component';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-fixed-placeholder-example',
