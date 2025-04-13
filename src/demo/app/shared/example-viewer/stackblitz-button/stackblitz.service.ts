@@ -5,7 +5,7 @@ import sdk, { Project } from '@stackblitz/sdk';
 const EXAMPLE_PATH = '/ng-select/examples/';
 const TEMPLATE_PATH = '/ng-select/assets/stackblitz/';
 
-const TEMPLATE_FILES = ['index.html', 'styles.css', 'polyfills.ts', 'data.service.ts', 'main.ts', 'app.module.ts', 'angular.json'];
+const TEMPLATE_FILES = ['index.html', 'styles.css', 'polyfills.ts', 'data.service.ts', 'main.ts', 'app.component.ts', 'angular.json'];
 
 const angularVersion = '>=15.0.0';
 const dependencies = {
@@ -36,6 +36,14 @@ export class StackblitzService {
 
 	constructor(private _http: HttpClient) {}
 
+	private get _exampleImport() {
+		return `import { ${this._componentName} } from \'./src/${this._exampleName}.component\'`;
+	}
+
+	private get _exampleTemplate() {
+		return `<ng-${this._exampleName}></ng-${this._exampleName}>`;
+	}
+
 	async openNewProject(example: string) {
 		this._mapExamplePath(example);
 
@@ -60,7 +68,7 @@ export class StackblitzService {
 		const files: { [path: string]: string } = {};
 		for (const file of TEMPLATE_FILES) {
 			let fileResult = await this._readFile(file, TEMPLATE_PATH);
-			if (file.includes('app.module')) {
+			if (file.includes('app.component')) {
 				fileResult = fileResult.replace('//example-import', this._exampleImport);
 				fileResult = fileResult.replace('//example-template', this._exampleTemplate);
 				fileResult = fileResult.replace('//example-cmp', this._componentName);
@@ -95,13 +103,5 @@ export class StackblitzService {
 			.split('-')
 			.map((x) => toUpperCase(x))
 			.join('')}Component`;
-	}
-
-	private get _exampleImport() {
-		return `import { ${this._componentName} } from \'./src/${this._exampleName}.component\'`;
-	}
-
-	private get _exampleTemplate() {
-		return `<ng-${this._exampleName}></ng-${this._exampleName}>`;
 	}
 }
