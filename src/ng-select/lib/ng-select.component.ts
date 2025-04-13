@@ -334,6 +334,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 				this._setItems([...this.items]);
 			}
 		}
+		if (changes.inputAttrs) {
+			this._setInputAttributes();
+		}
 	}
 
 	ngAfterViewInit() {
