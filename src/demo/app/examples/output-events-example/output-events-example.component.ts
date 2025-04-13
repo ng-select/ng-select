@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
-import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
 import { FormsModule } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 interface Event {
 	name: string;

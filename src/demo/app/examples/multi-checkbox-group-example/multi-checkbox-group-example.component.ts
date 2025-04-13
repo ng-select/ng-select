@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService, Person } from '../data.service';
 import { map } from 'rxjs/operators';
-import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
 import { FormsModule } from '@angular/forms';
 import { NgOptgroupTemplateDirective, NgOptionTemplateDirective } from '../../../../ng-select/lib/ng-templates.directive';
 import { UpperCasePipe } from '@angular/common';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-multi-checkbox-group-example',

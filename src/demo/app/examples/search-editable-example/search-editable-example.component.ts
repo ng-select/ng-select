@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService, Person } from '../data.service';
 import { Observable } from 'rxjs';
-import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-app-search-editable-example',

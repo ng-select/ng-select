@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { NgSelectComponent } from '../../../../ng-select/lib/ng-select.component';
 import { NgLoadingSpinnerTemplateDirective } from '../../../../ng-select/lib/ng-templates.directive';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-template-loading-example',
