@@ -5,9 +5,9 @@ import { FormsModule } from '@angular/forms';
 import {
 	NgLoadingTextTemplateDirective,
 	NgNotFoundTemplateDirective,
+	NgSelectComponent,
 	NgTypeToSearchTemplateDirective,
-} from '../../../../ng-select/lib/ng-templates.directive';
-import { NgSelectComponent } from '@ng-select/ng-select';
+} from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-template-display-example',
