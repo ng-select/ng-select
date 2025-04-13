@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgOptionComponent } from '../../../../ng-select/lib/ng-option.component';
-import { NgSelectComponent } from '@ng-select/ng-select';
+import { NgOptionComponent, NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-forms-with-options-example',

@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgSelectComponent } from '@ng-select/ng-select';
+import { NgOptionTemplateDirective, NgSelectComponent, NgSelectComponent as NgSelectComponent_1 } from '@ng-select/ng-select';
 import { delay } from 'rxjs/operators';
 import { DataService } from '../data.service';
-import { NgSelectComponent as NgSelectComponent_1 } from '../../../../ng-select/lib/ng-select.component';
-import { NgOptionTemplateDirective } from '../../../../ng-select/lib/ng-templates.directive';
-import { NgOptionHighlightDirective } from '../../../../ng-option-highlight/lib/ng-option-highlight.directive';
+import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
 
 @Component({
 	selector: 'ng-forms-async-data-example',
