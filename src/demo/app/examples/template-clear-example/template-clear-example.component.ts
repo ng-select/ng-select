@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgClearButtonTemplateDirective } from '../../../../ng-select/lib/ng-templates.directive';
-import { NgSelectComponent } from '@ng-select/ng-select';
+import { NgClearButtonTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-template-clear-example',

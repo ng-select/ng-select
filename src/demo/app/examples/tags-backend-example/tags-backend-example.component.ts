@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgTagTemplateDirective } from '../../../../ng-select/lib/ng-templates.directive';
-import { NgSelectComponent } from '@ng-select/ng-select';
+import { NgSelectComponent, NgTagTemplateDirective } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-tags-backend-example',
