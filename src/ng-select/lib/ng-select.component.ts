@@ -14,6 +14,7 @@ import {
 	HostListener,
 	Inject,
 	InjectionToken,
+	input,
 	Input,
 	numberAttribute,
 	OnChanges,
@@ -98,6 +99,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() appearance: string;
 	@Input() dropdownPosition: DropdownPosition = 'auto';
 	@Input() appendTo: string;
+	@Input() tabFocusOnClear: boolean;
 	@Input({ transform: booleanAttribute }) loading = false;
 	@Input({ transform: booleanAttribute }) closeOnSelect = true;
 	@Input({ transform: booleanAttribute }) hideSelected = false;
@@ -116,6 +118,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() labelForId = null;
 	@Input() inputAttrs: { [key: string]: string } = {};
 	@Input({ transform: numberAttribute }) tabIndex: number;
+	readonly tabFocusOnClearButton = input(false, { transform: booleanAttribute });
 	@Input({ transform: booleanAttribute }) readonly = false;
 	@Input({ transform: booleanAttribute }) searchWhileComposing = true;
 	@Input({ transform: numberAttribute }) minTermLength = 0;
@@ -941,7 +944,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _handleTab($event: KeyboardEvent) {
 		if (this.isOpen === false) {
-			if (this.showClear() && !$event.shiftKey) {
+			if (this.showClear() && !$event.shiftKey && (this.tabFocusOnClear || this.tabFocusOnClearButton())) {
 				this.focusOnClear();
 				$event.preventDefault();
 			} else if (!this.addTag) {
@@ -1052,5 +1055,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.bindValue = this.bindValue || config.bindValue;
 		this.bindLabel = this.bindLabel || config.bindLabel;
 		this.appearance = this.appearance || config.appearance;
+		this.tabFocusOnClear = this.tabFocusOnClear || config.tabFocusOnClear;
 	}
 }

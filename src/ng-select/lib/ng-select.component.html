@@ -65,7 +65,7 @@
 		@if (clearButtonTemplate) {
 			<ng-container [ngTemplateOutlet]="clearButtonTemplate"></ng-container>
 		} @else {
-			<span class="ng-clear-wrapper" role="button" tabindex="0" title="{{ clearAllText }}" #clearButton>
+			<span class="ng-clear-wrapper" role="button" [attr.tabindex]="(tabFocusOnClear || tabFocusOnClearButton()) ? 0 : -1" title="{{ clearAllText }}" #clearButton>
 				<span class="ng-clear" aria-hidden="true">×</span>
 			</span>
 		}
