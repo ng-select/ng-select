@@ -943,7 +943,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _handleTab($event: KeyboardEvent) {
 		if (this.isOpen === false) {
-			if (this.showClear() && !$event.shiftKey && (this.tabFocusOnClearButton() || this.config.tabFocusOnClearButton)) {
+			if (this.showClear() && !$event.shiftKey && this.tabFocusOnClearButton()) {
 				this.focusOnClear();
 				$event.preventDefault();
 			} else if (!this.addTag) {

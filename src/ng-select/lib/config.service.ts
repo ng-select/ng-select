@@ -17,5 +17,4 @@ export class NgSelectConfig {
 	appearance = 'underline';
 	clearSearchOnAdd: boolean;
 	deselectOnClick: boolean;
-	tabFocusOnClearButton = true;
 }

@@ -1826,7 +1826,7 @@ describe('NgSelectComponent', () => {
 				expect(focusOnClear).toHaveBeenCalled();
 			}));
 
-			it('should not focus on clear button when tab pressed if [tabFocusOnClear]="false"', fakeAsync(() => {
+			it('should not focus on clear button when tab pressed if [tabFocusOnClearButton]="false"', fakeAsync(() => {
 				fixture.componentInstance.tabFocusOnClearButton = false;
 				selectOption(fixture, KeyCode.ArrowDown, 0);
 				tickAndDetectChanges(fixture);
