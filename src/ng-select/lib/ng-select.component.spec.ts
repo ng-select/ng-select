@@ -397,7 +397,10 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.cities = [
 				{ id: 1, name: 'Vilnius' },
 				{ id: 2, name: 'Kaunas' },
-				{ id: 3, name: 'Pabrade' },
+				{
+					id: 3,
+					name: 'Pabrade',
+				},
 			];
 			tickAndDetectChanges(fixture);
 			const vilnius = select.itemsList.items[0];
@@ -424,14 +427,20 @@ describe('NgSelectComponent', () => {
 			];
 			tickAndDetectChanges(fixture);
 			expect(select.selectedItems).toEqual([
-				jasmine.objectContaining({ label: 'Vilnius', value: { id: 1, name: 'Vilnius' } }),
+				jasmine.objectContaining({
+					label: 'Vilnius',
+					value: { id: 1, name: 'Vilnius' },
+				}),
 				jasmine.objectContaining({ label: 'Kaunas', value: { id: 2, name: 'Kaunas' } }),
 			]);
 
 			fixture.componentInstance.cities = [
 				{ id: 1, name: 'Vilnius' },
 				{ id: 2, name: 'Kaunas' },
-				{ id: 3, name: 'Pabrade' },
+				{
+					id: 3,
+					name: 'Pabrade',
+				},
 			];
 			tickAndDetectChanges(fixture);
 			const vilnius = select.itemsList.items[0];
@@ -3276,7 +3285,10 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.cities = [
 				{ id: 1, name: 'Vilnius' },
 				{ id: 2, name: 'Kaunas' },
-				{ id: 3, name: 'Pabrade' },
+				{
+					id: 3,
+					name: 'Pabrade',
+				},
 				{ id: 4, name: 'Bruchhausen-Vilsen' },
 			];
 			tickAndDetectChanges(fixture);
@@ -4445,9 +4457,18 @@ describe('Grouping', () => {
 		tickAndDetectChanges(fixture);
 
 		fixture.componentInstance.accounts.push(
-			<any>{ name: 'Henry', email: 'henry@email.com', age: 10 },
+			<any>{
+				name: 'Henry',
+				email: 'henry@email.com',
+				age: 10,
+			},
 			<any>{ name: 'Meg', email: 'meg@email.com', age: 7, country: null },
-			<any>{ name: 'Meg', email: 'meg@email.com', age: 7, country: '' },
+			<any>{
+				name: 'Meg',
+				email: 'meg@email.com',
+				age: 7,
+				country: '',
+			},
 		);
 		fixture.componentInstance.accounts = [...fixture.componentInstance.accounts];
 		tickAndDetectChanges(fixture);
@@ -4775,7 +4796,10 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
 		declarations: [cmp],
 		providers: [
 			{ provide: ErrorHandler, useClass: TestsErrorHandler },
-			{ provide: NgZone, useFactory: () => new MockNgZone() },
+			{
+				provide: NgZone,
+				useFactory: () => new MockNgZone(),
+			},
 			{ provide: ConsoleService, useFactory: () => new MockConsole() },
 		],
 	}).overrideComponent(cmp, {
@@ -4843,14 +4867,20 @@ class NgSelectTestComponent {
 	readonlyCities: readonly any[] = [
 		{ id: 1, name: 'Vilnius' },
 		{ id: 2, name: 'Kaunas' },
-		{ id: 3, name: 'Pabrade' },
+		{
+			id: 3,
+			name: 'Pabrade',
+		},
 	] as const;
 	citiesNames = this.cities.map((x) => x.name);
 
 	selectedCountry: any;
 	countries = [
 		{ id: 1, description: { name: 'Lithuania', id: 'a' } },
-		{ id: 2, description: { name: 'USA', id: 'b' } },
+		{
+			id: 2,
+			description: { name: 'USA', id: 'b' },
+		},
 		{ id: 3, description: { name: 'Australia', id: 'c' } },
 	];
 	keyDownFn = () => {};
@@ -4916,15 +4946,69 @@ class NgSelectGroupingTestComponent {
 	selectedAccountName = 'Adam';
 	selectedAccount = null;
 	accounts = [
-		{ name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { name: 'c1' } },
-		{ name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States', child: { name: 'c1' } },
-		{ name: 'Amalie', email: 'amalie@email.com', age: 12, country: 'Argentina', child: { name: 'c1' } },
-		{ name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina', child: { name: 'c1' } },
-		{ name: 'Adrian', email: 'adrian@email.com', age: 21, country: 'Ecuador', child: { name: 'c1' } },
-		{ name: 'Wladimir', email: 'wladimir@email.com', age: 30, country: 'Ecuador', child: { name: 'c2' } },
-		{ name: 'Natasha', email: 'natasha@email.com', age: 54, country: 'Ecuador', child: { name: 'c2' } },
-		{ name: 'Nicole', email: 'nicole@email.com', age: 43, country: 'Colombia', child: { name: 'c2' } },
-		{ name: 'Michael', email: 'michael@email.com', age: 15, country: 'Colombia', child: { name: 'c2' } },
+		{
+			name: 'Adam',
+			email: 'adam@email.com',
+			age: 12,
+			country: 'United States',
+			child: { name: 'c1' },
+		},
+		{
+			name: 'Samantha',
+			email: 'samantha@email.com',
+			age: 30,
+			country: 'United States',
+			child: { name: 'c1' },
+		},
+		{
+			name: 'Amalie',
+			email: 'amalie@email.com',
+			age: 12,
+			country: 'Argentina',
+			child: { name: 'c1' },
+		},
+		{
+			name: 'Estefanía',
+			email: 'estefania@email.com',
+			age: 21,
+			country: 'Argentina',
+			child: { name: 'c1' },
+		},
+		{
+			name: 'Adrian',
+			email: 'adrian@email.com',
+			age: 21,
+			country: 'Ecuador',
+			child: { name: 'c1' },
+		},
+		{
+			name: 'Wladimir',
+			email: 'wladimir@email.com',
+			age: 30,
+			country: 'Ecuador',
+			child: { name: 'c2' },
+		},
+		{
+			name: 'Natasha',
+			email: 'natasha@email.com',
+			age: 54,
+			country: 'Ecuador',
+			child: { name: 'c2' },
+		},
+		{
+			name: 'Nicole',
+			email: 'nicole@email.com',
+			age: 43,
+			country: 'Colombia',
+			child: { name: 'c2' },
+		},
+		{
+			name: 'Michael',
+			email: 'michael@email.com',
+			age: 15,
+			country: 'Colombia',
+			child: { name: 'c2' },
+		},
 		{ name: 'Nicolás', email: 'nicole@email.com', age: 43, country: 'Colombia', child: { name: 'c2' } },
 	];
 	groupedAccounts = [
@@ -4932,21 +5016,33 @@ class NgSelectGroupingTestComponent {
 			country: 'United States',
 			accounts: [
 				{ name: 'Adam', email: 'adam@email.com', age: 12 },
-				{ name: 'Samantha', email: 'samantha@email.com', age: 30 },
+				{
+					name: 'Samantha',
+					email: 'samantha@email.com',
+					age: 30,
+				},
 			],
 		},
 		{
 			country: 'Argentina',
 			accounts: [
 				{ name: 'Amalie', email: 'amalie@email.com', age: 12 },
-				{ name: 'Estefanía', email: 'estefania@email.com', age: 21 },
+				{
+					name: 'Estefanía',
+					email: 'estefania@email.com',
+					age: 21,
+				},
 			],
 		},
 		{
 			country: 'Ecuador',
 			accounts: [
 				{ name: 'Adrian', email: 'adrian@email.com', age: 21 },
-				{ name: 'Wladimir', email: 'wladimir@email.com', age: 30 },
+				{
+					name: 'Wladimir',
+					email: 'wladimir@email.com',
+					age: 30,
+				},
 				{ name: 'Natasha', email: 'natasha@email.com', age: 54 },
 			],
 		},
@@ -4954,7 +5050,11 @@ class NgSelectGroupingTestComponent {
 			country: 'Colombia',
 			accounts: [
 				{ name: 'Nicole', email: 'nicole@email.com', age: 43 },
-				{ name: 'Michael', email: 'michael@email.com', age: 15 },
+				{
+					name: 'Michael',
+					email: 'michael@email.com',
+					age: 15,
+				},
 				{ name: 'Nicolás', email: 'nicole@email.com', age: 43 },
 			],
 		},

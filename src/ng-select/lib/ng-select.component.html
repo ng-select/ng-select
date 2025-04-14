@@ -63,17 +63,17 @@
 
 	@if (showClear()) {
 		@if (clearButtonTemplate) {
-		<ng-container [ngTemplateOutlet]="clearButtonTemplate"></ng-container>
+			<ng-container [ngTemplateOutlet]="clearButtonTemplate"></ng-container>
 		} @else {
-		<span class="ng-clear-wrapper"
-			  role="button"
-			  tabindex="0"
-			  [attr.tabindex]="tabFocusOnClearButton() ? 0 : null"
-			  title="{{ clearAllText }}"
-			  #clearButton>
-			<span class="ng-clear"
-				  aria-hidden="true">×</span>
-		</span>
+			<span
+				class="ng-clear-wrapper"
+				role="button"
+				tabindex="0"
+				[attr.tabindex]="tabFocusOnClearButton() ? 0 : -1"
+				title="{{ clearAllText }}"
+				#clearButton>
+				<span class="ng-clear" aria-hidden="true">×</span>
+			</span>
 		}
 	}
 
