@@ -283,7 +283,7 @@ map: {
 Ng-select allows to provide custom selection implementation using `SELECTION_MODEL_FACTORY`. To override [default](https://github.com/ng-select/ng-select/blob/master/src/ng-select/lib/selection-model.ts) logic provide your factory method in your angular module.
 
 ```javascript
-// app.module.ts
+// app.module.ts.ts
 providers: [
     { provide: SELECTION_MODEL_FACTORY, useValue: <SelectionModelFactory>CustomSelectionFactory }
 ]
