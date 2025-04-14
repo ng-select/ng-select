@@ -117,7 +117,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() labelForId = null;
 	@Input() inputAttrs: { [key: string]: string } = {};
 	@Input({ transform: numberAttribute }) tabIndex: number;
-	tabFocusOnClearButton = input(true, { transform: booleanAttribute });
+	@Input({ transform: booleanAttribute }) tabFocusOnClearButton?: boolean;
 	@Input({ transform: booleanAttribute }) readonly = false;
 	@Input({ transform: booleanAttribute }) searchWhileComposing = true;
 	@Input({ transform: numberAttribute }) minTermLength = 0;
@@ -168,6 +168,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	element: HTMLElement;
 	focused: boolean;
 	escapeHTML = true;
+	finalTabFocus = true;
 	private _itemsAreUsed: boolean;
 	private _defaultLabel = 'label';
 	private _primitive;
@@ -319,6 +320,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	ngOnInit() {
 		this._handleKeyPresses();
 		this._setInputAttributes();
+		this._setFinalTabFocus();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -339,6 +341,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (changes.inputAttrs) {
 			this._setInputAttributes();
 		}
+		this._setFinalTabFocus();
 	}
 
 	ngAfterViewInit() {
@@ -874,6 +877,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 	}
 
+	private _setFinalTabFocus() {
+		this.finalTabFocus = this.tabFocusOnClearButton !== undefined
+			? this.tabFocusOnClearButton
+			: this.config.tabFocusOnClear;
+	}
+
 	private _updateNgModel() {
 		const model = [];
 		for (const item of this.selectedItems) {
@@ -943,7 +952,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _handleTab($event: KeyboardEvent) {
 		if (this.isOpen === false) {
-			if (this.showClear() && !$event.shiftKey && this.tabFocusOnClearButton()) {
+			if (this.showClear() && !$event.shiftKey && this.finalTabFocus) {
 				this.focusOnClear();
 				$event.preventDefault();
 			} else if (!this.addTag) {
