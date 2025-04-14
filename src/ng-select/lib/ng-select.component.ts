@@ -14,6 +14,7 @@ import {
 	HostListener,
 	Inject,
 	InjectionToken,
+	input,
 	Input,
 	numberAttribute,
 	OnChanges,
@@ -116,6 +117,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() labelForId = null;
 	@Input() inputAttrs: { [key: string]: string } = {};
 	@Input({ transform: numberAttribute }) tabIndex: number;
+	tabFocusOnClearButton = input(true, { transform: booleanAttribute });
 	@Input({ transform: booleanAttribute }) readonly = false;
 	@Input({ transform: booleanAttribute }) searchWhileComposing = true;
 	@Input({ transform: numberAttribute }) minTermLength = 0;
@@ -941,7 +943,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _handleTab($event: KeyboardEvent) {
 		if (this.isOpen === false) {
-			if (this.showClear() && !$event.shiftKey) {
+			if (this.showClear() && !$event.shiftKey && this.tabFocusOnClearButton()) {
 				this.focusOnClear();
 				$event.preventDefault();
 			} else if (!this.addTag) {
