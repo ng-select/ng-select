@@ -704,7 +704,7 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			fixture.componentInstance.selectedCities = [...fixture.componentInstance.cities.slice(0, 2)];
+			fixture.componentInstance.selectedCities = fixture.componentInstance.cities.slice(0, 2);
 			tickAndDetectChanges(fixture);
 
 			fixture.componentInstance.cities = [{ id: 1, name: 'New city' }];
