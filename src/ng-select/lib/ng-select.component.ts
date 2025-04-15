@@ -359,14 +359,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	@HostListener('keydown', ['$event'])
 	handleKeyDown($event: KeyboardEvent) {
-		const keyCode = KeyCode[$event.which];
-		if (keyCode) {
+		const keyName = $event.key;
+		if (Object.values(KeyCode).includes(keyName as KeyCode)) {
 			if (this.keyDownFn($event) === false) {
 				return;
 			}
 			this.handleKeyCode($event);
-		} else if ($event.key && $event.key.length === 1) {
-			this._keyPress$.next($event.key.toLocaleLowerCase());
+		} else if (keyName && keyName.length === 1) {
+			this._keyPress$.next(keyName.toLocaleLowerCase());
 		}
 	}
 
@@ -381,7 +381,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	handleKeyCodeInput($event: KeyboardEvent) {
-		switch ($event.which) {
+		switch ($event.key) {
 			case KeyCode.ArrowDown:
 				this._handleArrowDown($event);
 				break;
@@ -408,7 +408,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	handleKeyCodeClear($event: KeyboardEvent) {
-		switch ($event.which) {
+		switch ($event.key) {
 			case KeyCode.Enter:
 				this.handleClearClick();
 				$event.preventDefault();

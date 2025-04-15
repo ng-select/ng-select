@@ -1,15 +1,15 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ConsoleService } from './console.service';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
 import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
-import { KeyCode, NgOption } from './ng-select.types';
 import { MockConsole, MockNgZone } from '../testing/mocks';
+import { NgSelectConfig } from './config.service';
+import { ConsoleService } from './console.service';
 import { NgSelectComponent } from './ng-select.component';
 import { NgSelectModule } from './ng-select.module';
-import { Subject } from 'rxjs';
-import { NgSelectConfig } from './config.service';
+import { KeyCode, NgOption } from './ng-select.types';
 
 describe('NgSelectComponent', () => {
 	describe('Data source', () => {
@@ -1938,7 +1938,7 @@ describe('NgSelectComponent', () => {
 			});
 
 			it('should select item using key while not opened', fakeAsync(() => {
-				triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'v');
+				triggerKeyDownEvent(getNgSelectElement(fixture), 'v');
 				tick(200);
 
 				expect(fixture.componentInstance.selectedCity.name).toBe('Vilnius');
@@ -1947,9 +1947,9 @@ describe('NgSelectComponent', () => {
 			it('should mark item using key while opened', fakeAsync(() => {
 				const findByLabel = spyOn(select.itemsList, 'findByLabel');
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-				triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'v');
-				triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'i');
-				triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'l');
+				triggerKeyDownEvent(getNgSelectElement(fixture), 'v');
+				triggerKeyDownEvent(getNgSelectElement(fixture), 'i');
+				triggerKeyDownEvent(getNgSelectElement(fixture), 'l');
 				tick(200);
 
 				expect(fixture.componentInstance.selectedCity).toBeUndefined();
@@ -3118,7 +3118,7 @@ describe('NgSelectComponent', () => {
 
 			const select = fixture.componentInstance.select;
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'v');
+			triggerKeyDownEvent(getNgSelectElement(fixture), 'v');
 			tick(200);
 			fixture.detectChanges();
 
