@@ -1984,7 +1984,7 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
 
 				const handleClearClick = spyOn(select, 'handleClearClick');
-				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter, '', select.clearButton.nativeElement);
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter, select.clearButton.nativeElement);
 				expect(handleClearClick).toHaveBeenCalled();
 			}));
 		});
