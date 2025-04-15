@@ -1060,7 +1060,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	 *  @returns `true` if virtual scroll is enabled, `false` otherwise
 	 */
 	private getVirtualScroll(config: NgSelectConfig): boolean {
-		return isDefined(this.virtualScroll) ? this.virtualScroll : this.getDisableVirtualScroll(config);
+		return isDefined(this.virtualScroll) ? this.virtualScroll : this.isVirtualScrollDisabled(config);
 	}
 
 	/**
@@ -1070,7 +1070,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	 *
 	 *  @returns `true` if disableVirtualScroll is enabled, `false` otherwise
 	 */
-	private getDisableVirtualScroll(config: NgSelectConfig) {
+	private isVirtualScrollDisabled(config: NgSelectConfig) {
 		return isDefined(config.disableVirtualScroll) ? !config.disableVirtualScroll : false;
 	}
 }
