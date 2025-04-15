@@ -117,7 +117,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() labelForId = null;
 	@Input() inputAttrs: { [key: string]: string } = {};
 	@Input({ transform: numberAttribute }) tabIndex: number;
-	@Input({ transform: booleanAttribute }) tabFocusOnClearButton?: boolean;
+	tabFocusOnClearButton = input<boolean | undefined>();
 	@Input({ transform: booleanAttribute }) readonly = false;
 	@Input({ transform: booleanAttribute }) searchWhileComposing = true;
 	@Input({ transform: numberAttribute }) minTermLength = 0;
@@ -320,7 +320,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	ngOnInit() {
 		this._handleKeyPresses();
 		this._setInputAttributes();
-		this._setFinalTabFocus();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -878,8 +877,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	private _setFinalTabFocus() {
-		this.finalTabFocus = this.tabFocusOnClearButton !== undefined
-			? this.tabFocusOnClearButton
+		this.finalTabFocus = this.tabFocusOnClearButton() !== undefined
+			? !!this.tabFocusOnClearButton()
 			: this.config.tabFocusOnClear;
 	}
 
@@ -1063,5 +1062,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.bindValue = this.bindValue || config.bindValue;
 		this.bindLabel = this.bindLabel || config.bindLabel;
 		this.appearance = this.appearance || config.appearance;
+		this._setFinalTabFocus();
 	}
 }
