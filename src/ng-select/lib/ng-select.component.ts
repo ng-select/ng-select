@@ -1,4 +1,4 @@
-import { AfterViewInit, booleanAttribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, forwardRef, HostBinding, HostListener, InjectionToken, Input, numberAttribute, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation, input, output, HostAttributeToken, inject } from '@angular/core';
+import { AfterViewInit, booleanAttribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, forwardRef, HostBinding, HostListener, InjectionToken, Input, numberAttribute, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation, input, output, HostAttributeToken, inject, model } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { merge, Subject } from 'rxjs';
@@ -21,7 +21,7 @@ import {
 	NgTypeToSearchTemplateDirective,
 } from './ng-templates.directive';
 
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { NgSelectConfig } from './config.service';
 import { ConsoleService } from './console.service';
 import { newId } from './id';
@@ -61,12 +61,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	private _cd = inject(ChangeDetectorRef);
 	private _console = inject(ConsoleService);
 
+	readonly bindLabel = model<string>(undefined);
+	readonly bindValue = model<string>(undefined);
+	readonly appearance = model<string>(undefined);
+
 	readonly ariaLabelDropdown = input<string>('Options List');
-	readonly bindLabel = input<string>(undefined);
-	readonly bindValue = input<string>(undefined);
 	readonly ariaLabel = input<string | undefined>(undefined);
 	readonly markFirst = input(true, { transform: booleanAttribute });
-	readonly placeholder = input<string>(undefined);
+	readonly placeholder = input<string>(this.config.placeholder);
 	readonly fixedPlaceholder = input<boolean>(false);
 	readonly notFoundText = input<string>(undefined);
 	readonly typeToSearchText = input<string>(undefined);
@@ -74,14 +76,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly addTagText = input<string>(undefined);
 	readonly loadingText = input<string>(undefined);
 	readonly clearAllText = input<string>(undefined);
-	readonly appearance = input<string>(undefined);
 	readonly dropdownPosition = input<DropdownPosition>('auto');
 	readonly appendTo = input<string>(undefined);
 	readonly loading = input(false, { transform: booleanAttribute });
 	readonly closeOnSelect = input(true, { transform: booleanAttribute });
 	readonly hideSelected = input(false, { transform: booleanAttribute });
 	readonly selectOnTab = input(false, { transform: booleanAttribute });
-	readonly openOnEnter = input<boolean, unknown>(undefined, { transform: booleanAttribute });
+	readonly openOnEnter = input(undefined, { transform: booleanAttribute });
 	readonly maxSelectedItems = input<number, unknown>(undefined, { transform: numberAttribute });
 	readonly groupBy = input<string | ((value: any) => any)>(undefined);
 	readonly groupValue = input<GroupValueFn>(undefined);
@@ -113,11 +114,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@HostBinding('class.ng-select-clearable')
 	readonly clearable = input(true, { transform: booleanAttribute });
 	@HostBinding('class.ng-select-opened')
-	readonly isOpen = input<boolean>(false);
+	readonly isOpen = model<boolean>(false);
 	// output events
 	readonly blurEvent = output({ alias: 'blur' });
 	readonly focusEvent = output({ alias: 'focus' });
-	readonly changeEvent = output({ alias: 'change' });
+	readonly changeEvent = output<any>({ alias: 'change' });
 	readonly openEvent = output({ alias: 'open' });
 	readonly closeEvent = output({ alias: 'close' });
 	readonly searchEvent = output<{
@@ -297,7 +298,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		return term && term.length >= this.minTermLength();
 	}
 
-	readonly keyDownFn = input((_: KeyboardEvent) => true);
+	readonly keyDownFn = input<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true);
 
 	clearItem = (item: any) => {
 		const option = this.selectedItems.find((x) => x.value === item);
@@ -501,7 +502,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (!this._isTypeahead && !this.addTag() && this.itemsList.noItemsToSelect) {
 			return;
 		}
-		this.isOpen = true;
+		this.isOpen.set(true);
 		this.itemsList.markSelectedOrDefault(this.markFirst());
 		this.openEvent.emit();
 		if (!this.searchTerm) {
@@ -514,7 +515,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (!this.isOpen() || this._manualOpen) {
 			return;
 		}
-		this.isOpen = false;
+		this.isOpen.set(false);
 		this._isComposing = false;
 		if (!this._editableSearchTerm) {
 			this._clearSearch();
@@ -718,7 +719,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _setItems(items: any[]) {
 		const firstItem = items[0];
-		this.bindLabel = this.bindLabel() || this._defaultLabel;
+		this.bindLabel.set(this.bindLabel() || this._defaultLabel);
 		this._primitive = isDefined(firstItem) ? !isObject(firstItem) : this._primitive || this.bindLabel() === this._defaultLabel;
 		this.itemsList.setItems(items);
 		if (items.length > 0 && this.hasValue) {
@@ -760,7 +761,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		};
 
 		this.ngOptions.changes.pipe(startWith(this.ngOptions), takeUntil(this._destroy$)).subscribe((options) => {
-			this.bindLabel = this._defaultLabel;
+			this.bindLabel.set(this._defaultLabel);
 			mapNgOptions(options);
 			handleOptionChange();
 		});
@@ -929,7 +930,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	private _onSelectionChanged() {
-		if (this.isOpen() && this.deselectOnClick && this.appendTo()) {
+		const appendTo = this.appendTo() ?? this.config.appendTo;
+		if (this.isOpen() && this.deselectOnClick && appendTo) {
 			// Make sure items are rendered.
 			this._cd.detectChanges();
 			this.dropdownPanel.adjustPosition();
@@ -962,13 +964,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	private _handleEnter($event: KeyboardEvent) {
+		const openOnEnter = this.openOnEnter() ?? this.config.openOnEnter;
 		if (this.isOpen() || this._manualOpen) {
 			if (this.itemsList.markedItem) {
 				this.toggleItem(this.itemsList.markedItem);
 			} else if (this.showAddTag) {
 				this.selectTag();
 			}
-		} else if (this.openOnEnter()) {
+		} else if (openOnEnter) {
 			this.open();
 		} else {
 			return;
@@ -1032,24 +1035,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	private _mergeGlobalConfig(config: NgSelectConfig) {
-		this.placeholder = this.placeholder() || config.placeholder;
-		this.fixedPlaceholder = this.fixedPlaceholder() || config.fixedPlaceholder;
-		this.notFoundText = this.notFoundText() || config.notFoundText;
-		this.typeToSearchText = this.typeToSearchText() || config.typeToSearchText;
-		this.addTagText = this.addTagText() || config.addTagText;
-		this.loadingText = this.loadingText() || config.loadingText;
-		this.clearAllText = this.clearAllText() || config.clearAllText;
-		const virtualScroll = this.virtualScroll();
-		this.virtualScroll = isDefined(virtualScroll)
-			? virtualScroll
-			: isDefined(config.disableVirtualScroll)
-				? !config.disableVirtualScroll
-				: false;
-		const openOnEnter = this.openOnEnter();
-		this.openOnEnter = isDefined(openOnEnter) ? openOnEnter : config.openOnEnter;
-		this.appendTo = this.appendTo() || config.appendTo;
-		this.bindValue = this.bindValue() || config.bindValue;
-		this.bindLabel = this.bindLabel() || config.bindLabel;
-		this.appearance = this.appearance() || config.appearance;
+		this.bindValue.set(this.bindValue() || config.bindValue);
+		this.bindLabel.set(this.bindLabel() || config.bindLabel);
+		this.appearance.set(this.appearance() || config.appearance);
 	}
 }

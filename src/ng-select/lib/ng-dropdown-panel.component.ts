@@ -230,8 +230,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		this._zone.run(() => this.outsideClick.emit());
 	}
 
-	private _onItemsChange(items: NgOption[], firstChange: boolean) {
-		this.items = items || [];
+	private _onItemsChange(items: NgOption[] = [], firstChange: boolean) {
 		this._scrollToEndFired = false;
 		this.itemsLength = items.length;
 
