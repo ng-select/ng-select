@@ -168,7 +168,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	element: HTMLElement;
 	focused: boolean;
 	escapeHTML = true;
-	finalTabFocus = true;
+	private _tabFocusOnClear = true;
 	private _itemsAreUsed: boolean;
 	private readonly _defaultLabel = 'label';
 	private _primitive: any;
@@ -340,7 +340,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (changes.inputAttrs) {
 			this._setInputAttributes();
 		}
-		this._setFinalTabFocus();
+		this._setTabFocusOnClear();
 	}
 
 	ngAfterViewInit() {
@@ -876,8 +876,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 	}
 
-	private _setFinalTabFocus() {
-		this.finalTabFocus = this.tabFocusOnClearButton() !== undefined
+	protected getTabFocusOnClear() {
+		return this._tabFocusOnClear;
+	}
+
+	private _setTabFocusOnClear() {
+		this._tabFocusOnClear = isDefined(this.tabFocusOnClearButton())
 			? !!this.tabFocusOnClearButton()
 			: this.config.tabFocusOnClear;
 	}
@@ -951,7 +955,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _handleTab($event: KeyboardEvent) {
 		if (this.isOpen === false) {
-			if (this.showClear() && !$event.shiftKey && this.finalTabFocus) {
+			if (this.showClear() && !$event.shiftKey && this._tabFocusOnClear) {
 				this.focusOnClear();
 				$event.preventDefault();
 			} else if (!this.addTag) {
@@ -1058,7 +1062,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.bindValue = this.bindValue || config.bindValue;
 		this.bindLabel = this.bindLabel || config.bindLabel;
 		this.appearance = this.appearance || config.appearance;
-		this._setFinalTabFocus();
+		this._setTabFocusOnClear();
 	}
 
 	/**
