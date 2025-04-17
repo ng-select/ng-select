@@ -117,7 +117,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() labelForId = null;
 	@Input() inputAttrs: { [key: string]: string } = {};
 	@Input({ transform: numberAttribute }) tabIndex: number;
-	tabFocusOnClearButton = input(true, { transform: booleanAttribute });
+	tabFocusOnClearButton = input<boolean | undefined>();
 	@Input({ transform: booleanAttribute }) readonly = false;
 	@Input({ transform: booleanAttribute }) searchWhileComposing = true;
 	@Input({ transform: numberAttribute }) minTermLength = 0;
@@ -168,6 +168,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	element: HTMLElement;
 	focused: boolean;
 	escapeHTML = true;
+	private _tabFocusOnClear = true;
 	private _itemsAreUsed: boolean;
 	private readonly _defaultLabel = 'label';
 	private _primitive: any;
@@ -339,6 +340,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (changes.inputAttrs) {
 			this._setInputAttributes();
 		}
+		this._setTabFocusOnClear();
 	}
 
 	ngAfterViewInit() {
@@ -874,6 +876,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 	}
 
+	protected getTabFocusOnClear() {
+		return this._tabFocusOnClear;
+	}
+
+	private _setTabFocusOnClear() {
+		this._tabFocusOnClear = isDefined(this.tabFocusOnClearButton())
+			? !!this.tabFocusOnClearButton()
+			: this.config.tabFocusOnClear;
+	}
+
 	private _updateNgModel() {
 		const model = [];
 		for (const item of this.selectedItems) {
@@ -943,7 +955,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _handleTab($event: KeyboardEvent) {
 		if (this.isOpen === false) {
-			if (this.showClear() && !$event.shiftKey && this.tabFocusOnClearButton()) {
+			if (this.showClear() && !$event.shiftKey && this._tabFocusOnClear) {
 				this.focusOnClear();
 				$event.preventDefault();
 			} else if (!this.addTag) {
@@ -1050,6 +1062,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.bindValue = this.bindValue || config.bindValue;
 		this.bindLabel = this.bindLabel || config.bindLabel;
 		this.appearance = this.appearance || config.appearance;
+		this._setTabFocusOnClear();
 	}
 
 	/**
