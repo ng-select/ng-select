@@ -3,7 +3,7 @@
 	[class.ng-appearance-outline]="appearance === 'outline'"
 	[class.ng-has-value]="hasValue"
 	class="ng-select-container">
-	<div class="ng-value-container">
+	<div [attr.id]="id + '-aria-selected'" class="ng-value-container">
 		@if ((selectedItems.length === 0 && !searchTerm) || fixedPlaceholder) {
 			<ng-template #defaultPlaceholderTemplate>
 				<div class="ng-placeholder">{{ placeholder }}</div>
@@ -12,7 +12,7 @@
 		}
 
 		@if ((!multiLabelTemplate || !multiple) && selectedItems.length > 0) {
-			@for (item of selectedItems; track trackByOption($index, item)) {
+			@for (item of selectedItems; track trackByOption($index, item); let last = $last) {
 				<div [class.ng-value-disabled]="item.disabled" class="ng-value">
 					<ng-template #defaultLabelTemplate>
 						<span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">×</span>
@@ -23,6 +23,9 @@
 						[ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
 					</ng-template>
 				</div>
+				@if (!last) {
+					<span class="ng-visually-hidden">&#44;</span>
+				}
 			}
 		}
 
@@ -42,6 +45,7 @@
 				(input)="filter(searchInput.value)"
 				[attr.aria-activedescendant]="isOpen ? itemsList?.markedItem?.htmlId : null"
 				[attr.aria-controls]="isOpen ? dropdownId : null"
+				[attr.aria-describedby]="id + '-aria-selected'"
 				[attr.aria-expanded]="isOpen"
 				[attr.aria-label]="ariaLabel"
 				[attr.id]="labelForId"

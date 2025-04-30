@@ -3654,9 +3654,12 @@ describe('NgSelectComponent', () => {
 				`<ng-select [items]="cities"
                         labelForId="lbl"
                         (change)="onChange($event)"
-                        bindLabel="name">
+                        bindLabel="name"
+												[multiple]="true"
+												[(ngModel)]="selectedCities">
                 </ng-select>`,
 			);
+
 			select = fixture.componentInstance.select;
 			input = fixture.debugElement.query(By.css('input')).nativeElement;
 			comboBoxDiv = fixture.debugElement.query(By.css('.ng-input')).nativeElement;
@@ -3731,6 +3734,44 @@ describe('NgSelectComponent', () => {
 			input.setAttribute('aria-label', 'test');
 			expect(input.getAttribute('aria-label')).toBe('test');
 		});
+
+		it('should link the input to the ng-value-container via aria-describedby', () => {
+			const valueContainer = fixture.debugElement.nativeElement.querySelector('.ng-value-container');
+
+			expect(valueContainer.id).toBe(`${select.id}-aria-selected`);
+			expect(input.getAttribute('aria-describedby')).toBe(`${select.id}-aria-selected`);
+		});
+
+		it('should visually hide the separator for the selected items', fakeAsync(() => {
+			fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0], fixture.componentInstance.cities[1]];
+
+			tickAndDetectChanges(fixture);
+			tickAndDetectChanges(fixture);
+
+			const valueContainer = fixture.debugElement.nativeElement.querySelector('.ng-value-container');
+			const visuallyHiddenSpans = valueContainer.querySelectorAll('.ng-visually-hidden');
+
+			expect(visuallyHiddenSpans.length).toBe(1);
+		}));
+
+		it('should present the selected items in a screenreader-friendly format', fakeAsync(() => {
+			fixture.componentInstance.selectedCities = [
+				fixture.componentInstance.cities[0],
+				fixture.componentInstance.cities[1],
+				fixture.componentInstance.cities[2],
+			];
+
+			tickAndDetectChanges(fixture);
+			tickAndDetectChanges(fixture);
+
+			const valueContainer = fixture.debugElement.nativeElement.querySelector('.ng-value-container');
+			const visibleText = Array.from<HTMLElement>(valueContainer.querySelectorAll(':not([aria-hidden="true"])'))
+				.filter((el) => el.children.length === 0)
+				.map((el) => el.textContent.trim())
+				.join('');
+
+			expect(visibleText).toBe('Vilnius,Kaunas,Pabrade');
+		}));
 	});
 
 	describe('Output events', () => {

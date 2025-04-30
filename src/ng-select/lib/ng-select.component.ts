@@ -83,6 +83,9 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 	imports: [NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent, NgClass],
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
+	public static nextId = 0;
+	public id = `ng-select-${NgSelectComponent.nextId++}`;
+
 	@Input() ariaLabelDropdown: string = 'Options List';
 	@Input() bindLabel: string;
 	@Input() bindValue: string;
