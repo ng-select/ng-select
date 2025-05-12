@@ -4,7 +4,7 @@
 	[class.ng-has-value]="hasValue"
 	class="ng-select-container">
 	<div class="ng-value-container">
-		@if ((selectedItems.length === 0 && !searchTerm) || fixedPlaceholder === true) {
+		@if ((selectedItems.length === 0 && !searchTerm) || fixedPlaceholder) {
 			<ng-template #defaultPlaceholderTemplate>
 				<div class="ng-placeholder">{{ placeholder }}</div>
 			</ng-template>
@@ -48,7 +48,7 @@
 				[attr.tabindex]="tabIndex"
 				[disabled]="disabled"
 				[readOnly]="!searchable || itemsList.maxItemsSelected"
-				[value]="searchTerm ? searchTerm : ''"
+				[value]="searchTerm ?? ''"
 				aria-autocomplete="list"
 				role="combobox" />
 		</div>
@@ -62,9 +62,19 @@
 	}
 
 	@if (showClear()) {
-		<span class="ng-clear-wrapper" role="button" tabindex="0" title="{{ clearAllText }}" #clearButton>
-			<span class="ng-clear" aria-hidden="true">×</span>
-		</span>
+		@if (clearButtonTemplate) {
+			<ng-container [ngTemplateOutlet]="clearButtonTemplate"></ng-container>
+		} @else {
+			<span
+				class="ng-clear-wrapper"
+				role="button"
+				tabindex="0"
+				[attr.tabindex]="tabFocusOnClearButton() ? 0 : -1"
+				title="{{ clearAllText }}"
+				#clearButton>
+				<span class="ng-clear" aria-hidden="true">×</span>
+			</span>
+		}
 	}
 
 	<span class="ng-arrow-wrapper">
@@ -91,7 +101,6 @@
 		[class.ng-select-multiple]="multiple"
 		[ngClass]="appendTo ? (ngClass ? ngClass : classes) : null"
 		[id]="dropdownId"
-		role="listbox"
 		[attr.aria-label]="ariaLabelDropdown">
 		<ng-container>
 			@for (item of viewPortItems; track trackByOption($index, item)) {
@@ -107,7 +116,9 @@
 					[class.ng-option-child]="!!item.parent"
 					[class.ng-option-marked]="item === itemsList.markedItem"
 					[attr.aria-selected]="item.selected"
-					[attr.id]="item?.htmlId">
+					[attr.id]="item?.htmlId"
+					[attr.aria-setsize]="itemsList.filteredItems.length"
+					[attr.aria-posinset]="item.index + 1">
 					<ng-template #defaultOptionTemplate>
 						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
 					</ng-template>

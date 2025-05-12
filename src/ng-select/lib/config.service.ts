@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class NgSelectConfig {
 	placeholder: string;
-	fixedPlaceholder = true;
+	fixedPlaceholder = false;
 	notFoundText = 'No items found';
 	typeToSearchText = 'Type to search';
 	addTagText = 'Add item';

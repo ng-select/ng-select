@@ -43,6 +43,7 @@ import { GroupChildrenExampleComponent } from './group-children-example/group-ch
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
 import { TemplatePlaceholderExampleComponent } from './template-placeholder-example/template-placeholder-example.component';
 import { FixedPlaceholderExampleComponent } from './fixed-placeholder-example/fixed-placeholder-example.component';
+import { TemplateClearExampleComponent } from './template-clear-example/template-clear-example.component';
 
 export interface Example {
 	component: any;
@@ -157,6 +158,10 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
 	'template-loading-example': {
 		component: TemplateLoadingExampleComponent,
 		title: 'Custom loading spinner',
+	},
+	'template-clear-example': {
+		component: TemplateClearExampleComponent,
+		title: 'Custom clear button',
 	},
 	'multi-select-default-example': {
 		component: MultiSelectDefaultExampleComponent,

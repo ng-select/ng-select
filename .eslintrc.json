@@ -23,6 +23,7 @@
         "jsdoc/newline-after-description": "off",
         "@angular-eslint/no-output-rename": "off",
         "@angular-eslint/no-output-native": "off",
+        "@angular-eslint/prefer-standalone": "warn",
         "@angular-eslint/component-selector": [
           "error",
           {

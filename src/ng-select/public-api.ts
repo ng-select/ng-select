@@ -25,4 +25,5 @@ export {
 	NgNotFoundTemplateDirective,
 	NgTagTemplateDirective,
 	NgTypeToSearchTemplateDirective,
+	NgClearButtonTemplateDirective,
 } from './lib/ng-templates.directive';

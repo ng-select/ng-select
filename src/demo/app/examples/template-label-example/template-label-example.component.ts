@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgLabelTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
-    selector: 'ng-template-label-example',
-    templateUrl: './template-label-example.component.html',
-    styleUrls: ['./template-label-example.component.scss'],
-    standalone: false
+	selector: 'ng-template-label-example',
+	templateUrl: './template-label-example.component.html',
+	styleUrls: ['./template-label-example.component.scss'],
+	imports: [NgSelectComponent, FormsModule, NgLabelTemplateDirective],
 })
 export class TemplateLabelExampleComponent implements OnInit {
 	cities = [

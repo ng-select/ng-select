@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgOptgroupTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
+import { JsonPipe } from '@angular/common';
 
 @Component({
-    selector: 'ng-group-function-example',
-    templateUrl: './group-function-example.component.html',
-    styleUrls: ['./group-function-example.component.scss'],
-    standalone: false
+	selector: 'ng-group-function-example',
+	templateUrl: './group-function-example.component.html',
+	styleUrls: ['./group-function-example.component.scss'],
+	imports: [NgSelectComponent, FormsModule, NgOptgroupTemplateDirective, JsonPipe],
 })
 export class GroupFunctionExampleComponent implements OnInit {
 	selectedAccounts = ['Michael'];

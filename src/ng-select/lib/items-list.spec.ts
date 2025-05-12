@@ -1,4 +1,4 @@
-import { NgSelectConfig } from './config.service';
+import { TestBed } from '@angular/core/testing';
 import { ItemsList } from './items-list';
 import { NgSelectComponent } from './ng-select.component';
 import { DefaultSelectionModel } from './selection-model';
@@ -573,6 +573,11 @@ describe('ItemsList', () => {
 	}
 
 	function ngSelectFactory(): NgSelectComponent {
-		return new NgSelectComponent(null, null, new NgSelectConfig(), () => new DefaultSelectionModel(), {} as any, null, null);
+		const fixture = TestBed.configureTestingModule({
+			imports: [NgSelectComponent],
+		}).createComponent(NgSelectComponent);
+
+		fixture.detectChanges();
+		return fixture.componentInstance;
 	}
 });

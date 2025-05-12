@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgSelectComponent, NgTagTemplateDirective } from '@ng-select/ng-select';
 
 @Component({
-    selector: 'ng-tags-backend-example',
-    templateUrl: './tags-backend-example.component.html',
-    styleUrls: ['./tags-backend-example.component.scss'],
-    standalone: false
+	selector: 'ng-tags-backend-example',
+	templateUrl: './tags-backend-example.component.html',
+	styleUrls: ['./tags-backend-example.component.scss'],
+	imports: [NgSelectComponent, FormsModule, NgTagTemplateDirective],
 })
 export class TagsBackendExampleComponent implements OnInit {
 	selectedCompanies;
