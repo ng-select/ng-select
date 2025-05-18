@@ -1,9 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgLabelTemplateDirective, NgOptgroupTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
+import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
 
 @Component({
 	selector: 'ng-template-optgroup-example',
 	templateUrl: './template-optgroup-example.component.html',
 	styleUrls: ['./template-optgroup-example.component.scss'],
+	imports: [
+		NgSelectComponent,
+		FormsModule,
+		NgLabelTemplateDirective,
+		NgOptgroupTemplateDirective,
+		NgOptionTemplateDirective,
+		NgOptionHighlightDirective,
+	],
 })
 export class TemplateOptgroupExampleComponent implements OnInit {
 	cities = [

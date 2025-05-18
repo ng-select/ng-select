@@ -1,14 +1,17 @@
 import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { NgSelectConfig } from '@ng-select/ng-select';
+import { LayoutHeaderComponent } from './layout/header.component';
+import { LayoutSidenavComponent } from './layout/sidenav-component';
 
 @Component({
 	selector: 'demo-app',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss'],
 	changeDetection: ChangeDetectionStrategy.Default,
+	imports: [LayoutHeaderComponent, LayoutSidenavComponent, RouterOutlet],
 })
 export class AppComponent {
 	title: string;
@@ -16,10 +19,6 @@ export class AppComponent {
 	exampleSourceUrl: string;
 	dir: 'ltr' | 'rtl' = 'ltr';
 	theme: 'default' | 'ant' | 'material' = 'default';
-
-	@HostBinding('class') get themeClass() {
-		return `${this.theme}-theme`;
-	}
 
 	constructor(
 		private router: Router,
@@ -34,6 +33,10 @@ export class AppComponent {
 		// You can also override bindValue for the specified template by defining `bindValue` as property
 		// Eg : <ng-select bindValue="some-new-value"></ng-select>
 		// this.config.bindValue = 'value';
+	}
+
+	@HostBinding('class') get themeClass() {
+		return `${this.theme}-theme`;
 	}
 
 	ngOnInit() {

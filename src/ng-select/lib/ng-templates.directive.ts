@@ -132,3 +132,9 @@ export class NgTagTemplateDirective {
 export class NgLoadingSpinnerTemplateDirective {
 	constructor(public template: TemplateRef<any>) {}
 }
+
+// eslint-disable-next-line @angular-eslint/directive-selector
+@Directive({ selector: '[ng-clearbutton-tmp]', standalone: true })
+export class NgClearButtonTemplateDirective {
+	constructor(public template: TemplateRef<any>) {}
+}

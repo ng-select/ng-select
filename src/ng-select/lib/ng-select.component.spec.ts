@@ -1,15 +1,15 @@
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ConsoleService } from './console.service';
+import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { delay, Observable, of, Subject } from 'rxjs';
+import { By } from '@angular/platform-browser';
 import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
-import { KeyCode, NgOption } from './ng-select.types';
 import { MockConsole, MockNgZone } from '../testing/mocks';
+import { NgSelectConfig } from './config.service';
+import { ConsoleService } from './console.service';
 import { NgSelectComponent } from './ng-select.component';
 import { NgSelectModule } from './ng-select.module';
-import { delay, Observable, of, Subject } from 'rxjs';
-import { NgSelectConfig } from './config.service';
+import { KeyCode, NgOption } from './ng-select.types';
 
 describe('NgSelectComponent', () => {
 	describe('Data source', () => {
@@ -452,7 +452,10 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.cities = [
 				{ id: 1, name: 'Vilnius' },
 				{ id: 2, name: 'Kaunas' },
-				{ id: 3, name: 'Pabrade' },
+				{
+					id: 3,
+					name: 'Pabrade',
+				},
 			];
 			tickAndDetectChanges(fixture);
 			const vilnius = select.itemsList.items[0];
@@ -479,14 +482,20 @@ describe('NgSelectComponent', () => {
 			];
 			tickAndDetectChanges(fixture);
 			expect(select.selectedItems).toEqual([
-				jasmine.objectContaining({ label: 'Vilnius', value: { id: 1, name: 'Vilnius' } }),
+				jasmine.objectContaining({
+					label: 'Vilnius',
+					value: { id: 1, name: 'Vilnius' },
+				}),
 				jasmine.objectContaining({ label: 'Kaunas', value: { id: 2, name: 'Kaunas' } }),
 			]);
 
 			fixture.componentInstance.cities = [
 				{ id: 1, name: 'Vilnius' },
 				{ id: 2, name: 'Kaunas' },
-				{ id: 3, name: 'Pabrade' },
+				{
+					id: 3,
+					name: 'Pabrade',
+				},
 			];
 			tickAndDetectChanges(fixture);
 			const vilnius = select.itemsList.items[0];
@@ -750,7 +759,7 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			fixture.componentInstance.selectedCities = [...fixture.componentInstance.cities.slice(0, 2)];
+			fixture.componentInstance.selectedCities = fixture.componentInstance.cities.slice(0, 2);
 			tickAndDetectChanges(fixture);
 
 			fixture.componentInstance.cities = [{ id: 1, name: 'New city' }];
@@ -1462,7 +1471,7 @@ describe('NgSelectComponent', () => {
 			expect((<HTMLElement>options[0]).innerText).toBe('No items found');
 		}));
 
-		xit('should scroll to selected item on first open when virtual scroll is enabled', fakeAsync(() => {
+		it('should scroll to selected item on first open when virtual scroll is enabled', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [items]="cities"
@@ -1644,6 +1653,21 @@ describe('NgSelectComponent', () => {
 				expect(dropdown).toBeNull();
 			});
 		}));
+
+		it('should set aria-label on dropdown panel when ariaLabelDropdown input is provided', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" ariaLabelDropdown="Custom Aria Label">
+    </ng-select>`,
+			);
+
+			const select = fixture.componentInstance.select;
+			select.open();
+			tickAndDetectChanges(fixture);
+
+			const dropdownPanel = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel');
+			expect(dropdownPanel.getAttribute('aria-label')).toBe('Custom Aria Label');
+		}));
 	});
 
 	describe('Keyboard events', () => {
@@ -1658,6 +1682,7 @@ describe('NgSelectComponent', () => {
                         [loading]="citiesLoading"
                         [selectOnTab]="selectOnTab"
                         [multiple]="multiple"
+						[tabFocusOnClearButton]="tabFocusOnClearButton"
                         [(ngModel)]="selectedCity">
                 </ng-select>`,
 			);
@@ -1844,6 +1869,7 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
 				expect(fixture.componentInstance.select.selectedItems).toEqual([result]);
 			}));
+
 			it('should focus on clear button when tab pressed while not opened and clear showing', fakeAsync(() => {
 				selectOption(fixture, KeyCode.ArrowDown, 0);
 				tickAndDetectChanges(fixture);
@@ -1853,6 +1879,18 @@ describe('NgSelectComponent', () => {
 				const focusOnClear = spyOn(select, 'focusOnClear');
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
 				expect(focusOnClear).toHaveBeenCalled();
+			}));
+
+			it('should not focus on clear button when tab pressed if [tabFocusOnClearButton]="false"', fakeAsync(() => {
+				fixture.componentInstance.tabFocusOnClearButton = false;
+				selectOption(fixture, KeyCode.ArrowDown, 0);
+				tickAndDetectChanges(fixture);
+				expect(select.showClear()).toBeTruthy();
+
+				select.searchInput.nativeElement.focus();
+				const focusOnClear = spyOn(select, 'focusOnClear');
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+				expect(focusOnClear).not.toHaveBeenCalled();
 			}));
 		});
 
@@ -1955,7 +1993,7 @@ describe('NgSelectComponent', () => {
 			});
 
 			it('should select item using key while not opened', fakeAsync(() => {
-				triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'v');
+				triggerKeyDownEvent(getNgSelectElement(fixture), 'v');
 				tick(200);
 
 				expect(fixture.componentInstance.selectedCity.name).toBe('Vilnius');
@@ -1964,9 +2002,9 @@ describe('NgSelectComponent', () => {
 			it('should mark item using key while opened', fakeAsync(() => {
 				const findByLabel = spyOn(select.itemsList, 'findByLabel');
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-				triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'v');
-				triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'i');
-				triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'l');
+				triggerKeyDownEvent(getNgSelectElement(fixture), 'v');
+				triggerKeyDownEvent(getNgSelectElement(fixture), 'i');
+				triggerKeyDownEvent(getNgSelectElement(fixture), 'l');
 				tick(200);
 
 				expect(fixture.componentInstance.selectedCity).toBeUndefined();
@@ -1993,6 +2031,7 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
 				expect(select.isOpen).toBe(false);
 			}));
+
 			it('should clear input when enter pressed while clear button focused', fakeAsync(() => {
 				selectOption(fixture, KeyCode.ArrowDown, 0);
 				select.searchInput.nativeElement.focus();
@@ -2000,7 +2039,7 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
 
 				const handleClearClick = spyOn(select, 'handleClearClick');
-				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter, '', select.clearButton.nativeElement);
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter, select.clearButton.nativeElement);
 				expect(handleClearClick).toHaveBeenCalled();
 			}));
 		});
@@ -2607,6 +2646,55 @@ describe('NgSelectComponent', () => {
 			expect(items[0].disabled).toBeTruthy();
 		}));
 
+		it('should display custom clear button template when selected city provided as content child', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+                            [loading]="true"
+                            [(ngModel)]="selectedCity">
+
+                    <ng-template ng-clearbutton-tmp>
+                        <div class="custom-clearbutton">
+                            Custom clear button
+                        </div>
+                    </ng-template>
+                </ng-select>`,
+			);
+
+			fixture.whenStable().then(() => {
+				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+				tickAndDetectChanges(fixture);
+				tickAndDetectChanges(fixture);
+				const clear = fixture.debugElement.queryAll(By.css('.custom-clearbutton'));
+				expect(clear.length).toBe(1);
+			});
+		}));
+
+				it('should display custom clear button template when selected city provided as attribute', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-template #clearButtonTemplate>
+						<div class="custom-clearbutton">
+								Custom clear button
+						</div>
+				</ng-template>
+
+				<ng-select [items]="cities"
+									 [loading]="true"
+									 [(ngModel)]="selectedCity"
+									 [clearButtonTemplate]="clearButtonTemplate">
+				</ng-select>`,
+			);
+
+			fixture.whenStable().then(() => {
+				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+				tickAndDetectChanges(fixture);
+				tickAndDetectChanges(fixture);
+				const clear = fixture.debugElement.queryAll(By.css('.custom-clearbutton'));
+				expect(clear.length).toBe(1);
+			});
+		}));
+
 		it('should display ng-placeholder template', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
@@ -2628,6 +2716,7 @@ describe('NgSelectComponent', () => {
 				NgSelectTestComponent,
 				`<ng-select [(ngModel)]="selectedCity" 
 														 [items]="cities" bindLabel="name" 
+														 fixedPlaceholder="true"
 														 placeholder="testPlaceholder">			
                   </ng-select>`,
 			);
@@ -2644,8 +2733,8 @@ describe('NgSelectComponent', () => {
 				NgSelectTestComponent,
 				`<ng-select [(ngModel)]="selectedCity"
 														 [fixedPlaceholder]="false"
-														 [items]="cities" bindLabel="name" 
-														 placeholder="testPlaceholder">			
+														 [items]="cities" bindLabel="name"
+														 placeholder="testPlaceholder">
                   </ng-select>`,
 			);
 
@@ -3345,7 +3434,7 @@ describe('NgSelectComponent', () => {
 
 			const select = fixture.componentInstance.select;
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			triggerKeyDownEvent(getNgSelectElement(fixture), 97, 'v');
+			triggerKeyDownEvent(getNgSelectElement(fixture), 'v');
 			tick(200);
 			fixture.detectChanges();
 
@@ -3512,7 +3601,10 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.cities = [
 				{ id: 1, name: 'Vilnius' },
 				{ id: 2, name: 'Kaunas' },
-				{ id: 3, name: 'Pabrade' },
+				{
+					id: 3,
+					name: 'Pabrade',
+				},
 				{ id: 4, name: 'Bruchhausen-Vilsen' },
 			];
 			tickAndDetectChanges(fixture);
@@ -3890,11 +3982,11 @@ describe('NgSelectComponent', () => {
 			expect(input.hasAttribute('aria-activedescendant')).toBe(false);
 		}));
 
-		xit('should set aria-expanded to false at start', fakeAsync(() => {
+		it('should set aria-expanded to false at start', fakeAsync(() => {
 			expect(input.getAttribute('aria-expanded')).toBe('false');
 		}));
 
-		xit('should set aria-expanded to true on open', fakeAsync(() => {
+		it('should set aria-expanded to true on open', fakeAsync(() => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 			tickAndDetectChanges(fixture);
 
@@ -3946,6 +4038,15 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 			expect(input.getAttribute('id')).toEqual('lbl');
 		}));
+
+		it('should show undefined for aria-label on input element', () => {
+			expect(input.getAttribute('aria-label')).toBe(null);
+		});
+
+		it('should set aria-label on input element', () => {
+			input.setAttribute('aria-label', 'test');
+			expect(input.getAttribute('aria-label')).toBe('test');
+		});
 	});
 
 	describe('Output events', () => {
@@ -4672,9 +4773,18 @@ describe('Grouping', () => {
 		tickAndDetectChanges(fixture);
 
 		fixture.componentInstance.accounts.push(
-			<any>{ name: 'Henry', email: 'henry@email.com', age: 10 },
+			<any>{
+				name: 'Henry',
+				email: 'henry@email.com',
+				age: 10,
+			},
 			<any>{ name: 'Meg', email: 'meg@email.com', age: 7, country: null },
-			<any>{ name: 'Meg', email: 'meg@email.com', age: 7, country: '' },
+			<any>{
+				name: 'Meg',
+				email: 'meg@email.com',
+				age: 7,
+				country: '',
+			},
 		);
 		fixture.componentInstance.accounts = [...fixture.componentInstance.accounts];
 		tickAndDetectChanges(fixture);
@@ -5116,7 +5226,10 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
 		declarations: [cmp],
 		providers: [
 			{ provide: ErrorHandler, useClass: TestsErrorHandler },
-			{ provide: NgZone, useFactory: () => new MockNgZone() },
+			{
+				provide: NgZone,
+				useFactory: () => new MockNgZone(),
+			},
 			{ provide: ConsoleService, useFactory: () => new MockConsole() },
 		],
 	}).overrideComponent(cmp, {
@@ -5150,7 +5263,10 @@ function createEvent(target = {}) {
 	};
 }
 
-@Component({ template: `` })
+@Component({
+	template: ``,
+	standalone: false,
+})
 class NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
 	multiple = false;
@@ -5164,9 +5280,10 @@ class NgSelectTestComponent {
 	filter = new Subject<string>();
 	searchFn: (term: string, item: any) => boolean = null;
 	selectOnTab = true;
+	asyncTimeout = 1000;
+	tabFocusOnClearButton = true;
 	hideSelected = false;
 
-	asyncTimeout = 1000;
 	citiesLoading = false;
 	selectedCityId: number;
 	selectedCityIds: number[];
@@ -5178,18 +5295,23 @@ class NgSelectTestComponent {
 		{ id: 2, name: 'Kaunas' },
 		{ id: 3, name: 'Pabrade' },
 	];
-	cities$ = of(this.cities).pipe(delay(this.asyncTimeout));
 	readonlyCities: readonly any[] = [
 		{ id: 1, name: 'Vilnius' },
 		{ id: 2, name: 'Kaunas' },
-		{ id: 3, name: 'Pabrade' },
+		{
+			id: 3,
+			name: 'Pabrade',
+		},
 	] as const;
 	citiesNames = this.cities.map((x) => x.name);
 
 	selectedCountry: any;
 	countries = [
 		{ id: 1, description: { name: 'Lithuania', id: 'a' } },
-		{ id: 2, description: { name: 'USA', id: 'b' } },
+		{
+			id: 2,
+			description: { name: 'USA', id: 'b' },
+		},
 		{ id: 3, description: { name: 'Australia', id: 'c' } },
 	];
 	keyDownFn = () => {};
@@ -5237,26 +5359,87 @@ class NgSelectTestComponent {
 	onScrollToEnd() {}
 }
 
-@Component({ template: ``, encapsulation: ViewEncapsulation.ShadowDom })
+@Component({
+	template: ``,
+	encapsulation: ViewEncapsulation.ShadowDom,
+	standalone: false,
+})
 class EncapsulatedTestComponent extends NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 }
 
-@Component({ template: `` })
+@Component({
+	template: ``,
+	standalone: false,
+})
 class NgSelectGroupingTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
 	selectedAccountName = 'Adam';
 	selectedAccount = null;
 	accounts = [
-		{ name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { name: 'c1' } },
-		{ name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States', child: { name: 'c1' } },
-		{ name: 'Amalie', email: 'amalie@email.com', age: 12, country: 'Argentina', child: { name: 'c1' } },
-		{ name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina', child: { name: 'c1' } },
-		{ name: 'Adrian', email: 'adrian@email.com', age: 21, country: 'Ecuador', child: { name: 'c1' } },
-		{ name: 'Wladimir', email: 'wladimir@email.com', age: 30, country: 'Ecuador', child: { name: 'c2' } },
-		{ name: 'Natasha', email: 'natasha@email.com', age: 54, country: 'Ecuador', child: { name: 'c2' } },
-		{ name: 'Nicole', email: 'nicole@email.com', age: 43, country: 'Colombia', child: { name: 'c2' } },
-		{ name: 'Michael', email: 'michael@email.com', age: 15, country: 'Colombia', child: { name: 'c2' } },
+		{
+			name: 'Adam',
+			email: 'adam@email.com',
+			age: 12,
+			country: 'United States',
+			child: { name: 'c1' },
+		},
+		{
+			name: 'Samantha',
+			email: 'samantha@email.com',
+			age: 30,
+			country: 'United States',
+			child: { name: 'c1' },
+		},
+		{
+			name: 'Amalie',
+			email: 'amalie@email.com',
+			age: 12,
+			country: 'Argentina',
+			child: { name: 'c1' },
+		},
+		{
+			name: 'Estefanía',
+			email: 'estefania@email.com',
+			age: 21,
+			country: 'Argentina',
+			child: { name: 'c1' },
+		},
+		{
+			name: 'Adrian',
+			email: 'adrian@email.com',
+			age: 21,
+			country: 'Ecuador',
+			child: { name: 'c1' },
+		},
+		{
+			name: 'Wladimir',
+			email: 'wladimir@email.com',
+			age: 30,
+			country: 'Ecuador',
+			child: { name: 'c2' },
+		},
+		{
+			name: 'Natasha',
+			email: 'natasha@email.com',
+			age: 54,
+			country: 'Ecuador',
+			child: { name: 'c2' },
+		},
+		{
+			name: 'Nicole',
+			email: 'nicole@email.com',
+			age: 43,
+			country: 'Colombia',
+			child: { name: 'c2' },
+		},
+		{
+			name: 'Michael',
+			email: 'michael@email.com',
+			age: 15,
+			country: 'Colombia',
+			child: { name: 'c2' },
+		},
 		{ name: 'Nicolás', email: 'nicole@email.com', age: 43, country: 'Colombia', child: { name: 'c2' } },
 	];
 	groupedAccounts = [
@@ -5264,21 +5447,33 @@ class NgSelectGroupingTestComponent {
 			country: 'United States',
 			accounts: [
 				{ name: 'Adam', email: 'adam@email.com', age: 12 },
-				{ name: 'Samantha', email: 'samantha@email.com', age: 30 },
+				{
+					name: 'Samantha',
+					email: 'samantha@email.com',
+					age: 30,
+				},
 			],
 		},
 		{
 			country: 'Argentina',
 			accounts: [
 				{ name: 'Amalie', email: 'amalie@email.com', age: 12 },
-				{ name: 'Estefanía', email: 'estefania@email.com', age: 21 },
+				{
+					name: 'Estefanía',
+					email: 'estefania@email.com',
+					age: 21,
+				},
 			],
 		},
 		{
 			country: 'Ecuador',
 			accounts: [
 				{ name: 'Adrian', email: 'adrian@email.com', age: 21 },
-				{ name: 'Wladimir', email: 'wladimir@email.com', age: 30 },
+				{
+					name: 'Wladimir',
+					email: 'wladimir@email.com',
+					age: 30,
+				},
 				{ name: 'Natasha', email: 'natasha@email.com', age: 54 },
 			],
 		},
@@ -5286,7 +5481,11 @@ class NgSelectGroupingTestComponent {
 			country: 'Colombia',
 			accounts: [
 				{ name: 'Nicole', email: 'nicole@email.com', age: 43 },
-				{ name: 'Michael', email: 'michael@email.com', age: 15 },
+				{
+					name: 'Michael',
+					email: 'michael@email.com',
+					age: 15,
+				},
 				{ name: 'Nicolás', email: 'nicole@email.com', age: 43 },
 			],
 		},

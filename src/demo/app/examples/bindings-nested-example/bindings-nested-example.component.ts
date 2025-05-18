@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-bindings-nested-example',
 	templateUrl: './bindings-nested-example.component.html',
 	styleUrls: ['./bindings-nested-example.component.scss'],
+	imports: [NgSelectComponent, FormsModule],
 })
 export class BindingsNestedExampleComponent implements OnInit {
 	countries = [

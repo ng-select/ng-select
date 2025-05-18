@@ -36,6 +36,14 @@ export class StackblitzService {
 
 	constructor(private _http: HttpClient) {}
 
+	private get _exampleImport() {
+		return `import { ${this._componentName} } from \'./src/${this._exampleName}.component\'`;
+	}
+
+	private get _exampleTemplate() {
+		return `<ng-${this._exampleName}></ng-${this._exampleName}>`;
+	}
+
 	async openNewProject(example: string) {
 		this._mapExamplePath(example);
 
@@ -95,13 +103,5 @@ export class StackblitzService {
 			.split('-')
 			.map((x) => toUpperCase(x))
 			.join('')}Component`;
-	}
-
-	private get _exampleImport() {
-		return `import { ${this._componentName} } from \'./src/${this._exampleName}.component\'`;
-	}
-
-	private get _exampleTemplate() {
-		return `<${this._exampleName}></${this._exampleName}>`;
 	}
 }

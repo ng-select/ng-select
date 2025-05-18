@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
+import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
 
 @Component({
 	selector: 'ng-template-option-example',
 	templateUrl: './template-option-example.component.html',
 	styleUrls: ['./template-option-example.component.scss'],
+	imports: [NgSelectComponent, FormsModule, NgOptionTemplateDirective, NgOptionHighlightDirective],
 })
 export class TemplateOptionExampleComponent implements OnInit {
 	cities = [

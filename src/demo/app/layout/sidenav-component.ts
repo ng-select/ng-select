@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { appRoutes } from '../routes';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
 	selector: 'layout-sidenav',
@@ -12,6 +13,7 @@ import { appRoutes } from '../routes';
 			}
 		</ul>
 	`,
+	imports: [RouterLinkActive, RouterLink],
 })
 export class LayoutSidenavComponent {
 	routes = [];

@@ -30,11 +30,10 @@ const CSS_POSITIONS: Readonly<string[]> = ['top', 'right', 'bottom', 'left'];
 const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
 
 @Component({
-	changeDetection: ChangeDetectionStrategy.OnPush,
-	encapsulation: ViewEncapsulation.None,
-	selector: 'ng-dropdown-panel',
-	standalone: true,
-	template: `
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    selector: 'ng-dropdown-panel',
+    template: `
 		@if (headerTemplate) {
 			<div class="ng-dropdown-header">
 				<ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }" />
@@ -52,7 +51,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 			</div>
 		}
 	`,
-	imports: [NgTemplateOutlet],
+    imports: [NgTemplateOutlet]
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() items: NgOption[] = [];
@@ -406,7 +405,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 			return;
 		}
 
-		this._parent = document.querySelector(this.appendTo);
+		this._parent = this._dropdown.shadowRoot
+			? this._dropdown.shadowRoot.querySelector(this.appendTo)
+			: document.querySelector(this.appendTo);
 		if (!this._parent) {
 			throw new Error(`appendTo selector ${this.appendTo} did not found any parent element`);
 		}

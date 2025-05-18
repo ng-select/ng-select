@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgbDropdown, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
 
 type langDir = 'ltr' | 'rtl';
 type theme = 'default' | 'ant' | 'material';
@@ -56,6 +58,7 @@ type theme = 'default' | 'ant' | 'material';
 			</div>
 		</nav>
 	`,
+	imports: [NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, FormsModule],
 })
 export class LayoutHeaderComponent {
 	@Input() dir: langDir;

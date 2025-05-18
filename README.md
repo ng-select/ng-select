@@ -16,6 +16,7 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 | Angular          | ng-select |
 |------------------|:---------:|
+| >=19.0.0 <20.0.0 |   v14.x   |
 | >=18.0.0 <19.0.0 |   v13.x   |
 | >=17.0.0 <18.0.0 |   v12.x   |
 | >=16.0.0 <17.0.0 |   v11.x   |
@@ -85,7 +86,7 @@ npm install --save @ng-select/ng-select
 ```shell
 yarn add @ng-select/ng-select
 ```
-### Step 2: 
+### Step 2:
 
 #### Standalone: Import NgSelectComponent and other necessary directives directly:
 ```typescript
@@ -201,7 +202,7 @@ map: {
 | addTagText                  | `string`                                             | `Add item`          | no | Set custom text when using tagging                                                                                                                                                             |
 | appearance                  | `string`                                             | `underline`         | no | Allows to select dropdown appearance. Set to `outline` to add border instead of underline (applies only to Material theme)                                                                     |
 | appendTo                    | `string`                                             | null                | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative`                                                                |
-| bufferAmount                | `string`                                             | null                | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative`                                                                |
+| bufferAmount                | `number`                                             | 4                | no | Used in virtual scrolling, the `bufferAmount` property controls the number of items preloaded in the background to ensure smoother and more seamless scrolling. |
 | bindValue                   | `string`                                             | `-`                 | no | Object property to use for selected model. By default binds to whole object.                                                                                                                   |
 | bindLabel                   | `string`                                             | `label`             | no | Object property to use for label. Default `label`                                                                                                                                              |
 | [closeOnSelect]             | `boolean`                                            | true                | no | Whether to close the menu when a value is selected                                                                                                                                             |
@@ -235,6 +236,7 @@ map: {
 | [deselectOnClick]           | `boolean`                                            | `false`             | no | Deselects a selected item when it is clicked in the dropdown. Default `false`. Default `true` when **multiple** is `true`                                                                      |
 | [editableSearchTerm]        | `boolean`                                            | `false`             | no | Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`.                                                                                             |
 | [selectOnTab]               | `boolean`                                            | `false`             | no | Select marked dropdown item using tab. Default `false`                                                                                                                                         |
+| [tabFocusOnClearButton]     | `boolean`                                            | `true`              | no | Control tab navigation behavior for the clear button. Default `true`                                                                                                                           |
 | [openOnEnter]               | `boolean`                                            | `true`              | no | Open dropdown using enter. Default `true`                                                                                                                                                      |
 | [typeahead]                 | `Subject`                                            | `-`                 | no | Custom autocomplete or advanced filter.                                                                                                                                                        |
 | [minTermLength]             | `number`                                             | `0`                 | no | Minimum term length to start a search. Should be used with `typeahead`                                                                                                                         |
@@ -281,7 +283,7 @@ map: {
 Ng-select allows to provide custom selection implementation using `SELECTION_MODEL_FACTORY`. To override [default](https://github.com/ng-select/ng-select/blob/master/src/ng-select/lib/selection-model.ts) logic provide your factory method in your angular module.
 
 ```javascript
-// app.module.ts
+// app.module.ts.ts
 providers: [
     { provide: SELECTION_MODEL_FACTORY, useValue: <SelectionModelFactory>CustomSelectionFactory }
 ]
@@ -327,7 +329,7 @@ If you are not happy with default styles you can easily override them with incre
     min-height: 0px;
     border-radius: 0;
 }
-.ng-select.custom .ng-select-container  {            
+.ng-select.custom .ng-select-container  {
     min-height: 0px;
     border-radius: 0;
 }
@@ -336,7 +338,7 @@ If you are not happy with default styles you can easily override them with incre
 If you are using `ViewEncapsulation`, you could use special `::ng-deep` selector which will prevent scoping for nested selectors altough this is more of a workaround and we recommend using solution described above.
 
 ```css
-.ng-select.custom ::ng-deep .ng-select-container  {            
+.ng-select.custom ::ng-deep .ng-select-container  {
     min-height: 0px;
     border-radius: 0;
 }
