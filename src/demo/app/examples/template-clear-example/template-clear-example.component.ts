@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgClearButtonTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-template-clear-example',
 	templateUrl: './template-clear-example.component.html',
 	styleUrls: ['./template-clear-example.component.scss'],
-	standalone: false,
+	imports: [NgSelectComponent, FormsModule, NgClearButtonTemplateDirective],
 })
 export class TemplateClearExampleComponent {
 	cities = [

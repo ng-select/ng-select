@@ -14,6 +14,7 @@ import {
 	HostListener,
 	Inject,
 	InjectionToken,
+	input,
 	Input,
 	numberAttribute,
 	OnChanges,
@@ -32,6 +33,8 @@ import { merge, Subject } from 'rxjs';
 import { debounceTime, filter, map, startWith, takeUntil, tap } from 'rxjs/operators';
 
 import {
+	NgClearButtonTemplateDirective,
+	NgCollapseButtonTemplateDirective,
 	NgFooterTemplateDirective,
 	NgHeaderTemplateDirective,
 	NgItemLabelDirective,
@@ -45,7 +48,6 @@ import {
 	NgPlaceholderTemplateDirective,
 	NgTagTemplateDirective,
 	NgTypeToSearchTemplateDirective,
-	NgClearButtonTemplateDirective, NgCollapseButtonTemplateDirective,
 } from './ng-templates.directive';
 
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -88,7 +90,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() ariaLabel: string | undefined;
 	@Input({ transform: booleanAttribute }) markFirst = true;
 	@Input() placeholder: string;
-	@Input() fixedPlaceholder: boolean = true;
+	@Input() fixedPlaceholder: boolean = false;
 	@Input() notFoundText: string;
 	@Input() typeToSearchText: string;
 	@Input() preventToggleOnRightClick: boolean = false;
@@ -118,6 +120,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() labelForId = null;
 	@Input() inputAttrs: { [key: string]: string } = {};
 	@Input({ transform: numberAttribute }) tabIndex: number;
+	tabFocusOnClearButton = input(true, { transform: booleanAttribute });
 	@Input({ transform: booleanAttribute }) readonly = false;
 	@Input({ transform: booleanAttribute }) searchWhileComposing = true;
 	@Input({ transform: numberAttribute }) minTermLength = 0;
@@ -170,8 +173,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	focused: boolean;
 	escapeHTML = true;
 	private _itemsAreUsed: boolean;
-	private _defaultLabel = 'label';
-	private _primitive;
+	private readonly _defaultLabel = 'label';
+	private _primitive: any;
 	private _manualOpen: boolean;
 	private _pressedKeys: string[] = [];
 	private _isComposing = false;
@@ -180,12 +183,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	constructor(
 		@Attribute('class') public classes: string,
-		@Attribute('autofocus') private autoFocus: any,
+		@Attribute('autofocus') private readonly autoFocus: any,
 		public config: NgSelectConfig,
 		@Inject(SELECTION_MODEL_FACTORY) @Optional() newSelectionModel: SelectionModelFactory | undefined,
 		_elementRef: ElementRef<HTMLElement>,
-		private _cd: ChangeDetectorRef,
-		private _console: ConsoleService,
+		private readonly _cd: ChangeDetectorRef,
+		private readonly _console: ConsoleService,
 	) {
 		this._mergeGlobalConfig(config);
 		this.itemsList = new ItemsList(this, newSelectionModel ? newSelectionModel() : DefaultSelectionModelFactory());
@@ -306,7 +309,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	private get _validTerm() {
-		const term = this.searchTerm && this.searchTerm.trim();
+		const term = this.searchTerm?.trim();
 		return term && term.length >= this.minTermLength;
 	}
 
@@ -332,6 +335,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (changes.isOpen) {
 			this._manualOpen = isDefined(changes.isOpen.currentValue);
 		}
+		if (changes.groupBy) {
+			if (!changes.items) {
+				this._setItems([...this.items]);
+			}
+		}
+		if (changes.inputAttrs) {
+			this._setInputAttributes();
+		}
 	}
 
 	ngAfterViewInit() {
@@ -352,14 +363,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	@HostListener('keydown', ['$event'])
 	handleKeyDown($event: KeyboardEvent) {
-		const keyCode = KeyCode[$event.which];
-		if (keyCode) {
+		const keyName = $event.key;
+		if (Object.values(KeyCode).includes(keyName as KeyCode)) {
 			if (this.keyDownFn($event) === false) {
 				return;
 			}
 			this.handleKeyCode($event);
-		} else if ($event.key && $event.key.length === 1) {
-			this._keyPress$.next($event.key.toLocaleLowerCase());
+		} else if (keyName && keyName.length === 1) {
+			this._keyPress$.next(keyName.toLocaleLowerCase());
 		}
 	}
 
@@ -374,7 +385,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	handleKeyCodeInput($event: KeyboardEvent) {
-		switch ($event.which) {
+		switch ($event.key) {
 			case KeyCode.ArrowDown:
 				this._handleArrowDown($event);
 				break;
@@ -401,7 +412,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	handleKeyCodeClear($event: KeyboardEvent) {
-		switch ($event.which) {
+		switch ($event.key) {
 			case KeyCode.Enter:
 				this.handleClearClick();
 				$event.preventDefault();
@@ -675,7 +686,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.open();
 	}
 
-	onInputFocus($event) {
+	onInputFocus($event: FocusEvent) {
 		if (this.focused) {
 			return;
 		}
@@ -689,7 +700,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.focused = true;
 	}
 
-	onInputBlur($event) {
+	onInputBlur($event: FocusEvent) {
 		this.element.classList.remove('ng-select-focused');
 		this.blurEvent.emit($event);
 		if (!this.isOpen && !this.disabled) {
@@ -719,8 +730,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	private _onTouched = () => {};
 
 	private _setSearchTermFromItems() {
-		const selected = this.selectedItems && this.selectedItems[0];
-		this.searchTerm = (selected && selected.label) || null;
+		const selected = this.selectedItems?.[0];
+		this.searchTerm = selected?.label ?? null;
 	}
 
 	private _setItems(items: any[]) {
@@ -941,7 +952,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _handleTab($event: KeyboardEvent) {
 		if (this.isOpen === false) {
-			if (this.showClear() && !$event.shiftKey) {
+			if (this.showClear() && !$event.shiftKey && this.tabFocusOnClearButton()) {
 				this.focusOnClear();
 				$event.preventDefault();
 			} else if (!this.addTag) {
@@ -1042,15 +1053,33 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.addTagText = this.addTagText || config.addTagText;
 		this.loadingText = this.loadingText || config.loadingText;
 		this.clearAllText = this.clearAllText || config.clearAllText;
-		this.virtualScroll = isDefined(this.virtualScroll)
-			? this.virtualScroll
-			: isDefined(config.disableVirtualScroll)
-				? !config.disableVirtualScroll
-				: false;
+		this.virtualScroll = this.getVirtualScroll(config);
 		this.openOnEnter = isDefined(this.openOnEnter) ? this.openOnEnter : config.openOnEnter;
 		this.appendTo = this.appendTo || config.appendTo;
 		this.bindValue = this.bindValue || config.bindValue;
 		this.bindLabel = this.bindLabel || config.bindLabel;
 		this.appearance = this.appearance || config.appearance;
+	}
+
+	/**
+	 * Gets virtual scroll value from input or from config
+	 *
+	 *  @param config NgSelectConfig object
+	 *
+	 *  @returns `true` if virtual scroll is enabled, `false` otherwise
+	 */
+	private getVirtualScroll(config: NgSelectConfig): boolean {
+		return isDefined(this.virtualScroll) ? this.virtualScroll : this.isVirtualScrollDisabled(config);
+	}
+
+	/**
+	 * Gets disableVirtualScroll value from input or from config
+	 *
+	 *  @param config NgSelectConfig object
+	 *
+	 *  @returns `true` if disableVirtualScroll is enabled, `false` otherwise
+	 */
+	private isVirtualScrollDisabled(config: NgSelectConfig) {
+		return isDefined(config.disableVirtualScroll) ? !config.disableVirtualScroll : false;
 	}
 }

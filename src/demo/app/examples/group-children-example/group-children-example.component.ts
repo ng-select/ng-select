@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { JsonPipe } from '@angular/common';
+import { NgOptgroupTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
-    selector: 'ng-group-children-example',
-    templateUrl: './group-children-example.component.html',
-    styleUrls: ['./group-children-example.component.scss'],
-    standalone: false
+	selector: 'ng-group-children-example',
+	templateUrl: './group-children-example.component.html',
+	styleUrls: ['./group-children-example.component.scss'],
+	imports: [NgSelectComponent, FormsModule, NgOptgroupTemplateDirective, NgOptionTemplateDirective, JsonPipe],
 })
 export class GroupChildrenExampleComponent implements OnInit {
 	selectedProjects = [];

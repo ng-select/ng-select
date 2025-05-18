@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { JsonPipe } from '@angular/common';
+import { NgOptgroupTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
-    selector: 'ng-group-default-example',
-    templateUrl: './group-default-example.component.html',
-    styleUrls: ['./group-default-example.component.scss'],
-    standalone: false
+	selector: 'ng-group-default-example',
+	templateUrl: './group-default-example.component.html',
+	styleUrls: ['./group-default-example.component.scss'],
+	imports: [NgSelectComponent, FormsModule, NgOptgroupTemplateDirective, JsonPipe],
 })
 export class GroupDefaultExampleComponent implements OnInit {
 	selectedAccount = 'Adam';

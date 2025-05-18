@@ -1,19 +1,17 @@
 import { Component, ComponentFactoryResolver, Directive, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { EXAMPLE_COMPONENTS } from '../../examples/examples';
+import { StackblitzButtonComponent } from './stackblitz-button/stackblitz-button.component';
 
-@Directive({
-    selector: '[example-host]',
-    standalone: false
-})
+@Directive({ selector: '[example-host]' })
 export class ExampleHostDirective {
 	constructor(public viewContainerRef: ViewContainerRef) {}
 }
 
 @Component({
-    selector: 'example-viewer',
-    templateUrl: './example-viewer.component.html',
-    styles: [
-        `
+	selector: 'example-viewer',
+	templateUrl: './example-viewer.component.html',
+	styles: [
+		`
 			.card-header {
 				display: flex;
 				align-items: center;
@@ -30,8 +28,8 @@ export class ExampleHostDirective {
 				margin-bottom: 20px;
 			}
 		`,
-    ],
-    standalone: false
+	],
+	imports: [StackblitzButtonComponent, ExampleHostDirective],
 })
 export class ExampleViewerComponent implements OnInit {
 	@Input() example: string;

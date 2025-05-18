@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { NgHeaderTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
+
 @Component({
 	selector: 'ng-virtual-scroll-example',
 	templateUrl: './virtual-scroll-example.component.html',
 	styleUrls: ['./virtual-scroll-example.component.scss'],
-	standalone: false,
+	imports: [NgSelectComponent, NgHeaderTemplateDirective, NgOptionTemplateDirective],
 })
 export class VirtualScrollExampleComponent implements OnInit {
 	photos = [];
