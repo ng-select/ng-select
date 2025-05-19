@@ -73,7 +73,7 @@
 	}
 
 	@if (showClear()) {
-		@if (clearButtonTemplate) {
+		@if (providedClearButtonTemplate) {
 			<ng-container [ngTemplateOutlet]="providedClearButtonTemplate"></ng-container>
 		} @else {
 			<span

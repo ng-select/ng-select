@@ -1475,11 +1475,11 @@ describe('NgSelectComponent', () => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [items]="cities"
-                            bindLabel="name"
-                            [virtualScroll]="true"
-                            [appendTo]="body"
-                            [(ngModel)]="city">
-                </ng-select>`,
+										[virtualScroll]="true"
+										[(ngModel)]="city"
+										appendTo="body"
+										bindLabel="name">
+				</ng-select>`,
 			);
 
 			const select = fixture.componentInstance.select;
@@ -1492,12 +1492,14 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 			fixture.detectChanges();
 
-			const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
-			const marked = fixture.debugElement.nativeElement.querySelector('.ng-option-marked');
+			fixture.whenStable().then(() => {
+				const options = document.querySelectorAll<HTMLElement>('.ng-dropdown-panel .ng-option');
+				const marked = document.querySelectorAll<HTMLElement>('.ng-dropdown-panel .ng-option-marked')[0];
 
-			expect(options.length).toBe(18);
-			expect(marked.innerText).toBe('k');
-			expect(marked.offsetTop).toBeGreaterThanOrEqual(180);
+				expect(options.length).toBe(17);
+				expect(marked.innerText).toBe('k');
+				expect(marked.offsetTop).toBeGreaterThanOrEqual(180);
+			});
 		}));
 
 		it('should scroll to item and do not change scroll position when scrolled to visible item', fakeAsync(() => {
@@ -2670,7 +2672,7 @@ describe('NgSelectComponent', () => {
 			});
 		}));
 
-				it('should display custom clear button template when selected city provided as attribute', fakeAsync(() => {
+		it('should display custom clear button template when selected city provided as attribute', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-template #clearButtonTemplate>
@@ -5295,6 +5297,7 @@ class NgSelectTestComponent {
 		{ id: 2, name: 'Kaunas' },
 		{ id: 3, name: 'Pabrade' },
 	];
+	cities$ = of(this.cities).pipe(delay(this.asyncTimeout));
 	readonlyCities: readonly any[] = [
 		{ id: 1, name: 'Vilnius' },
 		{ id: 2, name: 'Kaunas' },
