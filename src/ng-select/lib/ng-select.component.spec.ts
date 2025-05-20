@@ -4840,6 +4840,7 @@ function createEvent(target = {}) {
 
 @Component({
 	template: ``,
+	standalone: false,
 })
 class NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
@@ -4935,6 +4936,7 @@ class NgSelectTestComponent {
 @Component({
 	template: ``,
 	encapsulation: ViewEncapsulation.ShadowDom,
+	standalone: false,
 })
 class EncapsulatedTestComponent extends NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
@@ -4942,6 +4944,7 @@ class EncapsulatedTestComponent extends NgSelectTestComponent {
 
 @Component({
 	template: ``,
+	standalone: false,
 })
 class NgSelectGroupingTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
