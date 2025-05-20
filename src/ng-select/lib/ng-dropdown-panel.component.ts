@@ -40,7 +40,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 				<ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }" />
 			</div>
 		}
-		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host" [attr.aria-label]="ariaLabel()">
+		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host" [attr.aria-label]="ariaLabelDropdown()">
 			<div #padding [class.total-padding]="virtualScroll"></div>
 			<div #content [class.scrollable-content]="virtualScroll && items.length">
 				<ng-content />
@@ -64,7 +64,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() headerTemplate: TemplateRef<any>;
 	@Input() footerTemplate: TemplateRef<any>;
 	@Input() filterValue: string = null;
-	ariaLabel = input<string|null>(null);
+	ariaLabelDropdown = input<string | null>(null);
 
 	@Output() update = new EventEmitter<any[]>();
 	@Output() scroll = new EventEmitter<{ start: number; end: number }>();
