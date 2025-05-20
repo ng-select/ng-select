@@ -1599,7 +1599,7 @@ describe('NgSelectComponent', () => {
 			});
 		}));
 
-		it('should set aria-label on dropdown panel when ariaLabelDropdown input is provided', fakeAsync(() => {
+		it('should set aria-label on the inner listbox element when ariaLabelDropdown input is provided', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [items]="cities" ariaLabelDropdown="Custom Aria Label">
@@ -1610,8 +1610,13 @@ describe('NgSelectComponent', () => {
 			select.open();
 			tickAndDetectChanges(fixture);
 
+			// The dropdown panel itself should NOT have aria-label directly
 			const dropdownPanel = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel');
-			expect(dropdownPanel.getAttribute('aria-label')).toBe('Custom Aria Label');
+			expect(dropdownPanel.getAttribute('aria-label')).toBeNull();
+
+			// The inner element with role="listbox" should have the aria-label
+			const listboxElement = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel-items[role="listbox"]');
+			expect(listboxElement.getAttribute('aria-label')).toBe('Custom Aria Label');
 		}));
 	});
 

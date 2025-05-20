@@ -6,6 +6,7 @@ import {
 	ElementRef,
 	EventEmitter,
 	Inject,
+	input,
 	Input,
 	NgZone,
 	OnChanges,
@@ -30,16 +31,16 @@ const CSS_POSITIONS: Readonly<string[]> = ['top', 'right', 'bottom', 'left'];
 const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    selector: 'ng-dropdown-panel',
-    template: `
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	encapsulation: ViewEncapsulation.None,
+	selector: 'ng-dropdown-panel',
+	template: `
 		@if (headerTemplate) {
 			<div class="ng-dropdown-header">
 				<ng-container [ngTemplateOutlet]="headerTemplate" [ngTemplateOutletContext]="{ searchTerm: filterValue }" />
 			</div>
 		}
-		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host">
+		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host" [attr.aria-label]="ariaLabelDropdown()">
 			<div #padding [class.total-padding]="virtualScroll"></div>
 			<div #content [class.scrollable-content]="virtualScroll && items.length">
 				<ng-content />
@@ -51,7 +52,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 			</div>
 		}
 	`,
-    imports: [NgTemplateOutlet]
+	imports: [NgTemplateOutlet],
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() items: NgOption[] = [];
@@ -63,6 +64,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() headerTemplate: TemplateRef<any>;
 	@Input() footerTemplate: TemplateRef<any>;
 	@Input() filterValue: string = null;
+	ariaLabelDropdown = input<string | null>(null);
 
 	@Output() update = new EventEmitter<any[]>();
 	@Output() scroll = new EventEmitter<{ start: number; end: number }>();
