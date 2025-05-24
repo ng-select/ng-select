@@ -178,7 +178,7 @@
 }
 
 <!-- Always present aria-live region -->
-<div class="ng-visually-hidden" aria-live="polite">
+<div class="ng-visually-hidden" aria-live="polite" role="status" aria-atomic="true">
     @if (isOpen && showNoItemsFound()) {
     {{ notFoundText }}
     }
