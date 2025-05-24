@@ -3736,6 +3736,31 @@ describe('NgSelectComponent', () => {
 			input.setAttribute('aria-label', 'test');
 			expect(input.getAttribute('aria-label')).toBe('test');
 		});
+
+		it('should announce notFoundText in aria-live region when dropdown is open and no items match', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+							[notFoundText]="'No items found (aria-live)'"
+							bindLabel="name"
+							[(ngModel)]="selectedCity">
+				</ng-select>`,
+			);
+			const select = fixture.componentInstance.select;
+
+			// Open dropdown
+			select.open();
+			tickAndDetectChanges(fixture);
+
+			// Filter to a non-existent item
+			select.filter('not-in-list');
+			tickAndDetectChanges(fixture);
+
+			// Find the aria-live region
+			const ariaLiveDiv = fixture.debugElement.query(By.css('.ng-visually-hidden[aria-live="polite"]'));
+			expect(ariaLiveDiv).toBeTruthy();
+			expect(ariaLiveDiv.nativeElement.textContent).toContain('No items found (aria-live)');
+		}));
 	});
 
 	describe('Output events', () => {
@@ -4840,7 +4865,6 @@ function createEvent(target = {}) {
 
 @Component({
 	template: ``,
-	standalone: false,
 })
 class NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
@@ -4936,7 +4960,6 @@ class NgSelectTestComponent {
 @Component({
 	template: ``,
 	encapsulation: ViewEncapsulation.ShadowDom,
-	standalone: false,
 })
 class EncapsulatedTestComponent extends NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
@@ -4944,7 +4967,6 @@ class EncapsulatedTestComponent extends NgSelectTestComponent {
 
 @Component({
 	template: ``,
-	standalone: false,
 })
 class NgSelectGroupingTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
