@@ -3738,14 +3738,6 @@ describe('NgSelectComponent', () => {
 		});
 
 		it('should announce notFoundText in aria-live region when dropdown is open and no items match', fakeAsync(() => {
-			const fixture = createTestingModule(
-				NgSelectTestComponent,
-				`<ng-select [items]="cities"
-							[notFoundText]="'No items found (aria-live)'"
-							bindLabel="name"
-							[(ngModel)]="selectedCity">
-				</ng-select>`,
-			);
 			const select = fixture.componentInstance.select;
 
 			// Open dropdown
