@@ -176,3 +176,10 @@
 		}
 	</ng-dropdown-panel>
 }
+
+<!-- Always present aria-live region -->
+<div aria-atomic="true" aria-live="polite" class="ng-visually-hidden" role="status">
+	@if (isOpen && showNoItemsFound()) {
+		{{ notFoundText }}
+	}
+</div>

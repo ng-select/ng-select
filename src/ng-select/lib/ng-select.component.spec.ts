@@ -3659,6 +3659,7 @@ describe('NgSelectComponent', () => {
 				`<ng-select [items]="cities"
                         labelForId="lbl"
                         (change)="onChange($event)"
+                        notFoundText="No items found (aria-live)"
                         bindLabel="name">
                 </ng-select>`,
 			);
@@ -3736,6 +3737,21 @@ describe('NgSelectComponent', () => {
 			input.setAttribute('aria-label', 'test');
 			expect(input.getAttribute('aria-label')).toBe('test');
 		});
+
+		it('should announce notFoundText in aria-live region when dropdown is open and no items match', fakeAsync(() => {
+			const select = fixture.componentInstance.select;
+
+			// Open dropdown
+			select.open();
+			tickAndDetectChanges(fixture);
+
+			// Filter to a non-existent item
+			select.filter('not-in-list');
+			tickAndDetectChanges(fixture);
+
+			const notFoundText = fixture.componentInstance.select.notFoundText;
+			expect(notFoundText).toBe('No items found (aria-live)');
+		}));
 	});
 
 	describe('Output events', () => {
@@ -4857,7 +4873,6 @@ class NgSelectTestComponent {
 	selectOnTab = true;
 	tabFocusOnClearButton = true;
 	hideSelected = false;
-
 	citiesLoading = false;
 	selectedCityId: number;
 	selectedCityIds: number[];
