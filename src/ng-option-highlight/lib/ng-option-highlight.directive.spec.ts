@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive';
 import { By } from '@angular/platform-browser';
+import 'zone.js/testing';
 
 @Component({
-    template: `
+	template: `
 		<span id="test1" [ngOptionHighlight]="term">My text is highlighted</span>
 		<span id="test2" [ngOptionHighlight]="term">My text is not highlighted</span>
 		<span id="test3" [ngOptionHighlight]="term">My text is highlighted</span>
@@ -14,7 +15,7 @@ import { By } from '@angular/platform-browser';
 		}
 		<span id="test6" [ngOptionHighlight]="term">+My text is) high\\lighted</span>
 	`,
-    imports: [NgOptionHighlightDirective]
+	imports: [NgOptionHighlightDirective],
 })
 class TestComponent {
 	term: string;
