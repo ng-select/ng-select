@@ -10,6 +10,7 @@ import { ConsoleService } from './console.service';
 import { NgSelectComponent } from './ng-select.component';
 import { NgSelectModule } from './ng-select.module';
 import { KeyCode, NgOption } from './ng-select.types';
+import 'zone.js/testing';
 
 describe('NgSelectComponent', () => {
 	describe('Data source', () => {
