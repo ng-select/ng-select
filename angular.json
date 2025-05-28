@@ -25,6 +25,10 @@
         "test": {
           "builder": "@angular/build:karma",
           "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "main": "src/ng-select/test.ts",
             "tsConfig": "src/ng-select/tsconfig.spec.json",
             "karmaConfig": "src/ng-select/karma.conf.js",
