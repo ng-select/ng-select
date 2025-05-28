@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { ItemsList } from './items-list';
 import { NgSelectComponent } from './ng-select.component';
 import { DefaultSelectionModel } from './selection-model';
-import 'zone.js/testing';
 
 describe('ItemsList', () => {
 	describe('select', () => {
