@@ -1,8 +1,9 @@
-import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
 	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
+	DOCUMENT,
 	ElementRef,
 	EventEmitter,
 	Inject,
@@ -20,6 +21,7 @@ import {
 	ViewChild,
 	ViewEncapsulation,
 } from '@angular/core';
+
 import { animationFrameScheduler, asapScheduler, fromEvent, merge, Subject } from 'rxjs';
 import { auditTime, takeUntil } from 'rxjs/operators';
 import { NgDropdownPanelService, PanelDimensions } from './ng-dropdown-panel.service';

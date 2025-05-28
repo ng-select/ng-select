@@ -3,6 +3,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitF
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
+import 'zone.js/testing';
 import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
 import { MockConsole, MockNgZone } from '../testing/mocks';
 import { NgSelectConfig } from './config.service';
