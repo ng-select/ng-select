@@ -1,6 +1,4 @@
-// Karma configuration file, see link for more information
-// https://karma-runner.github.io/1.0/config/configuration-file.html
-
+// Karma configuration file for ng-option-highlight library
 module.exports = function (config) {
 	config.set({
 		basePath: '',
@@ -18,10 +16,14 @@ module.exports = function (config) {
 		coverageReporter: {
 			dir: require('path').join(__dirname, '../../coverage/'),
 			subdir: 'ng-option-highlight',
-			type: 'lcovonly',
+			reporters: [
+				{ type: 'html' },
+				{ type: 'lcovonly' },
+				{ type: 'text-summary' }
+			],
 			fixWebpackSourcePaths: true,
 		},
-		reporters: ['progress', 'kjhtml'],
+		reporters: ['progress', 'kjhtml', 'coverage'],
 		port: 9876,
 		colors: true,
 		logLevel: config.LOG_INFO,

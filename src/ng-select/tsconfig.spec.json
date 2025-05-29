@@ -7,6 +7,5 @@
 	"angularCompilerOptions": {
 		"enableIvy": false
 	},
-	"files": ["test.ts"],
 	"include": ["**/*.spec.ts", "**/*.d.ts"]
 }
