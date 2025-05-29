@@ -101,7 +101,7 @@
 		[class.ng-select-multiple]="multiple"
 		[ngClass]="appendTo ? (ngClass ? ngClass : classes) : null"
 		[id]="dropdownId"
-		[attr.aria-label]="ariaLabelDropdown">
+		[ariaLabelDropdown]="ariaLabelDropdown">
 		<ng-container>
 			@for (item of viewPortItems; track trackByOption($index, item)) {
 				<div
@@ -176,3 +176,10 @@
 		}
 	</ng-dropdown-panel>
 }
+
+<!-- Always present aria-live region -->
+<div aria-atomic="true" aria-live="polite" class="ng-visually-hidden" role="status">
+	@if (isOpen && showNoItemsFound()) {
+		{{ notFoundText }}
+	}
+</div>

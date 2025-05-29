@@ -9,166 +9,181 @@
   "version": 1,
   "newProjectRoot": "src",
   "projects": {
-    "ng-select": {
-      "projectType": "library",
-      "root": "src/ng-select",
-      "sourceRoot": "src/ng-select",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "src/ng-select/tsconfig.lib.json",
-            "project": "src/ng-select/ng-package.json"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/ng-select/test.ts",
-            "tsConfig": "src/ng-select/tsconfig.spec.json",
-            "karmaConfig": "src/ng-select/karma.conf.js",
-            "watch": false,
-            "codeCoverageExclude": [
-              "src/ng-select/testing/*",
-              "src/ng-select/*.ts",
-              "src/ng-select/lib/console.service.ts",
-              "src/ng-select/lib/search-helper.ts",
-              "src/ng-select/lib/ng-templates.directive.ts"
-            ]
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "src/ng-select/**/*.ts",
-              "src/ng-select/**/*.html"
-            ]
-          }
-        }
-      }
+		"ng-select": {
+			"projectType": "library",
+			"root": "src/ng-select",
+			"sourceRoot": "src/ng-select",
+			"prefix": "lib",
+			"architect": {
+				"build": {
+					"builder": "@angular/build:ng-packagr",
+					"options": {
+						"tsConfig": "src/ng-select/tsconfig.lib.json",
+						"project": "src/ng-select/ng-package.json"
+					}
+				},
+				"test": {
+					"builder": "@angular/build:karma",
+					"options": {
+						"polyfills": ["zone.js", "zone.js/testing"],
+						"tsConfig": "src/ng-select/tsconfig.spec.json",
+						"watch": false,
+						"codeCoverage": true,
+						"codeCoverageExclude": [
+							"src/ng-select/testing/*",
+							"src/ng-select/*.ts",
+							"src/ng-select/lib/console.service.ts",
+							"src/ng-select/lib/search-helper.ts",
+							"src/ng-select/lib/ng-templates.directive.ts"
+						],
+						"karmaConfig": "src/ng-select/karma.conf.js"
+					}
+				},
+				"lint": {
+					"builder": "@angular-eslint/builder:lint",
+					"options": {
+						"lintFilePatterns": ["src/ng-select/**/*.ts", "src/ng-select/**/*.html"]
+					}
+				}
+			}
+		},
+		"demo": {
+			"projectType": "application",
+			"schematics": {
+				"@schematics/angular:component": {
+					"style": "scss",
+					"skipTests": true
+				},
+				"@schematics/angular:class": {
+					"skipTests": true
+				},
+				"@schematics/angular:directive": {
+					"skipTests": true
+				},
+				"@schematics/angular:guard": {
+					"skipTests": true
+				},
+				"@schematics/angular:module": {
+					"skipTests": true
+				},
+				"@schematics/angular:pipe": {
+					"skipTests": true
+				},
+				"@schematics/angular:service": {
+					"skipTests": true
+				}
+			},
+			"root": "src/demo",
+			"sourceRoot": "src/demo",
+			"prefix": "",
+			"architect": {
+				"build": {
+					"builder": "@angular/build:application",
+					"options": {
+						"outputPath": {
+							"base": "dist/demo"
+						},
+						"index": "src/demo/index.html",
+						"polyfills": ["zone.js"],
+						"tsConfig": "src/demo/tsconfig.app.json",
+						"deployUrl": "/ng-select/",
+						"assets": ["src/demo/favicon.ico", "src/demo/assets"],
+						"styles": ["src/demo/styles.scss"],
+						"scripts": [],
+						"browser": "src/demo/main.ts"
+					},
+					"configurations": {
+						"production": {
+							"fileReplacements": [
+								{
+									"replace": "src/demo/environments/environment.ts",
+									"with": "src/demo/environments/environment.prod.ts"
+								}
+							],
+							"outputHashing": "all",
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "2mb",
+									"maximumError": "5mb"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "100kb"
+								}
+							]
+						}
+					}
+				},
+				"serve": {
+					"builder": "@angular/build:dev-server",
+					"options": {
+						"buildTarget": "demo:build"
+					},
+					"configurations": {
+						"production": {
+							"buildTarget": "demo:build:production"
+						}
+					}
+				}
+			}
+		},
+		"ng-option-highlight": {
+			"projectType": "library",
+			"root": "src/ng-option-highlight",
+			"sourceRoot": "src/ng-option-highlight",
+			"prefix": "lib",
+			"architect": {
+				"build": {
+					"builder": "@angular/build:ng-packagr",
+					"options": {
+						"tsConfig": "src/ng-option-highlight/tsconfig.lib.json",
+						"project": "src/ng-option-highlight/ng-package.json"
+					}
+				},
+				"test": {
+					"builder": "@angular/build:karma",
+					"options": {
+						"polyfills": ["zone.js", "zone.js/testing"],
+						"tsConfig": "src/ng-option-highlight/tsconfig.spec.json",
+						"watch": false,
+						"codeCoverage": true,
+						"karmaConfig": "src/ng-option-highlight/karma.conf.js"
+					}
+				},
+				"lint": {
+					"builder": "@angular-eslint/builder:lint",
+					"options": {
+						"lintFilePatterns": ["src/ng-option-highlight/**/*.ts", "src/ng-option-highlight/**/*.html"]
+					}
+				}
+			}
+		}
+	},
+  "schematics": {
+    "@schematics/angular:component": {
+      "type": "component"
     },
-    "demo": {
-      "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss",
-          "skipTests": true
-        },
-        "@schematics/angular:class": {
-          "skipTests": true
-        },
-        "@schematics/angular:directive": {
-          "skipTests": true
-        },
-        "@schematics/angular:guard": {
-          "skipTests": true
-        },
-        "@schematics/angular:module": {
-          "skipTests": true
-        },
-        "@schematics/angular:pipe": {
-          "skipTests": true
-        },
-        "@schematics/angular:service": {
-          "skipTests": true
-        }
-      },
-      "root": "src/demo",
-      "sourceRoot": "src/demo",
-      "prefix": "",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:application",
-          "options": {
-            "outputPath": {
-              "base": "dist/demo"
-            },
-            "index": "src/demo/index.html",
-            "polyfills": [
-              "zone.js"
-            ],
-            "tsConfig": "src/demo/tsconfig.app.json",
-            "deployUrl": "/ng-select/",
-            "assets": [
-              "src/demo/favicon.ico",
-              "src/demo/assets"
-            ],
-            "styles": [
-              "src/demo/styles.scss"
-            ],
-            "scripts": [],
-            "browser": "src/demo/main.ts"
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/demo/environments/environment.ts",
-                  "with": "src/demo/environments/environment.prod.ts"
-                }
-              ],
-              "outputHashing": "all",
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "100kb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "buildTarget": "demo:build"
-          },
-          "configurations": {
-            "production": {
-              "buildTarget": "demo:build:production"
-            }
-          }
-        }
-      }
+    "@schematics/angular:directive": {
+      "type": "directive"
     },
-    "ng-option-highlight": {
-      "projectType": "library",
-      "root": "src/ng-option-highlight",
-      "sourceRoot": "src/ng-option-highlight",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "src/ng-option-highlight/tsconfig.lib.json",
-            "project": "src/ng-option-highlight/ng-package.json"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/ng-option-highlight/test.ts",
-            "tsConfig": "src/ng-option-highlight/tsconfig.spec.json",
-            "karmaConfig": "src/ng-option-highlight/karma.conf.js",
-            "watch": false
-          }
-        },
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
-          "options": {
-            "lintFilePatterns": [
-              "src/ng-option-highlight/**/*.ts",
-              "src/ng-option-highlight/**/*.html"
-            ]
-          }
-        }
-      }
+    "@schematics/angular:service": {
+      "type": "service"
+    },
+    "@schematics/angular:guard": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:interceptor": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:module": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:pipe": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:resolver": {
+      "typeSeparator": "."
     }
   }
 }

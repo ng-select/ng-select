@@ -1,0 +1,11 @@
+diff --git a/node_modules/@ng-bootstrap/ng-bootstrap/fesm2022/ng-bootstrap.mjs b/node_modules/@ng-bootstrap/ng-bootstrap/fesm2022/ng-bootstrap.mjs
+index d65de64..69b1e02 100644
+--- a/node_modules/@ng-bootstrap/ng-bootstrap/fesm2022/ng-bootstrap.mjs
++++ b/node_modules/@ng-bootstrap/ng-bootstrap/fesm2022/ng-bootstrap.mjs
+@@ -1,5 +1,5 @@
+ import * as i0 from '@angular/core';
+-import { Injectable, inject, ElementRef, NgZone, EventEmitter, Directive, Input, Output, TemplateRef, ViewContainerRef, Component, ViewChild, ContentChild, ChangeDetectorRef, DestroyRef, ContentChildren, NgModule, ChangeDetectionStrategy, ViewEncapsulation, PLATFORM_ID, Injector, afterNextRender, LOCALE_ID, forwardRef, afterRender, ApplicationRef, EnvironmentInjector, createComponent, Attribute, ViewChildren, InjectionToken } from '@angular/core';
++import { Injectable, inject, ElementRef, NgZone, EventEmitter, Directive, Input, Output, TemplateRef, ViewContainerRef, Component, ViewChild, ContentChild, ChangeDetectorRef, DestroyRef, ContentChildren, NgModule, ChangeDetectionStrategy, ViewEncapsulation, PLATFORM_ID, Injector, afterNextRender, LOCALE_ID, forwardRef, afterEveryRender as afterRender, ApplicationRef, EnvironmentInjector, createComponent, Attribute, ViewChildren, InjectionToken } from '@angular/core';
+ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+ import { Observable, EMPTY, of, Subject, fromEvent, timer, race, BehaviorSubject, combineLatest, NEVER, zip, merge } from 'rxjs';
+ import { endWith, takeUntil, filter, map, startWith, distinctUntilChanged, switchMap, take, tap, withLatestFrom, delay, mergeMap, skip, finalize } from 'rxjs/operators';
