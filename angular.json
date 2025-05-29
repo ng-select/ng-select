@@ -28,13 +28,15 @@
 						"polyfills": ["zone.js", "zone.js/testing"],
 						"tsConfig": "src/ng-select/tsconfig.spec.json",
 						"watch": false,
+						"codeCoverage": true,
 						"codeCoverageExclude": [
 							"src/ng-select/testing/*",
 							"src/ng-select/*.ts",
 							"src/ng-select/lib/console.service.ts",
 							"src/ng-select/lib/search-helper.ts",
 							"src/ng-select/lib/ng-templates.directive.ts"
-						]
+						],
+						"karmaConfig": "src/ng-select/karma.conf.js"
 					}
 				},
 				"lint": {
@@ -144,7 +146,9 @@
 					"options": {
 						"polyfills": ["zone.js", "zone.js/testing"],
 						"tsConfig": "src/ng-option-highlight/tsconfig.spec.json",
-						"watch": false
+						"watch": false,
+						"codeCoverage": true,
+						"karmaConfig": "src/ng-option-highlight/karma.conf.js"
 					}
 				},
 				"lint": {
