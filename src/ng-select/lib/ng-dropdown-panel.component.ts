@@ -163,7 +163,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 			return;
 		}
 
-		let scrollTo;
+		let scrollTo: number;
 		if (this.virtualScroll) {
 			const itemHeight = this._panelService.dimensions.itemHeight;
 			scrollTo = this._panelService.getScrollTo(index * itemHeight, itemHeight, this._lastScrollPosition);
@@ -216,15 +216,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
 	private _handleScroll() {
 		this._zone.runOutsideAngular(() => {
-			fromEvent(this.scrollElementRef.nativeElement, 'scroll')
+			fromEvent(this._scrollablePanel, 'scroll')
 				.pipe(takeUntil(this._destroy$), auditTime(0, SCROLL_SCHEDULER))
-				.subscribe((e: { path; composedPath; target }) => {
-					const path = e.path || (e.composedPath && e.composedPath());
-					if (!path || (path.length === 0 && !e.target)) {
-						return;
-					}
-					const scrollTop = !path || path.length === 0 ? e.target.scrollTop : path[0].scrollTop;
-					this._onContentScrolled(scrollTop);
+				.subscribe(() => {
+					this._onContentScrolled(this._scrollablePanel.scrollTop);
 				});
 		});
 	}
