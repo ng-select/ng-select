@@ -23,6 +23,7 @@ import {
 	Optional,
 	Output,
 	QueryList,
+	signal,
 	SimpleChanges,
 	TemplateRef,
 	ViewChild,
@@ -168,7 +169,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	element: HTMLElement;
 	focused: boolean;
 	escapeHTML = true;
-	private _tabFocusOnClear = true;
+	tabFocusOnClear = signal<boolean>(true);
 	private _itemsAreUsed: boolean;
 	private readonly _defaultLabel = 'label';
 	private _primitive: any;
@@ -877,14 +878,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 	}
 
-	protected getTabFocusOnClear() {
-		return this._tabFocusOnClear;
-	}
-
 	private _setTabFocusOnClear() {
-		this._tabFocusOnClear = isDefined(this.tabFocusOnClearButton())
-			? !!this.tabFocusOnClearButton()
-			: this.config.tabFocusOnClear;
+		this.tabFocusOnClear.set(isDefined(this.tabFocusOnClearButton()) ? !!this.tabFocusOnClearButton() : this.config.tabFocusOnClear);
 	}
 
 	private _updateNgModel() {
@@ -956,7 +951,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _handleTab($event: KeyboardEvent) {
 		if (this.isOpen === false) {
-			if (this.showClear() && !$event.shiftKey && this._tabFocusOnClear) {
+			if (this.showClear() && !$event.shiftKey && this.tabFocusOnClear()) {
 				this.focusOnClear();
 				$event.preventDefault();
 			} else if (!this.addTag) {

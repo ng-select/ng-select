@@ -1931,7 +1931,6 @@ describe('NgSelectComponent', () => {
 	});
 
 	describe('Keyboard events (tab)', () => {
-
 		function genericFixture() {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
@@ -1945,11 +1944,11 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 			const select = fixture.componentInstance.select;
-			return {fixture, select}
+			return { fixture, select };
 		}
 
 		it('should close dropdown when there are no items', fakeAsync(() => {
-			const {fixture, select} = genericFixture();
+			const { fixture, select } = genericFixture();
 			select.filter('random stuff');
 			tick(200);
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
@@ -1958,7 +1957,7 @@ describe('NgSelectComponent', () => {
 		}));
 
 		it('should close dropdown when [selectOnTab]="false"', fakeAsync(() => {
-			const {fixture, select} = genericFixture();
+			const { fixture, select } = genericFixture();
 			fixture.componentInstance.selectOnTab = false;
 			tickAndDetectChanges(fixture);
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
@@ -1968,7 +1967,7 @@ describe('NgSelectComponent', () => {
 		}));
 
 		it('should close dropdown and keep selected value', fakeAsync(() => {
-			const {fixture, select} = genericFixture();
+			const { fixture, select } = genericFixture();
 			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
 			tickAndDetectChanges(fixture);
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
@@ -1984,7 +1983,7 @@ describe('NgSelectComponent', () => {
 		}));
 
 		it('should mark first item on filter when tab', fakeAsync(() => {
-			const {fixture} = genericFixture();
+			const { fixture } = genericFixture();
 			tick(200);
 			fixture.componentInstance.select.filter('pab');
 			tick(200);
@@ -1998,7 +1997,7 @@ describe('NgSelectComponent', () => {
 		}));
 
 		it('should focus on clear button when tab pressed while not opened and clear showing', fakeAsync(() => {
-			const {fixture, select} = genericFixture();
+			const { fixture, select } = genericFixture();
 			fixture.componentInstance.tabFocusOnClearButton = true;
 			selectOption(fixture, KeyCode.ArrowDown, 0);
 			tickAndDetectChanges(fixture);
@@ -2023,7 +2022,7 @@ describe('NgSelectComponent', () => {
 												[tabFocusOnClearButton]="tabFocusOnClearButton"
                         [(ngModel)]="selectedCity">
                 </ng-select>`,
-				config
+				config,
 			);
 			const select = fixture.componentInstance.select;
 			fixture.componentInstance.tabFocusOnClearButton = false;
@@ -2050,7 +2049,7 @@ describe('NgSelectComponent', () => {
 												[tabFocusOnClearButton]="tabFocusOnClearButton"
                         [(ngModel)]="selectedCity">
                 </ng-select>`,
-				config
+				config,
 			);
 			const select = fixture.componentInstance.select;
 			fixture.componentInstance.tabFocusOnClearButton = false;
@@ -2077,11 +2076,10 @@ describe('NgSelectComponent', () => {
 												[tabFocusOnClearButton]="tabFocusOnClearButton"
                         [(ngModel)]="selectedCity">
                 </ng-select>`,
-				config
+				config,
 			);
 			const select = fixture.componentInstance.select;
 			fixture.componentInstance.tabFocusOnClearButton = true;
-			console.log('fixture compon', fixture.componentInstance.tabFocusOnClearButton);
 			selectOption(fixture, KeyCode.ArrowDown, 0);
 			tickAndDetectChanges(fixture);
 			expect(select.showClear()).toBeTruthy();
@@ -2105,7 +2103,7 @@ describe('NgSelectComponent', () => {
 												[tabFocusOnClearButton]="tabFocusOnClearButton"
                         [(ngModel)]="selectedCity">
                 </ng-select>`,
-				config
+				config,
 			);
 			const select = fixture.componentInstance.select;
 			fixture.componentInstance.tabFocusOnClearButton = true;
@@ -2131,7 +2129,7 @@ describe('NgSelectComponent', () => {
                         [multiple]="multiple"
                         [(ngModel)]="selectedCity">
                 </ng-select>`,
-				config
+				config,
 			);
 			const select = fixture.componentInstance.select;
 			selectOption(fixture, KeyCode.ArrowDown, 0);
@@ -2156,7 +2154,7 @@ describe('NgSelectComponent', () => {
                         [multiple]="multiple"
                         [(ngModel)]="selectedCity">
                 </ng-select>`,
-				config
+				config,
 			);
 			const select = fixture.componentInstance.select;
 			selectOption(fixture, KeyCode.ArrowDown, 0);
