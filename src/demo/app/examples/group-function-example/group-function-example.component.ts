@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgOptgroupTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 import { JsonPipe } from '@angular/common';
 
 @Component({
 	selector: 'ng-group-function-example',
+	standalone: true,
 	templateUrl: './group-function-example.component.html',
 	styleUrls: ['./group-function-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgOptgroupTemplateDirective, JsonPipe],
 })
-export class GroupFunctionExampleComponent implements OnInit {
+export class GroupFunctionExampleComponent {
 	selectedAccounts = ['Michael'];
 	accounts = [
 		{ name: 'Jill', email: 'jill@email.com', age: 15, country: undefined, child: { state: 'Active' } },
@@ -28,11 +29,7 @@ export class GroupFunctionExampleComponent implements OnInit {
 		{ name: 'Nicolás', email: 'nicole@email.com', age: 43, country: 'Colombia', child: { state: 'Inactive' } },
 	];
 
-	constructor() {}
-
 	groupByFn = (item) => item.child.state;
 
 	groupValueFn = (_: string, children: any[]) => ({ name: children[0].child.state, total: children.length });
-
-	ngOnInit() {}
 }

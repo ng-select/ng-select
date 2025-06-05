@@ -4,6 +4,7 @@ import { NgLabelTemplateDirective, NgPlaceholderTemplateDirective, NgSelectCompo
 
 @Component({
 	selector: 'ng-template-placeholder-example',
+	standalone: true,
 	templateUrl: './template-placeholder-example.component.html',
 	styleUrls: ['./template-placeholder-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgPlaceholderTemplateDirective, NgLabelTemplateDirective],

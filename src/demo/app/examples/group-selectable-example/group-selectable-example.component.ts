@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgOptgroupTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 import { JsonPipe } from '@angular/common';
 
 @Component({
 	selector: 'ng-group-selectable-example',
+	standalone: true,
 	templateUrl: './group-selectable-example.component.html',
 	styleUrls: ['./group-selectable-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgOptgroupTemplateDirective, JsonPipe],
 })
-export class GroupSelectableExampleComponent implements OnInit {
+export class GroupSelectableExampleComponent {
 	selectedAccount = [{ country: 'Colombia' }];
 	selectedAccounts = [{ name: 'Adam' }];
 	accounts = [
@@ -28,8 +29,6 @@ export class GroupSelectableExampleComponent implements OnInit {
 		{ name: 'Michael', email: 'michael@email.com', age: 15, country: 'Colombia', child: { state: 'Inactive' } },
 		{ name: 'Nicolás', email: 'nicole@email.com', age: 43, country: 'Colombia', child: { state: 'Inactive' } },
 	];
-
-	ngOnInit() {}
 
 	compareAccounts = (item, selected) => {
 		if (selected.country && item.country) {
