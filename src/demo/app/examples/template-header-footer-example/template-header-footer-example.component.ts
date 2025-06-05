@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
 import { NgFooterTemplateDirective, NgHeaderTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
+import { DataService } from '../data.service';
 
 @Component({
 	selector: 'ng-template-header-footer-example',
+	standalone: true,
 	templateUrl: './template-header-footer-example.component.html',
 	styleUrls: ['./template-header-footer-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgHeaderTemplateDirective, NgFooterTemplateDirective],

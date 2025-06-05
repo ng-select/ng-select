@@ -7,6 +7,7 @@ import { AsyncPipe } from '@angular/common';
 
 @Component({
 	selector: 'ng-multi-select-template-example',
+	standalone: true,
 	templateUrl: './multi-select-template-example.component.html',
 	styleUrls: ['./multi-select-template-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgLabelTemplateDirective, NgOptionTemplateDirective, AsyncPipe],

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
@@ -11,11 +11,12 @@ interface Event {
 
 @Component({
 	selector: 'ng-output-events-example',
+	standalone: true,
 	templateUrl: './output-events-example.component.html',
 	styleUrls: ['./output-events-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, JsonPipe],
 })
-export class OutputEventsExampleComponent implements OnInit {
+export class OutputEventsExampleComponent {
 	selectedItems: any;
 	items = [];
 
@@ -26,8 +27,6 @@ export class OutputEventsExampleComponent implements OnInit {
 			this.items = items;
 		});
 	}
-
-	ngOnInit() {}
 
 	onChange($event) {
 		this.events.push({ name: '(change)', value: $event });

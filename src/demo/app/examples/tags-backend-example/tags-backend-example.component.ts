@@ -4,6 +4,7 @@ import { NgSelectComponent, NgTagTemplateDirective } from '@ng-select/ng-select'
 
 @Component({
 	selector: 'ng-tags-backend-example',
+	standalone: true,
 	templateUrl: './tags-backend-example.component.html',
 	styleUrls: ['./tags-backend-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgTagTemplateDirective],

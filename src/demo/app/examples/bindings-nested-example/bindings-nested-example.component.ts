@@ -4,6 +4,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-bindings-nested-example',
+	standalone: true,
 	templateUrl: './bindings-nested-example.component.html',
 	styleUrls: ['./bindings-nested-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule],

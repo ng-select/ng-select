@@ -5,25 +5,25 @@ import sdk, { Project } from '@stackblitz/sdk';
 const EXAMPLE_PATH = '/ng-select/examples/';
 const TEMPLATE_PATH = '/ng-select/assets/stackblitz/';
 
-const TEMPLATE_FILES = ['index.html', 'styles.css', 'polyfills.ts', 'data.service.ts', 'main.ts', 'app.module.ts', 'angular.json'];
+// Updated template files for standalone setup
+const TEMPLATE_FILES = ['index.html', 'styles.css', 'polyfills.ts', 'data.service.ts', 'main.ts', 'app.component.ts', 'angular.json'];
 
-const angularVersion = '>=15.0.0';
+const angularVersion = '>=20.0.0';
 const dependencies = {
 	'@angular/animations': angularVersion,
 	'@angular/common': angularVersion,
 	'@angular/compiler': angularVersion,
 	'@angular/core': angularVersion,
 	'@angular/forms': angularVersion,
-	'@angular/http': angularVersion,
-	'@angular/localize': angularVersion,
 	'@angular/platform-browser': angularVersion,
 	'@angular/platform-browser-dynamic': angularVersion,
 	'@angular/router': angularVersion,
+	'@angular/localize': angularVersion,
 	'@ng-select/ng-select': '*',
 	'@ng-select/ng-option-highlight': '*',
 	'@ng-bootstrap/ng-bootstrap': '*',
-	rxjs: '^6.5.3 || ^7.4.0',
-	'zone.js': '^0.12.0',
+	rxjs: '^7.8.0',
+	'zone.js': '^0.15.1',
 };
 
 @Injectable({
@@ -37,11 +37,17 @@ export class StackblitzService {
 	constructor(private _http: HttpClient) {}
 
 	private get _exampleImport() {
-		return `import { ${this._componentName} } from \'./src/${this._exampleName}.component\'`;
+		return `import { ${this._componentName} } from './src/${this._exampleName}.component'`;
 	}
 
-	private get _exampleTemplate() {
-		return `<ng-${this._exampleName}></ng-${this._exampleName}>`;
+	private get _bootstrapComponent() {
+		return `
+    bootstrapApplication(AppComponent, {
+      providers: [
+        importProvidersFrom(NgbModule),
+        provideHttpClient()
+      ]
+    }).catch(err => console.error(err));`;
 	}
 
 	async openNewProject(example: string) {
@@ -68,10 +74,9 @@ export class StackblitzService {
 		const files: { [path: string]: string } = {};
 		for (const file of TEMPLATE_FILES) {
 			let fileResult = await this._readFile(file, TEMPLATE_PATH);
-			if (file.includes('app.module')) {
+			if (file.includes('app.component')) {
 				fileResult = fileResult.replace('//example-import', this._exampleImport);
-				fileResult = fileResult.replace('//example-template', this._exampleTemplate);
-				fileResult = fileResult.replace('//example-cmp', this._componentName);
+				fileResult = fileResult.replace('//bootstrap', this._bootstrapComponent);
 			}
 			files[file] = fileResult;
 		}
@@ -90,7 +95,7 @@ export class StackblitzService {
 		return files;
 	}
 
-	async _readFile(file: string, path: string) {
+	private async _readFile(file: string, path: string) {
 		return await this._http.get(path + file, { responseType: 'text' }).toPromise();
 	}
 

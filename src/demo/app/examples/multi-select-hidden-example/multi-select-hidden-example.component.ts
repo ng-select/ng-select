@@ -7,6 +7,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-multi-select-hidden-example',
+	standalone: true,
 	templateUrl: './multi-select-hidden-example.component.html',
 	styleUrls: ['./multi-select-hidden-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, AsyncPipe],

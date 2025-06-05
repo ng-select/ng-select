@@ -7,6 +7,7 @@ import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
 
 @Component({
 	selector: 'ng-forms-async-data-example',
+	standalone: true,
 	templateUrl: './forms-async-data-example.component.html',
 	styleUrls: ['./forms-async-data-example.component.scss'],
 	imports: [FormsModule, ReactiveFormsModule, NgSelectComponent_1, NgOptionTemplateDirective, NgOptionHighlightDirective],

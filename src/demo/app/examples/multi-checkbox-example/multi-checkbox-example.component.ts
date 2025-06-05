@@ -7,6 +7,7 @@ import { NgOptgroupTemplateDirective, NgOptionTemplateDirective, NgSelectCompone
 
 @Component({
 	selector: 'ng-multi-checkbox-example',
+	standalone: true,
 	templateUrl: './multi-checkbox-example.component.html',
 	styleUrls: ['./multi-checkbox-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgOptgroupTemplateDirective, NgOptionTemplateDirective, UpperCasePipe, JsonPipe],

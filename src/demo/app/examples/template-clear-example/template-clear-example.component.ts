@@ -4,6 +4,7 @@ import { NgClearButtonTemplateDirective, NgSelectComponent } from '@ng-select/ng
 
 @Component({
 	selector: 'ng-template-clear-example',
+	standalone: true,
 	templateUrl: './template-clear-example.component.html',
 	styleUrls: ['./template-clear-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgClearButtonTemplateDirective],

@@ -1,15 +1,14 @@
 /// <reference types="@angular/localize" />
 
-import { enableProdMode, importProvidersFrom } from '@angular/core';
-import { environment } from './environments/environment';
 import { provideHttpClient } from '@angular/common/http';
-import { DataService } from './app/examples/data.service';
+import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
-import { ExamplesModule } from './app/examples/examples.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { provideRouter, withHashLocation } from '@angular/router';
-import { appRoutes } from './app/routes';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app/app.component';
+import { DataService } from './app/examples/data.service';
+import { appRoutes } from './app/routes';
+import { environment } from './environments/environment';
 
 if (environment.production) {
 	enableProdMode();
@@ -17,7 +16,7 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
 	providers: [
-		importProvidersFrom(BrowserModule, ExamplesModule, NgbModule),
+		importProvidersFrom(BrowserModule, NgbModule),
 		provideHttpClient(),
 		DataService,
 		provideRouter(appRoutes, withHashLocation()),

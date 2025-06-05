@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgLoadingSpinnerTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-template-loading-example',
+	standalone: true,
 	templateUrl: './template-loading-example.component.html',
 	styleUrls: ['./template-loading-example.component.scss'],
 	imports: [NgSelectComponent, NgLoadingSpinnerTemplateDirective],
 })
-export class TemplateLoadingExampleComponent implements OnInit {
+export class TemplateLoadingExampleComponent {
 	cities = [
 		{
 			id: 1,
@@ -26,6 +27,4 @@ export class TemplateLoadingExampleComponent implements OnInit {
 			avatar: '//www.gravatar.com/avatar/b0d8c6e5ea589e6fc3d3e08afb1873bb?d=retro&r=g&s=30 2x',
 		},
 	];
-
-	ngOnInit() {}
 }

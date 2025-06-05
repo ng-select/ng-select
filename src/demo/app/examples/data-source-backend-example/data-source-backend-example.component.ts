@@ -7,6 +7,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-data-source-backend-example',
+	standalone: true,
 	templateUrl: './data-source-backend-example.component.html',
 	styleUrls: ['./data-source-backend-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, AsyncPipe],

@@ -7,6 +7,7 @@ import { UpperCasePipe } from '@angular/common';
 
 @Component({
 	selector: 'ng-multi-checkbox-group-example',
+	standalone: true,
 	templateUrl: './multi-checkbox-group-example.component.html',
 	styleUrls: ['./multi-checkbox-group-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgOptgroupTemplateDirective, NgOptionTemplateDirective, UpperCasePipe],

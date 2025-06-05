@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 import { NgOptgroupTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-group-default-example',
+	standalone: true,
 	templateUrl: './group-default-example.component.html',
 	styleUrls: ['./group-default-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgOptgroupTemplateDirective, JsonPipe],
 })
-export class GroupDefaultExampleComponent implements OnInit {
+export class GroupDefaultExampleComponent {
 	selectedAccount = 'Adam';
 	accounts = [
 		{ name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { state: 'Active' } },
@@ -26,6 +27,4 @@ export class GroupDefaultExampleComponent implements OnInit {
 	];
 
 	constructor() {}
-
-	ngOnInit() {}
 }

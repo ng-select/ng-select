@@ -1,10 +1,11 @@
+import { JsonPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
 import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-tags-custom-example',
+	standalone: true,
 	templateUrl: './tags-custom-example.component.html',
 	styleUrls: ['./tags-custom-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, JsonPipe],

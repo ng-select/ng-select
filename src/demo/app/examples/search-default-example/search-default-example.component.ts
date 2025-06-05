@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService, Person } from '../data.service';
 import { NgSelectComponent } from '@ng-select/ng-select';
+import { DataService, Person } from '../data.service';
 
 @Component({
 	selector: 'ng-search-default-example',
+	standalone: true,
 	templateUrl: './search-default-example.component.html',
 	styleUrls: ['./search-default-example.component.scss'],
 	imports: [NgSelectComponent],

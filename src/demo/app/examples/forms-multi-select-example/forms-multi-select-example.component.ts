@@ -4,6 +4,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-forms-multi-select-example',
+	standalone: true,
 	templateUrl: './forms-multi-select-example.component.html',
 	styleUrls: ['./forms-multi-select-example.component.scss'],
 	imports: [FormsModule, ReactiveFormsModule, NgSelectComponent],

@@ -7,6 +7,7 @@ import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
 
 @Component({
 	selector: 'ng-forms-custom-template-example',
+	standalone: true,
 	templateUrl: './forms-custom-template-example.component.html',
 	styleUrls: ['./forms-custom-template-example.component.scss'],
 	imports: [

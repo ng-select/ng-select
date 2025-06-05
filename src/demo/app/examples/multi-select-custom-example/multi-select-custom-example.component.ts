@@ -7,6 +7,7 @@ import { AsyncPipe, SlicePipe } from '@angular/common';
 
 @Component({
 	selector: 'ng-multi-select-custom-example',
+	standalone: true,
 	templateUrl: './multi-select-custom-example.component.html',
 	styleUrls: ['./multi-select-custom-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgMultiLabelTemplateDirective, AsyncPipe, SlicePipe],

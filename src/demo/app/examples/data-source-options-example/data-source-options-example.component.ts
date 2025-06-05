@@ -5,6 +5,7 @@ import { JsonPipe } from '@angular/common';
 
 @Component({
 	selector: 'ng-data-source-options-example',
+	standalone: true,
 	templateUrl: './data-source-options-example.component.html',
 	styleUrls: ['./data-source-options-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgOptionComponent, JsonPipe],
