@@ -2606,7 +2606,7 @@ describe('NgSelectComponent', () => {
 
 			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeFalsy();
 		}));
-
+		
 		it('should update ng-option label', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
