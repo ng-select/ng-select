@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { DataService } from '../data.service';
-import { FormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
+import { DataService } from '../data.service';
 
 @Component({
 	selector: 'ng-append-to-example',
+	standalone: true,
 	templateUrl: './append-to-example.component.html',
 	styleUrls: ['./append-to-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, AsyncPipe],

@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgOptgroupTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 import { JsonPipe } from '@angular/common';
 
 @Component({
 	selector: 'ng-group-selectable-hidden-example',
+	standalone: true,
 	templateUrl: './group-selectable-hidden-example.component.html',
 	styleUrls: ['./group-selectable-hidden-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgOptgroupTemplateDirective, JsonPipe],
 })
-export class GroupSelectableHiddenExampleComponent implements OnInit {
+export class GroupSelectableHiddenExampleComponent {
 	accounts = [
 		{ name: 'Jill', email: 'jill@email.com', age: 15, country: undefined, child: { state: 'Active' } },
 		{ name: 'Henry', email: 'henry@email.com', age: 10, country: undefined, child: { state: 'Active' } },
@@ -30,8 +31,6 @@ export class GroupSelectableHiddenExampleComponent implements OnInit {
 	selectedAccounts = [{ country: 'Argentina' }, { name: 'Samantha' }];
 
 	constructor() {}
-
-	ngOnInit() {}
 
 	compareAccounts = (item, selected) => {
 		if (selected.country && item.country) {

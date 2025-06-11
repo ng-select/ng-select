@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
+import { NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-template-option-example',
+	standalone: true,
 	templateUrl: './template-option-example.component.html',
 	styleUrls: ['./template-option-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgOptionTemplateDirective, NgOptionHighlightDirective],
 })
-export class TemplateOptionExampleComponent implements OnInit {
+export class TemplateOptionExampleComponent {
 	cities = [
 		{
 			id: 1,
@@ -32,6 +33,4 @@ export class TemplateOptionExampleComponent implements OnInit {
 	selectedCity = this.cities[1].name;
 
 	constructor() {}
-
-	ngOnInit() {}
 }

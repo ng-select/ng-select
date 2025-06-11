@@ -1,9 +1,9 @@
 import './polyfills';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { AppModule } from './app.module';
+import { AppComponent } from './app.module';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { appConfig } from './app.config';
 
-platformBrowserDynamic()
-	.bootstrapModule(AppModule)
+bootstrapApplication(AppComponent, appConfig)
 	.then((ref) => {
 		if (window['ngRef']) {
 			window['ngRef'].destroy();
