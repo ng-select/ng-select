@@ -411,13 +411,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		const select = this._select.getBoundingClientRect();
 		const parent = this._parent.getBoundingClientRect();
 		const isRTL = document.documentElement.dir === 'rtl';
+		const offsetLeft = select.left - parent.left;
 
 		if (isRTL) {
 			const offsetRight = parent.right - select.right;
 			this._dropdown.style.right = offsetRight + 'px';
 			this._dropdown.style.left = 'auto';
 		} else {
-			const offsetLeft = select.left - parent.left;
 			this._dropdown.style.left = offsetLeft + 'px';
 			this._dropdown.style.right = 'auto';
 		}
