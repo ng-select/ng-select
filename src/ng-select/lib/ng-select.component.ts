@@ -420,6 +420,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	handleMousedown($event: MouseEvent) {
+		if (this.disabled) {
+			return;
+		}
+
 		if (this.preventToggleOnRightClick && $event.button === 2) {
 			return false;
 		}
