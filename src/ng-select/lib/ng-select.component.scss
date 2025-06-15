@@ -127,10 +127,12 @@
 	}
 
 	&.ng-select-multiple {
-		&.ng-select-disabled {
-			> .ng-select-container .ng-value-container .ng-value {
-				.ng-value-icon {
-					display: none;
+		&.ng-select-multiple {
+			&.ng-select-disabled {
+				> .ng-select-container .ng-value-container .ng-value {
+					.ng-value-icon {
+						display: none;
+					}
 				}
 			}
 		}
