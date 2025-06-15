@@ -5,6 +5,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-forms-single-select-example',
+	standalone: true,
 	templateUrl: './forms-single-select-example.component.html',
 	styleUrls: ['./forms-single-select-example.component.scss'],
 	imports: [FormsModule, ReactiveFormsModule, NgSelectComponent],

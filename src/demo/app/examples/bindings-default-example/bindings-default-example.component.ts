@@ -5,6 +5,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-bindings-default-example',
+	standalone: true,
 	templateUrl: './bindings-default-example.component.html',
 	styleUrls: ['./bindings-default-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, JsonPipe],

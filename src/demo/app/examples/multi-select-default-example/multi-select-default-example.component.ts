@@ -7,6 +7,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-multi-select-default-example',
+	standalone: true,
 	templateUrl: './multi-select-default-example.component.html',
 	styleUrls: ['./multi-select-default-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, AsyncPipe],
