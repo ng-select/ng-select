@@ -26,11 +26,6 @@ export class FormsCustomTemplateExampleComponent implements OnInit {
 	heroForm: FormGroup;
 	photos = [];
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.loadPhotos();
 

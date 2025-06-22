@@ -21,11 +21,6 @@ export interface Person {
 export class DataService {
 	private http = inject(HttpClient);
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	getGithubAccounts(term: string = null) {
 		if (term) {
 			return this.http.get<any>(`https://api.github.com/search/users?q=${term}`).pipe(map((rsp) => rsp.items));

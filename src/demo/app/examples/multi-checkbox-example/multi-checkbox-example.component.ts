@@ -17,11 +17,6 @@ export class MultiCheckboxExampleComponent implements OnInit {
 	people: Person[] = [];
 	selectedPeople = [];
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.dataService
 			.getPeople()

@@ -20,11 +20,6 @@ export class SearchAutocompleteExampleComponent implements OnInit {
 	peopleInput$ = new Subject<string>();
 	selectedPersons: Person[] = <any>[{ name: 'Karyn Wright' }, { name: 'Other' }];
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.loadPeople();
 	}

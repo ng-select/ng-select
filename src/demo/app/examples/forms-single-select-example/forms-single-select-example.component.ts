@@ -20,11 +20,6 @@ export class FormsSingleSelectExampleComponent implements OnInit {
 		{ value: '>18', label: 'More than 18' },
 	];
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.heroForm = this.fb.group({
 			age: [null, Validators.required],

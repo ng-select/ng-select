@@ -22,11 +22,6 @@ export class TemplateDisplayExampleComponent implements OnInit {
 	serverSideFilterItems = [];
 	selectedPeople;
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.serverSideSearch();
 	}

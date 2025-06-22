@@ -18,11 +18,6 @@ export class VirtualScrollExampleComponent implements OnInit {
 	numberOfItemsFromEndBeforeFetchingMore = 10;
 	loading = false;
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').subscribe((photos) => {
 			this.photos = photos;

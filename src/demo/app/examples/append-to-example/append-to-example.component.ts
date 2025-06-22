@@ -18,11 +18,6 @@ export class AppendToExampleComponent implements OnInit {
 	selected2: any;
 	selected3: any;
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.people = this.dataService.getPeople();
 	}

@@ -13,11 +13,6 @@ export class RouteViewerComponent implements OnInit {
 
 	examples: string[];
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.route.data.subscribe((data: { examples: string }) => {
 			this.examples = Object.keys(EXAMPLE_COMPONENTS).filter((x) => x.startsWith(data.examples));

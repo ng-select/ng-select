@@ -14,11 +14,6 @@ export class FormsWithOptionsExampleComponent implements OnInit {
 	basePath;
 	heroForm: FormGroup;
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.basePath = window.location.host.includes('localhost') ? '' : '/ng-select';
 		this.heroForm = this.fb.group({

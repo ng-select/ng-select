@@ -6,10 +6,6 @@ import { StackblitzButtonComponent } from './stackblitz-button/stackblitz-button
 export class ExampleHostDirective {
 	viewContainerRef = inject(ViewContainerRef);
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() { }
 }
 
 @Component({
@@ -44,11 +40,6 @@ export class ExampleViewerComponent implements OnInit {
 	@ViewChild(ExampleHostDirective, { static: true }) exampleHost: ExampleHostDirective;
 
 	title: string;
-
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() { }
 
 	get sourcePath() {
 		return `https://github.com/ng-select/ng-select/tree/master/src/demo/app/examples/${this.example()}`;

@@ -23,11 +23,6 @@ export class DataService {
 
 	private _gitHubAccountsCache = new Map<string, []>();
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	getGithubAccounts(term: string = null) {
 		if (this._gitHubAccountsCache.has(term)) {
 			return of(this._gitHubAccountsCache.get(term));

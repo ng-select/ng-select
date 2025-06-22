@@ -17,11 +17,6 @@ export class MultiSelectLimitExampleComponent implements OnInit {
 	people$: Observable<any[]>;
 	selectedPeople = [];
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.people$ = this.dataService.getPeople();
 	}

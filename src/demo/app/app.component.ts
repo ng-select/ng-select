@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { filter, map, mergeMap } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { LayoutSidenavComponent } from './layout/sidenav-component';
 	changeDetection: ChangeDetectionStrategy.Default,
 	imports: [LayoutHeaderComponent, LayoutSidenavComponent, RouterOutlet],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 	private router = inject(Router);
 	private activatedRoute = inject(ActivatedRoute);
 	private titleService = inject(Title);
@@ -24,9 +24,6 @@ export class AppComponent {
 	exampleSourceUrl: string;
 	dir: 'ltr' | 'rtl' = 'ltr';
 	theme: 'default' | 'ant' | 'material' = 'default';
-
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
 
 	constructor() {
 		this.config.placeholder = 'Select item';

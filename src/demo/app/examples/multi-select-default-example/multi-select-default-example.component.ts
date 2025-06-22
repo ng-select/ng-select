@@ -17,11 +17,6 @@ export class MultiSelectDefaultExampleComponent implements OnInit {
 	people$: Observable<any[]>;
 	selectedPeople = [{ name: 'Karyn Wright' }];
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.people$ = this.dataService.getPeople();
 	}

@@ -15,11 +15,6 @@ export class TemplateHeaderFooterExampleComponent implements OnInit {
 	people = [];
 	selectedPeople = [];
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.dataService.getPeople().subscribe((items) => {
 			this.people = items;

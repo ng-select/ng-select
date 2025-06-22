@@ -19,11 +19,6 @@ export class StackblitzButtonComponent {
 
 	readonly example = input<string>(undefined);
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	async openExample() {
 		if (!environment.production) {
 			return;

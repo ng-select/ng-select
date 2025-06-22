@@ -17,11 +17,6 @@ export class DataSourceBackendExampleComponent implements OnInit {
 	people$: Observable<Person[]>;
 	selectedPersonId = '5a15b13c36e7a7f00cf0d7cb';
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.people$ = this.dataService.getPeople();
 	}

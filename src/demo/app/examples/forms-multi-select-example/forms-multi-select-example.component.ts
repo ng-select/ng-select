@@ -20,11 +20,6 @@ export class FormsMultiSelectExampleComponent implements OnInit {
 		{ id: 4, name: 'Pabradė' },
 	];
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.heroForm = this.fb.group({
 			selectedCitiesIds: [],

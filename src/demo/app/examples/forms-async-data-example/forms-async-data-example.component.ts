@@ -19,11 +19,6 @@ export class FormsAsyncDataExampleComponent implements OnInit {
 	albums = [];
 	allAlbums = [];
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.loadAlbums();
 		this.heroForm = this.fb.group({

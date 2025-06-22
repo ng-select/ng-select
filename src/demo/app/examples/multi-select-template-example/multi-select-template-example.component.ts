@@ -17,11 +17,6 @@ export class MultiSelectTemplateExampleComponent implements OnInit {
 	githubUsers$: Observable<any[]>;
 	selectedUsers = ['anjmao'];
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.githubUsers$ = this.dataService.getGithubAccounts('anjm');
 	}

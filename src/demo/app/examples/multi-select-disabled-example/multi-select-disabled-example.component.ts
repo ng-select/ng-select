@@ -18,11 +18,6 @@ export class MultiSelectDisabledExampleComponent implements OnInit {
 	selectedPeople = [];
 	disable = true;
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.people$ = this.dataService.getPeople();
 		this.setSelectedPeople();

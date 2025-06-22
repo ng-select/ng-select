@@ -18,11 +18,6 @@ export class DataSourceArrayExampleComponent implements OnInit {
 	selectedSimpleItem = 'Two';
 	simpleItems = [];
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	ngOnInit() {
 		this.dataService.getPeople().subscribe((items) => (this.people = items));
 		this.simpleItems = [true, 'Two', 3];

@@ -36,11 +36,6 @@ export class StackblitzService {
 	private _componentName: string;
 	private _examplePath: string;
 
-	/** Inserted by Angular inject() migration for backwards compatibility */
-	constructor(...args: unknown[]);
-
-	constructor() {}
-
 	private get _exampleImport() {
 		return `import { ${this._componentName} } from \'./src/${this._exampleName}.component\'`;
 	}
