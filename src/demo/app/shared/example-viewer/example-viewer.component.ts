@@ -9,7 +9,7 @@ export class ExampleHostDirective {
 	/** Inserted by Angular inject() migration for backwards compatibility */
 	constructor(...args: unknown[]);
 
-	constructor() {}
+	constructor() { }
 }
 
 @Component({
@@ -48,7 +48,7 @@ export class ExampleViewerComponent implements OnInit {
 	/** Inserted by Angular inject() migration for backwards compatibility */
 	constructor(...args: unknown[]);
 
-	constructor() {}
+	constructor() { }
 
 	get sourcePath() {
 		return `https://github.com/ng-select/ng-select/tree/master/src/demo/app/examples/${this.example()}`;

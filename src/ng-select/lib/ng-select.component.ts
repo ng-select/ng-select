@@ -55,8 +55,8 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 	imports: [NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent],
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
-	classes = inject(new HostAttributeToken('class'));
-	private autoFocus = inject(new HostAttributeToken('autofocus'));
+	classes = inject(new HostAttributeToken('class'), { optional: true });
+	private autoFocus = inject(new HostAttributeToken('autofocus'), { optional: true });
 	config = inject(NgSelectConfig);
 	private _cd = inject(ChangeDetectorRef);
 	private _console = inject(ConsoleService);

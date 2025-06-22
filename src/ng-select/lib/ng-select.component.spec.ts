@@ -1614,11 +1614,16 @@ describe('NgSelectComponent', () => {
 			fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [items]="cities"
-                        bindLabel="name"
-                        [loading]="citiesLoading"
-                        [selectOnTab]="selectOnTab"
-                        [multiple]="multiple"
-                        [(ngModel)]="selectedCity">
+					bindLabel="name"
+					[loading]="citiesLoading"
+					[selectOnTab]="selectOnTab"
+					[isOpen]="isOpen"
+					[multiple]="multiple"
+					[clearOnBackspace]="clearOnBackspace"
+					[clearable]="clearable"
+					[markFirst]="markFirst"
+					[searchable]="searchable"
+					[(ngModel)]="selectedCity">
                 </ng-select>`,
 			);
 			select = fixture.componentInstance.select;
@@ -1674,7 +1679,7 @@ describe('NgSelectComponent', () => {
 			}));
 
 			it('should open dropdown without marking first item', () => {
-				select.markFirst = false;
+				fixture.componentInstance.markFirst = false;
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 				expect(select.itemsList.markedItem).toEqual(undefined);
 			});
@@ -1753,7 +1758,7 @@ describe('NgSelectComponent', () => {
 
 		describe('esc', () => {
 			it('should close opened dropdown', () => {
-				select.isOpen = true;
+				select.isOpen.set(true);
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Esc);
 				expect(select.isOpen()).toBe(false);
 			});
@@ -1838,7 +1843,7 @@ describe('NgSelectComponent', () => {
 			}));
 
 			it('should not remove selected value when clearable is false', fakeAsync(() => {
-				select.clearable = false;
+				fixture.componentInstance.clearable = false;
 				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
 				tickAndDetectChanges(fixture);
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
@@ -1897,7 +1902,7 @@ describe('NgSelectComponent', () => {
 
 			it('should not remove selected value when clearOnBackspace false', fakeAsync(() => {
 				fixture.componentInstance.multiple = true;
-				select.clearOnBackspace = false;
+				fixture.componentInstance.clearOnBackspace = false;
 				fixture.componentInstance.cities = [...fixture.componentInstance.cities];
 				tickAndDetectChanges(fixture);
 				selectOption(fixture, KeyCode.ArrowDown, 1);
@@ -1910,7 +1915,7 @@ describe('NgSelectComponent', () => {
 
 		describe('key presses', () => {
 			beforeEach(() => {
-				select.searchable = false;
+				fixture.componentInstance.searchable = false;
 				select.ngOnInit();
 			});
 
@@ -1949,7 +1954,7 @@ describe('NgSelectComponent', () => {
 			});
 
 			it('should not open dropdown if [openOnEnter]="false"', fakeAsync(() => {
-				select.openOnEnter = false;
+				fixture.componentInstance.openOnEnter = false;
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
 				expect(select.isOpen()).toBe(false);
 			}));
@@ -2431,6 +2436,11 @@ describe('NgSelectComponent', () => {
                     bindLabel="name"
                     placeholder="select value"
                     [(ngModel)]="selectedCities"
+					[hideSelected]="hideSelected"
+                    [closeOnSelect]="closeOnSelect"
+					[maxSelectedItems]="maxSelectedItems"
+                    [addTag]="addTag"
+                    [typeahead]="typeahead"
                     [multiple]="true">
                 </ng-select>`,
 			);
@@ -2470,7 +2480,7 @@ describe('NgSelectComponent', () => {
 		describe('max selected items', () => {
 			let arrowIcon: DebugElement = null;
 			beforeEach(() => {
-				fixture.componentInstance.select.maxSelectedItems = 2;
+				fixture.componentInstance.maxSelectedItems = 2;
 				arrowIcon = fixture.debugElement.query(By.css('.ng-arrow-wrapper'));
 			});
 
@@ -2497,8 +2507,8 @@ describe('NgSelectComponent', () => {
 		describe('show selected', () => {
 			beforeEach(() => {
 				select = fixture.componentInstance.select;
-				select.hideSelected = true;
-				select.closeOnSelect = false;
+				fixture.componentInstance.hideSelected = true;
+				fixture.componentInstance.closeOnSelect = false;
 			});
 
 			it('should close dropdown when all items are selected', fakeAsync(() => {
@@ -2520,7 +2530,7 @@ describe('NgSelectComponent', () => {
 			}));
 
 			it('should open dropdown when all items are selected and tagging is enabled', fakeAsync(() => {
-				select.addTag = true;
+				fixture.componentInstance.addTag = true;
 				fixture.componentInstance.cities = [];
 				tickAndDetectChanges(fixture);
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
@@ -2528,8 +2538,8 @@ describe('NgSelectComponent', () => {
 			}));
 
 			it('should not insert option back to list if it is newly created option', fakeAsync(() => {
-				select.addTag = true;
-				select.typeahead = new Subject();
+				fixture.componentInstance.addTag = true;
+				fixture.componentInstance.typeahead = new Subject();
 				select.typeahead().subscribe();
 				fixture.componentInstance.cities = [];
 				tickAndDetectChanges(fixture);
@@ -2901,12 +2911,14 @@ describe('NgSelectComponent', () => {
 				fixture = createTestingModule(
 					NgSelectTestComponent,
 					`<ng-select [items]="cities"
-                    bindLabel="name"
-                    [multiple]="true"
-                    [addTag]="true"
-                    placeholder="select value"
-                    [(ngModel)]="selectedCities">
-                </ng-select>`,
+						bindLabel="name"
+						[multiple]="true"
+						[addTag]="true"
+						[minTermLength]="minTermLength"
+						[hideSelected]="hideSelected"
+						placeholder="select value"
+						[(ngModel)]="selectedCities">
+					</ng-select>`,
 				);
 				select = fixture.componentInstance.select;
 			});
@@ -2918,7 +2930,7 @@ describe('NgSelectComponent', () => {
 
 			it('should be false when term is too short', () => {
 				select.searchTerm = 'vi';
-				select.minTermLength = 3;
+				fixture.componentInstance.minTermLength = 3;
 				expect(select.showAddTag).toBeFalsy();
 			});
 
@@ -2934,18 +2946,18 @@ describe('NgSelectComponent', () => {
 
 			it('should be false when term exists among selected items', fakeAsync(() => {
 				fixture.componentInstance.selectedCities = [{ name: 'Palanga', id: 9 }];
+				fixture.componentInstance.hideSelected = true;
 				select.searchTerm = 'Palanga';
-				select.hideSelected = true;
-				select.isOpen = true;
+				select.isOpen.set(true);
 				tickAndDetectChanges(fixture);
 				expect(select.showAddTag).toBeFalsy();
 			}));
 
 			it('should be false when term exists among selected items and select is closed', fakeAsync(() => {
 				fixture.componentInstance.selectedCities = [{ name: 'Palanga', id: 9 }];
+				fixture.componentInstance.hideSelected = false;
 				select.searchTerm = 'Palanga';
-				select.hideSelected = false;
-				select.isOpen = false;
+				select.isOpen.set(false);
 				tickAndDetectChanges(fixture);
 				expect(select.showAddTag).toBeFalsy();
 			}));
@@ -3286,6 +3298,7 @@ describe('NgSelectComponent', () => {
                         [typeahead]="filter"
                         [minTermLength]="minTermLength"
                         bindLabel="name"
+						[markFirst]="markFirst"
                         [hideSelected]="hideSelected"
                         [(ngModel)]="selectedCity">
                     </ng-select>`,
@@ -3348,7 +3361,7 @@ describe('NgSelectComponent', () => {
 			}));
 
 			it('should not mark first item when typeahead results are loaded', fakeAsync(() => {
-				fixture.componentInstance.select.markFirst = false;
+				fixture.componentInstance.markFirst = false;
 				fixture.componentInstance.filter.subscribe();
 				fixture.componentInstance.select.filter('buk');
 				fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];
@@ -3912,6 +3925,7 @@ describe('NgSelectComponent', () => {
 					`<ng-select [items]="cities"
                             bindLabel="name"
                             [multiple]="true"
+							[preventToggleOnRightClick]="preventToggleOnRightClick"
                             [(ngModel)]="selectedCities">
                     </ng-select>`,
 				);
@@ -3933,7 +3947,7 @@ describe('NgSelectComponent', () => {
 			}));
 
 			it('shouldnt focus dropdown, because prevent flag is true for right mouse click', fakeAsync(() => {
-				select.preventToggleOnRightClick = true;
+				fixture.componentInstance.preventToggleOnRightClick = true;
 				const preventDefault = spyOn(event, 'preventDefault');
 				triggerMousedown();
 				tickAndDetectChanges(fixture);
@@ -4656,7 +4670,7 @@ describe('Input method composition', () => {
 			`<ng-select [items]="citiesNames"
                     [addTag]="true"
                     placeholder="select value"
-                    [searchWhileComposing]="false"
+                    [searchWhileComposing]="searchWhileComposing"
                     [(ngModel)]="selectedCity">
                 </ng-select>`,
 		);
@@ -4688,6 +4702,7 @@ describe('Input method composition', () => {
 
 	describe('composition end', () => {
 		it('should update search term', fakeAsync(() => {
+			fixture.componentInstance.searchWhileComposing = false;
 			select.filter(originValue);
 			tickAndDetectChanges(fixture);
 			select.onCompositionEnd(imeInputValue);
@@ -4697,7 +4712,7 @@ describe('Input method composition', () => {
 		}));
 
 		it('should update search term when searchWhileComposing', fakeAsync(() => {
-			select.searchWhileComposing = true;
+			fixture.componentInstance.searchWhileComposing = true;
 			select.onCompositionStart();
 			select.onCompositionEnd(imeInputValue);
 			select.filter('new term');
@@ -4757,7 +4772,6 @@ describe('User defined keyDown handler', () => {
 function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectConfig: NgSelectConfig | null = null): ComponentFixture<T> {
 	TestBed.configureTestingModule({
 		imports: [FormsModule, NgSelectModule],
-		declarations: [cmp],
 		providers: [
 			{ provide: ErrorHandler, useClass: TestsErrorHandler },
 			{ provide: NgZone, useFactory: () => new MockNgZone() },
@@ -4782,12 +4796,12 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
 
 function createEvent(target = {}) {
 	return {
-		preventDefault: () => {},
+		preventDefault: () => { },
 		target: {
 			className: '',
 			tagName: '',
 			classList: {
-				contains: () => {},
+				contains: () => { },
 			},
 			...target,
 		},
@@ -4796,13 +4810,14 @@ function createEvent(target = {}) {
 
 @Component({
 	template: ``,
-	standalone: false,
+	standalone: true,
+	imports: [NgSelectModule, FormsModule],
 })
 class NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
 	multiple = false;
 	label = 'Yes';
-	clearOnBackspace = false;
+	clearOnBackspace = true;
 	disabled = false;
 	readonly = false;
 	dropdownPosition = 'bottom';
@@ -4812,6 +4827,16 @@ class NgSelectTestComponent {
 	searchFn: (term: string, item: any) => boolean = null;
 	selectOnTab = true;
 	hideSelected = false;
+	closeOnSelect = true;
+	clearable = true;
+	markFirst = true;
+	searchable = true;
+	openOnEnter = undefined;
+	maxSelectedItems = undefined;
+	addTag = false;
+	typeahead = undefined;
+	preventToggleOnRightClick = false;
+	searchWhileComposing = true;
 
 	citiesLoading = false;
 	selectedCityId: number;
@@ -4837,7 +4862,7 @@ class NgSelectTestComponent {
 		{ id: 2, description: { name: 'USA', id: 'b' } },
 		{ id: 3, description: { name: 'Australia', id: 'c' } },
 	];
-	keyDownFn = () => {};
+	keyDownFn = () => { };
 
 	tagFunc(term: string) {
 		return { id: term, name: term, custom: true };
@@ -4859,33 +4884,33 @@ class NgSelectTestComponent {
 		this.visible = !this.visible;
 	}
 
-	onChange(_: any) {}
+	onChange(_: any) { }
 
-	onFocus(_: Event) {}
+	onFocus(_: Event) { }
 
-	onBlur(_: Event) {}
+	onBlur(_: Event) { }
 
-	onOpen() {}
+	onOpen() { }
 
-	onClose() {}
+	onClose() { }
 
-	onAdd(_: Event) {}
+	onAdd(_: Event) { }
 
-	onRemove(_: Event) {}
+	onRemove(_: Event) { }
 
-	onClear() {}
+	onClear() { }
 
-	onSearch(_: any) {}
+	onSearch(_: any) { }
 
-	onScroll() {}
+	onScroll() { }
 
-	onScrollToEnd() {}
+	onScrollToEnd() { }
 }
 
 @Component({
 	template: ``,
 	encapsulation: ViewEncapsulation.ShadowDom,
-	standalone: false,
+	imports: [NgSelectModule, FormsModule],
 })
 class EncapsulatedTestComponent extends NgSelectTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
@@ -4893,7 +4918,7 @@ class EncapsulatedTestComponent extends NgSelectTestComponent {
 
 @Component({
 	template: ``,
-	standalone: false,
+	imports: [NgSelectModule, FormsModule],
 })
 class NgSelectGroupingTestComponent {
 	@ViewChild(NgSelectComponent, { static: true }) select: NgSelectComponent;
