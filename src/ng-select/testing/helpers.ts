@@ -27,9 +27,8 @@ export function getNgSelectElement(fixture: ComponentFixture<any>): DebugElement
 	return fixture.debugElement.query(By.css('ng-select'));
 }
 
-export function triggerKeyDownEvent(element: DebugElement, which: number, key = '', target: Element = null): void {
+export function triggerKeyDownEvent(element: DebugElement, key: string, target: Element = null): void {
 	element.triggerEventHandler('keydown', {
-		which,
 		key,
 		preventDefault: () => { },
 		target,

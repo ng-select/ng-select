@@ -1,5 +1,6 @@
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { booleanAttribute, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation, input, output, inject, viewChild } from '@angular/core';
+
 import { animationFrameScheduler, asapScheduler, fromEvent, merge, Subject } from 'rxjs';
 import { auditTime, takeUntil } from 'rxjs/operators';
 import { NgDropdownPanelService, PanelDimensions } from './ng-dropdown-panel.service';
@@ -20,7 +21,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 				<ng-container [ngTemplateOutlet]="headerTemplate()" [ngTemplateOutletContext]="{ searchTerm: filterValue() }" />
 			</div>
 		}
-		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host">
+		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host" [attr.aria-label]="ariaLabelDropdown()">
 			<div #padding [class.total-padding]="virtualScroll()"></div>
 			<div #content [class.scrollable-content]="virtualScroll() && items().length">
 				<ng-content />
@@ -384,9 +385,18 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	private _updateXPosition() {
 		const select = this._select.getBoundingClientRect();
 		const parent = this._parent.getBoundingClientRect();
+		const isRTL = document.documentElement.dir === 'rtl';
 		const offsetLeft = select.left - parent.left;
 
-		this._dropdown.style.left = offsetLeft + 'px';
+		if (isRTL) {
+			const offsetRight = parent.right - select.right;
+			this._dropdown.style.right = offsetRight + 'px';
+			this._dropdown.style.left = 'auto';
+		} else {
+			this._dropdown.style.left = offsetLeft + 'px';
+			this._dropdown.style.right = 'auto';
+		}
+
 		this._dropdown.style.width = select.width + 'px';
 		this._dropdown.style.minWidth = select.width + 'px';
 	}

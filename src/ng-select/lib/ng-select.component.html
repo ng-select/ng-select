@@ -65,7 +65,13 @@
 		@if (clearButtonTemplate) {
 			<ng-container [ngTemplateOutlet]="clearButtonTemplate"></ng-container>
 		} @else {
-			<span class="ng-clear-wrapper" role="button" tabindex="0" title="{{ clearAllText() || config.clearAllText }}" #clearButton>
+			<span
+				class="ng-clear-wrapper"
+				role="button"
+				tabindex="0"
+				[attr.tabindex]="tabFocusOnClear() ? 0 : -1"
+				title="{{ clearAllText() || config.clearAllText }}"
+				#clearButton>
 				<span class="ng-clear" aria-hidden="true">×</span>
 			</span>
 		}
@@ -170,3 +176,10 @@
 		}
 	</ng-dropdown-panel>
 }
+
+<!-- Always present aria-live region -->
+<div aria-atomic="true" aria-live="polite" class="ng-visually-hidden" role="status">
+	@if (isOpen && showNoItemsFound()) {
+		{{ notFoundText }}
+	}
+</div>

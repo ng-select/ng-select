@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { NgSelectConfig } from './config.service';
 import { ItemsList } from './items-list';
 import { NgSelectComponent } from './ng-select.component';
 import { DefaultSelectionModel } from './selection-model';
@@ -586,14 +585,6 @@ describe('ItemsList', () => {
 	function itemsListFactory(cmp: NgSelectComponent): ItemsList {
 		return new ItemsList(cmp, new DefaultSelectionModel());
 	}
-
-	interface TemplateModel {
-		bindLabel: string,
-		multiple: boolean,
-		groupBy: string,
-		selectableGroupAsModel: boolean,
-		hideSelected: boolean,
-	};
 
 	async function ngSelectFactory(): Promise<{
 		component: NgSelectComponent,
