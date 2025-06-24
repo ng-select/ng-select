@@ -2134,7 +2134,7 @@ describe('NgSelectComponent', () => {
                         [loading]="citiesLoading"
                         [selectOnTab]="selectOnTab"
                         [multiple]="multiple"
-												[tabFocusOnClearButton]="tabFocusOnClearButton"
+						[tabFocusOnClearButton]="tabFocusOnClearButton"
                         [(ngModel)]="selectedCity">
                 </ng-select>`,
 				config,
@@ -4955,6 +4955,7 @@ describe('Input method composition', () => {
 		fixture = createTestingModule(
 			NgSelectTestComponent,
 			`<ng-select [items]="citiesNames"
+					[keyDownFn]="keyDownFn"
                     [addTag]="true"
                     placeholder="select value"
                     [searchWhileComposing]="searchWhileComposing"

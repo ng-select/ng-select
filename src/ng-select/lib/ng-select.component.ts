@@ -1,6 +1,5 @@
 import {
 	AfterViewInit,
-	Attribute,
 	booleanAttribute,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -8,20 +7,20 @@ import {
 	ContentChild,
 	ContentChildren,
 	ElementRef,
-	EventEmitter,
 	forwardRef,
+	HostAttributeToken,
 	HostBinding,
 	HostListener,
-	Inject,
+	inject,
 	InjectionToken,
 	input,
 	Input,
+	model,
 	numberAttribute,
 	OnChanges,
 	OnDestroy,
 	OnInit,
-	Optional,
-	Output,
+	output,
 	QueryList,
 	signal,
 	SimpleChanges,
@@ -119,6 +118,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly bufferAmount = input(4, { transform: numberAttribute });
 	readonly virtualScroll = input<boolean, unknown>(undefined, { transform: booleanAttribute });
 	readonly selectableGroup = input(false, { transform: booleanAttribute });
+	readonly tabFocusOnClearButton = input<boolean | undefined>();
 	readonly selectableGroupAsModel = input(true, { transform: booleanAttribute });
 	readonly searchFn = input(null);
 	readonly trackByFn = input(null);
@@ -145,10 +145,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly clearable = input(true, { transform: booleanAttribute });
 	@HostBinding('class.ng-select-opened')
 	readonly isOpen = model<boolean>(false);
-	
+
 	// output events
-	readonly blurEvent = output({ alias: 'blur' });
-	readonly focusEvent = output({ alias: 'focus' });
+	readonly blurEvent = output<FocusEvent>({ alias: 'blur' });
+	readonly focusEvent = output<FocusEvent>({ alias: 'focus' });
 	readonly changeEvent = output<any>({ alias: 'change' });
 	readonly openEvent = output({ alias: 'open' });
 	readonly closeEvent = output({ alias: 'close' });
@@ -327,7 +327,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private get _validTerm() {
 		const term = this.searchTerm?.trim();
-		return term && term.length >= this.minTermLength;
+		return term && term.length >= this.minTermLength();
 	}
 
 	readonly keyDownFn = input<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true);
@@ -1077,16 +1077,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	private _mergeGlobalConfig(config: NgSelectConfig) {
-		this.placeholder = this.placeholder || config.placeholder;
-		this.fixedPlaceholder = this.fixedPlaceholder || config.fixedPlaceholder;
-		this.notFoundText = this.notFoundText || config.notFoundText;
-		this.typeToSearchText = this.typeToSearchText || config.typeToSearchText;
-		this.addTagText = this.addTagText || config.addTagText;
-		this.loadingText = this.loadingText || config.loadingText;
-		this.clearAllText = this.clearAllText || config.clearAllText;
-		this.virtualScroll = this.getVirtualScroll(config);
-		this.openOnEnter = isDefined(this.openOnEnter) ? this.openOnEnter : config.openOnEnter;
-		this.appendTo = this.appendTo || config.appendTo;
 		this.bindValue.set(this.bindValue() || config.bindValue);
 		this.bindLabel.set(this.bindLabel() || config.bindLabel);
 		this.appearance.set(this.appearance() || config.appearance);
@@ -1101,7 +1091,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	 *  @returns `true` if virtual scroll is enabled, `false` otherwise
 	 */
 	private getVirtualScroll(config: NgSelectConfig): boolean {
-		return isDefined(this.virtualScroll) ? this.virtualScroll : this.isVirtualScrollDisabled(config);
+		return isDefined(this.virtualScroll) ? this.virtualScroll() : this.isVirtualScrollDisabled(config);
 	}
 
 	/**

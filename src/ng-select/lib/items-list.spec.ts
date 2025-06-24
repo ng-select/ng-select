@@ -601,7 +601,6 @@ describe('ItemsList', () => {
 
 		const component = fixture.componentInstance
 		const componentRef = fixture.componentRef
-		componentRef.setInput('firstName', 'Feyd-Rautha')
 		fixture.detectChanges();
 
 		return {

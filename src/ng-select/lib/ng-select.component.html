@@ -83,11 +83,12 @@
 </div>
 
 @if (isOpen()) {
+	@let appendToValue = appendTo() || config.appendTo;
 	<ng-dropdown-panel
 		class="ng-dropdown-panel"
 		[virtualScroll]="virtualScroll() ?? !config.disableVirtualScroll ?? false"
 		[bufferAmount]="bufferAmount()"
-		[appendTo]="appendTo()"
+		[appendTo]="appendToValue"
 		[position]="dropdownPosition()"
 		[headerTemplate]="headerTemplate"
 		[footerTemplate]="footerTemplate"
@@ -99,7 +100,7 @@
 		(scrollToEnd)="scrollToEnd.emit($event)"
 		(outsideClick)="close()"
 		[class.ng-select-multiple]="multiple()"
-		[class]="appendTo() ? (ngClass() ? ngClass() : classes) : null"
+		[class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
 		[id]="dropdownId"
 		[attr.aria-label]="ariaLabelDropdown()">
 		<ng-container>
