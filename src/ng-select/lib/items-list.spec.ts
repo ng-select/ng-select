@@ -142,7 +142,7 @@ describe('ItemsList', () => {
 
 			it('should remove group from filtered items when hideSelected=true and all child group items are selected', () => {
 				cmpRef.setInput('hideSelected', true);
-				cmpRef.setInput('groupKey', 'groupKey');
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([
 					// G1
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
@@ -595,12 +595,12 @@ describe('ItemsList', () => {
 			providers: [
 				provideNgSelect(),
 			]
-		}).compileComponents()
+		}).compileComponents();
 
-		const fixture = TestBed.createComponent(NgSelectComponent)
+		const fixture = TestBed.createComponent(NgSelectComponent);
 
-		const component = fixture.componentInstance
-		const componentRef = fixture.componentRef
+		const component = fixture.componentInstance;
+		const componentRef = fixture.componentRef;
 		fixture.detectChanges();
 
 		return {

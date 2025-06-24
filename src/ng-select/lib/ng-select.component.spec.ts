@@ -2798,6 +2798,7 @@ describe('NgSelectComponent', () => {
 			it('should not insert option back to list if it is newly created option', fakeAsync(() => {
 				fixture.componentInstance.addTag = true;
 				fixture.componentInstance.typeahead = new Subject();
+				tickAndDetectChanges(fixture);
 				select.typeahead().subscribe();
 				fixture.componentInstance.cities = [];
 				tickAndDetectChanges(fixture);
