@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { concat, Observable, of, Subject } from 'rxjs';
-import { DataService, Person } from '../data.service';
-import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
-import { FormsModule } from '@angular/forms';
 import { AsyncPipe, JsonPipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
+import { concat, Observable, of, Subject } from 'rxjs';
+import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import { DataService, Person } from '../data.service';
 
 @Component({
 	selector: 'ng-search-autocomplete-example',
+	standalone: true,
 	templateUrl: './search-autocomplete-example.component.html',
 	styleUrls: ['./search-autocomplete-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, AsyncPipe, JsonPipe],

@@ -1,6 +1,4 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
 import {
 	NgLoadingTextTemplateDirective,
@@ -8,9 +6,12 @@ import {
 	NgSelectComponent,
 	NgTypeToSearchTemplateDirective,
 } from '@ng-select/ng-select';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { DataService } from '../data.service';
 
 @Component({
 	selector: 'ng-template-display-example',
+	standalone: true,
 	templateUrl: './template-display-example.component.html',
 	styleUrls: ['./template-display-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, NgTypeToSearchTemplateDirective, NgNotFoundTemplateDirective, NgLoadingTextTemplateDirective],
