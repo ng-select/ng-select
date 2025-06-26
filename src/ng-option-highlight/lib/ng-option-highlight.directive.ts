@@ -1,57 +1,47 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnChanges, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, input, inject, computed } from '@angular/core';
+
+function escapeRegExp(str: string): string {
+	return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 @Directive({
 	selector: '[ngOptionHighlight]',
 	standalone: true,
+	host: {
+		'innerHTML': 'innerHTML()'
+	}
 })
-export class NgOptionHighlightDirective implements OnChanges, AfterViewInit {
-	@Input('ngOptionHighlight') term: string;
+export class NgOptionHighlightDirective {
+	private readonly elementRef = inject(ElementRef);
 
-	private element: HTMLElement;
+	readonly term = input<string>(undefined, { alias: "ngOptionHighlight" });
+
+	private element = this.elementRef.nativeElement;;
 	private label: string;
 
-	constructor(
-		private elementRef: ElementRef,
-		private renderer: Renderer2,
-	) {
-		this.element = this.elementRef.nativeElement;
-	}
-
 	private get _canHighlight() {
-		return this._isDefined(this.term) && this._isDefined(this.label);
+		return this._isDefined(this.term()) && this._isDefined(this.label);
 	}
 
-	ngOnChanges() {
+	innerHTML = computed(() => {
+		const label = this.element.innerHTML;
+
 		if (this._canHighlight) {
-			this._highlightLabel();
+			return this._highlightLabel();
 		}
-	}
-
-	ngAfterViewInit() {
-		this.label = this.element.innerHTML;
-		if (this._canHighlight) {
-			this._highlightLabel();
-		}
-	}
-
-	private _escapeRegExp(str: string): string {
-		return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-	}
+		return label;
+	})
 
 	private _highlightLabel() {
 		const label = this.label;
-		if (!this.term) {
-			this._setInnerHtml(label);
-			return;
+		const term = this.term();
+		if (!term) {
+			return label;
 		}
 
-		const alternationString = this._escapeRegExp(this.term).replace(' ', '|');
+		const alternationString = escapeRegExp(term).replace(' ', '|');
 		const termRegex = new RegExp(alternationString, 'gi');
-		this._setInnerHtml(label.replace(termRegex, `<span class=\"highlighted\">$&</span>`));
-	}
-
-	private _setInnerHtml(html) {
-		this.renderer.setProperty(this.elementRef.nativeElement, 'innerHTML', html);
+		return label.replace(termRegex, `<span class=\"highlighted\">$&</span>`);
 	}
 
 	private _isDefined(value: any) {

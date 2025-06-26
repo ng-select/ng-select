@@ -1,10 +1,11 @@
-import { Component, ComponentFactoryResolver, Directive, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentFactoryResolver, Directive, OnInit, ViewChild, ViewContainerRef, input, inject } from '@angular/core';
 import { EXAMPLE_COMPONENTS } from '../../examples/examples';
 import { StackblitzButtonComponent } from './stackblitz-button/stackblitz-button.component';
 
 @Directive({ selector: '[example-host]' })
 export class ExampleHostDirective {
-	constructor(public viewContainerRef: ViewContainerRef) {}
+	viewContainerRef = inject(ViewContainerRef);
+
 }
 
 @Component({
@@ -32,16 +33,16 @@ export class ExampleHostDirective {
 	imports: [StackblitzButtonComponent, ExampleHostDirective],
 })
 export class ExampleViewerComponent implements OnInit {
-	@Input() example: string;
+	private componentFactoryResolver = inject(ComponentFactoryResolver);
+
+	readonly example = input<string>(undefined);
 
 	@ViewChild(ExampleHostDirective, { static: true }) exampleHost: ExampleHostDirective;
 
 	title: string;
 
-	constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
-
 	get sourcePath() {
-		return `https://github.com/ng-select/ng-select/tree/master/src/demo/app/examples/${this.example}`;
+		return `https://github.com/ng-select/ng-select/tree/master/src/demo/app/examples/${this.example()}`;
 	}
 
 	ngOnInit() {
@@ -49,7 +50,7 @@ export class ExampleViewerComponent implements OnInit {
 	}
 
 	private loadComponent() {
-		const example = EXAMPLE_COMPONENTS[this.example];
+		const example = EXAMPLE_COMPONENTS[this.example()];
 		this.title = example.title;
 		const componentFactory = this.componentFactoryResolver.resolveComponentFactory(example.component);
 
