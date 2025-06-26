@@ -1,4 +1,4 @@
-import { isSignal } from '@angular/core';
+import { isSignal, Signal } from '@angular/core';
 import { newId } from './id';
 import { NgSelectComponent } from './ng-select.component';
 import { NgOption } from './ng-select.types';
@@ -8,7 +8,7 @@ import { isDefined, isFunction, isObject } from './value-utils';
 
 type OptionGroups = Map<string | NgOption, NgOption[]>;
 
-const evaluateValue = (value) => isSignal(value) ? value() : value;
+const evaluateValue = <T>(value: T | Signal<T>): T => isSignal(value) ? value() : value;
 
 export class ItemsList {
 	private _groups: OptionGroups;
