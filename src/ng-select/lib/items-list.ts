@@ -1,3 +1,4 @@
+import { isSignal } from '@angular/core';
 import { newId } from './id';
 import { NgSelectComponent } from './ng-select.component';
 import { NgOption } from './ng-select.types';
@@ -6,6 +7,8 @@ import { SelectionModel } from './selection-model';
 import { isDefined, isFunction, isObject } from './value-utils';
 
 type OptionGroups = Map<string | NgOption, NgOption[]>;
+
+const evaluateValue = (value) => isSignal(value) ? value() : value;
 
 export class ItemsList {
 	private _groups: OptionGroups;
@@ -102,12 +105,12 @@ export class ItemsList {
 	findItem(value: any): NgOption {
 		let findBy: (item: NgOption) => boolean;
 		if (this._ngSelect.compareWith) {
-			findBy = (item) => this._ngSelect.compareWith(item.value, value);
+			findBy = (item) => this._ngSelect.compareWith(evaluateValue(item.value), value);
 		} else if (this._ngSelect.bindValue()) {
-			findBy = (item) => !item.children && this.resolveNested(item.value, this._ngSelect.bindValue()) === value;
+			findBy = (item) => !item.children && this.resolveNested(evaluateValue(item.value), this._ngSelect.bindValue()) === value;
 		} else {
 			findBy = (item) =>
-				item.value === value || (!item.children && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel()));
+				evaluateValue(item.value) === value || (!item.children && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel()));
 		}
 		return this._items.find((item) => findBy(item));
 	}
