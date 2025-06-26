@@ -102,7 +102,7 @@
 		[class.ng-select-multiple]="multiple()"
 		[class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
 		[id]="dropdownId"
-		[attr.aria-label]="ariaLabelDropdown()">
+		[ariaLabelDropdown]="ariaLabelDropdown()">
 		<ng-container>
 			@for (item of viewPortItems; track trackByOption($index, item)) {
 				<div

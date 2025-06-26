@@ -25,6 +25,7 @@ export class NgOptionComponent {
 	public readonly disabled = input(false, {
 		transform: booleanAttribute,
 	});
+	public elementRef = inject(ElementRef<HTMLElement>);
 
 	public readonly stateChange = computed<StateChange | undefined>(() => {
 		return {
@@ -33,8 +34,6 @@ export class NgOptionComponent {
 			label: this.elementRef.nativeElement.innerHTML,
 		}
 	});
-
-	public elementRef = inject(ElementRef<HTMLElement>);
 
 	get label(): string {
 		return (this.elementRef.nativeElement.textContent || '').trim();

@@ -30,7 +30,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { merge, Subject } from 'rxjs';
+import { merge, of, Subject } from 'rxjs';
 import { debounceTime, filter, map, startWith, takeUntil, tap } from 'rxjs/operators';
 
 import {
@@ -787,7 +787,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 		const handleOptionChange = () => {
 			const changedOrDestroyed = merge(this.ngOptions.changes, this._destroy$);
-			merge(...this.ngOptions.map((option) => toObservable(option.stateChange)))
+			merge(...this.ngOptions.map((option) => of(option.stateChange())))
 				.pipe(takeUntil(changedOrDestroyed))
 				.subscribe((option) => {
 					const item = this.itemsList.findItem(option.value);

@@ -191,7 +191,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	private _handleScroll() {
-		debugger;
 		this._zone.runOutsideAngular(() => {
 			fromEvent(this._scrollablePanel(), 'scroll')
 				.pipe(takeUntil(this._destroy$), auditTime(0, SCROLL_SCHEDULER))
