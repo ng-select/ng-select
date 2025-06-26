@@ -7,6 +7,7 @@ import {
 	inject,
 	input,
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 type StateChange = {
 	value: any;
@@ -34,6 +35,7 @@ export class NgOptionComponent {
 			label: this.elementRef.nativeElement.innerHTML,
 		}
 	});
+	public readonly stateChange$ = toObservable(this.stateChange);
 
 	get label(): string {
 		return (this.elementRef.nativeElement.textContent || '').trim();

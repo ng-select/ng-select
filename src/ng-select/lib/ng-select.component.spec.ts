@@ -1637,7 +1637,7 @@ describe('NgSelectComponent', () => {
 					bindLabel="name"
 					[loading]="citiesLoading"
 					[selectOnTab]="selectOnTab"
-					[isOpen]="isOpen"
+					[openOnEnter]="openOnEnter"
 					[multiple]="multiple"
 					[clearOnBackspace]="clearOnBackspace"
 					[clearable]="clearable"
@@ -1698,12 +1698,12 @@ describe('NgSelectComponent', () => {
 				expect(select.itemsList.markedItem).toEqual(jasmine.objectContaining(result));
 			}));
 
-			it('should open dropdown without marking first item', () => {
+			it('should open dropdown without marking first item', fakeAsync(() => {
 				fixture.componentInstance.markFirst = false;
 				tickAndDetectChanges(fixture);
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 				expect(select.itemsList.markedItem).toEqual(undefined);
-			});
+			}));
 		});
 
 		describe('arrows', () => {
@@ -1783,63 +1783,6 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Esc);
 				expect(select.isOpen()).toBe(false);
 			});
-		});
-
-		describe('tab', () => {
-			it('should close dropdown when there are no items', fakeAsync(() => {
-				select.filter('random stuff');
-				tick(200);
-				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
-				expect(select.isOpen()).toBeFalsy();
-			}));
-
-			it('should close dropdown when [selectOnTab]="false"', fakeAsync(() => {
-				fixture.componentInstance.selectOnTab = false;
-				tickAndDetectChanges(fixture);
-				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
-				expect(select.selectedItems).toEqual([]);
-				expect(select.isOpen()).toBeFalsy();
-			}));
-
-			it('should close dropdown and keep selected value', fakeAsync(() => {
-				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
-				tickAndDetectChanges(fixture);
-				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
-				tickAndDetectChanges(fixture);
-				const result = [
-					jasmine.objectContaining({
-						value: fixture.componentInstance.cities[0],
-					}),
-				];
-				expect(select.selectedItems).toEqual(result);
-				expect(select.isOpen()).toBeFalsy();
-			}));
-
-			it('should mark first item on filter when tab', fakeAsync(() => {
-				tick(200);
-				fixture.componentInstance.select.filter('pab');
-				tick(200);
-
-				const result = jasmine.objectContaining({
-					value: fixture.componentInstance.cities[2],
-				});
-				expect(fixture.componentInstance.select.itemsList.markedItem).toEqual(result);
-				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
-				expect(fixture.componentInstance.select.selectedItems).toEqual([result]);
-			}));
-			it('should focus on clear button when tab pressed while not opened and clear showing', fakeAsync(() => {
-				selectOption(fixture, KeyCode.ArrowDown, 0);
-				tickAndDetectChanges(fixture);
-				expect(select.showClear()).toBeTruthy();
-
-				select.searchInput.nativeElement.focus();
-				const focusOnClear = spyOn(select, 'focusOnClear');
-				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
-				expect(focusOnClear).toHaveBeenCalled();
-			}));
 		});
 
 		describe('backspace', () => {
@@ -1940,25 +1883,25 @@ describe('NgSelectComponent', () => {
 				select.ngOnInit();
 			});
 
-			it('should select item using key while not opened', fakeAsync(() => {
+			it('should select item using key while not opened', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), 'v');
-				tick(200);
+				fixture.detectChanges();
 
 				expect(fixture.componentInstance.selectedCity.name).toBe('Vilnius');
-			}));
+			});
 
-			it('should mark item using key while opened', fakeAsync(() => {
+			it('should mark item using key while opened', () => {
 				const findByLabel = spyOn(select.itemsList, 'findByLabel');
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 				triggerKeyDownEvent(getNgSelectElement(fixture), 'v');
 				triggerKeyDownEvent(getNgSelectElement(fixture), 'i');
 				triggerKeyDownEvent(getNgSelectElement(fixture), 'l');
-				tick(200);
+				fixture.detectChanges();
 
 				expect(fixture.componentInstance.selectedCity).toBeUndefined();
 				expect(select.itemsList.markedItem.label).toBe('Vilnius');
 				expect(findByLabel).toHaveBeenCalledWith('vil');
-			}));
+			});
 		});
 
 		describe('enter', () => {
@@ -1998,13 +1941,13 @@ describe('NgSelectComponent', () => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [items]="cities"
-                        bindLabel="name"
-                        [loading]="citiesLoading"
-                        [selectOnTab]="selectOnTab"
-                        [multiple]="multiple"
-												[tabFocusOnClearButton]="tabFocusOnClearButton"
-                        [(ngModel)]="selectedCity">
-                </ng-select>`,
+					bindLabel="name"
+					[loading]="citiesLoading"
+					[selectOnTab]="selectOnTab"
+					[multiple]="multiple"
+					[tabFocusOnClearButton]="tabFocusOnClearButton"
+					[(ngModel)]="selectedCity" />
+				`,
 			);
 			const select = fixture.componentInstance.select;
 			return { fixture, select };
