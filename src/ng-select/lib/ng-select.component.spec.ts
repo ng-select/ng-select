@@ -1880,6 +1880,7 @@ describe('NgSelectComponent', () => {
 		describe('key presses', () => {
 			beforeEach(() => {
 				fixture.componentInstance.searchable = false;
+				fixture.detectChanges();
 				select.ngOnInit();
 			});
 
@@ -3136,6 +3137,7 @@ describe('NgSelectComponent', () => {
 			it('should be false when term is too short', () => {
 				select.searchTerm = 'vi';
 				fixture.componentInstance.minTermLength = 3;
+				fixture.detectChanges();
 				expect(select.showAddTag).toBeFalsy();
 			});
 
@@ -3570,6 +3572,7 @@ describe('NgSelectComponent', () => {
 
 			it('should not mark first item when typeahead results are loaded', fakeAsync(() => {
 				fixture.componentInstance.markFirst = false;
+				fixture.detectChanges();
 				fixture.componentInstance.filter.subscribe();
 				fixture.componentInstance.select.filter('buk');
 				fixture.componentInstance.cities = [{ id: 4, name: 'Bukiskes' }];

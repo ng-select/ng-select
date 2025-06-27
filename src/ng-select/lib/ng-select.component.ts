@@ -774,7 +774,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		const mapNgOptions = (options: QueryList<NgOptionComponent>) => {
 			this.items = options.map((option) => ({
 				$ngOptionValue: option.value(),
-				$ngOptionLabel: option.label(),
+				$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
 				disabled: option.disabled(),
 			}));
 			this.itemsList.setItems(this.items);
