@@ -53,7 +53,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { NgSelectConfig } from './config.service';
 import { ConsoleService } from './console.service';
 import { newId } from './id';
-import { evaluateValue, ItemsList } from './items-list';
+import { ItemsList } from './items-list';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgDropdownPanelService } from './ng-dropdown-panel.service';
 import { NgOptionComponent } from './ng-option.component';
@@ -773,9 +773,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	private _setItemsFromNgOptions() {
 		const mapNgOptions = (options: QueryList<NgOptionComponent>) => {
 			this.items = options.map((option) => ({
-				$ngOptionValue: option.value,
-				$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
-				disabled: option.disabled,
+				$ngOptionValue: option.value(),
+				$ngOptionLabel: option.label(),
+				disabled: option.disabled(),
 			}));
 			this.itemsList.setItems(this.items);
 			if (this.hasValue) {
@@ -922,9 +922,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 				} else {
 					value = this.itemsList.resolveNested(item.value, bindValue);
 				}
-				model.push(evaluateValue(value));
+				model.push(value);
 			} else {
-				model.push(evaluateValue(item.value));
+				model.push(item.value);
 			}
 		}
 

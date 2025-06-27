@@ -1883,12 +1883,12 @@ describe('NgSelectComponent', () => {
 				select.ngOnInit();
 			});
 
-			it('should select item using key while not opened', () => {
+			it('should select item using key while not opened', fakeAsync(() => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), 'v');
-				fixture.detectChanges();
+				tickAndDetectChanges(fixture);
 
 				expect(fixture.componentInstance.selectedCity.name).toBe('Vilnius');
-			});
+			}));
 
 			it('should mark item using key while opened', () => {
 				const findByLabel = spyOn(select.itemsList, 'findByLabel');
