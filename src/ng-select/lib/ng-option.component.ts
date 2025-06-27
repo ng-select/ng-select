@@ -1,4 +1,5 @@
 import {
+	afterEveryRender,
 	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
@@ -6,6 +7,7 @@ import {
 	ElementRef,
 	inject,
 	input,
+	signal,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 
@@ -19,25 +21,33 @@ type StateChange = {
 	selector: 'ng-option',
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	template: `<ng-content />`,
+	template: `<ng-content #test />`,
 })
 export class NgOptionComponent {
 	public readonly value = input<any>();
 	public readonly disabled = input(false, {
 		transform: booleanAttribute,
 	});
-	public elementRef = inject(ElementRef<HTMLElement>);
+	public readonly elementRef = inject(ElementRef<HTMLElement>);
+	public readonly label = signal<string>('');
 
-	public readonly stateChange = computed<StateChange | undefined>(() => {
-		return {
-			value: this.value(),
-			disabled: this.disabled(),
-			label: this.elementRef.nativeElement.innerHTML,
-		}
-	});
+	constructor() {
+		afterEveryRender(() => {
+			const label = this.label();
+			if (this._label !== label) {
+				this.label.set(this._label);
+			}
+		});
+	}
+
+	public readonly stateChange = computed<StateChange | undefined>(() => ({
+		value: this.value(),
+		disabled: this.disabled(),
+		label: this.label(),
+	}));
 	public readonly stateChange$ = toObservable(this.stateChange);
 
-	get label(): string {
-		return (this.elementRef.nativeElement.textContent || '').trim();
+	private get _label() {
+		return this.elementRef.nativeElement.textContent || ''.trim();
 	}
 }

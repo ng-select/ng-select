@@ -8,7 +8,7 @@ import { isDefined, isFunction, isObject } from './value-utils';
 
 type OptionGroups = Map<string | NgOption, NgOption[]>;
 
-const evaluateValue = <T>(value: T | Signal<T>): T => isSignal(value) ? value() : value;
+export const evaluateValue = <T>(value: T | Signal<T>): T => isSignal(value) ? value() : value;
 
 export class ItemsList {
 	private _groups: OptionGroups;

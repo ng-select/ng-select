@@ -53,7 +53,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { NgSelectConfig } from './config.service';
 import { ConsoleService } from './console.service';
 import { newId } from './id';
-import { ItemsList } from './items-list';
+import { evaluateValue, ItemsList } from './items-list';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgDropdownPanelService } from './ng-dropdown-panel.service';
 import { NgOptionComponent } from './ng-option.component';
@@ -922,9 +922,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 				} else {
 					value = this.itemsList.resolveNested(item.value, bindValue);
 				}
-				model.push(value);
+				model.push(evaluateValue(value));
 			} else {
-				model.push(item.value);
+				model.push(evaluateValue(item.value));
 			}
 		}
 

@@ -2624,6 +2624,7 @@ describe('NgSelectComponent', () => {
 
 			fixture.componentInstance.label = 'Indeed';
 			tickAndDetectChanges(fixture);
+			tickAndDetectChanges(fixture);
 			const items = fixture.componentInstance.select.itemsList.items;
 			expect(items[0].label).toBe('Indeed');
 		}));
