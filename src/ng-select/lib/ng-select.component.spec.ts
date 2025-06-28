@@ -3626,7 +3626,7 @@ describe('NgSelectComponent', () => {
                     </ng-select>`,
 				);
 
-				expect(fixture.componentInstance.select().clearSearchOnAdd).toBeTruthy();
+				expect(fixture.componentInstance.select().clearSearchOnAddValue()).toBeTruthy();
 
 				fixture.componentInstance.filter.subscribe();
 				fixture.componentInstance.select().filter('new');
@@ -3652,7 +3652,7 @@ describe('NgSelectComponent', () => {
                     </ng-select>`,
 				);
 
-				expect(fixture.componentInstance.select().clearSearchOnAdd).toBeFalsy();
+				expect(fixture.componentInstance.select().clearSearchOnAddValue()).toBeFalsy();
 
 				fixture.componentInstance.filter.subscribe();
 				fixture.componentInstance.select().filter('new');
@@ -3678,7 +3678,7 @@ describe('NgSelectComponent', () => {
                     </ng-select>`,
 				);
 
-				expect(fixture.componentInstance.select().clearSearchOnAdd).toBeFalsy();
+				expect(fixture.componentInstance.select().clearSearchOnAddValue()).toBeFalsy();
 				expect(fixture.componentInstance.select().closeOnSelect()).toBeFalsy();
 
 				fixture.componentInstance.filter.subscribe();
@@ -3706,7 +3706,7 @@ describe('NgSelectComponent', () => {
                     </ng-select>`,
 				);
 
-				expect(fixture.componentInstance.select().clearSearchOnAdd).toBeTruthy();
+				expect(fixture.componentInstance.select().clearSearchOnAddValue()).toBeTruthy();
 				expect(fixture.componentInstance.select().closeOnSelect()).toBeFalsy();
 
 				let lastEmittedSearchTerm = '';
@@ -3739,7 +3739,7 @@ describe('NgSelectComponent', () => {
 					config,
 				);
 
-				expect(fixture.componentInstance.select().clearSearchOnAdd).toBeTruthy();
+				expect(fixture.componentInstance.select().clearSearchOnAddValue()).toBeTruthy();
 
 				fixture.componentInstance.filter.subscribe();
 				fixture.componentInstance.select().filter('new');
@@ -3768,7 +3768,7 @@ describe('NgSelectComponent', () => {
 					config,
 				);
 
-				expect(fixture.componentInstance.select().clearSearchOnAdd).toBeFalsy();
+				expect(fixture.componentInstance.select().clearSearchOnAddValue()).toBeFalsy();
 
 				fixture.componentInstance.filter.subscribe();
 				fixture.componentInstance.select().filter('new');

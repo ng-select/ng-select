@@ -26,8 +26,8 @@ import {
 	ViewEncapsulation,
 	contentChild,
 	viewChild,
-	contentChildren,
-	ContentChildren
+	ContentChildren,
+	computed
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { merge, Subject } from 'rxjs';
@@ -251,21 +251,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this._compareWith = fn;
 	}
 
-	private _clearSearchOnAdd: boolean;
+	readonly clearSearchOnAdd = input(undefined);
 
-	@Input()
-	get clearSearchOnAdd() {
-		if (isDefined(this._clearSearchOnAdd)) {
-			return this._clearSearchOnAdd;
-		} else if (isDefined(this.config.clearSearchOnAdd)) {
+	readonly clearSearchOnAddValue = computed(() => {
+		if (isDefined(this.clearSearchOnAdd())) {
+			return this.clearSearchOnAdd();
+		}
+		if (isDefined(this.config.clearSearchOnAdd)) {
 			return this.config.clearSearchOnAdd;
 		}
 		return this.closeOnSelect();
-	}
-
-	set clearSearchOnAdd(value) {
-		this._clearSearchOnAdd = value;
-	}
+	});
 
 	private _deselectOnClick: boolean;
 
@@ -586,7 +582,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	select(item: NgOption) {
 		if (!item.selected) {
 			this.itemsList.select(item);
-			if (this.clearSearchOnAdd && !this._editableSearchTerm) {
+			if (this.clearSearchOnAddValue() && !this._editableSearchTerm) {
 				this._clearSearch();
 			}
 
