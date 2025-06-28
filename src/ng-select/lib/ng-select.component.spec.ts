@@ -4919,6 +4919,7 @@ describe('Input method composition', () => {
                 </ng-select>`,
 		);
 		select = fixture.componentInstance.select();
+		fixture.componentInstance.searchWhileComposing = false;
 	});
 
 	describe('composition start', () => {
@@ -4946,7 +4947,7 @@ describe('Input method composition', () => {
 
 	describe('composition end', () => {
 		it('should update search term', fakeAsync(() => {
-			fixture.componentInstance.searchWhileComposing = false;
+			tickAndDetectChanges(fixture);
 			select.filter(originValue);
 			tickAndDetectChanges(fixture);
 			select.onCompositionEnd(imeInputValue);
