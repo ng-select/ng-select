@@ -4,8 +4,6 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
-	ContentChild,
-	ContentChildren,
 	ElementRef,
 	forwardRef,
 	HostAttributeToken,
@@ -25,8 +23,11 @@ import {
 	signal,
 	SimpleChanges,
 	TemplateRef,
-	ViewChild,
 	ViewEncapsulation,
+	contentChild,
+	viewChild,
+	contentChildren,
+	ContentChildren
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { merge, Subject } from 'rxjs';
@@ -164,23 +165,23 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}>({ alias: 'scroll' });
 	readonly scrollToEnd = output({ alias: 'scrollToEnd' });
 	// custom templates
-	@ContentChild(NgOptionTemplateDirective, { read: TemplateRef }) optionTemplate: TemplateRef<any>;
-	@ContentChild(NgOptgroupTemplateDirective, { read: TemplateRef }) optgroupTemplate: TemplateRef<any>;
-	@ContentChild(NgLabelTemplateDirective, { read: TemplateRef }) labelTemplate: TemplateRef<any>;
-	@ContentChild(NgMultiLabelTemplateDirective, { read: TemplateRef }) multiLabelTemplate: TemplateRef<any>;
-	@ContentChild(NgHeaderTemplateDirective, { read: TemplateRef }) headerTemplate: TemplateRef<any>;
-	@ContentChild(NgFooterTemplateDirective, { read: TemplateRef }) footerTemplate: TemplateRef<any>;
-	@ContentChild(NgNotFoundTemplateDirective, { read: TemplateRef }) notFoundTemplate: TemplateRef<any>;
-	@ContentChild(NgPlaceholderTemplateDirective, { read: TemplateRef }) placeholderTemplate: TemplateRef<any>;
-	@ContentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef }) typeToSearchTemplate: TemplateRef<any>;
-	@ContentChild(NgLoadingTextTemplateDirective, { read: TemplateRef }) loadingTextTemplate: TemplateRef<any>;
-	@ContentChild(NgTagTemplateDirective, { read: TemplateRef }) tagTemplate: TemplateRef<any>;
-	@ContentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef }) loadingSpinnerTemplate: TemplateRef<any>;
-	@ContentChild(NgClearButtonTemplateDirective, { read: TemplateRef }) clearButtonTemplate: TemplateRef<any>;
+	readonly optionTemplate = contentChild(NgOptionTemplateDirective, { read: TemplateRef });
+	readonly optgroupTemplate = contentChild(NgOptgroupTemplateDirective, { read: TemplateRef });
+	readonly labelTemplate = contentChild(NgLabelTemplateDirective, { read: TemplateRef });
+	readonly multiLabelTemplate = contentChild(NgMultiLabelTemplateDirective, { read: TemplateRef });
+	readonly headerTemplate = contentChild(NgHeaderTemplateDirective, { read: TemplateRef });
+	readonly footerTemplate = contentChild(NgFooterTemplateDirective, { read: TemplateRef });
+	readonly notFoundTemplate = contentChild(NgNotFoundTemplateDirective, { read: TemplateRef });
+	readonly placeholderTemplate = contentChild(NgPlaceholderTemplateDirective, { read: TemplateRef });
+	readonly typeToSearchTemplate = contentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef });
+	readonly loadingTextTemplate = contentChild(NgLoadingTextTemplateDirective, { read: TemplateRef });
+	readonly tagTemplate = contentChild(NgTagTemplateDirective, { read: TemplateRef });
+	readonly loadingSpinnerTemplate = contentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef });
+	readonly clearButtonTemplate = contentChild(NgClearButtonTemplateDirective, { read: TemplateRef });
 
-	@ViewChild(forwardRef(() => NgDropdownPanelComponent)) dropdownPanel: NgDropdownPanelComponent;
-	@ViewChild('searchInput', { static: true }) searchInput: ElementRef<HTMLInputElement>;
-	@ViewChild('clearButton') clearButton: ElementRef<HTMLSpanElement>;
+	readonly dropdownPanel = viewChild(forwardRef(() => NgDropdownPanelComponent));
+	readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
+	readonly clearButton = viewChild<ElementRef<HTMLSpanElement>>('clearButton');
 	@ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
 	@HostBinding('class.ng-select') useDefaultClass = true;
 	itemsList: ItemsList;
@@ -295,8 +296,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	get currentPanelPosition(): DropdownPosition {
-		if (this.dropdownPanel) {
-			return this.dropdownPanel.currentPosition;
+		const dropdownPanel = this.dropdownPanel();
+		if (dropdownPanel) {
+			return dropdownPanel.currentPosition;
 		}
 		return undefined;
 	}
@@ -394,7 +396,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	handleKeyCode($event: KeyboardEvent) {
 		const target = $event.target;
 
-		if (this.clearButton && this.clearButton.nativeElement === target) {
+		const clearButton = this.clearButton();
+		if (clearButton && clearButton.nativeElement === target) {
 			this.handleKeyCodeClear($event);
 		} else {
 			this.handleKeyCodeInput($event);
@@ -601,11 +604,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	focus() {
-		this.searchInput.nativeElement.focus();
+		this.searchInput().nativeElement.focus();
 	}
 
 	blur() {
-		this.searchInput.nativeElement.blur();
+		this.searchInput().nativeElement.blur();
 	}
 
 	unselect(item: NgOption) {
@@ -643,8 +646,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	focusOnClear() {
 		this.blur();
-		if (this.clearButton) {
-			this.clearButton.nativeElement.focus();
+		const clearButton = this.clearButton();
+		if (clearButton) {
+			clearButton.nativeElement.focus();
 		}
 	}
 
@@ -891,7 +895,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	private _setInputAttributes() {
-		const input = this.searchInput.nativeElement;
+		const input = this.searchInput().nativeElement;
 		const attributes = {
 			type: 'text',
 			autocorrect: 'off',
@@ -957,17 +961,19 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	private _scrollToMarked() {
-		if (!this.isOpen() || !this.dropdownPanel) {
+		const dropdownPanel = this.dropdownPanel();
+		if (!this.isOpen() || !dropdownPanel) {
 			return;
 		}
-		this.dropdownPanel.scrollTo(this.itemsList.markedItem);
+		dropdownPanel.scrollTo(this.itemsList.markedItem);
 	}
 
 	private _scrollToTag() {
-		if (!this.isOpen() || !this.dropdownPanel) {
+		const dropdownPanel = this.dropdownPanel();
+		if (!this.isOpen() || !dropdownPanel) {
 			return;
 		}
-		this.dropdownPanel.scrollToTag();
+		dropdownPanel.scrollToTag();
 	}
 
 	private _onSelectionChanged() {
@@ -975,7 +981,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (this.isOpen() && this.deselectOnClick && appendTo) {
 			// Make sure items are rendered.
 			this._cd.detectChanges();
-			this.dropdownPanel.adjustPosition();
+			this.dropdownPanel().adjustPosition();
 		}
 	}
 

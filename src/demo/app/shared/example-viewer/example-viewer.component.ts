@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, Directive, OnInit, ViewChild, ViewContainerRef, input, inject } from '@angular/core';
+import { Component, ComponentFactoryResolver, Directive, OnInit, ViewContainerRef, input, inject, viewChild } from '@angular/core';
 import { EXAMPLE_COMPONENTS } from '../../examples/examples';
 import { StackblitzButtonComponent } from './stackblitz-button/stackblitz-button.component';
 
@@ -37,7 +37,7 @@ export class ExampleViewerComponent implements OnInit {
 
 	readonly example = input<string>(undefined);
 
-	@ViewChild(ExampleHostDirective, { static: true }) exampleHost: ExampleHostDirective;
+	readonly exampleHost = viewChild(ExampleHostDirective);
 
 	title: string;
 
@@ -54,7 +54,7 @@ export class ExampleViewerComponent implements OnInit {
 		this.title = example.title;
 		const componentFactory = this.componentFactoryResolver.resolveComponentFactory(example.component);
 
-		const viewContainerRef = this.exampleHost.viewContainerRef;
+		const viewContainerRef = this.exampleHost().viewContainerRef;
 		viewContainerRef.clear();
 		viewContainerRef.createComponent(componentFactory);
 	}

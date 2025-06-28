@@ -8,10 +8,10 @@
 			<ng-template #defaultPlaceholderTemplate>
 				<div class="ng-placeholder">{{ placeholder() ?? config.placeholder }}</div>
 			</ng-template>
-			<ng-template [ngTemplateOutlet]="placeholderTemplate || defaultPlaceholderTemplate"> </ng-template>
+			<ng-template [ngTemplateOutlet]="placeholderTemplate() || defaultPlaceholderTemplate"> </ng-template>
 		}
 
-		@if ((!multiLabelTemplate || !multiple()) && selectedItems.length > 0) {
+		@if ((!multiLabelTemplate() || !multiple()) && selectedItems.length > 0) {
 			@for (item of selectedItems; track trackByOption($index, item)) {
 				<div [class.ng-value-disabled]="item.disabled" class="ng-value">
 					<ng-template #defaultLabelTemplate>
@@ -19,15 +19,15 @@
 						<span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
 					</ng-template>
 					<ng-template
-						[ngTemplateOutlet]="labelTemplate || defaultLabelTemplate"
+						[ngTemplateOutlet]="labelTemplate() || defaultLabelTemplate"
 						[ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
 					</ng-template>
 				</div>
 			}
 		}
 
-		@if (multiple() && multiLabelTemplate && selectedValues.length > 0) {
-			<ng-template [ngTemplateOutlet]="multiLabelTemplate" [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
+		@if (multiple() && multiLabelTemplate() && selectedValues.length > 0) {
+			<ng-template [ngTemplateOutlet]="multiLabelTemplate()" [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
 			</ng-template>
 		}
 
@@ -58,12 +58,12 @@
 		<ng-template #defaultLoadingSpinnerTemplate>
 			<div class="ng-spinner-loader"></div>
 		</ng-template>
-		<ng-template [ngTemplateOutlet]="loadingSpinnerTemplate || defaultLoadingSpinnerTemplate"></ng-template>
+		<ng-template [ngTemplateOutlet]="loadingSpinnerTemplate() || defaultLoadingSpinnerTemplate"></ng-template>
 	}
 
 	@if (showClear()) {
-		@if (clearButtonTemplate) {
-			<ng-container [ngTemplateOutlet]="clearButtonTemplate"></ng-container>
+		@if (clearButtonTemplate()) {
+			<ng-container [ngTemplateOutlet]="clearButtonTemplate()"></ng-container>
 		} @else {
 			<span
 				class="ng-clear-wrapper"
@@ -90,8 +90,8 @@
 		[bufferAmount]="bufferAmount()"
 		[appendTo]="appendToValue"
 		[position]="dropdownPosition()"
-		[headerTemplate]="headerTemplate"
-		[footerTemplate]="footerTemplate"
+		[headerTemplate]="headerTemplate()"
+		[footerTemplate]="footerTemplate()"
 		[filterValue]="searchTerm"
 		[items]="itemsList.filteredItems"
 		[markedItem]="itemsList.markedItem"
@@ -125,7 +125,7 @@
 					</ng-template>
 					<ng-template
 						[ngTemplateOutlet]="
-							item.children ? optgroupTemplate || defaultOptionTemplate : optionTemplate || defaultOptionTemplate
+							item.children ? optgroupTemplate() || defaultOptionTemplate : optionTemplate() || defaultOptionTemplate
 						"
 						[ngTemplateOutletContext]="{ item: item.value, item$: item, index: item.index, searchTerm: searchTerm }">
 					</ng-template>
@@ -145,7 +145,7 @@
 						>
 					</ng-template>
 					<ng-template
-						[ngTemplateOutlet]="tagTemplate || defaultTagTemplate"
+						[ngTemplateOutlet]="tagTemplate() || defaultTagTemplate"
 						[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
 					</ng-template>
 				</div>
@@ -156,7 +156,7 @@
 				<div class="ng-option ng-option-disabled">{{ notFoundText() ?? config.notFoundText }}</div>
 			</ng-template>
 			<ng-template
-				[ngTemplateOutlet]="notFoundTemplate || defaultNotFoundTemplate"
+				[ngTemplateOutlet]="notFoundTemplate() || defaultNotFoundTemplate"
 				[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
 			</ng-template>
 		}
@@ -164,14 +164,14 @@
 			<ng-template #defaultTypeToSearchTemplate>
 				<div class="ng-option ng-option-disabled">{{ typeToSearchText() || config.typeToSearchText }}</div>
 			</ng-template>
-			<ng-template [ngTemplateOutlet]="typeToSearchTemplate || defaultTypeToSearchTemplate"></ng-template>
+			<ng-template [ngTemplateOutlet]="typeToSearchTemplate() || defaultTypeToSearchTemplate"></ng-template>
 		}
 		@if (loading() && itemsList.filteredItems.length === 0) {
 			<ng-template #defaultLoadingTextTemplate>
 				<div class="ng-option ng-option-disabled">{{ loadingText() || config.loadingText }}</div>
 			</ng-template>
 			<ng-template
-				[ngTemplateOutlet]="loadingTextTemplate || defaultLoadingTextTemplate"
+				[ngTemplateOutlet]="loadingTextTemplate() || defaultLoadingTextTemplate"
 				[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
 			</ng-template>
 		}

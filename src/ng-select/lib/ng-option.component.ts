@@ -21,7 +21,7 @@ type StateChange = {
 	selector: 'ng-option',
 	standalone: true,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	template: `<ng-content #test />`,
+	template: `<ng-content />`,
 })
 export class NgOptionComponent {
 	public readonly value = input<any>();
