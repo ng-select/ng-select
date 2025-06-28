@@ -258,21 +258,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		return this.closeOnSelect();
 	});
 
-	private _deselectOnClick: boolean;
-
-	@Input()
-	get deselectOnClick() {
-		if (isDefined(this._deselectOnClick)) {
-			return this._deselectOnClick;
-		} else if (isDefined(this.config.deselectOnClick)) {
+	readonly deselectOnClick = input<boolean>();
+	readonly deselectOnClickValue = computed(() => {
+		if (isDefined(this.deselectOnClick())) {
+			return this.deselectOnClick();
+		}
+		if (isDefined(this.config.deselectOnClick)) {
 			return this.config.deselectOnClick;
 		}
 		return this.multiple();
-	}
-
-	set deselectOnClick(value) {
-		this._deselectOnClick = value;
-	}
+	});
 
 	get selectedItems(): NgOption[] {
 		return this.itemsList.selectedItems;
@@ -563,7 +558,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			return;
 		}
 
-		if (this.deselectOnClick && item.selected) {
+		if (this.deselectOnClickValue() && item.selected) {
 			this.unselect(item);
 		} else {
 			this.select(item);
@@ -969,7 +964,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _onSelectionChanged() {
 		const appendTo = this.appendTo() ?? this.config.appendTo;
-		if (this.isOpen() && this.deselectOnClick && appendTo) {
+		if (this.isOpen() && this.deselectOnClickValue() && appendTo) {
 			// Make sure items are rendered.
 			this._cd.detectChanges();
 			this.dropdownPanel().adjustPosition();
