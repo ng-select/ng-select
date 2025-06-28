@@ -237,19 +237,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		return this.readonly() || this._disabled;
 	}
 
-	private _compareWith: CompareWithFn;
-
-	@Input()
-	get compareWith() {
-		return this._compareWith;
-	}
-
-	set compareWith(fn: CompareWithFn) {
-		if (fn !== undefined && fn !== null && !isFunction(fn)) {
-			throw Error('`compareWith` must be a function.');
-		}
-		this._compareWith = fn;
-	}
+	readonly compareWith = input(undefined, {
+		transform: (fn: CompareWithFn | undefined) => {
+			if (fn !== undefined && fn !== null && !isFunction(fn)) {
+				throw Error('`compareWith` must be a function.');
+			}
+			return fn;
+		},
+	});
 
 	readonly clearSearchOnAdd = input(undefined);
 
