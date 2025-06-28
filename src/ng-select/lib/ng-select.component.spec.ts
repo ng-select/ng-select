@@ -1880,8 +1880,6 @@ describe('NgSelectComponent', () => {
 		describe('key presses', () => {
 			beforeEach(() => {
 				fixture.componentInstance.searchable = false;
-				fixture.detectChanges();
-				select.ngOnInit();
 			});
 
 			it('should select item using key while not opened', fakeAsync(() => {
@@ -1891,18 +1889,18 @@ describe('NgSelectComponent', () => {
 				expect(fixture.componentInstance.selectedCity.name).toBe('Vilnius');
 			}));
 
-			it('should mark item using key while opened', () => {
+			it('should mark item using key while opened', fakeAsync(() => {
 				const findByLabel = spyOn(select.itemsList, 'findByLabel');
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 				triggerKeyDownEvent(getNgSelectElement(fixture), 'v');
 				triggerKeyDownEvent(getNgSelectElement(fixture), 'i');
 				triggerKeyDownEvent(getNgSelectElement(fixture), 'l');
-				fixture.detectChanges();
+				tickAndDetectChanges(fixture);
 
 				expect(fixture.componentInstance.selectedCity).toBeUndefined();
 				expect(select.itemsList.markedItem.label).toBe('Vilnius');
 				expect(findByLabel).toHaveBeenCalledWith('vil');
-			});
+			}));
 		});
 
 		describe('enter', () => {

@@ -231,10 +231,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this._items = value ?? [];
 	}
 
-	private _disabled: boolean;
+	public readonly _disabled = signal<boolean>(false);
 
 	@HostBinding('class.ng-select-disabled') get disabled() {
-		return this.readonly() || this._disabled;
+		return this.readonly() || this._disabled();
 	}
 
 	readonly compareWith = input(undefined, {
@@ -507,8 +507,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	setDisabledState(state: boolean): void {
-		this._disabled = state;
-		this._cd.markForCheck();
+		this._disabled.set(state);
 	}
 
 	toggle() {
