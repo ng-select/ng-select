@@ -11,7 +11,7 @@ import { ConsoleService } from './console.service';
 import { NgSelectComponent } from './ng-select.component';
 import { NgSelectModule } from './ng-select.module';
 import { KeyCode, NgOption } from './ng-select.types';
-import { signalGetFn, SIGNAL } from '@angular/core/primitives/signals';
+import { SIGNAL } from '@angular/core/primitives/signals';
 
 describe('NgSelectComponent', () => {
 	describe('Data source', () => {
@@ -1878,13 +1878,15 @@ describe('NgSelectComponent', () => {
 		});
 
 		describe('key presses', () => {
-			beforeEach(() => {
+			beforeEach(fakeAsync(() => {
 				fixture.componentInstance.searchable = false;
-			});
+				tickAndDetectChanges(fixture);
+				select.ngOnInit();
+			}));
 
 			it('should select item using key while not opened', fakeAsync(() => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), 'v');
-				tickAndDetectChanges(fixture);
+				tick(200);
 
 				expect(fixture.componentInstance.selectedCity.name).toBe('Vilnius');
 			}));
@@ -1896,6 +1898,7 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), 'i');
 				triggerKeyDownEvent(getNgSelectElement(fixture), 'l');
 				tickAndDetectChanges(fixture);
+				tick(200);
 
 				expect(fixture.componentInstance.selectedCity).toBeUndefined();
 				expect(select.itemsList.markedItem.label).toBe('Vilnius');
@@ -1904,10 +1907,19 @@ describe('NgSelectComponent', () => {
 		});
 
 		describe('enter', () => {
-			it('should open dropdown when it is closed', () => {
+			beforeEach(fakeAsync(() => {
+				fixture.componentInstance.searchable = false;
+				tickAndDetectChanges(fixture);
+				select.ngOnInit();
+			}));
+
+			it('should open dropdown when it is closed', fakeAsync(() => {
+				fixture.componentInstance.openOnEnter = true;
+				tickAndDetectChanges(fixture);
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+				tickAndDetectChanges(fixture);
 				expect(select.isOpen()).toBe(true);
-			});
+			}));
 
 			it('should select option and close dropdown', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
@@ -4972,7 +4984,9 @@ describe('User defined keyDown handler', () => {
 	let select: NgSelectComponent;
 
 	beforeEach(() => {
-		fixture = createTestingModule(NgSelectTestComponent, `<ng-select [keyDownFn]="keyDownFn"></ng-select>`);
+		fixture = createTestingModule(
+			NgSelectTestComponent,
+			`<ng-select [keyDownFn]="keyDownFn" />`);
 		select = fixture.componentInstance.select();
 	});
 
