@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgLabelTemplateDirective, NgOptgroupTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
+import { NgLabelTemplateDirective, NgOptgroupTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-template-optgroup-example',
+	standalone: true,
 	templateUrl: './template-optgroup-example.component.html',
 	styleUrls: ['./template-optgroup-example.component.scss'],
 	imports: [
@@ -16,7 +17,7 @@ import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
 		NgOptionHighlightDirective,
 	],
 })
-export class TemplateOptgroupExampleComponent implements OnInit {
+export class TemplateOptgroupExampleComponent {
 	cities = [
 		{
 			id: 1,
@@ -37,6 +38,4 @@ export class TemplateOptgroupExampleComponent implements OnInit {
 	];
 
 	selectedCity = this.cities[2].name;
-
-	ngOnInit() {}
 }

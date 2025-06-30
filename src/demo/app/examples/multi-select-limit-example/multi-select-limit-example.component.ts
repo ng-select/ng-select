@@ -7,6 +7,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-multi-select-limit-example',
+	standalone: true,
 	templateUrl: './multi-select-limit-example.component.html',
 	styleUrls: ['./multi-select-limit-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, AsyncPipe],
