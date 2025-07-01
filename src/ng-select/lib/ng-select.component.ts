@@ -309,7 +309,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private get _isTypeahead() {
 		const typeahead = this.typeahead();
-		return typeahead && typeahead.observers.length > 0;
+		return typeahead && typeahead.observed;
 	}
 
 	private get _validTerm() {
