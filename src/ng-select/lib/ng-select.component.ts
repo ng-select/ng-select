@@ -12,7 +12,6 @@ import {
 	inject,
 	InjectionToken,
 	input,
-	Input,
 	model,
 	numberAttribute,
 	OnChanges,
@@ -219,17 +218,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		return !this.multiple();
 	}
 
-	private _items: readonly any[] = [];
-
-	@Input()
-	get items() {
-		return this._items;
-	}
-
-	set items(value: readonly any[] | null | undefined) {
-		this._itemsAreUsed = true;
-		this._items = value ?? [];
-	}
+	public readonly items = model([]);
 
 	public readonly _disabled = signal<boolean>(false);
 
@@ -334,6 +323,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			this.itemsList.clearSelected();
 		}
 		if (changes.items) {
+			this._itemsAreUsed = true;
 			this._setItems(changes.items.currentValue || []);
 		}
 		if (changes.isOpen) {
@@ -341,7 +331,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 		if (changes.groupBy) {
 			if (!changes.items) {
-				this._setItems([...this.items]);
+				this._setItems([...this.items()]);
 			}
 		}
 		if (changes.inputAttrs) {
@@ -761,12 +751,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _setItemsFromNgOptions() {
 		const mapNgOptions = (options: QueryList<NgOptionComponent>) => {
-			this.items = options.map((option) => ({
+			const items = options.map((option) => ({
 				$ngOptionValue: option.value(),
 				$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
 				disabled: option.disabled(),
-			}));
-			this.itemsList.setItems(this.items);
+			})) ?? [];
+			this.items.set(items);
+			this.itemsList.setItems(items);
 			if (this.hasValue) {
 				this.itemsList.mapSelectedItems();
 			}
@@ -774,7 +765,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		};
 
 		const handleOptionChange = () => {
-			const changedOrDestroyed = merge(this.ngOptions.changes, this._destroy$);
+			const changedOrDestroyed = merge(
+				this.ngOptions.changes,
+				this._destroy$,
+			);
 			merge(...this.ngOptions.map((option) => option.stateChange$))
 				.pipe(takeUntil(changedOrDestroyed))
 				.subscribe((option) => {

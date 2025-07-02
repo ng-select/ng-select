@@ -950,11 +950,11 @@ describe('NgSelectComponent', () => {
 
 				select = fixture.componentInstance.select();
 				tickAndDetectChanges(fixture);
-				expect(select.items.length).toEqual(3);
+				expect(select.items().length).toEqual(3);
 
 				fixture.componentInstance.cities = [];
 				tickAndDetectChanges(fixture);
-				expect(select.items.length).toEqual(0);
+				expect(select.items().length).toEqual(0);
 			}));
 
 			it('should bind value', fakeAsync(() => {
@@ -2765,7 +2765,7 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
 
 				expect(select.selectedItems.length).toBe(1);
-				expect(select.items.length).toBe(0);
+				expect(select.items().length).toBe(0);
 				select.unselect(select.selectedItems[0]);
 				tickAndDetectChanges(fixture);
 				expect(select.itemsList.filteredItems.length).toBe(0);
