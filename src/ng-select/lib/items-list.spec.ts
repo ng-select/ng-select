@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { ItemsList } from './items-list';
 import { NgSelectComponent } from './ng-select.component';
 import { DefaultSelectionModel } from './selection-model';
@@ -448,7 +448,7 @@ describe('ItemsList', () => {
 			expect(list.filteredItems.length).toBe(0);
 		});
 
-		it('should find item from grouped items list', () => {
+		it('should find item from grouped items list', fakeAsync(() => {
 			cmpRef.setInput('groupBy', 'groupKey');
 			list.setItems([
 				// G1 group
@@ -471,7 +471,7 @@ describe('ItemsList', () => {
 
 			list.filter('nope');
 			expect(list.filteredItems.length).toBe(0);
-		});
+		}));
 
 		it('should exclude child item if its parent is already selected when hideSelected=true', () => {
 			cmpRef.setInput('hideSelected', true);

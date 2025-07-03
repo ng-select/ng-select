@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, model, output } from '@angular/core';
 import { NgbDropdown, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 
@@ -61,19 +61,17 @@ type theme = 'default' | 'ant' | 'material';
 	imports: [NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, FormsModule],
 })
 export class LayoutHeaderComponent {
-	readonly dir = input<langDir>(undefined);
-	readonly theme = input('default');
+	readonly dir = model<langDir>(undefined);
+	readonly theme = model('default');
 	readonly version = input<string>(undefined);
 	readonly dirChange = output<langDir>();
 	readonly themeChange = output<theme>();
 
 	setTheme(theme: theme) {
-		this.theme = theme;
-		this.themeChange.emit(theme);
+		this.theme.set(theme);
 	}
 
 	changeDirTo(dir: langDir) {
-		this.dir = dir;
-		this.dirChange.emit(dir);
+		this.dir.set(dir);
 	}
 }

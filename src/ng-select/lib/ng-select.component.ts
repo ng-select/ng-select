@@ -18,19 +18,18 @@ import {
 	OnDestroy,
 	OnInit,
 	output,
-	QueryList,
 	signal,
 	SimpleChanges,
 	TemplateRef,
 	ViewEncapsulation,
 	contentChild,
 	viewChild,
-	ContentChildren,
-	computed
+	computed,
+	contentChildren
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { merge, Subject } from 'rxjs';
-import { debounceTime, filter, map, startWith, takeUntil, tap } from 'rxjs/operators';
+import { combineLatest, merge, Subject } from 'rxjs';
+import { debounceTime, filter, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import {
 	NgClearButtonTemplateDirective,
@@ -60,6 +59,7 @@ import { NgOptionComponent } from './ng-option.component';
 import { DropdownPosition, KeyCode, NgOption } from './ng-select.types';
 import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
 import { isDefined, isFunction, isObject, isPromise } from './value-utils';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type AddTagFn = (term: string) => any | Promise<any>;
@@ -181,7 +181,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly dropdownPanel = viewChild(forwardRef(() => NgDropdownPanelComponent));
 	readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 	readonly clearButton = viewChild<ElementRef<HTMLSpanElement>>('clearButton');
-	@ContentChildren(NgOptionComponent, { descendants: true }) ngOptions: QueryList<NgOptionComponent>;
+	ngOptions = contentChildren(NgOptionComponent, { descendants: true });
+	ngOptionsObservable = toObservable(this.ngOptions);
 	@HostBinding('class.ng-select') useDefaultClass = true;
 	itemsList: ItemsList;
 	viewPortItems: NgOption[] = [];
@@ -750,7 +751,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	private _setItemsFromNgOptions() {
-		const mapNgOptions = (options: QueryList<NgOptionComponent>) => {
+		const mapNgOptions = (options: readonly NgOptionComponent[]) => {
 			const items = options.map((option) => ({
 				$ngOptionValue: option.value(),
 				$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
@@ -761,29 +762,28 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			if (this.hasValue) {
 				this.itemsList.mapSelectedItems();
 			}
-			this.detectChanges();
 		};
 
-		const handleOptionChange = () => {
-			const changedOrDestroyed = merge(
-				this.ngOptions.changes,
-				this._destroy$,
-			);
-			merge(...this.ngOptions.map((option) => option.stateChange$))
-				.pipe(takeUntil(changedOrDestroyed))
-				.subscribe((option) => {
+		const handleOptionChange = (options: readonly NgOptionComponent[]) => {
+			return merge(...options.map((option) => option.stateChange$)).pipe(
+				tap((option) => {
 					const item = this.itemsList.findItem(option.value);
 					item.disabled = option.disabled;
 					item.label = option.label || item.label;
-					this._cd.detectChanges();
-				});
+				}),
+			)
 		};
 
-		this.ngOptions.changes.pipe(startWith(this.ngOptions), takeUntil(this._destroy$)).subscribe((options) => {
-			this.bindLabel.set(this._defaultLabel);
-			mapNgOptions(options);
-			handleOptionChange();
-		});
+		this.ngOptionsObservable.pipe(
+			startWith(this.ngOptions()),
+			takeUntil(this._destroy$),
+			tap((options) => {
+				this.bindLabel.set(this._defaultLabel);
+				mapNgOptions(options);
+				this._cd.detectChanges();
+			}),
+			switchMap((options) => handleOptionChange(options))
+		).subscribe();
 	}
 
 	private _isValidWriteValue(value: any): boolean {

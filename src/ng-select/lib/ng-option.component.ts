@@ -33,8 +33,7 @@ export class NgOptionComponent {
 
 	constructor() {
 		afterEveryRender(() => {
-			const label = this.label();
-			if (this._label !== label) {
+			if (this._label !== this.label()) {
 				this.label.set(this._label);
 			}
 		});

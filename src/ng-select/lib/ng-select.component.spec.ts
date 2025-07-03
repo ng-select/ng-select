@@ -3813,6 +3813,7 @@ describe('NgSelectComponent', () => {
 				input.focus();
 				tick(2000);
 				tickAndDetectChanges(fixture);
+				tickAndDetectChanges(fixture);
 				expect(select.searchTerm).toEqual(selectedCity.name);
 				expect(input.value).toEqual(selectedCity.name);
 			}));
