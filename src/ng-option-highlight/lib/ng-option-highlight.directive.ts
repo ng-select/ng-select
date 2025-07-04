@@ -28,10 +28,12 @@ export class NgOptionHighlightDirective {
 	private readonly canHighlight = computed(
 		() => isDefined(this.term()) && isDefined(this.label()));
 
-	_effect = effect(() => {
-		if (this.canHighlight()) {
-			this._highlightLabel();
+	// Update innerHTML using effect
+	_effectUpdateInnerHtml = effect(() => {
+		if (!this.canHighlight()) {
+			return;
 		}
+		this._highlightLabel();
 	});
 
 	_ = afterNextRender(() => {
