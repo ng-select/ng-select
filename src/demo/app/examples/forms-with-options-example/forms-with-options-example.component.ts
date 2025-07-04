@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgOptionComponent, NgSelectComponent } from '@ng-select/ng-select';
 
@@ -9,10 +9,10 @@ import { NgOptionComponent, NgSelectComponent } from '@ng-select/ng-select';
 	imports: [FormsModule, ReactiveFormsModule, NgSelectComponent, NgOptionComponent],
 })
 export class FormsWithOptionsExampleComponent implements OnInit {
+	private fb = inject(FormBuilder);
+
 	basePath;
 	heroForm: FormGroup;
-
-	constructor(private fb: FormBuilder) {}
 
 	ngOnInit() {
 		this.basePath = window.location.host.includes('localhost') ? '' : '/ng-select';
