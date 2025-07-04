@@ -1,4 +1,8 @@
-import { Directive, ElementRef, input, inject, computed } from '@angular/core';
+import { afterNextRender, computed, effect, inject, input, signal, Directive, ElementRef, Renderer2 } from '@angular/core';
+
+function isDefined(value: any) {
+	return value !== undefined && value !== null;
+}
 
 function escapeRegExp(str: string): string {
 	return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -7,44 +11,46 @@ function escapeRegExp(str: string): string {
 @Directive({
 	selector: '[ngOptionHighlight]',
 	standalone: true,
-	host: {
-		'innerHTML': 'innerHTML()'
-	}
 })
 export class NgOptionHighlightDirective {
-	private readonly elementRef = inject(ElementRef);
 
-	readonly term = input<string>(undefined, { alias: "ngOptionHighlight" });
+	// Dependencies
+	private readonly element = inject(ElementRef<HTMLElement>).nativeElement;
+	private readonly renderer = inject(Renderer2);
 
-	private element = this.elementRef.nativeElement;;
-	private label: string;
+	// Signals
+	private readonly label = signal<string>('');
 
-	private get _canHighlight() {
-		return this._isDefined(this.term()) && this._isDefined(this.label);
-	}
+	// Inputs
+	public readonly term = input<string>('', { alias: 'ngOptionHighlight' });
 
-	innerHTML = computed(() => {
-		const label = this.element.innerHTML;
+	// Computed properties
+	private readonly canHighlight = computed(
+		() => isDefined(this.term()) && isDefined(this.label()));
 
-		if (this._canHighlight) {
-			return this._highlightLabel();
+	_effect = effect(() => {
+		if (this.canHighlight()) {
+			this._highlightLabel();
 		}
-		return label;
-	})
+	});
+
+	_ = afterNextRender(() => {
+		this.label.set(this.element?.innerHTML ?? '');
+	});
 
 	private _highlightLabel() {
-		const label = this.label;
-		const term = this.term();
-		if (!term) {
-			return label;
+		const label = this.label();
+		if (!this.term()) {
+			this._setInnerHtml(label);
+			return;
 		}
 
-		const alternationString = escapeRegExp(term).replace(' ', '|');
+		const alternationString = escapeRegExp(this.term()).replace(' ', '|');
 		const termRegex = new RegExp(alternationString, 'gi');
-		return label.replace(termRegex, `<span class=\"highlighted\">$&</span>`);
+		this._setInnerHtml(label.replace(termRegex, `<span class=\"highlighted\">$&</span>`));
 	}
 
-	private _isDefined(value: any) {
-		return value !== undefined && value !== null;
+	private _setInnerHtml(html) {
+		this.renderer.setProperty(this.element, 'innerHTML', html);
 	}
 }
