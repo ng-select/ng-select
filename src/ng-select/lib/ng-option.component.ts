@@ -47,6 +47,6 @@ export class NgOptionComponent {
 	public readonly stateChange$ = toObservable(this.stateChange);
 
 	private get _label() {
-		return this.elementRef.nativeElement.innerHTML || ''.trim();
+		return (this.elementRef.nativeElement.innerHTML || '').trim();
 	}
 }
