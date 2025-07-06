@@ -26,7 +26,7 @@ export class NgOptionHighlightDirective {
 
 	// Computed properties
 	private readonly canHighlight = computed(
-		() => isDefined(this.term()) && isDefined(this.label()));
+		() => isDefined(this.term()) && isDefined(this.label()) && this.label() !== '');
 
 	// Update innerHTML using effect
 	_effectUpdateInnerHtml = effect(() => {
@@ -37,7 +37,9 @@ export class NgOptionHighlightDirective {
 	});
 
 	_ = afterNextRender(() => {
-		this.label.set(this.element?.innerHTML ?? '');
+		this.label.set(this.element.innerHTML);
+		// 1st label highlight triggers from here
+		this._highlightLabel();
 	});
 
 	private _highlightLabel() {
