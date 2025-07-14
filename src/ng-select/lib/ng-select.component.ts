@@ -23,6 +23,7 @@ import {
 	Optional,
 	Output,
 	QueryList,
+	signal,
 	SimpleChanges,
 	TemplateRef,
 	ViewChild,
@@ -89,7 +90,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() ariaLabel: string | undefined;
 	@Input({ transform: booleanAttribute }) markFirst = true;
 	@Input() placeholder: string;
-	@Input() fixedPlaceholder: boolean = false;
+	@Input() fixedPlaceholder: boolean = true;
 	@Input() notFoundText: string;
 	@Input() typeToSearchText: string;
 	@Input() preventToggleOnRightClick: boolean = false;
@@ -117,7 +118,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() labelForId = null;
 	@Input() inputAttrs: { [key: string]: string } = {};
 	@Input({ transform: numberAttribute }) tabIndex: number;
-	tabFocusOnClearButton = input(true, { transform: booleanAttribute });
+	tabFocusOnClearButton = input<boolean | undefined>();
 	@Input({ transform: booleanAttribute }) readonly = false;
 	@Input({ transform: booleanAttribute }) searchWhileComposing = true;
 	@Input({ transform: numberAttribute }) minTermLength = 0;
@@ -168,6 +169,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	element: HTMLElement;
 	focused: boolean;
 	escapeHTML = true;
+	tabFocusOnClear = signal<boolean>(true);
 	private _itemsAreUsed: boolean;
 	private readonly _defaultLabel = 'label';
 	private _primitive: any;
@@ -301,7 +303,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	private get _isTypeahead() {
-		return this.typeahead && this.typeahead.observers.length > 0;
+		return this.typeahead && this.typeahead.observed;
 	}
 
 	private get _validTerm() {
@@ -339,6 +341,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (changes.inputAttrs) {
 			this._setInputAttributes();
 		}
+		this._setTabFocusOnClear();
 	}
 
 	ngAfterViewInit() {
@@ -417,6 +420,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	handleMousedown($event: MouseEvent) {
+		if (this.disabled) {
+			return;
+		}
+
 		if (this.preventToggleOnRightClick && $event.button === 2) {
 			return false;
 		}
@@ -865,13 +872,18 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			type: 'text',
 			autocorrect: 'off',
 			autocapitalize: 'off',
-			autocomplete: this.labelForId ? 'off' : this.dropdownId,
+			autocomplete: 'off',
+			'aria-controls': this.dropdownId,
 			...this.inputAttrs,
 		};
 
 		for (const key of Object.keys(attributes)) {
 			input.setAttribute(key, attributes[key]);
 		}
+	}
+
+	private _setTabFocusOnClear() {
+		this.tabFocusOnClear.set(isDefined(this.tabFocusOnClearButton()) ? !!this.tabFocusOnClearButton() : this.config.tabFocusOnClear);
 	}
 
 	private _updateNgModel() {
@@ -943,7 +955,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _handleTab($event: KeyboardEvent) {
 		if (this.isOpen === false) {
-			if (this.showClear() && !$event.shiftKey && this.tabFocusOnClearButton()) {
+			if (this.showClear() && !$event.shiftKey && this.tabFocusOnClear()) {
 				this.focusOnClear();
 				$event.preventDefault();
 			} else if (!this.addTag) {
@@ -1050,6 +1062,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.bindValue = this.bindValue || config.bindValue;
 		this.bindLabel = this.bindLabel || config.bindLabel;
 		this.appearance = this.appearance || config.appearance;
+		this._setTabFocusOnClear();
 	}
 
 	/**

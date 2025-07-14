@@ -1,11 +1,11 @@
 {
 	"name": "@ng-select/ng-option-highlight",
-	"version": "13.0.0",
+	"version": "15.0.1",
 	"author": "@ng-select/ng-select",
 	"license": "MIT",
 	"repository": "ng-select/ng-select",
 	"peerDependencies": {
-		"@angular/common": "^19.0.0",
-		"@angular/core": "^19.0.0"
+		"@angular/common": "^20.0.0",
+		"@angular/core": "^20.0.0"
 	}
 }

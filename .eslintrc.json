@@ -20,37 +20,37 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
-        "jsdoc/newline-after-description": "off",
-        "@angular-eslint/no-output-rename": "off",
-        "@angular-eslint/no-output-native": "off",
-        "@angular-eslint/prefer-standalone": "warn",
-        "@angular-eslint/component-selector": [
-          "error",
-          {
-            "prefix": "ng",
-            "style": "kebab-case",
-            "type": "element"
-          }
-        ],
-        "@angular-eslint/directive-selector": [
-          "error",
-          {
-            "prefix": "ng",
-            "style": "camelCase",
-            "type": "attribute"
-          }
-        ],
-        "@typescript-eslint/consistent-type-assertions": "off",
-        "@typescript-eslint/member-delimiter-style": "off",
-        "@typescript-eslint/member-ordering": "off",
-        "@typescript-eslint/naming-convention": "off",
-        "@typescript-eslint/semi": "off",
-        "indent": "off",
-        "no-underscore-dangle": "off",
-        "prefer-arrow/prefer-arrow-functions": "off",
-        "spaced-comment": "error",
-        "quote-props": "off"
-      }
+				"jsdoc/newline-after-description": "off",
+				"@angular-eslint/no-output-rename": "off",
+				"@angular-eslint/no-output-native": "off",
+				"@angular-eslint/prefer-standalone": "off",
+				"@angular-eslint/component-selector": [
+					"error",
+					{
+						"prefix": "ng",
+						"style": "kebab-case",
+						"type": "element"
+					}
+				],
+				"@angular-eslint/directive-selector": [
+					"error",
+					{
+						"prefix": "ng",
+						"style": "camelCase",
+						"type": "attribute"
+					}
+				],
+				"@typescript-eslint/consistent-type-assertions": "off",
+				"@typescript-eslint/member-delimiter-style": "off",
+				"@typescript-eslint/member-ordering": "off",
+				"@typescript-eslint/naming-convention": "off",
+				"@typescript-eslint/semi": "off",
+				"indent": "off",
+				"no-underscore-dangle": "off",
+				"prefer-arrow/prefer-arrow-functions": "off",
+				"spaced-comment": "error",
+				"quote-props": "off"
+			}
     },
     {
       "files": [
