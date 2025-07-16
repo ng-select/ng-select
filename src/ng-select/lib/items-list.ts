@@ -1,4 +1,3 @@
-import { isSignal, Signal } from '@angular/core';
 import { newId } from './id';
 import { NgSelectComponent } from './ng-select.component';
 import { NgOption } from './ng-select.types';
