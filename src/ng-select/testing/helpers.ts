@@ -3,11 +3,7 @@ import { ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KeyCode } from '../lib/ng-select.types';
 
-export class TestsErrorHandler {
-	handleError(error: any): void {
-		console.error('Error in tests:', error);
-	}
-}
+export class TestsErrorHandler { }
 
 export function tickAndDetectChanges(fixture: ComponentFixture<any>) {
 	fixture.detectChanges();
