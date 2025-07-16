@@ -1,5 +1,5 @@
 import {
-	afterEveryRender,
+	afterNextRender,
 	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
@@ -32,7 +32,7 @@ export class NgOptionComponent {
 	public readonly label = signal<string>('');
 
 	constructor() {
-		afterEveryRender(() => {
+		afterNextRender(() => {
 			if (this._label !== this.label()) {
 				this.label.set(this._label);
 			}

@@ -497,7 +497,6 @@ describe('ItemsList', () => {
 			cmpRef = componentRef;
 			componentRef.setInput('bindLabel', 'name');
 			componentRef.setInput('multiple', true);
-			cmp.bindValue.set('name');
 			cmpRef.setInput('selectableGroupAsModel', false);
 			cmpRef.setInput('groupBy', 'country');
 			list = itemsListFactory(cmp);
