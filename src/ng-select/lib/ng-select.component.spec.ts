@@ -4193,6 +4193,7 @@ describe('NgSelectComponent', () => {
 
 			it('shouldnt focus dropdown, because prevent flag is true for right mouse click', fakeAsync(() => {
 				fixture.componentInstance.preventToggleOnRightClick = true;
+				const event = createEvent({ tagName: 'INPUT' }) as any;
 				const preventDefault = spyOn(event, 'preventDefault');
 				triggerMousedown();
 				tickAndDetectChanges(fixture);
