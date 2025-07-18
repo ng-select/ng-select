@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { NgHeaderTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
@@ -10,13 +10,13 @@ import { NgHeaderTemplateDirective, NgOptionTemplateDirective, NgSelectComponent
 	imports: [NgSelectComponent, NgHeaderTemplateDirective, NgOptionTemplateDirective],
 })
 export class VirtualScrollExampleComponent implements OnInit {
+	private http = inject(HttpClient);
+
 	photos = [];
 	photosBuffer = [];
 	bufferSize = 50;
 	numberOfItemsFromEndBeforeFetchingMore = 10;
 	loading = false;
-
-	constructor(private http: HttpClient) {}
 
 	ngOnInit() {
 		this.http.get<any[]>('https://jsonplaceholder.typicode.com/photos').subscribe((photos) => {

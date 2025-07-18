@@ -3,7 +3,7 @@ import { ComponentFixture, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KeyCode } from '../lib/ng-select.types';
 
-export class TestsErrorHandler {}
+export class TestsErrorHandler { }
 
 export function tickAndDetectChanges(fixture: ComponentFixture<any>) {
 	fixture.detectChanges();
@@ -26,7 +26,7 @@ export function getNgSelectElement(fixture: ComponentFixture<any>): DebugElement
 export function triggerKeyDownEvent(element: DebugElement, key: string, target: Element = null): void {
 	element.triggerEventHandler('keydown', {
 		key,
-		preventDefault: () => {},
+		preventDefault: () => { },
 		target,
 	});
 }
