@@ -96,10 +96,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	private get _startOffset() {
-		const markedItem = this.markedItem();
-		if (markedItem) {
+		if (this.markedItem()) {
 			const { itemHeight, panelHeight } = this._panelService.dimensions;
-			const offset = markedItem.index * itemHeight;
+			const offset = this.markedItem().index * itemHeight;
 			return panelHeight > offset ? 0 : offset;
 		}
 		return 0;
@@ -192,11 +191,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 
 	private _handleScroll() {
 		this._zone.runOutsideAngular(() => {
-			const scrollablePanel = this._scrollablePanel();
-			if (!scrollablePanel) {
+			if (!this._scrollablePanel()) {
 				return;
 			}
-			fromEvent(scrollablePanel, 'scroll')
+			fromEvent(this._scrollablePanel(), 'scroll')
 				.pipe(takeUntil(this._destroy$), auditTime(0, SCROLL_SCHEDULER))
 				.subscribe((e: { path; composedPath; target }) => {
 					const path = e.path || (e.composedPath && e.composedPath());
@@ -373,16 +371,15 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	private _appendDropdown() {
-		const appendTo = this.appendTo();
-		if (!appendTo) {
+		if (!this.appendTo()) {
 			return;
 		}
 
 		this._parent = this._dropdown.shadowRoot
-			? this._dropdown.shadowRoot.querySelector(appendTo)
-			: document.querySelector(appendTo);
+			? this._dropdown.shadowRoot.querySelector(this.appendTo())
+			: document.querySelector(this.appendTo());
 		if (!this._parent) {
-			throw new Error(`appendTo selector ${appendTo} did not found any parent element`);
+			throw new Error(`appendTo selector ${this.appendTo()} did not found any parent element`);
 		}
 		this._updateXPosition();
 		this._parent.appendChild(this._dropdown);
