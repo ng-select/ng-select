@@ -261,6 +261,16 @@
 
 		.ng-optgroup {
 			@include wrap-text();
+
+			.ng-option-collapse-button {
+				background: transparent;
+				border: none;
+				margin-inline-end: 6px;
+			}
+
+			.ng-option-collapse-wrapper {
+				display: contents;
+			}
 		}
 
 		.ng-option {
@@ -268,6 +278,10 @@
 			cursor: pointer;
 			display: block;
 			@include wrap-text();
+
+			&:empty {
+				display: none;
+			}
 
 			.ng-option-label:empty:before {
 				content: '\200b';
