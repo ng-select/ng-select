@@ -591,7 +591,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 
 		this.itemsList.unselect(item);
-		this.focus();
+		// Only focus if custom search control is not currently focused
+		if (!this._isCustomSearchFocused()) {
+			this.focus();
+		}
 		this._updateNgModel();
 		this.removeEvent.emit(item.value);
 		this._onSelectionChanged();
@@ -1046,6 +1049,26 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		} else {
 			this.clearModel();
 		}
+	}
+
+	/**
+	 * Checks if a custom search control (header template input) is currently focused
+	 * @returns true if custom search control is focused, false otherwise
+	 */
+	private _isCustomSearchFocused(): boolean {
+		// If there's no header template, there's no custom search control
+		if (!this.headerTemplate()) {
+			return false;
+		}
+
+		// Check if dropdown is open and header is rendered
+		if (!this.isOpen()) {
+			return false;
+		}
+
+		// Look for focused input element within the dropdown header
+		const dropdownHeader = this.element.querySelector('.ng-dropdown-header input:focus');
+		return dropdownHeader !== null;
 	}
 
 	private _mergeGlobalConfig(config: NgSelectConfig) {
