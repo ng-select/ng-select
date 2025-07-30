@@ -2426,6 +2426,42 @@ describe('NgSelectComponent', () => {
 			});
 		}));
 
+		it('should properly position dropdown when header and footer templates are used', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" [(ngModel)]="selectedCity">
+                    <ng-template ng-header-tmp>
+                        <div class="header-content" style="height: 50px; padding: 10px;">Custom Header</div>
+                    </ng-template>
+                    <ng-template ng-footer-tmp>
+                        <div class="footer-content" style="height: 40px; padding: 10px;">Custom Footer</div>
+                    </ng-template>
+                </ng-select>`,
+			);
+
+			const select = fixture.componentInstance.select();
+			select.open();
+			tickAndDetectChanges(fixture);
+
+			// Wait for position calculation to complete
+			tick();
+			fixture.detectChanges();
+
+			const dropdownPanel = fixture.debugElement.query(By.css('.ng-dropdown-panel'));
+			expect(dropdownPanel).toBeTruthy();
+
+			// Verify that the dropdown has been positioned (should have ng-select-bottom or ng-select-top class)
+			const hasPositionClass = dropdownPanel.nativeElement.classList.contains('ng-select-bottom') ||
+				dropdownPanel.nativeElement.classList.contains('ng-select-top');
+			expect(hasPositionClass).toBeTruthy();
+
+			// Verify templates are rendered
+			const header = fixture.debugElement.query(By.css('.header-content'));
+			const footer = fixture.debugElement.query(By.css('.footer-content'));
+			expect(header).toBeTruthy();
+			expect(footer).toBeTruthy();
+		}));
+
 		it('should display custom tag template', waitForAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,

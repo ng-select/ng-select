@@ -163,18 +163,21 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	private _handleDropdownPosition() {
-		this._currentPosition = this._calculateCurrentPosition(this._dropdown);
-		if (CSS_POSITIONS.includes(this._currentPosition)) {
-			this._updateDropdownClass(this._currentPosition);
-		} else {
-			this._updateDropdownClass('bottom');
-		}
+		// Wait for next frame to ensure all templates (header/footer) are rendered
+		Promise.resolve().then(() => {
+			this._currentPosition = this._calculateCurrentPosition(this._dropdown);
+			if (CSS_POSITIONS.includes(this._currentPosition)) {
+				this._updateDropdownClass(this._currentPosition);
+			} else {
+				this._updateDropdownClass('bottom');
+			}
 
-		if (this.appendTo()) {
-			this._updateYPosition();
-		}
+			if (this.appendTo()) {
+				this._updateYPosition();
+			}
 
-		this._dropdown.style.opacity = '1';
+			this._dropdown.style.opacity = '1';
+		});
 	}
 
 	private _updateDropdownClass(currentPosition: string) {
