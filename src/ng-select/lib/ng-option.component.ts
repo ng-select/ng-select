@@ -1,15 +1,21 @@
 import {
-	AfterViewChecked,
+	afterNextRender,
 	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
+	computed,
 	ElementRef,
-	Input,
-	OnChanges,
-	OnDestroy,
-	SimpleChanges,
+	inject,
+	input,
+	signal,
 } from '@angular/core';
-import { Subject } from 'rxjs';
+import { toObservable } from '@angular/core/rxjs-interop';
+
+type StateChange = {
+	value: any;
+	disabled: boolean;
+	label?: string;
+}
 
 @Component({
 	selector: 'ng-option',
@@ -17,41 +23,30 @@ import { Subject } from 'rxjs';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	template: `<ng-content />`,
 })
-export class NgOptionComponent implements OnChanges, AfterViewChecked, OnDestroy {
-	@Input() value: any;
-	@Input({ transform: booleanAttribute }) disabled: boolean = false;
+export class NgOptionComponent {
+	public readonly value = input<any>();
+	public readonly disabled = input(false, {
+		transform: booleanAttribute,
+	});
+	public readonly elementRef = inject(ElementRef<HTMLElement>);
+	public readonly label = signal<string>('');
 
-	readonly stateChange$ = new Subject<{ value: any; disabled: boolean; label?: string }>();
-
-	private _previousLabel: string;
-
-	constructor(public elementRef: ElementRef<HTMLElement>) {}
-
-	get label(): string {
-		return (this.elementRef.nativeElement.textContent || '').trim();
+	constructor() {
+		afterNextRender(() => {
+			if (this._label !== this.label()) {
+				this.label.set(this._label);
+			}
+		});
 	}
 
-	ngOnChanges(changes: SimpleChanges) {
-		if (changes.disabled) {
-			this.stateChange$.next({
-				value: this.value,
-				disabled: this.disabled,
-			});
-		}
-	}
+	public readonly stateChange = computed<StateChange | undefined>(() => ({
+		value: this.value(),
+		disabled: this.disabled(),
+		label: this.label(),
+	}));
+	public readonly stateChange$ = toObservable(this.stateChange);
 
-	ngAfterViewChecked() {
-		if (this.label !== this._previousLabel) {
-			this._previousLabel = this.label;
-			this.stateChange$.next({
-				value: this.value,
-				disabled: this.disabled,
-				label: this.elementRef.nativeElement.innerHTML,
-			});
-		}
-	}
-
-	ngOnDestroy() {
-		this.stateChange$.complete();
+	private get _label() {
+		return (this.elementRef.nativeElement.innerHTML || '').trim();
 	}
 }
