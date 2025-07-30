@@ -3185,6 +3185,109 @@ describe('NgSelectComponent', () => {
 				expect(select.showAddTag).toBeFalsy();
 			});
 		});
+
+		describe('add tag validation', () => {
+			let select: NgSelectComponent;
+			let fixture: ComponentFixture<NgSelectTestComponent>;
+			
+			beforeEach(() => {
+				fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="[0,12,18]"
+						[addTag]="validateIfNumberAndAddTag"
+						[addTagInvalidText]="addTagInvalidText"
+						[(ngModel)]="selectedCity">
+					</ng-select>`,
+				);
+				select = fixture.componentInstance.select();
+				fixture.componentInstance.validateIfNumberAndAddTag = (tag: string) => {
+					const numberValue = Number(tag);
+					if (!isNaN(numberValue) && Number.isInteger(numberValue) && numberValue < 29 && numberValue >= 0) {
+						return numberValue;
+					} else {
+						return null;
+					}
+				};
+			});
+
+			it('should return true for valid input', () => {
+				select.searchTerm = '25';
+				expect(select.isValidAddTag).toBeTruthy();
+			});
+
+			it('should return false for invalid input', () => {
+				select.searchTerm = 'abc';
+				expect(select.isValidAddTag).toBeFalsy();
+			});
+
+			it('should return false for out of range input', () => {
+				select.searchTerm = '30';
+				expect(select.isValidAddTag).toBeFalsy();
+			});
+
+			it('should return true for non-function addTag', () => {
+				fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" [addTag]="true" [(ngModel)]="selectedCity"></ng-select>`,
+				);
+				select = fixture.componentInstance.select();
+				select.searchTerm = 'any value';
+				expect(select.isValidAddTag).toBeTruthy();
+			});
+
+			it('should show custom invalid text for invalid input', fakeAsync(() => {
+				fixture.componentInstance.addTagInvalidText = 'Custom invalid message';
+				tickAndDetectChanges(fixture);
+				
+				select.searchTerm = 'invalid';
+				select.open();
+				tickAndDetectChanges(fixture);
+
+				const addTagOption = fixture.debugElement.query(By.css('.ng-option.ng-option-invalid'));
+				expect(addTagOption).toBeTruthy();
+				expect(addTagOption.nativeElement.textContent).toContain('Custom invalid message');
+			}));
+
+			it('should show default invalid text when no custom text is provided', fakeAsync(() => {
+				tickAndDetectChanges(fixture);
+				
+				select.searchTerm = 'invalid';
+				select.open();
+				tickAndDetectChanges(fixture);
+
+				const addTagOption = fixture.debugElement.query(By.css('.ng-option.ng-option-invalid'));
+				expect(addTagOption).toBeTruthy();
+				expect(addTagOption.nativeElement.textContent).toContain('Invalid value');
+			}));
+
+			it('should not add invalid tag when clicked', fakeAsync(() => {
+				tickAndDetectChanges(fixture);
+				
+				select.searchTerm = 'invalid';
+				select.open();
+				tickAndDetectChanges(fixture);
+
+				const addTagOption = fixture.debugElement.query(By.css('.ng-option.ng-option-invalid'));
+				addTagOption.nativeElement.click();
+				tickAndDetectChanges(fixture);
+
+				expect(fixture.componentInstance.selectedCity).toBeUndefined();
+			}));
+
+			it('should add valid tag when clicked', fakeAsync(() => {
+				tickAndDetectChanges(fixture);
+				
+				select.searchTerm = '25';
+				select.open();
+				tickAndDetectChanges(fixture);
+
+				const addTagOption = fixture.debugElement.query(By.css('.ng-option:not(.ng-option-invalid)'));
+				addTagOption.nativeElement.click();
+				tickAndDetectChanges(fixture);
+
+				expect(fixture.componentInstance.selectedCity).toBe(25);
+			}));
+		});
 	});
 
 	describe('Placeholder', () => {

@@ -102,6 +102,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly typeToSearchText = input<string>(undefined);
 	readonly preventToggleOnRightClick = input<boolean>(false);
 	readonly addTagText = input<string>(undefined);
+	readonly addTagInvalidText = input<string>(undefined);
 	readonly loadingText = input<string>(undefined);
 	readonly clearAllText = input<string>(undefined);
 	readonly dropdownPosition = input<DropdownPosition>('auto');
@@ -303,6 +304,24 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	private get _validTerm() {
 		const term = this.searchTerm?.trim();
 		return term && term.length >= this.minTermLength();
+	}
+
+	get isValidAddTag() {
+		if (!this._validTerm || !isFunction(this.addTag())) {
+			return true; // Default to true for non-function addTag or invalid terms
+		}
+
+		try {
+			const result = (<AddTagFn>this.addTag())(this.searchTerm);
+			// If result is a promise, we can't determine validity synchronously
+			// so we assume it's valid and let the user try to add it
+			if (isPromise(result)) {
+				return true;
+			}
+			return result !== null && result !== undefined;
+		} catch {
+			return false;
+		}
 	}
 
 	readonly keyDownFn = input<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true);
@@ -598,6 +617,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	selectTag() {
+		// Don't allow selection of invalid tags when using a validation function
+		if (isFunction(this.addTag()) && !this.isValidAddTag) {
+			return;
+		}
+
 		let tag;
 		if (isFunction(this.addTag())) {
 			tag = (<AddTagFn>this.addTag())(this.searchTerm);

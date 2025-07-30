@@ -280,6 +280,12 @@
 			&.disabled {
 				cursor: default;
 			}
+			&.ng-option-invalid {
+				.ng-tag-label-invalid {
+					color: #dc3545;
+					font-style: italic;
+				}
+			}
 		}
 	}
 

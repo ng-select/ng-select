@@ -135,18 +135,23 @@
 				<div
 					class="ng-option"
 					[class.ng-option-marked]="!itemsList.markedItem"
+					[class.ng-option-invalid]="!isValidAddTag"
 					(mouseover)="itemsList.unmarkItem()"
 					role="option"
 					(click)="selectTag()">
 					<ng-template #defaultTagTemplate>
-						<span
-							><span class="ng-tag-label">{{ addTagText() || config.addTagText }}</span
-							>"{{ searchTerm }}"</span
-						>
+						@if (isValidAddTag) {
+							<span
+								><span class="ng-tag-label">{{ addTagText() || config.addTagText }}</span
+								>"{{ searchTerm }}"</span
+							>
+						} @else {
+							<span class="ng-tag-label ng-tag-label-invalid">{{ addTagInvalidText() || 'Invalid value' }}: "{{ searchTerm }}"</span>
+						}
 					</ng-template>
 					<ng-template
 						[ngTemplateOutlet]="tagTemplate() || defaultTagTemplate"
-						[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
+						[ngTemplateOutletContext]="{ searchTerm: searchTerm, isValid: isValidAddTag }">
 					</ng-template>
 				</div>
 			}
