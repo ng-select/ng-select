@@ -1,5 +1,5 @@
 import { newId } from './id';
-import { NgSelectComponent } from './ng-select.component';
+import { NgSelectBaseComponent } from './ng-select-base.interface';
 import { NgOption } from './ng-select.types';
 import * as searchHelper from './search-helper';
 import { SelectionModel } from './selection-model';
@@ -11,7 +11,7 @@ export class ItemsList {
 	private _groups: OptionGroups;
 
 	constructor(
-		private _ngSelect: NgSelectComponent,
+		private _ngSelect: NgSelectBaseComponent,
 		private _selectionModel: SelectionModel,
 	) { }
 

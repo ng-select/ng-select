@@ -48,12 +48,10 @@ import {
 	NgTypeToSearchTemplateDirective,
 } from './ng-templates.directive';
 
-import { NgTemplateOutlet } from '@angular/common';
 import { NgSelectConfig } from './config.service';
 import { ConsoleService } from './console.service';
 import { newId } from './id';
 import { ItemsList } from './items-list';
-import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgDropdownPanelService } from './ng-dropdown-panel.service';
 import { NgOptionComponent } from './ng-option.component';
 import { NgSelectBaseComponent } from './ng-select-base.interface';
@@ -67,23 +65,27 @@ export type AddTagFn = (term: string) => any | Promise<any>;
 export type CompareWithFn = (a: any, b: any) => boolean;
 export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 
+/**
+ * NgSelectCdkComponent provides the core functionality of NgSelect without any predefined UI.
+ * This allows developers to build completely custom interfaces while maintaining all the
+ * selection, search, and dropdown logic.
+ */
 @Component({
-	selector: 'ng-select',
-	templateUrl: './ng-select.component.html',
-	styleUrls: ['./ng-select.component.scss'],
+	selector: 'ng-select-cdk',
+	template: '<ng-content></ng-content>',
 	providers: [
 		{
 			provide: NG_VALUE_ACCESSOR,
-			useExisting: forwardRef(() => NgSelectComponent),
+			useExisting: forwardRef(() => NgSelectCdkComponent),
 			multi: true,
 		},
 		NgDropdownPanelService,
 	],
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent],
+	standalone: true
 })
-export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor, NgSelectBaseComponent {
+export class NgSelectCdkComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor, NgSelectBaseComponent {
 	classes = inject(new HostAttributeToken('class'), { optional: true });
 	private autoFocus = inject(new HostAttributeToken('autofocus'), { optional: true });
 	config = inject(NgSelectConfig);
@@ -164,6 +166,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		end: number;
 	}>({ alias: 'scroll' });
 	readonly scrollToEnd = output({ alias: 'scrollToEnd' });
+
 	// custom templates
 	readonly optionTemplate = contentChild(NgOptionTemplateDirective, { read: TemplateRef });
 	readonly optgroupTemplate = contentChild(NgOptgroupTemplateDirective, { read: TemplateRef });
@@ -179,9 +182,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly loadingSpinnerTemplate = contentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef });
 	readonly clearButtonTemplate = contentChild(NgClearButtonTemplateDirective, { read: TemplateRef });
 
-	readonly dropdownPanel = viewChild(forwardRef(() => NgDropdownPanelComponent));
-	readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
-	readonly clearButton = viewChild<ElementRef<HTMLSpanElement>>('clearButton');
 	ngOptions = contentChildren(NgOptionComponent, { descendants: true });
 	ngOptionsObservable = toObservable(this.ngOptions);
 	@HostBinding('class.ng-select') useDefaultClass = true;
@@ -272,13 +272,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		return this.selectedItems.length > 0;
 	}
 
-	get currentPanelPosition(): DropdownPosition {
-		if (this.dropdownPanel()) {
-			return this.dropdownPanel().currentPosition;
-		}
-		return undefined;
-	}
-
 	get showAddTag() {
 		if (!this._validTerm) {
 			return false;
@@ -315,7 +308,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	ngOnInit() {
 		this._handleKeyPresses();
-		this._setInputAttributes();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -333,9 +325,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			if (!changes.items) {
 				this._setItems([...this.items()]);
 			}
-		}
-		if (changes.inputAttrs) {
-			this._setInputAttributes();
 		}
 		this._setTabFocusOnClear();
 	}
@@ -370,13 +359,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	handleKeyCode($event: KeyboardEvent) {
-		const target = $event.target;
-
-		if (this.clearButton() && this.clearButton().nativeElement === target) {
-			this.handleKeyCodeClear($event);
-		} else {
-			this.handleKeyCodeInput($event);
-		}
+		this.handleKeyCodeInput($event);
 	}
 
 	handleKeyCodeInput($event: KeyboardEvent) {
@@ -403,61 +386,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			case KeyCode.Backspace:
 				this._handleBackspace();
 				break;
-		}
-	}
-
-	handleKeyCodeClear($event: KeyboardEvent) {
-		switch ($event.key) {
-			case KeyCode.Enter:
-				this.handleClearClick();
-				$event.preventDefault();
-				break;
-		}
-	}
-
-	handleMousedown($event: MouseEvent) {
-		if (this.disabled) {
-			return;
-		}
-
-		if (this.preventToggleOnRightClick() && $event.button === 2) {
-			return false;
-		}
-		const target = $event.target as HTMLElement;
-		if (target.tagName !== 'INPUT') {
-			$event.preventDefault();
-		}
-
-		if (target.classList.contains('ng-clear-wrapper')) {
-			this.handleClearClick();
-			return;
-		}
-
-		if (target.classList.contains('ng-arrow-wrapper')) {
-			this.handleArrowClick();
-			return;
-		}
-
-		if (target.classList.contains('ng-value-icon')) {
-			return;
-		}
-
-		if (!this.focused) {
-			this.focus();
-		}
-
-		if (this.searchable()) {
-			this.open();
-		} else {
-			this.toggle();
-		}
-	}
-
-	handleArrowClick() {
-		if (this.isOpen()) {
-			this.close();
-		} else {
-			this.open();
 		}
 	}
 
@@ -519,9 +447,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.isOpen.set(true);
 		this.itemsList.markSelectedOrDefault(this.markFirst());
 		this.openEvent.emit();
-		if (!this.searchTerm) {
-			this.focus();
-		}
 		this.detectChanges();
 	}
 
@@ -579,11 +504,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	focus() {
-		this.searchInput().nativeElement.focus();
+		// In CDK version, focus implementation is left to the consumer
+		// They can override this method or implement their own focus logic
 	}
 
 	blur() {
-		this.searchInput().nativeElement.blur();
+		// In CDK version, blur implementation is left to the consumer
+		// They can override this method or implement their own blur logic
 	}
 
 	unselect(item: NgOption) {
@@ -592,7 +519,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 
 		this.itemsList.unselect(item);
-		this.focus();
 		this._updateNgModel();
 		this.removeEvent.emit(item.value);
 		this._onSelectionChanged();
@@ -616,13 +542,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	showClear() {
 		return this.clearable() && (this.hasValue || this.searchTerm) && !this.disabled;
-	}
-
-	focusOnClear() {
-		this.blur();
-		if (this.clearButton()) {
-			this.clearButton().nativeElement.focus();
-		}
 	}
 
 	trackByOption = (_: number, item: NgOption) => {
@@ -855,7 +774,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 				if (item) {
 					if (this.isOpen()) {
 						this.itemsList.markItem(item);
-						this._scrollToMarked();
 						this._cd.markForCheck();
 					} else {
 						this.select(item);
@@ -863,22 +781,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 				}
 				this._pressedKeys = [];
 			});
-	}
-
-	private _setInputAttributes() {
-		const input = this.searchInput().nativeElement;
-		const attributes = {
-			type: 'text',
-			autocorrect: 'off',
-			autocapitalize: 'off',
-			autocomplete: 'off',
-			'aria-controls': this.dropdownId,
-			...this.inputAttrs(),
-		};
-
-		for (const key of Object.keys(attributes)) {
-			input.setAttribute(key, attributes[key]);
-		}
 	}
 
 	private _setTabFocusOnClear() {
@@ -930,35 +832,15 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 	}
 
-	private _scrollToMarked() {
-		if (!this.isOpen() || !this.dropdownPanel()) {
-			return;
-		}
-		this.dropdownPanel().scrollTo(this.itemsList.markedItem);
-	}
-
-	private _scrollToTag() {
-		if (!this.isOpen() || !this.dropdownPanel()) {
-			return;
-		}
-		this.dropdownPanel().scrollToTag();
-	}
-
 	private _onSelectionChanged() {
-		const appendTo = this.appendTo() ?? this.config.appendTo;
-		if (this.isOpen() && this.deselectOnClickValue() && appendTo) {
-			// Make sure items are rendered.
-			this._cd.detectChanges();
-			this.dropdownPanel().adjustPosition();
-		}
+		// In CDK version, this can be extended by consumers
+		// for custom dropdown positioning logic
+		this.detectChanges();
 	}
 
 	private _handleTab($event: KeyboardEvent) {
 		if (this.isOpen() === false) {
-			if (this.showClear() && !$event.shiftKey && this.tabFocusOnClear()) {
-				this.focusOnClear();
-				$event.preventDefault();
-			} else if (!this.addTag()) {
+			if (!this.addTag()) {
 				return;
 			}
 		}
@@ -1006,10 +888,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	private _handleArrowDown($event: KeyboardEvent) {
 		if (this._nextItemIsTag(+1)) {
 			this.itemsList.unmarkItem();
-			this._scrollToTag();
 		} else {
 			this.itemsList.markNextItem();
-			this._scrollToMarked();
 		}
 		this.open();
 		$event.preventDefault();
@@ -1022,10 +902,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 		if (this._nextItemIsTag(-1)) {
 			this.itemsList.unmarkItem();
-			this._scrollToTag();
 		} else {
 			this.itemsList.markPreviousItem();
-			this._scrollToMarked();
 		}
 		$event.preventDefault();
 	}
@@ -1054,27 +932,5 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.bindLabel.set(this.bindLabel() || config.bindLabel);
 		this.appearance.set(this.appearance() || config.appearance);
 		this._setTabFocusOnClear();
-	}
-
-	/**
-	 * Gets virtual scroll value from input or from config
-	 *
-	 *  @param config NgSelectConfig object
-	 *
-	 *  @returns `true` if virtual scroll is enabled, `false` otherwise
-	 */
-	private getVirtualScroll(config: NgSelectConfig): boolean {
-		return isDefined(this.virtualScroll) ? this.virtualScroll() : this.isVirtualScrollDisabled(config);
-	}
-
-	/**
-	 * Gets disableVirtualScroll value from input or from config
-	 *
-	 *  @param config NgSelectConfig object
-	 *
-	 *  @returns `true` if disableVirtualScroll is enabled, `false` otherwise
-	 */
-	private isVirtualScrollDisabled(config: NgSelectConfig) {
-		return isDefined(config.disableVirtualScroll) ? !config.disableVirtualScroll : false;
 	}
 }

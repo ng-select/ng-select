@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgOptionComponent } from './ng-option.component';
 import { NgSelectComponent, SELECTION_MODEL_FACTORY } from './ng-select.component';
+import { NgSelectCdkComponent } from './ng-select-cdk.component';
 import {
 	NgFooterTemplateDirective,
 	NgHeaderTemplateDirective,
@@ -25,6 +26,7 @@ import { DefaultSelectionModelFactory } from './selection-model';
 		NgDropdownPanelComponent,
 		NgOptionComponent,
 		NgSelectComponent,
+		NgSelectCdkComponent,
 		NgOptgroupTemplateDirective,
 		NgOptionTemplateDirective,
 		NgLabelTemplateDirective,
@@ -42,6 +44,7 @@ import { DefaultSelectionModelFactory } from './selection-model';
 	],
 	exports: [
 		NgSelectComponent,
+		NgSelectCdkComponent,
 		NgOptionComponent,
 		NgOptgroupTemplateDirective,
 		NgOptionTemplateDirective,

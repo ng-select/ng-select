@@ -3,6 +3,7 @@
  */
 
 export { NgSelectComponent, SELECTION_MODEL_FACTORY } from './lib/ng-select.component';
+export { NgSelectCdkComponent } from './lib/ng-select-cdk.component';
 export { NgSelectModule } from './lib/ng-select.module';
 export { NgOption, DropdownPosition } from './lib/ng-select.types';
 export { DefaultSelectionModelFactory, DefaultSelectionModel, SelectionModel } from './lib/selection-model';
