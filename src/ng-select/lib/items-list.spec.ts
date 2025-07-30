@@ -581,6 +581,101 @@ describe('ItemsList', () => {
 		});
 	});
 
+	describe('pre-grouped items', () => {
+		describe('parent items without children', () => {
+			let list: ItemsList;
+			let cmp: NgSelectComponent;
+			let cmpRef: ComponentRef<NgSelectComponent>;
+
+			beforeEach(async () => {
+				const { component, componentRef } = await ngSelectFactory();
+				cmp = component;
+				cmpRef = componentRef;
+				componentRef.setInput('bindLabel', 'title');
+				componentRef.setInput('bindValue', 'id');
+				componentRef.setInput('selectableGroup', true);
+				componentRef.setInput('selectableGroupAsModel', false);
+				componentRef.setInput('groupBy', 'subprojects');
+				list = itemsListFactory(cmp);
+			});
+
+			it('should render and allow selection of parent items with empty children arrays', () => {
+				// Test data simulating the issue - parent item with empty children array
+				const projects = [
+					{
+						id: 'p0',
+						title: 'Project 0',
+						subprojects: [], // Empty children array
+					},
+				];
+
+				list.setItems(projects);
+
+				// Should have 1 item: the parent with empty children
+				expect(list.items.length).toBe(1);
+
+				// Find the parent item with empty children (Project 0)
+				const parentWithoutChildren = list.items.find(item => 
+					item.value && item.value.id === 'p0'
+				);
+
+				// Parent item should exist
+				expect(parentWithoutChildren).toBeDefined();
+				
+				// Parent item should be selectable (not disabled)
+				expect(parentWithoutChildren.disabled).toBe(false);
+				
+				// Parent should have empty children array
+				expect(parentWithoutChildren.children).toEqual([]);
+
+				// Should be able to select the parent item
+				list.select(parentWithoutChildren);
+				expect(list.selectedItems).toContain(parentWithoutChildren);
+				expect(parentWithoutChildren.selected).toBe(true);
+			});
+
+			it('should handle multiple parent items with empty children arrays', () => {
+				const projects = [
+					{
+						id: 'p0',
+						title: 'Project 0',
+						subprojects: [],
+					},
+					{
+						id: 'p2',
+						title: 'Project Empty',
+						subprojects: [],
+					},
+					{
+						id: 'p1',
+						title: 'Project A',
+						subprojects: [
+							{ title: 'Subproject 1 of A', id: 's1p1' },
+						],
+					},
+				];
+
+				list.setItems(projects);
+
+				// Should have 4 items: 3 parents + 1 subproject
+				expect(list.items.length).toBe(4);
+
+				// Find parent items without children
+				const emptyParents = list.items.filter(item => 
+					item.value && (item.value.id === 'p0' || item.value.id === 'p2')
+				);
+
+				expect(emptyParents.length).toBe(2);
+				
+				// Both should be selectable
+				emptyParents.forEach(parent => {
+					expect(parent.disabled).toBe(false);
+					expect(parent.children).toEqual([]);
+				});
+			});
+		});
+	});
+
 	function itemsListFactory(cmp: NgSelectComponent): ItemsList {
 		return new ItemsList(cmp, new DefaultSelectionModel());
 	}
