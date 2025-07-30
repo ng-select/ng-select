@@ -3901,7 +3901,7 @@ describe('NgSelectComponent', () => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 			tickAndDetectChanges(fixture);
 
-			expect(input.getAttribute('aria-controls')).toBe(select.dropdownId);
+			expect(input.getAttribute('aria-controls')).toBe(select.dropdownId());
 		}));
 
 		it('should set aria-activedecendant equal to chosen item on open', fakeAsync(() => {
@@ -3961,6 +3961,27 @@ describe('NgSelectComponent', () => {
 
 			const notFoundText = fixture.componentInstance.select().notFoundText();
 			expect(notFoundText).toBe('No items found (aria-live)');
+		}));
+	});
+
+	describe('Custom dropdown ID', () => {
+		it('should use custom dropdownId when provided', fakeAsync(() => {
+			const customFixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" bindLabel="name" dropdownId="custom-test-id"></ng-select>`,
+			);
+
+			const customSelect = customFixture.componentInstance.select();
+			tickAndDetectChanges(customFixture);
+
+			expect(customSelect.dropdownId()).toBe('custom-test-id');
+			
+			// Also verify it's used in aria-controls when opened
+			triggerKeyDownEvent(getNgSelectElement(customFixture), KeyCode.Space);
+			tickAndDetectChanges(customFixture);
+			
+			const customInput = customFixture.debugElement.query(By.css('.ng-input input')).nativeElement;
+			expect(customInput.getAttribute('aria-controls')).toBe('custom-test-id');
 		}));
 	});
 

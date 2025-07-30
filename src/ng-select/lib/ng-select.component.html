@@ -41,7 +41,7 @@
 				(focus)="onInputFocus($event)"
 				(input)="filter(searchInput.value)"
 				[attr.aria-activedescendant]="isOpen() ? itemsList?.markedItem?.htmlId : null"
-				[attr.aria-controls]="isOpen() ? dropdownId : null"
+				[attr.aria-controls]="isOpen() ? dropdownId() : null"
 				[attr.aria-expanded]="isOpen()"
 				[attr.aria-label]="ariaLabel()"
 				[attr.id]="labelForId()"
@@ -101,7 +101,7 @@
 		(outsideClick)="close()"
 		[class.ng-select-multiple]="multiple()"
 		[class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
-		[id]="dropdownId"
+		[id]="dropdownId()"
 		[ariaLabelDropdown]="ariaLabelDropdown()">
 		<ng-container>
 			@for (item of viewPortItems; track trackByOption($index, item)) {

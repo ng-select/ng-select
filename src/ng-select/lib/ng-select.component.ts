@@ -128,6 +128,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}>({});
 	readonly tabIndex = input<number, unknown>(undefined, { transform: numberAttribute });
 	readonly readonly = input(false, { transform: booleanAttribute });
+	readonly dropdownId = input<string>(undefined);
 	readonly searchWhileComposing = input(true, { transform: booleanAttribute });
 	readonly minTermLength = input(0, { transform: numberAttribute });
 	readonly editableSearchTerm = input(false, { transform: booleanAttribute });
@@ -187,7 +188,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	itemsList: ItemsList;
 	viewPortItems: NgOption[] = [];
 	searchTerm: string = null;
-	dropdownId = newId();
+	private _defaultDropdownId = newId();
 	element: HTMLElement;
 	focused: boolean;
 	escapeHTML = true;
@@ -246,6 +247,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			return this.config.clearSearchOnAdd;
 		}
 		return this.closeOnSelect();
+	});
+
+	readonly dropdownId = computed(() => {
+		return this.dropdownIdInput() || this._defaultDropdownId;
 	});
 
 	readonly deselectOnClick = input<boolean>();
@@ -871,7 +876,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			autocorrect: 'off',
 			autocapitalize: 'off',
 			autocomplete: 'off',
-			'aria-controls': this.dropdownId,
+			'aria-controls': this.dropdownId(),
 			...this.inputAttrs(),
 		};
 
