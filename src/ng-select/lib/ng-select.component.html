@@ -90,6 +90,8 @@
 		[bufferAmount]="bufferAmount()"
 		[appendTo]="appendToValue"
 		[position]="dropdownPosition()"
+		[autoWidth]="autoWidth()"
+		[multiLineLabels]="multiLineLabels()"
 		[headerTemplate]="headerTemplate()"
 		[footerTemplate]="footerTemplate()"
 		[filterValue]="searchTerm"
@@ -100,6 +102,7 @@
 		(scrollToEnd)="scrollToEnd.emit($event)"
 		(outsideClick)="close()"
 		[class.ng-select-multiple]="multiple()"
+		[class.ng-select-multi-line-labels]="multiLineLabels()"
 		[class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
 		[id]="dropdownId"
 		[ariaLabelDropdown]="ariaLabelDropdown()">

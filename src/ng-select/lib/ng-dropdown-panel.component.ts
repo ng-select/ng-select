@@ -48,6 +48,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	readonly appendTo = input<string>(undefined);
 	readonly bufferAmount = input<number>(undefined);
 	readonly virtualScroll = input(false, { transform: booleanAttribute });
+	readonly autoWidth = input(false, { transform: booleanAttribute });
+	readonly multiLineLabels = input(false, { transform: booleanAttribute });
 	readonly headerTemplate = input<TemplateRef<any>>(undefined);
 	readonly footerTemplate = input<TemplateRef<any>>(undefined);
 	readonly filterValue = input<string>(null);
@@ -353,21 +355,37 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		}
 	}
 
-	private _calculateCurrentPosition(dropdownEl: HTMLElement) {
+	private _calculateCurrentPosition(dropdownEl: HTMLElement): DropdownPosition {
 		const position = this.position();
 		if (position !== 'auto') {
 			return position;
 		}
+		
 		const selectRect: ClientRect = this._select.getBoundingClientRect();
 		const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
 		const offsetTop = selectRect.top + window.pageYOffset;
 		const height = selectRect.height;
 		const dropdownHeight = dropdownEl.getBoundingClientRect().height;
+		const dropdownWidth = dropdownEl.getBoundingClientRect().width;
+		
+		// Determine vertical position (top vs bottom)
+		let verticalPosition: DropdownPosition = 'bottom';
 		if (offsetTop + height + dropdownHeight > scrollTop + document.documentElement.clientHeight) {
-			return 'top';
-		} else {
-			return 'bottom';
+			verticalPosition = 'top';
 		}
+		
+		// If auto-width is enabled, also consider horizontal positioning
+		if (this.autoWidth()) {
+			const spaceLeft = selectRect.left;
+			const spaceRight = document.documentElement.clientWidth - selectRect.right;
+			
+			// If dropdown is wider than available space on the right, consider left positioning
+			if (dropdownWidth > spaceRight && spaceLeft > spaceRight) {
+				return verticalPosition === 'top' ? 'top' : 'bottom'; // For now, prioritize vertical over horizontal
+			}
+		}
+		
+		return verticalPosition;
 	}
 
 	private _appendDropdown() {
@@ -400,8 +418,17 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 			this._dropdown.style.right = 'auto';
 		}
 
-		this._dropdown.style.width = select.width + 'px';
-		this._dropdown.style.minWidth = select.width + 'px';
+		// Handle width based on autoWidth setting
+		if (this.autoWidth()) {
+			// Remove width constraints to allow natural sizing
+			this._dropdown.style.width = 'auto';
+			this._dropdown.style.minWidth = select.width + 'px';
+			this._dropdown.style.maxWidth = 'none';
+		} else {
+			// Original behavior - match select width
+			this._dropdown.style.width = select.width + 'px';
+			this._dropdown.style.minWidth = select.width + 'px';
+		}
 	}
 
 	private _updateYPosition() {

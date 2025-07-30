@@ -281,6 +281,25 @@
 				cursor: default;
 			}
 		}
+		
+		// Multi-line label support
+		&.ng-select-multi-line-labels {
+			.ng-option {
+				white-space: normal;
+				word-wrap: break-word;
+				word-break: break-word;
+				overflow: visible;
+				text-overflow: inherit;
+				
+				.ng-option-label {
+					white-space: normal;
+					word-wrap: break-word;
+					word-break: break-word;
+					overflow: visible;
+					text-overflow: inherit;
+				}
+			}
+		}
 	}
 
 	.scroll-host {
