@@ -11,6 +11,7 @@ import { ConsoleService } from './console.service';
 import { NgSelectComponent } from './ng-select.component';
 import { NgSelectModule } from './ng-select.module';
 import { KeyCode, NgOption } from './ng-select.types';
+import { ZonelessService } from './zoneless.service';
 import { SIGNAL } from '@angular/core/primitives/signals';
 
 describe('NgSelectComponent', () => {
@@ -5115,6 +5116,7 @@ class NgSelectTestComponent {
 		{ id: 2, name: 'Kaunas' },
 		{ id: 3, name: 'Pabrade' },
 	];
+	manyItems: any[] = [];
 	readonlyCities: readonly any[] = [
 		{ id: 1, name: 'Vilnius' },
 		{ id: 2, name: 'Kaunas' },
@@ -5315,3 +5317,147 @@ class NgSelectGroupingTestComponent {
 
 	groupValueFn = (key, _) => ({ group: key });
 }
+
+// Additional tests for zoneless mode support
+describe('NgSelectComponent - Zoneless Mode Integration', () => {
+	// Mock NoopNgZone to simulate zoneless mode
+	class MockNoopNgZone extends NgZone {
+		constructor() {
+			super({ enableLongStackTrace: false });
+		}
+
+		run<T>(fn: () => T): T {
+			return fn();
+		}
+
+		runOutsideAngular<T>(fn: () => T): T {
+			return fn();
+		}
+	}
+
+	function createZonelessTestingModule<T>(cmp: Type<T>, template: string): ComponentFixture<T> {
+		TestBed.configureTestingModule({
+			imports: [FormsModule, NgSelectModule],
+			providers: [
+				{ provide: ErrorHandler, useClass: TestsErrorHandler },
+				{
+					provide: NgZone,
+					useFactory: () => new MockNoopNgZone(),
+				},
+				{ provide: ConsoleService, useFactory: () => new MockConsole() },
+			],
+		}).overrideComponent(cmp, {
+			set: {
+				template,
+			},
+		});
+
+		TestBed.compileComponents();
+
+		const fixture = TestBed.createComponent(cmp);
+		fixture.detectChanges();
+		return fixture;
+	}
+
+	it('should work correctly in zoneless mode', fakeAsync(() => {
+		const fixture = createZonelessTestingModule(
+			NgSelectTestComponent,
+			`<ng-select [items]="cities"
+                       bindLabel="name"
+                       bindValue="id"
+                       placeholder="Select city">
+            </ng-select>`
+		);
+
+		tickAndDetectChanges(fixture);
+		
+		const component = fixture.componentInstance.select();
+		const dropdown = component.dropdownPanel;
+
+		// Verify the component initializes correctly
+		expect(component).toBeDefined();
+		expect(dropdown).toBeDefined();
+		
+		// Verify that the ZonelessService detects zoneless mode
+		const zonelessService = TestBed.inject(ZonelessService);
+		expect(zonelessService.isZoneless).toBe(true);
+
+		// Test that basic functionality works (opening dropdown)
+		component.open();
+		tickAndDetectChanges(fixture);
+		expect(component.isOpen()).toBe(true);
+
+		// Test that selection works
+		selectOption(fixture, KeyCode.Enter, 0);
+		expect(component.selectedItems.length).toBe(1);
+		expect(component.selectedItems[0].value).toEqual({ id: 1, name: 'Vilnius' });
+	}));
+
+	it('should handle scroll events correctly in zoneless mode', fakeAsync(() => {
+		const fixture = createZonelessTestingModule(
+			NgSelectTestComponent,
+			`<ng-select [items]="manyItems"
+                       bindLabel="name"
+                       placeholder="Select item">
+            </ng-select>`
+		);
+
+		// Set up many items to test virtual scrolling
+		fixture.componentInstance.manyItems = Array.from({ length: 100 }, (_, i) => ({
+			id: i,
+			name: `Item ${i}`
+		}));
+
+		tickAndDetectChanges(fixture);
+		
+		const component = fixture.componentInstance.select();
+		component.open();
+		tickAndDetectChanges(fixture);
+
+		// Verify dropdown opened
+		expect(component.isOpen()).toBe(true);
+		
+		// Test that scroll handling works without errors
+		const scrollEvent = new Event('scroll');
+		const panelElement = fixture.debugElement.query(By.css('.ng-dropdown-panel-items'));
+		expect(panelElement).toBeTruthy();
+		
+		// Simulate scroll event - should not throw errors in zoneless mode
+		expect(() => {
+			panelElement.nativeElement.dispatchEvent(scrollEvent);
+			tickAndDetectChanges(fixture);
+		}).not.toThrow();
+	}));
+
+	it('should handle outside clicks correctly in zoneless mode', fakeAsync(() => {
+		const fixture = createZonelessTestingModule(
+			NgSelectTestComponent,
+			`<ng-select [items]="cities"
+                       bindLabel="name"
+                       placeholder="Select city">
+            </ng-select>`
+		);
+
+		tickAndDetectChanges(fixture);
+		
+		const component = fixture.componentInstance.select();
+		
+		// Open dropdown
+		component.open();
+		tickAndDetectChanges(fixture);
+		expect(component.isOpen()).toBe(true);
+
+		// Simulate outside click
+		const outsideClickEvent = new MouseEvent('click', {
+			bubbles: true,
+			cancelable: true,
+		});
+		
+		// Click outside the component (on document body)
+		document.body.dispatchEvent(outsideClickEvent);
+		tickAndDetectChanges(fixture);
+		
+		// Dropdown should close
+		expect(component.isOpen()).toBe(false);
+	}));
+});

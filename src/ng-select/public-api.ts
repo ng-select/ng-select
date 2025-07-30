@@ -11,6 +11,7 @@ export { NgOptionComponent } from './lib/ng-option.component';
 export { ConsoleService } from './lib/console.service';
 export { NgDropdownPanelComponent } from './lib/ng-dropdown-panel.component';
 export { NgDropdownPanelService } from './lib/ng-dropdown-panel.service';
+export { ZonelessService } from './lib/zoneless.service';
 export {
 	NgOptgroupTemplateDirective,
 	NgOptionTemplateDirective,

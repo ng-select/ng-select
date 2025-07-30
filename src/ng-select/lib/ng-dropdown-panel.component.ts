@@ -4,6 +4,7 @@ import { booleanAttribute, ChangeDetectionStrategy, Component, ElementRef, NgZon
 import { animationFrameScheduler, asapScheduler, fromEvent, merge, Subject } from 'rxjs';
 import { auditTime, takeUntil } from 'rxjs/operators';
 import { NgDropdownPanelService, PanelDimensions } from './ng-dropdown-panel.service';
+import { ZonelessService } from './zoneless.service';
 
 import { DropdownPosition, NgOption } from './ng-select.types';
 import { isDefined } from './value-utils';
@@ -38,6 +39,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	private _renderer = inject(Renderer2);
 	private _zone = inject(NgZone);
+	private _zonelessService = inject(ZonelessService);
 	private _panelService = inject(NgDropdownPanelService);
 	private _document = inject(DOCUMENT, { optional: true })!;
 	private _dropdown = inject(ElementRef<HTMLElement>).nativeElement;
@@ -190,7 +192,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	private _handleScroll() {
-		this._zone.runOutsideAngular(() => {
+		this._zonelessService.runOutsideAngular(() => {
 			if (!this._scrollablePanel()) {
 				return;
 			}
@@ -212,7 +214,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 			return;
 		}
 
-		this._zone.runOutsideAngular(() => {
+		this._zonelessService.runOutsideAngular(() => {
 			merge(fromEvent(this._document, 'touchstart', { capture: true }), fromEvent(this._document, 'click', { capture: true }))
 				.pipe(takeUntil(this._destroy$))
 				.subscribe(($event) => this._checkToClose($event));
@@ -229,7 +231,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 			return;
 		}
 
-		this._zone.run(() => this.outsideClick.emit());
+		this._zonelessService.run(() => this.outsideClick.emit());
 	}
 
 	private _onItemsChange(items: NgOption[] = [], firstChange: boolean) {
@@ -250,7 +252,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 			return;
 		}
 
-		this._zone.runOutsideAngular(() => {
+		this._zonelessService.runOutsideAngular(() => {
 			Promise.resolve().then(() => {
 				const panelHeight = this._scrollablePanel().clientHeight;
 				this._panelService.setDimensions(0, panelHeight);
@@ -261,7 +263,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	private _updateItemsRange(firstChange: boolean) {
-		this._zone.runOutsideAngular(() => {
+		this._zonelessService.runOutsideAngular(() => {
 			this._measureDimensions().then(() => {
 				if (firstChange) {
 					this._renderItemsRange(this._startOffset);
@@ -310,7 +312,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		this._updateVirtualHeight(range.scrollHeight);
 		this._contentPanel().style.transform = `translateY(${range.topPadding}px)`;
 
-		this._zone.run(() => {
+		this._zonelessService.run(() => {
 			this.update.emit(this.items().slice(range.start, range.end));
 			this.scroll.emit({ start: range.start, end: range.end });
 		});
@@ -348,7 +350,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		const padding = this.virtualScroll() ? this._virtualPadding() : this._contentPanel();
 
 		if (scrollTop + this._dropdown.clientHeight >= padding.clientHeight - 1) {
-			this._zone.run(() => this.scrollToEnd.emit());
+			this._zonelessService.run(() => this.scrollToEnd.emit());
 			this._scrollToEndFired = true;
 		}
 	}
@@ -421,7 +423,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	private _setupMousedownListener(): void {
-		this._zone.runOutsideAngular(() => {
+		this._zonelessService.runOutsideAngular(() => {
 			fromEvent(this._dropdown, 'mousedown')
 				.pipe(takeUntil(this._destroy$))
 				.subscribe((event: MouseEvent) => {
