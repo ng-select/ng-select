@@ -27,7 +27,7 @@ import {
 	computed,
 	contentChildren
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, Validators } from '@angular/forms';
 import { combineLatest, merge, Subject } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
@@ -200,15 +200,33 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	private _isComposing = false;
 	private readonly _destroy$ = new Subject<void>();
 	private readonly _keyPress$ = new Subject<string>();
+	private _ngControl: NgControl | null = null;
+
+	readonly required = computed(() => {
+		if (!this._ngControl || !this._ngControl.control) {
+			return false;
+		}
+		
+		const control = this._ngControl.control;
+		if (!control.validator) {
+			return false;
+		}
+		
+		// Check if required validator is present by testing with empty value
+		const validators = control.validator({} as any);
+		return validators && validators['required'];
+	});
 
 	constructor() {
 		const config = this.config;
 		const newSelectionModel = inject<SelectionModelFactory | undefined>(SELECTION_MODEL_FACTORY, { optional: true });
 		const _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+		const ngControl = inject(NgControl, { optional: true });
 
 		this._mergeGlobalConfig(config);
 		this.itemsList = new ItemsList(this, newSelectionModel ? newSelectionModel() : DefaultSelectionModelFactory());
 		this.element = _elementRef.nativeElement;
+		this._ngControl = ngControl;
 	}
 
 	@HostBinding('class.ng-select-filtered') get filtered() {

@@ -46,6 +46,7 @@
 				[attr.aria-label]="ariaLabel()"
 				[attr.id]="labelForId()"
 				[attr.tabindex]="tabIndex()"
+				[attr.required]="required() ? true : null"
 				[disabled]="disabled"
 				[readOnly]="!searchable() || itemsList.maxItemsSelected"
 				[value]="searchTerm ?? ''"
