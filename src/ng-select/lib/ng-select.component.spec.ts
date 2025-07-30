@@ -3854,6 +3854,44 @@ describe('NgSelectComponent', () => {
 				const allOptions = select.element.querySelectorAll('.ng-dropdown-panel .ng-option');
 				expect(allOptions.length).toEqual(fixture.componentInstance.cities.length);
 			}));
+
+			it('should update search term when ngModel is updated programmatically', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+                        [editableSearchTerm]="true"
+                        bindValue="id"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`,
+				);
+				const select = fixture.componentInstance.select();
+				const input = select.searchInput().nativeElement;
+				const selectedCity = fixture.componentInstance.cities[0];
+				
+				// Initially no value is selected
+				expect(select.searchTerm).toBeNull();
+				expect(input.value).toBe('');
+				
+				// Set initial value programmatically via ngModel
+				fixture.componentInstance.selectedCity = selectedCity.id;
+				tickAndDetectChanges(fixture);
+				fixture.detectChanges(); // Additional detectChanges call
+				
+				// The search term should be updated to show the selected item's label
+				expect(select.searchTerm).toEqual(selectedCity.name);
+				expect(input.value).toEqual(selectedCity.name);
+				
+				// Change to another city programmatically
+				const secondCity = fixture.componentInstance.cities[1];
+				fixture.componentInstance.selectedCity = secondCity.id;
+				tickAndDetectChanges(fixture);
+				fixture.detectChanges(); // Additional detectChanges call
+				
+				// Search term should update to the new selection
+				expect(select.searchTerm).toEqual(secondCity.name);
+				expect(input.value).toEqual(secondCity.name);
+			}));
 		});
 	});
 
