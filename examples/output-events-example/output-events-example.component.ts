@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
@@ -15,19 +15,19 @@ interface Event {
 	styleUrls: ['./output-events-example.component.scss'],
 	imports: [NgSelectComponent, FormsModule, JsonPipe],
 })
-export class OutputEventsExampleComponent {
-	private dataService = inject(DataService);
-
+export class OutputEventsExampleComponent implements OnInit {
 	selectedItems: any;
 	items = [];
 
 	events: Event[] = [];
 
-	constructor() {
+	constructor(private dataService: DataService) {
 		this.dataService.getPeople().subscribe((items) => {
 			this.items = items;
 		});
 	}
+
+	ngOnInit() {}
 
 	onChange($event) {
 		this.events.push({ name: '(change)', value: $event });
