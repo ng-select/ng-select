@@ -8,6 +8,7 @@ export { NgOption, DropdownPosition } from './lib/ng-select.types';
 export { DefaultSelectionModelFactory, DefaultSelectionModel, SelectionModel } from './lib/selection-model';
 export { NgSelectConfig } from './lib/config.service';
 export { NgOptionComponent } from './lib/ng-option.component';
+export { NgOptionRegistry } from './lib/ng-option-registry.service';
 export { ConsoleService } from './lib/console.service';
 export { NgDropdownPanelComponent } from './lib/ng-dropdown-panel.component';
 export { NgDropdownPanelService } from './lib/ng-dropdown-panel.service';

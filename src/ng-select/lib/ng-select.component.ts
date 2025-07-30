@@ -56,6 +56,7 @@ import { ItemsList } from './items-list';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgDropdownPanelService } from './ng-dropdown-panel.service';
 import { NgOptionComponent } from './ng-option.component';
+import { NgOptionRegistry } from './ng-option-registry.service';
 import { DropdownPosition, KeyCode, NgOption } from './ng-select.types';
 import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
 import { isDefined, isFunction, isObject, isPromise } from './value-utils';
@@ -88,6 +89,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	config = inject(NgSelectConfig);
 	private _cd = inject(ChangeDetectorRef);
 	private _console = inject(ConsoleService);
+	private _optionRegistry = inject(NgOptionRegistry);
 
 	readonly bindLabel = model<string>(undefined);
 	readonly bindValue = model<string>(undefined);
@@ -183,6 +185,39 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly clearButton = viewChild<ElementRef<HTMLSpanElement>>('clearButton');
 	ngOptions = contentChildren(NgOptionComponent, { descendants: true });
 	ngOptionsObservable = toObservable(this.ngOptions);
+	
+	// Observable of all registry options (not filtered by parent)
+	private readonly _registryOptionsObservable = toObservable(this._optionRegistry.options).pipe(
+		map(optionsSet => Array.from(optionsSet))
+	);
+	
+	// Combined observable that includes both contentChildren and registry options
+	private readonly _allOptionsObservable = combineLatest([
+		this.ngOptionsObservable,
+		this._registryOptionsObservable.pipe(startWith([]))
+	]).pipe(
+		map(([contentOptions, registryOptions]) => {
+			// If element is not yet available, just use content options
+			if (!this.element) {
+				return contentOptions;
+			}
+			
+			// Filter registry options that belong to this component
+			const relevantRegistryOptions = registryOptions.filter(option => 
+				this.element.contains(option.elementRef.nativeElement)
+			);
+			
+			// Combine and deduplicate options (contentOptions take precedence)
+			const allOptions = [...contentOptions];
+			for (const registryOption of relevantRegistryOptions) {
+				// Only add registry option if it's not already in contentOptions
+				if (!contentOptions.includes(registryOption)) {
+					allOptions.push(registryOption);
+				}
+			}
+			return allOptions;
+		})
+	);
 	@HostBinding('class.ng-select') useDefaultClass = true;
 	itemsList: ItemsList;
 	viewPortItems: NgOption[] = [];
@@ -767,8 +802,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			)
 		};
 
-		this.ngOptionsObservable.pipe(
-			startWith(this.ngOptions()),
+		this._allOptionsObservable.pipe(
 			takeUntil(this._destroy$),
 			tap((options) => {
 				this.bindLabel.set(this._defaultLabel);
