@@ -15,7 +15,7 @@
 			@for (item of selectedItems; track trackByOption($index, item)) {
 				<div [class.ng-value-disabled]="item.disabled" class="ng-value">
 					<ng-template #defaultLabelTemplate>
-						<span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">×</span>
+						<span class="ng-value-icon left" (click)="!disabled && !item.disabled && unselect(item)" aria-hidden="true">×</span>
 						<span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
 					</ng-template>
 					<ng-template
