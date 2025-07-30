@@ -400,8 +400,14 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 			this._dropdown.style.right = 'auto';
 		}
 
-		this._dropdown.style.width = select.width + 'px';
-		this._dropdown.style.minWidth = select.width + 'px';
+		// For virtual scroll, allow dropdown to expand beyond select width
+		if (this.virtualScroll()) {
+			this._dropdown.style.width = 'auto';
+			this._dropdown.style.minWidth = select.width + 'px';
+		} else {
+			this._dropdown.style.width = select.width + 'px';
+			this._dropdown.style.minWidth = select.width + 'px';
+		}
 	}
 
 	private _updateYPosition() {

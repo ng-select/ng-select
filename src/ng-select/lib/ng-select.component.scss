@@ -294,7 +294,8 @@
 	.scrollable-content {
 		top: 0;
 		left: 0;
-		width: 100%;
+		min-width: 100%;
+		width: max-content;
 		height: 100%;
 		position: absolute;
 	}
