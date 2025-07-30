@@ -429,6 +429,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 					if (target.tagName === 'INPUT') {
 						return;
 					}
+					// Don't prevent default on clickable option elements to ensure click events work in Chrome
+					const optionElement = target.closest('.ng-option');
+					if (optionElement && !optionElement.classList.contains('ng-option-disabled')) {
+						return;
+					}
 					event.preventDefault();
 				});
 		});
