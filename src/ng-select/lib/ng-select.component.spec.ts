@@ -1551,6 +1551,45 @@ describe('NgSelectComponent', () => {
 			});
 		}));
 
+		it('should use configured outsideClickType for outside click detection', fakeAsync(() => {
+			const fixture = createTestingModule(
+				EncapsulatedTestComponent,
+				`<ng-select [items]="cities"
+                            bindLabel="name"
+                            outsideClickType="mousedown"
+                            [(ngModel)]="city"></ng-select>`,
+			);
+
+			const cmp = fixture.componentInstance;
+			cmp.select().open();
+			tickAndDetectChanges(fixture);
+
+			expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
+			expect(cmp.select().outsideClickType()).toBe('mousedown');
+
+			// Verify that the dropdown panel receives the correct outsideClickType
+			expect(cmp.select().dropdownPanel().outsideClickType()).toBe('mousedown');
+		}));
+
+		it('should default to click for outsideClickType when not specified', fakeAsync(() => {
+			const fixture = createTestingModule(
+				EncapsulatedTestComponent,
+				`<ng-select [items]="cities"
+                            bindLabel="name"
+                            [(ngModel)]="city"></ng-select>`,
+			);
+
+			const cmp = fixture.componentInstance;
+			cmp.select().open();
+			tickAndDetectChanges(fixture);
+
+			expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
+			expect(cmp.select().outsideClickType()).toBe('click');
+
+			// Verify that the dropdown panel receives the correct outsideClickType
+			expect(cmp.select().dropdownPanel().outsideClickType()).toBe('click');
+		}));
+
 		it('should not close when isOpen is true', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,

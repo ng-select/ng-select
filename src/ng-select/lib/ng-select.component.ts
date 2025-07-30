@@ -106,6 +106,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly clearAllText = input<string>(undefined);
 	readonly dropdownPosition = input<DropdownPosition>('auto');
 	readonly appendTo = input<string>(undefined);
+	readonly outsideClickType = input<'click' | 'mousedown'>('click');
 	readonly loading = input(false, { transform: booleanAttribute });
 	readonly closeOnSelect = input(true, { transform: booleanAttribute });
 	readonly hideSelected = input(false, { transform: booleanAttribute });
