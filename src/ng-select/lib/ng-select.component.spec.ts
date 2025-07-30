@@ -4388,6 +4388,55 @@ describe('NgSelectComponent', () => {
 				expect(fixture.componentInstance.select().isOpen()).toBe(true);
 			}));
 		});
+
+		describe('event replay handling', () => {
+			beforeEach(fakeAsync(() => {
+				fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+                            bindLabel="name"
+                            [(ngModel)]="selectedCity">
+                    </ng-select>`,
+				);
+				select = fixture.componentInstance.select();
+				tickAndDetectChanges(fixture);
+			}));
+
+			it('should not call preventDefault during event replay', fakeAsync(() => {
+				// Import EventPhase to create a replay event
+				const { EventPhase } = require('@angular/core/primitives/event-dispatch');
+				
+				// Create a mock event that simulates an event replay
+				const event = createEvent({ 
+					tagName: 'DIV',
+					eventPhase: EventPhase.REPLAY 
+				}) as any;
+				event.eventPhase = EventPhase.REPLAY;
+				
+				const preventDefault = spyOn(event, 'preventDefault');
+				
+				const control = fixture.debugElement.query(By.css('.ng-select-container'));
+				control.triggerEventHandler('mousedown', event);
+				
+				tickAndDetectChanges(fixture);
+				
+				// preventDefault should not be called during event replay
+				expect(preventDefault).not.toHaveBeenCalled();
+			}));
+
+			it('should call preventDefault for normal events (not replay)', fakeAsync(() => {
+				const event = createEvent({ tagName: 'DIV' }) as any;
+				const preventDefault = spyOn(event, 'preventDefault');
+				
+				const control = fixture.debugElement.query(By.css('.ng-select-container'));
+				control.triggerEventHandler('mousedown', event);
+				
+				tickAndDetectChanges(fixture);
+				
+				// preventDefault should be called for normal events
+				expect(preventDefault).toHaveBeenCalled();
+			}));
+		});
 	});
 
 	describe('Append to', () => {

@@ -60,6 +60,7 @@ import { DropdownPosition, KeyCode, NgOption } from './ng-select.types';
 import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
 import { isDefined, isFunction, isObject, isPromise } from './value-utils';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { EventPhase } from '@angular/core/primitives/event-dispatch';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type AddTagFn = (term: string) => any | Promise<any>;
@@ -424,7 +425,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 		const target = $event.target as HTMLElement;
 		if (target.tagName !== 'INPUT') {
-			$event.preventDefault();
+			// Avoid calling preventDefault during event replay to prevent errors in prerendered pages
+			if (($event as any).eventPhase !== EventPhase.REPLAY) {
+				$event.preventDefault();
+			}
 		}
 
 		if (target.classList.contains('ng-clear-wrapper')) {
