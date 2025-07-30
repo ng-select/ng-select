@@ -1,22 +1,18 @@
-import { Directive, effect, ElementRef, inject, input, TemplateRef } from '@angular/core';
+import { Directive, ElementRef, Input, OnChanges, SimpleChanges, TemplateRef } from '@angular/core';
 import { escapeHTML } from './value-utils';
 
 @Directive({
 	selector: '[ngItemLabel]',
 	standalone: true,
 })
-export class NgItemLabelDirective {
-	private element = inject<ElementRef<HTMLElement>>(ElementRef);
+export class NgItemLabelDirective implements OnChanges {
+	@Input() ngItemLabel: string;
+	@Input() escape = true;
 
-	ngItemLabel = input<string>();
-	escape = input(true);
+	constructor(private element: ElementRef<HTMLElement>) {}
 
-	constructor() {
-		effect(() => {
-			this.element.nativeElement.innerHTML = this.escape()
-				? escapeHTML(this.ngItemLabel())
-				: this.ngItemLabel();
-		})
+	ngOnChanges(changes: SimpleChanges) {
+		this.element.nativeElement.innerHTML = this.escape ? escapeHTML(this.ngItemLabel) : this.ngItemLabel;
 	}
 }
 
@@ -26,7 +22,7 @@ export class NgItemLabelDirective {
 	standalone: true,
 })
 export class NgOptionTemplateDirective {
-	public readonly template = inject(TemplateRef<any>);
+	constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
@@ -35,7 +31,7 @@ export class NgOptionTemplateDirective {
 	standalone: true,
 })
 export class NgOptgroupTemplateDirective {
-	public readonly template = inject(TemplateRef<any>);
+	constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
@@ -44,7 +40,7 @@ export class NgOptgroupTemplateDirective {
 	standalone: true,
 })
 export class NgLabelTemplateDirective {
-	public readonly template = inject(TemplateRef<any>);
+	constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
@@ -53,7 +49,7 @@ export class NgLabelTemplateDirective {
 	standalone: true,
 })
 export class NgMultiLabelTemplateDirective {
-	public readonly template = inject(TemplateRef<any>);
+	constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
@@ -62,7 +58,7 @@ export class NgMultiLabelTemplateDirective {
 	standalone: true,
 })
 export class NgHeaderTemplateDirective {
-	public readonly template = inject(TemplateRef<any>);
+	constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
@@ -71,7 +67,7 @@ export class NgHeaderTemplateDirective {
 	standalone: true,
 })
 export class NgFooterTemplateDirective {
-	public readonly template = inject(TemplateRef<any>);
+	constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
@@ -80,7 +76,7 @@ export class NgFooterTemplateDirective {
 	standalone: true,
 })
 export class NgNotFoundTemplateDirective {
-	public readonly template = inject(TemplateRef<any>);
+	constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
@@ -89,7 +85,7 @@ export class NgNotFoundTemplateDirective {
 	standalone: true,
 })
 export class NgPlaceholderTemplateDirective {
-	public readonly template = inject(TemplateRef<any>);
+	constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
@@ -98,7 +94,7 @@ export class NgPlaceholderTemplateDirective {
 	standalone: true,
 })
 export class NgTypeToSearchTemplateDirective {
-	public readonly template = inject(TemplateRef<any>);
+	constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
@@ -107,7 +103,7 @@ export class NgTypeToSearchTemplateDirective {
 	standalone: true,
 })
 export class NgLoadingTextTemplateDirective {
-	public readonly template = inject(TemplateRef<any>);
+	constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
@@ -116,7 +112,7 @@ export class NgLoadingTextTemplateDirective {
 	standalone: true,
 })
 export class NgTagTemplateDirective {
-	public readonly template = inject(TemplateRef<any>);
+	constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
@@ -125,11 +121,11 @@ export class NgTagTemplateDirective {
 	standalone: true,
 })
 export class NgLoadingSpinnerTemplateDirective {
-	public readonly template = inject(TemplateRef<any>);
+	constructor(public template: TemplateRef<any>) {}
 }
 
 // eslint-disable-next-line @angular-eslint/directive-selector
 @Directive({ selector: '[ng-clearbutton-tmp]', standalone: true })
 export class NgClearButtonTemplateDirective {
-	public readonly template = inject(TemplateRef<any>);
+	constructor(public template: TemplateRef<any>) {}
 }

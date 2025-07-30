@@ -1,4 +1,4 @@
-import { Component, input, model, output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbDropdown, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 
@@ -26,7 +26,7 @@ type theme = 'default' | 'ant' | 'material';
 
 			<div class="collapse navbar-collapse">
 				<div ngbDropdown class="d-inline-block">
-					<button class="btn btn-outline-secondary btn-sm" style="width: 150px;" ngbDropdownToggle>{{ theme() }}</button>
+					<button class="btn btn-outline-secondary btn-sm" style="width: 150px;" ngbDropdownToggle>{{ theme }}</button>
 					<div ngbDropdownMenu>
 						<button (click)="setTheme('default')" class="dropdown-item btn-sm">Default theme</button>
 						<button (click)="setTheme('material')" class="dropdown-item btn-sm">Material theme</button>
@@ -35,7 +35,7 @@ type theme = 'default' | 'ant' | 'material';
 				</div>
 
 				<div ngbDropdown class="d-inline-block ml-2">
-					<button class="btn btn-outline-secondary btn-sm text-uppercase" style="width: 60px;" ngbDropdownToggle>{{ dir() }}</button>
+					<button class="btn btn-outline-secondary btn-sm text-uppercase" style="width: 60px;" ngbDropdownToggle>{{ dir }}</button>
 					<div ngbDropdownMenu>
 						<button (click)="changeDirTo('ltr')" class="dropdown-item btn-sm text-uppercase">ltr</button>
 						<button (click)="changeDirTo('rtl')" class="dropdown-item btn-sm text-uppercase">rtl</button>
@@ -61,17 +61,19 @@ type theme = 'default' | 'ant' | 'material';
 	imports: [NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, FormsModule],
 })
 export class LayoutHeaderComponent {
-	readonly dir = model<langDir>(undefined);
-	readonly theme = model('default');
-	readonly version = input<string>(undefined);
-	readonly dirChange = output<langDir>();
-	readonly themeChange = output<theme>();
+	@Input() dir: langDir;
+	@Input() theme = 'default';
+	@Input() version: string;
+	@Output() dirChange = new EventEmitter<langDir>();
+	@Output() themeChange = new EventEmitter<theme>();
 
 	setTheme(theme: theme) {
-		this.theme.set(theme);
+		this.theme = theme;
+		this.themeChange.emit(theme);
 	}
 
 	changeDirTo(dir: langDir) {
-		this.dir.set(dir);
+		this.dir = dir;
+		this.dirChange.emit(dir);
 	}
 }

@@ -57,15 +57,6 @@ import { DefaultSelectionModelFactory } from './selection-model';
 		NgLoadingSpinnerTemplateDirective,
 		NgClearButtonTemplateDirective
 	],
-	providers: provideNgSelect(),
+	providers: [{ provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory }],
 })
-export class NgSelectModule { }
-
-export function provideNgSelect() {
-	return [
-		{
-			provide: SELECTION_MODEL_FACTORY,
-			useValue: DefaultSelectionModelFactory,
-		},
-	];
-}
+export class NgSelectModule {}

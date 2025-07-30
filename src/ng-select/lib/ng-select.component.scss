@@ -40,9 +40,7 @@
 			.ng-value-container {
 				.ng-placeholder,
 				.ng-value {
-					position: relative;
-					z-index: 1001;
-					user-select: text;
+					user-select: none;
 					cursor: default;
 				}
 			}
