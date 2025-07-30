@@ -1,5 +1,35 @@
 <p>In this example we are loading many items but only ~30 of them are rendered in the DOM. This allows to load as big data as you want.</p>
 
+<div style="width: 150px; border: 2px solid red; padding: 10px; margin-bottom: 20px;">
+	<h5>Virtual Scroll (Issue) - Dropdown width constrained</h5>
+	<ng-select
+		[items]="testItems"
+		[virtualScroll]="true"
+		bindLabel="label"
+		bindValue="value"
+		placeholder="Select"
+		appendTo="body">
+		<ng-template ng-option-tmp let-item="item">
+			{{ item.label }}
+		</ng-template>
+	</ng-select>
+</div>
+
+<div style="width: 150px; border: 2px solid green; padding: 10px; margin-bottom: 20px;">
+	<h5>No Virtual Scroll (Works) - Dropdown width adapts</h5>
+	<ng-select
+		[items]="testItems"
+		[virtualScroll]="false"
+		bindLabel="label"
+		bindValue="value"
+		placeholder="Select"
+		appendTo="body">
+		<ng-template ng-option-tmp let-item="item">
+			{{ item.label }}
+		</ng-template>
+	</ng-select>
+</div>
+
 <ng-select
 	[items]="photosBuffer"
 	[virtualScroll]="true"
