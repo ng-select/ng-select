@@ -71,6 +71,7 @@
 				tabindex="0"
 				[attr.tabindex]="tabFocusOnClear() ? 0 : -1"
 				title="{{ clearAllText() || config.clearAllText }}"
+				(click)="handleClearClick(); $event.stopPropagation()"
 				#clearButton>
 				<span class="ng-clear" aria-hidden="true">×</span>
 			</span>
