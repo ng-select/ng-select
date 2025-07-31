@@ -7,7 +7,6 @@ import {
 	ElementRef,
 	forwardRef,
 	HostAttributeToken,
-	HostBinding,
 	HostListener,
 	inject,
 	InjectionToken,
@@ -28,7 +27,7 @@ import {
 	contentChildren
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { combineLatest, merge, Subject } from 'rxjs';
+import { merge, Subject } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import {
@@ -81,18 +80,30 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent],
+	host: {
+		'[class.ng-select]': 'true',
+		'[class.ng-select-single]': '!multiple()',
+		'[class.ng-select-typeahead]': 'typeahead()',
+		'[class.ng-select-multiple]': 'multiple()',
+		'[class.ng-select-taggable]': 'addTag()',
+		'[class.ng-select-searchable]': 'searchable()',
+		'[class.ng-select-clearable]': 'clearable()',
+		'[class.ng-select-opened]': 'isOpen()',
+		'[class.ng-select-filtered]': 'filtered',
+		'[class.ng-select-disabled]': 'disabled()',
+	}
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
-	classes = inject(new HostAttributeToken('class'), { optional: true });
-	private autoFocus = inject(new HostAttributeToken('autofocus'), { optional: true });
-	config = inject(NgSelectConfig);
-	private _cd = inject(ChangeDetectorRef);
-	private _console = inject(ConsoleService);
+	readonly classes = inject(new HostAttributeToken('class'), { optional: true });
+	private readonly autoFocus = inject(new HostAttributeToken('autofocus'), { optional: true });
+	readonly config = inject(NgSelectConfig);
+	private readonly _cd = inject(ChangeDetectorRef);
+	private readonly _console = inject(ConsoleService);
 
-	readonly bindLabel = model<string>(undefined);
-	readonly bindValue = model<string>(undefined);
-	readonly appearance = model<string>(undefined);
+	// signals
+	public readonly _disabled = signal<boolean>(false);
 
+	// inputs
 	readonly ariaLabelDropdown = input<string>('Options List');
 	readonly ariaLabel = input<string | undefined>(undefined);
 	readonly markFirst = input(true, { transform: booleanAttribute });
@@ -132,22 +143,32 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly minTermLength = input(0, { transform: numberAttribute });
 	readonly editableSearchTerm = input(false, { transform: booleanAttribute });
 	readonly ngClass = input(null);
-	@HostBinding('class.ng-select-typeahead')
 	readonly typeahead = input<Subject<string>>(undefined);
-	@HostBinding('class.ng-select-multiple')
 	readonly multiple = input(false, { transform: booleanAttribute });
-	@HostBinding('class.ng-select-taggable')
 	readonly addTag = input<boolean | AddTagFn>(false);
-	@HostBinding('class.ng-select-searchable')
 	readonly searchable = input(true, { transform: booleanAttribute });
-	@HostBinding('class.ng-select-clearable')
 	readonly clearable = input(true, { transform: booleanAttribute });
-	@HostBinding('class.ng-select-opened')
+	readonly deselectOnClick = input<boolean>();
+	readonly clearSearchOnAdd = input(undefined);
+	readonly compareWith = input(undefined, {
+		transform: (fn: CompareWithFn | undefined) => {
+			if (fn !== undefined && fn !== null && !isFunction(fn)) {
+				throw Error('`compareWith` must be a function.');
+			}
+			return fn;
+		},
+	});
+
+	// models
+	readonly bindLabel = model<string>(undefined);
+	readonly bindValue = model<string>(undefined);
+	readonly appearance = model<string>(undefined);
 	readonly isOpen = model<boolean>(false);
+	readonly items = model([]);
 
 	// output events
-	readonly blurEvent = output<FocusEvent>({ alias: 'blur' });
-	readonly focusEvent = output<FocusEvent>({ alias: 'focus' });
+	readonly blurEvent = output<any>({ alias: 'blur' });
+	readonly focusEvent = output<any>({ alias: 'focus' });
 	readonly changeEvent = output<any>({ alias: 'change' });
 	readonly openEvent = output({ alias: 'open' });
 	readonly closeEvent = output({ alias: 'close' });
@@ -156,14 +177,36 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		items: any[];
 	}>({ alias: 'search' });
 	readonly clearEvent = output({ alias: 'clear' });
-	readonly addEvent = output({ alias: 'add' });
-	readonly removeEvent = output({ alias: 'remove' });
+	readonly addEvent = output<any>({ alias: 'add' });
+	readonly removeEvent = output<any>({ alias: 'remove' });
 	readonly scroll = output<{
 		start: number;
 		end: number;
 	}>({ alias: 'scroll' });
-	readonly scrollToEnd = output({ alias: 'scrollToEnd' });
-	// custom templates
+	readonly scrollToEnd = output<any>({ alias: 'scrollToEnd' });
+
+	// computed
+	readonly disabled = computed(() => this.readonly() || this._disabled());
+	readonly clearSearchOnAddValue = computed(() => {
+		if (isDefined(this.clearSearchOnAdd())) {
+			return this.clearSearchOnAdd();
+		}
+		if (isDefined(this.config.clearSearchOnAdd)) {
+			return this.config.clearSearchOnAdd;
+		}
+		return this.closeOnSelect();
+	});
+	readonly deselectOnClickValue = computed(() => {
+		if (isDefined(this.deselectOnClick())) {
+			return this.deselectOnClick();
+		}
+		if (isDefined(this.config.deselectOnClick)) {
+			return this.config.deselectOnClick;
+		}
+		return this.multiple();
+	});
+
+	// content child queries
 	readonly optionTemplate = contentChild(NgOptionTemplateDirective, { read: TemplateRef });
 	readonly optgroupTemplate = contentChild(NgOptgroupTemplateDirective, { read: TemplateRef });
 	readonly labelTemplate = contentChild(NgLabelTemplateDirective, { read: TemplateRef });
@@ -178,12 +221,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly loadingSpinnerTemplate = contentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef });
 	readonly clearButtonTemplate = contentChild(NgClearButtonTemplateDirective, { read: TemplateRef });
 
+	// view children queries
 	readonly dropdownPanel = viewChild(forwardRef(() => NgDropdownPanelComponent));
 	readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 	readonly clearButton = viewChild<ElementRef<HTMLSpanElement>>('clearButton');
+
+	// public variables
 	ngOptions = contentChildren(NgOptionComponent, { descendants: true });
 	ngOptionsObservable = toObservable(this.ngOptions);
-	@HostBinding('class.ng-select') useDefaultClass = true;
 	itemsList: ItemsList;
 	viewPortItems: NgOption[] = [];
 	searchTerm: string = null;
@@ -192,6 +237,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	focused: boolean;
 	escapeHTML = true;
 	tabFocusOnClear = signal<boolean>(true);
+
+	// private variables
 	private _itemsAreUsed: boolean;
 	private readonly _defaultLabel = 'label';
 	private _primitive: any;
@@ -211,53 +258,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.element = _elementRef.nativeElement;
 	}
 
-	@HostBinding('class.ng-select-filtered') get filtered() {
+	get filtered() {
 		return (!!this.searchTerm && this.searchable()) || this._isComposing;
 	}
-
-	@HostBinding('class.ng-select-single') get single() {
-		return !this.multiple();
-	}
-
-	public readonly items = model([]);
-
-	public readonly _disabled = signal<boolean>(false);
-
-	@HostBinding('class.ng-select-disabled') get disabled() {
-		return this.readonly() || this._disabled();
-	}
-
-	readonly compareWith = input(undefined, {
-		transform: (fn: CompareWithFn | undefined) => {
-			if (fn !== undefined && fn !== null && !isFunction(fn)) {
-				throw Error('`compareWith` must be a function.');
-			}
-			return fn;
-		},
-	});
-
-	readonly clearSearchOnAdd = input(undefined);
-
-	readonly clearSearchOnAddValue = computed(() => {
-		if (isDefined(this.clearSearchOnAdd())) {
-			return this.clearSearchOnAdd();
-		}
-		if (isDefined(this.config.clearSearchOnAdd)) {
-			return this.config.clearSearchOnAdd;
-		}
-		return this.closeOnSelect();
-	});
-
-	readonly deselectOnClick = input<boolean>();
-	readonly deselectOnClickValue = computed(() => {
-		if (isDefined(this.deselectOnClick())) {
-			return this.deselectOnClick();
-		}
-		if (isDefined(this.config.deselectOnClick)) {
-			return this.config.deselectOnClick;
-		}
-		return this.multiple();
-	});
 
 	get selectedItems(): NgOption[] {
 		return this.itemsList.selectedItems;
@@ -415,7 +418,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	handleMousedown($event: MouseEvent) {
-		if (this.disabled) {
+		if (this.disabled()) {
 			return;
 		}
 
@@ -508,7 +511,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	open() {
-		if (this.disabled || this.isOpen() || this._manualOpen) {
+		if (this.disabled() || this.isOpen() || this._manualOpen) {
 			return;
 		}
 
@@ -542,7 +545,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	toggleItem(item: NgOption) {
-		if (!item || item.disabled || this.disabled) {
+		if (!item || item.disabled || this.disabled()) {
 			return;
 		}
 
@@ -614,7 +617,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	showClear() {
-		return this.clearable() && (this.hasValue || this.searchTerm) && !this.disabled;
+		return this.clearable() && (this.hasValue || this.searchTerm) && !this.disabled();
 	}
 
 	focusOnClear() {
@@ -696,7 +699,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	onInputBlur($event: FocusEvent) {
 		this.element.classList.remove('ng-select-focused');
 		this.blurEvent.emit($event);
-		if (!this.isOpen() && !this.disabled) {
+		if (!this.isOpen() && !this.disabled()) {
 			this._onTouched();
 		}
 		if (this._editableSearchTerm) {

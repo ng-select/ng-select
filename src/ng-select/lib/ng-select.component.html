@@ -46,7 +46,7 @@
 				[attr.aria-label]="ariaLabel()"
 				[attr.id]="labelForId()"
 				[attr.tabindex]="tabIndex()"
-				[disabled]="disabled"
+				[disabled]="disabled()"
 				[readOnly]="!searchable() || itemsList.maxItemsSelected"
 				[value]="searchTerm ?? ''"
 				aria-autocomplete="list"
