@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgCollapseButtonTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-template-collapse-example',
 	templateUrl: './template-collapse-example.component.html',
 	styleUrls: ['./template-collapse-example.component.scss'],
-	standalone: false,
+	imports: [NgSelectComponent, NgCollapseButtonTemplateDirective, FormsModule],
 })
 export class TemplateCollapseExampleComponent {
 	selectedAccount = ['Adam'];

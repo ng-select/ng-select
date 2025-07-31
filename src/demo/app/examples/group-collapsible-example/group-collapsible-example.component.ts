@@ -1,10 +1,13 @@
+import { JsonPipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-group-collapsible-example',
 	templateUrl: './group-collapsible-example.component.html',
 	styleUrls: ['./group-collapsible-example.component.scss'],
-	standalone: false,
+	imports: [NgSelectComponent, FormsModule, JsonPipe],
 })
 export class GroupCollapsibleExampleComponent {
 	selectedAccount = ['Adam'];
