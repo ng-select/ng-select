@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { delay, map, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -19,9 +19,9 @@ export interface Person {
 	providedIn: 'root',
 })
 export class DataService {
-	private _gitHubAccountsCache = new Map<string, []>();
+	private http = inject(HttpClient);
 
-	constructor(private http: HttpClient) {}
+	private _gitHubAccountsCache = new Map<string, []>();
 
 	getGithubAccounts(term: string = null) {
 		if (this._gitHubAccountsCache.has(term)) {

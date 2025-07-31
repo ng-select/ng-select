@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EXAMPLE_COMPONENTS } from '../../examples/examples';
 import { ExampleViewerComponent } from '../example-viewer/example-viewer.component';
@@ -9,9 +9,9 @@ import { ExampleViewerComponent } from '../example-viewer/example-viewer.compone
 	imports: [ExampleViewerComponent],
 })
 export class RouteViewerComponent implements OnInit {
-	examples: string[];
+	private route = inject(ActivatedRoute);
 
-	constructor(private route: ActivatedRoute) {}
+	examples: string[];
 
 	ngOnInit() {
 		this.route.data.subscribe((data: { examples: string }) => {

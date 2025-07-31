@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, inject } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { StackblitzService } from './stackblitz.service';
 
@@ -15,15 +15,15 @@ import { StackblitzService } from './stackblitz.service';
 	],
 })
 export class StackblitzButtonComponent {
-	@Input() example: string;
+	private stackblitz = inject(StackblitzService);
 
-	constructor(private stackblitz: StackblitzService) {}
+	readonly example = input<string>(undefined);
 
 	async openExample() {
 		if (!environment.production) {
 			return;
 		}
 
-		await this.stackblitz.openNewProject(this.example);
+		await this.stackblitz.openNewProject(this.example());
 	}
 }
