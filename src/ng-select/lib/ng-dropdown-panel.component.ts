@@ -58,6 +58,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() items: NgOption[] = [];
+	@Input() showAddTag: boolean = false;
 	@Input() markedItem: NgOption;
 	@Input() position: DropdownPosition = 'auto';
 	@Input() appendTo: string;
@@ -140,7 +141,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	ngOnChanges(changes: SimpleChanges) {
 		if (changes.items) {
 			const change = changes.items;
-			this._onItemsChange(change.currentValue, change.firstChange);
+			this._onItemsOrShowAddTagChange(change.currentValue, this.showAddTag, change.firstChange);
+		}
+		if (changes.showAddTag) {
+			const change = changes.showAddTag;
+			this._onItemsOrShowAddTagChange(this.items, change.currentValue, change.firstChange);
 		}
 	}
 
@@ -254,11 +259,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		this._zone.run(() => this.outsideClick.emit());
 	}
 
-	private _onItemsChange(items: NgOption[], firstChange: boolean) {
+	private _onItemsOrShowAddTagChange(items: NgOption[], showAddTag: boolean, firstChange: boolean) {
 		this.items = items || [];
 		this._scrollToEndFired = false;
 		this.itemsLength = items.length;
-
+		if (showAddTag && !(items.length === 0)) {
+			this.itemsLength++;
+		}
 		if (this.virtualScroll) {
 			this._updateItemsRange(firstChange);
 		} else {
