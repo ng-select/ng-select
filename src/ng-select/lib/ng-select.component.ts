@@ -90,7 +90,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() ariaLabel: string | undefined;
 	@Input({ transform: booleanAttribute }) markFirst = true;
 	@Input() placeholder: string;
-	@Input() fixedPlaceholder: boolean = true;
+	@Input() fixedPlaceholder: boolean = false;
 	@Input() notFoundText: string;
 	@Input() typeToSearchText: string;
 	@Input() preventToggleOnRightClick: boolean = false;
@@ -303,7 +303,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	private get _isTypeahead() {
-		return this.typeahead && this.typeahead.observed;
+		return this.typeahead && this.typeahead.observers.length > 0;
 	}
 
 	private get _validTerm() {
@@ -420,10 +420,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	handleMousedown($event: MouseEvent) {
-		if (this.disabled) {
-			return;
-		}
-
 		if (this.preventToggleOnRightClick && $event.button === 2) {
 			return false;
 		}

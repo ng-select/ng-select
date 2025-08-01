@@ -4580,7 +4580,6 @@ describe('Grouping', () => {
 			NgSelectGroupingTestComponent,
 			`<ng-select [items]="accounts"
                         groupBy="country"
-                        bindLabel="name"
                         [(ngModel)]="selectedAccount">
                 </ng-select>`,
 		);
