@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { concat, Observable, of, Subject } from 'rxjs';
 import { DataService, Person } from '../data.service';
 import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
@@ -13,12 +13,12 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 	imports: [NgSelectComponent, FormsModule, AsyncPipe, JsonPipe],
 })
 export class SearchAutocompleteExampleComponent implements OnInit {
+	private dataService = inject(DataService);
+
 	people$: Observable<Person[]>;
 	peopleLoading = false;
 	peopleInput$ = new Subject<string>();
 	selectedPersons: Person[] = <any>[{ name: 'Karyn Wright' }, { name: 'Other' }];
-
-	constructor(private dataService: DataService) {}
 
 	ngOnInit() {
 		this.loadPeople();
