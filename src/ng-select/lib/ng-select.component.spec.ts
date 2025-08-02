@@ -4,16 +4,152 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import 'zone.js/testing';
-import { getNgSelectElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
+import { getNgSelectElement, getNgSelectNativeElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
 import { MockConsole, MockNgZone } from '../testing/mocks';
 import { NgSelectConfig } from './config.service';
 import { ConsoleService } from './console.service';
-import { NgSelectComponent } from './ng-select.component';
+import { AddTagFn, NgSelectComponent } from './ng-select.component';
 import { NgSelectModule } from './ng-select.module';
 import { KeyCode, NgOption } from './ng-select.types';
 import { SIGNAL } from '@angular/core/primitives/signals';
 
 describe('NgSelectComponent', () => {
+
+	const selectTypes = [
+		{ name: 'single', classContains: 'ng-select-single', classNotContains: 'ng-select-multiple', isMultiple: false },
+		{ name: 'multiple', classContains: 'ng-select-multiple', classNotContains: 'ng-select-single', isMultiple: true },
+	];
+
+	selectTypes.forEach(({ name, classContains, classNotContains, isMultiple }) => {
+		describe(`Check class existence of classes on ${name} select scenario`, () => {
+			let fixture: ComponentFixture<NgSelectTestComponent>;
+			let componentInstance: NgSelectTestComponent;
+
+			beforeEach(() => {
+				fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [typeahead]="typeahead"
+						[multiple]="${isMultiple}"
+						[clearable]="clearable"
+						[searchable]="searchable"
+						[readonly]="readonly"
+						[addTag]="addTag" />`);
+				componentInstance = fixture.componentInstance;
+				fixture.detectChanges();
+
+				// set default values
+				componentInstance.searchable = false;
+				componentInstance.clearable = false;
+				fixture.detectChanges();
+			});
+
+			it('should have ng-select class on host element', () => {
+				const ngSelectEl = getNgSelectNativeElement(fixture);
+				expect(ngSelectEl).toHaveClass('ng-select');
+				expect(ngSelectEl).toHaveClass(classContains);
+
+				expect(ngSelectEl).not.toHaveClass(classNotContains);
+				expect(ngSelectEl).not.toHaveClass('ng-select-typeahead');
+				expect(ngSelectEl).not.toHaveClass('ng-select-taggable');
+				expect(ngSelectEl).not.toHaveClass('ng-select-searchable');
+				expect(ngSelectEl).not.toHaveClass('ng-select-clearable');
+				expect(ngSelectEl).not.toHaveClass('ng-select-opened');
+				expect(ngSelectEl).not.toHaveClass('ng-select-filtered');
+				expect(ngSelectEl).not.toHaveClass('ng-select-disabled');
+			});
+
+			it('should have ng-select-typeahead class when typeahead is true', () => {
+				componentInstance.typeahead = true;
+				fixture.detectChanges();
+
+				const ngSelectEl = getNgSelectNativeElement(fixture);
+				expect(ngSelectEl).toHaveClass('ng-select');
+				expect(ngSelectEl).toHaveClass('ng-select-typeahead');
+				expect(ngSelectEl).toHaveClass(classContains);
+
+				expect(ngSelectEl).not.toHaveClass(classNotContains);
+				expect(ngSelectEl).not.toHaveClass('ng-select-taggable');
+				expect(ngSelectEl).not.toHaveClass('ng-select-searchable');
+				expect(ngSelectEl).not.toHaveClass('ng-select-clearable');
+				expect(ngSelectEl).not.toHaveClass('ng-select-opened');
+				expect(ngSelectEl).not.toHaveClass('ng-select-filtered');
+				expect(ngSelectEl).not.toHaveClass('ng-select-disabled');
+			});
+
+			it('should have appropriate ng-select-typeahead when taggable is true', () => {
+				componentInstance.addTag = () => 'new tag';
+				fixture.detectChanges();
+
+				const ngSelectEl = getNgSelectNativeElement(fixture);
+				expect(ngSelectEl).toHaveClass('ng-select');
+				expect(ngSelectEl).toHaveClass('ng-select-taggable');
+				expect(ngSelectEl).toHaveClass(classContains);
+
+				expect(ngSelectEl).not.toHaveClass(classNotContains);
+				expect(ngSelectEl).not.toHaveClass('ng-select-typeahead');
+				expect(ngSelectEl).not.toHaveClass('ng-select-searchable');
+				expect(ngSelectEl).not.toHaveClass('ng-select-clearable');
+				expect(ngSelectEl).not.toHaveClass('ng-select-opened');
+				expect(ngSelectEl).not.toHaveClass('ng-select-filtered');
+				expect(ngSelectEl).not.toHaveClass('ng-select-disabled');
+			});
+
+			it('should have appropriate ng-select-typeahead when searchable is true', () => {
+				componentInstance.searchable = true;
+				fixture.detectChanges();
+
+				const ngSelectEl = getNgSelectNativeElement(fixture);
+				expect(ngSelectEl).toHaveClass('ng-select');
+				expect(ngSelectEl).toHaveClass('ng-select-searchable');
+				expect(ngSelectEl).toHaveClass(classContains);
+
+				expect(ngSelectEl).not.toHaveClass(classNotContains);
+				expect(ngSelectEl).not.toHaveClass('ng-select-typeahead');
+				expect(ngSelectEl).not.toHaveClass('ng-select-taggable');
+				expect(ngSelectEl).not.toHaveClass('ng-select-clearable');
+				expect(ngSelectEl).not.toHaveClass('ng-select-opened');
+				expect(ngSelectEl).not.toHaveClass('ng-select-filtered');
+				expect(ngSelectEl).not.toHaveClass('ng-select-disabled');
+			});
+
+			it('should have appropriate ng-select-typeahead when clearable is true', () => {
+				componentInstance.clearable = true;
+				fixture.detectChanges();
+
+				const ngSelectEl = getNgSelectNativeElement(fixture);
+				expect(ngSelectEl).toHaveClass('ng-select');
+				expect(ngSelectEl).toHaveClass('ng-select-clearable');
+				expect(ngSelectEl).toHaveClass(classContains);
+
+				expect(ngSelectEl).not.toHaveClass(classNotContains);
+				expect(ngSelectEl).not.toHaveClass('ng-select-typeahead');
+				expect(ngSelectEl).not.toHaveClass('ng-select-taggable');
+				expect(ngSelectEl).not.toHaveClass('ng-select-searchable');
+				expect(ngSelectEl).not.toHaveClass('ng-select-opened');
+				expect(ngSelectEl).not.toHaveClass('ng-select-filtered');
+				expect(ngSelectEl).not.toHaveClass('ng-select-disabled');
+			});
+
+			it('should have appropriate ng-select-typeahead when disabled is true', () => {
+				componentInstance.readonly = true;
+				fixture.detectChanges();
+
+				const ngSelectEl = getNgSelectNativeElement(fixture);
+				expect(ngSelectEl).toHaveClass('ng-select');
+				expect(ngSelectEl).toHaveClass('ng-select-disabled');
+				expect(ngSelectEl).toHaveClass(classContains);
+
+				expect(ngSelectEl).not.toHaveClass(classNotContains);
+				expect(ngSelectEl).not.toHaveClass('ng-select-typeahead');
+				expect(ngSelectEl).not.toHaveClass('ng-select-taggable');
+				expect(ngSelectEl).not.toHaveClass('ng-select-searchable');
+				expect(ngSelectEl).not.toHaveClass('ng-select-opened');
+				expect(ngSelectEl).not.toHaveClass('ng-select-filtered');
+				expect(ngSelectEl).not.toHaveClass('ng-select-clearable');
+			});
+		});
+	});
+
 	describe('Data source', () => {
 		it('should set items from primitive numbers array', fakeAsync(() => {
 			const fixture = createTestingModule(
@@ -2662,6 +2798,12 @@ describe('NgSelectComponent', () => {
 			);
 		});
 
+		it('should have relevant classes', () => {
+			const selectElement = getNgSelectNativeElement(fixture);
+			expect(selectElement).toHaveClass('ng-select');
+			expect(selectElement).toHaveClass('ng-select-multiple');
+		});
+
 		it('should select several items', fakeAsync(() => {
 			selectOption(fixture, KeyCode.ArrowDown, 1);
 			selectOption(fixture, KeyCode.ArrowDown, 2);
@@ -5099,7 +5241,7 @@ class NgSelectTestComponent {
 	searchable = true;
 	openOnEnter = undefined;
 	maxSelectedItems = undefined;
-	addTag = false;
+	addTag: boolean | AddTagFn = false;
 	typeahead = undefined;
 	preventToggleOnRightClick = false;
 	searchWhileComposing = true;
