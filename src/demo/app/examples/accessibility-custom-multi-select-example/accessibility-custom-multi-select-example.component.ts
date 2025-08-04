@@ -2,11 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { KeyCode } from 'src/ng-select/lib/ng-select.types';
 import { DataService } from '../data.service';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { AsyncPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-    selector: 'accessibility-custom-multi-select-example',
+    selector: 'ng-accessibility-custom-multi-select-example',
     templateUrl: './accessibility-custom-multi-select-example.component.html',
-    styleUrls: ['./accessibility-custom-multi-select-example.component.scss']
+    styleUrls: ['./accessibility-custom-multi-select-example.component.scss'],
+    imports: [NgSelectComponent, FormsModule, AsyncPipe]
 })
 export class AccessibilityCustomMultiSelectExampleComponent implements OnInit {
 

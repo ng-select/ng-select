@@ -1065,10 +1065,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	triggerClick(event: KeyboardEvent, element: HTMLElement): void {
-		const isClick =
-			['Enter', 'Space'].includes(event.code) || [KeyCode.Enter, KeyCode.Space].includes(event.keyCode);
-
-		if (isClick) {
+		if (this.isClick(event)) {
 			element.click();
 			event.preventDefault();
 			event.stopPropagation();
@@ -1076,16 +1073,19 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	clearAllItems(event: KeyboardEvent): void {
-		const isClick =
-			['Enter', 'Space'].includes(event.code) || [KeyCode.Enter, KeyCode.Space].includes(event.keyCode);
-
-		if (isClick) {
+		if (this.isClick(event)) {
 			this.handleClearClick();
 			event.preventDefault();
 			event.stopPropagation();
 		}
 	}
 
+	private isClick(event: KeyboardEvent): boolean {
+		return ['Enter', 'Space'].includes(event.code) ||
+			['Enter', ' '].includes(event.key) ||
+			(event as any).keyCode === 13 || // Enter
+			(event as any).keyCode === 32;    // Space
+	}
 	/**
 	 * Gets virtual scroll value from input or from config
 	 *
