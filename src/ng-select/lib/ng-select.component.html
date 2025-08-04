@@ -15,7 +15,11 @@
 			@for (item of selectedItems; track trackByOption($index, item)) {
 				<div [class.ng-value-disabled]="item.disabled" class="ng-value">
 					<ng-template #defaultLabelTemplate>
-						<span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">×</span>
+						<span #removeItem role="button" tabindex="0" 
+                        attr.aria-label="{{ removeText }} {{ item.label }}" 
+                        title="{{ removeText }} {{ item.label }}" 
+                        class="ng-value-icon left" (click)="unselect(item);" 
+                        (keydown)="triggerClick($event ,removeItem)">×</span>
 						<span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
 					</ng-template>
 					<ng-template
@@ -44,6 +48,8 @@
 				[attr.aria-controls]="isOpen ? dropdownId : null"
 				[attr.aria-expanded]="isOpen"
 				[attr.aria-label]="ariaLabel"
+                attr.aria-labelledby="{{ labelId }} {{ labelForId }}"
+                attr.aria-label="{{ multiple || selectedItems.length < 1 ? placeholder : selectedItems[0]?.label }}"
 				[attr.id]="labelForId"
 				[attr.tabindex]="tabIndex"
 				[disabled]="disabled"
@@ -71,6 +77,8 @@
 				tabindex="0"
 				[attr.tabindex]="tabFocusOnClear() ? 0 : -1"
 				title="{{ clearAllText }}"
+                attr.aria-label="{{ clearAllText }}"
+                (keydown)="clearAllItems($event)"
 				#clearButton>
 				<span class="ng-clear" aria-hidden="true">×</span>
 			</span>
@@ -152,7 +160,8 @@
 		</ng-container>
 		@if (showNoItemsFound()) {
 			<ng-template #defaultNotFoundTemplate>
-				<div class="ng-option ng-option-disabled">{{ notFoundText }}</div>
+				<div class="ng-option ng-option-disabled" 
+                role="alert" aria-live="polite">{{ notFoundText }}</div>
 			</ng-template>
 			<ng-template
 				[ngTemplateOutlet]="notFoundTemplate || defaultNotFoundTemplate"
@@ -161,13 +170,15 @@
 		}
 		@if (showTypeToSearch()) {
 			<ng-template #defaultTypeToSearchTemplate>
-				<div class="ng-option ng-option-disabled">{{ typeToSearchText }}</div>
+				<div class="ng-option ng-option-disabled"
+                role="alert" aria-live="polite">{{ typeToSearchText }}</div>
 			</ng-template>
 			<ng-template [ngTemplateOutlet]="typeToSearchTemplate || defaultTypeToSearchTemplate"></ng-template>
 		}
 		@if (loading && itemsList.filteredItems.length === 0) {
 			<ng-template #defaultLoadingTextTemplate>
-				<div class="ng-option ng-option-disabled">{{ loadingText }}</div>
+				<div class="ng-option ng-option-disabled"
+                role="alert" aria-live="polite">{{ loadingText }}</div>
 			</ng-template>
 			<ng-template
 				[ngTemplateOutlet]="loadingTextTemplate || defaultLoadingTextTemplate"

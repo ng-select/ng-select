@@ -15,9 +15,10 @@ export class MultiSelectCustomExampleComponent implements OnInit {
 	githubUsers$: Observable<any[]>;
 	selectedUsers = ['anjmao', 'anjmittu', 'anjmendoza'];
 
-	constructor(private dataService: DataService) {}
+    constructor(private dataService: DataService) { }
 
-	ngOnInit() {
-		this.githubUsers$ = this.dataService.getGithubAccounts('anjm');
-	}
+    ngOnInit() {
+        this.githubUsers$ = this.dataService.getGithubAccounts('anjm');
+    }
+
 }
