@@ -14,6 +14,8 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 ## Versions
 
+**Warning**: Do not use versions 15.2.0, 16.0.0, 17.0.0, 18.0.0, 19.0.0, 20.0.0 as they contain unresolved issues
+
 | Angular          |     ng-select      |
 |------------------|:------------------:|
 | >=20.0.0 <21.0.0 | <=15.1.3, >=20.0.1 |
