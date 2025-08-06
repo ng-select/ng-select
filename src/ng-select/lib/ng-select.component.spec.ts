@@ -1,6 +1,6 @@
 import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import 'zone.js/testing';
@@ -4984,9 +4984,80 @@ describe('User defined keyDown handler', () => {
 	}));
 });
 
+describe('Accessibility - Required Attribute', () => {
+	it('should not add required attribute when no FormControl', fakeAsync(() => {
+		const fixture = createTestingModule(
+			NgSelectTestComponent,
+			`<ng-select [items]="cities" bindLabel="name"></ng-select>`
+		);
+
+		tickAndDetectChanges(fixture);
+		const input = fixture.debugElement.query(By.css('input'));
+		
+		expect(input.nativeElement.hasAttribute('required')).toBe(false);
+	}));
+
+	it('should not add required attribute when FormControl has no validators', fakeAsync(() => {
+		const fixture = createTestingModule(
+			NgSelectReactiveFormTestComponent,
+			`<ng-select [items]="cities" bindLabel="name" [formControl]="cityControl"></ng-select>`
+		);
+
+		tickAndDetectChanges(fixture);
+		const input = fixture.debugElement.query(By.css('input'));
+		
+		expect(input.nativeElement.hasAttribute('required')).toBe(false);
+	}));
+
+	it('should add required attribute when FormControl has required validator', fakeAsync(() => {
+		const fixture = createTestingModule(
+			NgSelectReactiveFormTestComponent,
+			`<ng-select [items]="cities" bindLabel="name" [formControl]="requiredCityControl"></ng-select>`
+		);
+
+		tickAndDetectChanges(fixture);
+		const input = fixture.debugElement.query(By.css('input'));
+		
+		expect(input.nativeElement.hasAttribute('required')).toBe(true);
+		expect(input.nativeElement.getAttribute('required')).toBe('true');
+	}));
+
+	it('should add required attribute when FormControl has multiple validators including required', fakeAsync(() => {
+		const fixture = createTestingModule(
+			NgSelectReactiveFormTestComponent,
+			`<ng-select [items]="cities" bindLabel="name" [formControl]="multiValidatorControl"></ng-select>`
+		);
+
+		tickAndDetectChanges(fixture);
+		const input = fixture.debugElement.query(By.css('input'));
+		
+		expect(input.nativeElement.hasAttribute('required')).toBe(true);
+		expect(input.nativeElement.getAttribute('required')).toBe('true');
+	}));
+
+	it('should remove required attribute when validators are cleared', fakeAsync(() => {
+		const fixture = createTestingModule(
+			NgSelectReactiveFormTestComponent,
+			`<ng-select [items]="cities" bindLabel="name" [formControl]="requiredCityControl"></ng-select>`
+		);
+
+		tickAndDetectChanges(fixture);
+		let input = fixture.debugElement.query(By.css('input'));
+		expect(input.nativeElement.hasAttribute('required')).toBe(true);
+
+		// Clear validators
+		fixture.componentInstance.requiredCityControl.clearValidators();
+		fixture.componentInstance.requiredCityControl.updateValueAndValidity();
+		tickAndDetectChanges(fixture);
+
+		input = fixture.debugElement.query(By.css('input'));
+		expect(input.nativeElement.hasAttribute('required')).toBe(false);
+	}));
+});
+
 function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectConfig: NgSelectConfig | null = null): ComponentFixture<T> {
 	TestBed.configureTestingModule({
-		imports: [FormsModule, NgSelectModule],
+		imports: [FormsModule, ReactiveFormsModule, NgSelectModule],
 		declarations: [cmp],
 		providers: [
 			{ provide: ErrorHandler, useClass: TestsErrorHandler },
@@ -5256,4 +5327,22 @@ class NgSelectGroupingTestComponent {
 	groupByFn = (item) => item.child.name;
 
 	groupValueFn = (key, _) => ({ group: key });
+}
+
+@Component({
+	template: ``,
+	standalone: false,
+})
+class NgSelectReactiveFormTestComponent {
+	@ViewChild(NgSelectComponent, { static: false }) select: NgSelectComponent;
+	
+	cities = [
+		{ id: 1, name: 'Vilnius' },
+		{ id: 2, name: 'Kaunas' },
+		{ id: 3, name: 'Pabrade' },
+	];
+	
+	cityControl = new FormControl();
+	requiredCityControl = new FormControl('', Validators.required);
+	multiValidatorControl = new FormControl('', [Validators.required, Validators.minLength(3)]);
 }

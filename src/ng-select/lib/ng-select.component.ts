@@ -13,6 +13,7 @@ import {
 	HostBinding,
 	HostListener,
 	Inject,
+	Injector,
 	InjectionToken,
 	input,
 	Input,
@@ -29,7 +30,7 @@ import {
 	ViewChild,
 	ViewEncapsulation,
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NgControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { merge, Subject } from 'rxjs';
 import { debounceTime, filter, map, startWith, takeUntil, tap } from 'rxjs/operators';
 
@@ -178,6 +179,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	private _isComposing = false;
 	private readonly _destroy$ = new Subject<void>();
 	private readonly _keyPress$ = new Subject<string>();
+	private _ngControl: NgControl | null = null;
 
 	constructor(
 		@Attribute('class') public classes: string,
@@ -187,10 +189,17 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		_elementRef: ElementRef<HTMLElement>,
 		private readonly _cd: ChangeDetectorRef,
 		private readonly _console: ConsoleService,
+		private readonly _injector: Injector,
 	) {
 		this._mergeGlobalConfig(config);
 		this.itemsList = new ItemsList(this, newSelectionModel ? newSelectionModel() : DefaultSelectionModelFactory());
 		this.element = _elementRef.nativeElement;
+		// Get NgControl after construction to avoid circular dependency
+		try {
+			this._ngControl = this._injector.get(NgControl, null);
+		} catch {
+			// NgControl not available, that's fine
+		}
 	}
 
 	@HostBinding('class.ng-select-filtered') get filtered() {
@@ -309,6 +318,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	private get _validTerm() {
 		const term = this.searchTerm?.trim();
 		return term && term.length >= this.minTermLength;
+	}
+
+	get isRequired(): boolean {
+		if (!this._ngControl || !this._ngControl.control) {
+			return false;
+		}
+		
+		const control = this._ngControl.control;
+		const validator = control.validator && control.validator({} as any);
+		return validator && validator['required'];
 	}
 
 	@Input() keyDownFn = (_: KeyboardEvent) => true;
