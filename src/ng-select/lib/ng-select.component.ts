@@ -194,12 +194,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this._mergeGlobalConfig(config);
 		this.itemsList = new ItemsList(this, newSelectionModel ? newSelectionModel() : DefaultSelectionModelFactory());
 		this.element = _elementRef.nativeElement;
-		// Get NgControl after construction to avoid circular dependency
-		try {
-			this._ngControl = this._injector.get(NgControl, null);
-		} catch {
-			// NgControl not available, that's fine
-		}
 	}
 
 	@HostBinding('class.ng-select-filtered') get filtered() {
@@ -326,8 +320,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 		
 		const control = this._ngControl.control;
-		const validator = control.validator && control.validator({} as any);
-		return validator && validator['required'];
+		if (!control.validator) {
+			return false;
+		}
+		
+		// Test the validator with null/empty value to see if it returns a 'required' error
+		const validationResult = control.validator({ value: null } as any);
+		return validationResult && validationResult['required'] === true;
 	}
 
 	@Input() keyDownFn = (_: KeyboardEvent) => true;
@@ -340,6 +339,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	ngOnInit() {
 		this._handleKeyPresses();
 		this._setInputAttributes();
+		// Get NgControl after OnInit to ensure proper timing
+		try {
+			this._ngControl = this._injector.get(NgControl, null);
+		} catch {
+			// NgControl not available, that's fine
+		}
 	}
 
 	ngOnChanges(changes: SimpleChanges) {

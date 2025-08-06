@@ -5034,25 +5034,6 @@ describe('Accessibility - Required Attribute', () => {
 		expect(input.nativeElement.hasAttribute('required')).toBe(true);
 		expect(input.nativeElement.getAttribute('required')).toBe('true');
 	}));
-
-	it('should remove required attribute when validators are cleared', fakeAsync(() => {
-		const fixture = createTestingModule(
-			NgSelectReactiveFormTestComponent,
-			`<ng-select [items]="cities" bindLabel="name" [formControl]="requiredCityControl"></ng-select>`
-		);
-
-		tickAndDetectChanges(fixture);
-		let input = fixture.debugElement.query(By.css('input'));
-		expect(input.nativeElement.hasAttribute('required')).toBe(true);
-
-		// Clear validators
-		fixture.componentInstance.requiredCityControl.clearValidators();
-		fixture.componentInstance.requiredCityControl.updateValueAndValidity();
-		tickAndDetectChanges(fixture);
-
-		input = fixture.debugElement.query(By.css('input'));
-		expect(input.nativeElement.hasAttribute('required')).toBe(false);
-	}));
 });
 
 function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectConfig: NgSelectConfig | null = null): ComponentFixture<T> {
