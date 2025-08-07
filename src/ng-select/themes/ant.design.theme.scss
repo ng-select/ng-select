@@ -1,4 +1,5 @@
-@import 'mixins';
+@use 'sass:color';
+@use './mixins';
 
 $ng-select-highlight: #40a9ff !default;
 $ng-select-primary-text: rgba(0, 0, 0, 0.65) !default;
@@ -30,7 +31,7 @@ $ng-select-marked: #e6f7ff !default;
 			.ng-arrow-wrapper {
 				transform: rotate(180deg);
 				opacity: 1;
-				@include rtl {
+				@include mixins.rtl {
 					transform: rotate(-180deg);
 				}
 			}
@@ -95,7 +96,7 @@ $ng-select-marked: #e6f7ff !default;
 			}
 			.ng-placeholder {
 				font-size: 14px;
-				color: lighten($ng-select-primary-text, 60);
+				color: color.adjust($ng-select-primary-text, $lightness: 60%);
 			}
 		}
 	}
@@ -111,7 +112,7 @@ $ng-select-marked: #e6f7ff !default;
 					left: 0;
 					padding-left: 10px;
 					padding-right: 50px;
-					@include rtl {
+					@include mixins.rtl {
 						padding-right: 10px;
 						padding-left: 50px;
 					}
@@ -132,7 +133,7 @@ $ng-select-marked: #e6f7ff !default;
 			min-height: 32px;
 			padding-left: 5px;
 
-			@include rtl {
+			@include mixins.rtl {
 				padding-right: 5px;
 				padding-left: 11px;
 				.ng-value-container .ng-placeholder {
@@ -147,11 +148,11 @@ $ng-select-marked: #e6f7ff !default;
 					margin-right: 4px;
 					font-size: 0.9em;
 					background-color: #fafafa;
-					border: 1px solid lighten($ng-select-border, 6);
+					border: 1px solid color.adjust($ng-select-border, $lightness: 6%);
 					border-radius: 2px;
 					height: 24px;
 					line-height: 22px;
-					@include rtl {
+					@include mixins.rtl {
 						margin-right: 0;
 						margin-left: 4px;
 					}
@@ -160,7 +161,7 @@ $ng-select-marked: #e6f7ff !default;
 						color: $ng-select-disabled-text;
 						.ng-value-label {
 							padding-left: 5px;
-							@include rtl {
+							@include mixins.rtl {
 								padding-left: 0;
 								padding-right: 5px;
 							}
@@ -190,7 +191,7 @@ $ng-select-marked: #e6f7ff !default;
 	}
 	.ng-clear-wrapper {
 		opacity: 0;
-		color: darken($ng-select-border, 20);
+		color: color.adjust($ng-select-border, $lightness: -20%);
 		background: rgba(0, 0, 0, 0.25);
 		width: 12px;
 		height: 12px;
@@ -200,7 +201,7 @@ $ng-select-marked: #e6f7ff !default;
 		transition: color 0.3s ease;
 		position: absolute;
 		right: 13px;
-		@include rtl {
+		@include mixins.rtl {
 			left: 13px;
 			right: auto;
 		}
@@ -223,7 +224,7 @@ $ng-select-marked: #e6f7ff !default;
 	.ng-spinner-zone {
 		padding: 5px 5px 0 0;
 
-		@include rtl {
+		@include mixins.rtl {
 			padding: 5px 0 0 5px;
 		}
 	}
@@ -253,23 +254,23 @@ $ng-select-marked: #e6f7ff !default;
 	left: 0;
 	&.ng-select-top {
 		bottom: 100%;
-		border-bottom-color: lighten($ng-select-border, 10);
+		border-bottom-color: color.adjust($ng-select-border, $lightness: 10%);
 	}
 	&.ng-select-right {
 		left: 100%;
 		top: 0;
-		border-bottom-color: lighten($ng-select-border, 10);
+		border-bottom-color: color.adjust($ng-select-border, $lightness: 10%);
 		margin-top: 0;
 		margin-left: 4px;
 	}
 	&.ng-select-bottom {
 		top: 100%;
-		border-top-color: lighten($ng-select-border, 10);
+		border-top-color: color.adjust($ng-select-border, $lightness: 10%);
 	}
 	&.ng-select-left {
 		left: calc(-100% - 4px);
 		top: 0;
-		border-bottom-color: lighten($ng-select-border, 10);
+		border-bottom-color: color.adjust($ng-select-border, $lightness: 10%);
 		margin-top: 0;
 	}
 	.ng-dropdown-header {
@@ -332,7 +333,7 @@ $ng-select-marked: #e6f7ff !default;
 			}
 			&.ng-option-child {
 				padding-left: 20px;
-				@include rtl {
+				@include mixins.rtl {
 					padding-right: 20px;
 					padding-left: 0;
 				}
@@ -344,7 +345,7 @@ $ng-select-marked: #e6f7ff !default;
 				font-size: 80%;
 				font-weight: 400;
 				padding-right: 5px;
-				@include rtl {
+				@include mixins.rtl {
 					padding-left: 5px;
 					padding-right: 0;
 				}
@@ -352,7 +353,7 @@ $ng-select-marked: #e6f7ff !default;
 		}
 	}
 
-	@include rtl {
+	@include mixins.rtl {
 		direction: rtl;
 		text-align: right;
 	}
