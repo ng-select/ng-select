@@ -70,5 +70,7 @@
       }
     }
   ],
-  "extends": ["prettier"]
+  "extends": [
+    "prettier"
+  ]
 }
