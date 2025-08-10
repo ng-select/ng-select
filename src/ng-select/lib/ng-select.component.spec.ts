@@ -4251,13 +4251,9 @@ describe('NgSelectComponent', () => {
 				fixture.componentInstance.cities = [...fixture.componentInstance.cities];
 				tickAndDetectChanges(fixture);
 				triggerMousedown = () => {
-					const control = fixture.debugElement.query(By.css('.ng-select-container'));
-					control.triggerEventHandler(
-						'mousedown',
-						createEvent({
-							classList: { contains: (term) => term === 'ng-clear-wrapper' },
-						}),
-					);
+					const clearButton = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
+					const event = { stopPropagation: jasmine.createSpy('stopPropagation') };
+					clearButton.triggerEventHandler('click', event);
 				};
 			}));
 
