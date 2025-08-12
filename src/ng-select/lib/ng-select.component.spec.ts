@@ -4212,13 +4212,8 @@ describe('NgSelectComponent', () => {
 				fixture.componentInstance.cities = [...fixture.componentInstance.cities];
 				tickAndDetectChanges(fixture);
 				triggerMousedown = () => {
-					const control = fixture.debugElement.query(By.css('.ng-select-container'));
-					control.triggerEventHandler(
-						'mousedown',
-						createEvent({
-							classList: { contains: (term) => term === 'ng-clear-wrapper' },
-						}),
-					);
+					const clearButton = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
+					clearButton.triggerEventHandler('click', createEvent({}));
 				};
 			}));
 
@@ -4249,6 +4244,19 @@ describe('NgSelectComponent', () => {
 				triggerMousedown();
 				tickAndDetectChanges(fixture);
 				expect(fixture.componentInstance.select.isOpen).toBe(false);
+			}));
+
+			it('should respond to click events for accessibility compliance', fakeAsync(() => {
+				// Test that mousedown alone doesn't trigger clear
+				const clearButton = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
+				clearButton.triggerEventHandler('mousedown', createEvent({}));
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.selectedCities.length).toBe(2); // Should not have cleared
+
+				// Test that click does trigger clear
+				clearButton.triggerEventHandler('click', createEvent({}));
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.selectedCities.length).toBe(1); // Should have cleared
 			}));
 
 			it('clear button should not appear if select is disabled', fakeAsync(() => {
