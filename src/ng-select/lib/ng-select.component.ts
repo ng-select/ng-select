@@ -453,7 +453,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 
 		if (target.classList.contains('ng-clear-wrapper')) {
-			this.handleClearClick();
+			// Don't handle clear on mousedown - let click event handle it
 			return;
 		}
 
@@ -485,7 +485,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 	}
 
-	handleClearClick() {
+	handleClearClick(_event?: MouseEvent) {
 		if (this.hasValue) {
 			this.itemsList.clearSelected(true);
 			this._updateNgModel();
