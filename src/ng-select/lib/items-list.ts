@@ -244,18 +244,16 @@ export class ItemsList {
 	mapSelectedItems() {
 		const multiple = this._ngSelect.multiple;
 		for (const selected of this.selectedItems) {
-			let value: any;
+			let item: NgOption | null = null;
+
+			// When compareWith is used, we need to find the item using the original selected value rather than the extracted bindValue, since compareWith expects to compare against the original value
 			if (this._ngSelect.compareWith) {
-				// When compareWith is provided, use the original value to allow proper comparison
-				value = selected.value;
-			} else if (this._ngSelect.bindValue) {
-				// When bindValue is used without compareWith, extract the bound value
-				value = this.resolveNested(selected.value, this._ngSelect.bindValue);
+				item = this._items.find((item) => this._ngSelect.compareWith(item.value, selected.value));
 			} else {
-				// Default case - use the selected value as-is
-				value = selected.value;
+				const value = this._ngSelect.bindValue ? this.resolveNested(selected.value, this._ngSelect.bindValue) : selected.value;
+				item = isDefined(value) ? this.findItem(value) : null;
 			}
-			const item = isDefined(value) ? this.findItem(value) : null;
+
 			this._selectionModel.unselect(selected, multiple);
 			this._selectionModel.select(item || selected, multiple, this._ngSelect.selectableGroupAsModel);
 		}
