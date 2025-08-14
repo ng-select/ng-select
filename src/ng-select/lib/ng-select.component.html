@@ -77,9 +77,10 @@
 				tabindex="0"
 				[attr.tabindex]="tabFocusOnClear() ? 0 : -1"
 				title="{{ clearAllText }}"
-                attr.aria-label="{{ clearAllText }}"
-                (keydown)="clearAllItems($event)"
-				#clearButton>
+        #clearButton
+				(click)="handleClearClick($event)">
+        attr.aria-label="{{ clearAllText }}"
+        (keydown)="clearAllItems($event)">
 				<span class="ng-clear" aria-hidden="true">×</span>
 			</span>
 		}
