@@ -49,6 +49,11 @@ import { SearchEditableExampleComponent } from './search-editable-example/search
 import { TemplatePlaceholderExampleComponent } from './template-placeholder-example/template-placeholder-example.component';
 import { FixedPlaceholderExampleComponent } from './fixed-placeholder-example/fixed-placeholder-example.component';
 import { TemplateClearExampleComponent } from './template-clear-example/template-clear-example.component';
+import { AccessibilityTestExampleComponent } from './accessibility-test-example/accessibility-test-example.component';
+// eslint-disable-next-line max-len
+import { AccessibilityCustomLabelExampleComponent } from './accessibility-custom-label-example/accessibility-custom-label-example.component';
+// eslint-disable-next-line max-len
+import { AccessibilityCustomMultiSelectExampleComponent } from './accessibility-custom-multi-select-example/accessibility-custom-multi-select-example.component';
 
 const examples = [
 	DataSourceBackendExampleComponent,
@@ -97,10 +102,13 @@ const examples = [
 	GroupSelectableHiddenExampleComponent,
 	GroupChildrenExampleComponent,
 	SearchEditableExampleComponent,
+	AccessibilityTestExampleComponent,
+	AccessibilityCustomLabelExampleComponent,
+	AccessibilityCustomMultiSelectExampleComponent
 ];
 
 @NgModule({
 	imports: [NgSelectModule, FormsModule, CommonModule, ReactiveFormsModule, ...examples],
 	exports: [NgSelectModule, FormsModule, CommonModule, ReactiveFormsModule],
 })
-export class ExamplesModule {}
+export class ExamplesModule { }
