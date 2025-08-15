@@ -4,7 +4,7 @@
 	[class.ng-has-value]="hasValue"
 	class="ng-select-container">
 	<div class="ng-value-container">
-		@if ((selectedItems.length === 0 && !searchTerm) || fixedPlaceholder) {
+		@if ((selectedItems.length === 0 && !searchTerm) || fixedPlaceholder || (hasValue && fixedPlaceholder !== false)) {
 			<ng-template #defaultPlaceholderTemplate>
 				<div class="ng-placeholder">{{ placeholder }}</div>
 			</ng-template>
