@@ -1357,6 +1357,7 @@ describe('NgSelectComponent', () => {
 					);
 
 					const cmp = fixture.componentInstance;
+					const select = fixture.componentInstance.select();
 					// Start with empty items and a selected item
 					cmp.itemsWithNestedBindValue = [];
 					cmp.nestedSelectedItem = { code: 'A', value: 'description' };
@@ -1368,15 +1369,15 @@ describe('NgSelectComponent', () => {
 
 					// Initially no compareWith should be called since items is empty
 					expect(cmp.compareWith).not.toHaveBeenCalled();
-					expect(cmp.select.hasValue).toBe(true);
-					expect(cmp.select.selectedItems.length).toBe(1);
+					expect(select.hasValue).toBe(true);
+					expect(select.selectedItems.length).toBe(1);
 
 					// Now update items to contain the matching item
 					cmp.itemsWithNestedBindValue = [
-						{ 
-							description: 'alternate description', 
-							item: { code: 'A', value: 'description' }, 
-							group: 'some group' 
+						{
+							description: 'alternate description',
+							item: { code: 'A', value: 'description' },
+							group: 'some group'
 						}
 					];
 
@@ -1386,8 +1387,8 @@ describe('NgSelectComponent', () => {
 					expect(cmp.compareWith).toHaveBeenCalled();
 
 					// The selected item should be properly mapped to the new item
-					expect(cmp.select.selectedItems.length).toBe(1);
-					expect(cmp.select.selectedItems[0].value).toEqual({
+					expect(select.selectedItems.length).toBe(1);
+					expect(select.selectedItems[0].value).toEqual({
 						description: 'alternate description',
 						item: { code: 'A', value: 'description' },
 						group: 'some group'
