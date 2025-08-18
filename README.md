@@ -14,22 +14,25 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 ## Versions
 
-| Angular          | ng-select |
-|------------------|:---------:|
-| >=19.0.0 <20.0.0 |   v14.x   |
-| >=18.0.0 <19.0.0 |   v13.x   |
-| >=17.0.0 <18.0.0 |   v12.x   |
-| >=16.0.0 <17.0.0 |   v11.x   |
-| >=15.0.0 <16.0.0 |   v10.x   |
-| >=14.0.0 <15.0.0 |   v9.x    |
-| >=13.0.0 <14.0.0 |   v8.x    |
-| >=12.0.0 <13.0.0 |   v7.x    |
-| >=11.0.0 <12.0.0 |   v6.x    |
-| >=10.0.0 <11.0.0 |   v5.x    |
-| >=9.0.0 <10.0.0  |   v4.x    |
-| >=8.0.0 <9.0.0   |   v3.x    |
-| >=6.0.0 <8.0.0   |   v2.x    |
-| v5.x.x           |   v1.x    |
+**Warning**: Do not use versions 15.2.0, 16.0.0, 17.0.0, 18.0.0, 19.0.0, 20.0.0 as they contain unresolved issues
+
+| Angular          |     ng-select      |
+|------------------|:------------------:|
+| >=20.0.0 <21.0.0 | <=15.1.3, >=20.0.1 |
+| >=19.0.0 <20.0.0 |       v14.x        |
+| >=18.0.0 <19.0.0 |       v13.x        |
+| >=17.0.0 <18.0.0 |       v12.x        |
+| >=16.0.0 <17.0.0 |       v11.x        |
+| >=15.0.0 <16.0.0 |       v10.x        |
+| >=14.0.0 <15.0.0 |        v9.x        |
+| >=13.0.0 <14.0.0 |        v8.x        |
+| >=12.0.0 <13.0.0 |        v7.x        |
+| >=11.0.0 <12.0.0 |        v6.x        |
+| >=10.0.0 <11.0.0 |        v5.x        |
+| >=9.0.0 <10.0.0  |        v4.x        |
+| >=8.0.0 <9.0.0   |        v3.x        |
+| >=6.0.0 <8.0.0   |        v2.x        |
+| v5.x.x           |        v1.x        |
 
 ---
 ## Browser Support
@@ -86,7 +89,7 @@ npm install --save @ng-select/ng-select
 ```shell
 yarn add @ng-select/ng-select
 ```
-### Step 2: 
+### Step 2:
 
 #### Standalone: Import NgSelectComponent and other necessary directives directly:
 ```typescript
@@ -120,18 +123,18 @@ import { FormsModule } from '@angular/forms';
 export class AppModule {}
 ```
 
-### Step 3: Include a theme: 
+### Step 3: Include a theme:
 To allow customization and theming, `ng-select` bundle includes only generic styles that are necessary for correct layout and positioning. To get full look of the control, include one of the themes in your application. If you're using the Angular CLI, you can add this to your `styles.scss` or include it in `.angular-cli.json` (Angular v5 and below) or `angular.json` (Angular v6 onwards).
 
 ```scss
 @import "~@ng-select/ng-select/themes/default.theme.css";
-// ... or 
+// ... or
 @import "~@ng-select/ng-select/themes/material.theme.css";
 
 ```
 
 
-### Step 4 (Optional): Configuration 
+### Step 4 (Optional): Configuration
 
 You can also set global configuration and localization messages by injecting NgSelectConfig service,
 typically in your root component, and customize the values of its properties in order to provide default values.
@@ -140,9 +143,9 @@ typically in your root component, and customize the values of its properties in 
   constructor(private config: NgSelectConfig) {
       this.config.notFoundText = 'Custom not found';
       this.config.appendTo = 'body';
-      // set the bindValue to global config when you use the same 
-      // bindValue in most of the place. 
-      // You can also override bindValue for the specified template 
+      // set the bindValue to global config when you use the same
+      // bindValue in most of the place.
+      // You can also override bindValue for the specified template
       // by defining `bindValue` as property
       // Eg : <ng-select bindValue="some-new-value"></ng-select>
       this.config.bindValue = 'value';
@@ -176,9 +179,9 @@ In template use `ng-select` component with your options
 </ng-select>
 
 <!--Using items input-->
-<ng-select [items]="cars" 
-           bindLabel="name" 
-           bindValue="id" 
+<ng-select [items]="cars"
+           bindLabel="name"
+           bindValue="id"
            [(ngModel)]="selectedCar">
 </ng-select>
 ```
@@ -236,6 +239,7 @@ map: {
 | [deselectOnClick]           | `boolean`                                            | `false`             | no | Deselects a selected item when it is clicked in the dropdown. Default `false`. Default `true` when **multiple** is `true`                                                                      |
 | [editableSearchTerm]        | `boolean`                                            | `false`             | no | Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`.                                                                                             |
 | [selectOnTab]               | `boolean`                                            | `false`             | no | Select marked dropdown item using tab. Default `false`                                                                                                                                         |
+| [tabFocusOnClearButton]     | `boolean`                                            | `true`              | no | Control tab navigation behavior for the clear button. Default `true`                                                                                                                           |
 | [openOnEnter]               | `boolean`                                            | `true`              | no | Open dropdown using enter. Default `true`                                                                                                                                                      |
 | [typeahead]                 | `Subject`                                            | `-`                 | no | Custom autocomplete or advanced filter.                                                                                                                                                        |
 | [minTermLength]             | `number`                                             | `0`                 | no | Minimum term length to start a search. Should be used with `typeahead`                                                                                                                         |
@@ -282,7 +286,7 @@ map: {
 Ng-select allows to provide custom selection implementation using `SELECTION_MODEL_FACTORY`. To override [default](https://github.com/ng-select/ng-select/blob/master/src/ng-select/lib/selection-model.ts) logic provide your factory method in your angular module.
 
 ```javascript
-// app.module.ts
+// app.module.ts.ts
 providers: [
     { provide: SELECTION_MODEL_FACTORY, useValue: <SelectionModelFactory>CustomSelectionFactory }
 ]
@@ -298,7 +302,7 @@ export class CustomSelectionModel implements SelectionModel {
 ```
 
 ## Change Detection
-Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable 
+Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable
 data types. That means if you do object mutations like:
 
 ```javascript
@@ -328,7 +332,7 @@ If you are not happy with default styles you can easily override them with incre
     min-height: 0px;
     border-radius: 0;
 }
-.ng-select.custom .ng-select-container  {            
+.ng-select.custom .ng-select-container  {
     min-height: 0px;
     border-radius: 0;
 }
@@ -337,7 +341,7 @@ If you are not happy with default styles you can easily override them with incre
 If you are using `ViewEncapsulation`, you could use special `::ng-deep` selector which will prevent scoping for nested selectors altough this is more of a workaround and we recommend using solution described above.
 
 ```css
-.ng-select.custom ::ng-deep .ng-select-container  {            
+.ng-select.custom ::ng-deep .ng-select-container  {
     min-height: 0px;
     border-radius: 0;
 }
@@ -383,4 +387,3 @@ To release to npm just run `./release.sh`, of course if you have permissions ;)
 
 ## Inspiration
 This component is inspired by [React select](https://github.com/JedWatson/react-select) and [Virtual scroll](https://github.com/rintoj/angular2-virtual-scroll). Check theirs amazing work and components :)
-

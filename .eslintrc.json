@@ -23,7 +23,8 @@
         "jsdoc/newline-after-description": "off",
         "@angular-eslint/no-output-rename": "off",
         "@angular-eslint/no-output-native": "off",
-        "@angular-eslint/prefer-standalone": "warn",
+        "@angular-eslint/prefer-standalone": "off",
+        "@angular-eslint/prefer-inject": "off",
         "@angular-eslint/component-selector": [
           "error",
           {
@@ -69,5 +70,7 @@
       }
     }
   ],
-  "extends": ["prettier"]
+  "extends": [
+    "prettier"
+  ]
 }

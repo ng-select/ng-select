@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgOptgroupTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
+import { JsonPipe } from '@angular/common';
 
 @Component({
-    selector: 'ng-group-selectable-example',
-    templateUrl: './group-selectable-example.component.html',
-    styleUrls: ['./group-selectable-example.component.scss'],
-    standalone: false
+	selector: 'ng-group-selectable-example',
+	templateUrl: './group-selectable-example.component.html',
+	styleUrls: ['./group-selectable-example.component.scss'],
+	imports: [NgSelectComponent, FormsModule, NgOptgroupTemplateDirective, JsonPipe],
 })
 export class GroupSelectableExampleComponent implements OnInit {
 	selectedAccount = [{ country: 'Colombia' }];
