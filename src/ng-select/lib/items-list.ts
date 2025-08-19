@@ -161,6 +161,9 @@ export class ItemsList {
 			if (matchedItems.length > 0) {
 				const [last] = matchedItems.slice(-1);
 				if (last.parent) {
+					if (this._ngSelect.collapsibleGroup) {
+						last.parent.collapsed = false; // Expand the group even if it is collapsed to make sure the matched search item is immediately visible
+					}
 					const head = this._items.find((x) => x === last.parent);
 					this._filteredItems.push(head);
 				}
@@ -172,6 +175,12 @@ export class ItemsList {
 	resetFilteredItems() {
 		if (this._filteredItems.length === this._items.length) {
 			return;
+		}
+
+		if (this._ngSelect.collapsibleGroup) {
+			for (const item of this._items) {
+				if (item.parent) item.parent.collapsed = this._ngSelect.collapseGroupByDefault;
+			}
 		}
 
 		if (this._ngSelect.hideSelected && this.selectedItems.length > 0) {
@@ -390,6 +399,7 @@ export class ItemsList {
 				index: i++,
 				disabled: !this._ngSelect.selectableGroup,
 				htmlId: newId(),
+				collapsed: this._ngSelect.collapsibleGroup ? this._ngSelect.collapseGroupByDefault : false,
 			};
 			const groupKey = isGroupByFn ? this._ngSelect.bindLabel : <string>this._ngSelect.groupBy;
 			const groupValue =
