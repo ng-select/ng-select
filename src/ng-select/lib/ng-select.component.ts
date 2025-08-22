@@ -108,7 +108,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly ariaLabel = input<string | undefined>(undefined);
 	readonly markFirst = input(true, { transform: booleanAttribute });
 	readonly placeholder = input<string>(this.config.placeholder);
-	readonly fixedPlaceholder = input<boolean>(false);
+	readonly fixedPlaceholder = input<boolean>(true);
 	readonly notFoundText = input<string>(undefined);
 	readonly typeToSearchText = input<string>(undefined);
 	readonly preventToggleOnRightClick = input<boolean>(false);
