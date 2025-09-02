@@ -1,5 +1,23 @@
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
-import { booleanAttribute, ChangeDetectionStrategy, Component, ElementRef, NgZone, OnChanges, OnDestroy, OnInit, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewEncapsulation, input, output, inject, viewChild, computed } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	NgZone,
+	OnChanges,
+	OnDestroy,
+	OnInit,
+	Renderer2,
+	SimpleChanges,
+	TemplateRef,
+	ViewEncapsulation,
+	booleanAttribute,
+	computed,
+	inject,
+	input,
+	output,
+	viewChild,
+} from '@angular/core';
 
 import { animationFrameScheduler, asapScheduler, fromEvent, merge, Subject } from 'rxjs';
 import { auditTime, takeUntil } from 'rxjs/operators';
