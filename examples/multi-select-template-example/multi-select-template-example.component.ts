@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
@@ -12,10 +12,10 @@ import { AsyncPipe } from '@angular/common';
 	imports: [NgSelectComponent, FormsModule, NgLabelTemplateDirective, NgOptionTemplateDirective, AsyncPipe],
 })
 export class MultiSelectTemplateExampleComponent implements OnInit {
+	private dataService = inject(DataService);
+
 	githubUsers$: Observable<any[]>;
 	selectedUsers = ['anjmao'];
-
-	constructor(private dataService: DataService) {}
 
 	ngOnInit() {
 		this.githubUsers$ = this.dataService.getGithubAccounts('anjm');
