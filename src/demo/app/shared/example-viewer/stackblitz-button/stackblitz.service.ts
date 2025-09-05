@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import sdk, { Project } from '@stackblitz/sdk';
 
 const EXAMPLE_PATH = '/ng-select/examples/';
@@ -30,11 +30,11 @@ const dependencies = {
 	providedIn: 'root',
 })
 export class StackblitzService {
+	private _http = inject(HttpClient);
+
 	private _exampleName: string;
 	private _componentName: string;
 	private _examplePath: string;
-
-	constructor(private _http: HttpClient) {}
 
 	private get _exampleImport() {
 		return `import { ${this._componentName} } from \'./src/${this._exampleName}.component\'`;
