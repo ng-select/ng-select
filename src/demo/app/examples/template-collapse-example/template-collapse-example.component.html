@@ -1,0 +1,14 @@
+<label>Custom collapse button template</label>
+
+<ng-select
+	[items]="accounts"
+	[collapsibleGroup]="true"
+	[multiple]="true"
+	bindLabel="name"
+	bindValue="name"
+	groupBy="country"
+	[(ngModel)]="selectedAccount">
+	<ng-template ng-collapse-button-tmp let-collapsed="collapsed">
+		{{ collapsed ? '⊕' : '⊖' }}
+	</ng-template>
+</ng-select>
