@@ -91,7 +91,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	@Input() ariaLabel: string | undefined;
 	@Input({ transform: booleanAttribute }) markFirst = true;
 	@Input() placeholder: string;
-	@Input() fixedPlaceholder: boolean = false;
+	@Input() fixedPlaceholder: boolean = true;
 	@Input() notFoundText: string;
 	@Input() typeToSearchText: string;
 	@Input() preventToggleOnRightClick: boolean = false;
@@ -433,7 +433,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 
 		if (target.classList.contains('ng-clear-wrapper')) {
-			this.handleClearClick();
+			// Don't handle clear on mousedown - let click event handle it
 			return;
 		}
 
@@ -465,7 +465,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 	}
 
-	handleClearClick() {
+	handleClearClick(_event?: MouseEvent) {
 		if (this.hasValue) {
 			this.itemsList.clearSelected(true);
 			this._updateNgModel();

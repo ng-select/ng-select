@@ -1207,6 +1207,55 @@ describe('NgSelectComponent', () => {
 					expect(cmp.select.selectedItems[0].value).toEqual(cmp.cities[1]);
 				}));
 
+				it('should call compareWith when items are updated from empty to populated', fakeAsync(() => {
+					const fixture = createTestingModule(
+						NgSelectTestComponent,
+						`<ng-select [items]="itemsWithNestedBindValue"
+                            bindLabel="description"
+                            bindValue="item"
+                            [compareWith]="compareWith"
+                            [(ngModel)]="nestedSelectedItem">
+                        </ng-select>`,
+					);
+
+					const cmp = fixture.componentInstance;
+					// Start with empty items and a selected item
+					cmp.itemsWithNestedBindValue = [];
+					cmp.nestedSelectedItem = { code: 'A', value: 'description' };
+					cmp.compareWith = jasmine.createSpy('compareWith').and.callFake((toCompare, selected) => {
+						return toCompare && selected && toCompare.item && toCompare.item.code === selected.code;
+					});
+
+					tickAndDetectChanges(fixture);
+
+					// Initially no compareWith should be called since items is empty
+					expect(cmp.compareWith).not.toHaveBeenCalled();
+					expect(cmp.select.hasValue).toBe(true);
+					expect(cmp.select.selectedItems.length).toBe(1);
+
+					// Now update items to contain the matching item
+					cmp.itemsWithNestedBindValue = [
+						{ 
+							description: 'alternate description', 
+							item: { code: 'A', value: 'description' }, 
+							group: 'some group' 
+						}
+					];
+
+					tickAndDetectChanges(fixture);
+
+					// compareWith should be called when items are updated
+					expect(cmp.compareWith).toHaveBeenCalled();
+
+					// The selected item should be properly mapped to the new item
+					expect(cmp.select.selectedItems.length).toBe(1);
+					expect(cmp.select.selectedItems[0].value).toEqual({
+						description: 'alternate description',
+						item: { code: 'A', value: 'description' },
+						group: 'some group'
+					});
+				}));
+
 				it('should select selected when there is no items', fakeAsync(() => {
 					const fixture = createTestingModule(
 						NgSelectTestComponent,
@@ -4235,13 +4284,8 @@ describe('NgSelectComponent', () => {
 				fixture.componentInstance.cities = [...fixture.componentInstance.cities];
 				tickAndDetectChanges(fixture);
 				triggerMousedown = () => {
-					const control = fixture.debugElement.query(By.css('.ng-select-container'));
-					control.triggerEventHandler(
-						'mousedown',
-						createEvent({
-							classList: { contains: (term) => term === 'ng-clear-wrapper' },
-						}),
-					);
+					const clearButton = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
+					clearButton.triggerEventHandler('click', createEvent({}));
 				};
 			}));
 
@@ -4272,6 +4316,19 @@ describe('NgSelectComponent', () => {
 				triggerMousedown();
 				tickAndDetectChanges(fixture);
 				expect(fixture.componentInstance.select.isOpen).toBe(false);
+			}));
+
+			it('should respond to click events for accessibility compliance', fakeAsync(() => {
+				// Test that mousedown alone doesn't trigger clear
+				const clearButton = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
+				clearButton.triggerEventHandler('mousedown', createEvent({}));
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.selectedCities.length).toBe(2); // Should not have cleared
+
+				// Test that click does trigger clear
+				clearButton.triggerEventHandler('click', createEvent({}));
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.selectedCities.length).toBe(1); // Should have cleared
 			}));
 
 			it('clear button should not appear if select is disabled', fakeAsync(() => {
@@ -5174,6 +5231,8 @@ class NgSelectTestComponent {
 	citiesNames = this.cities.map((x) => x.name);
 
 	selectedCountry: any;
+	itemsWithNestedBindValue: any[] = [];
+	nestedSelectedItem: any;
 	countries = [
 		{ id: 1, description: { name: 'Lithuania', id: 'a' } },
 		{
