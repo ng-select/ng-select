@@ -4156,6 +4156,132 @@ describe('NgSelectComponent', () => {
 		}));
 	});
 
+	describe('Accessibility - Announcement Text', () => {
+		it('should provide announcement text when searchable is true and component is focused', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+                        bindLabel="name"
+                        [searchable]="true">
+                </ng-select>`,
+			);
+			const select = fixture.componentInstance.select();
+			
+			// Set focused state
+			select.focused = true;
+			tickAndDetectChanges(fixture);
+
+			// Should announce help text when no value selected
+			expect(select.announceText).toBe('Press Enter to open dropdown');
+		}));
+
+		it('should announce selected value when focused with value selected', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+                        bindLabel="name"
+                        bindValue="id"
+                        [searchable]="true"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+			);
+			const select = fixture.componentInstance.select();
+			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0].id;
+			tickAndDetectChanges(fixture);
+
+			// Set focused state
+			select.focused = true;
+			tickAndDetectChanges(fixture);
+
+			// Should announce selected value with proper label
+			expect(select.announceText).toContain('Vilnius selected');
+		}));
+
+		it('should announce available options when dropdown is opened with searchable=true', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+                        bindLabel="name"
+                        [searchable]="true">
+                </ng-select>`,
+			);
+			const select = fixture.componentInstance.select();
+			
+			// Set focused state and open dropdown
+			select.focused = true;
+			select.open();
+			tickAndDetectChanges(fixture);
+
+			// Should announce available options
+			expect(select.announceText).toContain('3 options available');
+			expect(select.announceText).toContain('Vilnius highlighted');
+		}));
+
+		it('should announce not found text when searchable=true and no matches', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+                        bindLabel="name"
+                        [searchable]="true"
+                        notFoundText="Custom not found">
+                </ng-select>`,
+			);
+			const select = fixture.componentInstance.select();
+			
+			// Set focused state, open dropdown and filter
+			select.focused = true;
+			select.open();
+			select.filter('non-existent');
+			tickAndDetectChanges(fixture);
+
+			// Should announce custom not found text
+			expect(select.announceText).toBe('Custom not found');
+		}));
+
+		it('should not provide announcement text when searchable is false', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+                        bindLabel="name"
+                        [searchable]="false">
+                </ng-select>`,
+			);
+			const select = fixture.componentInstance.select();
+			
+			// Set focused state
+			select.focused = true;
+			tickAndDetectChanges(fixture);
+
+			// Should not announce when searchable is false
+			expect(select.announceText).toBe('');
+		}));
+
+		it('should announce multiple selections when multiple=true', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+                        bindLabel="name"
+                        [searchable]="true"
+                        [multiple]="true"
+                        [(ngModel)]="selectedCities">
+                </ng-select>`,
+			);
+			const select = fixture.componentInstance.select();
+			fixture.componentInstance.selectedCities = [
+				fixture.componentInstance.cities[0].id,
+				fixture.componentInstance.cities[1].id
+			];
+			tickAndDetectChanges(fixture);
+
+			// Set focused state
+			select.focused = true;
+			tickAndDetectChanges(fixture);
+
+			// Should announce multiple items selected
+			expect(select.announceText).toContain('2 items selected');
+		}));
+	});
+
 	describe('Output events', () => {
 		it('should fire open event once', fakeAsync(() => {
 			const fixture = createTestingModule(

@@ -308,6 +308,37 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		return term && term.length >= this.minTermLength();
 	}
 
+	get announceText(): string {
+		// Only provide announcements when component is focused and searchable is true
+		if (!this.focused || !this.searchable()) {
+			return '';
+		}
+
+		if (this.showNoItemsFound()) {
+			return this.notFoundText() ?? 'No items found';
+		}
+
+		if (this.isOpen()) {
+			const itemCount = this.itemsList.filteredItems.length;
+			let announcement = `${itemCount} ${itemCount === 1 ? 'option' : 'options'} available`;
+			
+			if (this.itemsList.markedItem) {
+				announcement += `. ${this.itemsList.markedItem.label} highlighted`;
+			}
+			
+			return announcement;
+		}
+
+		if (this.hasValue) {
+			const selectedLabel = this.multiple() ? 
+				`${this.selectedItems.length} items selected` : 
+				`${this.selectedItems[0]?.label} selected`;
+			return `${selectedLabel}. Press Enter to open dropdown`;
+		}
+
+		return 'Press Enter to open dropdown';
+	}
+
 	readonly keyDownFn = input<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true);
 
 	clearItem = (item: any) => {
