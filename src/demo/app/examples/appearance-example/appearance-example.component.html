@@ -1,0 +1,92 @@
+<p>This example shows different appearance styles for ng-select. Use the Material theme to see the visual differences.</p>
+
+<div class="form-group">
+	<label for="appearance-selector">Select Appearance:</label>
+	<ng-select 
+		id="appearance-selector"
+		[(ngModel)]="selectedAppearance" 
+		[clearable]="false"
+		bindLabel="label" 
+		bindValue="value">
+		@for (appearance of appearances; track appearance.value) {
+			<ng-option [value]="appearance.value">
+				{{ appearance.label }}
+			</ng-option>
+		}
+	</ng-select>
+</div>
+
+<hr>
+
+<div class="row">
+	<div class="col-md-6">
+		<h5>Single Select - {{ selectedAppearance | titlecase }}</h5>
+		<ng-select 
+			[(ngModel)]="selectedValue"
+			[appearance]="selectedAppearance"
+			bindLabel="name"
+			bindValue="id"
+			placeholder="Select a city">
+			@for (city of cities; track city.id) {
+				<ng-option [value]="city.id" [disabled]="city.disabled">
+					{{ city.name }}
+				</ng-option>
+			}
+		</ng-select>
+		<small class="form-text text-muted">Selected: {{ selectedValue | json }}</small>
+	</div>
+
+	<div class="col-md-6">
+		<h5>Multi Select - {{ selectedAppearance | titlecase }}</h5>
+		<ng-select 
+			[(ngModel)]="selectedValue"
+			[appearance]="selectedAppearance"
+			[multiple]="true"
+			bindLabel="name"
+			bindValue="id"
+			placeholder="Select cities">
+			@for (city of cities; track city.id) {
+				<ng-option [value]="city.id" [disabled]="city.disabled">
+					{{ city.name }}
+				</ng-option>
+			}
+		</ng-select>
+		<small class="form-text text-muted">Selected: {{ selectedValue | json }}</small>
+	</div>
+</div>
+
+<div class="row mt-4">
+	<div class="col-md-6">
+		<h5>Disabled - {{ selectedAppearance | titlecase }}</h5>
+		<ng-select 
+			[(ngModel)]="selectedValue"
+			[appearance]="selectedAppearance"
+			[disabled]="true"
+			bindLabel="name"
+			bindValue="id"
+			placeholder="Disabled select">
+			@for (city of cities; track city.id) {
+				<ng-option [value]="city.id">
+					{{ city.name }}
+				</ng-option>
+			}
+		</ng-select>
+	</div>
+
+	<div class="col-md-6">
+		<h5>Clearable - {{ selectedAppearance | titlecase }}</h5>
+		<ng-select 
+			[(ngModel)]="selectedValue"
+			[appearance]="selectedAppearance"
+			[clearable]="true"
+			bindLabel="name"
+			bindValue="id"
+			placeholder="Clearable select">
+			@for (city of cities; track city.id) {
+				<ng-option [value]="city.id" [disabled]="city.disabled">
+					{{ city.name }}
+				</ng-option>
+			}
+		</ng-select>
+	</div>
+</div>

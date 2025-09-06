@@ -23,6 +23,7 @@ import { TemplateHeaderFooterExampleComponent } from './template-header-footer-e
 import { TemplateDisplayExampleComponent } from './template-display-example/template-display-example.component';
 import { TemplateSearchExampleComponent } from './template-search-example/template-search-example.component';
 import { TemplateLoadingExampleComponent } from './template-loading-example/template-loading-example.component';
+import { AppearanceExampleComponent } from './appearance-example/appearance-example.component';
 import { MultiSelectDefaultExampleComponent } from './multi-select-default-example/multi-select-default-example.component';
 import { MultiSelectHiddenExampleComponent } from './multi-select-hidden-example/multi-select-hidden-example.component';
 import { MultiSelectLimitExampleComponent } from './multi-select-limit-example/multi-select-limit-example.component';
@@ -210,6 +211,10 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
 	'fixed-placeholder-example': {
 		component: FixedPlaceholderExampleComponent,
 		title: 'Fixed Placeholder',
+	},
+	'appearance-example': {
+		component: AppearanceExampleComponent,
+		title: 'Appearance Styles (fill, outline, underline)',
 	},
 	'append-to-example': {
 		component: AppendToExampleComponent,

@@ -48,6 +48,7 @@ import { VirtualScrollExampleComponent } from './virtual-scroll-example/virtual-
 import { SearchEditableExampleComponent } from './search-editable-example/search-editable-example.component';
 import { TemplatePlaceholderExampleComponent } from './template-placeholder-example/template-placeholder-example.component';
 import { FixedPlaceholderExampleComponent } from './fixed-placeholder-example/fixed-placeholder-example.component';
+import { AppearanceExampleComponent } from './appearance-example/appearance-example.component';
 import { TemplateClearExampleComponent } from './template-clear-example/template-clear-example.component';
 
 const examples = [
@@ -55,6 +56,7 @@ const examples = [
 	DataSourceArrayExampleComponent,
 	DataSourceOptionsExampleComponent,
 	FixedPlaceholderExampleComponent,
+	AppearanceExampleComponent,
 	FormsWithOptionsExampleComponent,
 	FormsSingleSelectExampleComponent,
 	FormsMultiSelectExampleComponent,

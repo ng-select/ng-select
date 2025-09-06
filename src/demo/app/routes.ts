@@ -36,6 +36,11 @@ export const appRoutes: Routes = [
 		data: { title: 'Fixed Placeholder', examples: 'fixed-placeholder-example' },
 	},
 	{
+		path: 'appearance',
+		component: RouteViewerComponent,
+		data: { title: 'Appearance Styles', examples: 'appearance-example' },
+	},
+	{
 		path: 'append-to-element',
 		component: RouteViewerComponent,
 		data: { title: 'Append to element', examples: 'append-to' },
