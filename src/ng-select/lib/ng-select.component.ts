@@ -27,7 +27,7 @@ import {
 	contentChildren
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { merge, Subject } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import {
@@ -54,7 +54,7 @@ import { newId } from './id';
 import { ItemsList } from './items-list';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgDropdownPanelService } from './ng-dropdown-panel.service';
-import { NgOptionComponent } from './ng-option.component';
+import { NgOptionComponent, StateChange } from './ng-option.component';
 import { DropdownPosition, KeyCode, NgOption } from './ng-select.types';
 import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
 import { isDefined, isFunction, isObject, isPromise } from './value-utils';
@@ -760,25 +760,25 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			}
 		};
 
-		const handleOptionChange = (options: readonly NgOptionComponent[]) => {
-			return merge(...options.map((option) => option.stateChange$)).pipe(
-				tap((option) => {
-					const item = this.itemsList.findItem(option.value);
-					item.disabled = option.disabled;
-					item.label = option.label || item.label;
-				}),
-			)
-		};
+		const handleOptionChange = (states: StateChange[]) => {
+			states.forEach((state) => {
+				const item = this.itemsList.findItem(state.value);
+				item.disabled = state.disabled;
+				item.label = state.label || item.label;
+			});
+		}
 
 		this.ngOptionsObservable.pipe(
 			startWith(this.ngOptions()),
 			takeUntil(this._destroy$),
-			tap((options) => {
+			// Wait for all options to be rendered
+			switchMap((options) => combineLatest(options.map((option) => option.stateChange$))),
+			tap((stateChanges) => {
+				const ngOptions = this.ngOptions();
 				this.bindLabel.set(this._defaultLabel);
-				mapNgOptions(options);
-				this._cd.detectChanges();
+				mapNgOptions(ngOptions);
+				handleOptionChange(stateChanges);
 			}),
-			switchMap((options) => handleOptionChange(options))
 		).subscribe();
 	}
 

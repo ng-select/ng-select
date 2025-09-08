@@ -10,8 +10,9 @@ import {
 	signal,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 
-type StateChange = {
+export type StateChange = {
 	value: any;
 	disabled: boolean;
 	label?: string;
@@ -30,11 +31,13 @@ export class NgOptionComponent {
 	});
 	public readonly elementRef = inject(ElementRef<HTMLElement>);
 	public readonly label = signal<string>('');
+	private _isRendered = false;
 
 	constructor() {
 		afterNextRender(() => {
 			if (this._label !== this.label()) {
 				this.label.set(this._label);
+				this._isRendered = true;
 			}
 		});
 	}
@@ -44,7 +47,10 @@ export class NgOptionComponent {
 		disabled: this.disabled(),
 		label: this.label(),
 	}));
-	public readonly stateChange$ = toObservable(this.stateChange);
+
+	public readonly stateChange$ = toObservable(this.stateChange).pipe(
+		filter(() => this._isRendered),
+	);
 
 	private get _label() {
 		return (this.elementRef.nativeElement.innerHTML || '').trim();
