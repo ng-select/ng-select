@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
 import { NgFooterTemplateDirective, NgHeaderTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
@@ -10,10 +10,10 @@ import { NgFooterTemplateDirective, NgHeaderTemplateDirective, NgSelectComponent
 	imports: [NgSelectComponent, FormsModule, NgHeaderTemplateDirective, NgFooterTemplateDirective],
 })
 export class TemplateHeaderFooterExampleComponent implements OnInit {
+	private dataService = inject(DataService);
+
 	people = [];
 	selectedPeople = [];
-
-	constructor(private dataService: DataService) {}
 
 	ngOnInit() {
 		this.dataService.getPeople().subscribe((items) => {
