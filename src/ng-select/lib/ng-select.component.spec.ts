@@ -2730,11 +2730,11 @@ describe('NgSelectComponent', () => {
 			);
 
 			tickAndDetectChanges(fixture);
-			const items = fixture.componentInstance.select().itemsList.items;
-			expect(items[0].disabled).toBeFalsy();
+			const select = fixture.componentInstance.select();
+			expect(select.itemsList.items[0].disabled).toBeFalsy();
 			fixture.componentInstance.disabled = true;
 			tickAndDetectChanges(fixture);
-			expect(items[0].disabled).toBeTruthy();
+			expect(select.itemsList.items[0].disabled).toBeTruthy();
 		}));
 
 		it('should display custom clear button template when selected city', fakeAsync(() => {

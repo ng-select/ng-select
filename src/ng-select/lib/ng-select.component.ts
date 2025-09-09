@@ -27,7 +27,7 @@ import {
 	contentChildren
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest, of, Subject } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import {
@@ -771,8 +771,14 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		this.ngOptionsObservable.pipe(
 			startWith(this.ngOptions()),
 			takeUntil(this._destroy$),
-			// Wait for all options to be rendered
-			switchMap((options) => combineLatest(options.map((option) => option.stateChange$))),
+			switchMap((options) => {
+				// when there are no options we don't need to wait for anything
+				if (options.length === 0) {
+					return of([]);
+				}
+				// Wait for all options to be rendered
+				return combineLatest(options.map((option) => option.stateChange$))
+			}),
 			tap((stateChanges) => {
 				const ngOptions = this.ngOptions();
 				this.bindLabel.set(this._defaultLabel);

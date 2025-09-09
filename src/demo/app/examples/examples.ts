@@ -51,14 +51,6 @@ export interface Example {
 }
 
 export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
-	'data-source-backend-example': {
-		component: DataSourceBackendExampleComponent,
-		title: 'Backend data with async pipe',
-	},
-	'data-source-array-example': {
-		component: DataSourceArrayExampleComponent,
-		title: 'Array of objects',
-	},
 	'data-source-options-example': {
 		component: DataSourceOptionsExampleComponent,
 		title: 'Display data using ng-option',

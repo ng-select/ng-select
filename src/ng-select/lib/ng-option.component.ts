@@ -31,13 +31,13 @@ export class NgOptionComponent {
 	});
 	public readonly elementRef = inject(ElementRef<HTMLElement>);
 	public readonly label = signal<string>('');
-	private _isRendered = false;
+	private _previousLabel = '';
 
 	constructor() {
 		afterNextRender(() => {
-			if (this._label !== this.label()) {
+			if (this._previousLabel !== this._label) {
+				this._previousLabel = this.label();
 				this.label.set(this._label);
-				this._isRendered = true;
 			}
 		});
 	}
@@ -49,7 +49,7 @@ export class NgOptionComponent {
 	}));
 
 	public readonly stateChange$ = toObservable(this.stateChange).pipe(
-		filter(() => this._isRendered),
+		filter(() => this._previousLabel !== undefined),
 	);
 
 	private get _label() {
