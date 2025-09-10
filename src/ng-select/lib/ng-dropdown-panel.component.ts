@@ -70,6 +70,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	readonly footerTemplate = input<TemplateRef<any>>(undefined);
 	readonly filterValue = input<string>(null);
 	readonly ariaLabelDropdown = input<string | null>(null);
+	readonly outsideClickEventType = input<'click' | 'mousedown'>('click');
 
 	readonly update = output<any[]>();
 	readonly scroll = output<{
@@ -231,7 +232,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		}
 
 		this._zone.runOutsideAngular(() => {
-			merge(fromEvent(this._document, 'touchstart', { capture: true }), fromEvent(this._document, 'click', { capture: true }))
+			const eventType = this.outsideClickEventType();
+			merge(fromEvent(this._document, 'touchstart', { capture: true }), fromEvent(this._document, eventType, { capture: true }))
 				.pipe(takeUntil(this._destroy$))
 				.subscribe(($event) => this._checkToClose($event));
 		});
