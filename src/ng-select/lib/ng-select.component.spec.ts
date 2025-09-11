@@ -1093,6 +1093,28 @@ describe('NgSelectComponent', () => {
 				expect(select.items().length).toEqual(0);
 			}));
 
+			it('should update ng-option when updated asynchronously', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [(ngModel)]="selectedCityId">
+                        @for (city of cities; track city) {
+                            <ng-option [value]="city.id">{{city.name}}</ng-option>
+                        }
+                    </ng-select>`,
+				);
+
+				select = fixture.componentInstance.select();
+				tickAndDetectChanges(fixture);
+				expect(select.items().length).toEqual(3);
+
+				fixture.componentInstance.cities = [
+					{ id: 1, name: 'Vilnius' },
+					{ id: 2, name: 'Kaunas' },
+				];
+				tickAndDetectChanges(fixture);
+				expect(select.items().length).toEqual(2);
+			}));
+
 			it('should bind value', fakeAsync(() => {
 				const fixture = createTestingModule(
 					NgSelectTestComponent,
@@ -2730,11 +2752,11 @@ describe('NgSelectComponent', () => {
 			);
 
 			tickAndDetectChanges(fixture);
-			const items = fixture.componentInstance.select().itemsList.items;
-			expect(items[0].disabled).toBeFalsy();
+			const select = fixture.componentInstance.select();
+			expect(select.itemsList.items[0].disabled).toBeFalsy();
 			fixture.componentInstance.disabled = true;
 			tickAndDetectChanges(fixture);
-			expect(items[0].disabled).toBeTruthy();
+			expect(select.itemsList.items[0].disabled).toBeTruthy();
 		}));
 
 		it('should display custom clear button template when selected city', fakeAsync(() => {
