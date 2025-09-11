@@ -490,6 +490,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	registerOnChange(fn: any): void {
+		// If we're switching to a different FormControl (different callback function),
+		// clear the selected items to ensure the component state is reset
+		if (this._onChange && this._onChange !== fn) {
+			this.itemsList.clearSelected();
+			this._cd.markForCheck();
+		}
 		this._onChange = fn;
 	}
 

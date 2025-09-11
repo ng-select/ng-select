@@ -1,6 +1,6 @@
 import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewEncapsulation, viewChild } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import 'zone.js/testing';
@@ -5231,9 +5231,93 @@ describe('User defined keyDown handler', () => {
 	}));
 });
 
+describe('Dynamic FormControl switching', () => {
+	let fixture: ComponentFixture<NgSelectDynamicFormControlTestComponent>;
+	let component: NgSelectDynamicFormControlTestComponent;
+
+	beforeEach(() => {
+		fixture = createTestingModuleWithReactiveForms(
+			NgSelectDynamicFormControlTestComponent,
+			`<ng-select [formControl]="predicate ? control1 : control2" 
+					   [items]="cities" 
+					   bindLabel="name" 
+					   bindValue="name">
+			</ng-select>`);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
+
+	it('should clear selected items when switching FormControl instances', fakeAsync(() => {
+		// Select an item in control1
+		component.control1.setValue('Vilnius');
+		tickAndDetectChanges(fixture);
+		
+		// Verify item is selected
+		expect(component.select().selectedItems.length).toBe(1);
+		expect(component.select().selectedItems[0].value.name).toBe('Vilnius');
+		
+		// Switch to control2 (which has no value set)
+		component.predicate = false;
+		tickAndDetectChanges(fixture);
+		
+		// Selected items should be cleared when switching FormControl instances
+		expect(component.select().selectedItems.length).toBe(0);
+	}));
+
+	it('should clear selected items when switching FormControl instances even if both controls have same value', fakeAsync(() => {
+		// Set the same value on both controls
+		component.control1.setValue('Vilnius');
+		component.control2.setValue('Vilnius');
+		
+		// Start with control1 (predicate = true)
+		component.predicate = true;
+		tickAndDetectChanges(fixture);
+		
+		// Verify item is selected
+		expect(component.select().selectedItems.length).toBe(1);
+		expect(component.select().selectedItems[0].value.name).toBe('Vilnius');
+		
+		// Switch to control2 (which has the same value)
+		component.predicate = false;
+		tickAndDetectChanges(fixture);
+		
+		// Selected items should be cleared when switching FormControl instances,
+		// even though both controls have the same value
+		expect(component.select().selectedItems.length).toBe(0);
+	}));
+});
+
 function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectConfig: NgSelectConfig | null = null): ComponentFixture<T> {
 	TestBed.configureTestingModule({
 		imports: [FormsModule, NgSelectModule],
+		providers: [
+			{ provide: ErrorHandler, useClass: TestsErrorHandler },
+			{
+				provide: NgZone,
+				useFactory: () => new MockNgZone(),
+			},
+			{ provide: ConsoleService, useFactory: () => new MockConsole() },
+		],
+	}).overrideComponent(cmp, {
+		set: {
+			template,
+		},
+	});
+
+	if (customNgSelectConfig) {
+		TestBed.overrideProvider(NgSelectConfig, { useValue: customNgSelectConfig });
+	}
+
+	TestBed.compileComponents();
+
+	const fixture = TestBed.createComponent(cmp);
+	fixture.detectChanges();
+	return fixture;
+}
+
+function createTestingModuleWithReactiveForms<T>(cmp: Type<T>, template: string, customNgSelectConfig: NgSelectConfig | null = null): ComponentFixture<T> {
+	TestBed.configureTestingModule({
+		imports: [FormsModule, ReactiveFormsModule, NgSelectModule],
 		providers: [
 			{ provide: ErrorHandler, useClass: TestsErrorHandler },
 			{
@@ -5516,4 +5600,21 @@ class NgSelectGroupingTestComponent {
 	groupByFn = (item) => item.child.name;
 
 	groupValueFn = (key, _) => ({ group: key });
+}
+
+@Component({
+	template: ``,
+	imports: [NgSelectModule, ReactiveFormsModule],
+})
+class NgSelectDynamicFormControlTestComponent {
+	readonly select = viewChild(NgSelectComponent);
+	control1 = new FormControl();
+	control2 = new FormControl();
+	predicate = true;
+	
+	cities = [
+		{ id: 1, name: 'Vilnius' },
+		{ id: 2, name: 'Kaunas' },
+		{ id: 3, name: 'Pabrade' },
+	];
 }
