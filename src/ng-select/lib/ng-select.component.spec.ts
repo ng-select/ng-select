@@ -2417,6 +2417,58 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 			expect(select.isOpen()).toBeTruthy();
 		}));
+
+		it('should use click event type by default when outsideClickEventType is not set', fakeAsync(() => {
+			// This test uses the default fixture which doesn't specify outsideClickEventType
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			expect(select.isOpen()).toBeTruthy();
+			
+			// Dispatch mousedown event - should not close when using default click
+			const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
+			document.getElementById('outside').dispatchEvent(mousedownEvent);
+			tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+			
+			// Dispatch click event - should close when using default click
+			const clickEvent = new MouseEvent('click', { bubbles: true });
+			document.getElementById('outside').dispatchEvent(clickEvent);
+			tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeFalsy();
+		}));
+	});
+
+	describe('Outside click with mousedown event type', () => {
+		let fixture: ComponentFixture<NgSelectTestComponent>;
+		let select: NgSelectComponent;
+		beforeEach(() => {
+			fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<div id="outside">Outside</div><br />
+                <ng-select id="select" [items]="cities"
+                    bindLabel="name"
+                    outsideClickEventType="mousedown"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`,
+			);
+			select = fixture.componentInstance.select();
+		});
+
+		it('should use mousedown event type when outsideClickEventType is set to mousedown', fakeAsync(() => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			expect(select.isOpen()).toBeTruthy();
+			
+			// Dispatch click event - should not close when using mousedown
+			const clickEvent = new MouseEvent('click', { bubbles: true });
+			document.getElementById('outside').dispatchEvent(clickEvent);
+			tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+			
+			// Dispatch mousedown event - should close when using mousedown
+			const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
+			document.getElementById('outside').dispatchEvent(mousedownEvent);
+			tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeFalsy();
+		}));
 	});
 
 	describe('Dropdown position', () => {
