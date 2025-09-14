@@ -8,9 +8,10 @@ import {
 	inject,
 	input,
 	signal,
+	DestroyRef,
+	ChangeDetectorRef,
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { filter } from 'rxjs';
+import { toObservable, takeUntilDestroyed, } from '@angular/core/rxjs-interop';
 
 export type StateChange = {
 	value: any;
@@ -30,6 +31,9 @@ export class NgOptionComponent {
 		transform: booleanAttribute,
 	});
 	public readonly elementRef = inject(ElementRef<HTMLElement>);
+	public readonly _cd = inject(ChangeDetectorRef);
+
+	private readonly _destroyRef = inject(DestroyRef);
 	public readonly label = signal<string>('');
 	private _previousLabel = '';
 
@@ -38,18 +42,23 @@ export class NgOptionComponent {
 			if (this._previousLabel !== this._label) {
 				this._previousLabel = this.label();
 				this.label.set(this._label);
+				this._cd.detectChanges();
 			}
 		});
 	}
 
-	public readonly stateChange = computed<StateChange | undefined>(() => ({
+	public readonly stateChange = computed<StateChange>(() => ({
 		value: this.value(),
 		disabled: this.disabled(),
 		label: this.label(),
-	}));
+	}), {
+		equal: (a, b) => a?.value === b?.value
+			&& a?.disabled === b?.disabled
+			&& a?.label === b?.label,
+	});
 
 	public readonly stateChange$ = toObservable(this.stateChange).pipe(
-		filter(() => this._previousLabel !== undefined),
+		takeUntilDestroyed(this._destroyRef),
 	);
 
 	private get _label() {

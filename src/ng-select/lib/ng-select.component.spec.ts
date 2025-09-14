@@ -2751,7 +2751,6 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			tickAndDetectChanges(fixture);
 			const select = fixture.componentInstance.select();
 			expect(select.itemsList.items[0].disabled).toBeFalsy();
 			fixture.componentInstance.disabled = true;
@@ -2810,7 +2809,6 @@ describe('NgSelectComponent', () => {
 			);
 
 			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
-			tickAndDetectChanges(fixture);
 			tickAndDetectChanges(fixture);
 
 			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeTruthy();
