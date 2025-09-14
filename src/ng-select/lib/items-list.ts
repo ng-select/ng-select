@@ -213,7 +213,7 @@ export class ItemsList {
 	}
 
 	resolveNested(option: any, key: string): any {
-		if (!isObject(option) || !key) {
+		if (!isObject(option)) {
 			return option;
 		}
 		if (key.indexOf('.') === -1) {
