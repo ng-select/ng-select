@@ -49,9 +49,12 @@ export class NgOptionComponent {
 		disabled: this.disabled(),
 		label: this.label(),
 	}), {
-		equal: (a, b) => a?.value === b?.value
-			&& a?.disabled === b?.disabled
-			&& a?.label === b?.label,
+		equal: (a, b) => {
+			if (a === b) return true;
+			return a?.value === b?.value
+				&& a?.disabled === b?.disabled
+				&& a?.label === b?.label;
+		},
 	});
 
 	public readonly stateChange$ = toObservable(this.stateChange).pipe(
