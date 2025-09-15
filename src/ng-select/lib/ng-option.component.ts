@@ -9,7 +9,6 @@ import {
 	input,
 	signal,
 	DestroyRef,
-	ChangeDetectorRef,
 } from '@angular/core';
 import { toObservable, takeUntilDestroyed, } from '@angular/core/rxjs-interop';
 
@@ -31,7 +30,6 @@ export class NgOptionComponent {
 		transform: booleanAttribute,
 	});
 	public readonly elementRef = inject(ElementRef<HTMLElement>);
-	public readonly _cd = inject(ChangeDetectorRef);
 
 	private readonly _destroyRef = inject(DestroyRef);
 	public readonly label = signal<string>('');
@@ -42,7 +40,6 @@ export class NgOptionComponent {
 			if (this._previousLabel !== this._label) {
 				this._previousLabel = this.label();
 				this.label.set(this._label);
-				this._cd.detectChanges();
 			}
 		});
 	}
