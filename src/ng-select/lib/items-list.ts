@@ -99,7 +99,7 @@ export class ItemsList {
 		}
 	}
 
-	findItem(value: any): NgOption {
+	findItem(value: any): NgOption | undefined {
 		let findBy: (item: NgOption) => boolean;
 		if (this._ngSelect.compareWith()) {
 			findBy = (item) => this._ngSelect.compareWith()(item.value, value);
