@@ -215,17 +215,18 @@ describe('NgSelectComponent', () => {
 			);
 
 			tickAndDetectChanges(fixture);
+			tickAndDetectChanges(fixture);
 
-			const items = fixture.componentInstance.select().itemsList.items;
-			expect(items.length).toBe(2);
-			expect(items[0]).toEqual(
+			const itemsList = fixture.componentInstance.select().itemsList;
+			expect(itemsList.items.length).toBe(2);
+			expect(itemsList.items[0]).toEqual(
 				jasmine.objectContaining({
 					label: 'Yes',
 					value: true,
 					disabled: false,
 				}),
 			);
-			expect(items[1]).toEqual(
+			expect(itemsList.items[1]).toEqual(
 				jasmine.objectContaining({
 					label: 'No',
 					value: false,
@@ -1083,6 +1084,7 @@ describe('NgSelectComponent', () => {
                         }
                     </ng-select>`,
 				);
+				tickAndDetectChanges(fixture);
 
 				select = fixture.componentInstance.select();
 				tickAndDetectChanges(fixture);
@@ -1102,6 +1104,7 @@ describe('NgSelectComponent', () => {
                         }
                     </ng-select>`,
 				);
+				tickAndDetectChanges(fixture);
 
 				select = fixture.componentInstance.select();
 				tickAndDetectChanges(fixture);
@@ -1111,6 +1114,7 @@ describe('NgSelectComponent', () => {
 					{ id: 1, name: 'Vilnius' },
 					{ id: 2, name: 'Kaunas' },
 				];
+				tickAndDetectChanges(fixture);
 				tickAndDetectChanges(fixture);
 				expect(select.items().length).toEqual(2);
 			}));
@@ -1123,6 +1127,8 @@ describe('NgSelectComponent', () => {
 						<ng-option [value]="2">B</ng-option>
 					</ng-select>`,
 				);
+				tick(1000);
+				tickAndDetectChanges(fixture);
 
 				// from component to model
 				selectOption(fixture, KeyCode.ArrowDown, 0);
@@ -1150,6 +1156,7 @@ describe('NgSelectComponent', () => {
                         <ng-option [value]="cities[1]">Kaunas</ng-option>
                 	</ng-select>`,
 				);
+				tickAndDetectChanges(fixture);
 
 				const selected = { name: 'Vilnius', id: 1 };
 				fixture.componentInstance.selectedCity = selected;
@@ -2750,6 +2757,8 @@ describe('NgSelectComponent', () => {
                     <ng-option [value]="false">No</ng-option>
                 </ng-select>`,
 			);
+			tick(100);
+			tickAndDetectChanges(fixture);
 
 			const select = fixture.componentInstance.select();
 			expect(select.itemsList.items[0].disabled).toBeFalsy();
