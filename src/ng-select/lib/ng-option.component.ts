@@ -34,14 +34,13 @@ export class NgOptionComponent {
 
 	private readonly _destroyRef = inject(DestroyRef);
 	public readonly label = signal<string>('');
-	private _previousLabel = '';
 
 	constructor() {
 		afterNextRender(() => {
-			if (this._previousLabel !== this._label) {
-				this._previousLabel = this.label();
-				this.label.set(this._label);
+			if (this.label() === this._label) {
+				return;
 			}
+			this.label.set(this._label);
 		});
 	}
 
