@@ -11,6 +11,7 @@ import {
 	DestroyRef,
 } from '@angular/core';
 import { toObservable, takeUntilDestroyed, } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 
 export type StateChange = {
 	value: any;
@@ -59,6 +60,7 @@ export class NgOptionComponent {
 
 	public readonly stateChange$ = toObservable(this.stateChange).pipe(
 		takeUntilDestroyed(this._destroyRef),
+		filter(() => !!this._label),
 	);
 
 	private get _label() {

@@ -766,8 +766,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.ngOptionsObservable.pipe(
 			startWith(this.ngOptions()),
 			takeUntilDestroyed(this._destroyRef),
-			// only proceed when all options have labels evaluated
-			filter((options) => options.every((o) => !o.label())),
 			switchMap((options) => {
 				// when there are no options we don't need to wait for anything
 				if (options.length === 0) {
