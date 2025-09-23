@@ -135,11 +135,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	ngOnChanges(changes: SimpleChanges) {
 		if (changes.items) {
 			const change = changes.items;
-			this._onItemsOrShowAddTagChange(change.currentValue, this.showAddTag, change.firstChange);
+			this._onItemsOrShowAddTagChange(change.currentValue, this.showAddTag(), change.firstChange);
 		}
 		if (changes.showAddTag) {
 			const change = changes.showAddTag;
-			this._onItemsOrShowAddTagChange(this.items, change.currentValue, change.firstChange);
+			this._onItemsOrShowAddTagChange(this.items(), change.currentValue, change.firstChange);
 		}
 	}
 
