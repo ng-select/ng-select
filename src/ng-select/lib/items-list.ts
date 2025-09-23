@@ -252,7 +252,15 @@ export class ItemsList {
 			// When compareWith is used, we need to find the item using the original selected value rather than the extracted bindValue, since compareWith expects to compare against the original value
 			if (this._ngSelect.compareWith()) {
 				// Extract the original value when bindValue is used to avoid passing dummy objects to compareWith
-				const originalValue = bindValue ? this.resolveNested(selected.value, bindValue) : selected.value;
+				// Only extract if we have a dummy object (has bindValue property and bindLabel is null)
+				let originalValue = selected.value;
+				if (bindValue && selected.value && 
+					typeof selected.value === 'object' && 
+					selected.value.hasOwnProperty(bindValue) &&
+					(!this._ngSelect.bindLabel() || selected.value[this._ngSelect.bindLabel()] === null)) {
+					// This looks like a dummy object, extract the original value
+					originalValue = this.resolveNested(selected.value, bindValue);
+				}
 				item = this._items.find((item) => this._ngSelect.compareWith()(item.value, originalValue));
 			} else {
 				const value = bindValue ? this.resolveNested(selected.value, bindValue) : selected.value;
