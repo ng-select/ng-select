@@ -1395,6 +1395,57 @@ describe('NgSelectComponent', () => {
 					});
 				}));
 
+				it('should call compareWith with original model value not dummy object (regression test)', fakeAsync(() => {
+					const fixture = createTestingModule(
+						NgSelectTestComponent,
+						`<ng-select [items]="cities"
+                            bindLabel="name"
+                            bindValue="id"
+                            [compareWith]="compareWith"
+                            [(ngModel)]="selectedCityId">
+                        </ng-select>`,
+					);
+
+					const cmp = fixture.componentInstance;
+					const select = fixture.componentInstance.select();
+					
+					// Start with empty items to simulate the timing issue
+					cmp.cities = [];
+					cmp.selectedCityId = 2; // Primitive value
+					
+					let compareWithArgs = [];
+					cmp.compareWith = jasmine.createSpy('compareWith').and.callFake((item, model) => {
+						compareWithArgs.push({ item, model });
+						return item.id === model;
+					});
+
+					tickAndDetectChanges(fixture);
+
+					// Initially no compareWith should be called since items is empty
+					expect(cmp.compareWith).not.toHaveBeenCalled();
+					expect(select.hasValue).toBe(true);
+					expect(select.selectedItems.length).toBe(1);
+
+					// Now update items to contain the matching item - this simulates the timing issue
+					cmp.cities = [
+						{ id: 1, name: 'Vilnius' },
+						{ id: 2, name: 'Kaunas' },
+						{ id: 3, name: 'Pabrade' },
+					];
+
+					tickAndDetectChanges(fixture);
+
+					// compareWith should be called when items are updated
+					expect(cmp.compareWith).toHaveBeenCalled();
+					
+					// REGRESSION CHECK: compareWith should be called with the original model value (2)
+					// NOT with a dummy object like { name: null, id: 2 }
+					expect(compareWithArgs.length).toBeGreaterThan(0);
+					const lastCall = compareWithArgs[compareWithArgs.length - 1];
+					expect(lastCall.model).toBe(2); // Should be the original primitive value
+					expect(typeof lastCall.model).toBe('number'); // Should be a number, not an object
+				}));
+
 				it('should select selected when there is no items', fakeAsync(() => {
 					const fixture = createTestingModule(
 						NgSelectTestComponent,
