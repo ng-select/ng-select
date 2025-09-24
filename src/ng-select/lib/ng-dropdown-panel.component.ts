@@ -260,7 +260,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	private _onItemsOrShowAddTagChange(items: NgOption[] = [], showAddTag: boolean, firstChange: boolean) {
 		this._scrollToEndFired = false;
 		this.itemsLength = items.length;
-		if (showAddTag) {
+		if (showAddTag && !(items.length === 0)) {
 			this.itemsLength++;
 		}
 
