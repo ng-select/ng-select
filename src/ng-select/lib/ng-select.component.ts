@@ -764,8 +764,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			return merge(...options.map((option) => option.stateChange$)).pipe(
 				tap((option) => {
 					const item = this.itemsList.findItem(option.value);
-					item.disabled = option.disabled;
-					item.label = option.label || item.label;
+					if (item) {
+						item.disabled = option.disabled;
+						item.label = option.label || item.label;
+					}
 				}),
 			)
 		};

@@ -2737,6 +2737,41 @@ describe('NgSelectComponent', () => {
 			expect(items[0].disabled).toBeTruthy();
 		}));
 
+		it('should not throw error when option value cannot be found in items list', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [(ngModel)]="selectedCity">
+                    <ng-option [value]="dynamicValue">Dynamic Option</ng-option>
+                </ng-select>`,
+			);
+
+			// Set initial value
+			fixture.componentInstance.dynamicValue = 'initial-value';
+			tickAndDetectChanges(fixture);
+			
+			// Spy on findItem to ensure it gets called and returns undefined for non-existent values
+			const select = fixture.componentInstance.select();
+			const originalFindItem = select.itemsList.findItem.bind(select.itemsList);
+			spyOn(select.itemsList, 'findItem').and.callFake((value: any) => {
+				// Return undefined for values that don't exist (simulating the real scenario)
+				if (value === 'non-existent-value') {
+					return undefined;
+				}
+				return originalFindItem(value);
+			});
+
+			// Change the option value to something that doesn't exist in itemsList
+			fixture.componentInstance.dynamicValue = 'non-existent-value';
+			
+			// This should not throw an error even though findItem returns undefined
+			expect(() => {
+				tickAndDetectChanges(fixture);
+			}).not.toThrow();
+			
+			// Verify that findItem was called with the non-existent value
+			expect(select.itemsList.findItem).toHaveBeenCalledWith('non-existent-value');
+		}));
+
 		it('should display custom clear button template when selected city', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
@@ -5284,6 +5319,7 @@ class NgSelectTestComponent {
 	label = 'Yes';
 	clearOnBackspace = true;
 	disabled = false;
+	dynamicValue = 'initial-value';
 	readonly = false;
 	dropdownPosition = 'bottom';
 	visible = true;
