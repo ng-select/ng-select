@@ -60,6 +60,15 @@ import { DefaultSelectionModelFactory } from './selection-model';
 		NgClearButtonTemplateDirective,
 		NgCollapseButtonTemplateDirective,
 	],
-	providers: [{ provide: SELECTION_MODEL_FACTORY, useValue: DefaultSelectionModelFactory }],
+	providers: provideNgSelect(),
 })
-export class NgSelectModule {}
+export class NgSelectModule { }
+
+export function provideNgSelect() {
+	return [
+		{
+			provide: SELECTION_MODEL_FACTORY,
+			useValue: DefaultSelectionModelFactory,
+		},
+	];
+}
