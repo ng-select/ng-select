@@ -64,8 +64,6 @@ export class LayoutHeaderComponent {
 	readonly dir = model<langDir>(undefined);
 	readonly theme = model('default');
 	readonly version = input<string>(undefined);
-	readonly dirChange = output<langDir>();
-	readonly themeChange = output<theme>();
 
 	setTheme(theme: theme) {
 		this.theme.set(theme);

@@ -46,7 +46,7 @@
 				[attr.aria-label]="ariaLabel()"
 				[attr.id]="labelForId()"
 				[attr.tabindex]="tabIndex()"
-				[disabled]="disabled"
+				[disabled]="disabled()"
 				[readOnly]="!searchable() || itemsList.maxItemsSelected"
 				[value]="searchTerm ?? ''"
 				aria-autocomplete="list"
@@ -71,7 +71,8 @@
 				tabindex="0"
 				[attr.tabindex]="tabFocusOnClear() ? 0 : -1"
 				title="{{ clearAllText() || config.clearAllText }}"
-				#clearButton>
+				#clearButton
+				(click)="handleClearClick($event)">
 				<span class="ng-clear" aria-hidden="true">×</span>
 			</span>
 		}

@@ -23,6 +23,10 @@ export function getNgSelectElement(fixture: ComponentFixture<any>): DebugElement
 	return fixture.debugElement.query(By.css('ng-select'));
 }
 
+export function getNgSelectNativeElement(fixture: ComponentFixture<any>): HTMLElement {
+	return getNgSelectElement(fixture).nativeElement;
+}
+
 export function triggerKeyDownEvent(element: DebugElement, key: string, target: Element = null): void {
 	element.triggerEventHandler('keydown', {
 		key,
