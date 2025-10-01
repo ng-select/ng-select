@@ -278,10 +278,10 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/ssr@^20.0.0":
-  version "20.0.0"
-  resolved "https://registry.npmjs.org/@angular/ssr/-/ssr-20.0.0.tgz"
-  integrity sha512-ezca+E3A3zRbMDmvyyclgDX38JvmXb0ZvqGkgQGURa12+5dHvwy8hnDT1eBoRxXBedp+cnIkxXxLjTzXb4/4Hw==
+"@angular/ssr@^20.3.0":
+  version "20.3.0"
+  resolved "https://registry.yarnpkg.com/@angular/ssr/-/ssr-20.3.0.tgz#30d6a135e9460dc31a79a5972a2fe4563a1fe614"
+  integrity sha512-vVe3xfikXRUpQvrYf2egB+oH6DRvmeEIS7mVwyGSLBkBD2UHDIrNEExGQL0TpDOzq1yff6bvNtK6COrIhsDRpg==
   dependencies:
     tslib "^2.3.0"
 
