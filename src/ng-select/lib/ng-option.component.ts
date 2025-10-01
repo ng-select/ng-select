@@ -9,7 +9,6 @@ import {
 	input,
 	signal,
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 
 type StateChange = {
 	value: any;
@@ -33,20 +32,10 @@ export class NgOptionComponent {
 
 	constructor() {
 		afterNextRender(() => {
-			if (this._label !== this.label()) {
-				this.label.set(this._label);
+			const label = (this.elementRef.nativeElement.innerHTML || '').trim();
+			if (label !== this.label()) {
+				this.label.set(label);
 			}
 		});
-	}
-
-	public readonly stateChange = computed<StateChange | undefined>(() => ({
-		value: this.value(),
-		disabled: this.disabled(),
-		label: this.label(),
-	}));
-	public readonly stateChange$ = toObservable(this.stateChange);
-
-	private get _label() {
-		return (this.elementRef.nativeElement.innerHTML || '').trim();
 	}
 }
