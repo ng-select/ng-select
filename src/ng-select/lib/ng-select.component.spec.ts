@@ -215,17 +215,18 @@ describe('NgSelectComponent', () => {
 			);
 
 			tickAndDetectChanges(fixture);
+			tickAndDetectChanges(fixture);
 
-			const items = fixture.componentInstance.select().itemsList.items;
-			expect(items.length).toBe(2);
-			expect(items[0]).toEqual(
+			const itemsList = fixture.componentInstance.select().itemsList;
+			expect(itemsList.items.length).toBe(2);
+			expect(itemsList.items[0]).toEqual(
 				jasmine.objectContaining({
 					label: 'Yes',
 					value: true,
 					disabled: false,
 				}),
 			);
-			expect(items[1]).toEqual(
+			expect(itemsList.items[1]).toEqual(
 				jasmine.objectContaining({
 					label: 'No',
 					value: false,
@@ -1083,6 +1084,7 @@ describe('NgSelectComponent', () => {
                         }
                     </ng-select>`,
 				);
+				tickAndDetectChanges(fixture);
 
 				select = fixture.componentInstance.select();
 				tickAndDetectChanges(fixture);
@@ -1093,6 +1095,30 @@ describe('NgSelectComponent', () => {
 				expect(select.items().length).toEqual(0);
 			}));
 
+			it('should update ng-option when updated asynchronously', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [(ngModel)]="selectedCityId">
+                        @for (city of cities; track city) {
+                            <ng-option [value]="city.id">{{city.name}}</ng-option>
+                        }
+                    </ng-select>`,
+				);
+				tickAndDetectChanges(fixture);
+
+				select = fixture.componentInstance.select();
+				tickAndDetectChanges(fixture);
+				expect(select.items().length).toEqual(3);
+
+				fixture.componentInstance.cities = [
+					{ id: 1, name: 'Vilnius' },
+					{ id: 2, name: 'Kaunas' },
+				];
+				tickAndDetectChanges(fixture);
+				tickAndDetectChanges(fixture);
+				expect(select.items().length).toEqual(2);
+			}));
+
 			it('should bind value', fakeAsync(() => {
 				const fixture = createTestingModule(
 					NgSelectTestComponent,
@@ -1101,6 +1127,8 @@ describe('NgSelectComponent', () => {
 						<ng-option [value]="2">B</ng-option>
 					</ng-select>`,
 				);
+				tick(1000);
+				tickAndDetectChanges(fixture);
 
 				// from component to model
 				selectOption(fixture, KeyCode.ArrowDown, 0);
@@ -1128,6 +1156,7 @@ describe('NgSelectComponent', () => {
                         <ng-option [value]="cities[1]">Kaunas</ng-option>
                 	</ng-select>`,
 				);
+				tickAndDetectChanges(fixture);
 
 				const selected = { name: 'Vilnius', id: 1 };
 				fixture.componentInstance.selectedCity = selected;
@@ -2728,13 +2757,14 @@ describe('NgSelectComponent', () => {
                     <ng-option [value]="false">No</ng-option>
                 </ng-select>`,
 			);
-
+			tick(100);
 			tickAndDetectChanges(fixture);
-			const items = fixture.componentInstance.select().itemsList.items;
-			expect(items[0].disabled).toBeFalsy();
+
+			const select = fixture.componentInstance.select();
+			expect(select.itemsList.items[0].disabled).toBeFalsy();
 			fixture.componentInstance.disabled = true;
 			tickAndDetectChanges(fixture);
-			expect(items[0].disabled).toBeTruthy();
+			expect(select.itemsList.items[0].disabled).toBeTruthy();
 		}));
 
 		it('should display custom clear button template when selected city', fakeAsync(() => {
@@ -2788,7 +2818,6 @@ describe('NgSelectComponent', () => {
 			);
 
 			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
-			tickAndDetectChanges(fixture);
 			tickAndDetectChanges(fixture);
 
 			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeTruthy();
