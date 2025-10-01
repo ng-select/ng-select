@@ -32,6 +32,7 @@ import { debounceTime, filter, map, startWith, switchMap, takeUntil, tap } from 
 
 import {
 	NgClearButtonTemplateDirective,
+	NgCollapseButtonTemplateDirective,
 	NgFooterTemplateDirective,
 	NgHeaderTemplateDirective,
 	NgItemLabelDirective,
@@ -130,6 +131,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly selectableGroup = input(false, { transform: booleanAttribute });
 	readonly tabFocusOnClearButton = input<boolean | undefined>();
 	readonly selectableGroupAsModel = input(true, { transform: booleanAttribute });
+	readonly collapsibleGroup = input(false, { transform: booleanAttribute });
+	readonly collapseGroupByDefault = input(false, { transform: booleanAttribute });
 	readonly searchFn = input(null);
 	readonly trackByFn = input(null);
 	readonly clearOnBackspace = input(true, { transform: booleanAttribute });
@@ -220,6 +223,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly tagTemplate = contentChild(NgTagTemplateDirective, { read: TemplateRef });
 	readonly loadingSpinnerTemplate = contentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef });
 	readonly clearButtonTemplate = contentChild(NgClearButtonTemplateDirective, { read: TemplateRef });
+	readonly collapseButtonTemplate = contentChild(NgCollapseButtonTemplateDirective, { read: TemplateRef });
 
 	// view children queries
 	readonly dropdownPanel = viewChild(forwardRef(() => NgDropdownPanelComponent));
@@ -561,6 +565,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (this._editableSearchTerm) {
 			this._setSearchTermFromItems();
 		}
+	}
+
+	toggleItemCollapse(event: Event, item: NgOption) {
+		event.stopPropagation();
+		item.collapsed = !item.collapsed;
 	}
 
 	select(item: NgOption) {
