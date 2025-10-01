@@ -4451,6 +4451,7 @@ describe('NgSelectComponent', () => {
                             bindLabel="name"
                             [multiple]="true"
                             [disabled]="disabled"
+                            [clearKeepsDisabledOptions]="clearKeepsDisabledOptions"
                             [readonly]="readonly"
                             [(ngModel)]="selectedCities">
                     </ng-select>`,
@@ -4469,7 +4470,7 @@ describe('NgSelectComponent', () => {
 				};
 			}));
 
-			it('should clear model except disabled', fakeAsync(() => {
+			it('should clear model except disabled when clearKeepsDisabledOptions is enabled', fakeAsync(() => {
 				triggerMousedown();
 				tickAndDetectChanges(fixture);
 				expect(fixture.componentInstance.selectedCities.length).toBe(1);
@@ -4479,6 +4480,15 @@ describe('NgSelectComponent', () => {
 						name: 'Kaunas',
 					}),
 				);
+				expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
+			}));
+
+			it('should clear model including disabled when clearKeepsDisabledOptions is disabled', fakeAsync(() => {
+				fixture.componentInstance.clearKeepsDisabledOptions = false;
+				tickAndDetectChanges(fixture);
+				triggerMousedown();
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.selectedCities.length).toBe(0);
 				expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
 			}));
 
@@ -5316,6 +5326,7 @@ class NgSelectTestComponent {
 	hideSelected = false;
 	closeOnSelect = true;
 	clearable = true;
+	clearKeepsDisabledOptions = true;
 	markFirst = true;
 	searchable = true;
 	openOnEnter = undefined;
