@@ -14,7 +14,6 @@ import {
 	model,
 	numberAttribute,
 	OnChanges,
-	OnDestroy,
 	OnInit,
 	output,
 	signal,
@@ -24,11 +23,12 @@ import {
 	contentChild,
 	viewChild,
 	computed,
-	contentChildren
+	contentChildren,
+	DestroyRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { merge, Subject } from 'rxjs';
-import { debounceTime, filter, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { combineLatest, of, Subject } from 'rxjs';
+import { debounceTime, filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 
 import {
 	NgClearButtonTemplateDirective,
@@ -54,11 +54,11 @@ import { newId } from './id';
 import { ItemsList } from './items-list';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgDropdownPanelService } from './ng-dropdown-panel.service';
-import { NgOptionComponent } from './ng-option.component';
+import { NgOptionComponent, StateChange } from './ng-option.component';
 import { DropdownPosition, KeyCode, NgOption } from './ng-select.types';
 import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
 import { isDefined, isFunction, isObject, isPromise } from './value-utils';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type AddTagFn = (term: string) => any | Promise<any>;
@@ -93,12 +93,13 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 		'[class.ng-select-disabled]': 'disabled()',
 	}
 })
-export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
+export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
 	readonly classes = inject(new HostAttributeToken('class'), { optional: true });
 	private readonly autoFocus = inject(new HostAttributeToken('autofocus'), { optional: true });
 	readonly config = inject(NgSelectConfig);
 	private readonly _cd = inject(ChangeDetectorRef);
 	private readonly _console = inject(ConsoleService);
+	private readonly _destroyRef = inject(DestroyRef);
 
 	// signals
 	public readonly _disabled = signal<boolean>(false);
@@ -245,7 +246,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	private _manualOpen: boolean;
 	private _pressedKeys: string[] = [];
 	private _isComposing = false;
-	private readonly _destroy$ = new Subject<void>();
 	private readonly _keyPress$ = new Subject<string>();
 
 	constructor() {
@@ -351,11 +351,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (isDefined(this.autoFocus)) {
 			this.focus();
 		}
-	}
-
-	ngOnDestroy() {
-		this._destroy$.next();
-		this._destroy$.complete();
 	}
 
 	@HostListener('keydown', ['$event'])
@@ -763,25 +758,31 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			}
 		};
 
-		const handleOptionChange = (options: readonly NgOptionComponent[]) => {
-			return merge(...options.map((option) => option.stateChange$)).pipe(
-				tap((option) => {
-					const item = this.itemsList.findItem(option.value);
-					item.disabled = option.disabled;
-					item.label = option.label || item.label;
-				}),
-			)
-		};
+		const handleOptionChange = (states: StateChange[]) => {
+			states.forEach((state) => {
+				const item = this.itemsList.findItem(state.value);
+				item.disabled = state.disabled;
+				item.label = state.label || item.label;
+			});
+		}
 
 		this.ngOptionsObservable.pipe(
 			startWith(this.ngOptions()),
-			takeUntil(this._destroy$),
-			tap((options) => {
-				this.bindLabel.set(this._defaultLabel);
-				mapNgOptions(options);
-				this._cd.detectChanges();
+			takeUntilDestroyed(this._destroyRef),
+			switchMap((options) => {
+				// when there are no options we don't need to wait for anything
+				if (options.length === 0) {
+					return of([]);
+				}
+				// Wait for all options to be rendered
+				return combineLatest(options.map((option) => option.stateChange$))
 			}),
-			switchMap((options) => handleOptionChange(options))
+			tap((stateChanges) => {
+				const ngOptions = this.ngOptions();
+				this.bindLabel.set(this._defaultLabel);
+				mapNgOptions(ngOptions);
+				handleOptionChange(stateChanges);
+			}),
 		).subscribe();
 	}
 
@@ -849,7 +850,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 		this._keyPress$
 			.pipe(
-				takeUntil(this._destroy$),
+				takeUntilDestroyed(this._destroyRef),
 				tap((letter) => this._pressedKeys.push(letter)),
 				debounceTime(200),
 				filter(() => this._pressedKeys.length > 0),

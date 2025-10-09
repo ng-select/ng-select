@@ -8,10 +8,12 @@ import {
 	inject,
 	input,
 	signal,
+	DestroyRef,
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { toObservable, takeUntilDestroyed, } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 
-type StateChange = {
+export type StateChange = {
 	value: any;
 	disabled: boolean;
 	label?: string;
@@ -29,22 +31,36 @@ export class NgOptionComponent {
 		transform: booleanAttribute,
 	});
 	public readonly elementRef = inject(ElementRef<HTMLElement>);
+
+	private readonly _destroyRef = inject(DestroyRef);
 	public readonly label = signal<string>('');
 
 	constructor() {
 		afterNextRender(() => {
-			if (this._label !== this.label()) {
-				this.label.set(this._label);
+			if (this.label() === this._label) {
+				return;
 			}
+			this.label.set(this._label);
 		});
 	}
 
-	public readonly stateChange = computed<StateChange | undefined>(() => ({
+	public readonly stateChange = computed<StateChange>(() => ({
 		value: this.value(),
 		disabled: this.disabled(),
 		label: this.label(),
-	}));
-	public readonly stateChange$ = toObservable(this.stateChange);
+	}), {
+		equal: (a, b) => {
+			if (a === b) return true;
+			return a?.value === b?.value
+				&& a?.disabled === b?.disabled
+				&& a?.label === b?.label;
+		},
+	});
+
+	public readonly stateChange$ = toObservable(this.stateChange).pipe(
+		takeUntilDestroyed(this._destroyRef),
+		filter(() => !!this._label),
+	);
 
 	private get _label() {
 		return (this.elementRef.nativeElement.innerHTML || '').trim();
