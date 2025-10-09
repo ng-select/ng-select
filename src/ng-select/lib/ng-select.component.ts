@@ -481,6 +481,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	writeValue(value: any | any[]): void {
 		this.itemsList.clearSelected();
 		this._handleWriteValue(value);
+		if (this._editableSearchTerm) {
+			this._setSearchTermFromItems();
+		}
 		this._cd.markForCheck();
 	}
 
