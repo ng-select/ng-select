@@ -4097,6 +4097,27 @@ describe('NgSelectComponent', () => {
 				const allOptions = select.element.querySelectorAll('.ng-dropdown-panel .ng-option');
 				expect(allOptions.length).toEqual(fixture.componentInstance.cities.length);
 			}));
+
+			it('should update search term when ngModel is updated programmatically', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+                        [editableSearchTerm]="true"
+                        bindValue="id"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`,
+				);
+				const select = fixture.componentInstance.select();
+				const selectedCity = fixture.componentInstance.cities[0];
+
+				// Update ngModel programmatically (simulating writeValue)
+				fixture.componentInstance.selectedCity = selectedCity.id;
+				tickAndDetectChanges(fixture);
+
+				// The search term should be updated to match the selected item's label
+				expect(select.searchTerm).toEqual(selectedCity.name);
+			}));
 		});
 	});
 
