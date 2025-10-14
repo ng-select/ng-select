@@ -144,6 +144,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly editableSearchTerm = input(false, { transform: booleanAttribute });
 	readonly ngClass = input(null);
 	readonly typeahead = input<Subject<string>>(undefined);
+	readonly outsideClickEventType = input<'click' | 'mousedown'>('click');
 	readonly multiple = input(false, { transform: booleanAttribute });
 	readonly addTag = input<boolean | AddTagFn>(false);
 	readonly searchable = input(true, { transform: booleanAttribute });
