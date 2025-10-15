@@ -4,6 +4,9 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
+	computed,
+	contentChild,
+	contentChildren,
 	ElementRef,
 	forwardRef,
 	HostAttributeToken,
@@ -20,11 +23,8 @@ import {
 	signal,
 	SimpleChanges,
 	TemplateRef,
-	ViewEncapsulation,
-	contentChild,
 	viewChild,
-	computed,
-	contentChildren
+	ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { merge, Subject } from 'rxjs';
@@ -48,6 +48,7 @@ import {
 } from './ng-templates.directive';
 
 import { NgTemplateOutlet } from '@angular/common';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { NgSelectConfig } from './config.service';
 import { ConsoleService } from './console.service';
 import { newId } from './id';
@@ -58,7 +59,6 @@ import { NgOptionComponent } from './ng-option.component';
 import { DropdownPosition, KeyCode, NgOption } from './ng-select.types';
 import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
 import { isDefined, isFunction, isObject, isPromise } from './value-utils';
-import { toObservable } from '@angular/core/rxjs-interop';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type AddTagFn = (term: string) => any | Promise<any>;
@@ -91,7 +91,7 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 		'[class.ng-select-opened]': 'isOpen()',
 		'[class.ng-select-filtered]': 'filtered',
 		'[class.ng-select-disabled]': 'disabled()',
-	}
+	},
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
 	readonly classes = inject(new HostAttributeToken('class'), { optional: true });
@@ -613,7 +613,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 		const handleTag = (item) => (this._isTypeahead || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item));
 		if (isPromise(tag)) {
-			tag.then((item) => this.select(handleTag(item))).catch(() => { });
+			tag.then((item) => this.select(handleTag(item))).catch(() => {});
 		} else if (tag) {
 			this.select(handleTag(tag));
 		}
@@ -724,9 +724,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 	}
 
-	private _onChange = (_: any) => { };
+	private _onChange = (_: any) => {};
 
-	private _onTouched = () => { };
+	private _onTouched = () => {};
 
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];
@@ -751,11 +751,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 	private _setItemsFromNgOptions() {
 		const mapNgOptions = (options: readonly NgOptionComponent[]) => {
-			const items = options.map((option) => ({
-				$ngOptionValue: option.value(),
-				$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
-				disabled: option.disabled(),
-			})) ?? [];
+			const items =
+				options.map((option) => ({
+					$ngOptionValue: option.value(),
+					$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
+					disabled: option.disabled(),
+				})) ?? [];
 			this.items.set(items);
 			this.itemsList.setItems(items);
 			if (this.hasValue) {
@@ -767,22 +768,26 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			return merge(...options.map((option) => option.stateChange$)).pipe(
 				tap((option) => {
 					const item = this.itemsList.findItem(option.value);
-					item.disabled = option.disabled;
-					item.label = option.label || item.label;
+					if (item) {
+						item.disabled = option.disabled;
+						item.label = option.label || item.label;
+					}
 				}),
-			)
+			);
 		};
 
-		this.ngOptionsObservable.pipe(
-			startWith(this.ngOptions()),
-			takeUntil(this._destroy$),
-			tap((options) => {
-				this.bindLabel.set(this._defaultLabel);
-				mapNgOptions(options);
-				this._cd.detectChanges();
-			}),
-			switchMap((options) => handleOptionChange(options))
-		).subscribe();
+		this.ngOptionsObservable
+			.pipe(
+				startWith(this.ngOptions()),
+				takeUntil(this._destroy$),
+				tap((options) => {
+					this.bindLabel.set(this._defaultLabel);
+					mapNgOptions(options);
+					this._cd.detectChanges();
+				}),
+				switchMap((options) => handleOptionChange(options)),
+			)
+			.subscribe();
 	}
 
 	private _isValidWriteValue(value: any): boolean {
