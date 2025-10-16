@@ -4,7 +4,7 @@
 	[class.ng-has-value]="hasValue"
 	class="ng-select-container">
 	<div class="ng-value-container">
-		@if ((selectedItems.length === 0 && !searchTerm) || (fixedPlaceholder() ?? config.fixedPlaceholder )) {
+		@if ((selectedItems.length === 0 && !searchTerm) || (fixedPlaceholder() ?? config.fixedPlaceholder)) {
 			<ng-template #defaultPlaceholderTemplate>
 				<div class="ng-placeholder">{{ placeholder() ?? config.placeholder }}</div>
 			</ng-template>
@@ -122,11 +122,29 @@
 					[attr.aria-setsize]="itemsList.filteredItems.length"
 					[attr.aria-posinset]="item.index + 1">
 					<ng-template #defaultOptionTemplate>
-						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
+						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"> </span>
 					</ng-template>
+
+					@if (item.children && collapsibleGroup()) {
+						<ng-template #defaultCollapseButtonTemplate let-collapsed="collapsed">
+							<button class="ng-option-collapse-button">{{ collapsed ? '⏷' : '⏶' }}</button>
+						</ng-template>
+
+						<span class="ng-option-collapse-wrapper" (click)="toggleItemCollapse($event, item)">
+							<ng-template
+								[ngTemplateOutlet]="collapseButtonTemplate() || defaultCollapseButtonTemplate"
+								[ngTemplateOutletContext]="{ collapsed: item.collapsed }">
+							</ng-template>
+						</span>
+					}
+
 					<ng-template
 						[ngTemplateOutlet]="
-							item.children ? optgroupTemplate() || defaultOptionTemplate : optionTemplate() || defaultOptionTemplate
+							!collapsibleGroup() || item.children || !item.parent?.collapsed
+								? item.children
+									? optgroupTemplate() || defaultOptionTemplate
+									: optionTemplate() || defaultOptionTemplate
+								: null
 						"
 						[ngTemplateOutletContext]="{ item: item.value, item$: item, index: item.index, searchTerm: searchTerm }">
 					</ng-template>
