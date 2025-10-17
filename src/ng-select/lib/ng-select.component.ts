@@ -95,14 +95,9 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 })
 export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
 	readonly classes = inject(new HostAttributeToken('class'), { optional: true });
-	private readonly autoFocus = inject(new HostAttributeToken('autofocus'), { optional: true });
 	readonly config = inject(NgSelectConfig);
-	private readonly _cd = inject(ChangeDetectorRef);
-	private readonly _console = inject(ConsoleService);
-
 	// signals
 	public readonly _disabled = signal<boolean>(false);
-
 	// inputs
 	readonly ariaLabelDropdown = input<string>('Options List');
 	readonly ariaLabel = input<string | undefined>(undefined);
@@ -158,14 +153,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			return fn;
 		},
 	});
-
 	// models
 	readonly bindLabel = model<string>(undefined);
 	readonly bindValue = model<string>(undefined);
 	readonly appearance = model<string>(undefined);
 	readonly isOpen = model<boolean>(false);
-	readonly items = model([]);
-
+	readonly items = input<any[]>([]);
 	// output events
 	readonly blurEvent = output<any>({ alias: 'blur' });
 	readonly focusEvent = output<any>({ alias: 'focus' });
@@ -184,7 +177,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		end: number;
 	}>({ alias: 'scroll' });
 	readonly scrollToEnd = output<any>({ alias: 'scrollToEnd' });
-
 	// computed
 	readonly disabled = computed(() => this.readonly() || this._disabled());
 	readonly clearSearchOnAddValue = computed(() => {
@@ -205,7 +197,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 		return this.multiple();
 	});
-
 	// content child queries
 	readonly optionTemplate = contentChild(NgOptionTemplateDirective, { read: TemplateRef });
 	readonly optgroupTemplate = contentChild(NgOptgroupTemplateDirective, { read: TemplateRef });
@@ -220,12 +211,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly tagTemplate = contentChild(NgTagTemplateDirective, { read: TemplateRef });
 	readonly loadingSpinnerTemplate = contentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef });
 	readonly clearButtonTemplate = contentChild(NgClearButtonTemplateDirective, { read: TemplateRef });
-
 	// view children queries
 	readonly dropdownPanel = viewChild(forwardRef(() => NgDropdownPanelComponent));
 	readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 	readonly clearButton = viewChild<ElementRef<HTMLSpanElement>>('clearButton');
-
 	// public variables
 	ngOptions = contentChildren(NgOptionComponent, { descendants: true });
 	ngOptionsObservable = toObservable(this.ngOptions);
@@ -237,7 +226,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	focused: boolean;
 	escapeHTML = true;
 	tabFocusOnClear = signal<boolean>(true);
-
+	readonly keyDownFn = input<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true);
+	private readonly autoFocus = inject(new HostAttributeToken('autofocus'), { optional: true });
+	private readonly _cd = inject(ChangeDetectorRef);
+	private readonly _console = inject(ConsoleService);
 	// private variables
 	private _itemsAreUsed: boolean;
 	private readonly _defaultLabel = 'label';
@@ -307,8 +299,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		const term = this.searchTerm?.trim();
 		return term && term.length >= this.minTermLength();
 	}
-
-	readonly keyDownFn = input<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true);
 
 	clearItem = (item: any) => {
 		const option = this.selectedItems.find((x) => x.value === item);
@@ -757,7 +747,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 					$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
 					disabled: option.disabled(),
 				})) ?? [];
-			this.items.set(items);
 			this.itemsList.setItems(items);
 			if (this.hasValue) {
 				this.itemsList.mapSelectedItems();
