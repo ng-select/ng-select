@@ -164,7 +164,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly bindValue = model<string>(undefined);
 	readonly appearance = model<string>(undefined);
 	readonly isOpen = model<boolean>(false);
-	readonly items = model([]);
+	readonly items = input<any[]>([]);
 
 	// output events
 	readonly blurEvent = output<any>({ alias: 'blur' });
@@ -757,7 +757,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 					$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
 					disabled: option.disabled(),
 				})) ?? [];
-			this.items.set(items);
 			this.itemsList.setItems(items);
 			if (this.hasValue) {
 				this.itemsList.mapSelectedItems();
