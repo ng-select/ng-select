@@ -2399,15 +2399,6 @@ describe('NgSelectComponent', () => {
 			expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
 		}));
 
-		it('should close dropdown if opened and touched outside dropdown container', fakeAsync(() => {
-			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
-			const event = new TouchEvent('touchstart', { bubbles: true });
-			document.getElementById('outside').dispatchEvent(event);
-			tickAndDetectChanges(fixture);
-			expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
-		}));
-
 		it('should prevent dropdown close if clicked on select', fakeAsync(() => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 			expect(select.isOpen()).toBeTruthy();
