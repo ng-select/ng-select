@@ -19,7 +19,7 @@ import {
 	viewChild,
 } from '@angular/core';
 
-import { animationFrameScheduler, asapScheduler, fromEvent, merge, Subject } from 'rxjs';
+import { animationFrameScheduler, asapScheduler, fromEvent, Subject } from 'rxjs';
 import { auditTime, takeUntil } from 'rxjs/operators';
 import { NgDropdownPanelService, PanelDimensions } from './ng-dropdown-panel.service';
 
@@ -237,7 +237,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		}
 
 		this._zone.runOutsideAngular(() => {
-			merge(fromEvent(this._document, 'touchstart', { capture: true }), fromEvent(this._document, 'click', { capture: true }))
+			fromEvent(this._document, 'click', { capture: true })
 				.pipe(takeUntil(this._destroy$))
 				.subscribe(($event) => this._checkToClose($event));
 		});
