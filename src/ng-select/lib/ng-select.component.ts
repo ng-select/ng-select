@@ -5,6 +5,8 @@ import {
 	ChangeDetectorRef,
 	Component,
 	effect,
+	contentChild,
+	contentChildren,
 	computed,
 	ElementRef,
 	forwardRef,
@@ -48,7 +50,6 @@ import {
 } from './ng-templates.directive';
 
 import { NgTemplateOutlet } from '@angular/common';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { NgSelectConfig } from './config.service';
 import { ConsoleService } from './console.service';
 import { newId } from './id';
@@ -158,12 +159,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	});
 	readonly keyDownFn = input<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true);
 
-  // models
+	// models
 	readonly bindLabel = model<string>(undefined);
 	readonly bindValue = model<string>(undefined);
 	readonly appearance = model<string>(undefined);
 	readonly isOpen = model<boolean>(false);
-	readonly items = input<readonly any[]>([]);
+	readonly items = model<readonly any[]>([]);
+
 	// output events
 	readonly blurEvent = output<any>({ alias: 'blur' });
 	readonly focusEvent = output<any>({ alias: 'focus' });
@@ -182,8 +184,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		end: number;
 	}>({ alias: 'scroll' });
 	readonly scrollToEnd = output<any>({ alias: 'scrollToEnd' });
-	// 
 
+	// computed
 	readonly disabled = computed(() => this.readonly() || this._disabled());
 	readonly clearSearchOnAddValue = computed(() => {
 		if (isDefined(this.clearSearchOnAdd())) {
@@ -232,14 +234,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	itemsList: ItemsList;
 	viewPortItems: NgOption[] = [];
 	tabFocusOnClear = signal<boolean>(true);
-	readonly keyDownFn = input<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true);
 	private readonly autoFocus = inject(new HostAttributeToken('autofocus'), { optional: true });
-	private readonly _cd = inject(ChangeDetectorRef);
-	private readonly _console = inject(ConsoleService);
 	// private variables
 	private readonly _defaultLabel = 'label';
 	private readonly _destroy$ = new Subject<void>();
-	private readonly _disabled = signal<boolean>(false);
 	private readonly _editableSearchTerm = computed(() => this.editableSearchTerm() && !this.multiple());
 	private _focused: boolean;
 	private _injector = inject(Injector);
@@ -308,19 +306,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			((!this.hideSelected() && this.isOpen()) || !this.selectedItems.some((x) => x.label.toLowerCase() === term)) &&
 			!this.loading()
 		);
-	}
-
-	private get _editableSearchTerm(): boolean {
-		return this.editableSearchTerm() && !this.multiple();
-	}
-
-	private get _isTypeahead() {
-		return this.typeahead() && this.typeahead().observed;
-	}
-
-	private get _validTerm() {
-		const term = this.searchTerm?.trim();
-		return term && term.length >= this.minTermLength();
 	}
 
 	clearItem = (item: any) => {
@@ -626,7 +611,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 		const handleTag = (item) => (this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item));
 		if (isPromise(tag)) {
-			tag.then((item) => this.select(handleTag(item))).catch(() => {});
+			tag.then((item) => this.select(handleTag(item))).catch(() => { });
 		} else if (tag) {
 			this.select(handleTag(tag));
 		}
@@ -737,9 +722,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 	}
 
-	private _onChange = (_: any) => {};
+	private _onChange = (_: any) => { };
 
-	private _onTouched = () => {};
+	private _onTouched = () => { };
 
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];
