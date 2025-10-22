@@ -1,187 +1,135 @@
-<div
-	(mousedown)="handleMousedown($event)"
-	[class.ng-appearance-outline]="appearance() === 'outline'"
-	[class.ng-has-value]="hasValue"
-	class="ng-select-container">
-	<div class="ng-value-container">
-		@if ((selectedItems.length === 0 && !searchTerm) || (fixedPlaceholder() ?? config.fixedPlaceholder )) {
-			<ng-template #defaultPlaceholderTemplate>
-				<div class="ng-placeholder">{{ placeholder() ?? config.placeholder }}</div>
-			</ng-template>
-			<ng-template [ngTemplateOutlet]="placeholderTemplate() || defaultPlaceholderTemplate"> </ng-template>
-		}
+<div (mousedown)="handleMousedown($event)" [class.ng-appearance-outline]="appearance() === 'outline'"
+    [class.ng-has-value]="hasValue" class="ng-select-container">
+    <div class="ng-value-container">
+        @if ((selectedItems.length === 0 && !searchTerm) || (fixedPlaceholder() ?? config.fixedPlaceholder)) {
+        <ng-template #defaultPlaceholderTemplate>
+            <div class="ng-placeholder">{{ placeholder() ?? config.placeholder }}</div>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="placeholderTemplate() || defaultPlaceholderTemplate"> </ng-template>
+        }
 
-		@if ((!multiLabelTemplate() || !multiple()) && selectedItems.length > 0) {
-			@for (item of selectedItems; track trackByOption($index, item)) {
-				<div [class.ng-value-disabled]="item.disabled" class="ng-value">
-					<ng-template #defaultLabelTemplate>
-						<span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">×</span>
-						<span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
-					</ng-template>
-					<ng-template
-						[ngTemplateOutlet]="labelTemplate() || defaultLabelTemplate"
-						[ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
-					</ng-template>
-				</div>
-			}
-		}
+        @if ((!multiLabelTemplate() || !multiple()) && selectedItems.length > 0) {
+        @for (item of selectedItems; track trackByOption($index, item)) {
+        <div [class.ng-value-disabled]="item.disabled" class="ng-value">
+            <ng-template #defaultLabelTemplate>
+                <span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">×</span>
+                <span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
+            </ng-template>
+            <ng-template [ngTemplateOutlet]="labelTemplate() || defaultLabelTemplate"
+                [ngTemplateOutletContext]="{ item: item.value, clear: clearItem, label: item.label }">
+            </ng-template>
+        </div>
+        }
+        }
 
-		@if (multiple() && multiLabelTemplate() && selectedValues.length > 0) {
-			<ng-template [ngTemplateOutlet]="multiLabelTemplate()" [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
-			</ng-template>
-		}
+        @if (multiple() && multiLabelTemplate() && selectedValues.length > 0) {
+        <ng-template [ngTemplateOutlet]="multiLabelTemplate()"
+            [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
+        </ng-template>
+        }
 
-		<div class="ng-input">
-			<input
-				#searchInput
-				(blur)="onInputBlur($event)"
-				(change)="$event.stopPropagation()"
-				(compositionend)="onCompositionEnd(searchInput.value)"
-				(compositionstart)="onCompositionStart()"
-				(focus)="onInputFocus($event)"
-				(input)="filter(searchInput.value)"
-				[attr.aria-activedescendant]="isOpen() ? itemsList?.markedItem?.htmlId : null"
-				[attr.aria-controls]="isOpen() ? dropdownId : null"
-				[attr.aria-expanded]="isOpen()"
-				[attr.aria-label]="ariaLabel()"
-				[attr.id]="labelForId()"
-				[attr.tabindex]="tabIndex()"
-				[disabled]="disabled()"
-				[readOnly]="!searchable() || itemsList.maxItemsSelected"
-				[value]="searchTerm ?? ''"
-				aria-autocomplete="list"
-				role="combobox" />
-		</div>
-	</div>
+        <div class="ng-input">
+            <input #searchInput (blur)="onInputBlur($event)" (change)="$event.stopPropagation()"
+                (compositionend)="onCompositionEnd(searchInput.value)" (compositionstart)="onCompositionStart()"
+                (focus)="onInputFocus($event)" (input)="filter(searchInput.value)"
+                [attr.aria-activedescendant]="isOpen() ? itemsList?.markedItem?.htmlId : null"
+                [attr.aria-controls]="isOpen() ? dropdownId : null" [attr.aria-expanded]="isOpen()"
+                [attr.aria-label]="ariaLabel()" [attr.id]="labelForId()" [attr.tabindex]="tabIndex()"
+                [disabled]="disabled()" [readOnly]="!searchable() || itemsList.maxItemsSelected"
+                [value]="searchTerm ?? ''" aria-autocomplete="list" role="combobox" />
+        </div>
+    </div>
 
-	@if (loading()) {
-		<ng-template #defaultLoadingSpinnerTemplate>
-			<div class="ng-spinner-loader"></div>
-		</ng-template>
-		<ng-template [ngTemplateOutlet]="loadingSpinnerTemplate() || defaultLoadingSpinnerTemplate"></ng-template>
-	}
+    @if (loading()) {
+    <ng-template #defaultLoadingSpinnerTemplate>
+        <div class="ng-spinner-loader"></div>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="loadingSpinnerTemplate() || defaultLoadingSpinnerTemplate"></ng-template>
+    }
 
-	@if (showClear()) {
-		@if (clearButtonTemplate()) {
-			<ng-container [ngTemplateOutlet]="clearButtonTemplate()"></ng-container>
-		} @else {
-			<span
-				class="ng-clear-wrapper"
-				role="button"
-				tabindex="0"
-				[attr.tabindex]="tabFocusOnClear() ? 0 : -1"
-				title="{{ clearAllText() || config.clearAllText }}"
-				#clearButton
-				(click)="handleClearClick($event)">
-				<span class="ng-clear" aria-hidden="true">×</span>
-			</span>
-		}
-	}
+    @if (showClear()) {
+    @if (clearButtonTemplate()) {
+    <ng-container [ngTemplateOutlet]="clearButtonTemplate()"></ng-container>
+    } @else {
+    <span class="ng-clear-wrapper" role="button" tabindex="0" [attr.tabindex]="tabFocusOnClear() ? 0 : -1"
+        title="{{ clearAllText() || config.clearAllText }}" #clearButton (click)="handleClearClick($event)">
+        <span class="ng-clear" aria-hidden="true">×</span>
+    </span>
+    }
+    }
 
-	<span class="ng-arrow-wrapper">
-		<span class="ng-arrow"></span>
-	</span>
+    <span class="ng-arrow-wrapper">
+        <span class="ng-arrow"></span>
+    </span>
 </div>
 
 @if (isOpen()) {
-	@let appendToValue = appendTo() || config.appendTo;
-	<ng-dropdown-panel
-		class="ng-dropdown-panel"
-		[virtualScroll]="virtualScroll() ?? !config.disableVirtualScroll ?? false"
-		[bufferAmount]="bufferAmount()"
-		[appendTo]="appendToValue"
-		[position]="dropdownPosition()"
-		[headerTemplate]="headerTemplate()"
-		[footerTemplate]="footerTemplate()"
-		[filterValue]="searchTerm"
-		[items]="itemsList.filteredItems"
-		[markedItem]="itemsList.markedItem"
-		(update)="viewPortItems = $event"
-		(scroll)="scroll.emit($event)"
-		(scrollToEnd)="scrollToEnd.emit($event)"
-		(outsideClick)="close()"
-		[class.ng-select-multiple]="multiple()"
-		[class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
-		[id]="dropdownId"
-		[ariaLabelDropdown]="ariaLabelDropdown()">
-		<ng-container>
-			@for (item of viewPortItems; track trackByOption($index, item)) {
-				<div
-					class="ng-option"
-					[attr.role]="item.children ? 'group' : 'option'"
-					(click)="toggleItem(item)"
-					(mouseover)="onItemHover(item)"
-					[class.ng-option-disabled]="item.disabled"
-					[class.ng-option-selected]="item.selected"
-					[class.ng-optgroup]="item.children"
-					[class.ng-option]="!item.children"
-					[class.ng-option-child]="!!item.parent"
-					[class.ng-option-marked]="item === itemsList.markedItem"
-					[attr.aria-selected]="item.selected"
-					[attr.id]="item?.htmlId"
-					[attr.aria-setsize]="itemsList.filteredItems.length"
-					[attr.aria-posinset]="item.index + 1">
-					<ng-template #defaultOptionTemplate>
-						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
-					</ng-template>
-					<ng-template
-						[ngTemplateOutlet]="
+@let appendToValue = appendTo() || config.appendTo;
+<ng-dropdown-panel class="ng-dropdown-panel" [virtualScroll]="virtualScroll() ?? !config.disableVirtualScroll ?? false"
+    [bufferAmount]="bufferAmount()" [appendTo]="appendToValue" [position]="dropdownPosition()"
+    [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [filterValue]="searchTerm"
+    [items]="itemsList.filteredItems" [markedItem]="itemsList.markedItem" (update)="viewPortItems = $event"
+    (scroll)="scroll.emit($event)" (scrollToEnd)="scrollToEnd.emit($event)" (outsideClick)="close()"
+    [class.ng-select-multiple]="multiple()" [class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
+    [id]="dropdownId" [ariaLabelDropdown]="ariaLabelDropdown()">
+    <ng-container>
+        @for (item of viewPortItems; track trackByOption($index, item)) {
+        <div class="ng-option" [attr.role]="item.children ? 'group' : 'option'" (click)="toggleItem(item)"
+            (mouseover)="onItemHover(item)" [class.ng-option-disabled]="item.disabled"
+            [class.ng-option-selected]="item.selected" [class.ng-optgroup]="item.children"
+            [class.ng-option]="!item.children" [class.ng-option-child]="!!item.parent"
+            [class.ng-option-marked]="item === itemsList.markedItem" [attr.aria-selected]="item.selected"
+            [attr.id]="item?.htmlId" [attr.aria-setsize]="itemsList.filteredItems.length"
+            [attr.aria-posinset]="item.index + 1">
+            <ng-template #defaultOptionTemplate>
+                <span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
+            </ng-template>
+            <ng-template [ngTemplateOutlet]="
 							item.children ? optgroupTemplate() || defaultOptionTemplate : optionTemplate() || defaultOptionTemplate
-						"
-						[ngTemplateOutletContext]="{ item: item.value, item$: item, index: item.index, searchTerm: searchTerm }">
-					</ng-template>
-				</div>
-			}
-			@if (showAddTag) {
-				<div
-					class="ng-option"
-					[class.ng-option-marked]="!itemsList.markedItem"
-					(mouseover)="itemsList.unmarkItem()"
-					role="option"
-					(click)="selectTag()">
-					<ng-template #defaultTagTemplate>
-						<span
-							><span class="ng-tag-label">{{ addTagText() || config.addTagText }}</span
-							>"{{ searchTerm }}"</span
-						>
-					</ng-template>
-					<ng-template
-						[ngTemplateOutlet]="tagTemplate() || defaultTagTemplate"
-						[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
-					</ng-template>
-				</div>
-			}
-		</ng-container>
-		@if (showNoItemsFound()) {
-			<ng-template #defaultNotFoundTemplate>
-				<div class="ng-option ng-option-disabled">{{ notFoundText() ?? config.notFoundText }}</div>
-			</ng-template>
-			<ng-template
-				[ngTemplateOutlet]="notFoundTemplate() || defaultNotFoundTemplate"
-				[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
-			</ng-template>
-		}
-		@if (showTypeToSearch()) {
-			<ng-template #defaultTypeToSearchTemplate>
-				<div class="ng-option ng-option-disabled">{{ typeToSearchText() || config.typeToSearchText }}</div>
-			</ng-template>
-			<ng-template [ngTemplateOutlet]="typeToSearchTemplate() || defaultTypeToSearchTemplate"></ng-template>
-		}
-		@if (loading() && itemsList.filteredItems.length === 0) {
-			<ng-template #defaultLoadingTextTemplate>
-				<div class="ng-option ng-option-disabled">{{ loadingText() || config.loadingText }}</div>
-			</ng-template>
-			<ng-template
-				[ngTemplateOutlet]="loadingTextTemplate() || defaultLoadingTextTemplate"
-				[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
-			</ng-template>
-		}
-	</ng-dropdown-panel>
+						" [ngTemplateOutletContext]="{ item: item.value, item$: item, index: item.index, searchTerm: searchTerm }">
+            </ng-template>
+        </div>
+        }
+        @if (showAddTag) {
+        <div class="ng-option" [class.ng-option-marked]="!itemsList.markedItem" (mouseover)="itemsList.unmarkItem()"
+            role="option" (click)="selectTag()">
+            <ng-template #defaultTagTemplate>
+                <span><span class="ng-tag-label">{{ addTagText() || config.addTagText }}</span>"{{ searchTerm }}"</span>
+            </ng-template>
+            <ng-template [ngTemplateOutlet]="tagTemplate() || defaultTagTemplate"
+                [ngTemplateOutletContext]="{ searchTerm: searchTerm }">
+            </ng-template>
+        </div>
+        }
+    </ng-container>
+    @if (showNoItemsFound()) {
+    <ng-template #defaultNotFoundTemplate>
+        <div class="ng-option ng-option-disabled">{{ notFoundText() ?? config.notFoundText }}</div>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="notFoundTemplate() || defaultNotFoundTemplate"
+        [ngTemplateOutletContext]="{ searchTerm: searchTerm }">
+    </ng-template>
+    }
+    @if (showTypeToSearch()) {
+    <ng-template #defaultTypeToSearchTemplate>
+        <div class="ng-option ng-option-disabled">{{ typeToSearchText() || config.typeToSearchText }}</div>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="typeToSearchTemplate() || defaultTypeToSearchTemplate"></ng-template>
+    }
+    @if (loading() && itemsList.filteredItems.length === 0) {
+    <ng-template #defaultLoadingTextTemplate>
+        <div class="ng-option ng-option-disabled">{{ loadingText() || config.loadingText }}</div>
+    </ng-template>
+    <ng-template [ngTemplateOutlet]="loadingTextTemplate() || defaultLoadingTextTemplate"
+        [ngTemplateOutletContext]="{ searchTerm: searchTerm }">
+    </ng-template>
+    }
+</ng-dropdown-panel>
 }
 
 <!-- Always present aria-live region -->
 <div aria-atomic="true" aria-live="polite" class="ng-visually-hidden" role="status">
-	@if (isOpen && showNoItemsFound()) {
-		{{ notFoundText }}
-	}
+    @if (isOpen() && showNoItemsFound()) {
+    {{ notFoundText() ?? config.notFoundText }}
+    }
 </div>

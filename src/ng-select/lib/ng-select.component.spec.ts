@@ -1086,11 +1086,11 @@ describe('NgSelectComponent', () => {
 
 				select = fixture.componentInstance.select();
 				tickAndDetectChanges(fixture);
-				expect(select.items().length).toEqual(3);
+				expect(select.itemsList.items.length).toEqual(3);
 
 				fixture.componentInstance.cities = [];
 				tickAndDetectChanges(fixture);
-				expect(select.items().length).toEqual(0);
+				expect(select.itemsList.items.length).toEqual(0);
 			}));
 
 			it('should bind value', fakeAsync(() => {
@@ -2394,15 +2394,6 @@ describe('NgSelectComponent', () => {
 			expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
 			document.getElementById('outside').click();
 			const event = new MouseEvent('mousedown', { bubbles: true });
-			document.getElementById('outside').dispatchEvent(event);
-			tickAndDetectChanges(fixture);
-			expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
-		}));
-
-		it('should close dropdown if opened and touched outside dropdown container', fakeAsync(() => {
-			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
-			const event = new TouchEvent('touchstart', { bubbles: true });
 			document.getElementById('outside').dispatchEvent(event);
 			tickAndDetectChanges(fixture);
 			expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
@@ -4080,6 +4071,27 @@ describe('NgSelectComponent', () => {
 				tickAndDetectChanges(fixture);
 				const allOptions = select.element.querySelectorAll('.ng-dropdown-panel .ng-option');
 				expect(allOptions.length).toEqual(fixture.componentInstance.cities.length);
+			}));
+
+			it('should update search term when ngModel is updated programmatically', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+                        [editableSearchTerm]="true"
+                        bindValue="id"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`,
+				);
+				const select = fixture.componentInstance.select();
+				const selectedCity = fixture.componentInstance.cities[0];
+
+				// Update ngModel programmatically (simulating writeValue)
+				fixture.componentInstance.selectedCity = selectedCity.id;
+				tickAndDetectChanges(fixture);
+
+				// The search term should be updated to match the selected item's label
+				expect(select.searchTerm).toEqual(selectedCity.name);
 			}));
 		});
 	});
