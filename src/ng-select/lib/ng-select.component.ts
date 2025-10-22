@@ -206,41 +206,41 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	});
 
 	// content child queries
-	protected readonly optionTemplate = contentChild(NgOptionTemplateDirective, { read: TemplateRef });
-	protected readonly optgroupTemplate = contentChild(NgOptgroupTemplateDirective, { read: TemplateRef });
-	protected readonly labelTemplate = contentChild(NgLabelTemplateDirective, { read: TemplateRef });
-	protected readonly multiLabelTemplate = contentChild(NgMultiLabelTemplateDirective, { read: TemplateRef });
-	protected readonly headerTemplate = contentChild(NgHeaderTemplateDirective, { read: TemplateRef });
-	protected readonly footerTemplate = contentChild(NgFooterTemplateDirective, { read: TemplateRef });
-	protected readonly notFoundTemplate = contentChild(NgNotFoundTemplateDirective, { read: TemplateRef });
-	protected readonly placeholderTemplate = contentChild(NgPlaceholderTemplateDirective, { read: TemplateRef });
-	protected readonly typeToSearchTemplate = contentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef });
-	protected readonly loadingTextTemplate = contentChild(NgLoadingTextTemplateDirective, { read: TemplateRef });
-	protected readonly tagTemplate = contentChild(NgTagTemplateDirective, { read: TemplateRef });
-	protected readonly loadingSpinnerTemplate = contentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef });
-	protected readonly clearButtonTemplate = contentChild(NgClearButtonTemplateDirective, { read: TemplateRef });
-	protected readonly ngOptions = contentChildren(NgOptionComponent, { descendants: true });
+	readonly optionTemplate = contentChild(NgOptionTemplateDirective, { read: TemplateRef });
+	readonly optgroupTemplate = contentChild(NgOptgroupTemplateDirective, { read: TemplateRef });
+	readonly labelTemplate = contentChild(NgLabelTemplateDirective, { read: TemplateRef });
+	readonly multiLabelTemplate = contentChild(NgMultiLabelTemplateDirective, { read: TemplateRef });
+	readonly headerTemplate = contentChild(NgHeaderTemplateDirective, { read: TemplateRef });
+	readonly footerTemplate = contentChild(NgFooterTemplateDirective, { read: TemplateRef });
+	readonly notFoundTemplate = contentChild(NgNotFoundTemplateDirective, { read: TemplateRef });
+	readonly placeholderTemplate = contentChild(NgPlaceholderTemplateDirective, { read: TemplateRef });
+	readonly typeToSearchTemplate = contentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef });
+	readonly loadingTextTemplate = contentChild(NgLoadingTextTemplateDirective, { read: TemplateRef });
+	readonly tagTemplate = contentChild(NgTagTemplateDirective, { read: TemplateRef });
+	readonly loadingSpinnerTemplate = contentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef });
+	readonly clearButtonTemplate = contentChild(NgClearButtonTemplateDirective, { read: TemplateRef });
+	readonly ngOptions = contentChildren(NgOptionComponent, { descendants: true });
 
 	// view children queries
-	protected readonly dropdownPanel = viewChild(forwardRef(() => NgDropdownPanelComponent));
-	protected readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
-	protected readonly clearButton = viewChild<ElementRef<HTMLSpanElement>>('clearButton');
+	readonly dropdownPanel = viewChild(forwardRef(() => NgDropdownPanelComponent));
+	readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
+	readonly clearButton = viewChild<ElementRef<HTMLSpanElement>>('clearButton');
 
 	// public variables
 	readonly dropdownId = newId();
+	readonly element: HTMLElement;
 
-	// protected variables
-	protected escapeHTML = true;
-	protected itemsList: ItemsList;
-	protected viewPortItems: NgOption[] = [];
-	protected tabFocusOnClear = signal<boolean>(true);
+	// variables
+	escapeHTML = true;
+	itemsList: ItemsList;
+	viewPortItems: NgOption[] = [];
+	tabFocusOnClear = signal<boolean>(true);
 
 	// private variables
 	private readonly _defaultLabel = 'label';
 	private readonly _destroy$ = new Subject<void>();
 	private readonly _disabled = signal<boolean>(false);
 	private readonly _editableSearchTerm = computed(() => this.editableSearchTerm() && !this.multiple());
-	private _element: HTMLElement;
 	private _focused: boolean;
 	private _injector = inject(Injector);
 	private _isComposing = false;
@@ -262,7 +262,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 		this._mergeGlobalConfig(config);
 		this.itemsList = new ItemsList(this, newSelectionModel ? newSelectionModel() : DefaultSelectionModelFactory());
-		this._element = _elementRef.nativeElement;
+		this.element = _elementRef.nativeElement;
 	}
 
 	get filtered() {
@@ -694,13 +694,13 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			this._setSearchTermFromItems();
 		}
 
-		this._element.classList.add('ng-select-focused');
+		this.element.classList.add('ng-select-focused');
 		this.focusEvent.emit($event);
 		this._focused = true;
 	}
 
 	onInputBlur($event: FocusEvent) {
-		this._element.classList.remove('ng-select-focused');
+		this.element.classList.remove('ng-select-focused');
 		this.blurEvent.emit($event);
 		if (!this.isOpen() && !this.disabled()) {
 			this._onTouched();
@@ -772,7 +772,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 					item.label = option.label() || item.label;
 				}
 			},
-			{injector: this._injector}
+			{ injector: this._injector }
 		);
 	}
 
