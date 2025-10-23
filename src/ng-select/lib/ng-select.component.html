@@ -68,7 +68,7 @@
 <ng-dropdown-panel class="ng-dropdown-panel" [virtualScroll]="virtualScroll() ?? !config.disableVirtualScroll ?? false"
     [bufferAmount]="bufferAmount()" [appendTo]="appendToValue" [position]="dropdownPosition()"
     [headerTemplate]="headerTemplate()" [footerTemplate]="footerTemplate()" [filterValue]="searchTerm"
-    [items]="itemsList.filteredItems" [markedItem]="itemsList.markedItem" (update)="viewPortItems = $event"
+    [items]="itemsList.filteredItems" [showAddTag]="showAddTag" [markedItem]="itemsList.markedItem" (update)="viewPortItems = $event"
     (scroll)="scroll.emit($event)" (scrollToEnd)="scrollToEnd.emit($event)" (outsideClick)="close()"
     [class.ng-select-multiple]="multiple()" [class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
     [id]="dropdownId" [ariaLabelDropdown]="ariaLabelDropdown()">
