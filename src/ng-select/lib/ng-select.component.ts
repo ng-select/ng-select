@@ -766,7 +766,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 				options
 					// find item for each option
-					.map((option) => ({ option, item: this.itemsList.findItem(option.value()) }))
+					.map((option) => ({
+						option,
+						item: this.itemsList.findItem(option.value()),
+					}))
 					// filter non found items
 					.filter(({ item }) => isDefined(item))
 					// process to update disabled and label
