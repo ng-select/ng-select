@@ -29,8 +29,8 @@ import {
 	ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { merge, Subject } from 'rxjs';
-import { debounceTime, filter, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { debounceTime, filter, map, takeUntil, tap } from 'rxjs/operators';
 
 import {
 	NgClearButtonTemplateDirective,
@@ -764,11 +764,16 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 				}
 				this._cd.detectChanges();
 
-				for (const option of options) {
-					const item = this.itemsList.findItem(option.value());
-					item.disabled = option.disabled();
-					item.label = option.label() || item.label;
-				}
+				options
+					// find item for each option
+					.map((option) => ({ option, item: this.itemsList.findItem(option.value()) }))
+					// filter non found items
+					.filter(({ item }) => isDefined(item))
+					// process to update disabled and label
+					.forEach(({ option, item }) => {
+						item.disabled = option.disabled();
+						item.label = option.label() || item.label;
+					});
 			},
 			{ injector: this._injector }
 		);

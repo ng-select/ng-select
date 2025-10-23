@@ -1093,6 +1093,26 @@ describe('NgSelectComponent', () => {
 				expect(select.itemsList.items.length).toEqual(0);
 			}));
 
+			it('should update ng-option when updated asynchronously', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [(ngModel)]="selectedCityId">
+                        @for (city of cities; track city) {
+                            <ng-option [value]="city.id">{{city.name}}</ng-option>
+                        }
+                    </ng-select>`,
+				);
+				select = fixture.componentInstance.select();
+				expect(select.items().length).toEqual(3);
+
+				fixture.componentInstance.cities = [
+					{ id: 1, name: 'Vilnius' },
+					{ id: 2, name: 'Kaunas' },
+				];
+				tickAndDetectChanges(fixture);
+				expect(select.items().length).toEqual(2);
+			}));
+
 			it('should bind value', fakeAsync(() => {
 				const fixture = createTestingModule(
 					NgSelectTestComponent,
