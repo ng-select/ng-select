@@ -856,9 +856,11 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 				const item = this.itemsList.findByLabel(term);
 				if (item) {
 					if (this.isOpen()) {
-						this.itemsList.markItem(item);
-						this._scrollToMarked();
-						this._cd.markForCheck();
+						if (!item.disabled) {
+							this.itemsList.markItem(item);
+							this._scrollToMarked();
+							this._cd.markForCheck();
+						}
 					} else {
 						this.select(item);
 					}
