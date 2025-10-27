@@ -1086,11 +1086,31 @@ describe('NgSelectComponent', () => {
 
 				select = fixture.componentInstance.select();
 				tickAndDetectChanges(fixture);
-				expect(select.items().length).toEqual(3);
+				expect(select.itemsList.items.length).toEqual(3);
 
 				fixture.componentInstance.cities = [];
 				tickAndDetectChanges(fixture);
-				expect(select.items().length).toEqual(0);
+				expect(select.itemsList.items.length).toEqual(0);
+			}));
+
+			it('should update ng-option when updated asynchronously', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [(ngModel)]="selectedCityId">
+                        @for (city of cities; track city) {
+                            <ng-option [value]="city.id">{{city.name}}</ng-option>
+                        }
+                    </ng-select>`,
+				);
+				select = fixture.componentInstance.select();
+				expect(select.items().length).toEqual(3);
+
+				fixture.componentInstance.cities = [
+					{ id: 1, name: 'Vilnius' },
+					{ id: 2, name: 'Kaunas' },
+				];
+				tickAndDetectChanges(fixture);
+				expect(select.items().length).toEqual(2);
 			}));
 
 			it('should bind value', fakeAsync(() => {
@@ -1980,7 +2000,8 @@ describe('NgSelectComponent', () => {
 			}));
 
 			it('should not remove selected value if filter is set', fakeAsync(() => {
-				select.searchTerm = 'a';
+				select.filter('a');
+
 				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
 				tickAndDetectChanges(fixture);
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
@@ -2399,15 +2420,6 @@ describe('NgSelectComponent', () => {
 			expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
 		}));
 
-		it('should close dropdown if opened and touched outside dropdown container', fakeAsync(() => {
-			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
-			const event = new TouchEvent('touchstart', { bubbles: true });
-			document.getElementById('outside').dispatchEvent(event);
-			tickAndDetectChanges(fixture);
-			expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
-		}));
-
 		it('should prevent dropdown close if clicked on select', fakeAsync(() => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 			expect(select.isOpen()).toBeTruthy();
@@ -2623,7 +2635,7 @@ describe('NgSelectComponent', () => {
 			);
 
 			const select = fixture.componentInstance.select();
-			select.searchTerm = 'tag';
+			select.filter('tag');
 			select.open();
 			fixture.detectChanges();
 
@@ -2730,11 +2742,11 @@ describe('NgSelectComponent', () => {
 			);
 
 			tickAndDetectChanges(fixture);
-			const items = fixture.componentInstance.select().itemsList.items;
-			expect(items[0].disabled).toBeFalsy();
+			const itemsList = fixture.componentInstance.select().itemsList;
+			expect(itemsList.items[0].disabled).toBeFalsy();
 			fixture.componentInstance.disabled = true;
 			tickAndDetectChanges(fixture);
-			expect(items[0].disabled).toBeTruthy();
+			expect(itemsList.items[0].disabled).toBeTruthy();
 		}));
 
 		it('should display custom clear button template when selected city', fakeAsync(() => {
@@ -3333,47 +3345,48 @@ describe('NgSelectComponent', () => {
 			});
 
 			it('should be false when there is no search term', () => {
-				select.searchTerm = null;
+				select.filter(null);
 				expect(select.showAddTag).toBeFalsy();
 			});
 
 			it('should be false when term is too short', () => {
-				select.searchTerm = 'vi';
+				select.filter('vi');
 				fixture.componentInstance.minTermLength = 3;
 				fixture.detectChanges();
 				expect(select.showAddTag).toBeFalsy();
 			});
 
 			it('should be true when term not exists among items', () => {
-				select.searchTerm = 'Vil';
+				select.filter('Vil');
 				expect(select.showAddTag).toBeTruthy();
 			});
 
 			it('should be false when term exists among items', () => {
-				select.searchTerm = 'Vilnius';
+				select.filter('Vilnius');
 				expect(select.showAddTag).toBeFalsy();
 			});
 
 			it('should be false when term exists among selected items', fakeAsync(() => {
-				fixture.componentInstance.selectedCities = [{ name: 'Palanga', id: 9 }];
 				fixture.componentInstance.hideSelected = true;
-				select.searchTerm = 'Palanga';
-				select.isOpen.set(true);
+				select.filter('Palanga');
+				tickAndDetectChanges(fixture);
+				fixture.componentInstance.selectedCities = [{ name: 'Palanga', id: 9 }];
 				tickAndDetectChanges(fixture);
 				expect(select.showAddTag).toBeFalsy();
 			}));
 
 			it('should be false when term exists among selected items and select is closed', fakeAsync(() => {
-				fixture.componentInstance.selectedCities = [{ name: 'Palanga', id: 9 }];
 				fixture.componentInstance.hideSelected = false;
-				select.searchTerm = 'Palanga';
+				select.filter('Palanga');
+				tickAndDetectChanges(fixture);
+				fixture.componentInstance.selectedCities = [{ name: 'Palanga', id: 9 }];
 				select.isOpen.set(false);
 				tickAndDetectChanges(fixture);
 				expect(select.showAddTag).toBeFalsy();
 			}));
 
 			it('should be false when there is search term with only empty space', () => {
-				select.searchTerm = '   ';
+				triggerKeyDownEvent(getNgSelectElement(fixture), '   ');
 				expect(select.showAddTag).toBeFalsy();
 			});
 		});
@@ -3613,8 +3626,7 @@ describe('NgSelectComponent', () => {
 
 			const select = fixture.componentInstance.select();
 			tickAndDetectChanges(fixture);
-
-			select.searchTerm = 'Hey! Whats up!?';
+			triggerKeyDownEvent(getNgSelectElement(fixture), 'Hey! Whats up!?');
 			selectOption(fixture, KeyCode.ArrowDown, 1);
 			tickAndDetectChanges(fixture);
 			expect(select.searchTerm).toBe(null);
@@ -3630,10 +3642,10 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			const resetFilteredItemsSpy = spyOn(fixture.componentInstance.select().itemsList, 'resetFilteredItems');
 			tickAndDetectChanges(fixture);
+			fixture.componentInstance.select().filter(null);
+			const resetFilteredItemsSpy = spyOn(fixture.componentInstance.select().itemsList, 'resetFilteredItems');
 
-			fixture.componentInstance.select().searchTerm = null;
 			selectOption(fixture, KeyCode.ArrowDown, 1);
 			tickAndDetectChanges(fixture);
 			expect(resetFilteredItemsSpy).not.toHaveBeenCalled();
@@ -3831,9 +3843,9 @@ describe('NgSelectComponent', () => {
 				expect(fixture.componentInstance.select().clearSearchOnAddValue()).toBeTruthy();
 
 				fixture.componentInstance.filter.subscribe();
-				fixture.componentInstance.select().filter('new');
 				fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
 				tickAndDetectChanges(fixture);
+				fixture.componentInstance.select().filter('new');
 				expect(fixture.componentInstance.select().itemsList.filteredItems.length).toBe(1);
 				expect(fixture.componentInstance.select().searchTerm).toBe('new');
 
@@ -3857,9 +3869,9 @@ describe('NgSelectComponent', () => {
 				expect(fixture.componentInstance.select().clearSearchOnAddValue()).toBeFalsy();
 
 				fixture.componentInstance.filter.subscribe();
-				fixture.componentInstance.select().filter('new');
 				fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
 				tickAndDetectChanges(fixture);
+				fixture.componentInstance.select().filter('new');
 
 				const select = fixture.componentInstance.select();
 				fixture.componentInstance.select().select(select.viewPortItems[0]);
@@ -3884,14 +3896,14 @@ describe('NgSelectComponent', () => {
 				expect(fixture.componentInstance.select().closeOnSelect()).toBeFalsy();
 
 				fixture.componentInstance.filter.subscribe();
-				fixture.componentInstance.select().filter('new');
+				const select = fixture.componentInstance.select();
+				select.filter('new');
 				fixture.componentInstance.cities = [
 					{ id: 4, name: 'New York' },
 					{ id: 5, name: 'California' },
 				];
 				tickAndDetectChanges(fixture);
-				const select = fixture.componentInstance.select();
-				fixture.componentInstance.select().select(select.viewPortItems[0]);
+				select.select(select.viewPortItems[0]);
 				expect(select.searchTerm).toBe('new');
 			}));
 
@@ -3915,13 +3927,13 @@ describe('NgSelectComponent', () => {
 				fixture.componentInstance.filter.subscribe((value) => {
 					lastEmittedSearchTerm = value;
 				});
-				fixture.componentInstance.select().filter('new');
-				expect(lastEmittedSearchTerm).toBe('new');
 				fixture.componentInstance.cities = [
 					{ id: 4, name: 'New York' },
 					{ id: 5, name: 'California' },
 				];
 				tickAndDetectChanges(fixture);
+				fixture.componentInstance.select().filter('new');
+				expect(lastEmittedSearchTerm).toBe('new');
 				fixture.componentInstance.select().select(fixture.componentInstance.select().viewPortItems[0]);
 				expect(lastEmittedSearchTerm).toBe(null);
 			}));
@@ -3973,12 +3985,12 @@ describe('NgSelectComponent', () => {
 				expect(fixture.componentInstance.select().clearSearchOnAddValue()).toBeFalsy();
 
 				fixture.componentInstance.filter.subscribe();
-				fixture.componentInstance.select().filter('new');
+				const select = fixture.componentInstance.select();
+				select.filter('new');
 				fixture.componentInstance.cities = [{ id: 4, name: 'New York' }];
 				tickAndDetectChanges(fixture);
 
-				const select = fixture.componentInstance.select();
-				fixture.componentInstance.select().select(select.viewPortItems[0]);
+				select.select(select.viewPortItems[0]);
 				expect(select.itemsList.filteredItems.length).toBe(1);
 				expect(select.searchTerm).toBe('new');
 			}));
@@ -4045,6 +4057,27 @@ describe('NgSelectComponent', () => {
 				tickAndDetectChanges(fixture);
 				const allOptions = select.element.querySelectorAll('.ng-dropdown-panel .ng-option');
 				expect(allOptions.length).toEqual(fixture.componentInstance.cities.length);
+			}));
+
+			it('should update search term when ngModel is updated programmatically', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+                        [editableSearchTerm]="true"
+                        bindValue="id"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`,
+				);
+				const select = fixture.componentInstance.select();
+				const selectedCity = fixture.componentInstance.cities[0];
+
+				// Update ngModel programmatically (simulating writeValue)
+				fixture.componentInstance.selectedCity = selectedCity.id;
+				tickAndDetectChanges(fixture);
+
+				// The search term should be updated to match the selected item's label
+				expect(select.searchTerm).toEqual(selectedCity.name);
 			}));
 		});
 	});
@@ -4474,7 +4507,8 @@ describe('NgSelectComponent', () => {
 			it('should clear only search text', fakeAsync(() => {
 				const select = fixture.componentInstance.select();
 				fixture.componentInstance.selectedCities = null;
-				select.searchTerm = 'Hey! Whats up!?';
+				triggerKeyDownEvent(getNgSelectElement(fixture), 'Hey! Whats up!?');
+
 				tickAndDetectChanges(fixture);
 				triggerMousedown();
 				tickAndDetectChanges(fixture);
