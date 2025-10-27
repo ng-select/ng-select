@@ -1,22 +1,22 @@
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
+	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
+	computed,
 	ElementRef,
+	inject,
+	input,
 	NgZone,
 	OnChanges,
 	OnDestroy,
 	OnInit,
+	output,
 	Renderer2,
 	SimpleChanges,
 	TemplateRef,
-	ViewEncapsulation,
-	booleanAttribute,
-	computed,
-	inject,
-	input,
-	output,
 	viewChild,
+	ViewEncapsulation,
 } from '@angular/core';
 
 import { animationFrameScheduler, asapScheduler, fromEvent, Subject } from 'rxjs';
@@ -51,7 +51,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 			</div>
 		}
 	`,
-	imports: [NgTemplateOutlet]
+	imports: [NgTemplateOutlet],
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	private _renderer = inject(Renderer2);
@@ -214,13 +214,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 			}
 			fromEvent(this._scrollablePanel(), 'scroll')
 				.pipe(takeUntil(this._destroy$), auditTime(0, SCROLL_SCHEDULER))
-				.subscribe((e: { path; composedPath; target }) => {
-					const path = e.path || (e.composedPath && e.composedPath());
-					if (!path || (path.length === 0 && !e.target)) {
-						return;
-					}
-					const scrollTop = !path || path.length === 0 ? e.target.scrollTop : path[0].scrollTop;
-					this._onContentScrolled(scrollTop);
+				.subscribe(() => {
+					this._onContentScrolled(this._scrollablePanel().scrollTop);
 				});
 		});
 	}
