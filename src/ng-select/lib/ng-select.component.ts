@@ -4,10 +4,10 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
-	effect,
+	computed,
 	contentChild,
 	contentChildren,
-	computed,
+	effect,
 	ElementRef,
 	forwardRef,
 	HostAttributeToken,
@@ -116,6 +116,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly clearAllText = input<string>(undefined);
 	readonly dropdownPosition = input<DropdownPosition>('auto');
 	readonly appendTo = input<string>(undefined);
+	readonly outsideClickEvent = input<'click' | 'mousedown'>(this.config.outsideClickEvent);
 	readonly loading = input(false, { transform: booleanAttribute });
 	readonly closeOnSelect = input(true, { transform: booleanAttribute });
 	readonly hideSelected = input(false, { transform: booleanAttribute });
