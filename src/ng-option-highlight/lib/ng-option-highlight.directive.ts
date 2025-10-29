@@ -1,12 +1,5 @@
 import { afterNextRender, computed, effect, inject, input, signal, Directive, ElementRef, Renderer2 } from '@angular/core';
-
-function isDefined(value: any) {
-	return value !== undefined && value !== null;
-}
-
-function escapeRegExp(str: string): string {
-	return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
+import { escapeRegExp, isDefined } from './utils';
 
 @Directive({
 	selector: '[ngOptionHighlight]',
