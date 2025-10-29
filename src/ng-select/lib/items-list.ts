@@ -232,13 +232,13 @@ export class ItemsList {
 	}
 
 	mapItem(item: any, index: number): NgOption {
-		const label = isDefined(item) && isDefined(item.$ngOptionLabel) ? item.$ngOptionLabel : this.resolveNested(item, this._ngSelect.bindLabel());
-		const value = isDefined(item) && isDefined(item.$ngOptionValue) ? item.$ngOptionValue : item;
+		const label = item?.$ngOptionLabel ?? this.resolveNested(item, this._ngSelect.bindLabel());
+		const value = item?.$ngOptionValue ?? item;
 		return {
 			index,
 			label: isDefined(label) ? label.toString() : '',
 			value,
-			disabled: isDefined(item) ? item.disabled : false,
+			disabled: item?.disabled ?? false,
 			htmlId: `${this._ngSelect.dropdownId}-${index}`,
 		};
 	}
