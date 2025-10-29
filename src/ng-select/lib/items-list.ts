@@ -232,13 +232,13 @@ export class ItemsList {
 	}
 
 	mapItem(item: any, index: number): NgOption {
-		const label = isDefined(item.$ngOptionLabel) ? item.$ngOptionLabel : this.resolveNested(item, this._ngSelect.bindLabel());
-		const value = isDefined(item.$ngOptionValue) ? item.$ngOptionValue : item;
+		const label = isDefined(item) && isDefined(item.$ngOptionLabel) ? item.$ngOptionLabel : this.resolveNested(item, this._ngSelect.bindLabel());
+		const value = isDefined(item) && isDefined(item.$ngOptionValue) ? item.$ngOptionValue : item;
 		return {
 			index,
 			label: isDefined(label) ? label.toString() : '',
 			value,
-			disabled: item.disabled,
+			disabled: isDefined(item) ? item.disabled : false,
 			htmlId: `${this._ngSelect.dropdownId}-${index}`,
 		};
 	}
@@ -254,7 +254,7 @@ export class ItemsList {
 				item = this._items.find((item) => this._ngSelect.compareWith()(item.value, selected.value));
 			} else {
 				const value = bindValue ? this.resolveNested(selected.value, bindValue) : selected.value;
-				item = isDefined(value) ? this.findItem(value) : null;
+				item = value !== undefined ? this.findItem(value) : null;
 			}
 
 			this._selectionModel.unselect(selected, multiple);

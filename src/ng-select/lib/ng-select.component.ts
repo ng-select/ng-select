@@ -784,7 +784,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	}
 
 	private _isValidWriteValue(value: any): boolean {
-		if (!isDefined(value) || (this.multiple() && value === '') || (Array.isArray(value) && value.length === 0)) {
+		if (value === undefined || (this.multiple() && value === '') || (Array.isArray(value) && value.length === 0)) {
 			return false;
 		}
 
@@ -910,7 +910,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			this._onChange(model);
 			this.changeEvent.emit(selected);
 		} else {
-			this._onChange(isDefined(model[0]) ? model[0] : null);
+			this._onChange(model[0] !== undefined ? model[0] : null);
 			this.changeEvent.emit(selected[0]);
 		}
 
