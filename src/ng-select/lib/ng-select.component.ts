@@ -7,6 +7,7 @@ import {
 	computed,
 	contentChild,
 	contentChildren,
+	DestroyRef,
 	effect,
 	ElementRef,
 	forwardRef,
@@ -19,7 +20,6 @@ import {
 	model,
 	numberAttribute,
 	OnChanges,
-	OnDestroy,
 	OnInit,
 	output,
 	signal,
@@ -30,7 +30,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { debounceTime, filter, map, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, filter, map, tap } from 'rxjs/operators';
 
 import {
 	NgClearButtonTemplateDirective,
@@ -60,6 +60,7 @@ import { NgOptionComponent } from './ng-option.component';
 import { DropdownPosition, KeyCode, NgOption } from './ng-select.types';
 import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
 import { isDefined, isFunction, isObject, isPromise } from './value-utils';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type AddTagFn = (term: string) => any | Promise<any>;
@@ -94,11 +95,12 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 		'[class.ng-select-disabled]': 'disabled()',
 	},
 })
-export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
+export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
 	readonly classes = inject(new HostAttributeToken('class'), { optional: true });
 	readonly config = inject(NgSelectConfig);
 	private readonly _cd = inject(ChangeDetectorRef);
 	private readonly _console = inject(ConsoleService);
+	private readonly _destroyRef = inject(DestroyRef);
 
 	// signals
 	public readonly _disabled = signal<boolean>(false);
@@ -238,7 +240,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	private readonly autoFocus = inject(new HostAttributeToken('autofocus'), { optional: true });
 	// private variables
 	private readonly _defaultLabel = 'label';
-	private readonly _destroy$ = new Subject<void>();
 	private readonly _editableSearchTerm = computed(() => this.editableSearchTerm() && !this.multiple());
 	private _focused: boolean;
 	private _injector = inject(Injector);
@@ -350,11 +351,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (isDefined(this.autoFocus)) {
 			this.focus();
 		}
-	}
-
-	ngOnDestroy() {
-		this._destroy$.next();
-		this._destroy$.complete();
 	}
 
 	@HostListener('keydown', ['$event'])
@@ -847,7 +843,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 		this._keyPress$
 			.pipe(
-				takeUntil(this._destroy$),
+				takeUntilDestroyed(this._destroyRef),
 				tap((letter) => this._pressedKeys.push(letter)),
 				debounceTime(200),
 				filter(() => this._pressedKeys.length > 0),
