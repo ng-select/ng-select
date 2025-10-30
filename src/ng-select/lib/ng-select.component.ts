@@ -50,6 +50,7 @@ import {
 } from './ng-templates.directive';
 
 import { NgTemplateOutlet } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgSelectConfig } from './config.service';
 import { ConsoleService } from './console.service';
 import { newId } from './id';
@@ -60,7 +61,6 @@ import { NgOptionComponent } from './ng-option.component';
 import { DropdownPosition, KeyCode, NgOption } from './ng-select.types';
 import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
 import { isDefined, isFunction, isObject, isPromise } from './value-utils';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type AddTagFn = (term: string) => any | Promise<any>;
@@ -69,6 +69,7 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 
 @Component({
 	selector: 'ng-select',
+	exportAs: 'ngSelect',
 	templateUrl: './ng-select.component.html',
 	styleUrls: ['./ng-select.component.scss'],
 	providers: [
@@ -606,9 +607,10 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			tag = this._primitive ? this.searchTerm : { [this.bindLabel()]: this.searchTerm };
 		}
 
-		const handleTag = (item) => (this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item));
+		const handleTag = (item) =>
+			this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item);
 		if (isPromise(tag)) {
-			tag.then((item) => this.select(handleTag(item))).catch(() => { });
+			tag.then((item) => this.select(handleTag(item))).catch(() => {});
 		} else if (tag) {
 			this.select(handleTag(tag));
 		}
@@ -636,7 +638,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	showNoItemsFound() {
 		const empty = this.itemsList.filteredItems.length === 0;
 		return (
-			((empty && !this.typeahead()?.observed && !this.loading()) || (empty && this.typeahead()?.observed && this._validTerm() && !this.loading())) &&
+			((empty && !this.typeahead()?.observed && !this.loading()) ||
+				(empty && this.typeahead()?.observed && this._validTerm() && !this.loading())) &&
 			!this.showAddTag
 		);
 	}
@@ -719,9 +722,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
-	private _onChange = (_: any) => { };
+	private _onChange = (_: any) => {};
 
-	private _onTouched = () => { };
+	private _onTouched = () => {};
 
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];
@@ -749,11 +752,12 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			() => {
 				const options = this.ngOptions();
 				this.bindLabel.set(this._defaultLabel);
-				const items = options.map((option) => ({
-					$ngOptionValue: option.value(),
-					$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
-					disabled: option.disabled(),
-				})) ?? [];
+				const items =
+					options.map((option) => ({
+						$ngOptionValue: option.value(),
+						$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
+						disabled: option.disabled(),
+					})) ?? [];
 				this.items.set(items);
 				this.itemsList.setItems(items);
 				if (this.hasValue) {
@@ -775,7 +779,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 						item.label = option.label() || item.label;
 					});
 			},
-			{ injector: this._injector }
+			{ injector: this._injector },
 		);
 	}
 
