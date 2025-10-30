@@ -1173,7 +1173,7 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			const invalidValues = [undefined, null];
+			const invalidValues = [undefined];
 
 			for (const v of invalidValues) {
 				fixture.componentInstance.selectedCity = <any>v;
@@ -1250,7 +1250,8 @@ describe('NgSelectComponent', () => {
 					let hasValueEl = fixture.nativeElement.querySelector('.ng-has-value');
 					expect(hasValueEl).not.toBeNull();
 
-					fixture.componentInstance.selectedCityId = null;
+					// Setting to undefined (not null) should remove the value
+					fixture.componentInstance.selectedCityId = undefined;
 					tickAndDetectChanges(fixture);
 					tickAndDetectChanges(fixture);
 					hasValueEl = fixture.nativeElement.querySelector('.ng-has-value');
@@ -1484,6 +1485,130 @@ describe('NgSelectComponent', () => {
 					expect(fixture.componentInstance.select().selectedItems).toEqual(result);
 				}));
 			});
+		});
+
+		describe('Null value handling', () => {
+			it('should accept null as a valid value for single select', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="citiesWithNull"
+                            bindLabel="name"
+                            bindValue="id"
+                            [(ngModel)]="selectedCityId">
+                    </ng-select>`,
+				);
+
+				fixture.componentInstance.citiesWithNull = [
+					{ id: null, name: 'Show All' },
+					{ id: 1, name: 'Vilnius' },
+					{ id: 2, name: 'Kaunas' },
+				];
+				fixture.componentInstance.selectedCityId = null;
+				tickAndDetectChanges(fixture);
+
+				const select = fixture.componentInstance.select();
+				expect(select.selectedItems.length).toBe(1);
+				expect(select.selectedItems[0].value).toEqual({ id: null, name: 'Show All' });
+			}));
+
+			it('should display the label when null value is selected', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="citiesWithNull"
+                            bindLabel="name"
+                            bindValue="id"
+                            [(ngModel)]="selectedCityId">
+                    </ng-select>`,
+				);
+
+				fixture.componentInstance.citiesWithNull = [
+					{ id: null, name: 'Show All' },
+					{ id: 1, name: 'Vilnius' },
+					{ id: 2, name: 'Kaunas' },
+				];
+				fixture.componentInstance.selectedCityId = null;
+				tickAndDetectChanges(fixture);
+
+				const labelElement = fixture.debugElement.query(By.css('.ng-value-label'));
+				expect(labelElement).not.toBeNull();
+				expect(labelElement.nativeElement.textContent.trim()).toBe('Show All');
+			}));
+
+			it('should emit null when option with null value is selected', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="citiesWithNull"
+                            bindLabel="name"
+                            bindValue="id"
+                            [(ngModel)]="selectedCityId"
+                            (change)="onChange($event)">
+                    </ng-select>`,
+				);
+
+				fixture.componentInstance.citiesWithNull = [
+					{ id: null, name: 'Show All' },
+					{ id: 1, name: 'Vilnius' },
+					{ id: 2, name: 'Kaunas' },
+				];
+				tickAndDetectChanges(fixture);
+
+				const select = fixture.componentInstance.select();
+				select.open();
+				tickAndDetectChanges(fixture);
+
+				selectOption(fixture, KeyCode.ArrowDown, 0);
+				tickAndDetectChanges(fixture);
+
+				expect(fixture.componentInstance.selectedCityId).toBe(null);
+			}));
+
+			it('should work with null value when not using bindValue', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="simpleCitiesWithNull"
+                            bindLabel="name"
+                            [(ngModel)]="selectedCity">
+                    </ng-select>`,
+				);
+
+				fixture.componentInstance.simpleCitiesWithNull = [
+					{ id: null, name: 'Show All' },
+					{ id: 1, name: 'Vilnius' },
+					{ id: 2, name: 'Kaunas' },
+				];
+				fixture.componentInstance.selectedCity = { id: null, name: 'Show All' };
+				tickAndDetectChanges(fixture);
+
+				const select = fixture.componentInstance.select();
+				expect(select.selectedItems.length).toBe(1);
+				expect(select.selectedItems[0].value).toEqual({ id: null, name: 'Show All' });
+			}));
+
+			it('should distinguish null from undefined', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="citiesWithNull"
+                            bindLabel="name"
+                            bindValue="id"
+                            [(ngModel)]="selectedCityId">
+                    </ng-select>`,
+				);
+
+				fixture.componentInstance.citiesWithNull = [
+					{ id: null, name: 'Show All' },
+					{ id: 1, name: 'Vilnius' },
+				];
+
+				// Set to null - should have selection
+				fixture.componentInstance.selectedCityId = null;
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.select().selectedItems.length).toBe(1);
+
+				// Set to undefined - should have no selection
+				fixture.componentInstance.selectedCityId = undefined;
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.select().selectedItems.length).toBe(0);
+			}));
 		});
 	});
 
@@ -5358,6 +5483,8 @@ class NgSelectTestComponent {
 		},
 	] as const;
 	citiesNames = this.cities.map((x) => x.name);
+	citiesWithNull: any[] = [];
+	simpleCitiesWithNull: any[] = [];
 
 	selectedCountry: any;
 	itemsWithNestedBindValue: any[] = [];
