@@ -151,6 +151,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly addTag = input<boolean | AddTagFn>(false);
 	readonly searchable = input(true, { transform: booleanAttribute });
 	readonly clearable = input(true, { transform: booleanAttribute });
+	readonly clearKeepsDisabledOptions = input(true, { transform: booleanAttribute });
 	readonly deselectOnClick = input<boolean>();
 	readonly clearSearchOnAdd = input(undefined);
 	readonly compareWith = input(undefined, {
@@ -323,7 +324,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 	ngOnChanges(changes: SimpleChanges) {
 		if (changes.multiple) {
-			this.itemsList.clearSelected();
+			this.itemsList.clearSelected(false);
 		}
 		if (changes.items) {
 			this._itemsAreUsed = true;
@@ -461,7 +462,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 	handleClearClick(_event?: MouseEvent) {
 		if (this.hasValue) {
-			this.itemsList.clearSelected(true);
+			this.itemsList.clearSelected(this.clearKeepsDisabledOptions());
 			this._updateNgModel();
 		}
 		this._clearSearch();
@@ -475,12 +476,12 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		if (!this.clearable()) {
 			return;
 		}
-		this.itemsList.clearSelected();
+		this.itemsList.clearSelected(false);
 		this._updateNgModel();
 	}
 
 	writeValue(value: any | any[]): void {
-		this.itemsList.clearSelected();
+		this.itemsList.clearSelected(false);
 		this._handleWriteValue(value);
 		if (this._editableSearchTerm()) {
 			this._setSearchTermFromItems();
