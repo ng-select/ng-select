@@ -228,7 +228,7 @@ describe('ItemsList', () => {
 			let list: ItemsList;
 			let cmp: NgSelectComponent;
 			beforeEach(async () => {
-				const { component, componentRef } = await ngSelectFactory();
+				const { component } = await ngSelectFactory();
 				cmp = component;
 				list = itemsListFactory(cmp);
 			});

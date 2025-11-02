@@ -1,26 +1,28 @@
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
+	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
+	computed,
+	DestroyRef,
 	ElementRef,
+	inject,
+	input,
 	NgZone,
 	OnChanges,
-	OnDestroy,
 	OnInit,
+	output,
 	Renderer2,
 	SimpleChanges,
 	TemplateRef,
-	ViewEncapsulation,
-	booleanAttribute,
-	computed,
-	inject,
-	input,
-	output,
 	viewChild,
+	ViewEncapsulation,
 } from '@angular/core';
 
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 import { animationFrameScheduler, asapScheduler, fromEvent, Subject } from 'rxjs';
-import { auditTime, takeUntil } from 'rxjs/operators';
+import { auditTime } from 'rxjs/operators';
 import { NgDropdownPanelService, PanelDimensions } from './ng-dropdown-panel.service';
 
 import { DropdownPosition, NgOption } from './ng-select.types';
@@ -51,13 +53,14 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 			</div>
 		}
 	`,
-	imports: [NgTemplateOutlet]
+	imports: [NgTemplateOutlet],
 })
-export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
+export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	private _renderer = inject(Renderer2);
 	private _zone = inject(NgZone);
 	private _panelService = inject(NgDropdownPanelService);
 	private _document = inject(DOCUMENT, { optional: true })!;
+	private _destroyRef = inject(DestroyRef);
 	private _dropdown = inject(ElementRef<HTMLElement>).nativeElement;
 
 	readonly items = input<NgOption[]>([]);
@@ -72,6 +75,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	readonly footerTemplate = input<TemplateRef<any>>(undefined);
 	readonly filterValue = input<string>(null);
 	readonly ariaLabelDropdown = input<string | null>(null);
+	/**
+	 * Which DOM event to listen to for outside click detection
+	 */
+	readonly outsideClickEvent = input<'click' | 'mousedown'>('click');
 
 	readonly update = output<any[]>();
 	readonly scroll = output<{
@@ -85,7 +92,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	private readonly scrollElementRef = viewChild('scroll', { read: ElementRef });
 	private readonly paddingElementRef = viewChild('padding', { read: ElementRef });
 
-	private readonly _destroy$ = new Subject<void>();
 	private readonly _virtualPadding = computed(() => this.paddingElementRef()?.nativeElement);
 	private readonly _scrollablePanel = computed(() => this.scrollElementRef()?.nativeElement);
 	private readonly _contentPanel = computed(() => this.contentElementRef()?.nativeElement);
@@ -124,6 +130,14 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		return 0;
 	}
 
+	constructor() {
+		this._destroyRef.onDestroy(() => {
+			if (this.appendTo()) {
+				this._renderer.removeChild(this._dropdown.parentNode, this._dropdown);
+			}
+		});
+	}
+
 	ngOnInit() {
 		this._select = this._dropdown.parentElement;
 		this._handleScroll();
@@ -140,15 +154,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		if (changes.showAddTag) {
 			const change = changes.showAddTag;
 			this._onItemsOrShowAddTagChange(this.items(), change.currentValue, change.firstChange);
-		}
-	}
-
-	ngOnDestroy() {
-		this._destroy$.next();
-		this._destroy$.complete();
-		this._destroy$.unsubscribe();
-		if (this.appendTo()) {
-			this._renderer.removeChild(this._dropdown.parentNode, this._dropdown);
 		}
 	}
 
@@ -219,14 +224,14 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 				return;
 			}
 			fromEvent(this._scrollablePanel(), 'scroll')
-				.pipe(takeUntil(this._destroy$), auditTime(0, SCROLL_SCHEDULER))
-				.subscribe((e: { path; composedPath; target }) => {
-					const path = e.path || (e.composedPath && e.composedPath());
-					if (!path || (path.length === 0 && !e.target)) {
-						return;
+				.pipe(
+					takeUntilDestroyed(this._destroyRef),
+					auditTime(0, SCROLL_SCHEDULER))
+				.subscribe((event: Event) => {
+					const target = event.target as HTMLElement;
+					if (target && 'scrollTop' in target) {
+						this._onContentScrolled(target.scrollTop);
 					}
-					const scrollTop = !path || path.length === 0 ? e.target.scrollTop : path[0].scrollTop;
-					this._onContentScrolled(scrollTop);
 				});
 		});
 	}
@@ -237,8 +242,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 		}
 
 		this._zone.runOutsideAngular(() => {
-			fromEvent(this._document, 'click', { capture: true })
-				.pipe(takeUntil(this._destroy$))
+			fromEvent(this._document, this.outsideClickEvent(), { capture: true })
+				.pipe(takeUntilDestroyed(this._destroyRef))
 				.subscribe(($event) => this._checkToClose($event));
 		});
 	}
@@ -451,7 +456,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges, OnDestroy {
 	private _setupMousedownListener(): void {
 		this._zone.runOutsideAngular(() => {
 			fromEvent(this._dropdown, 'mousedown')
-				.pipe(takeUntil(this._destroy$))
+				.pipe(takeUntilDestroyed(this._destroyRef))
 				.subscribe((event: MouseEvent) => {
 					const target = event.target as HTMLElement;
 					if (target.tagName === 'INPUT') {
