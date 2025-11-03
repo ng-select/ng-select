@@ -1,6 +1,6 @@
 /// <reference types="@angular/localize" />
 
-import { enableProdMode, importProvidersFrom } from '@angular/core';
+import { enableProdMode, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { environment } from './environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { DataService } from './app/examples/data.service';
@@ -17,7 +17,7 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
 	providers: [
-		importProvidersFrom(BrowserModule, ExamplesModule, NgbModule),
+		provideZoneChangeDetection(),importProvidersFrom(BrowserModule, ExamplesModule, NgbModule),
 		provideHttpClient(),
 		DataService,
 		provideRouter(appRoutes, withHashLocation()),
