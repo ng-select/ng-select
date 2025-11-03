@@ -85,6 +85,14 @@ Library is under active development and may have API breaking changes for subseq
 ```shell
 npm install --save @ng-select/ng-select
 ```
+#### Yarn
+```shell
+yarn add @ng-select/ng-select
+```
+#### PNPM
+```shell
+pnpm add @ng-select/ng-select
+```
 
 ### Step 2:
 
