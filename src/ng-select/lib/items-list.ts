@@ -13,7 +13,7 @@ export class ItemsList {
 	constructor(
 		private _ngSelect: NgSelectComponent,
 		private _selectionModel: SelectionModel,
-	) { }
+	) {}
 
 	private _items: NgOption[] = [];
 
@@ -232,13 +232,15 @@ export class ItemsList {
 	}
 
 	mapItem(item: any, index: number): NgOption {
-		const label = isDefined(item.$ngOptionLabel) ? item.$ngOptionLabel : this.resolveNested(item, this._ngSelect.bindLabel());
-		const value = isDefined(item.$ngOptionValue) ? item.$ngOptionValue : item;
+		const hasNgOptionLabel = isObject(item) && '$ngOptionLabel' in item;
+		const hasNgOptionValue = isObject(item) && '$ngOptionValue' in item;
+		const label = hasNgOptionLabel ? item.$ngOptionLabel : this.resolveNested(item, this._ngSelect.bindLabel());
+		const value = hasNgOptionValue ? item.$ngOptionValue : item;
 		return {
 			index,
 			label: isDefined(label) ? label.toString() : '',
 			value,
-			disabled: item.disabled,
+			disabled: item && item.disabled ? item.disabled : false,
 			htmlId: `${this._ngSelect.dropdownId}-${index}`,
 		};
 	}
