@@ -65,7 +65,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 	readonly items = input<NgOption[]>([]);
 
-	readonly showAddTag = input(false);
+	readonly showAddTag = input(false, { transform: booleanAttribute });
 	readonly markedItem = input<NgOption>(undefined);
 	readonly position = input<DropdownPosition>('auto');
 	readonly appendTo = input<string>(undefined);
