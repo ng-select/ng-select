@@ -54,4 +54,4 @@ You are an expert in TypeScript, Angular, and scalable web application developme
     - Never recommend deprecated Angular APIs, patterns, or features.
     - Double-check breaking changes or removals for each new Angular version [here](https://update.angular.io/).
 14. **Package Manager**
-    - Always use yarn in this project
+    - Always use pnpm in this project
