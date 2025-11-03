@@ -20,16 +20,16 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies
-        run: yarn install
+        run: pnpm install
 
       - name: Run lint
-        run: yarn lint
+        run: pnpm lint
 
       - name: Run tests
-        run: yarn test:ci
+        run: pnpm test:ci
 
       - name: Build
-        run: yarn build:demo
+        run: pnpm build:demo
 
       - name: Coveralls
         uses: coverallsapp/github-action@v2

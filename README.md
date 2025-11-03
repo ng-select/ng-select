@@ -85,10 +85,7 @@ Library is under active development and may have API breaking changes for subseq
 ```shell
 npm install --save @ng-select/ng-select
 ```
-#### YARN
-```shell
-yarn add @ng-select/ng-select
-```
+
 ### Step 2:
 
 #### Standalone: Import NgSelectComponent and other necessary directives directly:
@@ -372,14 +369,14 @@ Perform the _clone-to-launch_ steps with these terminal commands.
 ```
 git clone https://github.com/ng-select/ng-select
 cd ng-select
-yarn
-yarn run start
+pnpm i
+pnpm run start
 ```
 ### Testing
 ```
-yarn run test
+pnpm test
 or
-yarn run test:watch
+pnpm test:watch
 ```
 
 ### Release

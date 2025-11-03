@@ -301,6 +301,13 @@
 		width: 1px;
 		opacity: 0;
 	}
+
+	.scroll-host > div:first-child:not(.total-padding) {
+		height: 0;
+		margin: 0;
+		padding: 0;
+		display: none;
+	}
 }
 
 .ng-visually-hidden {
