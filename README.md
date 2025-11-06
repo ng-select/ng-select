@@ -85,10 +85,15 @@ Library is under active development and may have API breaking changes for subseq
 ```shell
 npm install --save @ng-select/ng-select
 ```
-#### YARN
+#### Yarn
 ```shell
 yarn add @ng-select/ng-select
 ```
+#### PNPM
+```shell
+pnpm add @ng-select/ng-select
+```
+
 ### Step 2:
 
 #### Standalone: Import NgSelectComponent and other necessary directives directly:
@@ -241,6 +246,7 @@ map: {
 | [selectOnTab]               | `boolean`                                            | `false`             | no | Select marked dropdown item using tab. Default `false`                                                                                                                                         |
 | [tabFocusOnClearButton]     | `boolean`                                            | `true`              | no | Control tab navigation behavior for the clear button. Default `true`                                                                                                                           |
 | [openOnEnter]               | `boolean`                                            | `true`              | no | Open dropdown using enter. Default `true`                                                                                                                                                      |
+| outsideClickEventType       | `'click'` \| `'mousedown'`                           | `'click'`           | no | Configure which DOM event type is used for outside click detection. Use `'mousedown'` to fix issues with backdrop/loading overlays that appear on dropdown open                               |
 | [typeahead]                 | `Subject`                                            | `-`                 | no | Custom autocomplete or advanced filter.                                                                                                                                                        |
 | [minTermLength]             | `number`                                             | `0`                 | no | Minimum term length to start a search. Should be used with `typeahead`                                                                                                                         |
 | typeToSearchText            | `string`                                             | `Type to search`    | no | Set custom text when using Typeahead                                                                                                                                                           |
@@ -371,14 +377,14 @@ Perform the _clone-to-launch_ steps with these terminal commands.
 ```
 git clone https://github.com/ng-select/ng-select
 cd ng-select
-yarn
-yarn run start
+pnpm i
+pnpm run start
 ```
 ### Testing
 ```
-yarn run test
+pnpm test
 or
-yarn run test:watch
+pnpm test:watch
 ```
 
 ### Release

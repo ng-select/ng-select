@@ -4,10 +4,11 @@ import {
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
-	effect,
+	computed,
 	contentChild,
 	contentChildren,
-	computed,
+	DestroyRef,
+	effect,
 	ElementRef,
 	forwardRef,
 	HostAttributeToken,
@@ -19,7 +20,6 @@ import {
 	model,
 	numberAttribute,
 	OnChanges,
-	OnDestroy,
 	OnInit,
 	output,
 	signal,
@@ -30,7 +30,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { debounceTime, filter, map, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, filter, map, tap } from 'rxjs/operators';
 
 import {
 	NgClearButtonTemplateDirective,
@@ -50,6 +50,7 @@ import {
 } from './ng-templates.directive';
 
 import { NgTemplateOutlet } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgSelectConfig } from './config.service';
 import { ConsoleService } from './console.service';
 import { newId } from './id';
@@ -68,6 +69,7 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 
 @Component({
 	selector: 'ng-select',
+	exportAs: 'ngSelect',
 	templateUrl: './ng-select.component.html',
 	styleUrls: ['./ng-select.component.scss'],
 	providers: [
@@ -94,11 +96,12 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 		'[class.ng-select-disabled]': 'disabled()',
 	},
 })
-export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
+export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
 	readonly classes = inject(new HostAttributeToken('class'), { optional: true });
 	readonly config = inject(NgSelectConfig);
 	private readonly _cd = inject(ChangeDetectorRef);
 	private readonly _console = inject(ConsoleService);
+	private readonly _destroyRef = inject(DestroyRef);
 
 	// signals
 	public readonly _disabled = signal<boolean>(false);
@@ -116,6 +119,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	readonly clearAllText = input<string>(undefined);
 	readonly dropdownPosition = input<DropdownPosition>('auto');
 	readonly appendTo = input<string>(undefined);
+	readonly outsideClickEvent = input<'click' | 'mousedown'>(this.config.outsideClickEvent);
 	readonly loading = input(false, { transform: booleanAttribute });
 	readonly closeOnSelect = input(true, { transform: booleanAttribute });
 	readonly hideSelected = input(false, { transform: booleanAttribute });
@@ -237,7 +241,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	private readonly autoFocus = inject(new HostAttributeToken('autofocus'), { optional: true });
 	// private variables
 	private readonly _defaultLabel = 'label';
-	private readonly _destroy$ = new Subject<void>();
 	private readonly _editableSearchTerm = computed(() => this.editableSearchTerm() && !this.multiple());
 	private _focused: boolean;
 	private _injector = inject(Injector);
@@ -349,11 +352,6 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		if (isDefined(this.autoFocus)) {
 			this.focus();
 		}
-	}
-
-	ngOnDestroy() {
-		this._destroy$.next();
-		this._destroy$.complete();
 	}
 
 	@HostListener('keydown', ['$event'])
@@ -609,9 +607,10 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			tag = this._primitive ? this.searchTerm : { [this.bindLabel()]: this.searchTerm };
 		}
 
-		const handleTag = (item) => (this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item));
+		const handleTag = (item) =>
+			this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item);
 		if (isPromise(tag)) {
-			tag.then((item) => this.select(handleTag(item))).catch(() => { });
+			tag.then((item) => this.select(handleTag(item))).catch(() => {});
 		} else if (tag) {
 			this.select(handleTag(tag));
 		}
@@ -639,7 +638,8 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 	showNoItemsFound() {
 		const empty = this.itemsList.filteredItems.length === 0;
 		return (
-			((empty && !this.typeahead()?.observed && !this.loading()) || (empty && this.typeahead()?.observed && this._validTerm() && !this.loading())) &&
+			((empty && !this.typeahead()?.observed && !this.loading()) ||
+				(empty && this.typeahead()?.observed && this._validTerm() && !this.loading())) &&
 			!this.showAddTag
 		);
 	}
@@ -722,9 +722,9 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 		}
 	}
 
-	private _onChange = (_: any) => { };
+	private _onChange = (_: any) => {};
 
-	private _onTouched = () => { };
+	private _onTouched = () => {};
 
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];
@@ -752,11 +752,12 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 			() => {
 				const options = this.ngOptions();
 				this.bindLabel.set(this._defaultLabel);
-				const items = options.map((option) => ({
-					$ngOptionValue: option.value(),
-					$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
-					disabled: option.disabled(),
-				})) ?? [];
+				const items =
+					options.map((option) => ({
+						$ngOptionValue: option.value(),
+						$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
+						disabled: option.disabled(),
+					})) ?? [];
 				this.items.set(items);
 				this.itemsList.setItems(items);
 				if (this.hasValue) {
@@ -778,7 +779,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 						item.label = option.label() || item.label;
 					});
 			},
-			{ injector: this._injector }
+			{ injector: this._injector },
 		);
 	}
 
@@ -846,7 +847,7 @@ export class NgSelectComponent implements OnDestroy, OnChanges, OnInit, AfterVie
 
 		this._keyPress$
 			.pipe(
-				takeUntil(this._destroy$),
+				takeUntilDestroyed(this._destroyRef),
 				tap((letter) => this._pressedKeys.push(letter)),
 				debounceTime(200),
 				filter(() => this._pressedKeys.length > 0),
