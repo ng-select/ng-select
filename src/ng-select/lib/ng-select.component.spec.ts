@@ -2839,7 +2839,7 @@ describe('NgSelectComponent', () => {
 			expect(items[0].label).toBe('Indeed');
 		}));
 
-		it('should update ng-option label after async change (delayed)', async () => {
+		it('should update ng-option label after async change (delayed)', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [(ngModel)]="selectedCity">
@@ -2850,7 +2850,7 @@ describe('NgSelectComponent', () => {
 
 			// Start with empty label to simulate late translation/signal resolution
 			fixture.componentInstance.label = '';
-			await new Promise(resolve => setTimeout(resolve, 100));
+			tick(100);
 			tickAndDetectChanges(fixture);
 
 			let items = fixture.componentInstance.select().itemsList.items;
@@ -2858,14 +2858,14 @@ describe('NgSelectComponent', () => {
 
 			// Simulate delayed async update (e.g., translation loaded later or signal update)
 			fixture.componentInstance.label = 'worked';
-			await new Promise(resolve => setTimeout(resolve, 100));
+			tick(100);
 			tickAndDetectChanges(fixture);
 
 			items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].label).toBe('worked');
-		});
+		}));
 
-		it('should update ng-option value after async change (delayed)', async () => {
+		it('should update ng-option value after async change (delayed)', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [(ngModel)]="selectedCity">
@@ -2877,9 +2877,8 @@ describe('NgSelectComponent', () => {
 			// Start with initial value
 			fixture.componentInstance.cityValue = 'initial';
 			fixture.componentInstance.label = 'Initial Label';
-			fixture.detectChanges();
-			await new Promise(resolve => setTimeout(resolve, 100));
-			fixture.detectChanges();
+			tick(100);
+			tickAndDetectChanges(fixture);
 
 			let items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].value).toBe('initial');
@@ -2888,16 +2887,13 @@ describe('NgSelectComponent', () => {
 			// Simulate delayed async update of value attribute
 			fixture.componentInstance.cityValue = 'updated';
 			fixture.componentInstance.label = 'Updated Label';
-			fixture.detectChanges();
-			await fixture.whenStable();
-			await new Promise(resolve => setTimeout(resolve, 100));
-			fixture.detectChanges();
-			await fixture.whenStable();
+			tick(100);
+			tickAndDetectChanges(fixture);
 
 			items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].value).toBe('updated');
 			expect(items[0].label).toBe('Updated Label');
-		});
+		}));
 	});
 
 	describe('Multiple', () => {
