@@ -2850,26 +2850,16 @@ describe('NgSelectComponent', () => {
 
 			// Start with empty label to simulate late translation/signal resolution
 			fixture.componentInstance.label = '';
-			fixture.detectChanges();
-			await fixture.whenStable();
-			// Wait longer for afterEveryRender to complete and effect to re-run
 			await new Promise(resolve => setTimeout(resolve, 100));
-			fixture.detectChanges(); // Ensure any pending updates are applied
-			await fixture.whenStable();
+			tickAndDetectChanges(fixture);
 
 			let items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].label).toBe('');
 
 			// Simulate delayed async update (e.g., translation loaded later or signal update)
 			fixture.componentInstance.label = 'worked';
-			fixture.detectChanges();
-			await fixture.whenStable();
 			await new Promise(resolve => setTimeout(resolve, 100));
-			fixture.detectChanges();
-			await fixture.whenStable();
-			// Add one more cycle to ensure effect has fully propagated
-			fixture.detectChanges();
-			await fixture.whenStable();
+			tickAndDetectChanges(fixture);
 
 			items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].label).toBe('worked');
@@ -2888,10 +2878,8 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.cityValue = 'initial';
 			fixture.componentInstance.label = 'Initial Label';
 			fixture.detectChanges();
-			await fixture.whenStable();
 			await new Promise(resolve => setTimeout(resolve, 100));
 			fixture.detectChanges();
-			await fixture.whenStable();
 
 			let items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].value).toBe('initial');
