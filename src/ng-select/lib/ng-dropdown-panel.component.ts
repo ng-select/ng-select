@@ -64,6 +64,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	private _dropdown = inject(ElementRef<HTMLElement>).nativeElement;
 
 	readonly items = input<NgOption[]>([]);
+
+	readonly showAddTag = input(false, { transform: booleanAttribute });
 	readonly markedItem = input<NgOption>(undefined);
 	readonly position = input<DropdownPosition>('auto');
 	readonly appendTo = input<string>(undefined);
@@ -147,7 +149,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	ngOnChanges(changes: SimpleChanges) {
 		if (changes.items) {
 			const change = changes.items;
-			this._onItemsChange(change.currentValue, change.firstChange);
+			this._onItemsOrShowAddTagChange(change.currentValue, this.showAddTag(), change.firstChange);
+		}
+		if (changes.showAddTag) {
+			const change = changes.showAddTag;
+			this._onItemsOrShowAddTagChange(this.items(), change.currentValue, change.firstChange);
 		}
 	}
 
@@ -255,9 +261,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._zone.run(() => this.outsideClick.emit());
 	}
 
-	private _onItemsChange(items: NgOption[] = [], firstChange: boolean) {
+
+	private _onItemsOrShowAddTagChange(items: NgOption[] = [], showAddTag: boolean, firstChange: boolean) {
 		this._scrollToEndFired = false;
 		this.itemsLength = items.length;
+		if (showAddTag && items.length) {
+			this.itemsLength++;
+		}
 
 		if (this.virtualScroll()) {
 			this._updateItemsRange(firstChange);

@@ -7,8 +7,8 @@ alwaysApply: true
 ## Always Applied Rules
 
 ### 1. Use Latest Angular and TypeScript
-- Always use the latest stable Angular (currently v20) and TypeScript
-- Reference Angular 20 APIs and features only
+- Always use the latest stable Angular (currently v21) and TypeScript
+- Reference Angular 21 APIs and features only
 - Do not use deprecated or removed APIs from older versions
 
 ### 2. Modern Angular Features
@@ -78,6 +78,9 @@ alwaysApply: true
 - Do not use or recommend deprecated Angular APIs, patterns, or features
 - Check for breaking changes or removals for each new Angular version
 - Stay updated with Angular release notes and migration guides
+
+### 14. Package Manager
+ - Always use pnpm in this project
 
 ## Code Generation Rules
 
