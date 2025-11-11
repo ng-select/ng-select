@@ -610,7 +610,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const handleTag = (item) =>
 			this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item);
 		if (isPromise(tag)) {
-			tag.then((item) => this.select(handleTag(item))).catch(() => {});
+			tag.then((item) => this.select(handleTag(item))).catch(() => { });
 		} else if (tag) {
 			this.select(handleTag(tag));
 		}
@@ -722,9 +722,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
-	private _onChange = (_: any) => {};
+	private _onChange = (_: any) => { };
 
-	private _onTouched = () => {};
+	private _onTouched = () => { };
 
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];
@@ -755,7 +755,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 				const items =
 					options.map((option) => ({
 						$ngOptionValue: option.value(),
-						$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
+						$ngOptionLabel: option.label(),
 						disabled: option.disabled(),
 					})) ?? [];
 				this.items.set(items);

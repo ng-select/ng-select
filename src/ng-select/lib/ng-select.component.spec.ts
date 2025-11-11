@@ -2838,6 +2838,78 @@ describe('NgSelectComponent', () => {
 			const items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].label).toBe('Indeed');
 		}));
+
+		it('should update ng-option label after async change (delayed)', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [(ngModel)]="selectedCity">
+					<ng-option [value]="true">{{label}}</ng-option>
+					<ng-option [value]="false">No</ng-option>
+				</ng-select>`,
+			);
+
+			// Start with empty label to simulate late translation/signal resolution
+			fixture.componentInstance.label = '';
+			fixture.detectChanges();
+			await fixture.whenStable();
+			// Wait longer for afterEveryRender to complete and effect to re-run
+			await new Promise(resolve => setTimeout(resolve, 100));
+			fixture.detectChanges(); // Ensure any pending updates are applied
+			await fixture.whenStable();
+
+			let items = fixture.componentInstance.select().itemsList.items;
+			expect(items[0].label).toBe('');
+
+			// Simulate delayed async update (e.g., translation loaded later or signal update)
+			fixture.componentInstance.label = 'worked';
+			fixture.detectChanges();
+			await fixture.whenStable();
+			await new Promise(resolve => setTimeout(resolve, 100));
+			fixture.detectChanges();
+			await fixture.whenStable();
+			// Add one more cycle to ensure effect has fully propagated
+			fixture.detectChanges();
+			await fixture.whenStable();
+
+			items = fixture.componentInstance.select().itemsList.items;
+			expect(items[0].label).toBe('worked');
+		});
+
+		it('should update ng-option value after async change (delayed)', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [(ngModel)]="selectedCity">
+					<ng-option [value]="cityValue">{{label}}</ng-option>
+					<ng-option [value]="false">No</ng-option>
+				</ng-select>`,
+			);
+
+			// Start with initial value
+			fixture.componentInstance.cityValue = 'initial';
+			fixture.componentInstance.label = 'Initial Label';
+			fixture.detectChanges();
+			await fixture.whenStable();
+			await new Promise(resolve => setTimeout(resolve, 100));
+			fixture.detectChanges();
+			await fixture.whenStable();
+
+			let items = fixture.componentInstance.select().itemsList.items;
+			expect(items[0].value).toBe('initial');
+			expect(items[0].label).toBe('Initial Label');
+
+			// Simulate delayed async update of value attribute
+			fixture.componentInstance.cityValue = 'updated';
+			fixture.componentInstance.label = 'Updated Label';
+			fixture.detectChanges();
+			await fixture.whenStable();
+			await new Promise(resolve => setTimeout(resolve, 100));
+			fixture.detectChanges();
+			await fixture.whenStable();
+
+			items = fixture.componentInstance.select().itemsList.items;
+			expect(items[0].value).toBe('updated');
+			expect(items[0].label).toBe('Updated Label');
+		});
 	});
 
 	describe('Multiple', () => {
@@ -5344,6 +5416,7 @@ class NgSelectTestComponent {
 	selectedCity: { id: number; name: string };
 	selectedCities: { id: number; name: string }[];
 	city: { id: number; name: string };
+	cityValue: any;
 	cities: any[] = [
 		{ id: 1, name: 'Vilnius' },
 		{ id: 2, name: 'Kaunas' },
