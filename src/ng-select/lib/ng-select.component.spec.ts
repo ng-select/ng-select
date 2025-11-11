@@ -2848,7 +2848,6 @@ describe('NgSelectComponent', () => {
 				</ng-select>`,
 			);
 
-			// Start with empty label to simulate late translation/signal resolution
 			fixture.componentInstance.label = '';
 			tick(100);
 			tickAndDetectChanges(fixture);
