@@ -1,6 +1,6 @@
  [![npm version](https://badge.fury.io/js/%40ng-select%2Fng-select.svg)](https://badge.fury.io/js/%40ng-select%2Fng-select)
 [![Coverage Status][coveralls-image]][coveralls-url]
-[![gzip bundle size](http://img.badgesize.io/https://unpkg.com/@ng-select/ng-select@latest/bundles/ng-select-ng-select.umd.min.js?compression=gzip&style=flat-square)][ng-select-url]
+[![gzip size](https://img.shields.io/badge/GZip_size-18.7%20kB-2ca5e0?style=flat-square&logo=npm&labelColor=black)](https://img.shields.io/badge/GZip_size-18.7%20kB-2ca5e0?style=flat-square&logo=npm&labelColor=black)
 [![ng-select channel on discord](https://img.shields.io/discord/873021904708059177.svg?style=flat-square)](https://discord.gg/ETyJTvKK)
 
 [coveralls-image]: https://coveralls.io/repos/github/ng-select/ng-select/badge.svg?branch=master
@@ -18,6 +18,7 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 | Angular          |     ng-select      |
 |------------------|:------------------:|
+| >=21.0.0 <22.0.0 |      v21.x.x       |
 | >=20.0.0 <21.0.0 | <=15.1.3, >=20.0.1 |
 | >=19.0.0 <20.0.0 |       v14.x        |
 | >=18.0.0 <19.0.0 |       v13.x        |
