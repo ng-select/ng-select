@@ -25,7 +25,7 @@ export class NgOptionComponent implements AfterContentChecked {
 
 	public readonly label = signal<string>('');
 
-	// TODO: consider using new lifecycle hook insteaad
+	// TODO: consider using new lifecycle hook instead
 	// ideally afterEveryRender should work
 	// somehow it breaks in unit test
 	ngAfterContentChecked(): void {
