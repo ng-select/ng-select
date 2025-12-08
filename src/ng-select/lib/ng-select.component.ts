@@ -137,9 +137,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly trackByFn = input(null);
 	readonly clearOnBackspace = input(true, { transform: booleanAttribute });
 	readonly labelForId = input(null);
-	readonly inputAttrs = input<{
-		[key: string]: string;
-	}>({});
+	readonly inputAttrs = input<Record<string, string>>({});
 	readonly tabIndex = input<number, unknown>(undefined, { transform: numberAttribute });
 	readonly readonly = input(false, { transform: booleanAttribute });
 	readonly searchWhileComposing = input(true, { transform: booleanAttribute });
