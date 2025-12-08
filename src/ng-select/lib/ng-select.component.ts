@@ -165,7 +165,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly bindLabel = model<string>(undefined);
 	readonly bindValue = model<string>(undefined);
 	readonly appearance = model<string>(undefined);
-	readonly isOpen = model<boolean>(false);
+	readonly isOpen = model<boolean | undefined>(false);
 	readonly items = model<readonly any[]>([]);
 
 	// output events
