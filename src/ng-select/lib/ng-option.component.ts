@@ -1,20 +1,4 @@
-import {
-	afterNextRender,
-	booleanAttribute,
-	ChangeDetectionStrategy,
-	Component,
-	computed,
-	ElementRef,
-	inject,
-	input,
-	signal,
-} from '@angular/core';
-
-type StateChange = {
-	value: any;
-	disabled: boolean;
-	label?: string;
-}
+import { afterNextRender, booleanAttribute, ChangeDetectionStrategy, Component, ElementRef, inject, input, signal } from '@angular/core';
 
 @Component({
 	selector: 'ng-option',

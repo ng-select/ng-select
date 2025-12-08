@@ -546,7 +546,7 @@ describe('ItemsList', () => {
 		let cmp: NgSelectComponent;
 
 		beforeEach(async () => {
-			const { component, componentRef } = await ngSelectFactory();
+			const { component } = await ngSelectFactory();
 			cmp = component;
 			list = itemsListFactory(cmp);
 			const items = Array.from(Array(30)).map((_, index) => `item-${index}`);
@@ -586,14 +586,12 @@ describe('ItemsList', () => {
 	}
 
 	async function ngSelectFactory(): Promise<{
-		component: NgSelectComponent,
-		componentRef: ComponentRef<NgSelectComponent>,
+		component: NgSelectComponent;
+		componentRef: ComponentRef<NgSelectComponent>;
 	}> {
 		await TestBed.configureTestingModule({
 			imports: [NgSelectComponent],
-			providers: [
-				provideNgSelect(),
-			]
+			providers: [provideNgSelect()],
 		}).compileComponents();
 
 		const fixture = TestBed.createComponent(NgSelectComponent);
@@ -605,6 +603,6 @@ describe('ItemsList', () => {
 		return {
 			component,
 			componentRef,
-		}
+		};
 	}
 });
