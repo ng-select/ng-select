@@ -755,7 +755,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 				const items =
 					options.map((option) => ({
 						$ngOptionValue: option.value(),
-						$ngOptionLabel: option.label(),
+						$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
 						disabled: option.disabled(),
 					})) ?? [];
 				this.items.set(items);

@@ -2839,7 +2839,7 @@ describe('NgSelectComponent', () => {
 			expect(items[0].label).toBe('Indeed');
 		}));
 
-		it('should update ng-option label after async change (delayed)', fakeAsync(() => {
+		it('should update ng-option label after async change (delayed)', () => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [(ngModel)]="selectedCity">
@@ -2849,22 +2849,20 @@ describe('NgSelectComponent', () => {
 			);
 
 			fixture.componentInstance.label = '';
-			tick(100);
-			tickAndDetectChanges(fixture);
+			TestBed.tick(); // Flush pending effects
 
 			let items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].label).toBe('');
 
 			// Simulate delayed async update (e.g., translation loaded later or signal update)
 			fixture.componentInstance.label = 'worked';
-			tick(100);
-			tickAndDetectChanges(fixture);
+			TestBed.tick(); // Flush pending effects
 
 			items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].label).toBe('worked');
-		}));
+		});
 
-		it('should update ng-option value after async change (delayed)', fakeAsync(() => {
+		it('should update ng-option value after async change (delayed)', () => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [(ngModel)]="selectedCity">
@@ -2876,8 +2874,7 @@ describe('NgSelectComponent', () => {
 			// Start with initial value
 			fixture.componentInstance.cityValue = 'initial';
 			fixture.componentInstance.label = 'Initial Label';
-			tick(100);
-			tickAndDetectChanges(fixture);
+			TestBed.tick(); // Flush pending effects
 
 			let items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].value).toBe('initial');
@@ -2886,13 +2883,12 @@ describe('NgSelectComponent', () => {
 			// Simulate delayed async update of value attribute
 			fixture.componentInstance.cityValue = 'updated';
 			fixture.componentInstance.label = 'Updated Label';
-			tick(100);
-			tickAndDetectChanges(fixture);
+			TestBed.tick(); // Flush pending effects
 
 			items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].value).toBe('updated');
 			expect(items[0].label).toBe('Updated Label');
-		}));
+		});
 	});
 
 	describe('Multiple', () => {

@@ -1,5 +1,5 @@
 import {
-	AfterContentChecked,
+	afterEveryRender,
 	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
@@ -15,7 +15,7 @@ import {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	template: `<ng-content />`,
 })
-export class NgOptionComponent implements AfterContentChecked {
+export class NgOptionComponent {
 
 	public readonly value = input<any>();
 	public readonly disabled = input(false, {
@@ -25,14 +25,13 @@ export class NgOptionComponent implements AfterContentChecked {
 
 	public readonly label = signal<string>('');
 
-	// TODO: consider using new lifecycle hook instead
-	// ideally afterEveryRender should work
-	// somehow it breaks in unit test
-	ngAfterContentChecked(): void {
-		// Update label signal after content check (innerHTML updated by template bindings)
-		const currentLabel = (this.elementRef.nativeElement.innerHTML || '').trim();
-		if (currentLabel !== this.label()) {
-			this.label.set(currentLabel);
-		}
+	constructor() {
+		afterEveryRender(() => {
+			// Update label signal after render (innerHTML updated by template bindings)
+			const currentLabel = (this.elementRef.nativeElement.innerHTML || '').trim();
+			if (currentLabel !== this.label()) {
+				this.label.set(currentLabel);
+			}
+		});
 	}
 }
