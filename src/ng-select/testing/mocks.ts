@@ -17,5 +17,7 @@ export class MockNgZone extends NgZone {
 
 @Injectable()
 export class MockConsole {
-	warn() {}
+	warn() {
+		// mocks console service warning
+	}
 }

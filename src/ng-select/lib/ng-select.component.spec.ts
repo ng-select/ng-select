@@ -2838,6 +2838,57 @@ describe('NgSelectComponent', () => {
 			const items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].label).toBe('Indeed');
 		}));
+
+		it('should update ng-option label after async change (delayed)', () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [(ngModel)]="selectedCity">
+					<ng-option [value]="true">{{label}}</ng-option>
+					<ng-option [value]="false">No</ng-option>
+				</ng-select>`,
+			);
+
+			fixture.componentInstance.label = '';
+			TestBed.tick(); // Flush pending effects
+
+			let items = fixture.componentInstance.select().itemsList.items;
+			expect(items[0].label).toBe('');
+
+			// Simulate delayed async update (e.g., translation loaded later or signal update)
+			fixture.componentInstance.label = 'worked';
+			TestBed.tick(); // Flush pending effects
+
+			items = fixture.componentInstance.select().itemsList.items;
+			expect(items[0].label).toBe('worked');
+		});
+
+		it('should update ng-option value after async change (delayed)', () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [(ngModel)]="selectedCity">
+					<ng-option [value]="cityValue">{{label}}</ng-option>
+					<ng-option [value]="false">No</ng-option>
+				</ng-select>`,
+			);
+
+			// Start with initial value
+			fixture.componentInstance.cityValue = 'initial';
+			fixture.componentInstance.label = 'Initial Label';
+			TestBed.tick(); // Flush pending effects
+
+			let items = fixture.componentInstance.select().itemsList.items;
+			expect(items[0].value).toBe('initial');
+			expect(items[0].label).toBe('Initial Label');
+
+			// Simulate delayed async update of value attribute
+			fixture.componentInstance.cityValue = 'updated';
+			fixture.componentInstance.label = 'Updated Label';
+			TestBed.tick(); // Flush pending effects
+
+			items = fixture.componentInstance.select().itemsList.items;
+			expect(items[0].value).toBe('updated');
+			expect(items[0].label).toBe('Updated Label');
+		});
 	});
 
 	describe('Multiple', () => {
@@ -5344,6 +5395,7 @@ class NgSelectTestComponent {
 	selectedCity: { id: number; name: string };
 	selectedCities: { id: number; name: string }[];
 	city: { id: number; name: string };
+	cityValue: any;
 	cities: any[] = [
 		{ id: 1, name: 'Vilnius' },
 		{ id: 2, name: 'Kaunas' },
