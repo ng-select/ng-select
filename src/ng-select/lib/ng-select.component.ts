@@ -106,10 +106,31 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 	// signals
 	public readonly _disabled = signal<boolean>(false);
-	// inputs
+	readonly markFirst = signal<boolean>(true);
+	readonly loading = signal<boolean>(false);
+	readonly closeOnSelect = signal<boolean>(true);
+	readonly hideSelected = signal<boolean>(false);
+	readonly selectOnTab = signal<boolean>(false);
+	readonly openOnEnter = signal<boolean | undefined>(undefined);
+	readonly maxSelectedItems = signal<number | undefined>(undefined);
+	readonly bufferAmount = signal<number>(4);
+	readonly virtualScroll = signal<boolean | undefined>(undefined);
+	readonly selectableGroup = signal<boolean>(false);
+	readonly selectableGroupAsModel = signal<boolean>(true);
+	readonly clearOnBackspace = signal<boolean>(true);
+	readonly tabIndex = signal<number | undefined>(undefined);
+	readonly readonly = signal<boolean>(false);
+	readonly searchWhileComposing = signal<boolean>(true);
+	readonly minTermLength = signal<number>(0);
+	readonly editableSearchTerm = signal<boolean>(false);
+	readonly multiple = signal<boolean>(false);
+	readonly searchable = signal<boolean>(true);
+	readonly clearable = signal<boolean>(true);
+	readonly compareWith = signal<CompareWithFn | undefined>(undefined);
+
+	// models
 	readonly ariaLabelDropdown = model<string>('Options List');
 	readonly ariaLabel = model<string | undefined>(undefined);
-	readonly markFirst = model<boolean>(true);
 	readonly placeholder = model<string>(this.config.placeholder);
 	readonly fixedPlaceholder = model<boolean>(true);
 	readonly notFoundText = model<string>(undefined);
@@ -121,118 +142,104 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly dropdownPosition = model<DropdownPosition>('auto');
 	readonly appendTo = model<string>(undefined);
 	readonly outsideClickEvent = model<'click' | 'mousedown'>(this.config.outsideClickEvent);
-	readonly loading = model<boolean>(false);
-	readonly closeOnSelect = model<boolean>(true);
-	readonly hideSelected = model<boolean>(false);
-	readonly selectOnTab = model<boolean>(false);
-	readonly openOnEnter = model<boolean | undefined>(undefined);
-	readonly maxSelectedItems = model<number | undefined>(undefined);
 	readonly groupBy = model<string | ((value: any) => any)>(undefined);
 	readonly groupValue = model<GroupValueFn>(undefined);
-	readonly bufferAmount = model<number>(4);
-	readonly virtualScroll = model<boolean | undefined>(undefined);
-	readonly selectableGroup = model<boolean>(false);
 	readonly tabFocusOnClearButton = model<boolean | undefined>(undefined);
-	readonly selectableGroupAsModel = model<boolean>(true);
 	readonly searchFn = model<any>(null);
 	readonly trackByFn = model<any>(null);
-	readonly clearOnBackspace = model<boolean>(true);
 	readonly labelForId = model<any>(null);
 	readonly inputAttrs = model<Record<string, string>>({});
-	readonly tabIndex = model<number | undefined>(undefined);
-	readonly readonly = model<boolean>(false);
-	readonly searchWhileComposing = model<boolean>(true);
-	readonly minTermLength = model<number>(0);
-	readonly editableSearchTerm = model<boolean>(false);
 	readonly ngClass = model<any>(null);
 	readonly typeahead = model<Subject<string> | undefined>(undefined);
-	readonly multiple = model<boolean>(false);
 	readonly addTag = model<boolean | AddTagFn>(false);
-	readonly searchable = model<boolean>(true);
-	readonly clearable = model<boolean>(true);
 	readonly deselectOnClick = model<boolean | undefined>(undefined);
 	readonly clearSearchOnAdd = model<any | undefined>(undefined);
-	readonly compareWith = model<CompareWithFn | undefined>(undefined);
 	readonly keyDownFn = model<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true);
+	readonly bindLabel = model<string>(undefined);
+	readonly bindValue = model<string>(undefined);
+	readonly appearance = model<string>(undefined);
+	readonly isOpen = model<boolean | undefined>(false);
+	readonly items = model<readonly any[]>([]);
 
 	// @Input setters that need to apply transforms/validation
-	@Input('markFirst') set markFirstInput(v: any) {
+	/* eslint-disable @angular-eslint/no-input-rename */
+	@Input('markFirst') set markFirstInput(v: unknown) {
 		this.markFirst.set(booleanAttribute(v));
 	}
 
-	@Input('loading') set loadingInput(v: any) {
+	@Input('loading') set loadingInput(v: unknown) {
 		this.loading.set(booleanAttribute(v));
 	}
 
-	@Input('closeOnSelect') set closeOnSelectInput(v: any) {
+	@Input('closeOnSelect') set closeOnSelectInput(v: unknown) {
 		this.closeOnSelect.set(booleanAttribute(v));
 	}
 
-	@Input('hideSelected') set hideSelectedInput(v: any) {
+	@Input('hideSelected') set hideSelectedInput(v: unknown) {
 		this.hideSelected.set(booleanAttribute(v));
 	}
 
-	@Input('selectOnTab') set selectOnTabInput(v: any) {
+	@Input('selectOnTab') set selectOnTabInput(v: unknown) {
 		this.selectOnTab.set(booleanAttribute(v));
 	}
 
-	@Input('openOnEnter') set openOnEnterInput(v: any) {
+	@Input('openOnEnter') set openOnEnterInput(v: unknown) {
 		this.openOnEnter.set(booleanAttribute(v));
 	}
 
-	@Input('maxSelectedItems') set maxSelectedItemsInput(v: any) {
+	@Input('maxSelectedItems') set maxSelectedItemsInput(v: unknown) {
 		this.maxSelectedItems.set(numberAttribute(v));
 	}
 
-	@Input('bufferAmount') set bufferAmountInput(v: any) {
+	@Input('bufferAmount') set bufferAmountInput(v: unknown) {
 		this.bufferAmount.set(numberAttribute(v));
 	}
 
-	@Input('virtualScroll') set virtualScrollInput(v: any) {
+	@Input('virtualScroll') set virtualScrollInput(v: unknown) {
 		this.virtualScroll.set(booleanAttribute(v));
 	}
 
-	@Input('selectableGroup') set selectableGroupInput(v: any) {
+	@Input('selectableGroup') set selectableGroupInput(v: unknown) {
 		this.selectableGroup.set(booleanAttribute(v));
 	}
 
-	@Input('selectableGroupAsModel') set selectableGroupAsModelInput(v: any) {
+	@Input('selectableGroupAsModel') set selectableGroupAsModelInput(v: unknown) {
 		this.selectableGroupAsModel.set(booleanAttribute(v));
 	}
 
-	@Input('clearOnBackspace') set clearOnBackspaceInput(v: any) {
+	@Input('clearOnBackspace') set clearOnBackspaceInput(v: unknown) {
 		this.clearOnBackspace.set(booleanAttribute(v));
 	}
 
-	@Input('tabIndex') set tabIndexInput(v: any) {
+	@Input('tabIndex') set tabIndexInput(v: unknown) {
 		this.tabIndex.set(numberAttribute(v));
 	}
 
-	@Input('readonly') set readonlyInput(v: any) {
+	@Input('readonly') set readonlyInput(v: unknown) {
 		this.readonly.set(booleanAttribute(v));
 	}
 
-	@Input('searchWhileComposing') set searchWhileComposingInput(v: any) {
+	@Input('searchWhileComposing') set searchWhileComposingInput(v: unknown) {
 		this.searchWhileComposing.set(booleanAttribute(v));
 	}
 
-	@Input('minTermLength') set minTermLengthInput(v: any) {
+	@Input('minTermLength') set minTermLengthInput(v: unknown) {
 		this.minTermLength.set(numberAttribute(v));
 	}
 
-	@Input('editableSearchTerm') set editableSearchTermInput(v: any) {
+	@Input('editableSearchTerm') set editableSearchTermInput(v: unknown) {
 		this.editableSearchTerm.set(booleanAttribute(v));
 	}
 
-	@Input('multiple') set multipleInput(v: any) {
+	@Input('multiple') set multipleInput(v: unknown) {
 		this.multiple.set(booleanAttribute(v));
 	}
 
-	@Input('searchable') set searchableInput(v: any) {
+	@Input('searchable') set searchableInput(v: unknown) {
 		this.searchable.set(booleanAttribute(v));
 	}
 
-	@Input('clearable') set clearableInput(v: any) {
+	@Input('clearable') set clearableInput(v: unknown) {
 		this.clearable.set(booleanAttribute(v));
 	}
 
@@ -242,13 +249,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 		this.compareWith.set(fn);
 	}
-
-	// models
-	readonly bindLabel = model<string>(undefined);
-	readonly bindValue = model<string>(undefined);
-	readonly appearance = model<string>(undefined);
-	readonly isOpen = model<boolean | undefined>(false);
-	readonly items = model<readonly any[]>([]);
+	/* eslint-enable @angular-eslint/no-input-rename */
 
 	// output events
 	readonly blurEvent = output<any>({ alias: 'blur' });
