@@ -4,14 +4,14 @@
 	[class.ng-has-value]="hasValue"
 	class="ng-select-container">
 	<div class="ng-value-container">
-		@if ((selectedItems.length === 0 && !searchTerm) || (fixedPlaceholder() ?? config.fixedPlaceholder)) {
+		@if ((selectedItems.length === 0 && !searchTerm) || (fixedPlaceholderState() ?? config.fixedPlaceholder)) {
 			<ng-template #defaultPlaceholderTemplate>
 				<div class="ng-placeholder">{{ placeholder() ?? config.placeholder }}</div>
 			</ng-template>
 			<ng-template [ngTemplateOutlet]="placeholderTemplate() || defaultPlaceholderTemplate"> </ng-template>
 		}
 
-		@if ((!multiLabelTemplate() || !multiple()) && selectedItems.length > 0) {
+		@if ((!multiLabelTemplate() || !multipleState()) && selectedItems.length > 0) {
 			@for (item of selectedItems; track trackByOption($index, item)) {
 				<div [class.ng-value-disabled]="item.disabled" class="ng-value">
 					<ng-template #defaultLabelTemplate>
@@ -26,7 +26,7 @@
 			}
 		}
 
-		@if (multiple() && multiLabelTemplate() && selectedValues.length > 0) {
+		@if (multipleState() && multiLabelTemplate() && selectedValues.length > 0) {
 			<ng-template [ngTemplateOutlet]="multiLabelTemplate()" [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
 			</ng-template>
 		}
@@ -43,18 +43,18 @@
 				[attr.aria-activedescendant]="isOpen() ? itemsList?.markedItem?.htmlId : null"
 				[attr.aria-controls]="isOpen() ? dropdownId : null"
 				[attr.aria-expanded]="isOpen()"
-				[attr.aria-label]="ariaLabel()"
-				[attr.id]="labelForId()"
-				[attr.tabindex]="tabIndex()"
+				[attr.aria-label]="ariaLabelState()"
+				[attr.id]="labelForIdState()"
+				[attr.tabindex]="tabIndexState()"
 				[disabled]="disabled()"
-				[readOnly]="!searchable() || itemsList.maxItemsSelected"
+				[readOnly]="!searchableState() || itemsList.maxItemsSelected"
 				[value]="searchTerm ?? ''"
 				aria-autocomplete="list"
 				role="combobox" />
 		</div>
 	</div>
 
-	@if (loading()) {
+	@if (loadingState()) {
 		<ng-template #defaultLoadingSpinnerTemplate>
 			<div class="ng-spinner-loader"></div>
 		</ng-template>
@@ -84,13 +84,13 @@
 </div>
 
 @if (isOpen()) {
-	@let appendToValue = appendTo() || config.appendTo;
+	@let appendToValue = appendToState() || config.appendTo;
 	<ng-dropdown-panel
 		class="ng-dropdown-panel"
-		[virtualScroll]="virtualScroll() ?? !config.disableVirtualScroll ?? false"
-		[bufferAmount]="bufferAmount()"
+		[virtualScroll]="virtualScrollState() ?? !config.disableVirtualScroll ?? false"
+		[bufferAmount]="bufferAmountState()"
 		[appendTo]="appendToValue"
-		[position]="dropdownPosition()"
+		[position]="dropdownPositionState()"
 		[outsideClickEvent]="outsideClickEvent()"
 		[headerTemplate]="headerTemplate()"
 		[footerTemplate]="footerTemplate()"
@@ -102,10 +102,10 @@
 		(scroll)="scroll.emit($event)"
 		(scrollToEnd)="scrollToEnd.emit($event)"
 		(outsideClick)="close()"
-		[class.ng-select-multiple]="multiple()"
+		[class.ng-select-multiple]="multipleState()"
 		[class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
 		[id]="dropdownId"
-		[ariaLabelDropdown]="ariaLabelDropdown()">
+		[ariaLabelDropdown]="ariaLabelDropdownState()">
 		<ng-container>
 			@for (item of viewPortItems; track trackByOption($index, item)) {
 				<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus, @angular-eslint/template/mouse-events-have-key-events -->
