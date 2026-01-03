@@ -21,14 +21,14 @@ import {
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { animationFrameScheduler, asapScheduler, fromEvent, Subject } from 'rxjs';
+import { animationFrameScheduler, asapScheduler, fromEvent } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 import { NgDropdownPanelService, PanelDimensions } from './ng-dropdown-panel.service';
 
 import { DropdownPosition, NgOption } from './ng-select.types';
 import { isDefined } from './value-utils';
 
-const CSS_POSITIONS: Readonly<string[]> = ['top', 'right', 'bottom', 'left'];
+const CSS_POSITIONS: readonly string[] = ['top', 'right', 'bottom', 'left'];
 const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
 
 @Component({
@@ -56,15 +56,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 	imports: [NgTemplateOutlet],
 })
 export class NgDropdownPanelComponent implements OnInit, OnChanges {
-	private _renderer = inject(Renderer2);
-	private _zone = inject(NgZone);
-	private _panelService = inject(NgDropdownPanelService);
-	private _document = inject(DOCUMENT, { optional: true })!;
-	private _destroyRef = inject(DestroyRef);
-	private _dropdown = inject(ElementRef<HTMLElement>).nativeElement;
-
 	readonly items = input<NgOption[]>([]);
-
 	readonly showAddTag = input(false, { transform: booleanAttribute });
 	readonly markedItem = input<NgOption>(undefined);
 	readonly position = input<DropdownPosition>('auto');
@@ -79,7 +71,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	 * Which DOM event to listen to for outside click detection
 	 */
 	readonly outsideClickEvent = input<'click' | 'mousedown'>('click');
-
 	readonly update = output<any[]>();
 	readonly scroll = output<{
 		start: number;
@@ -87,7 +78,12 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	}>();
 	readonly scrollToEnd = output<void>();
 	readonly outsideClick = output<void>();
-
+	private _renderer = inject(Renderer2);
+	private _zone = inject(NgZone);
+	private _panelService = inject(NgDropdownPanelService);
+	private _document = inject(DOCUMENT, { optional: true })!;
+	private _destroyRef = inject(DestroyRef);
+	private _dropdown = inject(ElementRef<HTMLElement>).nativeElement;
 	private readonly contentElementRef = viewChild('content', { read: ElementRef });
 	private readonly scrollElementRef = viewChild('scroll', { read: ElementRef });
 	private readonly paddingElementRef = viewChild('padding', { read: ElementRef });
@@ -101,6 +97,14 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	private _scrollToEndFired = false;
 	private _updateScrollHeight = false;
 	private _lastScrollPosition = 0;
+
+	constructor() {
+		this._destroyRef.onDestroy(() => {
+			if (this.appendTo()) {
+				this._renderer.removeChild(this._dropdown.parentNode, this._dropdown);
+			}
+		});
+	}
 
 	private _currentPosition: DropdownPosition;
 
@@ -128,14 +132,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			return panelHeight > offset ? 0 : offset;
 		}
 		return 0;
-	}
-
-	constructor() {
-		this._destroyRef.onDestroy(() => {
-			if (this.appendTo()) {
-				this._renderer.removeChild(this._dropdown.parentNode, this._dropdown);
-			}
-		});
 	}
 
 	ngOnInit() {
@@ -224,9 +220,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 				return;
 			}
 			fromEvent(this._scrollablePanel(), 'scroll')
-				.pipe(
-					takeUntilDestroyed(this._destroyRef),
-					auditTime(0, SCROLL_SCHEDULER))
+				.pipe(takeUntilDestroyed(this._destroyRef), auditTime(0, SCROLL_SCHEDULER))
 				.subscribe((event: Event) => {
 					const target = event.target as HTMLElement;
 					if (target && 'scrollTop' in target) {
@@ -260,7 +254,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 		this._zone.run(() => this.outsideClick.emit());
 	}
-
 
 	private _onItemsOrShowAddTagChange(items: NgOption[] = [], showAddTag: boolean, firstChange: boolean) {
 		this._scrollToEndFired = false;
