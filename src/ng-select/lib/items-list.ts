@@ -251,7 +251,8 @@ export class ItemsList {
 			const bindValue = this._ngSelect.bindValue();
 			let item: NgOption | null = null;
 
-			// When compareWith is used, we need to find the item using the original selected value rather than the extracted bindValue, since compareWith expects to compare against the original value
+			// When compareWith is used, we need to find the item using the original selected value rather than the extracted bindValue,
+			// since compareWith expects to compare against the original value
 			if (this._ngSelect.compareWith()) {
 				item = this._items.find((item) => this._ngSelect.compareWith()(item.value, selected.value));
 			} else {

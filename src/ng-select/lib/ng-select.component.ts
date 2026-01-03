@@ -137,9 +137,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly trackByFn = input(null);
 	readonly clearOnBackspace = input(true, { transform: booleanAttribute });
 	readonly labelForId = input(null);
-	readonly inputAttrs = input<{
-		[key: string]: string;
-	}>({});
+	readonly inputAttrs = input<Record<string, string>>({});
 	readonly tabIndex = input<number, unknown>(undefined, { transform: numberAttribute });
 	readonly readonly = input(false, { transform: booleanAttribute });
 	readonly searchWhileComposing = input(true, { transform: booleanAttribute });
@@ -168,7 +166,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly bindLabel = model<string>(undefined);
 	readonly bindValue = model<string>(undefined);
 	readonly appearance = model<string>(undefined);
-	readonly isOpen = model<boolean>(false);
+	readonly isOpen = model<boolean | undefined>(false);
 	readonly items = model<readonly any[]>([]);
 
 	// output events
@@ -611,7 +609,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const handleTag = (item) =>
 			this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item);
 		if (isPromise(tag)) {
-			tag.then((item) => this.select(handleTag(item))).catch(() => {});
+			tag.then((item) => this.select(handleTag(item))).catch(() => { });
 		} else if (tag) {
 			this.select(handleTag(tag));
 		}
@@ -723,9 +721,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
-	private _onChange = (_: any) => {};
+	private _onChange = (_: any) => { };
 
-	private _onTouched = () => {};
+	private _onTouched = () => { };
 
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];
