@@ -1,8 +1,9 @@
-# Copilot Instructions for Angular Projects
+# Copilot Instructions for Angular Projects'
+You are an expert in TypeScript, Angular, and scalable web application development. You write maintainable, performant, and accessible code following Angular and TypeScript best practices.
 
 1. **Use the Latest Angular and TypeScript**
-   - Always use the latest stable version of Angular (currently v20) and TypeScript.
-   - Code examples must reference Angular 20+ APIs and features.
+   - Always use the latest stable version of Angular (currently v21) and TypeScript.
+   - Code examples must reference Angular 21+ APIs and features.
    - If unsure about a feature or API, refer to the [Angular Docs](https://angular.dev/).
 
 2. **Modern Angular Features Only**
@@ -36,7 +37,7 @@
 
 9. **State Management**
    - For component-level state, use signals.
-   - For app-wide state, recommend using signals-based libraries or lightweight solutions compatible with Angular 20+ (e.g., SignalStore, Akita signals, etc.), but avoid heavy, legacy state libraries like NgRx unless necessary.
+   - For app-wide state, recommend using signals-based libraries or lightweight solutions compatible with Angular 21+ (e.g., SignalStore, Akita signals, etc.), but avoid heavy, legacy state libraries like NgRx unless necessary.
 
 10. **Testing**
     - All code examples should include unit test snippets where applicable.
@@ -52,3 +53,5 @@
 13. **No Deprecated APIs**
     - Never recommend deprecated Angular APIs, patterns, or features.
     - Double-check breaking changes or removals for each new Angular version [here](https://update.angular.io/).
+14. **Package Manager**
+    - Always use pnpm in this project

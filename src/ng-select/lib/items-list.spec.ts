@@ -1,16 +1,18 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { ItemsList } from './items-list';
 import { NgSelectComponent } from './ng-select.component';
 import { DefaultSelectionModel } from './selection-model';
+import { ComponentRef } from '@angular/core';
+import { provideNgSelect } from './ng-select.module';
 
 describe('ItemsList', () => {
 	describe('select', () => {
 		describe('single', () => {
 			let list: ItemsList;
-			beforeEach(() => {
-				const cmp = ngSelectFactory();
-				cmp.bindLabel = 'label';
-				list = itemsListFactory(cmp);
+			beforeEach(async () => {
+				const { component, componentRef } = await ngSelectFactory();
+				componentRef.setInput('bindLabel', 'label');
+				list = itemsListFactory(component);
 			});
 
 			it('should add only one item to selected items', () => {
@@ -27,10 +29,13 @@ describe('ItemsList', () => {
 		describe('multiple', () => {
 			let list: ItemsList;
 			let cmp: NgSelectComponent;
-			beforeEach(() => {
-				cmp = ngSelectFactory();
-				cmp.multiple = true;
-				cmp.bindLabel = 'label';
+			let cmpRef: ComponentRef<NgSelectComponent>;
+			beforeEach(async () => {
+				const { component, componentRef } = await ngSelectFactory();
+				cmp = component;
+				cmpRef = componentRef;
+				componentRef.setInput('multiple', true);
+				componentRef.setInput('bindLabel', 'label');
 				list = itemsListFactory(cmp);
 			});
 
@@ -49,8 +54,8 @@ describe('ItemsList', () => {
 			});
 
 			it('should select only group item when at least one child was selected and then group item was selected', () => {
-				cmp.hideSelected = true;
-				cmp.groupBy = 'groupKey';
+				cmpRef.setInput('hideSelected', true);
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
 					{ label: 'K2', val: 'V2', groupKey: 'G1' },
@@ -79,7 +84,7 @@ describe('ItemsList', () => {
 			});
 
 			it('should items from different groups', () => {
-				cmp.groupBy = 'groupKey';
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([
 					// G1
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
@@ -96,7 +101,7 @@ describe('ItemsList', () => {
 			});
 
 			it('should not select disabled items when selecting group', () => {
-				cmp.groupBy = 'groupKey';
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
 					{ label: 'K2', val: 'V2', groupKey: 'G1', disabled: true },
@@ -108,7 +113,7 @@ describe('ItemsList', () => {
 			});
 
 			it('should select group when disabled items are selected', () => {
-				cmp.groupBy = 'groupKey';
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
 					{ label: 'K2', val: 'V2', groupKey: 'G1', disabled: true },
@@ -121,7 +126,7 @@ describe('ItemsList', () => {
 			});
 
 			it('should remove item from filtered items when hideSelected=true', () => {
-				cmp.hideSelected = true;
+				cmpRef.setInput('hideSelected', true);
 				list.setItems([
 					{ label: 'K1', val: 'V1' },
 					{ label: 'K2', val: 'V2' },
@@ -136,8 +141,8 @@ describe('ItemsList', () => {
 			});
 
 			it('should remove group from filtered items when hideSelected=true and all child group items are selected', () => {
-				cmp.hideSelected = true;
-				cmp.groupBy = 'groupKey';
+				cmpRef.setInput('hideSelected', true);
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([
 					// G1
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
@@ -153,8 +158,8 @@ describe('ItemsList', () => {
 			});
 
 			it('should remove all group and group children items if group is selected when hideSelected=true', () => {
-				cmp.hideSelected = true;
-				cmp.groupBy = 'groupKey';
+				cmpRef.setInput('hideSelected', true);
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([
 					// G1
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
@@ -170,8 +175,8 @@ describe('ItemsList', () => {
 			});
 
 			it('should remove all children items if group is selected when hideSelected=true and filter is used', () => {
-				cmp.hideSelected = true;
-				cmp.groupBy = 'groupKey';
+				cmpRef.setInput('hideSelected', true);
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
 					{ label: 'K2', val: 'V2', groupKey: 'G1' },
@@ -184,8 +189,8 @@ describe('ItemsList', () => {
 
 			describe('group as model', () => {
 				beforeEach(() => {
-					cmp.selectableGroupAsModel = false;
-					cmp.groupBy = 'groupKey';
+					cmpRef.setInput('selectableGroupAsModel', false);
+					cmpRef.setInput('groupBy', 'groupKey');
 					list.setItems([
 						{ label: 'K1', val: 'V1', groupKey: 'G1' },
 						{ label: 'K2', val: 'V2', groupKey: 'G1' },
@@ -222,9 +227,9 @@ describe('ItemsList', () => {
 		describe('single', () => {
 			let list: ItemsList;
 			let cmp: NgSelectComponent;
-			beforeEach(() => {
-				cmp = ngSelectFactory();
-				cmp.bindLabel = 'label';
+			beforeEach(async () => {
+				const { component } = await ngSelectFactory();
+				cmp = component;
 				list = itemsListFactory(cmp);
 			});
 			it('should un-select selected item', () => {
@@ -240,10 +245,13 @@ describe('ItemsList', () => {
 		describe('multiple', () => {
 			let list: ItemsList;
 			let cmp: NgSelectComponent;
-			beforeEach(() => {
-				cmp = ngSelectFactory();
-				cmp.multiple = true;
-				cmp.bindLabel = 'label';
+			let cmpRef: ComponentRef<NgSelectComponent>;
+			beforeEach(async () => {
+				const { component, componentRef } = await ngSelectFactory();
+				cmp = component;
+				cmpRef = componentRef;
+				componentRef.setInput('multiple', true);
+				componentRef.setInput('bindLabel', 'label');
 				list = itemsListFactory(cmp);
 			});
 
@@ -262,7 +270,7 @@ describe('ItemsList', () => {
 			});
 
 			it('should un-select grouped selected item', () => {
-				cmp.groupBy = 'groupKey';
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
 					{ label: 'K2', val: 'V2', groupKey: 'G1' },
@@ -277,7 +285,7 @@ describe('ItemsList', () => {
 			});
 
 			it('should un-select grouped selected item when group was selected', () => {
-				cmp.groupBy = 'groupKey';
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
 					{ label: 'K2', val: 'V2', groupKey: 'G1' },
@@ -291,7 +299,7 @@ describe('ItemsList', () => {
 			});
 
 			it('should not unselect disabled items within a group', () => {
-				cmp.groupBy = 'groupKey';
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
 					{ label: 'K2', val: 'V2', groupKey: 'G1', disabled: true },
@@ -313,8 +321,8 @@ describe('ItemsList', () => {
 			});
 
 			it('should not unselect disabled items within a group (groupAsModel=false)', () => {
-				cmp.groupBy = 'groupKey';
-				cmp.selectableGroupAsModel = false;
+				cmpRef.setInput('groupBy', 'groupKey');
+				cmpRef.setInput('selectableGroupAsModel', false);
 				list.setItems([
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
 					{ label: 'K2', val: 'V2', groupKey: 'G1', disabled: true },
@@ -332,7 +340,7 @@ describe('ItemsList', () => {
 			});
 
 			it('should not affect disabled items when un-selecting a group', () => {
-				cmp.groupBy = 'groupKey';
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
 					{ label: 'K2', val: 'V2', groupKey: 'G1' },
@@ -346,7 +354,7 @@ describe('ItemsList', () => {
 			});
 
 			it('should un-select selected item and insert it back to filtered items list when hideSelected=true', () => {
-				cmp.hideSelected = true;
+				cmpRef.setInput('hideSelected', true);
 				list.setItems([
 					{ label: 'K1', val: 'V1' },
 					{ label: 'K2', val: 'V2' },
@@ -359,8 +367,8 @@ describe('ItemsList', () => {
 			});
 
 			it('should un-select selected group and insert it back to filtered items when hideSelected=true', () => {
-				cmp.hideSelected = true;
-				cmp.groupBy = 'groupKey';
+				cmpRef.setInput('hideSelected', true);
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
 					{ label: 'K2', val: 'V2', groupKey: 'G1' },
@@ -373,8 +381,8 @@ describe('ItemsList', () => {
 			});
 
 			it('should un-select selected item and insert it back to filtered items with parent group when hideSelected=true', () => {
-				cmp.hideSelected = true;
-				cmp.groupBy = 'groupKey';
+				cmpRef.setInput('hideSelected', true);
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([{ label: 'K1', val: 'V1', groupKey: 'G1' }]);
 
 				list.select(list.items[1]);
@@ -384,8 +392,8 @@ describe('ItemsList', () => {
 			});
 
 			it('should not inserted unselected group parent item to filtered items if it is already exists', () => {
-				cmp.hideSelected = true;
-				cmp.groupBy = 'groupKey';
+				cmpRef.setInput('hideSelected', true);
+				cmpRef.setInput('groupBy', 'groupKey');
 				list.setItems([
 					// G1
 					{ label: 'K1', val: 'V1', groupKey: 'G1' },
@@ -410,9 +418,11 @@ describe('ItemsList', () => {
 	describe('filter', () => {
 		let list: ItemsList;
 		let cmp: NgSelectComponent;
-		beforeEach(() => {
-			cmp = ngSelectFactory();
-			cmp.bindLabel = 'label';
+		let cmpRef: ComponentRef<NgSelectComponent>;
+		beforeEach(async () => {
+			const { component, componentRef } = await ngSelectFactory();
+			cmp = component;
+			cmpRef = componentRef;
 			list = itemsListFactory(cmp);
 		});
 
@@ -438,8 +448,8 @@ describe('ItemsList', () => {
 			expect(list.filteredItems.length).toBe(0);
 		});
 
-		it('should find item from grouped items list', () => {
-			cmp.groupBy = 'groupKey';
+		it('should find item from grouped items list', fakeAsync(() => {
+			cmpRef.setInput('groupBy', 'groupKey');
 			list.setItems([
 				// G1 group
 				{ label: 'K1 part1 part2', val: 'V1', groupKey: 'G1' },
@@ -461,11 +471,11 @@ describe('ItemsList', () => {
 
 			list.filter('nope');
 			expect(list.filteredItems.length).toBe(0);
-		});
+		}));
 
 		it('should exclude child item if its parent is already selected when hideSelected=true', () => {
-			cmp.groupBy = 'groupKey';
-			cmp.hideSelected = true;
+			cmpRef.setInput('hideSelected', true);
+			cmpRef.setInput('groupBy', 'groupKey');
 			list.setItems([
 				{ label: 'K1', val: 'V1', groupKey: 'G1' },
 				{ label: 'K2', val: 'V2', groupKey: 'G1' },
@@ -480,13 +490,15 @@ describe('ItemsList', () => {
 	describe('map selected', () => {
 		let list: ItemsList;
 		let cmp: NgSelectComponent;
-		beforeEach(() => {
-			cmp = ngSelectFactory();
-			cmp.multiple = true;
-			cmp.bindLabel = 'name';
-			cmp.bindValue = 'name';
-			cmp.groupBy = 'country';
-			cmp.selectableGroupAsModel = false;
+		let cmpRef: ComponentRef<NgSelectComponent>;
+		beforeEach(async () => {
+			const { component, componentRef } = await ngSelectFactory();
+			cmp = component;
+			cmpRef = componentRef;
+			componentRef.setInput('bindLabel', 'name');
+			componentRef.setInput('multiple', true);
+			cmpRef.setInput('selectableGroupAsModel', false);
+			cmpRef.setInput('groupBy', 'country');
 			list = itemsListFactory(cmp);
 		});
 
@@ -533,8 +545,9 @@ describe('ItemsList', () => {
 		let list: ItemsList;
 		let cmp: NgSelectComponent;
 
-		beforeEach(() => {
-			cmp = ngSelectFactory();
+		beforeEach(async () => {
+			const { component } = await ngSelectFactory();
+			cmp = component;
 			list = itemsListFactory(cmp);
 			const items = Array.from(Array(30)).map((_, index) => `item-${index}`);
 			list.setItems(items);
@@ -572,12 +585,24 @@ describe('ItemsList', () => {
 		return new ItemsList(cmp, new DefaultSelectionModel());
 	}
 
-	function ngSelectFactory(): NgSelectComponent {
-		const fixture = TestBed.configureTestingModule({
+	async function ngSelectFactory(): Promise<{
+		component: NgSelectComponent;
+		componentRef: ComponentRef<NgSelectComponent>;
+	}> {
+		await TestBed.configureTestingModule({
 			imports: [NgSelectComponent],
-		}).createComponent(NgSelectComponent);
+			providers: [provideNgSelect()],
+		}).compileComponents();
 
+		const fixture = TestBed.createComponent(NgSelectComponent);
+
+		const component = fixture.componentInstance;
+		const componentRef = fixture.componentRef;
 		fixture.detectChanges();
-		return fixture.componentInstance;
+
+		return {
+			component,
+			componentRef,
+		};
 	}
 });
