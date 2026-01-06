@@ -1,4 +1,13 @@
-import { afterNextRender, booleanAttribute, ChangeDetectionStrategy, Component, ElementRef, inject, input, signal } from '@angular/core';
+import {
+	afterEveryRender,
+	booleanAttribute,
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	inject,
+	input,
+	signal,
+} from '@angular/core';
 
 @Component({
 	selector: 'ng-option',
@@ -7,18 +16,21 @@ import { afterNextRender, booleanAttribute, ChangeDetectionStrategy, Component, 
 	template: `<ng-content />`,
 })
 export class NgOptionComponent {
+
 	public readonly value = input<any>();
 	public readonly disabled = input(false, {
 		transform: booleanAttribute,
 	});
 	public readonly elementRef = inject(ElementRef<HTMLElement>);
+
 	public readonly label = signal<string>('');
 
 	constructor() {
-		afterNextRender(() => {
-			const label = (this.elementRef.nativeElement.innerHTML || '').trim();
-			if (label !== this.label()) {
-				this.label.set(label);
+		afterEveryRender(() => {
+			// Update label signal after render (innerHTML updated by template bindings)
+			const currentLabel = (this.elementRef.nativeElement.innerHTML || '').trim();
+			if (currentLabel !== this.label()) {
+				this.label.set(currentLabel);
 			}
 		});
 	}
