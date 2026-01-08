@@ -2441,7 +2441,7 @@ describe('NgSelectComponent', () => {
 
 			const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
 			const panelClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-dropdown-panel').classList;
-			expect(select.dropdownPosition()).toBe('auto');
+			expect(select.dropdownPositionState()).toBe('auto');
 			expect(selectClasses.contains('ng-select-bottom')).toBeTruthy();
 			expect(panelClasses.contains('ng-select-bottom')).toBeTruthy();
 			expect(selectClasses.contains('ng-select-top')).toBeFalsy();
@@ -2457,7 +2457,7 @@ describe('NgSelectComponent', () => {
 
 			const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
 			const panelClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-dropdown-panel').classList;
-			expect(select.dropdownPosition()).toBe('top');
+			expect(select.dropdownPositionState()).toBe('top');
 			expect(selectClasses.contains('ng-select-bottom')).toBeFalsy();
 			expect(panelClasses.contains('ng-select-bottom')).toBeFalsy();
 			expect(selectClasses.contains('ng-select-top')).toBeTruthy();
@@ -2473,7 +2473,7 @@ describe('NgSelectComponent', () => {
 
 			const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
 			const panelClasses = document.querySelector('.ng-dropdown-panel').classList;
-			expect(select.dropdownPosition()).toBe('auto');
+			expect(select.dropdownPositionState()).toBe('auto');
 			expect(selectClasses.contains('ng-select-bottom')).toBeTruthy();
 			expect(panelClasses.contains('ng-select-bottom')).toBeTruthy();
 			expect(selectClasses.contains('ng-select-top')).toBeFalsy();
@@ -3012,7 +3012,7 @@ describe('NgSelectComponent', () => {
 				fixture.componentInstance.addTag = true;
 				fixture.componentInstance.typeahead = new Subject();
 				tickAndDetectChanges(fixture);
-				select.typeahead().subscribe();
+				select.typeaheadState().subscribe();
 				fixture.componentInstance.cities = [];
 				tickAndDetectChanges(fixture);
 				fixture.componentInstance.select().filter('New item');
@@ -3944,7 +3944,7 @@ describe('NgSelectComponent', () => {
 				);
 
 				expect(fixture.componentInstance.select().clearSearchOnAddValue()).toBeFalsy();
-				expect(fixture.componentInstance.select().closeOnSelect()).toBeFalsy();
+				expect(fixture.componentInstance.select().closeOnSelectState()).toBeFalsy();
 
 				fixture.componentInstance.filter.subscribe();
 				const select = fixture.componentInstance.select();
@@ -3972,7 +3972,7 @@ describe('NgSelectComponent', () => {
 				);
 
 				expect(fixture.componentInstance.select().clearSearchOnAddValue()).toBeTruthy();
-				expect(fixture.componentInstance.select().closeOnSelect()).toBeFalsy();
+				expect(fixture.componentInstance.select().closeOnSelectState()).toBeFalsy();
 
 				let lastEmittedSearchTerm = '';
 				fixture.componentInstance.filter.subscribe((value) => {
@@ -4059,7 +4059,7 @@ describe('NgSelectComponent', () => {
                         [(ngModel)]="selectedCity">
                     </ng-select>`,
 				);
-				expect(fixture.componentInstance.select().editableSearchTerm()).toBeTruthy();
+				expect(fixture.componentInstance.select().editableSearchTermState()).toBeTruthy();
 				const select = fixture.componentInstance.select();
 				const input = select.searchInput().nativeElement;
 				const selectedCity = fixture.componentInstance.cities[0];
@@ -4235,7 +4235,7 @@ describe('NgSelectComponent', () => {
 			select.filter('not-in-list');
 			tickAndDetectChanges(fixture);
 
-			const notFoundText = fixture.componentInstance.select().notFoundText();
+			const notFoundText = fixture.componentInstance.select().notFoundTextState();
 			expect(notFoundText).toBe('No items found (aria-live)');
 		}));
 	});
