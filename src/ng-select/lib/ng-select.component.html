@@ -6,7 +6,7 @@
 	<div class="ng-value-container">
 		@if ((selectedItems.length === 0 && !searchTerm) || (fixedPlaceholderState() ?? config.fixedPlaceholder)) {
 			<ng-template #defaultPlaceholderTemplate>
-				<div class="ng-placeholder">{{ placeholder() ?? config.placeholder }}</div>
+				<div class="ng-placeholder">{{ placeholderState() ?? config.placeholder }}</div>
 			</ng-template>
 			<ng-template [ngTemplateOutlet]="placeholderTemplate() || defaultPlaceholderTemplate"> </ng-template>
 		}
@@ -70,7 +70,7 @@
 				role="button"
 				tabindex="0"
 				[attr.tabindex]="tabFocusOnClear() ? 0 : -1"
-				title="{{ clearAllText() || config.clearAllText }}"
+				title="{{ clearAllTextState() || config.clearAllText }}"
 				#clearButton
 				(click)="handleClearClick($event)">
 				<span class="ng-clear" aria-hidden="true">×</span>
@@ -91,7 +91,7 @@
 		[bufferAmount]="bufferAmountState()"
 		[appendTo]="appendToValue"
 		[position]="dropdownPositionState()"
-		[outsideClickEvent]="outsideClickEvent()"
+		[outsideClickEvent]="outsideClickEventState()"
 		[headerTemplate]="headerTemplate()"
 		[footerTemplate]="footerTemplate()"
 		[filterValue]="searchTerm"
@@ -103,7 +103,7 @@
 		(scrollToEnd)="scrollToEnd.emit($event)"
 		(outsideClick)="close()"
 		[class.ng-select-multiple]="multipleState()"
-		[class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
+		[class]="appendToValue ? (ngClassState() ? ngClassState() : classes) : null"
 		[id]="dropdownId"
 		[ariaLabelDropdown]="ariaLabelDropdownState()">
 		<ng-container>
@@ -146,7 +146,7 @@
 					(click)="selectTag()">
 					<ng-template #defaultTagTemplate>
 						<span
-							><span class="ng-tag-label">{{ addTagText() || config.addTagText }}</span
+							><span class="ng-tag-label">{{ addTagTextState() || config.addTagText }}</span
 							>"{{ searchTerm }}"</span
 						>
 					</ng-template>
@@ -159,7 +159,7 @@
 		</ng-container>
 		@if (showNoItemsFound()) {
 			<ng-template #defaultNotFoundTemplate>
-				<div class="ng-option ng-option-disabled">{{ notFoundText() ?? config.notFoundText }}</div>
+				<div class="ng-option ng-option-disabled">{{ notFoundTextState() ?? config.notFoundText }}</div>
 			</ng-template>
 			<ng-template
 				[ngTemplateOutlet]="notFoundTemplate() || defaultNotFoundTemplate"
@@ -168,13 +168,13 @@
 		}
 		@if (showTypeToSearch()) {
 			<ng-template #defaultTypeToSearchTemplate>
-				<div class="ng-option ng-option-disabled">{{ typeToSearchText() || config.typeToSearchText }}</div>
+				<div class="ng-option ng-option-disabled">{{ typeToSearchTextState() || config.typeToSearchText }}</div>
 			</ng-template>
 			<ng-template [ngTemplateOutlet]="typeToSearchTemplate() || defaultTypeToSearchTemplate"></ng-template>
 		}
-		@if (loading() && itemsList.filteredItems.length === 0) {
+		@if (loadingState() && itemsList.filteredItems.length === 0) {
 			<ng-template #defaultLoadingTextTemplate>
-				<div class="ng-option ng-option-disabled">{{ loadingText() || config.loadingText }}</div>
+				<div class="ng-option ng-option-disabled">{{ loadingTextState() || config.loadingText }}</div>
 			</ng-template>
 			<ng-template
 				[ngTemplateOutlet]="loadingTextTemplate() || defaultLoadingTextTemplate"
@@ -187,6 +187,6 @@
 <!-- Always present aria-live region -->
 <div aria-atomic="true" aria-live="polite" class="ng-visually-hidden" role="status">
 	@if (isOpen() && showNoItemsFound()) {
-		{{ notFoundText() ?? config.notFoundText }}
+		{{ notFoundTextState() ?? config.notFoundText }}
 	}
 </div>
