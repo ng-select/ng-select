@@ -2773,6 +2773,41 @@ describe('NgSelectComponent', () => {
 			});
 		}));
 
+		it('should clear selected value when clicking custom clear button template', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+                            bindLabel="name"
+                            bindValue="name"
+                            [(ngModel)]="selectedCity">
+
+                    <ng-template ng-clearbutton-tmp>
+                        <div class="custom-clearbutton">
+                            <span class="clear-text">Clear</span>
+                        </div>
+                    </ng-template>
+                </ng-select>`,
+			);
+
+			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0].name;
+			tickAndDetectChanges(fixture);
+			tickAndDetectChanges(fixture);
+
+			expect(fixture.componentInstance.selectedCity).toBe(fixture.componentInstance.cities[0].name);
+
+			// Verify custom template is rendered inside the wrapper
+			const clearWrapper = fixture.debugElement.query(By.css('.ng-clear-wrapper'));
+			const customButton = clearWrapper.query(By.css('.custom-clearbutton'));
+			expect(customButton).toBeTruthy();
+			expect(customButton.nativeElement.textContent.trim()).toBe('Clear');
+
+			// Test clicking on the wrapper clears the value
+			clearWrapper.triggerEventHandler('click', createEvent({}));
+			tickAndDetectChanges(fixture);
+
+			expect(fixture.componentInstance.selectedCity).toBeNull();
+		}));
+
 		it('should display ng-placeholder template', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
