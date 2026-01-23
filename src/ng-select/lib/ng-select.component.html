@@ -105,7 +105,7 @@
 		[class.ng-select-multiple]="multiple()"
 		[class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
 		[id]="dropdownId"
-		[ariaLabelDropdown]="ariaLabelDropdown()">
+		[ariaLabelDropdown]="ariaLabelDropdown() ?? config.ariaLabelDropdown">
 		<ng-container>
 			@for (item of viewPortItems; track trackByOption($index, item)) {
 				<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus, @angular-eslint/template/mouse-events-have-key-events -->

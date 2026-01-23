@@ -106,7 +106,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	// signals
 	public readonly _disabled = signal<boolean>(false);
 	// inputs
-	readonly ariaLabelDropdown = input<string>('Options List');
+	readonly ariaLabelDropdown = input<string>(undefined);
 	readonly ariaLabel = input<string | undefined>(undefined);
 	readonly markFirst = input(true, { transform: booleanAttribute });
 	readonly placeholder = input<string>(this.config.placeholder);

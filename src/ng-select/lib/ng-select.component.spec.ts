@@ -1830,6 +1830,40 @@ describe('NgSelectComponent', () => {
 			const listboxElement = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel-items[role="listbox"]');
 			expect(listboxElement.getAttribute('aria-label')).toBe('Custom Aria Label');
 		}));
+
+		it('should use ariaLabelDropdown from NgSelectConfig when not provided in template', fakeAsync(() => {
+			const config = new NgSelectConfig();
+			config.ariaLabelDropdown = 'Global Aria Label';
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" />`,
+				config,
+			);
+
+			const select = fixture.componentInstance.select();
+			select.open();
+			tickAndDetectChanges(fixture);
+
+			const listboxElement = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel-items[role="listbox"]');
+			expect(listboxElement.getAttribute('aria-label')).toBe('Global Aria Label');
+		}));
+
+		it('should override ariaLabelDropdown from NgSelectConfig when provided in template', fakeAsync(() => {
+			const config = new NgSelectConfig();
+			config.ariaLabelDropdown = 'Global Aria Label';
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" ariaLabelDropdown="Template Aria Label" />`,
+				config,
+			);
+
+			const select = fixture.componentInstance.select();
+			select.open();
+			tickAndDetectChanges(fixture);
+
+			const listboxElement = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel-items[role="listbox"]');
+			expect(listboxElement.getAttribute('aria-label')).toBe('Template Aria Label');
+		}));
 	});
 
 	describe('Keyboard events', () => {
