@@ -58,7 +58,7 @@ $ng-select-bg: #ffffff !default;
 			&.ng-appearance-fill {
 				&:after {
 					border-color: $ng-select-highlight;
-					border-width: 0 0 2px 0;
+					border-width: 0 0 2px;
 				}
 			}
 			.ng-value-container .ng-placeholder {
