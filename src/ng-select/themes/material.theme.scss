@@ -19,6 +19,15 @@ $ng-select-bg: #ffffff !default;
 				background-size: 4px 1px;
 				background-repeat: repeat-x;
 			}
+			&.ng-appearance-fill {
+				background-color: rgba(0, 0, 0, 0.02);
+				&:after {
+					background-image: linear-gradient(to right, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.42) 33%, transparent 0%);
+					background-size: 4px 1px;
+					background-repeat: repeat-x;
+					border-bottom: none;
+				}
+			}
 			.ng-value-container {
 				.ng-value {
 					color: $ng-select-disabled-text;
@@ -44,6 +53,12 @@ $ng-select-bg: #ffffff !default;
 				&:hover:after {
 					border-color: $ng-select-highlight;
 					border-width: 2px;
+				}
+			}
+			&.ng-appearance-fill {
+				&:after {
+					border-color: $ng-select-highlight;
+					border-width: 0 0 2px;
 				}
 			}
 			.ng-value-container .ng-placeholder {
@@ -103,6 +118,37 @@ $ng-select-bg: #ffffff !default;
 				padding-left: 0.25em;
 			}
 		}
+		&.ng-appearance-fill {
+			background-color: rgba(0, 0, 0, 0.06);
+			border-radius: 4px 4px 0 0;
+			padding: 0 0.75em;
+			min-height: 56px;
+			&:after {
+				border-bottom: thin solid rgba(0, 0, 0, 0.42);
+				content: '';
+				bottom: 0;
+				left: 0;
+				right: 0;
+				position: absolute;
+				transition: border-color 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+			}
+			&:hover:after {
+				border-bottom-color: $ng-select-primary-text;
+			}
+			.ng-placeholder {
+				padding: 0 0.25em;
+				background-color: transparent;
+				z-index: 1;
+			}
+			.ng-value-container {
+				// Add extra headroom so the floating label matches Material filled spacing better.
+				padding-top: 0.5625em;
+				border-top-width: 1.09375em;
+			}
+			.ng-value {
+				padding-left: 0.25em;
+			}
+		}
 		.ng-value-container {
 			align-items: stretch;
 			padding: 0.4375em 0;
@@ -126,6 +172,14 @@ $ng-select-bg: #ffffff !default;
 	}
 	&.ng-select-single {
 		.ng-select-container {
+			&.ng-appearance-fill {
+				.ng-arrow-wrapper {
+					bottom: 15px;
+				}
+				.ng-clear-wrapper {
+					bottom: 12px;
+				}
+			}
 			&.ng-appearance-outline {
 				.ng-arrow-wrapper {
 					bottom: 17px;
@@ -150,6 +204,15 @@ $ng-select-bg: #ffffff !default;
 				background-color: $ng-select-divider;
 				color: rgba(0, 0, 0, 0.26);
 			}
+			.ng-appearance-fill {
+				&:after,
+				&:hover:after {
+					background-image: linear-gradient(to right, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.42) 33%, transparent 0%);
+					background-size: 4px 1px;
+					background-repeat: repeat-x;
+					border-bottom: none;
+				}
+			}
 			.ng-appearance-outline {
 				&:after,
 				&:hover:after {
@@ -159,6 +222,20 @@ $ng-select-bg: #ffffff !default;
 			}
 		}
 		.ng-select-container {
+			&.ng-appearance-fill {
+				&.ng-has-value {
+					.ng-arrow-wrapper,
+					.ng-clear-wrapper {
+						border-top: none;
+					}
+				}
+				.ng-arrow-wrapper {
+					top: 2px;
+				}
+				.ng-clear-wrapper {
+					top: 6px;
+				}
+			}
 			&.ng-appearance-outline {
 				&.ng-has-value {
 					.ng-arrow-wrapper,
