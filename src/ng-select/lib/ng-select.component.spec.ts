@@ -150,6 +150,24 @@ describe('NgSelectComponent', () => {
 		});
 	});
 
+	describe('Appearance', () => {
+		it('should add fill appearance class on select container', () => {
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select appearance="fill"></ng-select>`);
+
+			const ngSelectContainer: HTMLElement = fixture.nativeElement.querySelector('.ng-select-container');
+			expect(ngSelectContainer).toHaveClass('ng-appearance-fill');
+			expect(ngSelectContainer).not.toHaveClass('ng-appearance-outline');
+		});
+
+		it('should add outline appearance class on select container', () => {
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select appearance="outline"></ng-select>`);
+
+			const ngSelectContainer: HTMLElement = fixture.nativeElement.querySelector('.ng-select-container');
+			expect(ngSelectContainer).toHaveClass('ng-appearance-outline');
+			expect(ngSelectContainer).not.toHaveClass('ng-appearance-fill');
+		});
+	});
+
 	describe('Data source', () => {
 		it('should set items from primitive numbers array', fakeAsync(() => {
 			const fixture = createTestingModule(
