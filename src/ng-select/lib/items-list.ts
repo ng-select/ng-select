@@ -390,7 +390,7 @@ export class ItemsList {
 
 			const isObjectKey = isObject(key);
 			const parent: NgOption = {
-				label: isObjectKey ? '' : String(key),
+				label: isObjectKey ?  (<NgOption>key).label : String(key),
 				children: undefined,
 				parent: null,
 				index: i++,
