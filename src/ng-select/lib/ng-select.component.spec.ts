@@ -5367,6 +5367,16 @@ describe('Grouping', () => {
 			const options = select.itemsList.items.filter((item) => item.children === undefined);
 			expect(options.length).toBe(3);
 		}));
+
+		it('should not work if there are missing values', fakeAsync(() => {
+			fixture.componentInstance.accounts = [
+				{ name: 'Adam', email: 'adam@email.com', age: 42, country: 'United States', child: { name: 'c1' } },
+				null, // Missing value!
+				{ name: 'Amalie', email: 'amalie@email.com', age: 42, country: 'Argentina', child: { name: 'c1' } },
+			];
+
+			expect(() => tickAndDetectChanges(fixture)).toThrowError("Cannot read properties of null (reading 'name')");
+		}));
 	});
 });
 
