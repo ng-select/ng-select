@@ -5295,6 +5295,79 @@ describe('Grouping', () => {
 		expect(select.viewPortItems.find((opt) => opt.selected).index).toBe(2, 0);
 		expect(select.itemsList.selectedItems.length).toBe(1);
 	}));
+
+	describe('ng-option with groupBy', () => {
+		let fixture: ComponentFixture<NgSelectGroupingTestComponent>;
+		let select: NgSelectComponent;
+
+		beforeEach(() => {
+			fixture = createTestingModule(
+				NgSelectGroupingTestComponent,
+				`<ng-select groupBy="country" [(ngModel)]="selectedAccount">
+					@for (account of accounts; track account.name) {
+						<ng-option [value]="account">{{ account.name }}</ng-option>
+					}
+				</ng-select>`,
+			);
+			select = fixture.componentInstance.select();
+		});
+
+		it('should open dropdown and display grouped options correctly after load', fakeAsync(() => {
+			fixture.componentInstance.accounts = [
+				{ name: 'Adam', email: 'adam@email.com', age: 42, country: 'United States', child: { name: 'c1' } },
+				{ name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'Argentina', child: { name: 'c1' } },
+				{ name: 'Amalie', email: 'amalie@email.com', age: 42, country: 'Argentina', child: { name: 'c1' } },
+			];
+			tickAndDetectChanges(fixture);
+
+			select.open();
+			tickAndDetectChanges(fixture);
+
+			expect(select.isOpen()).toBe(true);
+			const groups = fixture.debugElement.nativeElement.querySelectorAll('.ng-optgroup');
+			expect(groups.length).toBe(2);
+			const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+			expect(options.length).toBe(3);
+		}));
+
+		it('should allow selection of items loaded dynamically with groupBy', fakeAsync(() => {
+			const accountToSelect = { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { name: 'c1' } };
+			fixture.componentInstance.accounts = [
+				accountToSelect,
+				{ name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States', child: { name: 'c1' } },
+			];
+			tickAndDetectChanges(fixture);
+
+			const ngOptionToSelect = select.itemsList.items.find((item) => item.label === accountToSelect.name);
+			expect(ngOptionToSelect).toBeDefined();
+			select.select(ngOptionToSelect);
+			tickAndDetectChanges(fixture);
+
+			expect(fixture.componentInstance.selectedAccount).toEqual(accountToSelect);
+		}));
+
+		it('should handle dynamic loading of ng-options with groupBy', fakeAsync(() => {
+			// Start with an empty array
+			fixture.componentInstance.accounts = [];
+			tickAndDetectChanges(fixture);
+			expect(select.itemsList.items.length).toBe(0);
+
+			// Load accounts dynamically
+			fixture.componentInstance.accounts = [
+				{ name: 'Adam', email: 'adam@email.com', age: 42, country: 'United States', child: { name: 'c1' } },
+				{ name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'Argentina', child: { name: 'c1' } },
+				{ name: 'Amalie', email: 'amalie@email.com', age: 42, country: 'Argentina', child: { name: 'c1' } },
+			];
+			tickAndDetectChanges(fixture);
+			expect(select.itemsList.items.length).toBe(5);
+
+			// Verify grouping structure - should have groups and regular options
+			const groups = select.itemsList.items.filter((item) => item.children !== undefined);
+			expect(groups.length).toBe(2);
+			const options = select.itemsList.items.filter((item) => item.children === undefined);
+			expect(options.length).toBe(3);
+		}));
+	});
 });
 
 describe('Input method composition', () => {

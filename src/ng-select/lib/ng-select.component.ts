@@ -757,6 +757,15 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 						$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
 						disabled: option.disabled(),
 					})) ?? [];
+
+				// Guard: skip processing if any option value is undefined.
+				// This can occur during initialization when content children are detected
+				// before their input bindings are fully set. The effect will re-run when
+				// the undefined values become defined (since we track all value signals above).
+				if (items.some((item) => !isDefined(item.$ngOptionValue))) {
+					return;
+				}
+
 				this.items.set(items);
 				this.itemsList.setItems(items);
 				if (this.hasValue) {
