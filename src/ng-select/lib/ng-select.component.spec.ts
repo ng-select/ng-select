@@ -5297,12 +5297,12 @@ describe('Grouping', () => {
 	}));
 
 	describe('ng-option with groupBy', () => {
-		let fixture: ComponentFixture<NgSelectGroupingTestComponent>;
+		let fixture: ComponentFixture<NgSelectSimpleGroupingTestComponent>;
 		let select: NgSelectComponent;
 
 		beforeEach(() => {
 			fixture = createTestingModule(
-				NgSelectGroupingTestComponent,
+				NgSelectSimpleGroupingTestComponent,
 				`<ng-select groupBy="country" [(ngModel)]="selectedAccount">
 					@for (account of accounts; track account.name) {
 						<ng-option [value]="account">{{ account.name }}</ng-option>
@@ -5314,9 +5314,9 @@ describe('Grouping', () => {
 
 		it('should open dropdown and display grouped options correctly after load', fakeAsync(() => {
 			fixture.componentInstance.accounts = [
-				{ name: 'Adam', email: 'adam@email.com', age: 42, country: 'United States', child: { name: 'c1' } },
-				{ name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'Argentina', child: { name: 'c1' } },
-				{ name: 'Amalie', email: 'amalie@email.com', age: 42, country: 'Argentina', child: { name: 'c1' } },
+				{ name: 'Adam', country: 'United States' },
+				{ name: 'Samantha', country: 'Argentina'},
+				{ name: 'Amalie', country: 'Argentina' },
 			];
 			tickAndDetectChanges(fixture);
 
@@ -5331,10 +5331,10 @@ describe('Grouping', () => {
 		}));
 
 		it('should allow selection of items loaded dynamically with groupBy', fakeAsync(() => {
-			const accountToSelect = { name: 'Adam', email: 'adam@email.com', age: 12, country: 'United States', child: { name: 'c1' } };
+			const accountToSelect = { name: 'Adam', country: 'United States' };
 			fixture.componentInstance.accounts = [
 				accountToSelect,
-				{ name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'United States', child: { name: 'c1' } },
+				{ name: 'Samantha', country: 'Argentina' },
 			];
 			tickAndDetectChanges(fixture);
 
@@ -5354,9 +5354,9 @@ describe('Grouping', () => {
 
 			// Load accounts dynamically
 			fixture.componentInstance.accounts = [
-				{ name: 'Adam', email: 'adam@email.com', age: 42, country: 'United States', child: { name: 'c1' } },
-				{ name: 'Samantha', email: 'samantha@email.com', age: 30, country: 'Argentina', child: { name: 'c1' } },
-				{ name: 'Amalie', email: 'amalie@email.com', age: 42, country: 'Argentina', child: { name: 'c1' } },
+				{ name: 'Adam', country: 'United States' },
+				{ name: 'Samantha', country: 'Argentina' },
+				{ name: 'Amalie', country: 'Argentina'},
 			];
 			tickAndDetectChanges(fixture);
 			expect(select.itemsList.items.length).toBe(5);
@@ -5369,13 +5369,26 @@ describe('Grouping', () => {
 		}));
 
 		it('should not work if there are missing values', fakeAsync(() => {
+			fixture = createTestingModule(
+				NgSelectSimpleGroupingTestComponent,
+				// Redefine the template for this single test. We need to add "?" after "account",
+				// so that the template does not break, and the missing value can flow through
+				// to the NgSelectComponent.
+				`<ng-select groupBy="country" [(ngModel)]="selectedAccount">
+					@for (account of accounts; track account?.name) {
+						<ng-option [value]="account">{{ account?.name }}</ng-option>
+					}
+				</ng-select>`,
+			);
+			select = fixture.componentInstance.select();
+
 			fixture.componentInstance.accounts = [
-				{ name: 'Adam', email: 'adam@email.com', age: 42, country: 'United States', child: { name: 'c1' } },
+				{ name: 'Adam', country: 'United States' },
 				null, // Missing value!
-				{ name: 'Amalie', email: 'amalie@email.com', age: 42, country: 'Argentina', child: { name: 'c1' } },
+				{ name: 'Amalie', country: 'Argentina' },
 			];
 
-			expect(() => tickAndDetectChanges(fixture)).toThrowError("Cannot read properties of null (reading 'name')");
+			expect(() => tickAndDetectChanges(fixture)).toThrowError("Cannot read properties of undefined (reading 'country')");
 		}));
 	});
 });
@@ -5783,4 +5796,14 @@ class NgSelectGroupingTestComponent {
 	groupByFn = (item) => item.child.name;
 
 	groupValueFn = (key, _) => ({ group: key });
+}
+
+@Component({
+	template: ``,
+	imports: [NgSelectModule, FormsModule],
+})
+class NgSelectSimpleGroupingTestComponent {
+	readonly select = viewChild(NgSelectComponent);
+	selectedAccount: { name: string; country: string } = null;
+	accounts: { name: string; country: string }[] = [];
 }
