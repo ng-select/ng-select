@@ -5296,7 +5296,7 @@ describe('Grouping', () => {
 		expect(select.itemsList.selectedItems.length).toBe(1);
 	}));
 
-	fdescribe('ng-option with groupBy', () => {
+	describe('ng-option with groupBy', () => {
 		let fixture: ComponentFixture<NgSelectSimpleGroupingTestComponent>;
 		let select: NgSelectComponent;
 
@@ -5313,7 +5313,7 @@ describe('Grouping', () => {
 			select = fixture.componentInstance.select();
 		});
 
-		it('should open dropdown and display grouped options correctly after load', fakeAsync(() => {
+		it('should open dropdown and display grouped options correctly', fakeAsync(() => {
 			fixture.componentInstance.accounts = [
 				{ name: 'Adam', country: 'United States' },
 				{ name: 'Samantha', country: 'Argentina' },
@@ -5331,7 +5331,7 @@ describe('Grouping', () => {
 			expect(options.length).toBe(3);
 		}));
 
-		it('should allow selection of items loaded dynamically with groupBy', fakeAsync(() => {
+		it('should allow selection of items', fakeAsync(() => {
 			const accountToSelect = { name: 'Adam', country: 'United States' };
 			fixture.componentInstance.accounts = [accountToSelect, { name: 'Samantha', country: 'Argentina' }];
 			tickAndDetectChanges(fixture);
@@ -5368,7 +5368,7 @@ describe('Grouping', () => {
 
 		it('should crash if there is a null value', fakeAsync(() => {
 			fixture.componentInstance.accounts = [{ name: 'Adam', country: 'United States' }, null, { name: 'Amalie', country: 'Argentina' }];
-			expect(() => tickAndDetectChanges(fixture)).toThrowError(/Cannot read properties of (null|undefined) \(reading 'country'\)/);
+			expect(() => tickAndDetectChanges(fixture)).toThrowError("Cannot read properties of null (reading 'country')");
 		}));
 
 		it('should crash if there is an undefined value', fakeAsync(() => {
@@ -5377,19 +5377,18 @@ describe('Grouping', () => {
 				undefined,
 				{ name: 'Amalie', country: 'Argentina' },
 			];
-			expect(() => tickAndDetectChanges(fixture)).toThrowError(/Cannot read properties of (null|undefined) \(reading 'country'\)/);
+			expect(() => tickAndDetectChanges(fixture)).toThrowError("Cannot read properties of undefined (reading 'country')");
 		}));
 
 		it('should crash if all values are null', fakeAsync(() => {
 			fixture.componentInstance.accounts = [null];
-			expect(() => tickAndDetectChanges(fixture)).toThrowError(/Cannot read properties of (null|undefined) \(reading 'country'\)/);
+			expect(() => tickAndDetectChanges(fixture)).toThrowError("Cannot read properties of null (reading 'country')");
 		}));
 
-		// TODO I would like this test to fail!! (That is, the tickAndDetectChanges to throw, just like when we use null)
-		it('should not crash if all the values are undefined', fakeAsync(() => {
-			// See https://github.com/ng-select/ng-select/pull/2761
+		it('should show no options if all the values are undefined', fakeAsync(() => {
 			fixture.componentInstance.accounts = [undefined];
 			expect(() => tickAndDetectChanges(fixture)).not.toThrow();
+			expect(select.itemsList.items.length).toBe(0);
 		}));
 	});
 });
@@ -5799,6 +5798,7 @@ class NgSelectGroupingTestComponent {
 	groupValueFn = (key, _) => ({ group: key });
 }
 
+/** Simple component to test grouping. Starts with empty accounts array */
 @Component({
 	template: ``,
 	imports: [NgSelectModule, FormsModule],
