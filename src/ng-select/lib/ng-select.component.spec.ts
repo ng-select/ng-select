@@ -5344,6 +5344,20 @@ describe('Grouping', () => {
 			expect(fixture.componentInstance.selectedAccount).toEqual(accountToSelect);
 		}));
 
+		it('should handle pre-selected value that loads dynamically', fakeAsync(() => {
+			const preSelected = { name: 'Adam', country: 'United States' };
+			fixture.componentInstance.selectedAccount = preSelected;
+			fixture.componentInstance.accounts = [];
+			tickAndDetectChanges(fixture);
+
+			// Load accounts including the pre-selected one
+			fixture.componentInstance.accounts = [preSelected, { name: 'Samantha', country: 'Argentina' }];
+			tickAndDetectChanges(fixture);
+
+			expect(select.selectedItems.length).toBe(1);
+			expect(select.selectedItems[0].value).toEqual(preSelected);
+		}));
+
 		it('should handle dynamic loading of ng-options with groupBy', fakeAsync(() => {
 			// Start with an empty array
 			fixture.componentInstance.accounts = [];
@@ -5364,6 +5378,40 @@ describe('Grouping', () => {
 			expect(groups.length).toBe(2);
 			const options = select.itemsList.items.filter((item) => item.children === undefined);
 			expect(options.length).toBe(3);
+		}));
+
+		it('should handle multiple empty-to-populated transitions', fakeAsync(() => {
+			// TODO include several cycles on previous test
+			// Empty -> Populated
+			fixture.componentInstance.accounts = [{ name: 'Adam', country: 'US' }];
+			tickAndDetectChanges(fixture);
+			expect(select.itemsList.items.length).toBe(2); // 1 group + 1 item
+
+			// Populated -> Empty
+			fixture.componentInstance.accounts = [];
+			tickAndDetectChanges(fixture);
+			expect(select.itemsList.items.length).toBe(0);
+
+			// Empty -> Populated again (checks that the guard works across cycles)
+			fixture.componentInstance.accounts = [{ name: 'Samantha', country: 'Argentina' }];
+			tickAndDetectChanges(fixture);
+			expect(select.itemsList.items.length).toBe(2);
+		}));
+
+		fit('should handle adding items to existing groups', fakeAsync(() => {
+			fixture.componentInstance.accounts = [{ name: 'Adam', country: 'United States' }];
+			tickAndDetectChanges(fixture);
+
+			// Add to existing group
+			fixture.componentInstance.accounts = [
+				{ name: 'Adam', country: 'United States' },
+				{ name: 'Bob', country: 'United States' }, // Same group
+				{ name: 'Carlos', country: 'Mexico' }, // New group
+			];
+			tickAndDetectChanges(fixture);
+
+			const groups = select.itemsList.items.filter((item) => item.children !== undefined);
+			expect(groups.length).toBe(2);
 		}));
 
 		it('should crash if there is a null value', fakeAsync(() => {
@@ -5389,6 +5437,14 @@ describe('Grouping', () => {
 			fixture.componentInstance.accounts = [undefined];
 			expect(() => tickAndDetectChanges(fixture)).not.toThrow();
 			expect(select.itemsList.items.length).toBe(0);
+		}));
+
+		it('should crash if items are missing the groupBy property', fakeAsync(() => {
+			fixture.componentInstance.accounts = [
+				{ name: 'Adam', country: 'United States' },
+				{ name: 'NoCountry' } as any,
+			];
+			expect(() => tickAndDetectChanges(fixture)).toThrowError();
 		}));
 	});
 });
