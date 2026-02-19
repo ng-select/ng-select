@@ -762,7 +762,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 				// Option values are undefined during initialization, when content children are
 				// detected, and before their input bindings are fully set. The effect will re-run
 				// when the undefined values become defined (since we track all value signals above).
-				if (items.length > 0 && items.some((item) => item.$ngOptionValue === undefined)) {
+				if (items.some((item) => item.$ngOptionValue === undefined)) {
 					return;
 				}
 
