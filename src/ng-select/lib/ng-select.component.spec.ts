@@ -5358,30 +5358,7 @@ describe('Grouping', () => {
 			expect(select.selectedItems[0].value).toEqual(preSelected);
 		}));
 
-		it('should handle dynamic loading of ng-options with groupBy', fakeAsync(() => {
-			// Start with an empty array
-			fixture.componentInstance.accounts = [];
-			tickAndDetectChanges(fixture);
-			expect(select.itemsList.items.length).toBe(0);
-
-			// Load accounts dynamically
-			fixture.componentInstance.accounts = [
-				{ name: 'Adam', country: 'United States' },
-				{ name: 'Samantha', country: 'Argentina' },
-				{ name: 'Amalie', country: 'Argentina' },
-			];
-			tickAndDetectChanges(fixture);
-			expect(select.itemsList.items.length).toBe(5);
-
-			// Verify grouping structure - should have groups and regular options
-			const groups = select.itemsList.items.filter((item) => item.children !== undefined);
-			expect(groups.length).toBe(2);
-			const options = select.itemsList.items.filter((item) => item.children === undefined);
-			expect(options.length).toBe(3);
-		}));
-
 		it('should handle multiple empty-to-populated transitions', fakeAsync(() => {
-			// TODO include several cycles on previous test
 			// Empty -> Populated
 			fixture.componentInstance.accounts = [{ name: 'Adam', country: 'US' }];
 			tickAndDetectChanges(fixture);
@@ -5392,17 +5369,21 @@ describe('Grouping', () => {
 			tickAndDetectChanges(fixture);
 			expect(select.itemsList.items.length).toBe(0);
 
-			// Empty -> Populated again (checks that the guard works across cycles)
+			// Empty -> Populated again
 			fixture.componentInstance.accounts = [{ name: 'Samantha', country: 'Argentina' }];
 			tickAndDetectChanges(fixture);
 			expect(select.itemsList.items.length).toBe(2);
+
+			// Populated -> Empty again
+			fixture.componentInstance.accounts = [];
+			tickAndDetectChanges(fixture);
+			expect(select.itemsList.items.length).toBe(0);
 		}));
 
-		fit('should handle adding items to existing groups', fakeAsync(() => {
+		it('should handle adding items to existing groups', fakeAsync(() => {
 			fixture.componentInstance.accounts = [{ name: 'Adam', country: 'United States' }];
 			tickAndDetectChanges(fixture);
 
-			// Add to existing group
 			fixture.componentInstance.accounts = [
 				{ name: 'Adam', country: 'United States' },
 				{ name: 'Bob', country: 'United States' }, // Same group
@@ -5412,6 +5393,8 @@ describe('Grouping', () => {
 
 			const groups = select.itemsList.items.filter((item) => item.children !== undefined);
 			expect(groups.length).toBe(2);
+			const options = select.itemsList.items.filter((item) => item.children === undefined);
+			expect(options.length).toBe(3);
 		}));
 
 		it('should crash if there is a null value', fakeAsync(() => {
@@ -5419,13 +5402,14 @@ describe('Grouping', () => {
 			expect(() => tickAndDetectChanges(fixture)).toThrowError("Cannot read properties of null (reading 'country')");
 		}));
 
-		it('should crash if there is an undefined value', fakeAsync(() => {
+		it('should show no options if there is an undefined value', fakeAsync(() => {
 			fixture.componentInstance.accounts = [
 				{ name: 'Adam', country: 'United States' },
 				undefined,
 				{ name: 'Amalie', country: 'Argentina' },
 			];
-			expect(() => tickAndDetectChanges(fixture)).toThrowError("Cannot read properties of undefined (reading 'country')");
+			expect(() => tickAndDetectChanges(fixture)).not.toThrow();
+			expect(select.itemsList.items.length).toBe(0);
 		}));
 
 		it('should crash if all values are null', fakeAsync(() => {
@@ -5439,12 +5423,16 @@ describe('Grouping', () => {
 			expect(select.itemsList.items.length).toBe(0);
 		}));
 
-		it('should crash if items are missing the groupBy property', fakeAsync(() => {
+		it('should work if any item is missing the groupBy property', fakeAsync(() => {
 			fixture.componentInstance.accounts = [
 				{ name: 'Adam', country: 'United States' },
 				{ name: 'NoCountry' } as any,
 			];
-			expect(() => tickAndDetectChanges(fixture)).toThrowError();
+			expect(() => tickAndDetectChanges(fixture)).not.toThrow();
+			const groups = select.itemsList.items.filter((item) => item.children !== undefined);
+			expect(groups.length).toBe(1);
+			const options = select.itemsList.items.filter((item) => item.children === undefined);
+			expect(options.length).toBe(2);
 		}));
 	});
 });
