@@ -5385,7 +5385,7 @@ describe('Grouping', () => {
 			tickAndDetectChanges(fixture);
 
 			fixture.componentInstance.accounts = [
-				{ name: 'Adam', country: 'United States' },
+				{ name: 'Adam', country: 'United States' }, // Already exists
 				{ name: 'Bob', country: 'United States' }, // Same group
 				{ name: 'Carlos', country: 'Mexico' }, // New group
 			];
