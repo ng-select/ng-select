@@ -25,7 +25,7 @@ export class NgOptionComponent implements OnInit {
 
 	public readonly label = signal<string>('');
 
-	/** Emits true when this component's inputs are initialized */
+	/** True when this component's inputs are initialized */
 	public readonly isInitialized = signal<boolean>(false);
 
 	constructor() {
