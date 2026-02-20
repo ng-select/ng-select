@@ -1,11 +1,13 @@
 import {
 	afterEveryRender,
+	AfterViewInit,
 	booleanAttribute,
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
 	inject,
 	input,
+	OnInit,
 	signal,
 } from '@angular/core';
 
@@ -15,8 +17,7 @@ import {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	template: `<ng-content />`,
 })
-export class NgOptionComponent {
-
+export class NgOptionComponent implements OnInit {
 	public readonly value = input<any>();
 	public readonly disabled = input(false, {
 		transform: booleanAttribute,
@@ -24,6 +25,9 @@ export class NgOptionComponent {
 	public readonly elementRef = inject(ElementRef<HTMLElement>);
 
 	public readonly label = signal<string>('');
+
+	/** Emits true when this component's inputs are initialized */
+	public readonly isInitialized = signal<boolean>(false);
 
 	constructor() {
 		afterEveryRender(() => {
@@ -33,5 +37,9 @@ export class NgOptionComponent {
 				this.label.set(currentLabel);
 			}
 		});
+	}
+
+	ngOnInit() {
+		this.isInitialized.set(true);
 	}
 }

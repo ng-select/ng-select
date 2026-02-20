@@ -750,6 +750,10 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		effect(
 			() => {
 				const options = this.ngOptions();
+				if (options.length > 0 && !options.every(opt => opt.isInitialized())) {
+					return;
+				}
+
 				this.bindLabel.set(this._defaultLabel);
 				const items =
 					options.map((option) => ({
@@ -757,14 +761,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 						$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
 						disabled: option.disabled(),
 					})) ?? [];
-
-				// Guard: skip processing if any option value is undefined.
-				// Option values are undefined during initialization, when content children are
-				// detected, and before their input bindings are fully set. The effect will re-run
-				// when the undefined values become defined (since we track all value signals above).
-				if (items.some((item) => item.$ngOptionValue === undefined)) {
-					return;
-				}
 
 				this.items.set(items);
 				this.itemsList.setItems(items);

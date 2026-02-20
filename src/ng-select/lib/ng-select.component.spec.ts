@@ -5402,25 +5402,13 @@ describe('Grouping', () => {
 			expect(() => tickAndDetectChanges(fixture)).toThrowError("Cannot read properties of null (reading 'country')");
 		}));
 
-		it('should show no options if there is an undefined value', fakeAsync(() => {
+		it('should crash if there is an undefined value', fakeAsync(() => {
 			fixture.componentInstance.accounts = [
 				{ name: 'Adam', country: 'United States' },
 				undefined,
 				{ name: 'Amalie', country: 'Argentina' },
 			];
-			expect(() => tickAndDetectChanges(fixture)).not.toThrow();
-			expect(select.itemsList.items.length).toBe(0);
-		}));
-
-		it('should crash if all values are null', fakeAsync(() => {
-			fixture.componentInstance.accounts = [null];
-			expect(() => tickAndDetectChanges(fixture)).toThrowError("Cannot read properties of null (reading 'country')");
-		}));
-
-		it('should show no options if all the values are undefined', fakeAsync(() => {
-			fixture.componentInstance.accounts = [undefined];
-			expect(() => tickAndDetectChanges(fixture)).not.toThrow();
-			expect(select.itemsList.items.length).toBe(0);
+			expect(() => tickAndDetectChanges(fixture)).toThrowError("Cannot read properties of undefined (reading 'country')");
 		}));
 
 		it('should work if any item is missing the groupBy property', fakeAsync(() => {
@@ -5433,6 +5421,26 @@ describe('Grouping', () => {
 			expect(groups.length).toBe(1);
 			const options = select.itemsList.items.filter((item) => item.children === undefined);
 			expect(options.length).toBe(2);
+		}));
+
+		it('should handle alternating between valid data and invalid data', fakeAsync(() => {
+			// Start with valid
+			fixture.componentInstance.accounts = [{ name: 'Adam', country: 'US' }];
+			tickAndDetectChanges(fixture);
+			expect(select.itemsList.items.length).toBe(2);
+
+			// Switch to invalid (should crash)
+			fixture.componentInstance.accounts = [undefined];
+			expect(() => tickAndDetectChanges(fixture)).toThrowError();
+
+			// Switch back to valid (should work)
+			fixture.componentInstance.accounts = [{ name: 'Adam', country: 'US' }];
+			tickAndDetectChanges(fixture);
+			expect(select.itemsList.items.length).toBe(2);
+
+			// Switch back to invalid (should crash)
+			fixture.componentInstance.accounts = [undefined];
+			expect(() => tickAndDetectChanges(fixture)).toThrowError();
 		}));
 	});
 });
