@@ -761,7 +761,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 						$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
 						disabled: option.disabled(),
 					})) ?? [];
-
 				this.items.set(items);
 				this.itemsList.setItems(items);
 				if (this.hasValue) {
