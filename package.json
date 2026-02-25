@@ -43,7 +43,7 @@
 		"@angular/platform-browser": "^21.0.3",
 		"@angular/platform-browser-dynamic": "^21.0.3",
 		"@angular/router": "^21.0.3",
-		"@angular/ssr": "^21.0.2",
+		"@angular/ssr": "^21.1.5",
 		"@ng-bootstrap/ng-bootstrap": "19.0.1",
 		"@popperjs/core": "^2.11.8",
 		"bootstrap": "^5.3.7",
