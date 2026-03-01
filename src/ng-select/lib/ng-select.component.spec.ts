@@ -1,10 +1,17 @@
-import { Component, DebugElement, ErrorHandler, NgZone, Type, ViewEncapsulation, viewChild } from '@angular/core';
+import { Component, DebugElement, ErrorHandler, NgZone, Type, viewChild, ViewEncapsulation } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import 'zone.js/testing';
-import { getNgSelectElement, getNgSelectNativeElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
+import {
+	getNgSelectElement,
+	getNgSelectNativeElement,
+	selectOption,
+	TestsErrorHandler,
+	tickAndDetectChanges,
+	triggerKeyDownEvent,
+} from '../testing/helpers';
 import { MockConsole, MockNgZone } from '../testing/mocks';
 import { NgSelectConfig } from './config.service';
 import { ConsoleService } from './console.service';
@@ -14,7 +21,6 @@ import { KeyCode, NgOption } from './ng-select.types';
 import { SIGNAL } from '@angular/core/primitives/signals';
 
 describe('NgSelectComponent', () => {
-
 	const selectTypes = [
 		{ name: 'single', classContains: 'ng-select-single', classNotContains: 'ng-select-multiple', isMultiple: false },
 		{ name: 'multiple', classContains: 'ng-select-multiple', classNotContains: 'ng-select-single', isMultiple: true },
@@ -33,7 +39,8 @@ describe('NgSelectComponent', () => {
 						[clearable]="clearable"
 						[searchable]="searchable"
 						[readonly]="readonly"
-						[addTag]="addTag" />`);
+						[addTag]="addTag" />`,
+				);
 				componentInstance = fixture.componentInstance;
 				fixture.detectChanges();
 
@@ -1415,8 +1422,8 @@ describe('NgSelectComponent', () => {
 						{
 							description: 'alternate description',
 							item: { code: 'A', value: 'description' },
-							group: 'some group'
-						}
+							group: 'some group',
+						},
 					];
 
 					tickAndDetectChanges(fixture);
@@ -1429,7 +1436,7 @@ describe('NgSelectComponent', () => {
 					expect(select.selectedItems[0].value).toEqual({
 						description: 'alternate description',
 						item: { code: 'A', value: 'description' },
-						group: 'some group'
+						group: 'some group',
 					});
 				}));
 
@@ -1775,6 +1782,25 @@ describe('NgSelectComponent', () => {
 			});
 		}));
 
+		it('should open and close normally when [isOpen] is bound to undefined', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+                            [isOpen]="undefined"
+                            bindLabel="name"
+                            [(ngModel)]="city">
+                </ng-select>`,
+			);
+
+			const select = fixture.componentInstance.select();
+			select.open();
+			tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBe(true);
+			select.close();
+			tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBe(false);
+		}));
+
 		it('should not close when isOpen is true', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
@@ -1831,10 +1857,7 @@ describe('NgSelectComponent', () => {
 		}));
 
 		it('should set aria-label on the inner listbox element when ariaLabelDropdown input is provided', fakeAsync(() => {
-			const fixture = createTestingModule(
-				NgSelectTestComponent,
-				`<ng-select [items]="cities" ariaLabelDropdown="Custom Aria Label" />`,
-			);
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" ariaLabelDropdown="Custom Aria Label" />`);
 
 			const select = fixture.componentInstance.select();
 			select.open();
@@ -1852,11 +1875,7 @@ describe('NgSelectComponent', () => {
 		it('should use ariaLabelDropdown from NgSelectConfig when not provided in template', fakeAsync(() => {
 			const config = new NgSelectConfig();
 			config.ariaLabelDropdown = 'Global Aria Label';
-			const fixture = createTestingModule(
-				NgSelectTestComponent,
-				`<ng-select [items]="cities" />`,
-				config,
-			);
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" />`, config);
 
 			const select = fixture.componentInstance.select();
 			select.open();
@@ -1919,6 +1938,14 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 				expect(select.isOpen()).toBeFalsy();
 				expect(open).not.toHaveBeenCalled();
+			});
+
+			it('should open and close dropdown normally when isOpen is undefined', () => {
+				select.ngOnChanges(<any>{ isOpen: { currentValue: undefined } });
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+				expect(select.isOpen()).toBe(true);
+				select.close();
+				expect(select.isOpen()).toBe(false);
 			});
 
 			it('should open empty dropdown if no items', fakeAsync(() => {
@@ -5368,9 +5395,7 @@ describe('User defined keyDown handler', () => {
 	let select: NgSelectComponent;
 
 	beforeEach(() => {
-		fixture = createTestingModule(
-			NgSelectTestComponent,
-			`<ng-select [keyDownFn]="keyDownFn" />`);
+		fixture = createTestingModule(NgSelectTestComponent, `<ng-select [keyDownFn]="keyDownFn" />`);
 		select = fixture.componentInstance.select();
 	});
 
@@ -5443,12 +5468,12 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
 
 function createEvent(target = {}) {
 	return {
-		preventDefault: () => { },
+		preventDefault: () => {},
 		target: {
 			className: '',
 			tagName: '',
 			classList: {
-				contains: () => { },
+				contains: () => {},
 			},
 			...target,
 		},
@@ -5520,7 +5545,7 @@ class NgSelectTestComponent {
 		},
 		{ id: 3, description: { name: 'Australia', id: 'c' } },
 	];
-	keyDownFn = () => { };
+	keyDownFn = () => {};
 
 	tagFunc(term: string) {
 		return { id: term, name: term, custom: true };
@@ -5542,27 +5567,27 @@ class NgSelectTestComponent {
 		this.visible = !this.visible;
 	}
 
-	onChange(_: any) { }
+	onChange(_: any) {}
 
-	onFocus(_: Event) { }
+	onFocus(_: Event) {}
 
-	onBlur(_: Event) { }
+	onBlur(_: Event) {}
 
-	onOpen() { }
+	onOpen() {}
 
-	onClose() { }
+	onClose() {}
 
-	onAdd(_: Event) { }
+	onAdd(_: Event) {}
 
-	onRemove(_: Event) { }
+	onRemove(_: Event) {}
 
-	onClear() { }
+	onClear() {}
 
-	onSearch(_: any) { }
+	onSearch(_: any) {}
 
-	onScroll() { }
+	onScroll() {}
 
-	onScrollToEnd() { }
+	onScrollToEnd() {}
 }
 
 @Component({
