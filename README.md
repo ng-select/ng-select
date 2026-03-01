@@ -18,6 +18,7 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 | Angular          |     ng-select      |
 |------------------|:------------------:|
+| >=22.0.0 <23.0.0 |      v22.x.x       |
 | >=21.0.0 <22.0.0 |      v21.x.x       |
 | >=20.0.0 <21.0.0 | <=15.1.3, >=20.0.1 |
 | >=19.0.0 <20.0.0 |       v14.x        |
@@ -270,7 +271,7 @@ map: {
 | (search) | Fired while typing search term. Outputs search term with filtered items |
 | (open)  | Fired on select dropdown open |
 | (remove)  | Fired when item is removed while `[multiple]="true"` |
-| (scroll)  | Fired when scrolled. Provides the start and end index of the currently available items. Can be used for loading more items in chunks before the user has scrolled all the way to the bottom of the list. |
+| (scroll)  | Fired when scrolled (only when `[virtualScroll]="true"`). Provides the start and end index of the currently available items. Can be used for loading more items in chunks before the user has scrolled all the way to the bottom of the list. |
 | (scrollToEnd)  | Fired when scrolled to the end of items. Can be used for loading more items in chunks. |
 
 
