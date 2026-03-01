@@ -8,19 +8,14 @@
 </div>
 
 <br />
-<p>It can be fixed by appending dropdown to body or other parent element.</p>
-
-<div class="overflow-box">
-	<ng-select
-		[items]="people | async"
-		bindLabel="company"
-		placeholder="Select item"
-		appendTo="body"
-		multiple="true"
-		[closeOnSelect]="false"
-		[(ngModel)]="selected2">
-	</ng-select>
-</div>
+<p>It can be fixed by appending dropdown to body or other parent element. Use <b> appendTo="body" </b> only if:</p>
+<ul>
+    <li><b>The Parent has overflow: hidden or overflow: auto:</b> If the select is inside a small div (like a sidebar or
+        a table cell) and the dropdown gets cut off.</li>
+    <li><b>The Parent has z-index issues:</b> If the dropdown is appearing behind another element (like a sticky header)
+        and you can't fix it with CSS.</li>
+    <li><b>Inside a Modal/Dialog:</b> Modals often have strict boundaries that clip child elements.</li>
+</ul>
 
 <br />
 <div class="scrollable-box">
@@ -33,4 +28,8 @@
 			[(ngModel)]="selected3">
 		</ng-select>
 	</div>
+</div>
+
+<div style="height: 100px;">
+
 </div>
