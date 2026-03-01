@@ -345,9 +345,10 @@ export class ItemsList {
 		}
 
 		// Check if items are already grouped by given key.
-		if (Array.isArray(items[0].value[<string>prop])) {
+		const firstValue = items[0].value;
+		if (firstValue != null && Array.isArray(firstValue[<string>prop])) {
 			for (const item of items) {
-				const children = (item.value[<string>prop] || []).map((x, index) => this.mapItem(x, index));
+				const children = (item.value?.[<string>prop] || []).map((x, index) => this.mapItem(x, index));
 				groups.set(item, children);
 			}
 			return groups;
@@ -355,7 +356,7 @@ export class ItemsList {
 
 		const isFnKey = isFunction(this._ngSelect.groupBy());
 		const keyFn = (item: NgOption) => {
-			const key = isFnKey ? (<(value: any) => any>prop)(item.value) : item.value[<string>prop];
+			const key = isFnKey ? (<(value: any) => any>prop)(item.value) : item.value?.[<string>prop];
 			return isDefined(key) ? key : undefined;
 		};
 
