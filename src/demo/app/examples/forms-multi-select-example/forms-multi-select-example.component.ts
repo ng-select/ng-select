@@ -14,10 +14,11 @@ export class FormsMultiSelectExampleComponent implements OnInit {
 	heroForm: FormGroup;
 	isCitiesControlVisible = true;
 	cities: any[] = [
-		{ id: 1, name: 'Vilnius' },
-		{ id: 2, name: 'Kaunas' },
-		{ id: 3, name: 'Pavilnys (Disabled)', disabled: true },
-		{ id: 4, name: 'Pabradė' },
+		{ id: 1, name: 'New York' },
+		{ id: 2, name: 'London' },
+		{ id: 3, name: 'Beijing' },
+		{ id: 4, name: 'New Delhi (Disabled)', disabled: true },
+		{ id: 5, name: 'Paris' },
 	];
 
 	ngOnInit() {
