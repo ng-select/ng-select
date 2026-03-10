@@ -6,6 +6,7 @@ import {
 	ElementRef,
 	inject,
 	input,
+	OnInit,
 	signal,
 } from '@angular/core';
 
@@ -15,7 +16,7 @@ import {
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	template: `<ng-content />`,
 })
-export class NgOptionComponent {
+export class NgOptionComponent implements OnInit {
 
 	public readonly value = input<any>();
 	public readonly disabled = input(false, {
@@ -25,6 +26,9 @@ export class NgOptionComponent {
 
 	public readonly label = signal<string>('');
 
+	/** True when this component's inputs are initialized (after first change detection). */
+	public readonly isInitialized = signal<boolean>(false);
+
 	constructor() {
 		afterEveryRender(() => {
 			// Update label signal after render (innerHTML updated by template bindings)
@@ -33,5 +37,9 @@ export class NgOptionComponent {
 				this.label.set(currentLabel);
 			}
 		});
+	}
+
+	ngOnInit(): void {
+		this.isInitialized.set(true);
 	}
 }

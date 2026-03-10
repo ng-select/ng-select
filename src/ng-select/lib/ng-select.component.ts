@@ -750,6 +750,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		effect(
 			() => {
 				const options = this.ngOptions();
+				// Wait until all ng-option inputs are initialized (avoids _groupBy crash when values load async)
+				if (options.length > 0 && !options.every((opt) => opt.isInitialized())) {
+					return;
+				}
+
 				this.bindLabel.set(this._defaultLabel);
 				const items =
 					options.map((option) => ({

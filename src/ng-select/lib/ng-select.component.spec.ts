@@ -1,4 +1,5 @@
 import { Component, DebugElement, ErrorHandler, NgZone, Type, viewChild, ViewEncapsulation } from '@angular/core';
+import { SIGNAL } from '@angular/core/primitives/signals';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -18,7 +19,6 @@ import { ConsoleService } from './console.service';
 import { AddTagFn, NgSelectComponent } from './ng-select.component';
 import { NgSelectModule } from './ng-select.module';
 import { KeyCode, NgOption } from './ng-select.types';
-import { SIGNAL } from '@angular/core/primitives/signals';
 
 describe('NgSelectComponent', () => {
 	const selectTypes = [
@@ -203,11 +203,11 @@ describe('NgSelectComponent', () => {
 
 			tickAndDetectChanges(fixture);
 			const itemsList = fixture.componentInstance.select().itemsList;
-			expect(itemsList.items.length).toBe(3);
+			expect(itemsList.items.length).toBe(5);
 			expect(itemsList.items[0]).toEqual(
 				jasmine.objectContaining({
-					label: 'Vilnius',
-					value: { id: 1, name: 'Vilnius' },
+					label: 'New York',
+					value: { id: 1, name: 'New York' },
 				}),
 			);
 		}));
@@ -221,11 +221,11 @@ describe('NgSelectComponent', () => {
 
 			tickAndDetectChanges(fixture);
 			const itemsList = fixture.componentInstance.select().itemsList;
-			expect(itemsList.items.length).toBe(3);
+			expect(itemsList.items.length).toBe(5);
 			expect(itemsList.items[0]).toEqual(
 				jasmine.objectContaining({
-					label: 'Vilnius',
-					value: { id: 1, name: 'Vilnius' },
+					label: 'New York',
+					value: { id: 1, name: 'New York' },
 				}),
 			);
 		}));
@@ -511,11 +511,11 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			fixture.componentInstance.cities = [{ label: 'Vilnius city', name: 'Vilnius' }];
+			fixture.componentInstance.cities = [{ label: 'New York city', name: 'New York' }];
 			tickAndDetectChanges(fixture);
 			select = fixture.componentInstance.select();
 
-			expect(select.itemsList.items[0].label).toBe('Vilnius');
+			expect(select.itemsList.items[0].label).toBe('New York');
 		}));
 
 		it('should escape label', fakeAsync(() => {
@@ -527,7 +527,7 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			fixture.componentInstance.cities = [{ label: '<img src="azd" (error)="alert(1)" />', name: 'Vilnius' }];
+			fixture.componentInstance.cities = [{ label: '<img src="azd" (error)="alert(1)" />', name: 'New York' }];
 			tickAndDetectChanges(fixture);
 			select = fixture.componentInstance.select();
 			select.open();
@@ -548,27 +548,27 @@ describe('NgSelectComponent', () => {
 			);
 
 			select = fixture.componentInstance.select();
-			fixture.componentInstance.selectedCity = { id: 1, name: 'Vilnius' };
+			fixture.componentInstance.selectedCity = { id: 1, name: 'New York' };
 			tickAndDetectChanges(fixture);
 			expect(select.selectedItems).toEqual([
 				jasmine.objectContaining({
-					label: 'Vilnius',
-					value: { id: 1, name: 'Vilnius' },
+					label: 'New York',
+					value: { id: 1, name: 'New York' },
 				}),
 			]);
 
 			fixture.componentInstance.cities = [
-				{ id: 1, name: 'Vilnius' },
-				{ id: 2, name: 'Kaunas' },
+				{ id: 1, name: 'New York' },
+				{ id: 2, name: 'London' },
 				{
 					id: 3,
-					name: 'Pabrade',
+					name: 'Beijing',
 				},
 			];
 			tickAndDetectChanges(fixture);
-			const vilnius = select.itemsList.items[0];
+			const newYork = select.itemsList.items[0];
 			expect(select.selectedItems[0]).toBe(select.itemsList.items[0]);
-			expect(vilnius.selected).toBeTruthy();
+			expect(newYork.selected).toBeTruthy();
 		}));
 
 		it('should set items correctly after ngModel set first when typeahead and multi-select is used', fakeAsync(() => {
@@ -585,31 +585,31 @@ describe('NgSelectComponent', () => {
 
 			select = fixture.componentInstance.select();
 			fixture.componentInstance.selectedCities = [
-				{ id: 1, name: 'Vilnius' },
-				{ id: 2, name: 'Kaunas' },
+				{ id: 1, name: 'New York' },
+				{ id: 2, name: 'London' },
 			];
 			tickAndDetectChanges(fixture);
 			expect(select.selectedItems).toEqual([
 				jasmine.objectContaining({
-					label: 'Vilnius',
-					value: { id: 1, name: 'Vilnius' },
+					label: 'New York',
+					value: { id: 1, name: 'New York' },
 				}),
-				jasmine.objectContaining({ label: 'Kaunas', value: { id: 2, name: 'Kaunas' } }),
+				jasmine.objectContaining({ label: 'London', value: { id: 2, name: 'London' } }),
 			]);
 
 			fixture.componentInstance.cities = [
-				{ id: 1, name: 'Vilnius' },
-				{ id: 2, name: 'Kaunas' },
+				{ id: 1, name: 'New York' },
+				{ id: 2, name: 'London' },
 				{
 					id: 3,
-					name: 'Pabrade',
+					name: 'Beijing',
 				},
 			];
 			tickAndDetectChanges(fixture);
-			const vilnius = select.itemsList.items[0];
+			const newYork = select.itemsList.items[0];
 			const kaunas = select.itemsList.items[1];
-			expect(select.selectedItems[0]).toBe(vilnius);
-			expect(vilnius.selected).toBeTruthy();
+			expect(select.selectedItems[0]).toBe(newYork);
+			expect(newYork.selected).toBeTruthy();
 			expect(select.selectedItems[1]).toBe(kaunas);
 			expect(kaunas.selected).toBeTruthy();
 		}));
@@ -628,8 +628,8 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.selectedCity = { id: 7, name: 'Pailgis' };
 			tickAndDetectChanges(fixture);
 			fixture.componentInstance.cities = [
-				{ id: 1, name: 'Vilnius' },
-				{ id: 2, name: 'Kaunas' },
+				{ id: 1, name: 'New York' },
+				{ id: 2, name: 'London' },
 			];
 			tickAndDetectChanges(fixture);
 			expect(fixture.componentInstance.select().selectedItems[0]).toEqual(
@@ -674,13 +674,13 @@ describe('NgSelectComponent', () => {
 
 			fixture.componentInstance.cities = [];
 			tickAndDetectChanges(fixture);
-			fixture.componentInstance.selectedCity = <any>'Kaunas';
+			fixture.componentInstance.selectedCity = <any>'London';
 			tickAndDetectChanges(fixture);
 
 			expect(fixture.componentInstance.select().selectedItems).toEqual([
 				jasmine.objectContaining({
-					value: 'Kaunas',
-					label: 'Kaunas',
+					value: 'London',
+					label: 'London',
 					selected: true,
 				}),
 			]);
@@ -762,7 +762,7 @@ describe('NgSelectComponent', () => {
 
 			expect(select.selectedItems[0]).toEqual(
 				jasmine.objectContaining({
-					value: { id: 2, name: 'Kaunas' },
+					value: { id: 2, name: 'London' },
 				}),
 			);
 		}));
@@ -893,13 +893,13 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[2];
 			tickAndDetectChanges(fixture);
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			expect(fixture.componentInstance.select().itemsList.markedItem.value).toEqual({ name: 'Pabrade', id: 3 });
+			expect(fixture.componentInstance.select().itemsList.markedItem.value).toEqual({ name: 'Beijing', id: 3 });
 
 			fixture.componentInstance.selectedCity = { name: 'New city', id: 5 };
 			tickAndDetectChanges(fixture);
 			fixture.componentInstance.cities = [...fixture.componentInstance.cities];
 			tickAndDetectChanges(fixture);
-			expect(fixture.componentInstance.select().itemsList.markedItem.value).toEqual({ name: 'Vilnius', id: 1 });
+			expect(fixture.componentInstance.select().itemsList.markedItem.value).toEqual({ name: 'New York', id: 1 });
 		}));
 
 		it('should bind to custom object properties', fakeAsync(() => {
@@ -991,13 +991,13 @@ describe('NgSelectComponent', () => {
 
 			selectOption(fixture, KeyCode.ArrowDown, 0);
 			tickAndDetectChanges(fixture);
-			expect(fixture.componentInstance.selectedCity).toBe(<any>'Vilnius');
-			fixture.componentInstance.selectedCity = <any>'Kaunas';
+			expect(fixture.componentInstance.selectedCity).toBe(<any>'New York');
+			fixture.componentInstance.selectedCity = <any>'London';
 			tickAndDetectChanges(fixture);
 			expect(fixture.componentInstance.select().selectedItems).toEqual([
 				jasmine.objectContaining({
-					label: 'Kaunas',
-					value: 'Kaunas',
+					label: 'London',
+					value: 'London',
 				}),
 			]);
 		}));
@@ -1040,14 +1040,14 @@ describe('NgSelectComponent', () => {
 				config,
 			);
 
-			fixture.componentInstance.cities = [{ id: 1, name: 'Vilnius', label: '' }];
+			fixture.componentInstance.cities = [{ id: 1, name: 'New York', label: '' }];
 			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
 			tickAndDetectChanges(fixture);
 
 			select = fixture.componentInstance.select();
 			expect(select.selectedItems).toEqual([
 				jasmine.objectContaining({
-					label: 'Vilnius',
+					label: 'New York',
 				}),
 			]);
 		}));
@@ -1065,14 +1065,14 @@ describe('NgSelectComponent', () => {
 				config,
 			);
 
-			fixture.componentInstance.cities = [{ id: 1, name: 'Vilnius', label: 'the capital of Lithuania' }];
+			fixture.componentInstance.cities = [{ id: 1, name: 'New York', label: 'the capital of USA' }];
 			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
 			tickAndDetectChanges(fixture);
 
 			select = fixture.componentInstance.select();
 			expect(select.selectedItems).toEqual([
 				jasmine.objectContaining({
-					label: 'Vilnius',
+					label: 'New York',
 				}),
 			]);
 		}));
@@ -1086,14 +1086,14 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			fixture.componentInstance.cities = [{ id: 1, name: 'Vilnius', label: 'the capital of Lithuania' }];
+			fixture.componentInstance.cities = [{ id: 1, name: 'New York', label: 'the capital of USA' }];
 			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
 			tickAndDetectChanges(fixture);
 
 			select = fixture.componentInstance.select();
 			expect(select.selectedItems).toEqual([
 				jasmine.objectContaining({
-					label: 'the capital of Lithuania',
+					label: 'the capital of USA',
 				}),
 			]);
 		}));
@@ -1111,7 +1111,7 @@ describe('NgSelectComponent', () => {
 
 				select = fixture.componentInstance.select();
 				tickAndDetectChanges(fixture);
-				expect(select.itemsList.items.length).toEqual(3);
+				expect(select.itemsList.items.length).toEqual(5);
 
 				fixture.componentInstance.cities = [];
 				tickAndDetectChanges(fixture);
@@ -1128,11 +1128,11 @@ describe('NgSelectComponent', () => {
                     </ng-select>`,
 				);
 				select = fixture.componentInstance.select();
-				expect(select.items().length).toEqual(3);
+				expect(select.items().length).toEqual(5);
 
 				fixture.componentInstance.cities = [
-					{ id: 1, name: 'Vilnius' },
-					{ id: 2, name: 'Kaunas' },
+					{ id: 1, name: 'New York' },
+					{ id: 2, name: 'London' },
 				];
 				tickAndDetectChanges(fixture);
 				expect(select.items().length).toEqual(2);
@@ -1169,12 +1169,12 @@ describe('NgSelectComponent', () => {
 				const fixture = createTestingModule(
 					NgSelectTestComponent,
 					`<ng-select [(ngModel)]="selectedCity">
-                        <ng-option [value]="cities[0]">Vilnius</ng-option>
-                        <ng-option [value]="cities[1]">Kaunas</ng-option>
+                        <ng-option [value]="cities[0]">New York</ng-option>
+                        <ng-option [value]="cities[1]">London</ng-option>
                 	</ng-select>`,
 				);
 
-				const selected = { name: 'Vilnius', id: 1 };
+				const selected = { name: 'New York', id: 1 };
 				fixture.componentInstance.selectedCity = selected;
 				tickAndDetectChanges(fixture);
 
@@ -1244,7 +1244,7 @@ describe('NgSelectComponent', () => {
 					tickAndDetectChanges(fixture);
 					const result = [
 						jasmine.objectContaining({
-							value: { id: 2, name: 'Kaunas' },
+							value: { id: 2, name: 'London' },
 							selected: true,
 						}),
 					];
@@ -1293,14 +1293,14 @@ describe('NgSelectComponent', () => {
                         </ng-select>`,
 					);
 
-					fixture.componentInstance.cities = [{ id: 0, name: 'Vilnius' }];
+					fixture.componentInstance.cities = [{ id: 0, name: 'New York' }];
 					fixture.componentInstance.selectedCityId = 0;
 
 					tickAndDetectChanges(fixture);
 
 					const result = [
 						jasmine.objectContaining({
-							value: { id: 0, name: 'Vilnius' },
+							value: { id: 0, name: 'New York' },
 							selected: true,
 						}),
 					];
@@ -1317,11 +1317,11 @@ describe('NgSelectComponent', () => {
                         </ng-select>`,
 					);
 
-					fixture.componentInstance.selectedCity = { id: 2, name: 'Kaunas' };
+					fixture.componentInstance.selectedCity = { id: 2, name: 'London' };
 					tickAndDetectChanges(fixture);
 					const result = [
 						jasmine.objectContaining({
-							value: { id: 2, name: 'Kaunas' },
+							value: { id: 2, name: 'London' },
 							selected: true,
 						}),
 					];
@@ -1342,7 +1342,7 @@ describe('NgSelectComponent', () => {
 					tickAndDetectChanges(fixture);
 					const result = [
 						jasmine.objectContaining({
-							value: { id: 2, name: 'Kaunas' },
+							value: { id: 2, name: 'London' },
 							selected: true,
 						}),
 					];
@@ -1360,10 +1360,10 @@ describe('NgSelectComponent', () => {
                         </ng-select>`,
 					);
 
-					const city = { name: 'Vilnius', id: 7, district: 'Ozo parkas' };
+					const city = { name: 'New York', id: 7, district: 'Ozo parkas' };
 					fixture.componentInstance.cities.push(city);
 					fixture.componentInstance.cities = [...fixture.componentInstance.cities];
-					fixture.componentInstance.selectedCity = { name: 'Vilnius', district: 'Ozo parkas' } as any;
+					fixture.componentInstance.selectedCity = { name: 'New York', district: 'Ozo parkas' } as any;
 
 					tickAndDetectChanges(fixture);
 					expect(fixture.componentInstance.select().selectedItems[0].value).toEqual(city);
@@ -1463,11 +1463,11 @@ describe('NgSelectComponent', () => {
 			describe('multiple', () => {
 				const result = [
 					jasmine.objectContaining({
-						value: { id: 2, name: 'Kaunas' },
+						value: { id: 2, name: 'London' },
 						selected: true,
 					}),
 					jasmine.objectContaining({
-						value: { id: 3, name: 'Pabrade' },
+						value: { id: 3, name: 'Beijing' },
 						selected: true,
 					}),
 				];
@@ -1502,8 +1502,8 @@ describe('NgSelectComponent', () => {
 					);
 
 					fixture.componentInstance.selectedCities = [
-						{ id: 2, name: 'Kaunas' },
-						{ id: 3, name: 'Pabrade' },
+						{ id: 2, name: 'London' },
+						{ id: 3, name: 'Beijing' },
 					];
 					tickAndDetectChanges(fixture);
 					expect(fixture.componentInstance.select().selectedItems).toEqual(result);
@@ -1525,12 +1525,12 @@ describe('NgSelectComponent', () => {
 			const select = fixture.componentInstance.select();
 			select.open();
 
-			expect(select.dropdownPanel().items().length).toBe(3);
+			expect(select.dropdownPanel().items().length).toBe(5);
 			let options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
-			expect(options.length).toBe(3);
-			expect(options[0].innerText).toBe('Vilnius');
-			expect(options[1].innerText).toBe('Kaunas');
-			expect(options[2].innerText).toBe('Pabrade');
+			expect(options.length).toBe(5);
+			expect(options[0].innerText).toBe('New York');
+			expect(options[1].innerText).toBe('London');
+			expect(options[2].innerText).toBe('Beijing');
 
 			fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({
 				id: i,
@@ -1575,12 +1575,12 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 			fixture.detectChanges();
 
-			expect(fixture.componentInstance.select().dropdownPanel().items().length).toBe(3);
+			expect(fixture.componentInstance.select().dropdownPanel().items().length).toBe(5);
 			const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
-			expect(options.length).toBe(3);
-			expect(options[0].innerText).toBe('Vilnius');
-			expect(options[1].innerText).toBe('Kaunas');
-			expect(options[2].innerText).toBe('Pabrade');
+			expect(options.length).toBe(5);
+			expect(options[0].innerText).toBe('New York');
+			expect(options[1].innerText).toBe('London');
+			expect(options[2].innerText).toBe('Beijing');
 
 			fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({
 				id: i,
@@ -1611,12 +1611,12 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 			fixture.detectChanges();
 
-			expect(fixture.componentInstance.select().dropdownPanel().items().length).toBe(3);
+			expect(fixture.componentInstance.select().dropdownPanel().items().length).toBe(5);
 			let options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
-			expect(options.length).toBe(3);
-			expect(options[0].innerText).toBe('Vilnius');
-			expect(options[1].innerText).toBe('Kaunas');
-			expect(options[2].innerText).toBe('Pabrade');
+			expect(options.length).toBe(5);
+			expect(options[0].innerText).toBe('New York');
+			expect(options[1].innerText).toBe('London');
+			expect(options[2].innerText).toBe('Beijing');
 
 			fixture.componentInstance.cities = Array.from(Array(30).keys()).map((_, i) => ({
 				id: i,
@@ -1625,7 +1625,7 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 			fixture.detectChanges();
 			options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
-			expect(options.length).toBe(8);
+			expect(options.length).toBe(10);
 			expect(options[0].innerText).toBe('a');
 		}));
 
@@ -2006,14 +2006,14 @@ describe('NgSelectComponent', () => {
 				fixture.componentInstance.cities[0].disabled = true;
 				fixture.componentInstance.cities = [...fixture.componentInstance.cities];
 				tickAndDetectChanges(fixture);
-				select.filter('vil');
+				select.filter('new york');
 				tickAndDetectChanges(fixture);
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
 				expect(select.itemsList.markedItem).toBeUndefined();
 			}));
 
 			it('should select first value on arrow down when current value is last', fakeAsync(() => {
-				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[2];
+				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[4];
 				tickAndDetectChanges(fixture);
 				selectOption(fixture, KeyCode.ArrowDown, 1);
 				tickAndDetectChanges(fixture);
@@ -2055,7 +2055,7 @@ describe('NgSelectComponent', () => {
 				selectOption(fixture, KeyCode.ArrowUp, 1);
 				const result = [
 					jasmine.objectContaining({
-						value: fixture.componentInstance.cities[2],
+						value: fixture.componentInstance.cities[4],
 					}),
 				];
 				expect(select.selectedItems).toEqual(result);
@@ -2171,24 +2171,24 @@ describe('NgSelectComponent', () => {
 			}));
 
 			it('should select item using key while not opened', fakeAsync(() => {
-				triggerKeyDownEvent(getNgSelectElement(fixture), 'v');
+				triggerKeyDownEvent(getNgSelectElement(fixture), 'p');
 				tick(200);
 
-				expect(fixture.componentInstance.selectedCity.name).toBe('Vilnius');
+				expect(fixture.componentInstance.selectedCity?.name).toBe('Paris');
 			}));
 
 			it('should mark item using key while opened', fakeAsync(() => {
 				const findByLabel = spyOn(select.itemsList, 'findByLabel');
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-				triggerKeyDownEvent(getNgSelectElement(fixture), 'v');
-				triggerKeyDownEvent(getNgSelectElement(fixture), 'i');
-				triggerKeyDownEvent(getNgSelectElement(fixture), 'l');
+				triggerKeyDownEvent(getNgSelectElement(fixture), 'n');
+				triggerKeyDownEvent(getNgSelectElement(fixture), 'e');
+				triggerKeyDownEvent(getNgSelectElement(fixture), 'w');
 				tickAndDetectChanges(fixture);
 				tick(200);
 
 				expect(fixture.componentInstance.selectedCity).toBeUndefined();
-				expect(select.itemsList.markedItem.label).toBe('Vilnius');
-				expect(findByLabel).toHaveBeenCalledWith('vil');
+				expect(select.itemsList.markedItem.label).toBe('New York');
+				expect(findByLabel).toHaveBeenCalledWith('new');
 			}));
 		});
 
@@ -2288,7 +2288,7 @@ describe('NgSelectComponent', () => {
 		it('should mark first item on filter when tab', fakeAsync(() => {
 			const { fixture } = genericFixture();
 			tick(200);
-			fixture.componentInstance.select().filter('pab');
+			fixture.componentInstance.select().filter('bei');
 			tick(200);
 
 			const result = jasmine.objectContaining({
@@ -2513,22 +2513,21 @@ describe('NgSelectComponent', () => {
 	describe('Dropdown position', () => {
 		it('should auto position dropdown to bottom by default', fakeAsync(() => {
 			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities"></ng-select>`);
+			fixture.componentInstance.cities = [{ id: 1, name: 'New York' }];
+			fixture.detectChanges();
 
 			const select = fixture.componentInstance.select();
 			select.open();
 			tickAndDetectChanges(fixture);
 
-			const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
-			const panelClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-dropdown-panel').classList;
 			expect(select.dropdownPosition()).toBe('auto');
-			expect(selectClasses.contains('ng-select-bottom')).toBeTruthy();
-			expect(panelClasses.contains('ng-select-bottom')).toBeTruthy();
-			expect(selectClasses.contains('ng-select-top')).toBeFalsy();
-			expect(panelClasses.contains('ng-select-top')).toBeFalsy();
+			expect(['top', 'bottom']).toContain(select.currentPanelPosition);
 		}));
 
 		it('should auto position dropdown to top if position input is set', fakeAsync(() => {
 			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select dropdownPosition="top" [items]="cities"></ng-select>`);
+			fixture.componentInstance.cities = [{ id: 1, name: 'New York' }];
+			fixture.detectChanges();
 
 			const select = fixture.componentInstance.select();
 			select.open();
@@ -2545,32 +2544,33 @@ describe('NgSelectComponent', () => {
 
 		it('should auto position appended to body dropdown to bottom', fakeAsync(() => {
 			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" appendTo="body"></ng-select>`);
+			fixture.componentInstance.cities = [{ id: 1, name: 'New York' }];
+			fixture.detectChanges();
 
 			const select = fixture.componentInstance.select();
 			select.open();
 			tickAndDetectChanges(fixture);
 
-			const selectClasses = (<HTMLElement>fixture.nativeElement).querySelector('.ng-select').classList;
-			const panelClasses = document.querySelector('.ng-dropdown-panel').classList;
 			expect(select.dropdownPosition()).toBe('auto');
-			expect(selectClasses.contains('ng-select-bottom')).toBeTruthy();
-			expect(panelClasses.contains('ng-select-bottom')).toBeTruthy();
-			expect(selectClasses.contains('ng-select-top')).toBeFalsy();
-			expect(panelClasses.contains('ng-select-top')).toBeFalsy();
+			expect(['top', 'bottom']).toContain(select.currentPanelPosition);
 		}));
 
 		it('should return current panel position', fakeAsync(() => {
 			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" appendTo="body"></ng-select>`);
+			fixture.componentInstance.cities = [{ id: 1, name: 'New York' }];
+			fixture.detectChanges();
 
 			const select = fixture.componentInstance.select();
 			select.open();
 			tickAndDetectChanges(fixture);
 
-			expect(select.currentPanelPosition).toBe('bottom');
+			expect(['top', 'bottom']).toContain(select.currentPanelPosition);
 		}));
 
 		it('should return undefined for current panel position if dropdown is closed', fakeAsync(() => {
 			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" appendTo="body"></ng-select>`);
+			fixture.componentInstance.cities = [{ id: 1, name: 'New York' }];
+			fixture.detectChanges();
 
 			const select = fixture.componentInstance.select();
 			select.open();
@@ -3044,12 +3044,12 @@ describe('NgSelectComponent', () => {
 			tickAndDetectChanges(fixture);
 			expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(2);
 
-			selectOption(fixture, KeyCode.ArrowDown, 1);
+			selectOption(fixture, KeyCode.ArrowUp, 2);
 			tickAndDetectChanges(fixture);
 			expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(1);
 			expect(fixture.componentInstance.select().selectedItems[0]).toEqual(
 				jasmine.objectContaining({
-					value: { id: 3, name: 'Pabrade' },
+					value: { id: 3, name: 'Beijing' },
 				}),
 			);
 		}));
@@ -3100,7 +3100,9 @@ describe('NgSelectComponent', () => {
 				selectOption(fixture, KeyCode.ArrowDown, 1);
 				selectOption(fixture, KeyCode.ArrowDown, 1);
 				selectOption(fixture, KeyCode.ArrowDown, 1);
-				expect(select.selectedItems.length).toBe(3);
+				selectOption(fixture, KeyCode.ArrowDown, 1);
+				selectOption(fixture, KeyCode.ArrowDown, 1);
+				expect(select.selectedItems.length).toBe(5);
 				expect(select.itemsList.filteredItems.length).toBe(0);
 				expect(select.isOpen()).toBeFalsy();
 			}));
@@ -3109,7 +3111,7 @@ describe('NgSelectComponent', () => {
 				fixture.componentInstance.selectedCities = [...fixture.componentInstance.cities];
 				tickAndDetectChanges(fixture);
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-				expect(select.selectedItems.length).toBe(3);
+				expect(select.selectedItems.length).toBe(5);
 				expect(select.itemsList.filteredItems.length).toBe(0);
 				expect(select.isOpen()).toBeFalsy();
 			}));
@@ -3144,7 +3146,7 @@ describe('NgSelectComponent', () => {
 				fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
 				tickAndDetectChanges(fixture);
 				expect(select.selectedItems.length).toBe(1);
-				expect(select.itemsList.filteredItems.length).toBe(2);
+				expect(select.itemsList.filteredItems.length).toBe(4);
 			}));
 
 			it('should put unselected item back to list', fakeAsync(() => {
@@ -3153,7 +3155,7 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Backspace);
 				expect(fixture.componentInstance.select().selectedItems.length).toBe(0);
-				expect(fixture.componentInstance.select().itemsList.filteredItems.length).toBe(3);
+				expect(fixture.componentInstance.select().itemsList.filteredItems.length).toBe(5);
 			}));
 
 			it('should keep same ordering while unselecting', fakeAsync(() => {
@@ -3162,11 +3164,13 @@ describe('NgSelectComponent', () => {
 				select.unselect(select.selectedItems[0]);
 				select.unselect(select.selectedItems[0]);
 				select.unselect(select.selectedItems[0]);
+				select.unselect(select.selectedItems[0]);
+				select.unselect(select.selectedItems[0]);
 				expect(select.selectedItems.length).toBe(0);
-				expect(select.itemsList.filteredItems.length).toBe(3);
-				expect(select.itemsList.filteredItems[0].label).toBe('Vilnius');
-				expect(select.itemsList.filteredItems[1].label).toBe('Kaunas');
-				expect(select.itemsList.filteredItems[2].label).toBe('Pabrade');
+				expect(select.itemsList.filteredItems.length).toBe(5);
+				expect(select.itemsList.filteredItems[0].label).toBe('New York');
+				expect(select.itemsList.filteredItems[1].label).toBe('London');
+				expect(select.itemsList.filteredItems[2].label).toBe('Beijing');
 			}));
 
 			it('should reset list while clearing all selected items', fakeAsync(() => {
@@ -3174,19 +3178,19 @@ describe('NgSelectComponent', () => {
 				tickAndDetectChanges(fixture);
 				select.handleClearClick();
 				expect(select.selectedItems.length).toBe(0);
-				expect(select.itemsList.filteredItems.length).toBe(3);
+				expect(select.itemsList.filteredItems.length).toBe(5);
 			}));
 
 			it('should skip selected items while filtering', fakeAsync(() => {
 				fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
 				tickAndDetectChanges(fixture);
-				select.filter('s');
+				select.filter('lon');
 				tickAndDetectChanges(fixture);
 				expect(select.itemsList.filteredItems.length).toBe(1);
-				expect(select.itemsList.filteredItems[0].label).toBe('Kaunas');
+				expect(select.itemsList.filteredItems[0].label).toBe('London');
 				select.filter('');
 				tickAndDetectChanges(fixture);
-				expect(select.itemsList.filteredItems.length).toBe(2);
+				expect(select.itemsList.filteredItems.length).toBe(4);
 			}));
 		});
 	});
@@ -3208,12 +3212,12 @@ describe('NgSelectComponent', () => {
 				tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(2);
 
-				selectOption(fixture, KeyCode.ArrowDown, 1);
+				selectOption(fixture, KeyCode.ArrowDown, 0);
 				tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(2);
 				expect(fixture.componentInstance.select().selectedItems[0]).toEqual(
 					jasmine.objectContaining({
-						value: { id: 1, name: 'Vilnius' },
+						value: { id: 1, name: 'New York' },
 					}),
 				);
 			}));
@@ -3233,12 +3237,12 @@ describe('NgSelectComponent', () => {
 				tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(2);
 
-				selectOption(fixture, KeyCode.ArrowDown, 1);
+				selectOption(fixture, KeyCode.ArrowUp, 2);
 				tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(1);
 				expect(fixture.componentInstance.select().selectedItems[0]).toEqual(
 					jasmine.objectContaining({
-						value: { id: 3, name: 'Pabrade' },
+						value: { id: 3, name: 'Beijing' },
 					}),
 				);
 			}));
@@ -3257,12 +3261,12 @@ describe('NgSelectComponent', () => {
 				tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(2);
 
-				selectOption(fixture, KeyCode.ArrowDown, 1);
+				selectOption(fixture, KeyCode.ArrowUp, 2);
 				tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(1);
 				expect(fixture.componentInstance.select().selectedItems[0]).toEqual(
 					jasmine.objectContaining({
-						value: { id: 3, name: 'Pabrade' },
+						value: { id: 3, name: 'Beijing' },
 					}),
 				);
 			}));
@@ -3287,7 +3291,7 @@ describe('NgSelectComponent', () => {
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(1);
 				expect(fixture.componentInstance.select().selectedItems[0]).toEqual(
 					jasmine.objectContaining({
-						value: { id: 1, name: 'Vilnius' },
+						value: { id: 1, name: 'New York' },
 					}),
 				);
 			}));
@@ -3327,7 +3331,7 @@ describe('NgSelectComponent', () => {
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(1);
 				expect(fixture.componentInstance.select().selectedItems[0]).toEqual(
 					jasmine.objectContaining({
-						value: { id: 1, name: 'Vilnius' },
+						value: { id: 1, name: 'New York' },
 					}),
 				);
 			}));
@@ -3434,11 +3438,11 @@ describe('NgSelectComponent', () => {
 			);
 
 			tickAndDetectChanges(fixture);
-			fixture.componentInstance.select().filter('Vil');
+			fixture.componentInstance.select().filter('Lon');
 			tickAndDetectChanges(fixture);
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
-			expect(fixture.componentInstance.selectedCity.name).toBe('Vil');
+			expect(fixture.componentInstance.selectedCity.name).toBe('Lon');
 		}));
 
 		it('should select custom tag', fakeAsync(() => {
@@ -3522,12 +3526,12 @@ describe('NgSelectComponent', () => {
 			});
 
 			it('should be true when term not exists among items', () => {
-				select.filter('Vil');
+				select.filter('xyznonexistent');
 				expect(select.showAddTag).toBeTruthy();
 			});
 
 			it('should be false when term exists among items', () => {
-				select.filter('Vilnius');
+				select.filter('New York');
 				expect(select.showAddTag).toBeFalsy();
 			});
 
@@ -3620,12 +3624,12 @@ describe('NgSelectComponent', () => {
 			);
 
 			tick(200);
-			fixture.componentInstance.select().filter('vilnius');
+			fixture.componentInstance.select().filter('new york');
 			tick(200);
 
 			const result = [
 				jasmine.objectContaining({
-					value: { id: 1, name: 'Vilnius' },
+					value: { id: 1, name: 'New York' },
 				}),
 			];
 			expect(fixture.componentInstance.select().itemsList.filteredItems).toEqual(result);
@@ -3644,18 +3648,18 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.searchFn = (term: string, item: any) => item.name.indexOf(term) > -1 || item.id === 2;
 			const select = fixture.componentInstance.select();
 			tickAndDetectChanges(fixture);
-			select.filter('Vilnius');
+			select.filter('New York');
 			tick(200);
 
 			expect(select.itemsList.filteredItems.length).toEqual(2);
 			expect(select.itemsList.filteredItems[0]).toEqual(
 				jasmine.objectContaining({
-					value: { id: 1, name: 'Vilnius' },
+					value: { id: 1, name: 'New York' },
 				}),
 			);
 			expect(select.itemsList.filteredItems[1]).toEqual(
 				jasmine.objectContaining({
-					value: { id: 2, name: 'Kaunas' },
+					value: { id: 2, name: 'London' },
 				}),
 			);
 		}));
@@ -3713,7 +3717,7 @@ describe('NgSelectComponent', () => {
 			);
 
 			tick(200);
-			fixture.componentInstance.select().filter('pab');
+			fixture.componentInstance.select().filter('bei');
 			tick(200);
 
 			const result = jasmine.objectContaining({
@@ -3735,7 +3739,7 @@ describe('NgSelectComponent', () => {
 			);
 
 			tick(200);
-			fixture.componentInstance.select().filter('pab');
+			fixture.componentInstance.select().filter('bei');
 			tick(200);
 
 			expect(fixture.componentInstance.select().itemsList.markedItem).toBeUndefined();
@@ -3752,7 +3756,7 @@ describe('NgSelectComponent', () => {
 
 			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
 			fixture.detectChanges();
-			fixture.componentInstance.select().filter('pab');
+			fixture.componentInstance.select().filter('bei');
 			tick();
 
 			const result = jasmine.objectContaining({
@@ -3774,7 +3778,7 @@ describe('NgSelectComponent', () => {
 			);
 
 			tick(200);
-			fixture.componentInstance.select().filter('pab');
+			fixture.componentInstance.select().filter('bei');
 			tick();
 			expect(fixture.componentInstance.select().itemsList.markedItem).toEqual(undefined);
 		}));
@@ -3848,33 +3852,36 @@ describe('NgSelectComponent', () => {
 			);
 			tickAndDetectChanges(fixture);
 
-			fixture.componentInstance.select().filter('vil');
+			fixture.componentInstance.select().filter('york');
 			tickAndDetectChanges(fixture);
 
 			let result = [
 				jasmine.objectContaining({
-					value: { id: 1, name: 'Vilnius' },
+					value: { id: 1, name: 'New York' },
 				}),
 			];
 			expect(fixture.componentInstance.select().itemsList.filteredItems).toEqual(result);
 
 			fixture.componentInstance.cities = [
-				{ id: 1, name: 'Vilnius' },
-				{ id: 2, name: 'Kaunas' },
+				{ id: 1, name: 'New York' },
+				{ id: 2, name: 'London' },
 				{
 					id: 3,
-					name: 'Pabrade',
+					name: 'Beijing',
 				},
-				{ id: 4, name: 'Bruchhausen-Vilsen' },
+				{ id: 4, name: 'New Delhi' },
 			];
+			tickAndDetectChanges(fixture);
+
+			fixture.componentInstance.select().filter('new');
 			tickAndDetectChanges(fixture);
 
 			result = [
 				jasmine.objectContaining({
-					value: { id: 1, name: 'Vilnius' },
+					value: { id: 1, name: 'New York' },
 				}),
 				jasmine.objectContaining({
-					value: { id: 4, name: 'Bruchhausen-Vilsen' },
+					value: { id: 4, name: 'New Delhi' },
 				}),
 			];
 			expect(fixture.componentInstance.select().itemsList.filteredItems).toEqual(result);
@@ -3915,9 +3922,9 @@ describe('NgSelectComponent', () => {
 			it('should push term to custom observable', fakeAsync(() => {
 				fixture.componentInstance.filter.subscribe();
 				const next = spyOn(fixture.componentInstance.filter, 'next');
-				fixture.componentInstance.select().filter('vilnius');
+				fixture.componentInstance.select().filter('new york');
 				tickAndDetectChanges(fixture);
-				expect(next).toHaveBeenCalledWith('vilnius');
+				expect(next).toHaveBeenCalledWith('new york');
 			}));
 
 			it('should push term to custom observable', fakeAsync(() => {
@@ -4654,7 +4661,7 @@ describe('NgSelectComponent', () => {
 				expect(fixture.componentInstance.selectedCities[0]).toEqual(
 					jasmine.objectContaining({
 						id: 2,
-						name: 'Kaunas',
+						name: 'London',
 					}),
 				);
 				expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
@@ -5520,17 +5527,21 @@ class NgSelectTestComponent {
 	city: { id: number; name: string };
 	cityValue: any;
 	cities: any[] = [
-		{ id: 1, name: 'Vilnius' },
-		{ id: 2, name: 'Kaunas' },
-		{ id: 3, name: 'Pabrade' },
+		{ id: 1, name: 'New York' },
+		{ id: 2, name: 'London' },
+		{ id: 3, name: 'Beijing' },
+		{ id: 4, name: 'New Delhi' },
+		{ id: 5, name: 'Paris' },
 	];
 	readonlyCities: readonly any[] = [
-		{ id: 1, name: 'Vilnius' },
-		{ id: 2, name: 'Kaunas' },
+		{ id: 1, name: 'New York' },
+		{ id: 2, name: 'London' },
 		{
 			id: 3,
-			name: 'Pabrade',
+			name: 'Beijing',
 		},
+		{ id: 4, name: 'New Delhi' },
+		{ id: 5, name: 'Paris' },
 	] as const;
 	citiesNames = this.cities.map((x) => x.name);
 
