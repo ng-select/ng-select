@@ -5437,6 +5437,58 @@ describe('Grouping', () => {
 		button.click();
 		expect(items[0].selected).toBeFalse();
 	}));
+
+	it('should toggle collapsible group using Ctrl+Space or Cmd+Space', fakeAsync(() => {
+		const fixture = createTestingModule(
+			NgSelectGroupingTestComponent,
+			`<ng-select
+                [items]="accounts"
+                groupBy="country"
+                [collapsibleGroup]="true"
+                [(ngModel)]="selectedAccount">
+            </ng-select>`,
+		);
+
+		tickAndDetectChanges(fixture);
+		const select = fixture.componentInstance.select();
+
+		select.open();
+		tickAndDetectChanges(fixture);
+
+		const itemsList = select.itemsList;
+		const firstGroup = itemsList.items[0];
+
+		itemsList.markItem(firstGroup);
+
+		expect(itemsList.markedItem).toBe(firstGroup);
+		expect(firstGroup.collapsed).toBeFalse();
+
+		let preventDefaultCalled = false;
+		select.handleKeyDown({
+			key: ' ',
+			ctrlKey: true,
+			preventDefault: () => {
+				preventDefaultCalled = true;
+			},
+		} as KeyboardEvent);
+		tickAndDetectChanges(fixture);
+
+		expect(firstGroup.collapsed).toBeTrue();
+		expect(preventDefaultCalled).toBeTrue();
+
+		preventDefaultCalled = false;
+		select.handleKeyDown({
+			key: ' ',
+			metaKey: true,
+			preventDefault: () => {
+				preventDefaultCalled = true;
+			},
+		} as KeyboardEvent);
+		tickAndDetectChanges(fixture);
+
+		expect(firstGroup.collapsed).toBeFalse();
+		expect(preventDefaultCalled).toBeTrue();
+	}));
 });
 
 describe('Input method composition', () => {
