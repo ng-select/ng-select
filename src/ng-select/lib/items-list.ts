@@ -139,9 +139,8 @@ export class ItemsList {
 			this._filteredItems = this._filteredItems.filter((x) => x.parent !== item);
 		} else {
 			const childrenToAdd = item.children.filter((child) => !(this._ngSelect.hideSelected() && child.selected));
-			this._filteredItems.push(...childrenToAdd);
 			// Re-sort by original index to drop them back into the correct visual order
-			this._filteredItems.sort((a, b) => a.index - b.index);
+			this._filteredItems = [...this._filteredItems, ...childrenToAdd].toSorted((a, b) => a.index - b.index);
 		}
 	}
 
