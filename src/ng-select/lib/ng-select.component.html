@@ -1,6 +1,7 @@
 <div
 	(mousedown)="handleMousedown($event)"
 	[class.ng-appearance-outline]="appearance() === 'outline'"
+	[class.ng-appearance-fill]="appearance() === 'fill'"
 	[class.ng-has-value]="hasValue"
 	class="ng-select-container">
 	<div class="ng-value-container">
@@ -62,20 +63,20 @@
 	}
 
 	@if (showClear()) {
-		@if (clearButtonTemplate()) {
-			<ng-container [ngTemplateOutlet]="clearButtonTemplate()"></ng-container>
-		} @else {
-			<span
-				class="ng-clear-wrapper"
-				role="button"
-				tabindex="0"
-				[attr.tabindex]="tabFocusOnClear() ? 0 : -1"
-				title="{{ clearAllText() || config.clearAllText }}"
-				#clearButton
-				(click)="handleClearClick($event)">
+		<span
+			class="ng-clear-wrapper"
+			role="button"
+			tabindex="0"
+			[attr.tabindex]="tabFocusOnClear() ? 0 : -1"
+			title="{{ clearAllText() || config.clearAllText }}"
+			#clearButton
+			(click)="handleClearClick($event)">
+			@if (clearButtonTemplate()) {
+				<ng-container [ngTemplateOutlet]="clearButtonTemplate()"></ng-container>
+			} @else {
 				<span class="ng-clear" aria-hidden="true">×</span>
-			</span>
-		}
+			}
+		</span>
 	}
 
 	<span class="ng-arrow-wrapper">
@@ -91,10 +92,12 @@
 		[bufferAmount]="bufferAmount()"
 		[appendTo]="appendToValue"
 		[position]="dropdownPosition()"
+		[outsideClickEvent]="outsideClickEvent()"
 		[headerTemplate]="headerTemplate()"
 		[footerTemplate]="footerTemplate()"
 		[filterValue]="searchTerm"
 		[items]="itemsList.filteredItems"
+		[showAddTag]="showAddTag"
 		[markedItem]="itemsList.markedItem"
 		(update)="viewPortItems = $event"
 		(scroll)="scroll.emit($event)"
@@ -103,9 +106,10 @@
 		[class.ng-select-multiple]="multiple()"
 		[class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
 		[id]="dropdownId"
-		[ariaLabelDropdown]="ariaLabelDropdown()">
+		[ariaLabelDropdown]="ariaLabelDropdown() ?? config.ariaLabelDropdown">
 		<ng-container>
 			@for (item of viewPortItems; track trackByOption($index, item)) {
+				<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus, @angular-eslint/template/mouse-events-have-key-events -->
 				<div
 					class="ng-option"
 					[attr.role]="item.children ? 'group' : 'option'"
@@ -151,11 +155,13 @@
 				</div>
 			}
 			@if (showAddTag) {
+				<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus, @angular-eslint/template/mouse-events-have-key-events -->
 				<div
 					class="ng-option"
 					[class.ng-option-marked]="!itemsList.markedItem"
 					(mouseover)="itemsList.unmarkItem()"
 					role="option"
+					[attr.aria-selected]="false"
 					(click)="selectTag()">
 					<ng-template #defaultTagTemplate>
 						<span
@@ -199,7 +205,7 @@
 
 <!-- Always present aria-live region -->
 <div aria-atomic="true" aria-live="polite" class="ng-visually-hidden" role="status">
-	@if (isOpen && showNoItemsFound()) {
-		{{ notFoundText }}
+	@if (isOpen() && showNoItemsFound()) {
+		{{ notFoundText() ?? config.notFoundText }}
 	}
 </div>

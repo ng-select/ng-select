@@ -1,0 +1,94 @@
+---
+alwaysApply: true
+---
+
+# Cursor Rules for Angular Projects
+
+## Always Applied Rules
+
+### 1. Use Latest Angular and TypeScript
+- Always use the latest stable Angular (currently v21) and TypeScript
+- Reference Angular 21 APIs and features only
+- Do not use deprecated or removed APIs from older versions
+
+### 2. Modern Angular Features
+- Prefer Angular control flow syntax (`@for`, `@if`, `@switch`) over legacy structural directives (`*ngFor`, `*ngIf`, `*ngSwitch`)
+- Use Angular signals for state management and reactivity
+- Use input and output signals for component communication, not legacy decorators
+- Example: `input()`, `output()`, `signal()`, `computed()`, `effect()`
+
+### 3. No Legacy Decorators
+- Do not use or recommend `@Input` and `@Output` decorators in new code
+- Use signals and the latest Angular data flow/event patterns
+- Replace `@Input()` with `input()` and `@Output()` with `output()`
+
+### 4. Template Syntax & Style
+- Use the latest template syntax and best practices
+- Use `<ng-container>` for structural grouping when needed
+- Prefer control flow over structural directives
+- Use proper Angular template binding syntax
+
+### 5. Component Architecture
+- Prefer standalone components; avoid NgModules for new features unless necessary
+- Encapsulate features in self-contained, reusable components
+- Use `standalone: true` in component decorators
+- Import dependencies directly in components rather than through modules
+
+### 6. Type Safety & Strictness
+- Ensure `"strict": true` in all `tsconfig.json` files
+- Always provide explicit types for functions, variables, and observables
+- Use proper TypeScript typing for all Angular constructs
+- Avoid `any` type unless absolutely necessary
+
+### 7. Dependency Injection
+- Use `@Injectable({providedIn: 'root'})` for services unless a different scope is required
+- Prefer Angular DI patterns over manual instantiation or singletons
+- Use proper injection tokens for configuration
+
+### 8. API Communication
+- Use Angular's `HttpClient` for all HTTP/API interactions
+- Prefer typed HTTP responses and RxJS-based error handling
+- Use proper error handling with RxJS operators
+- Implement proper loading states and error states
+
+### 9. State Management
+- Use signals for component-level and global state
+- Avoid heavy/legacy state libraries like NgRx
+- Prefer reactive patterns with signals over imperative state management
+
+### 10. Testing
+- Include unit test snippets for all code examples where applicable
+- Use Angular's karma and jasmine testing APIs
+- Test components, services, and utilities thoroughly
+- Use proper mocking and testing utilities
+
+### 11. Accessibility
+- Ensure all code follows WCAG guidelines and Angular accessibility best practices
+- Use proper ARIA attributes and semantic HTML
+- Implement keyboard navigation and screen reader support
+- Test with accessibility tools
+
+### 12. Documentation and Comments
+- Comment public APIs, inputs, and outputs
+- Follow Angular style guide for structure and naming
+- Use JSDoc comments for complex functions and services
+- Document component inputs, outputs, and lifecycle hooks
+
+### 13. No Deprecated APIs
+- Do not use or recommend deprecated Angular APIs, patterns, or features
+- Check for breaking changes or removals for each new Angular version
+- Stay updated with Angular release notes and migration guides
+
+### 14. Package Manager
+ - Always use pnpm in this project
+
+## Code Generation Rules
+
+When generating Angular code:
+- Always use the latest Angular syntax and patterns
+- Include proper TypeScript typing
+- Use signals for state management
+- Implement proper error handling
+- Follow Angular style guide conventions
+- Include accessibility considerations
+- Provide unit test examples where appropriate

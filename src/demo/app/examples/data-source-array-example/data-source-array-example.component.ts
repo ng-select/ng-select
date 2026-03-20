@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { DataService, Person } from '../data.service';
 import { FormsModule } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
+import { DataService, Person } from '../data.service';
 
 @Component({
 	selector: 'ng-data-source-array-example',

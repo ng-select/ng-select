@@ -79,7 +79,7 @@ export class ItemsList {
 		}
 		const multiple = this._ngSelect.multiple();
 		if (!multiple) {
-			this.clearSelected();
+			this.clearSelected(false);
 		}
 
 		this._selectionModel.select(item, multiple, this._ngSelect.selectableGroupAsModel());
@@ -119,7 +119,7 @@ export class ItemsList {
 		return option;
 	}
 
-	clearSelected(keepDisabled = false) {
+	clearSelected(keepDisabled: boolean) {
 		this._selectionModel.clear(keepDisabled);
 		this._items.forEach((item) => {
 			item.selected = keepDisabled && item.selected && item.disabled;
@@ -241,13 +241,15 @@ export class ItemsList {
 	}
 
 	mapItem(item: any, index: number): NgOption {
-		const label = isDefined(item.$ngOptionLabel) ? item.$ngOptionLabel : this.resolveNested(item, this._ngSelect.bindLabel());
-		const value = isDefined(item.$ngOptionValue) ? item.$ngOptionValue : item;
+		const hasNgOptionLabel = isObject(item) && '$ngOptionLabel' in item;
+		const hasNgOptionValue = isObject(item) && '$ngOptionValue' in item;
+		const label = hasNgOptionLabel ? item.$ngOptionLabel : this.resolveNested(item, this._ngSelect.bindLabel());
+		const value = hasNgOptionValue ? item.$ngOptionValue : item;
 		return {
 			index,
 			label: isDefined(label) ? label.toString() : '',
 			value,
-			disabled: item.disabled,
+			disabled: item && item.disabled ? item.disabled : false,
 			htmlId: `${this._ngSelect.dropdownId}-${index}`,
 		};
 	}
@@ -258,7 +260,8 @@ export class ItemsList {
 			const bindValue = this._ngSelect.bindValue();
 			let item: NgOption | null = null;
 
-			// When compareWith is used, we need to find the item using the original selected value rather than the extracted bindValue, since compareWith expects to compare against the original value
+			// When compareWith is used, we need to find the item using the original selected value rather than the extracted bindValue,
+			// since compareWith expects to compare against the original value
 			if (this._ngSelect.compareWith()) {
 				item = this._items.find((item) => this._ngSelect.compareWith()(item.value, selected.value));
 			} else {
@@ -351,9 +354,10 @@ export class ItemsList {
 		}
 
 		// Check if items are already grouped by given key.
-		if (Array.isArray(items[0].value[<string>prop])) {
+		const firstValue = items[0].value;
+		if (firstValue != null && Array.isArray(firstValue[<string>prop])) {
 			for (const item of items) {
-				const children = (item.value[<string>prop] || []).map((x, index) => this.mapItem(x, index));
+				const children = (item.value?.[<string>prop] || []).map((x, index) => this.mapItem(x, index));
 				groups.set(item, children);
 			}
 			return groups;
@@ -361,7 +365,7 @@ export class ItemsList {
 
 		const isFnKey = isFunction(this._ngSelect.groupBy());
 		const keyFn = (item: NgOption) => {
-			const key = isFnKey ? (<(value: any) => any>prop)(item.value) : item.value[<string>prop];
+			const key = isFnKey ? (<(value: any) => any>prop)(item.value) : item.value?.[<string>prop];
 			return isDefined(key) ? key : undefined;
 		};
 

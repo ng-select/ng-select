@@ -1,6 +1,6 @@
+import { JsonPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
 import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
@@ -11,9 +11,11 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 })
 export class BindingsDefaultExampleComponent implements OnInit {
 	defaultBindingsList = [
-		{ value: 1, label: 'Vilnius' },
-		{ value: 2, label: 'Kaunas' },
-		{ value: 3, label: 'Pavilnys', disabled: true },
+		{ value: 1, label: 'New York' },
+		{ value: 2, label: 'London' },
+		{ value: 3, label: 'Beijing' },
+		{ value: 4, label: 'New Delhi', disabled: true },
+		{ value: 5, label: 'Paris' },
 	];
 
 	selectedCity = null;
