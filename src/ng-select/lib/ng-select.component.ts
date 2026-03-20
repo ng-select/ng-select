@@ -1014,6 +1014,16 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	private _handleSpace($event: KeyboardEvent) {
+		if ($event.ctrlKey || $event.metaKey) {
+			const markedItem = this.itemsList.markedItem;
+
+			if (this.collapsibleGroup() && markedItem && markedItem.children) {
+				this.itemsList.toggleItemCollapse(markedItem);
+				$event.preventDefault();
+				return;
+			}
+		}
+
 		if (this.isOpen() || this._manualOpen) {
 			return;
 		}
