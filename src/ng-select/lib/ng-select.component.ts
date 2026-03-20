@@ -564,7 +564,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 	toggleItemCollapse(event: Event, item: NgOption) {
 		event.stopPropagation();
-		item.collapsed = !item.collapsed;
+		this.itemsList.toggleItemCollapse(item);
 	}
 
 	select(item: NgOption) {
@@ -618,7 +618,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const handleTag = (item) =>
 			this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item);
 		if (isPromise(tag)) {
-			tag.then((item) => this.select(handleTag(item))).catch(() => { });
+			tag.then((item) => this.select(handleTag(item))).catch(() => {});
 		} else if (tag) {
 			this.select(handleTag(tag));
 		}
@@ -730,9 +730,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
-	private _onChange = (_: any) => { };
+	private _onChange = (_: any) => {};
 
-	private _onTouched = () => { };
+	private _onTouched = () => {};
 
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];

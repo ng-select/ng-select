@@ -277,10 +277,6 @@
 			display: block;
 			@include wrap-text();
 
-			&:empty {
-				display: none;
-			}
-
 			.ng-option-label:empty:before {
 				content: '\200b';
 			}

@@ -143,13 +143,7 @@
 					}
 
 					<ng-template
-						[ngTemplateOutlet]="
-							!collapsibleGroup() || item.children || !item.parent?.collapsed
-								? item.children
-									? optgroupTemplate() || defaultOptionTemplate
-									: optionTemplate() || defaultOptionTemplate
-								: null
-						"
+						[ngTemplateOutlet]="item.children ? optgroupTemplate() || defaultOptionTemplate : optionTemplate() || defaultOptionTemplate"
 						[ngTemplateOutletContext]="{ item: item.value, item$: item, index: item.index, searchTerm: searchTerm }">
 					</ng-template>
 				</div>

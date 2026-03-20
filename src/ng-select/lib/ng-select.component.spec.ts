@@ -2906,10 +2906,10 @@ describe('NgSelectComponent', () => {
 		it('should display ng-placeholder if an item is selected', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
-				`<ng-select [(ngModel)]="selectedCity" 
-														 [items]="cities" bindLabel="name" 
+				`<ng-select [(ngModel)]="selectedCity"
+														 [items]="cities" bindLabel="name"
 														 fixedPlaceholder="true"
-														 placeholder="testPlaceholder">			
+														 placeholder="testPlaceholder">
                   </ng-select>`,
 			);
 
@@ -2956,7 +2956,7 @@ describe('NgSelectComponent', () => {
 		it('should use custom ng-collapse-button-tmp', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectGroupingTestComponent,
-				`<ng-select 
+				`<ng-select
 						[items]="accounts"
 						groupBy="country"
 						[collapsibleGroup]="true"
@@ -5355,47 +5355,50 @@ describe('Grouping', () => {
 	it('should be collapsible', fakeAsync(() => {
 		const fixture = createTestingModule(
 			NgSelectGroupingTestComponent,
-			`<ng-select 
-				[items]="accounts"
+			`<ng-select
+			  [items]="accounts"
 				groupBy="country"
-				[collapsibleGroup]="true"
-				[(ngModel)]="selectedAccount">
-      </ng-select>`,
+			  [collapsibleGroup]="true"
+			  [(ngModel)]="selectedAccount">
+			</ng-select>`,
 		);
 
 		tickAndDetectChanges(fixture);
 
 		const select = fixture.componentInstance.select();
 		select.open();
+		tickAndDetectChanges(fixture);
 
-		const allElementsHidden = (elements: Element[]) => {
-			return elements.every((element) => {
-				const style = window.getComputedStyle(element);
-				return style.display === 'none';
-			});
-		};
+		const itemsList = select.itemsList;
+		const firstGroup = itemsList.items[0];
+		const childrenCount = firstGroup.children.length;
+		const initialFilteredCount = itemsList.filteredItems.length;
 
-		const items = fixture.componentInstance.select().itemsList.items;
 		const nativeElement: HTMLElement = fixture.debugElement.nativeElement;
-		const childrenIdScheme = items[0].children[0].htmlId.split('-')[0];
-		const children = Array.from(nativeElement.querySelectorAll(`[id^="${childrenIdScheme}-"]`)).slice(0, items[0].children.length);
 		const button: HTMLButtonElement = nativeElement.querySelector('.ng-option-collapse-button');
+		let renderedOptions = nativeElement.querySelectorAll('.ng-option');
+		const initialDomCount = renderedOptions.length;
 
-		expect(items[0].collapsed).toBeFalse();
-		expect(allElementsHidden(children)).not.toBeTrue();
-
+		expect(firstGroup.collapsed).toBeFalse();
 		expect(button).not.toBeNull();
+		expect(itemsList.filteredItems.includes(firstGroup.children[0])).toBeTrue();
+
 		button.click();
 		tickAndDetectChanges(fixture);
 
-		expect(items[0].collapsed).toBeTrue();
-		expect(allElementsHidden(children)).toBeTrue();
+		expect(firstGroup.collapsed).toBeTrue();
+
+		expect(itemsList.filteredItems.length).toBe(initialFilteredCount - childrenCount);
+		expect(itemsList.filteredItems.includes(firstGroup.children[0])).toBeFalse();
+
+		renderedOptions = nativeElement.querySelectorAll('.ng-option');
+		expect(renderedOptions.length).toBe(initialDomCount - childrenCount);
 	}));
 
 	it('should be collapsed by default', fakeAsync(() => {
 		const fixture = createTestingModule(
 			NgSelectGroupingTestComponent,
-			`<ng-select 
+			`<ng-select
 					[items]="accounts"
 					groupBy="country"
 					[collapsibleGroup]="true"
@@ -5413,7 +5416,7 @@ describe('Grouping', () => {
 	it('should not select the group if collapse button is clicked', fakeAsync(() => {
 		const fixture = createTestingModule(
 			NgSelectGroupingTestComponent,
-			`<ng-select 
+			`<ng-select
 					[items]="accounts"
 					groupBy="country"
 					[collapsibleGroup]="true"
