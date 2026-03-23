@@ -97,6 +97,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	private _scrollToEndFired = false;
 	private _updateScrollHeight = false;
 	private _lastScrollPosition = 0;
+	private _lastMousedownTarget: EventTarget | null = null;
 
 	constructor() {
 		this._destroyRef.onDestroy(() => {
@@ -237,6 +238,12 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 
 		this._zone.runOutsideAngular(() => {
+			fromEvent(this._document, 'mousedown', { capture: true })
+				.pipe(takeUntilDestroyed(this._destroyRef))
+				.subscribe(($event: Event) => {
+					this._lastMousedownTarget = $event.target;
+				});
+
 			fromEvent(this._document, this.outsideClickEvent(), { capture: true })
 				.pipe(takeUntilDestroyed(this._destroyRef))
 				.subscribe(($event) => this._checkToClose($event));
@@ -245,6 +252,17 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 	private _checkToClose($event: any) {
 		if (this._select.contains($event.target) || this._dropdown.contains($event.target)) {
+			return;
+		}
+
+		// If the mousedown originated inside the select/dropdown, do not treat
+		// the subsequent click as an outside click. This handles the case where
+		// focus() scrolls the page between mousedown and mouseup, causing the
+		// click target to land outside the component.
+		if (
+			this._lastMousedownTarget &&
+			(this._select.contains(this._lastMousedownTarget as Node) || this._dropdown.contains(this._lastMousedownTarget as Node))
+		) {
 			return;
 		}
 
