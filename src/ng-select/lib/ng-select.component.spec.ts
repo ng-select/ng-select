@@ -2510,6 +2510,60 @@ describe('NgSelectComponent', () => {
 		}));
 	});
 
+	describe('Outside click - immediate close (issue #2765)', () => {
+		it('should remove dropdown panel from DOM on outside click without requiring external change detection', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<div id="outside">Outside</div><br />
+				<ng-select [items]="cities"
+					bindLabel="name"
+					[(ngModel)]="selectedCity">
+				</ng-select>`,
+			);
+
+			// Open dropdown and wait for full initialization
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			tickAndDetectChanges(fixture);
+			expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
+			expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).not.toBeNull();
+
+			// Click outside - this triggers _checkToClose → outsideClick.emit() → close()
+			document.getElementById('outside').click();
+
+			// close() must trigger immediate change detection internally,
+			// not just markForCheck(). In Angular 21 with provideZoneChangeDetection(),
+			// event coalescing defers zone-triggered CD, so markForCheck() alone
+			// leaves the dropdown in the DOM.
+			expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
+			expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).toBeNull();
+		}));
+
+		it('should remove appended dropdown panel from DOM on outside click without requiring external change detection', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<div id="outside">Outside</div><br />
+				<ng-select [items]="cities"
+					bindLabel="name"
+					appendTo="body"
+					[(ngModel)]="selectedCity">
+				</ng-select>`,
+			);
+
+			// Open dropdown and wait for full initialization
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			tickAndDetectChanges(fixture);
+			expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
+			expect(document.querySelector('ng-dropdown-panel')).not.toBeNull();
+
+			// Click outside
+			document.getElementById('outside').click();
+
+			// Dropdown should be closed and removed from body immediately
+			expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
+			expect(document.querySelector('ng-dropdown-panel')).toBeNull();
+		}));
+	});
+
 	describe('Dropdown position', () => {
 		it('should auto position dropdown to bottom by default', fakeAsync(() => {
 			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities"></ng-select>`);
