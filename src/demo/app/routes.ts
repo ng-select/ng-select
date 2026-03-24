@@ -40,5 +40,10 @@ export const appRoutes: Routes = [
 		component: RouteViewerComponent,
 		data: { title: 'Append to element', examples: 'append-to' },
 	},
+	{
+		path: 'bootstrap-modal',
+		component: RouteViewerComponent,
+		data: { title: 'Bootstrap modal', examples: 'modal-ng-bootstrap' },
+	},
 	{ path: 'grouping', component: RouteViewerComponent, data: { title: 'Grouping', examples: 'group' } },
 ];
