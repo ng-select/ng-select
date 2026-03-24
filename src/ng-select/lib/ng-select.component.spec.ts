@@ -2510,58 +2510,243 @@ describe('NgSelectComponent', () => {
 		}));
 	});
 
-	describe('Outside click - immediate close (issue #2765)', () => {
-		it('should remove dropdown panel from DOM on outside click without requiring external change detection', fakeAsync(() => {
-			const fixture = createTestingModule(
-				NgSelectTestComponent,
-				`<div id="outside">Outside</div><br />
-				<ng-select [items]="cities"
-					bindLabel="name"
-					[(ngModel)]="selectedCity">
-				</ng-select>`,
-			);
+	describe('Immediate close - DOM removal without external change detection (issue #2765)', () => {
+		// close() uses detectChanges() internally to ensure the dropdown panel is
+		// removed from the DOM immediately, without relying on zone-triggered CD.
+		// This is critical in Angular 21 with provideZoneChangeDetection() where
+		// event coalescing defers zone-triggered change detection.
 
-			// Open dropdown and wait for full initialization
-			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			tickAndDetectChanges(fixture);
-			expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
-			expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).not.toBeNull();
+		describe('Outside click', () => {
+			it('should remove dropdown panel from DOM immediately', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<div id="outside">Outside</div><br />
+					<ng-select [items]="cities"
+						bindLabel="name"
+						[(ngModel)]="selectedCity">
+					</ng-select>`,
+				);
 
-			// Click outside - this triggers _checkToClose → outsideClick.emit() → close()
-			document.getElementById('outside').click();
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
+				expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).not.toBeNull();
 
-			// close() must trigger immediate change detection internally,
-			// not just markForCheck(). In Angular 21 with provideZoneChangeDetection(),
-			// event coalescing defers zone-triggered CD, so markForCheck() alone
-			// leaves the dropdown in the DOM.
-			expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
-			expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).toBeNull();
-		}));
+				document.getElementById('outside').click();
 
-		it('should remove appended dropdown panel from DOM on outside click without requiring external change detection', fakeAsync(() => {
-			const fixture = createTestingModule(
-				NgSelectTestComponent,
-				`<div id="outside">Outside</div><br />
-				<ng-select [items]="cities"
-					bindLabel="name"
-					appendTo="body"
-					[(ngModel)]="selectedCity">
-				</ng-select>`,
-			);
+				expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
+				expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).toBeNull();
+			}));
 
-			// Open dropdown and wait for full initialization
-			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
-			tickAndDetectChanges(fixture);
-			expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
-			expect(document.querySelector('ng-dropdown-panel')).not.toBeNull();
+			it('should remove appended dropdown panel from DOM immediately', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<div id="outside">Outside</div><br />
+					<ng-select [items]="cities"
+						bindLabel="name"
+						appendTo="body"
+						[(ngModel)]="selectedCity">
+					</ng-select>`,
+				);
 
-			// Click outside
-			document.getElementById('outside').click();
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
+				expect(document.querySelector('ng-dropdown-panel')).not.toBeNull();
 
-			// Dropdown should be closed and removed from body immediately
-			expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
-			expect(document.querySelector('ng-dropdown-panel')).toBeNull();
-		}));
+				document.getElementById('outside').click();
+
+				expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
+				expect(document.querySelector('ng-dropdown-panel')).toBeNull();
+			}));
+		});
+
+		describe('Escape key', () => {
+			it('should remove dropdown panel from DOM immediately', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+						bindLabel="name"
+						[(ngModel)]="selectedCity">
+					</ng-select>`,
+				);
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
+				expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).not.toBeNull();
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Esc);
+
+				expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
+				expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).toBeNull();
+			}));
+
+			it('should remove appended dropdown panel from DOM immediately', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+						bindLabel="name"
+						appendTo="body"
+						[(ngModel)]="selectedCity">
+					</ng-select>`,
+				);
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
+				expect(document.querySelector('ng-dropdown-panel')).not.toBeNull();
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Esc);
+
+				expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
+				expect(document.querySelector('ng-dropdown-panel')).toBeNull();
+			}));
+		});
+
+		describe('Tab key', () => {
+			it('should remove dropdown panel from DOM immediately', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+						bindLabel="name"
+						[(ngModel)]="selectedCity">
+					</ng-select>`,
+				);
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
+				expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).not.toBeNull();
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+
+				expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
+				expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).toBeNull();
+			}));
+
+			it('should remove appended dropdown panel from DOM immediately', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+						bindLabel="name"
+						appendTo="body"
+						[(ngModel)]="selectedCity">
+					</ng-select>`,
+				);
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
+				expect(document.querySelector('ng-dropdown-panel')).not.toBeNull();
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+
+				expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
+				expect(document.querySelector('ng-dropdown-panel')).toBeNull();
+			}));
+		});
+
+		describe('Option select', () => {
+			it('should remove dropdown panel from DOM immediately when selecting an option', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+						bindLabel="name"
+						[(ngModel)]="selectedCity">
+					</ng-select>`,
+				);
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
+				expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).not.toBeNull();
+
+				// Select first option via Enter key
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+
+				expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
+				expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).toBeNull();
+			}));
+
+			it('should remove appended dropdown panel from DOM immediately when selecting an option', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+						bindLabel="name"
+						appendTo="body"
+						[(ngModel)]="selectedCity">
+					</ng-select>`,
+				);
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
+				expect(document.querySelector('ng-dropdown-panel')).not.toBeNull();
+
+				// Select first option via Enter key
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
+
+				expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
+				expect(document.querySelector('ng-dropdown-panel')).toBeNull();
+			}));
+		});
+
+		describe('Arrow click', () => {
+			it('should remove dropdown panel from DOM immediately', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+						bindLabel="name"
+						[(ngModel)]="selectedCity">
+					</ng-select>`,
+				);
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
+				expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).not.toBeNull();
+
+				// Simulate arrow click via mousedown on ng-select-container
+				const control = fixture.debugElement.query(By.css('.ng-select-container'));
+				control.triggerEventHandler(
+					'mousedown',
+					createEvent({
+						classList: { contains: (term) => term === 'ng-arrow-wrapper' },
+					}),
+				);
+
+				expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
+				expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).toBeNull();
+			}));
+
+			it('should remove appended dropdown panel from DOM immediately', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+						bindLabel="name"
+						appendTo="body"
+						[(ngModel)]="selectedCity">
+					</ng-select>`,
+				);
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+				tickAndDetectChanges(fixture);
+				expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
+				expect(document.querySelector('ng-dropdown-panel')).not.toBeNull();
+
+				const control = fixture.debugElement.query(By.css('.ng-select-container'));
+				control.triggerEventHandler(
+					'mousedown',
+					createEvent({
+						classList: { contains: (term) => term === 'ng-arrow-wrapper' },
+					}),
+				);
+
+				expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
+				expect(document.querySelector('ng-dropdown-panel')).toBeNull();
+			}));
+		});
 	});
 
 	describe('Dropdown position', () => {
