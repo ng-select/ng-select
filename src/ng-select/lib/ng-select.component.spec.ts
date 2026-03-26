@@ -1901,6 +1901,96 @@ describe('NgSelectComponent', () => {
 			const listboxElement = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel-items[role="listbox"]');
 			expect(listboxElement.getAttribute('aria-label')).toBe('Template Aria Label');
 		}));
+
+		describe('Popover', () => {
+			it('should have popover input with default value false', fakeAsync(() => {
+				const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name"></ng-select>`);
+
+				const select = fixture.componentInstance.select();
+				expect(select.popover()).toBe(false);
+			}));
+
+			it('should pass popover false to dropdown panel by default', fakeAsync(() => {
+				const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name"></ng-select>`);
+
+				const select = fixture.componentInstance.select();
+				select.open();
+				tickAndDetectChanges(fixture);
+
+				const dropdownPanel = select.dropdownPanel();
+				expect(dropdownPanel.popover()).toBe(false);
+
+				const panelElement = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel');
+				expect(panelElement?.matches(':popover-open')).toBe(false);
+			}));
+
+			it('should pass popover true to dropdown panel when set to true', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [popover]="true"></ng-select>`,
+				);
+
+				const select = fixture.componentInstance.select();
+				expect(select.popover()).toBe(true);
+
+				select.open();
+				tickAndDetectChanges(fixture);
+
+				const dropdownPanel = select.dropdownPanel();
+				expect(dropdownPanel.popover()).toBe(true);
+
+				const panelElement = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel');
+				expect(panelElement?.matches(':popover-open')).toBe(true);
+			}));
+
+			it('should pass popover false to dropdown panel when explicitly set to false', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [popover]="false"></ng-select>`,
+				);
+
+				const select = fixture.componentInstance.select();
+				expect(select.popover()).toBe(false);
+
+				select.open();
+				tickAndDetectChanges(fixture);
+
+				const dropdownPanel = select.dropdownPanel();
+				expect(dropdownPanel.popover()).toBe(false);
+
+				const panelElement = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel');
+				expect(panelElement?.matches(':popover-open')).toBe(false);
+			}));
+
+			it('should toggle popover value dynamically', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [popover]="popoverEnabled"></ng-select>`,
+				);
+
+				const component = fixture.componentInstance as any;
+				component.popoverEnabled = false;
+				fixture.detectChanges();
+
+				let select = fixture.componentInstance.select();
+				expect(select.popover()).toBe(false);
+
+				component.popoverEnabled = true;
+				fixture.detectChanges();
+
+				select = fixture.componentInstance.select();
+				expect(select.popover()).toBe(true);
+
+				select.open();
+				tickAndDetectChanges(fixture);
+
+				const dropdownPanel = select.dropdownPanel();
+				expect(dropdownPanel.popover()).toBe(true);
+
+				const panelElement = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel');
+				expect(panelElement?.matches(':popover-open')).toBe(true);
+			}));
+		});
 	});
 
 	describe('Keyboard events', () => {
@@ -5518,6 +5608,7 @@ class NgSelectTestComponent {
 	typeahead = undefined;
 	preventToggleOnRightClick = false;
 	searchWhileComposing = true;
+	popoverEnabled = false;
 
 	citiesLoading = false;
 	selectedCityId: number;
