@@ -2906,10 +2906,10 @@ describe('NgSelectComponent', () => {
 		it('should display ng-placeholder if an item is selected', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
-				`<ng-select [(ngModel)]="selectedCity" 
-														 [items]="cities" bindLabel="name" 
+				`<ng-select [(ngModel)]="selectedCity"
+														 [items]="cities" bindLabel="name"
 														 fixedPlaceholder="true"
-														 placeholder="testPlaceholder">			
+														 placeholder="testPlaceholder">
                   </ng-select>`,
 			);
 
@@ -2953,6 +2953,28 @@ describe('NgSelectComponent', () => {
 			expect(items[0].label).toBe('Indeed');
 		}));
 
+		it('should use custom ng-collapse-button-tmp', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectGroupingTestComponent,
+				`<ng-select
+						[items]="accounts"
+						groupBy="country"
+						[collapsibleGroup]="true"
+						[(ngModel)]="selectedAccount">
+					<ng-template ng-collapse-button-tmp>
+						<button class="custom-collapse-button">⦿</button>
+					</ng-template>
+				</ng-select>`,
+			);
+
+			tickAndDetectChanges(fixture);
+
+			const select = fixture.componentInstance.select();
+			select.open();
+
+			const customButton = fixture.debugElement.nativeElement.querySelector('.custom-collapse-button');
+			expect(customButton).not.toBeNull();
+		}));
 		it('should update ng-option label after async change (delayed)', () => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
@@ -5328,6 +5350,144 @@ describe('Grouping', () => {
 		expect(select.viewPortItems.filter((opt) => opt.selected).length).toBe(1, 2);
 		expect(select.viewPortItems.find((opt) => opt.selected).index).toBe(2, 0);
 		expect(select.itemsList.selectedItems.length).toBe(1);
+	}));
+
+	it('should be collapsible', fakeAsync(() => {
+		const fixture = createTestingModule(
+			NgSelectGroupingTestComponent,
+			`<ng-select
+			  [items]="accounts"
+				groupBy="country"
+			  [collapsibleGroup]="true"
+			  [(ngModel)]="selectedAccount">
+			</ng-select>`,
+		);
+
+		tickAndDetectChanges(fixture);
+
+		const select = fixture.componentInstance.select();
+		select.open();
+		tickAndDetectChanges(fixture);
+
+		const itemsList = select.itemsList;
+		const firstGroup = itemsList.items[0];
+		const childrenCount = firstGroup.children.length;
+		const initialFilteredCount = itemsList.filteredItems.length;
+
+		const nativeElement: HTMLElement = fixture.debugElement.nativeElement;
+		const button: HTMLButtonElement = nativeElement.querySelector('.ng-option-collapse-button');
+		let renderedOptions = nativeElement.querySelectorAll('.ng-option');
+		const initialDomCount = renderedOptions.length;
+
+		expect(firstGroup.collapsed).toBeFalse();
+		expect(button).not.toBeNull();
+		expect(itemsList.filteredItems.includes(firstGroup.children[0])).toBeTrue();
+
+		button.click();
+		tickAndDetectChanges(fixture);
+
+		expect(firstGroup.collapsed).toBeTrue();
+
+		expect(itemsList.filteredItems.length).toBe(initialFilteredCount - childrenCount);
+		expect(itemsList.filteredItems.includes(firstGroup.children[0])).toBeFalse();
+
+		renderedOptions = nativeElement.querySelectorAll('.ng-option');
+		expect(renderedOptions.length).toBe(initialDomCount - childrenCount);
+	}));
+
+	it('should be collapsed by default', fakeAsync(() => {
+		const fixture = createTestingModule(
+			NgSelectGroupingTestComponent,
+			`<ng-select
+					[items]="accounts"
+					groupBy="country"
+					[collapsibleGroup]="true"
+					[collapseGroupByDefault]="true"
+					[(ngModel)]="selectedAccount">
+			</ng-select>`,
+		);
+
+		tickAndDetectChanges(fixture);
+
+		const items = fixture.componentInstance.select().itemsList.items;
+		expect(items[0].collapsed).toBeTrue();
+	}));
+
+	it('should not select the group if collapse button is clicked', fakeAsync(() => {
+		const fixture = createTestingModule(
+			NgSelectGroupingTestComponent,
+			`<ng-select
+					[items]="accounts"
+					groupBy="country"
+					[collapsibleGroup]="true"
+					[selectableGroup]="true"
+					[(ngModel)]="selectedAccount">
+			</ng-select>`,
+		);
+
+		tickAndDetectChanges(fixture);
+
+		const select = fixture.componentInstance.select();
+		select.open();
+
+		const items = fixture.componentInstance.select().itemsList.items;
+		const nativeElement: HTMLElement = fixture.debugElement.nativeElement;
+		const button: HTMLButtonElement = nativeElement.querySelector('.ng-option-collapse-button');
+
+		button.click();
+		expect(items[0].selected).toBeFalse();
+	}));
+
+	it('should toggle collapsible group using Ctrl+Space or Cmd+Space', fakeAsync(() => {
+		const fixture = createTestingModule(
+			NgSelectGroupingTestComponent,
+			`<ng-select
+                [items]="accounts"
+                groupBy="country"
+                [collapsibleGroup]="true"
+                [(ngModel)]="selectedAccount">
+            </ng-select>`,
+		);
+
+		tickAndDetectChanges(fixture);
+		const select = fixture.componentInstance.select();
+
+		select.open();
+		tickAndDetectChanges(fixture);
+
+		const itemsList = select.itemsList;
+		const firstGroup = itemsList.items[0];
+
+		itemsList.markItem(firstGroup);
+
+		expect(itemsList.markedItem).toBe(firstGroup);
+		expect(firstGroup.collapsed).toBeFalse();
+
+		let preventDefaultCalled = false;
+		select.handleKeyDown({
+			key: ' ',
+			ctrlKey: true,
+			preventDefault: () => {
+				preventDefaultCalled = true;
+			},
+		} as KeyboardEvent);
+		tickAndDetectChanges(fixture);
+
+		expect(firstGroup.collapsed).toBeTrue();
+		expect(preventDefaultCalled).toBeTrue();
+
+		preventDefaultCalled = false;
+		select.handleKeyDown({
+			key: ' ',
+			metaKey: true,
+			preventDefault: () => {
+				preventDefaultCalled = true;
+			},
+		} as KeyboardEvent);
+		tickAndDetectChanges(fixture);
+
+		expect(firstGroup.collapsed).toBeFalse();
+		expect(preventDefaultCalled).toBeTrue();
 	}));
 });
 

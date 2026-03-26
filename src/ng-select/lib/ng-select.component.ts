@@ -34,6 +34,7 @@ import { debounceTime, filter, map, tap } from 'rxjs/operators';
 
 import {
 	NgClearButtonTemplateDirective,
+	NgCollapseButtonTemplateDirective,
 	NgFooterTemplateDirective,
 	NgHeaderTemplateDirective,
 	NgItemLabelDirective,
@@ -133,6 +134,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly selectableGroup = input(false, { transform: booleanAttribute });
 	readonly tabFocusOnClearButton = input<boolean | undefined>();
 	readonly selectableGroupAsModel = input(true, { transform: booleanAttribute });
+	readonly collapsibleGroup = input(false, { transform: booleanAttribute });
+	readonly collapseGroupByDefault = input(false, { transform: booleanAttribute });
 	readonly searchFn = input(null);
 	readonly trackByFn = input(null);
 	readonly clearOnBackspace = input(true, { transform: booleanAttribute });
@@ -222,6 +225,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly tagTemplate = contentChild(NgTagTemplateDirective, { read: TemplateRef });
 	readonly loadingSpinnerTemplate = contentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef });
 	readonly clearButtonTemplate = contentChild(NgClearButtonTemplateDirective, { read: TemplateRef });
+	readonly collapseButtonTemplate = contentChild(NgCollapseButtonTemplateDirective, { read: TemplateRef });
 	readonly ngOptions = contentChildren(NgOptionComponent, { descendants: true });
 
 	// view children queries
@@ -558,6 +562,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	toggleItemCollapse(event: Event, item: NgOption) {
+		event.stopPropagation();
+		this.itemsList.toggleItemCollapse(item);
+	}
+
 	select(item: NgOption) {
 		if (!item.selected) {
 			this.itemsList.select(item);
@@ -609,7 +618,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const handleTag = (item) =>
 			this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item);
 		if (isPromise(tag)) {
-			tag.then((item) => this.select(handleTag(item))).catch(() => { });
+			tag.then((item) => this.select(handleTag(item))).catch(() => {});
 		} else if (tag) {
 			this.select(handleTag(tag));
 		}
@@ -721,9 +730,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
-	private _onChange = (_: any) => { };
+	private _onChange = (_: any) => {};
 
-	private _onTouched = () => { };
+	private _onTouched = () => {};
 
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];
@@ -1005,6 +1014,16 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	private _handleSpace($event: KeyboardEvent) {
+		if ($event.ctrlKey || $event.metaKey) {
+			const markedItem = this.itemsList.markedItem;
+
+			if (this.collapsibleGroup() && markedItem && markedItem.children) {
+				this.itemsList.toggleItemCollapse(markedItem);
+				$event.preventDefault();
+				return;
+			}
+		}
+
 		if (this.isOpen() || this._manualOpen) {
 			return;
 		}

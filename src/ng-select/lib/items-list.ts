@@ -70,7 +70,7 @@ export class ItemsList {
 			this._groups = new Map();
 			this._groups.set(undefined, this._items);
 		}
-		this._filteredItems = [...this._items];
+		this._filteredItems = this._getVisibleItems([...this._items]);
 	}
 
 	select(item: NgOption) {
@@ -130,6 +130,20 @@ export class ItemsList {
 		}
 	}
 
+	toggleItemCollapse(item: NgOption) {
+		if (!this._ngSelect.collapsibleGroup() || !item.children) return;
+
+		item.collapsed = !item.collapsed;
+
+		if (item.collapsed) {
+			this._filteredItems = this._filteredItems.filter((x) => x.parent !== item);
+		} else {
+			const childrenToAdd = item.children.filter((child) => !(this._ngSelect.hideSelected() && child.selected));
+			// Re-sort by original index to drop them back into the correct visual order
+			this._filteredItems = [...this._filteredItems, ...childrenToAdd].toSorted((a, b) => a.index - b.index);
+		}
+	}
+
 	findByLabel(term: string) {
 		term = searchHelper.stripSpecialChars(term).toLocaleLowerCase();
 		return this.filteredItems.find((item) => {
@@ -163,6 +177,9 @@ export class ItemsList {
 			if (matchedItems.length > 0) {
 				const [last] = matchedItems.slice(-1);
 				if (last.parent) {
+					if (this._ngSelect.collapsibleGroup()) {
+						last.parent.collapsed = false; // Expand the group even if it is collapsed to make sure the matched search item is immediately visible
+					}
 					const head = this._items.find((x) => x === last.parent);
 					this._filteredItems.push(head);
 				}
@@ -176,11 +193,17 @@ export class ItemsList {
 			return;
 		}
 
-		if (this._ngSelect.hideSelected() && this.selectedItems.length > 0) {
-			this._filteredItems = this._items.filter((x) => !x.selected);
-		} else {
-			this._filteredItems = this._items;
+		if (this._ngSelect.collapsibleGroup()) {
+			for (const item of this._items) {
+				if (item.parent) item.parent.collapsed = this._ngSelect.collapseGroupByDefault();
+			}
 		}
+
+		let baseItems = this._items;
+		if (this._ngSelect.hideSelected() && this.selectedItems.length > 0) {
+			baseItems = baseItems.filter((x) => !x.selected);
+		}
+		this._filteredItems = this._getVisibleItems(baseItems);
 	}
 
 	unmarkItem() {
@@ -397,6 +420,7 @@ export class ItemsList {
 				index: i++,
 				disabled: !this._ngSelect.selectableGroup(),
 				htmlId: newId(),
+				collapsed: this._ngSelect.collapsibleGroup() ? this._ngSelect.collapseGroupByDefault() : false,
 			};
 			const groupKey = isGroupByFn ? this._ngSelect.bindLabel() : <string>this._ngSelect.groupBy();
 			const groupValue =
@@ -422,5 +446,11 @@ export class ItemsList {
 			items.push(...children);
 		}
 		return items;
+	}
+
+	private _getVisibleItems(items: NgOption[]): NgOption[] {
+		if (!this._ngSelect.collapsibleGroup()) return items;
+
+		return items.filter((item) => !(item.parent && item.parent.collapsed));
 	}
 }
