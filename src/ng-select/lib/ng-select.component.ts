@@ -161,6 +161,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		},
 	});
 	readonly keyDownFn = input<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true);
+	readonly popover = input(false, { transform: booleanAttribute });
 
 	// models
 	readonly bindLabel = model<string>(undefined);
