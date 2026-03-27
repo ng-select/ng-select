@@ -71,6 +71,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	 * Which DOM event to listen to for outside click detection
 	 */
 	readonly outsideClickEvent = input<'click' | 'mousedown'>('click');
+	readonly popover = input(false, { transform: booleanAttribute });
 	readonly update = output<any[]>();
 	readonly scroll = output<{
 		start: number;
@@ -141,6 +142,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._appendDropdown();
 		this._setupMousedownListener();
 		this._handleWindowScroll();
+		this._showPopoverIfNeeded();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -196,7 +198,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			this._updateDropdownClass('bottom');
 		}
 
-		if (this.appendTo()) {
+		if (this.appendTo() || this.popover()) {
 			this._updateYPosition();
 		}
 
@@ -463,7 +465,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	}
 
 	private _handleWindowScroll() {
-		if (!this.appendTo()) {
+		if (!this.appendTo() && !this.popover()) {
 			return;
 		}
 		this._zone.runOutsideAngular(() => {
@@ -474,5 +476,18 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 					this._updateYPosition();
 				});
 		});
+	}
+
+	private _showPopoverIfNeeded() {
+		if (!this.popover()) {
+			return;
+		}
+		if (typeof this._dropdown.showPopover === 'function') {
+			this._renderer.setAttribute(this._dropdown, 'popover', 'manual');
+			this._dropdown.showPopover();
+			this._parent = globalThis.document.body;
+			this._updateXPosition();
+			this._updateYPosition();
+		}
 	}
 }

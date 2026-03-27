@@ -1,0 +1,22 @@
+.clipped-box {
+	padding: 10px;
+	height: 80px;
+	border: 1px solid #999;
+	overflow: hidden;
+}
+
+.alert-info {
+	background-color: #d1ecf1;
+	border-color: #bee5eb;
+	color: #0c5460;
+	padding: 0.75rem 1.25rem;
+	border-radius: 4px;
+
+	ul {
+		padding-left: 1.2rem;
+	}
+
+	a {
+		color: #0c5460;
+	}
+}

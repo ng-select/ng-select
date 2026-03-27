@@ -45,6 +45,7 @@ import { SearchEditableExampleComponent } from './search-editable-example/search
 import { TemplatePlaceholderExampleComponent } from './template-placeholder-example/template-placeholder-example.component';
 import { FixedPlaceholderExampleComponent } from './fixed-placeholder-example/fixed-placeholder-example.component';
 import { TemplateClearExampleComponent } from './template-clear-example/template-clear-example.component';
+import { PopoverExampleComponent } from './popover-example/popover-example.component';
 
 export interface Example {
 	component: any;
@@ -239,5 +240,9 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
 	'group-children-example': {
 		component: GroupChildrenExampleComponent,
 		title: 'Items with already grouped children array',
+	},
+	'popover-example': {
+		component: PopoverExampleComponent,
+		title: 'Popover top layer',
 	},
 };
