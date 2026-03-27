@@ -35,6 +35,7 @@ import { OutputEventsExampleComponent } from './output-events-example/output-eve
 import { VirtualScrollExampleComponent } from './virtual-scroll-example/virtual-scroll-example.component';
 import { DropdownPositionExampleComponent } from './dropdown-position-example/dropdown-position-example.component';
 import { AppendToExampleComponent } from './append-to-example/append-to-example.component';
+import { ModalNgBootstrapExampleComponent } from './modal-ng-bootstrap-example/modal-ng-bootstrap-example.component';
 import { GroupDefaultExampleComponent } from './group-default-example/group-default-example.component';
 import { GroupFunctionExampleComponent } from './group-function-example/group-function-example.component';
 import { GroupSelectableExampleComponent } from './group-selectable-example/group-selectable-example.component';
@@ -44,6 +45,7 @@ import { SearchEditableExampleComponent } from './search-editable-example/search
 import { TemplatePlaceholderExampleComponent } from './template-placeholder-example/template-placeholder-example.component';
 import { FixedPlaceholderExampleComponent } from './fixed-placeholder-example/fixed-placeholder-example.component';
 import { TemplateClearExampleComponent } from './template-clear-example/template-clear-example.component';
+import { PopoverExampleComponent } from './popover-example/popover-example.component';
 
 export interface Example {
 	component: any;
@@ -215,6 +217,10 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
 		component: AppendToExampleComponent,
 		title: 'Append to position',
 	},
+	'modal-ng-bootstrap-example': {
+		component: ModalNgBootstrapExampleComponent,
+		title: 'Bootstrap modal',
+	},
 	'group-default-example': {
 		component: GroupDefaultExampleComponent,
 		title: 'Group by item key',
@@ -234,5 +240,9 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
 	'group-children-example': {
 		component: GroupChildrenExampleComponent,
 		title: 'Items with already grouped children array',
+	},
+	'popover-example': {
+		component: PopoverExampleComponent,
+		title: 'Popover top layer',
 	},
 };
