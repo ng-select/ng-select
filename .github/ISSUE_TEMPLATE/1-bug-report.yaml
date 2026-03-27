@@ -45,6 +45,8 @@ body:
     attributes:
       label: What version of Angular are you using?
       options:
+        - Angular 22
+        - Angular 21
         - Angular 20
         - Angular 19
         - Angular 18
