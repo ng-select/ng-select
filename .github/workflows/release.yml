@@ -5,12 +5,16 @@ on:
     branches:
       - master
 
+permissions:
+  id-token: write   # Required for npm trusted publishing (OIDC)
+  contents: write  # Required for semantic-release to push tags/commits
+
+
 jobs:
   release:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -24,6 +28,7 @@ jobs:
         with:
           node-version: "22"
           cache: "pnpm"
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
@@ -44,15 +49,11 @@ jobs:
           jq ".version = $(jq .version ./dist/ng-select/package.json)" \
             ./dist/ng-option-highlight/package.json > "$TEMPFILE"
           mv "$TEMPFILE" ./dist/ng-option-highlight/package.json
-      - name: Set up npm registry
-        run: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ~/.npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: publish @ng-select/ng-option-highlight
-        run: pnpm publish ./dist/ng-option-highlight --no-git-checks
+        run: pnpm publish ./dist/ng-option-highlight --no-git-checks --provenance
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: build demo
         run: pnpm build:demo
