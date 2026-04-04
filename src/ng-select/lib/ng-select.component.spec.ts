@@ -5505,7 +5505,7 @@ describe('User defined keyDown handler', () => {
 	};
 
 	it('should execute user function if any of defined keys was pressed', () => {
-		const spy = spyOn(fixture.componentInstance.select().keyDownFn[SIGNAL], 'value');
+		const spy = spyOn(fixture.componentInstance.select()._keyDownFn[SIGNAL], 'value');
 
 		expectSpyToBeCalledAfterKeyDown(spy, Object.keys(KeyCode).length);
 	});
