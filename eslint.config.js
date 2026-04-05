@@ -34,6 +34,7 @@ module.exports = defineConfig([
 			'@angular-eslint/no-output-rename': 'off',
 			'@angular-eslint/no-output-native': 'off',
 			'@angular-eslint/prefer-standalone': 'off',
+			"@angular-eslint/no-input-rename": 'off',
 			'@angular-eslint/component-selector': [
 				'error',
 				{
