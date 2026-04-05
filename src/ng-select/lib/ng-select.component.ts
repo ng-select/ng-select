@@ -639,7 +639,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.itemsList.unmarkItem();
 		this._onTouched();
 		this.closeEvent.emit();
-		this._cd.markForCheck();
+		this.detectChanges();
 	}
 
 	toggleItem(item: NgOption) {
