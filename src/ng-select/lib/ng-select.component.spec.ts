@@ -2561,6 +2561,92 @@ describe('NgSelectComponent', () => {
 		}));
 	});
 
+	describe('Tab focus on chips', () => {
+		const template = `<ng-select [items]="cities" bindLabel="name" [multiple]="true"
+			[tabFocusOnChips]="tabFocusOnChips" [(ngModel)]="selectedCities"></ng-select>`;
+
+		function setupChips(fixture: ComponentFixture<NgSelectTestComponent>) {
+			fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0], fixture.componentInstance.cities[1]];
+			tickAndDetectChanges(fixture);
+			tickAndDetectChanges(fixture);
+			return fixture.debugElement.queryAll(By.css('.ng-value-icon'));
+		}
+
+		it('should set tabindex and aria attributes on chip remove buttons based on tabFocusOnChips', fakeAsync(() => {
+			const fixture = createTestingModule(NgSelectTestComponent, template);
+			fixture.componentInstance.tabFocusOnChips = true;
+			const icons = setupChips(fixture);
+
+			expect(icons.length).toBe(2);
+			expect(icons[0].nativeElement.getAttribute('tabindex')).toBe('0');
+			expect(icons[0].nativeElement.getAttribute('role')).toBe('button');
+			expect(icons[0].nativeElement.getAttribute('aria-label')).toBe('Remove New York');
+
+			// default (false) should use tabindex -1
+			fixture.componentInstance.tabFocusOnChips = false;
+			tickAndDetectChanges(fixture);
+			const updatedIcons = fixture.debugElement.queryAll(By.css('.ng-value-icon'));
+			expect(updatedIcons[0].nativeElement.getAttribute('tabindex')).toBe('-1');
+		}));
+
+		it('should respect global config and allow input override', fakeAsync(() => {
+			const config = new NgSelectConfig();
+			config.tabFocusOnChips = true;
+			const fixture = createTestingModule(NgSelectTestComponent, template, config);
+			fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
+			tickAndDetectChanges(fixture);
+			tickAndDetectChanges(fixture);
+
+			// global config enables it
+			expect(fixture.debugElement.query(By.css('.ng-value-icon')).nativeElement.getAttribute('tabindex')).toBe('0');
+
+			// input overrides global config
+			fixture.componentInstance.tabFocusOnChips = false;
+			tickAndDetectChanges(fixture);
+			expect(fixture.debugElement.query(By.css('.ng-value-icon')).nativeElement.getAttribute('tabindex')).toBe('-1');
+		}));
+
+		it('should remove item when Enter is pressed on chip remove button', fakeAsync(() => {
+			const fixture = createTestingModule(NgSelectTestComponent, template);
+			fixture.componentInstance.tabFocusOnChips = true;
+			const icons = setupChips(fixture);
+
+			icons[0].triggerEventHandler('keydown.enter', { key: 'Enter', preventDefault: () => {} });
+			tickAndDetectChanges(fixture);
+
+			const select = fixture.componentInstance.select();
+			expect(select.selectedItems.length).toBe(1);
+			expect(select.selectedItems[0].value).toEqual(fixture.componentInstance.cities[1]);
+		}));
+
+		it('should remove item when Space is pressed on chip remove button', fakeAsync(() => {
+			const fixture = createTestingModule(NgSelectTestComponent, template);
+			fixture.componentInstance.tabFocusOnChips = true;
+			const icons = setupChips(fixture);
+
+			icons[0].triggerEventHandler('keydown.space', { key: ' ', preventDefault: () => {} });
+			tickAndDetectChanges(fixture);
+
+			const select = fixture.componentInstance.select();
+			expect(select.selectedItems.length).toBe(1);
+			expect(select.selectedItems[0].value).toEqual(fixture.componentInstance.cities[1]);
+		}));
+
+		it('should not intercept Tab key on chips so browser handles natural tab order', fakeAsync(() => {
+			const fixture = createTestingModule(NgSelectTestComponent, template);
+			fixture.componentInstance.tabFocusOnChips = true;
+			setupChips(fixture);
+
+			const select = fixture.componentInstance.select();
+			const spy = spyOn(select, 'handleKeyCodeInput');
+
+			const chipEl: HTMLElement = fixture.debugElement.query(By.css('.ng-value-icon')).nativeElement;
+			chipEl.dispatchEvent(new KeyboardEvent('keydown', { key: KeyCode.Tab, bubbles: true }));
+
+			expect(spy).not.toHaveBeenCalled();
+		}));
+	});
+
 	describe('Outside click', () => {
 		let fixture: ComponentFixture<NgSelectTestComponent>;
 		let select: NgSelectComponent;
@@ -2996,10 +3082,10 @@ describe('NgSelectComponent', () => {
 		it('should display ng-placeholder if an item is selected', fakeAsync(() => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
-				`<ng-select [(ngModel)]="selectedCity" 
-														 [items]="cities" bindLabel="name" 
+				`<ng-select [(ngModel)]="selectedCity"
+														 [items]="cities" bindLabel="name"
 														 fixedPlaceholder="true"
-														 placeholder="testPlaceholder">			
+														 placeholder="testPlaceholder">
                   </ng-select>`,
 			);
 
@@ -5596,6 +5682,7 @@ class NgSelectTestComponent {
 	searchFn: (term: string, item: any) => boolean = null;
 	selectOnTab = true;
 	tabFocusOnClearButton: boolean;
+	tabFocusOnChips: boolean;
 	hideSelected = false;
 	closeOnSelect = true;
 	clearable = true;
