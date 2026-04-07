@@ -19,6 +19,7 @@ export class NgSelectConfig {
 	clearSearchOnAdd: boolean;
 	deselectOnClick: boolean;
 	tabFocusOnClear = true;
+	tabFocusOnChips = false;
 	/**
 	 * Controls which DOM event is used to detect outside clicks for closing the dropdown.
 	 * Defaults to 'click'. Set to 'mousedown' to handle early outside interactions

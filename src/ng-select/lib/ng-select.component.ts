@@ -185,6 +185,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly _tabFocusOnClearButton = input<boolean | undefined>(undefined, { alias: 'tabFocusOnClearButton' });
 	readonly tabFocusOnClearButton = linkedSignal(() => this._tabFocusOnClearButton());
 
+	readonly _tabFocusOnChips = input<boolean | undefined>(undefined, { alias: 'tabFocusOnChips', transform: booleanAttribute });
+	readonly tabFocusOnChips = linkedSignal(() => this._tabFocusOnChips());
+
 	readonly _selectableGroupAsModel = input(true, { alias: 'selectableGroupAsModel', transform: booleanAttribute });
 	readonly selectableGroupAsModel = linkedSignal(() => this._selectableGroupAsModel());
 
