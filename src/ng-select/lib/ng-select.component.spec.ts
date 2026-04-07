@@ -2618,6 +2618,33 @@ describe('NgSelectComponent', () => {
 			expect(select.selectedItems.length).toBe(1);
 			expect(select.selectedItems[0].value).toEqual(fixture.componentInstance.cities[1]);
 		}));
+
+		it('should remove item when Space is pressed on chip remove button', fakeAsync(() => {
+			const fixture = createTestingModule(NgSelectTestComponent, template);
+			fixture.componentInstance.tabFocusOnChips = true;
+			const icons = setupChips(fixture);
+
+			icons[0].triggerEventHandler('keydown.space', { key: ' ', preventDefault: () => {} });
+			tickAndDetectChanges(fixture);
+
+			const select = fixture.componentInstance.select();
+			expect(select.selectedItems.length).toBe(1);
+			expect(select.selectedItems[0].value).toEqual(fixture.componentInstance.cities[1]);
+		}));
+
+		it('should not intercept Tab key on chips so browser handles natural tab order', fakeAsync(() => {
+			const fixture = createTestingModule(NgSelectTestComponent, template);
+			fixture.componentInstance.tabFocusOnChips = true;
+			setupChips(fixture);
+
+			const select = fixture.componentInstance.select();
+			const spy = spyOn(select, 'handleKeyCodeInput');
+
+			const chipEl: HTMLElement = fixture.debugElement.query(By.css('.ng-value-icon')).nativeElement;
+			chipEl.dispatchEvent(new KeyboardEvent('keydown', { key: KeyCode.Tab, bubbles: true }));
+
+			expect(spy).not.toHaveBeenCalled();
+		}));
 	});
 
 	describe('Outside click', () => {

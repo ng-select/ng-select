@@ -16,7 +16,7 @@
 			@for (item of selectedItems; track trackByOption($index, item)) {
 				<div [class.ng-value-disabled]="item.disabled" class="ng-value">
 					<ng-template #defaultLabelTemplate>
-						<span class="ng-value-icon left" (click)="unselect(item)" (keydown.enter)="unselect(item)" [attr.tabindex]="(tabFocusOnChips() ?? config.tabFocusOnChips) ? 0 : -1" role="button" [attr.aria-label]="'Remove ' + item.label">×</span>
+						<span class="ng-value-icon left" (click)="unselect(item)" (keydown.enter)="unselect(item)" (keydown.space)="$event.preventDefault(); unselect(item)" [attr.tabindex]="(tabFocusOnChips() ?? config.tabFocusOnChips) ? 0 : -1" role="button" [attr.aria-label]="'Remove ' + item.label">×</span>
 						<span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
 					</ng-template>
 					<ng-template

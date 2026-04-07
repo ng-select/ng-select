@@ -470,10 +470,14 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	handleKeyCode($event: KeyboardEvent) {
-		const target = $event.target;
+		const target = $event.target as HTMLElement;
 
 		if (this.clearButton() && this.clearButton().nativeElement === target) {
 			this.handleKeyCodeClear($event);
+		} else if (target?.classList?.contains('ng-value-icon')) {
+			// Chip remove buttons handle their own events via template bindings (Enter for removal).
+			// Tab/Shift+Tab navigation between chips is handled naturally by the browser via tabindex.
+			return;
 		} else {
 			this.handleKeyCodeInput($event);
 		}
