@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 import { AppendToExampleComponent } from './append-to-example/append-to-example.component';
+import { ModalNgBootstrapExampleComponent } from './modal-ng-bootstrap-example/modal-ng-bootstrap-example.component';
 import { BindingsCustomExampleComponent } from './bindings-custom-example/bindings-custom-example.component';
 import { BindingsDefaultExampleComponent } from './bindings-default-example/bindings-default-example.component';
 import { BindingsNestedExampleComponent } from './bindings-nested-example/bindings-nested-example.component';
@@ -91,6 +92,7 @@ const examples = [
 	VirtualScrollExampleComponent,
 	DropdownPositionExampleComponent,
 	AppendToExampleComponent,
+	ModalNgBootstrapExampleComponent,
 	GroupDefaultExampleComponent,
 	GroupFunctionExampleComponent,
 	GroupSelectableExampleComponent,

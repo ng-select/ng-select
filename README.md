@@ -18,6 +18,7 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 | Angular          |     ng-select      |
 |------------------|:------------------:|
+| >=22.0.0 <23.0.0 |      v22.x.x       |
 | >=21.0.0 <22.0.0 |      v21.x.x       |
 | >=20.0.0 <21.0.0 | <=15.1.3, >=20.0.1 |
 | >=19.0.0 <20.0.0 |       v14.x        |
@@ -209,7 +210,7 @@ map: {
 |-----------------------------|------------------------------------------------------|---------------------| ------------- |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [addTag]                    | `boolean \| ((term: string) => any \| Promise<any>)` | `false`             | no | Allows to create custom options.                                                                                                                                                               |
 | addTagText                  | `string`                                             | `Add item`          | no | Set custom text when using tagging                                                                                                                                                             |
-| appearance                  | `string`                                             | `underline`         | no | Allows to select dropdown appearance. Set to `outline` to add border instead of underline (applies only to Material theme)                                                                     |
+| appearance                  | `string`                                             | `underline`         | no | Allows to select dropdown appearance. Set to `outline` or `fill` for Material form-field styles (applies only to Material theme)                                                               |
 | appendTo                    | `string`                                             | null                | no | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative`                                                                |
 | bufferAmount                | `number`                                             | 4                | no | Used in virtual scrolling, the `bufferAmount` property controls the number of items preloaded in the background to ensure smoother and more seamless scrolling. |
 | bindValue                   | `string`                                             | `-`                 | no | Object property to use for selected model. By default binds to whole object.                                                                                                                   |
@@ -248,6 +249,7 @@ map: {
 | [tabFocusOnClearButton]     | `boolean`                                            | `true`              | no | Control tab navigation behavior for the clear button. Default `true`                                                                                                                           |
 | [openOnEnter]               | `boolean`                                            | `true`              | no | Open dropdown using enter. Default `true`                                                                                                                                                      |
 | outsideClickEventType       | `'click'` \| `'mousedown'`                           | `'click'`           | no | Configure which DOM event type is used for outside click detection. Use `'mousedown'` to fix issues with backdrop/loading overlays that appear on dropdown open                               |
+| [popover]                   | `boolean`                                            | `false`             | no | Display the dropdown in the top-layer using the native Popover API. Useful when the dropdown is clipped or hidden behind dialogs or other stacking contexts. Alternative to `appendTo`          |
 | [typeahead]                 | `Subject`                                            | `-`                 | no | Custom autocomplete or advanced filter.                                                                                                                                                        |
 | [minTermLength]             | `number`                                             | `0`                 | no | Minimum term length to start a search. Should be used with `typeahead`                                                                                                                         |
 | typeToSearchText            | `string`                                             | `Type to search`    | no | Set custom text when using Typeahead                                                                                                                                                           |
@@ -270,7 +272,7 @@ map: {
 | (search) | Fired while typing search term. Outputs search term with filtered items |
 | (open)  | Fired on select dropdown open |
 | (remove)  | Fired when item is removed while `[multiple]="true"` |
-| (scroll)  | Fired when scrolled. Provides the start and end index of the currently available items. Can be used for loading more items in chunks before the user has scrolled all the way to the bottom of the list. |
+| (scroll)  | Fired when scrolled (only when `[virtualScroll]="true"`). Provides the start and end index of the currently available items. Can be used for loading more items in chunks before the user has scrolled all the way to the bottom of the list. |
 | (scrollToEnd)  | Fired when scrolled to the end of items. Can be used for loading more items in chunks. |
 
 

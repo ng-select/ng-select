@@ -40,5 +40,10 @@ export const appRoutes: Routes = [
 		component: RouteViewerComponent,
 		data: { title: 'Append to element', examples: 'append-to' },
 	},
+	{
+		path: 'popover',
+		component: RouteViewerComponent,
+		data: { title: 'Popover', examples: 'popover' },
+	},
 	{ path: 'grouping', component: RouteViewerComponent, data: { title: 'Grouping', examples: 'group' } },
 ];

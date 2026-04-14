@@ -71,6 +71,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	 * Which DOM event to listen to for outside click detection
 	 */
 	readonly outsideClickEvent = input<'click' | 'mousedown'>('click');
+	readonly popover = input(false, { transform: booleanAttribute });
 	readonly update = output<any[]>();
 	readonly scroll = output<{
 		start: number;
@@ -140,6 +141,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._handleOutsideClick();
 		this._appendDropdown();
 		this._setupMousedownListener();
+		this._handleWindowScroll();
+		this._showPopoverIfNeeded();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -195,7 +198,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			this._updateDropdownClass('bottom');
 		}
 
-		if (this.appendTo()) {
+		if (this.appendTo() || this.popover()) {
 			this._updateYPosition();
 		}
 
@@ -216,15 +219,15 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 	private _handleScroll() {
 		this._zone.runOutsideAngular(() => {
-			if (!this._scrollablePanel()) {
+			const scrollablePanel = this._scrollablePanel();
+			if (!scrollablePanel) {
 				return;
 			}
-			fromEvent(this._scrollablePanel(), 'scroll')
+			fromEvent(scrollablePanel, 'scroll')
 				.pipe(takeUntilDestroyed(this._destroyRef), auditTime(0, SCROLL_SCHEDULER))
-				.subscribe((event: Event) => {
-					const target = event.target as HTMLElement;
-					if (target && 'scrollTop' in target) {
-						this._onContentScrolled(target.scrollTop);
+				.subscribe(() => {
+					if (scrollablePanel && 'scrollTop' in scrollablePanel) {
+						this._onContentScrolled(scrollablePanel.scrollTop);
 					}
 				});
 		});
@@ -433,15 +436,16 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	private _updateYPosition() {
 		const select = this._select.getBoundingClientRect();
 		const parent = this._parent.getBoundingClientRect();
-		const delta = select.height;
+		const selectContainer = this._select.querySelector('.ng-select-container') as HTMLElement;
+		const containerRect = selectContainer?.getBoundingClientRect() ?? select;
 
 		if (this._currentPosition === 'top') {
-			const offsetBottom = parent.bottom - select.bottom;
-			this._dropdown.style.bottom = offsetBottom + delta + 'px';
+			const offsetBottom = parent.bottom - containerRect.top;
+			this._dropdown.style.bottom = offsetBottom + 'px';
 			this._dropdown.style.top = 'auto';
 		} else if (this._currentPosition === 'bottom') {
-			const offsetTop = select.top - parent.top;
-			this._dropdown.style.top = offsetTop + delta + 'px';
+			const offsetTop = containerRect.bottom - parent.top;
+			this._dropdown.style.top = offsetTop + 'px';
 			this._dropdown.style.bottom = 'auto';
 		}
 	}
@@ -458,5 +462,32 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 					event.preventDefault();
 				});
 		});
+	}
+
+	private _handleWindowScroll() {
+		if (!this.appendTo() && !this.popover()) {
+			return;
+		}
+		this._zone.runOutsideAngular(() => {
+			fromEvent(this._document, 'scroll', { capture: true, passive: true })
+				.pipe(takeUntilDestroyed(this._destroyRef), auditTime(0, SCROLL_SCHEDULER))
+				.subscribe(() => {
+					this._updateXPosition();
+					this._updateYPosition();
+				});
+		});
+	}
+
+	private _showPopoverIfNeeded() {
+		if (!this.popover()) {
+			return;
+		}
+		if (typeof this._dropdown.showPopover === 'function') {
+			this._renderer.setAttribute(this._dropdown, 'popover', 'manual');
+			this._dropdown.showPopover();
+			this._parent = globalThis.document.body;
+			this._updateXPosition();
+			this._updateYPosition();
+		}
 	}
 }

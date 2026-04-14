@@ -1,0 +1,26 @@
+<p>
+	<code>ng-select</code> inside an <strong>ng-bootstrap</strong> modal. The dropdown panel is appended to
+	<code>body</code> by default so it stacks above the modal and is not clipped by the modal content.
+</p>
+
+<button type="button" class="btn btn-primary" (click)="openModal(modalContent)">Open modal</button>
+
+<ng-template #modalContent let-c="close" let-d="dismiss">
+	<div class="modal-header">
+		<h4 class="modal-title">Select in modal</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="d()"></button>
+	</div>
+	<div class="modal-body">
+		<ng-select
+			appendTo="body"
+			[items]="people$ | async"
+			bindLabel="company"
+			placeholder="Select item"
+			[(ngModel)]="selected">
+		</ng-select>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" (click)="d()">Close</button>
+		<button type="button" class="btn btn-primary" (click)="c()">OK</button>
+	</div>
+</ng-template>
