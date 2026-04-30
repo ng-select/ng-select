@@ -1390,6 +1390,42 @@ describe('NgSelectComponent', () => {
 					expect(cmp.select().selectedItems[0].value).toEqual(cmp.cities[1]);
 				}));
 
+				it('should call compareWith with model value when bindValue items are set after ngModel', fakeAsync(() => {
+					const fixture = createTestingModule(
+						NgSelectTestComponent,
+						`<ng-select [items]="cities"
+                            bindLabel="name"
+                            bindValue="id"
+                            [compareWith]="compareWith"
+                            [(ngModel)]="selectedCityId">
+                        </ng-select>`,
+					);
+
+					const cmp = fixture.componentInstance;
+					cmp.cities = [];
+					cmp.selectedCityId = 2;
+					const compareWith = jasmine.createSpy('compareWith').and.callFake((city, model) => city.id === model);
+					cmp.compareWith = compareWith;
+
+					tickAndDetectChanges(fixture);
+
+					expect(cmp.compareWith).not.toHaveBeenCalled();
+					expect(cmp.select().selectedItems[0].value).toEqual({ name: null, id: 2 });
+
+					cmp.cities = [
+						{ id: 1, name: 'New York' },
+						{ id: 2, name: 'London' },
+					];
+
+					tickAndDetectChanges(fixture);
+
+					expect(cmp.compareWith).toHaveBeenCalled();
+					for (const call of compareWith.calls.all()) {
+						expect(call.args[1]).toBe(2);
+					}
+					expect(cmp.select().selectedItems[0].value).toEqual({ id: 2, name: 'London' });
+				}));
+
 				it('should call compareWith when items are updated from empty to populated', fakeAsync(() => {
 					const fixture = createTestingModule(
 						NgSelectTestComponent,
