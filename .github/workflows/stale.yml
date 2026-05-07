@@ -18,3 +18,5 @@ jobs:
         stale-issue-label: 'stale'
         exempt-issue-labels: 'improvement,needs triage,good for contribution,bug'
         stale-pr-label: 'stale'
+        days-before-stale: 180
+        days-before-close: 30
