@@ -2028,7 +2028,7 @@ describe('NgSelectComponent', () => {
 			}));
 		});
 
-		fit('should update dropdown Y position when select resizes (popover true)', fakeAsync(() => {
+		it('should update dropdown Y position when select resizes (popover true)', fakeAsync(() => {
 			const originalRO = (globalThis as any).ResizeObserver;
 
 			let lastInstance: any = null;
