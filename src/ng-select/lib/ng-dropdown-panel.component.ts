@@ -143,6 +143,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._setupMousedownListener();
 		this._handleWindowScroll();
 		this._showPopoverIfNeeded();
+		this._handleSelectResize();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -489,5 +490,21 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			this._updateXPosition();
 			this._updateYPosition();
 		}
+	}
+
+	private _handleSelectResize() {
+		if (!this.popover() || !this._select) {
+			return;
+		}
+
+		const resizeObserver = new ResizeObserver(() => {
+			this._updateYPosition();
+		});
+
+		resizeObserver.observe(this._select);
+
+		this._destroyRef.onDestroy(() => {
+			resizeObserver.disconnect();
+		});
 	}
 }
