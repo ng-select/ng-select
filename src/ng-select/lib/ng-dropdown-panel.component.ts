@@ -188,6 +188,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 	adjustPosition() {
 		this._updateYPosition();
+		this._updateXPosition();
 	}
 
 	private _handleDropdownPosition() {
@@ -199,7 +200,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 
 		if (this.appendTo() || this.popover()) {
-			this._updateYPosition();
+			this.adjustPosition();
 		}
 
 		this._dropdown.style.opacity = '1';
