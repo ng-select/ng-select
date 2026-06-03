@@ -10,7 +10,7 @@ import { LayoutSidenavComponent } from './layout/sidenav-component';
 	selector: 'demo-app',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss'],
-	changeDetection: ChangeDetectionStrategy.Default,
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [LayoutHeaderComponent, LayoutSidenavComponent, RouterOutlet],
 })
 export class AppComponent implements OnInit {

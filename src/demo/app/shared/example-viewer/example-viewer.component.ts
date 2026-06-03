@@ -1,11 +1,19 @@
-import { Component, ComponentFactoryResolver, Directive, OnInit, ViewContainerRef, input, inject, viewChild } from '@angular/core';
+import {
+	Component,
+	Directive,
+	OnInit,
+	ViewContainerRef,
+	input,
+	inject,
+	viewChild,
+	ChangeDetectionStrategy,
+} from '@angular/core';
 import { EXAMPLE_COMPONENTS } from '../../examples/examples';
 import { StackblitzButtonComponent } from './stackblitz-button/stackblitz-button.component';
 
 @Directive({ selector: '[example-host]' })
 export class ExampleHostDirective {
 	viewContainerRef = inject(ViewContainerRef);
-
 }
 
 @Component({
@@ -30,11 +38,10 @@ export class ExampleHostDirective {
 			}
 		`,
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [StackblitzButtonComponent, ExampleHostDirective],
 })
 export class ExampleViewerComponent implements OnInit {
-	private componentFactoryResolver = inject(ComponentFactoryResolver);
-
 	readonly example = input<string>(undefined);
 
 	readonly exampleHost = viewChild(ExampleHostDirective);
@@ -52,10 +59,9 @@ export class ExampleViewerComponent implements OnInit {
 	private loadComponent() {
 		const example = EXAMPLE_COMPONENTS[this.example()];
 		this.title = example.title;
-		const componentFactory = this.componentFactoryResolver.resolveComponentFactory(example.component);
 
-		const viewContainerRef = this.exampleHost().viewContainerRef;
+		const viewContainerRef = this.exampleHost()!.viewContainerRef;
 		viewContainerRef.clear();
-		viewContainerRef.createComponent(componentFactory);
+		viewContainerRef.createComponent(example.component);
 	}
 }

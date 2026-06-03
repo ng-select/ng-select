@@ -88,7 +88,7 @@
 	@let appendToValue = appendTo() || config.appendTo;
 	<ng-dropdown-panel
 		class="ng-dropdown-panel"
-		[virtualScroll]="virtualScroll() ?? !config.disableVirtualScroll ?? false"
+		[virtualScroll]="dropdownVirtualScroll()"
 		[bufferAmount]="bufferAmount()"
 		[appendTo]="appendToValue"
 		[position]="dropdownPosition()"
@@ -125,7 +125,7 @@
 					[attr.aria-selected]="item.selected"
 					[attr.id]="item?.htmlId"
 					[attr.aria-setsize]="itemsList.filteredItems.length"
-					[attr.aria-posinset]="item.index + 1">
+					[attr.aria-posinset]="(item.index ?? 0) + 1">
 					<ng-template #defaultOptionTemplate>
 						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
 					</ng-template>

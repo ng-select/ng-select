@@ -1,7 +1,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "esModuleInterop": true,
@@ -16,17 +15,26 @@
     ],
     "lib": [
       "ES2022",
-      "dom",
-      "esnext"
+      "dom"
     ],
     "paths": {
       "@ng-select/ng-select": [
-        "src/ng-select/public-api.ts"
+        "./src/ng-select/public-api.ts"
       ],
       "@ng-select/ng-option-highlight": [
-        "src/ng-option-highlight/public-api.ts"
+        "./src/ng-option-highlight/public-api.ts"
       ]
     },
-    "useDefineForClassFields": false
-  }
+    "useDefineForClassFields": false,
+    "strict": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": false
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictTemplates": false,
+    "strictInputAccessModifiers": false
+  },
 }

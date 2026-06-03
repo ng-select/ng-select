@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 
@@ -6,6 +6,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 	selector: 'ng-forms-multi-select-example',
 	templateUrl: './forms-multi-select-example.component.html',
 	styleUrls: ['./forms-multi-select-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [FormsModule, ReactiveFormsModule, NgSelectComponent],
 })
 export class FormsMultiSelectExampleComponent implements OnInit {

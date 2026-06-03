@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { NgHeaderTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
@@ -7,6 +7,7 @@ import { NgHeaderTemplateDirective, NgOptionTemplateDirective, NgSelectComponent
 	selector: 'ng-virtual-scroll-example',
 	templateUrl: './virtual-scroll-example.component.html',
 	styleUrls: ['./virtual-scroll-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, NgHeaderTemplateDirective, NgOptionTemplateDirective],
 })
 export class VirtualScrollExampleComponent implements OnInit {

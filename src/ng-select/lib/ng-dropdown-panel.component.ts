@@ -63,8 +63,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	readonly appendTo = input<string>(undefined);
 	readonly bufferAmount = input<number>(undefined);
 	readonly virtualScroll = input(false, { transform: booleanAttribute });
-	readonly headerTemplate = input<TemplateRef<any>>(undefined);
-	readonly footerTemplate = input<TemplateRef<any>>(undefined);
+	readonly headerTemplate = input<TemplateRef<any> | undefined>(undefined);
+	readonly footerTemplate = input<TemplateRef<any> | undefined>(undefined);
 	readonly filterValue = input<string>(null);
 	readonly ariaLabelDropdown = input<string | null>(null);
 	/**
