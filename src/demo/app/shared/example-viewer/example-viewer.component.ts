@@ -1,6 +1,5 @@
 import {
 	Component,
-	ComponentFactoryResolver,
 	Directive,
 	OnInit,
 	ViewContainerRef,
@@ -43,8 +42,6 @@ export class ExampleHostDirective {
 	imports: [StackblitzButtonComponent, ExampleHostDirective],
 })
 export class ExampleViewerComponent implements OnInit {
-	private componentFactoryResolver = inject(ComponentFactoryResolver);
-
 	readonly example = input<string>(undefined);
 
 	readonly exampleHost = viewChild(ExampleHostDirective);
@@ -62,10 +59,9 @@ export class ExampleViewerComponent implements OnInit {
 	private loadComponent() {
 		const example = EXAMPLE_COMPONENTS[this.example()];
 		this.title = example.title;
-		const componentFactory = this.componentFactoryResolver.resolveComponentFactory(example.component);
 
-		const viewContainerRef = this.exampleHost().viewContainerRef;
+		const viewContainerRef = this.exampleHost()!.viewContainerRef;
 		viewContainerRef.clear();
-		viewContainerRef.createComponent(componentFactory);
+		viewContainerRef.createComponent(example.component);
 	}
 }
