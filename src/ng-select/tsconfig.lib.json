@@ -4,6 +4,10 @@
 		"outDir": "../../out-tsc/lib",
 		"declaration": true,
 		"inlineSources": true,
+		"strict": false,
+		"strictNullChecks": false,
+		"strictPropertyInitialization": false,
+		"noImplicitAny": false,
 		"types": [
 			"node"
 		],
@@ -15,14 +19,10 @@
 	},
 	"angularCompilerOptions": {
 		"compilationMode": "partial",
-		"extendedDiagnostics": {
-			"checks": {
-				"nullishCoalescingNotNullable": "suppress",
-				"optionalChainNotNullable": "suppress"
-			}
-		},
+		"enableI18nLegacyMessageIdFormat": false,
 		"strictInjectionParameters": true,
-		"strictTemplates": false
+		"strictTemplates": false,
+		"strictInputAccessModifiers": false
 	},
 	"exclude": [
 		"**/*.spec.ts"

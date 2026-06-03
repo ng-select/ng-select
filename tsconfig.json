@@ -20,10 +20,10 @@
     ],
     "paths": {
       "@ng-select/ng-select": [
-        "src/ng-select/public-api.ts"
+        "./src/ng-select/public-api.ts"
       ],
       "@ng-select/ng-option-highlight": [
-        "src/ng-option-highlight/public-api.ts"
+        "./src/ng-option-highlight/public-api.ts"
       ]
     },
     "useDefineForClassFields": false
