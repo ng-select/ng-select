@@ -17,13 +17,6 @@
 			"esnext"
 		]
 	},
-	"angularCompilerOptions": {
-		"compilationMode": "partial",
-		"enableI18nLegacyMessageIdFormat": false,
-		"strictInjectionParameters": true,
-		"strictTemplates": false,
-		"strictInputAccessModifiers": false
-	},
 	"exclude": [
 		"**/*.spec.ts"
 	]
