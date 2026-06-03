@@ -5,7 +5,14 @@
 		"types": ["jasmine", "node"]
 	},
 	"angularCompilerOptions": {
-		"enableIvy": false
+		"enableIvy": false,
+		"extendedDiagnostics": {
+			"checks": {
+				"nullishCoalescingNotNullable": "suppress",
+				"optionalChainNotNullable": "suppress"
+			}
+		},
+		"strictTemplates": false
 	},
 	"include": ["**/*.spec.ts", "**/*.d.ts"]
 }

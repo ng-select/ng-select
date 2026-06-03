@@ -1,11 +1,20 @@
-import { Component, ComponentFactoryResolver, Directive, OnInit, ViewContainerRef, input, inject, viewChild } from '@angular/core';
+import {
+	Component,
+	ComponentFactoryResolver,
+	Directive,
+	OnInit,
+	ViewContainerRef,
+	input,
+	inject,
+	viewChild,
+	ChangeDetectionStrategy,
+} from '@angular/core';
 import { EXAMPLE_COMPONENTS } from '../../examples/examples';
 import { StackblitzButtonComponent } from './stackblitz-button/stackblitz-button.component';
 
 @Directive({ selector: '[example-host]' })
 export class ExampleHostDirective {
 	viewContainerRef = inject(ViewContainerRef);
-
 }
 
 @Component({
@@ -30,6 +39,7 @@ export class ExampleHostDirective {
 			}
 		`,
 	],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [StackblitzButtonComponent, ExampleHostDirective],
 })
 export class ExampleViewerComponent implements OnInit {

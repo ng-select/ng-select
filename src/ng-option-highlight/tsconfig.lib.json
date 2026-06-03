@@ -4,16 +4,27 @@
 		"outDir": "../../out-tsc/lib",
 		"declaration": true,
 		"inlineSources": true,
-		"types": ["node"],
-		"lib": ["ES2022", "dom", "esnext"]
+		"types": [
+			"node"
+		],
+		"lib": [
+			"ES2022",
+			"dom",
+			"esnext"
+		]
 	},
 	"angularCompilerOptions": {
 		"compilationMode": "partial",
-		"skipTemplateCodegen": true,
-		"strictMetadataEmit": true,
-		"fullTemplateTypeCheck": true,
+		"extendedDiagnostics": {
+			"checks": {
+				"nullishCoalescingNotNullable": "suppress",
+				"optionalChainNotNullable": "suppress"
+			}
+		},
 		"strictInjectionParameters": true,
-		"enableResourceInlining": true
+		"strictTemplates": false
 	},
-	"exclude": ["**/*.spec.ts"]
+	"exclude": [
+		"**/*.spec.ts"
+	]
 }

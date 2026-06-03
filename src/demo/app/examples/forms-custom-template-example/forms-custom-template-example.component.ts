@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataService } from '../data.service';
@@ -9,6 +9,7 @@ import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
 	selector: 'ng-forms-custom-template-example',
 	templateUrl: './forms-custom-template-example.component.html',
 	styleUrls: ['./forms-custom-template-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [
 		FormsModule,
 		ReactiveFormsModule,

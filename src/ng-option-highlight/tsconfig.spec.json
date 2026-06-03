@@ -4,5 +4,14 @@
 		"outDir": "../../out-tsc/spec",
 		"types": ["jasmine", "node"]
 	},
-	"include": ["**/*.spec.ts", "**/*.d.ts"]
+	"include": ["**/*.spec.ts", "**/*.d.ts"],
+	"angularCompilerOptions": {
+		"extendedDiagnostics": {
+			"checks": {
+				"nullishCoalescingNotNullable": "suppress",
+				"optionalChainNotNullable": "suppress"
+			}
+		},
+		"strictTemplates": false
+	}
 }

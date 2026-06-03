@@ -1,4 +1,4 @@
-import { Component, input, model, output } from '@angular/core';
+import { Component, input, model, output, ChangeDetectionStrategy } from '@angular/core';
 import { NgbDropdown, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 
@@ -58,6 +58,7 @@ type theme = 'default' | 'ant' | 'material';
 			</div>
 		</nav>
 	`,
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, FormsModule],
 })
 export class LayoutHeaderComponent {
