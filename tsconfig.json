@@ -32,6 +32,7 @@
     "noImplicitAny": false
   },
   "angularCompilerOptions": {
+    "compilationMode": "partial",
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictTemplates": false,
