@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgLabelTemplateDirective, NgPlaceholderTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
@@ -6,6 +6,7 @@ import { NgLabelTemplateDirective, NgPlaceholderTemplateDirective, NgSelectCompo
 	selector: 'ng-template-placeholder-example',
 	templateUrl: './template-placeholder-example.component.html',
 	styleUrls: ['./template-placeholder-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, NgPlaceholderTemplateDirective, NgLabelTemplateDirective],
 })
 export class TemplatePlaceholderExampleComponent {

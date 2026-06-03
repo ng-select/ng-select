@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgOptgroupTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 import { JsonPipe } from '@angular/common';
@@ -7,6 +7,7 @@ import { JsonPipe } from '@angular/common';
 	selector: 'ng-group-selectable-hidden-example',
 	templateUrl: './group-selectable-hidden-example.component.html',
 	styleUrls: ['./group-selectable-hidden-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, NgOptgroupTemplateDirective, JsonPipe],
 })
 export class GroupSelectableHiddenExampleComponent implements OnInit {
