@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DataService, Person } from '../data.service';
 import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 	selector: 'ng-data-source-backend-example',
 	templateUrl: './data-source-backend-example.component.html',
 	styleUrls: ['./data-source-backend-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, AsyncPipe],
 })
 export class DataSourceBackendExampleComponent implements OnInit {

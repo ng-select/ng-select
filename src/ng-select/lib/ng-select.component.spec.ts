@@ -1,4 +1,4 @@
-import { Component, DebugElement, ErrorHandler, NgZone, Type, viewChild, ViewEncapsulation } from '@angular/core';
+import { Component, DebugElement, ErrorHandler, NgZone, Type, viewChild, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { SIGNAL } from '@angular/core/primitives/signals';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
@@ -5915,6 +5915,7 @@ function createEvent(target = {}) {
 @Component({
 	template: ``,
 	standalone: true,
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectModule, FormsModule],
 })
 class NgSelectTestComponent {
@@ -6030,6 +6031,7 @@ class NgSelectTestComponent {
 @Component({
 	template: ``,
 	encapsulation: ViewEncapsulation.ShadowDom,
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectModule, FormsModule],
 })
 class EncapsulatedTestComponent extends NgSelectTestComponent {
@@ -6038,6 +6040,7 @@ class EncapsulatedTestComponent extends NgSelectTestComponent {
 
 @Component({
 	template: ``,
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectModule, FormsModule],
 })
 class NgSelectGroupingTestComponent {

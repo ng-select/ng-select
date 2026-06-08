@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DataService, Person } from '../data.service';
 import { map } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { NgOptgroupTemplateDirective, NgOptionTemplateDirective, NgSelectCompone
 	selector: 'ng-multi-checkbox-example',
 	templateUrl: './multi-checkbox-example.component.html',
 	styleUrls: ['./multi-checkbox-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, NgOptgroupTemplateDirective, NgOptionTemplateDirective, UpperCasePipe, JsonPipe],
 })
 export class MultiCheckboxExampleComponent implements OnInit {

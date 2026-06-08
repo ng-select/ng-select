@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgOptionHighlightDirective } from './ng-option-highlight.directive';
 import { By } from '@angular/platform-browser';
@@ -14,6 +14,7 @@ import { By } from '@angular/platform-browser';
 		}
 		<span id="test6" [ngOptionHighlight]="term">+My text is) high\\lighted</span>
 	`,
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgOptionHighlightDirective],
 })
 class TestComponent {

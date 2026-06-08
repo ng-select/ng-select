@@ -68,6 +68,10 @@ export type AddTagFn = (term: string) => any | Promise<any>;
 export type CompareWithFn = (a: any, b: any) => boolean;
 export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 
+function optionalBooleanAttribute(value: unknown): boolean | undefined {
+	return value == null ? undefined : booleanAttribute(value);
+}
+
 @Component({
 	selector: 'ng-select',
 	exportAs: 'ngSelect',
@@ -81,7 +85,7 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 		},
 		NgDropdownPanelService,
 	],
-	encapsulation: ViewEncapsulation.None,
+	encapsulation: ViewEncapsulation.None	,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent],
 	host: {
@@ -176,8 +180,15 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly _bufferAmount = input(4, { alias: 'bufferAmount', transform: numberAttribute });
 	readonly bufferAmount = linkedSignal(() => this._bufferAmount());
 
-	readonly _virtualScroll = input<boolean, unknown>(undefined, { alias: 'virtualScroll', transform: booleanAttribute });
+	readonly _virtualScroll = input<boolean | undefined, unknown>(undefined, {
+		alias: 'virtualScroll',
+		transform: optionalBooleanAttribute,
+	});
 	readonly virtualScroll = linkedSignal(() => this._virtualScroll());
+	readonly dropdownVirtualScroll = computed(() => {
+		const value = this._virtualScroll();
+		return isDefined(value) ? value : this.isVirtualScrollDisabled(this.config);
+	});
 
 	readonly _selectableGroup = input(false, { alias: 'selectableGroup', transform: booleanAttribute });
 	readonly selectableGroup = linkedSignal(() => this._selectableGroup());
@@ -709,7 +720,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const handleTag = (item) =>
 			this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item);
 		if (isPromise(tag)) {
-			tag.then((item) => this.select(handleTag(item))).catch(() => { });
+			tag.then((item) => this.select(handleTag(item))).catch(() => {});
 		} else if (tag) {
 			this.select(handleTag(tag));
 		}
@@ -821,9 +832,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
-	private _onChange = (_: any) => { };
+	private _onChange = (_: any) => {};
 
-	private _onTouched = () => { };
+	private _onTouched = () => {};
 
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];
@@ -1173,7 +1184,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	 *  @returns `true` if virtual scroll is enabled, `false` otherwise
 	 */
 	private getVirtualScroll(config: NgSelectConfig): boolean {
-		return isDefined(this.virtualScroll) ? this.virtualScroll() : this.isVirtualScrollDisabled(config);
+		return isDefined(this._virtualScroll()) ? this._virtualScroll()! : this.isVirtualScrollDisabled(config);
 	}
 
 	/**

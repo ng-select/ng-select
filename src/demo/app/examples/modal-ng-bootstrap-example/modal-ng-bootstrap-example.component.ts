@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, TemplateRef, inject } from '@angular/core';
+import { Component, TemplateRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectComponent } from '@ng-select/ng-select';
@@ -10,6 +10,7 @@ import { DataService, Person } from '../data.service';
 	selector: 'ng-modal-ng-bootstrap-example',
 	templateUrl: './modal-ng-bootstrap-example.component.html',
 	styleUrls: ['./modal-ng-bootstrap-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, AsyncPipe],
 })
 export class ModalNgBootstrapExampleComponent {

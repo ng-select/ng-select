@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 	selector: 'ng-multi-select-limit-example',
 	templateUrl: './multi-select-limit-example.component.html',
 	styleUrls: ['./multi-select-limit-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, AsyncPipe],
 })
 export class MultiSelectLimitExampleComponent implements OnInit {
