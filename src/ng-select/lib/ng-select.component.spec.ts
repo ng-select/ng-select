@@ -2027,6 +2027,66 @@ describe('NgSelectComponent', () => {
 				expect(panelElement?.matches(':popover-open')).toBe(true);
 			}));
 		});
+
+		it('should update dropdown Y position when select resizes (popover true)', fakeAsync(() => {
+			const originalRO = (globalThis as any).ResizeObserver;
+
+			let lastInstance: any = null;
+
+			class MockResizeObserver {
+				callback: any;
+
+				constructor(cb: any) {
+					this.callback = cb;
+					lastInstance = this;
+				}
+
+				observe() {}
+
+				disconnect() {}
+			}
+
+			(globalThis as any).ResizeObserver = MockResizeObserver;
+
+			try {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`
+					<ng-select
+						[items]="cities"
+						bindLabel="name"
+						[multiple]="true"
+						[popover]="true"
+						[(ngModel)]="selectedCities"></ng-select>
+					`,
+				);
+
+				fixture.componentInstance.cities = [
+					{ id: 1, name: 'New York' },
+					{ id: 2, name: 'Vilnius' },
+				];
+
+				tickAndDetectChanges(fixture);
+
+				const select = fixture.componentInstance.select();
+
+				select.open();
+				tickAndDetectChanges(fixture);
+
+				const dropdownPanel = select.dropdownPanel();
+				const updateYPositionSpy = spyOn(dropdownPanel as any, '_updateYPosition').and.callThrough();
+
+				expect(lastInstance).toBeDefined();
+
+				lastInstance.callback();
+
+				tickAndDetectChanges(fixture);
+
+				expect(updateYPositionSpy).toHaveBeenCalled();
+			} finally {
+				(globalThis as any).ResizeObserver = originalRO;
+			}
+		}));
 	});
 
 	describe('Keyboard events', () => {
