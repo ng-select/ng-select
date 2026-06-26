@@ -1,4 +1,4 @@
-import { Component, DebugElement, ErrorHandler, NgZone, Type, viewChild, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DebugElement, ErrorHandler, NgZone, Type, viewChild, ViewEncapsulation } from '@angular/core';
 import { SIGNAL } from '@angular/core/primitives/signals';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
@@ -2693,6 +2693,38 @@ describe('NgSelectComponent', () => {
 			document.getElementById('select').dispatchEvent(event);
 			tickAndDetectChanges(fixture);
 			expect(select.isOpen()).toBeTruthy();
+		}));
+
+		it('should close dropdown when clicking outside if NgSelectConfig is provided as a partial object without outsideClickEvent', fakeAsync(() => {
+			// Simulate real-world usage: `{ provide: NgSelectConfig, useValue: { appendTo: 'body' } }`
+			// where outsideClickEvent is undefined because the plain object lacks that property.
+			TestBed.resetTestingModule();
+			TestBed.configureTestingModule({
+				imports: [FormsModule, NgSelectModule],
+				providers: [
+					{ provide: ErrorHandler, useClass: TestsErrorHandler },
+					{ provide: NgZone, useFactory: () => new MockNgZone() },
+					{ provide: ConsoleService, useFactory: () => new MockConsole() },
+					{ provide: NgSelectConfig, useValue: { appendTo: 'body' } },
+				],
+			}).overrideComponent(NgSelectTestComponent, {
+				set: {
+					template: `<div id="outside2">Outside</div>
+					<ng-select id="select2" [items]="cities" bindLabel="name" [(ngModel)]="selectedCity"></ng-select>`,
+				},
+			});
+			TestBed.compileComponents();
+			const partialFixture = TestBed.createComponent(NgSelectTestComponent);
+			partialFixture.detectChanges();
+			const partialSelect = partialFixture.componentInstance.select();
+
+			triggerKeyDownEvent(getNgSelectElement(partialFixture), KeyCode.Space);
+			tickAndDetectChanges(partialFixture);
+			expect(partialSelect.isOpen()).toBeTruthy();
+
+			document.getElementById('outside2').click();
+			tickAndDetectChanges(partialFixture);
+			expect(partialSelect.isOpen()).toBeFalsy();
 		}));
 	});
 
@@ -5900,12 +5932,12 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
 
 function createEvent(target = {}) {
 	return {
-		preventDefault: () => {},
+		preventDefault: () => { },
 		target: {
 			className: '',
 			tagName: '',
 			classList: {
-				contains: () => {},
+				contains: () => { },
 			},
 			...target,
 		},
@@ -5915,7 +5947,6 @@ function createEvent(target = {}) {
 @Component({
 	template: ``,
 	standalone: true,
-	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectModule, FormsModule],
 })
 class NgSelectTestComponent {
@@ -5983,7 +6014,7 @@ class NgSelectTestComponent {
 		},
 		{ id: 3, description: { name: 'Australia', id: 'c' } },
 	];
-	keyDownFn = () => {};
+	keyDownFn = () => { };
 
 	tagFunc(term: string) {
 		return { id: term, name: term, custom: true };
@@ -6005,33 +6036,32 @@ class NgSelectTestComponent {
 		this.visible = !this.visible;
 	}
 
-	onChange(_: any) {}
+	onChange(_: any) { }
 
-	onFocus(_: Event) {}
+	onFocus(_: Event) { }
 
-	onBlur(_: Event) {}
+	onBlur(_: Event) { }
 
-	onOpen() {}
+	onOpen() { }
 
-	onClose() {}
+	onClose() { }
 
-	onAdd(_: Event) {}
+	onAdd(_: Event) { }
 
-	onRemove(_: Event) {}
+	onRemove(_: Event) { }
 
-	onClear() {}
+	onClear() { }
 
-	onSearch(_: any) {}
+	onSearch(_: any) { }
 
-	onScroll() {}
+	onScroll() { }
 
-	onScrollToEnd() {}
+	onScrollToEnd() { }
 }
 
 @Component({
 	template: ``,
 	encapsulation: ViewEncapsulation.ShadowDom,
-	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectModule, FormsModule],
 })
 class EncapsulatedTestComponent extends NgSelectTestComponent {
@@ -6040,7 +6070,6 @@ class EncapsulatedTestComponent extends NgSelectTestComponent {
 
 @Component({
 	template: ``,
-	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectModule, FormsModule],
 })
 class NgSelectGroupingTestComponent {
