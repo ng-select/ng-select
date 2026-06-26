@@ -168,6 +168,42 @@ describe('NgSelectComponent', () => {
 		});
 	});
 
+	describe('Input attributes', () => {
+		it('should update search input attributes when inputAttrs binding changes', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" [inputAttrs]="inputAttrs"></ng-select>`,
+			);
+
+			tickAndDetectChanges(fixture);
+
+			const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+			expect(input.getAttribute('aria-invalid')).toBe('false');
+
+			fixture.componentInstance.inputAttrs = { 'aria-invalid': 'true' };
+			tickAndDetectChanges(fixture);
+
+			expect(input.getAttribute('aria-invalid')).toBe('true');
+		}));
+
+		it('should update search input attributes when inputAttrs signal is set programmatically', fakeAsync(() => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" [inputAttrs]="inputAttrs"></ng-select>`,
+			);
+
+			tickAndDetectChanges(fixture);
+
+			const select = fixture.componentInstance.select();
+			const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+			select.inputAttrs.set({ 'aria-invalid': 'true' });
+			tickAndDetectChanges(fixture);
+
+			expect(input.getAttribute('aria-invalid')).toBe('true');
+		}));
+	});
+
 	describe('Data source', () => {
 		it('should set items from primitive numbers array', fakeAsync(() => {
 			const fixture = createTestingModule(
@@ -5973,6 +6009,7 @@ class NgSelectTestComponent {
 	preventToggleOnRightClick = false;
 	searchWhileComposing = true;
 	popoverEnabled = false;
+	inputAttrs = { 'aria-invalid': 'false' };
 
 	citiesLoading = false;
 	selectedCityId: number;

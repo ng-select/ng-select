@@ -26,6 +26,7 @@ import {
 	signal,
 	SimpleChanges,
 	TemplateRef,
+	untracked,
 	viewChild,
 	ViewEncapsulation,
 } from '@angular/core';
@@ -319,6 +320,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._mergeGlobalConfig(config);
 		this.itemsList = new ItemsList(this, newSelectionModel ? newSelectionModel() : DefaultSelectionModelFactory());
 		this.element = _elementRef.nativeElement;
+		this._handleSignalChanges();
 	}
 
 	private _focused: boolean;
@@ -379,24 +381,28 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		if (changes.multiple) {
+		const multipleChange = changes._multiple ?? changes.multiple;
+		const itemsChange = changes.items;
+		const isOpenChange = changes.isOpen;
+		const groupByChange = changes._groupBy ?? changes.groupBy;
+
+		if (multipleChange?.firstChange) {
 			this.itemsList.clearSelected(false);
 		}
-		if (changes.items) {
+
+		if (itemsChange?.firstChange) {
 			this._itemsAreUsed = true;
-			this._setItems(changes.items.currentValue || []);
+			this._setItems(itemsChange.currentValue || []);
 		}
-		if (changes.isOpen) {
-			this._manualOpen = isDefined(changes.isOpen.currentValue);
+
+		if (isOpenChange) {
+			this._manualOpen = isDefined(isOpenChange.currentValue);
 		}
-		if (changes.groupBy) {
-			if (!changes.items) {
-				this._setItems([...this.items()]);
-			}
+
+		if (groupByChange?.firstChange && !itemsChange) {
+			this._setItems([...this.items()]);
 		}
-		if (changes.inputAttrs) {
-			this._setInputAttributes();
-		}
+
 		this._setTabFocusOnClear();
 	}
 
@@ -780,6 +786,70 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	private _onChange = (_: any) => {};
 
 	private _onTouched = () => {};
+
+	private _handleSignalChanges() {
+		let itemsInitialized = false;
+		effect(
+			() => {
+				const items = this.items();
+
+				if (!itemsInitialized) {
+					itemsInitialized = true;
+					return;
+				}
+
+				untracked(() => {
+					this._itemsAreUsed = true;
+					this._setItems(items || []);
+				});
+			},
+			{ injector: this._injector },
+		);
+
+		let multipleInitialized = false;
+		effect(
+			() => {
+				this.multiple();
+
+				if (!multipleInitialized) {
+					multipleInitialized = true;
+					return;
+				}
+
+				untracked(() => this.itemsList.clearSelected(false));
+			},
+			{ injector: this._injector },
+		);
+
+		let groupByInitialized = false;
+		effect(
+			() => {
+				this.groupBy();
+
+				if (!groupByInitialized) {
+					groupByInitialized = true;
+					return;
+				}
+
+				untracked(() => this._setItems([...this.items()]));
+			},
+			{ injector: this._injector },
+		);
+
+		effect(
+			() => {
+				this.inputAttrs();
+				const input = this.searchInput();
+
+				if (!input) {
+					return;
+				}
+
+				untracked(() => this._setInputAttributes());
+			},
+			{ injector: this._injector },
+		);
+	}
 
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];
