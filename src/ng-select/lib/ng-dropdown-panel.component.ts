@@ -239,7 +239,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 
 		this._zone.runOutsideAngular(() => {
-			fromEvent(this._document, this.outsideClickEvent(), { capture: true })
+			fromEvent(this._document, this.outsideClickEvent() ?? 'click', { capture: true })
 				.pipe(takeUntilDestroyed(this._destroyRef))
 				.subscribe(($event) => this._checkToClose($event));
 		});
