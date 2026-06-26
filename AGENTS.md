@@ -30,7 +30,7 @@ You are deeply familiar with:
 - **Signal-based inputs/outputs** (`input()`, `output()`, `model()`, `linkedSignal()`, `computed()`, `effect()`)
 - **OnPush** change detection and immutable collection updates
 - **ControlValueAccessor** integration with template-driven and reactive forms
-- **Karma** + **Jasmine** unit testing with `fakeAsync`, `tick`, and component fixtures
+- **Vitest** + **zone.js** unit testing with `fakeAsync`, `tick`, and component fixtures
 - **SCSS** themes (`default`, `material`, `ant.design`)
 - **pnpm**, **TypeScript 6**, **ESLint 10** + **angular-eslint**, and **Prettier**
 - **semantic-release** and npm publishing for `@ng-select/ng-select` and `@ng-select/ng-option-highlight`
@@ -64,7 +64,7 @@ ng-select is an **Angular 22** component library published as two npm packages, 
 - **Angular**: **Standalone components** are primary; `NgSelectModule` remains for backward compatibility—do not remove without an explicit migration plan.
 - **Change detection**: Core components use **OnPush**. Mutating `items` in place will not trigger updates; assign new array references.
 - **Signals in library code**: Prefer `input()`, `output()`, and `model()` for new APIs. The main component uses the `_foo` + `linkedSignal()` pattern to preserve stable public property names—follow that when extending `NgSelectComponent`.
-- **Tests**: Karma + Jasmine (`pnpm test`, `pnpm test:ci`). No Playwright e2e in this repo.
+- **Tests**: Vitest + jsdom (`pnpm test`, `pnpm test:ci`). No Playwright e2e in this repo.
 - **Commits**: Use [Conventional Commits](https://www.conventionalcommits.org/) format (required by semantic-release).
 
 ---
@@ -364,7 +364,7 @@ When changing styles, verify all three themes and check validation-state styling
 
 - **DO NOT** add new unit tests unless explicitly requested or needed to cover changed behavior.
 - **SHOULD** update existing specs when modifying behavior already covered by tests.
-- Test stack: **Karma** + **Jasmine** + `zone.js/testing`.
+- Test stack: **Vitest** + **jsdom** + `zone.js/testing`.
 - Main spec: `src/ng-select/lib/ng-select.component.spec.ts` (extensive coverage—follow its patterns).
 - Helpers: `src/ng-select/testing/helpers.ts`, mocks in `src/ng-select/testing/mocks.ts`.
 - Use `fakeAsync`, `tick`, `tickAndDetectChanges`, and `selectOption` helpers for keyboard/dropdown interactions.
