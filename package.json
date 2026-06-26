@@ -63,9 +63,8 @@
 		"@eslint/js": "^10.0.1",
 		"@semantic-release/changelog": "^6.0.3",
 		"@stackblitz/sdk": "^1.11.0",
-		"@types/jasmine": "~6.0.0",
-		"@types/jasminewd2": "^2.0.13",
 		"@types/node": "^26.0.1",
+		"@vitest/coverage-v8": "^4.1.9",
 		"angular-eslint": "22.0.0",
 		"baseline-browser-mapping": "^2.10.40",
 		"coveralls": "^3.1.1",
@@ -75,13 +74,7 @@
 		"eslint-plugin-jsdoc": "63.0.9",
 		"eslint-plugin-prefer-arrow": "^1.2.3",
 		"istanbul-lib-instrument": "^6.0.3",
-		"jasmine-core": "~6.3.0",
-		"jasmine-spec-reporter": "~7.0.0",
-		"karma": "~6.4.4",
-		"karma-chrome-launcher": "~3.2.0",
-		"karma-coverage": "^2.2.1",
-		"karma-jasmine": "~5.1.0",
-		"karma-jasmine-html-reporter": "^2.2.0",
+		"jsdom": "^29.1.1",
 		"ng-packagr": "^22.0.0",
 		"node-gyp": "^13.0.0",
 		"patch-package": "^8.0.1",
@@ -91,6 +84,7 @@
 		"standard-version": "^9.5.0",
 		"ts-node": "~10.9.2",
 		"typescript": "~6.0.3",
-		"typescript-eslint": "8.62.0"
+		"typescript-eslint": "8.62.0",
+		"vitest": "^4.1.9"
 	}
 }
