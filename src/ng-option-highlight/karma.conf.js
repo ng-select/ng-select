@@ -16,11 +16,7 @@ module.exports = function (config) {
 		coverageReporter: {
 			dir: require('path').join(__dirname, '../../coverage/'),
 			subdir: 'ng-option-highlight',
-			reporters: [
-				{ type: 'html' },
-				{ type: 'lcovonly' },
-				{ type: 'text-summary' }
-			],
+			reporters: [{ type: 'html' }, { type: 'lcovonly' }, { type: 'text-summary' }],
 			fixWebpackSourcePaths: true,
 		},
 		reporters: ['progress', 'kjhtml', 'coverage'],

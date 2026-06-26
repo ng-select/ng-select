@@ -143,6 +143,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._setupMousedownListener();
 		this._handleWindowScroll();
 		this._showPopoverIfNeeded();
+		this._handleSelectResize();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -404,9 +405,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			return;
 		}
 
-		this._parent = this._dropdown.shadowRoot
-			? this._dropdown.shadowRoot.querySelector(this.appendTo())
-			: document.querySelector(this.appendTo());
+		this._parent = this._dropdown.shadowRoot ? this._dropdown.shadowRoot.querySelector(this.appendTo()) : document.querySelector(this.appendTo());
 		if (!this._parent) {
 			throw new Error(`appendTo selector ${this.appendTo()} did not found any parent element`);
 		}
@@ -489,5 +488,24 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			this._updateXPosition();
 			this._updateYPosition();
 		}
+	}
+
+	private _handleSelectResize() {
+		if (!this.popover() || !this._select || typeof ResizeObserver === 'undefined') {
+			return;
+		}
+
+		this._zone.runOutsideAngular(() => {
+			const observer = new ResizeObserver(() => {
+				if (!this._parent) {
+					return;
+				}
+				this._updateXPosition();
+				this._updateYPosition();
+			});
+
+			observer.observe(this._select);
+			this._destroyRef.onDestroy(() => observer.disconnect());
+		});
 	}
 }

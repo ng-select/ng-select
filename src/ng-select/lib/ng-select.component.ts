@@ -26,6 +26,7 @@ import {
 	signal,
 	SimpleChanges,
 	TemplateRef,
+	untracked,
 	viewChild,
 	ViewEncapsulation,
 } from '@angular/core';
@@ -319,6 +320,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._mergeGlobalConfig(config);
 		this.itemsList = new ItemsList(this, newSelectionModel ? newSelectionModel() : DefaultSelectionModelFactory());
 		this.element = _elementRef.nativeElement;
+		this._handleSignalChanges();
 	}
 
 	private _focused: boolean;
@@ -379,24 +381,28 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		if (changes.multiple) {
+		const multipleChange = changes._multiple ?? changes.multiple;
+		const itemsChange = changes.items;
+		const isOpenChange = changes.isOpen;
+		const groupByChange = changes._groupBy ?? changes.groupBy;
+
+		if (multipleChange?.firstChange) {
 			this.itemsList.clearSelected(false);
 		}
-		if (changes.items) {
+
+		if (itemsChange?.firstChange) {
 			this._itemsAreUsed = true;
-			this._setItems(changes.items.currentValue || []);
+			this._setItems(itemsChange.currentValue || []);
 		}
-		if (changes.isOpen) {
-			this._manualOpen = isDefined(changes.isOpen.currentValue);
+
+		if (isOpenChange) {
+			this._manualOpen = isDefined(isOpenChange.currentValue);
 		}
-		if (changes.groupBy) {
-			if (!changes.items) {
-				this._setItems([...this.items()]);
-			}
+
+		if (groupByChange?.firstChange && !itemsChange) {
+			this._setItems([...this.items()]);
 		}
-		if (changes.inputAttrs) {
-			this._setInputAttributes();
-		}
+
 		this._setTabFocusOnClear();
 	}
 
@@ -664,10 +670,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			tag = this._primitive ? this.searchTerm : { [this.bindLabel()]: this.searchTerm };
 		}
 
-		const handleTag = (item) =>
-			this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item);
+		const handleTag = (item) => (this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item));
 		if (isPromise(tag)) {
-			tag.then((item) => this.select(handleTag(item))).catch(() => { });
+			tag.then((item) => this.select(handleTag(item))).catch(() => {});
 		} else if (tag) {
 			this.select(handleTag(tag));
 		}
@@ -695,8 +700,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	showNoItemsFound() {
 		const empty = this.itemsList.filteredItems.length === 0;
 		return (
-			((empty && !this.typeahead()?.observed && !this.loading()) ||
-				(empty && this.typeahead()?.observed && this._validTerm() && !this.loading())) &&
+			((empty && !this.typeahead()?.observed && !this.loading()) || (empty && this.typeahead()?.observed && this._validTerm() && !this.loading())) &&
 			!this.showAddTag
 		);
 	}
@@ -779,9 +783,73 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
-	private _onChange = (_: any) => { };
+	private _onChange = (_: any) => {};
 
-	private _onTouched = () => { };
+	private _onTouched = () => {};
+
+	private _handleSignalChanges() {
+		let itemsInitialized = false;
+		effect(
+			() => {
+				const items = this.items();
+
+				if (!itemsInitialized) {
+					itemsInitialized = true;
+					return;
+				}
+
+				untracked(() => {
+					this._itemsAreUsed = true;
+					this._setItems(items || []);
+				});
+			},
+			{ injector: this._injector },
+		);
+
+		let multipleInitialized = false;
+		effect(
+			() => {
+				this.multiple();
+
+				if (!multipleInitialized) {
+					multipleInitialized = true;
+					return;
+				}
+
+				untracked(() => this.itemsList.clearSelected(false));
+			},
+			{ injector: this._injector },
+		);
+
+		let groupByInitialized = false;
+		effect(
+			() => {
+				this.groupBy();
+
+				if (!groupByInitialized) {
+					groupByInitialized = true;
+					return;
+				}
+
+				untracked(() => this._setItems([...this.items()]));
+			},
+			{ injector: this._injector },
+		);
+
+		effect(
+			() => {
+				this.inputAttrs();
+				const input = this.searchInput();
+
+				if (!input) {
+					return;
+				}
+
+				untracked(() => this._setInputAttributes());
+			},
+			{ injector: this._injector },
+		);
+	}
 
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];
@@ -852,9 +920,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 		const validateBinding = (item: any): boolean => {
 			if (!isDefined(this.compareWith()) && isObject(item) && this.bindValue()) {
-				this._console.warn(
-					`Setting object(${JSON.stringify(item)}) as your model with bindValue is not allowed unless [compareWith] is used.`,
-				);
+				this._console.warn(`Setting object(${JSON.stringify(item)}) as your model with bindValue is not allowed unless [compareWith] is used.`);
 				return false;
 			}
 			return true;
@@ -1099,9 +1165,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 	private _nextItemIsTag(nextStep: number): boolean {
 		const nextIndex = this.itemsList.markedIndex + nextStep;
-		return (
-			this.addTag() && this.searchTerm && this.itemsList.markedItem && (nextIndex < 0 || nextIndex === this.itemsList.filteredItems.length)
-		);
+		return this.addTag() && this.searchTerm && this.itemsList.markedItem && (nextIndex < 0 || nextIndex === this.itemsList.filteredItems.length);
 	}
 
 	private _handleBackspace() {

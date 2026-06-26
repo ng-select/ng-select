@@ -1,14 +1,4 @@
-import {
-	afterEveryRender,
-	booleanAttribute,
-	ChangeDetectionStrategy,
-	Component,
-	ElementRef,
-	inject,
-	input,
-	OnInit,
-	signal,
-} from '@angular/core';
+import { afterEveryRender, booleanAttribute, ChangeDetectionStrategy, Component, ElementRef, inject, input, OnInit, signal } from '@angular/core';
 
 @Component({
 	selector: 'ng-option',
@@ -17,7 +7,6 @@ import {
 	template: `<ng-content />`,
 })
 export class NgOptionComponent implements OnInit {
-
 	public readonly value = input<any>();
 	public readonly disabled = input(false, {
 		transform: booleanAttribute,

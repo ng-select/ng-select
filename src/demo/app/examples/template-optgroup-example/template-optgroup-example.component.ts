@@ -8,14 +8,7 @@ import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
 	templateUrl: './template-optgroup-example.component.html',
 	styleUrls: ['./template-optgroup-example.component.scss'],
 	changeDetection: ChangeDetectionStrategy.Eager,
-	imports: [
-		NgSelectComponent,
-		FormsModule,
-		NgLabelTemplateDirective,
-		NgOptgroupTemplateDirective,
-		NgOptionTemplateDirective,
-		NgOptionHighlightDirective,
-	],
+	imports: [NgSelectComponent, FormsModule, NgLabelTemplateDirective, NgOptgroupTemplateDirective, NgOptionTemplateDirective, NgOptionHighlightDirective],
 })
 export class TemplateOptgroupExampleComponent implements OnInit {
 	cities = [

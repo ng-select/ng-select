@@ -5,9 +5,7 @@
 		<img height="15" width="15" [src]="item.avatar" />
 		<b>{{ item.name }}</b>
 	</ng-template>
-	<ng-template ng-optgroup-tmp let-item="item" let-index="index">
-		City group logo <img height="15" width="15" [src]="item.avatar" />
-	</ng-template>
+	<ng-template ng-optgroup-tmp let-item="item" let-index="index"> City group logo <img height="15" width="15" [src]="item.avatar" /> </ng-template>
 	<ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
 		<b [ngOptionHighlight]="search">{{ item.name }}</b>
 	</ng-template>

@@ -1,12 +1,6 @@
 <p>Custom template for all selected items using <b>ng-multi-label-tmp</b></p>
 
-<ng-select
-	[items]="githubUsers$ | async"
-	[multiple]="true"
-	bindLabel="login"
-	bindValue="login"
-	placeholder="Select items"
-	[(ngModel)]="selectedUsers">
+<ng-select [items]="githubUsers$ | async" [multiple]="true" bindLabel="login" bindValue="login" placeholder="Select items" [(ngModel)]="selectedUsers">
 	<ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
 		@for (item of items | slice: 0 : 2; track item) {
 			<div class="ng-value">
