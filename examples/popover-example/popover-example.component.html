@@ -4,8 +4,8 @@
 </p>
 
 <p>
-	If ng-select is placed inside an element with <code>overflow: hidden</code>, or inside a component that is already rendered in a
-	top-layer, the dropdown panel can be clipped or appear behind that container.
+	If ng-select is placed inside an element with <code>overflow: hidden</code>, or inside a component that is already rendered in a top-layer, the dropdown
+	panel can be clipped or appear behind that container.
 </p>
 
 <p>It can be fixed by setting <b>[popover]="true"</b>, which forces the dropdown panel to be displayed in a top-layer.</p>
@@ -27,9 +27,7 @@
 <div class="alert alert-info">
 	<strong>Use <code>[popover]="true"</code> when:</strong>
 	<ul class="mb-0 mt-1">
-		<li>
-			The select is inside a container with <code>overflow: hidden</code>, <code>overflow: auto</code> or <code>overflow: clip</code>
-		</li>
+		<li>The select is inside a container with <code>overflow: hidden</code>, <code>overflow: auto</code> or <code>overflow: clip</code></li>
 		<li>The select is rendered inside a modal, dialog or any other component already using the HTML top-layer</li>
 		<li>The dropdown appears behind another element because of stacking context or z-index constraints</li>
 	</ul>
@@ -39,8 +37,7 @@
 		<li>You are already using <code>appendTo</code>; both options solve similar positioning problems and should not be combined</li>
 		<li>
 			You need to support browsers without the
-			<a href="https://caniuse.com/mdn-api_htmlelement_showpopover" target="_blank">Popover API</a> (Chrome 114+, Firefox 125+, Safari
-			17+)
+			<a href="https://caniuse.com/mdn-api_htmlelement_showpopover" target="_blank">Popover API</a> (Chrome 114+, Firefox 125+, Safari 17+)
 		</li>
 	</ul>
 </div>
