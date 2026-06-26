@@ -13,3 +13,5 @@ dist.tgz
 
 .nx/cache
 .nx/workspace-data
+.superpowers/
+jasmine-vitest-*.md
