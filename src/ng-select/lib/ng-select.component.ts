@@ -85,7 +85,7 @@ function optionalBooleanAttribute(value: unknown): boolean | undefined {
 		},
 		NgDropdownPanelService,
 	],
-	encapsulation: ViewEncapsulation.None	,
+	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	imports: [NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent],
 	host: {
@@ -104,82 +104,55 @@ function optionalBooleanAttribute(value: unknown): boolean | undefined {
 export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
 	readonly classes = inject(new HostAttributeToken('class'), { optional: true });
 	readonly config = inject(NgSelectConfig);
-	private readonly _cd = inject(ChangeDetectorRef);
-	private readonly _console = inject(ConsoleService);
-	private readonly _destroyRef = inject(DestroyRef);
-
 	// signals
 	public readonly _disabled = signal<boolean>(false);
 	// inputs: underscored input() + alias + linkedSignal() for stable public names (back compat)
 	readonly _ariaLabelDropdown = input<string>(undefined, { alias: 'ariaLabelDropdown' });
 	readonly ariaLabelDropdown = linkedSignal(() => this._ariaLabelDropdown());
-
 	readonly _ariaLabel = input<string | undefined>(undefined, { alias: 'ariaLabel' });
 	readonly ariaLabel = linkedSignal(() => this._ariaLabel());
-
 	readonly _markFirst = input(true, { alias: 'markFirst', transform: booleanAttribute });
 	readonly markFirst = linkedSignal(() => this._markFirst());
-
 	readonly _placeholder = input<string>(this.config.placeholder, { alias: 'placeholder' });
 	readonly placeholder = linkedSignal(() => this._placeholder());
-
 	readonly _fixedPlaceholder = input<boolean>(true, { alias: 'fixedPlaceholder' });
 	readonly fixedPlaceholder = linkedSignal(() => this._fixedPlaceholder());
-
 	readonly _notFoundText = input<string>(undefined, { alias: 'notFoundText' });
 	readonly notFoundText = linkedSignal(() => this._notFoundText());
-
 	readonly _typeToSearchText = input<string>(undefined, { alias: 'typeToSearchText' });
 	readonly typeToSearchText = linkedSignal(() => this._typeToSearchText());
-
 	readonly _preventToggleOnRightClick = input<boolean>(false, { alias: 'preventToggleOnRightClick' });
 	readonly preventToggleOnRightClick = linkedSignal(() => this._preventToggleOnRightClick());
-
 	readonly _addTagText = input<string>(undefined, { alias: 'addTagText' });
 	readonly addTagText = linkedSignal(() => this._addTagText());
-
 	readonly _loadingText = input<string>(undefined, { alias: 'loadingText' });
 	readonly loadingText = linkedSignal(() => this._loadingText());
-
 	readonly _clearAllText = input<string>(undefined, { alias: 'clearAllText' });
 	readonly clearAllText = linkedSignal(() => this._clearAllText());
-
 	readonly _dropdownPosition = input<DropdownPosition>('auto', { alias: 'dropdownPosition' });
 	readonly dropdownPosition = linkedSignal(() => this._dropdownPosition());
-
 	readonly _appendTo = input<string>(undefined, { alias: 'appendTo' });
 	readonly appendTo = linkedSignal(() => this._appendTo());
-
 	readonly _outsideClickEvent = input<'click' | 'mousedown'>(this.config.outsideClickEvent, { alias: 'outsideClickEvent' });
 	readonly outsideClickEvent = linkedSignal(() => this._outsideClickEvent());
-
 	readonly _loading = input(false, { alias: 'loading', transform: booleanAttribute });
 	readonly loading = linkedSignal(() => this._loading());
-
 	readonly _closeOnSelect = input(true, { alias: 'closeOnSelect', transform: booleanAttribute });
 	readonly closeOnSelect = linkedSignal(() => this._closeOnSelect());
-
 	readonly _hideSelected = input(false, { alias: 'hideSelected', transform: booleanAttribute });
 	readonly hideSelected = linkedSignal(() => this._hideSelected());
-
 	readonly _selectOnTab = input(false, { alias: 'selectOnTab', transform: booleanAttribute });
 	readonly selectOnTab = linkedSignal(() => this._selectOnTab());
-
 	readonly _openOnEnter = input(undefined, { alias: 'openOnEnter', transform: booleanAttribute });
 	readonly openOnEnter = linkedSignal(() => this._openOnEnter());
-
 	readonly _maxSelectedItems = input<number, unknown>(undefined, { alias: 'maxSelectedItems', transform: numberAttribute });
 	readonly maxSelectedItems = linkedSignal(() => this._maxSelectedItems());
-
 	readonly _groupBy = input<string | ((value: any) => any)>(undefined, { alias: 'groupBy' });
 	readonly groupBy = linkedSignal(() => this._groupBy());
-
 	readonly _groupValue = input<GroupValueFn>(undefined, { alias: 'groupValue' });
 	readonly groupValue = linkedSignal(() => this._groupValue());
-
 	readonly _bufferAmount = input(4, { alias: 'bufferAmount', transform: numberAttribute });
 	readonly bufferAmount = linkedSignal(() => this._bufferAmount());
-
 	readonly _virtualScroll = input<boolean | undefined, unknown>(undefined, {
 		alias: 'virtualScroll',
 		transform: optionalBooleanAttribute,
@@ -189,73 +162,50 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const value = this._virtualScroll();
 		return isDefined(value) ? value : this.isVirtualScrollDisabled(this.config);
 	});
-
 	readonly _selectableGroup = input(false, { alias: 'selectableGroup', transform: booleanAttribute });
 	readonly selectableGroup = linkedSignal(() => this._selectableGroup());
-
 	readonly _tabFocusOnClearButton = input<boolean | undefined>(undefined, { alias: 'tabFocusOnClearButton' });
 	readonly tabFocusOnClearButton = linkedSignal(() => this._tabFocusOnClearButton());
-
 	readonly _selectableGroupAsModel = input(true, { alias: 'selectableGroupAsModel', transform: booleanAttribute });
 	readonly selectableGroupAsModel = linkedSignal(() => this._selectableGroupAsModel());
-
 	readonly _searchFn = input(null, { alias: 'searchFn' });
 	readonly searchFn = linkedSignal(() => this._searchFn());
-
 	readonly _trackByFn = input(null, { alias: 'trackByFn' });
 	readonly trackByFn = linkedSignal(() => this._trackByFn());
-
 	readonly _clearOnBackspace = input(true, { alias: 'clearOnBackspace', transform: booleanAttribute });
 	readonly clearOnBackspace = linkedSignal(() => this._clearOnBackspace());
-
 	readonly _labelForId = input(null, { alias: 'labelForId' });
 	readonly labelForId = linkedSignal(() => this._labelForId());
-
 	readonly _inputAttrs = input<Record<string, string>>({}, { alias: 'inputAttrs' });
 	readonly inputAttrs = linkedSignal(() => this._inputAttrs());
-
 	readonly _tabIndex = input<number, unknown>(undefined, { alias: 'tabIndex', transform: numberAttribute });
 	readonly tabIndex = linkedSignal(() => this._tabIndex());
-
 	readonly _readonly = input(false, { alias: 'readonly', transform: booleanAttribute });
 	readonly readonly = linkedSignal(() => this._readonly());
-
 	readonly _searchWhileComposing = input(true, { alias: 'searchWhileComposing', transform: booleanAttribute });
 	readonly searchWhileComposing = linkedSignal(() => this._searchWhileComposing());
-
 	readonly _minTermLength = input(0, { alias: 'minTermLength', transform: numberAttribute });
 	readonly minTermLength = linkedSignal(() => this._minTermLength());
-
 	readonly _editableSearchTerm = input(false, { alias: 'editableSearchTerm', transform: booleanAttribute });
 	readonly editableSearchTerm = linkedSignal(() => this._editableSearchTerm());
-
 	readonly _ngClass = input(null, { alias: 'ngClass' });
 	readonly ngClass = linkedSignal(() => this._ngClass());
-
 	readonly _typeahead = input<Subject<string>>(undefined, { alias: 'typeahead' });
 	readonly typeahead = linkedSignal(() => this._typeahead());
-
 	readonly _multiple = input(false, { alias: 'multiple', transform: booleanAttribute });
 	readonly multiple = linkedSignal(() => this._multiple());
-
 	readonly _addTag = input<boolean | AddTagFn>(false, { alias: 'addTag' });
 	readonly addTag = linkedSignal(() => this._addTag());
-
 	readonly _searchable = input(true, { alias: 'searchable', transform: booleanAttribute });
 	readonly searchable = linkedSignal(() => this._searchable());
-
 	readonly _clearable = input(true, { alias: 'clearable', transform: booleanAttribute });
 	readonly clearable = linkedSignal(() => this._clearable());
-
 	readonly _clearKeepsDisabledOptions = input(true, { alias: 'clearKeepsDisabledOptions', transform: booleanAttribute });
 	readonly clearKeepsDisabledOptions = linkedSignal(() => this._clearKeepsDisabledOptions());
-
 	readonly _deselectOnClick = input<boolean>(undefined, { alias: 'deselectOnClick' });
 	readonly deselectOnClick = linkedSignal(() => this._deselectOnClick());
-
 	readonly _clearSearchOnAdd = input(undefined, { alias: 'clearSearchOnAdd' });
 	readonly clearSearchOnAdd = linkedSignal(() => this._clearSearchOnAdd());
-
 	readonly _compareWith = input(undefined, {
 		alias: 'compareWith',
 		transform: (fn: CompareWithFn | undefined) => {
@@ -266,20 +216,16 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		},
 	});
 	readonly compareWith = linkedSignal(() => this._compareWith());
-
 	readonly _keyDownFn = input<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true, { alias: 'keyDownFn' });
 	readonly keyDownFn = linkedSignal(() => this._keyDownFn());
-
 	readonly _popover = input(false, { alias: 'popover', transform: booleanAttribute });
 	readonly popover = linkedSignal(() => this._popover());
-
 	// models
 	readonly bindLabel = model<string>(undefined);
 	readonly bindValue = model<string>(undefined);
 	readonly appearance = model<string>(undefined);
 	readonly isOpen = model<boolean | undefined>(false);
 	readonly items = model<readonly any[]>([]);
-
 	// output events
 	readonly blurEvent = output<any>({ alias: 'blur' });
 	readonly focusEvent = output<any>({ alias: 'focus' });
@@ -298,7 +244,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		end: number;
 	}>({ alias: 'scroll' });
 	readonly scrollToEnd = output<any>({ alias: 'scrollToEnd' });
-
 	// computed
 	readonly disabled = computed(() => this.readonly() || this._disabled());
 	readonly clearSearchOnAddValue = computed(() => {
@@ -334,7 +279,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly loadingSpinnerTemplate = contentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef });
 	readonly clearButtonTemplate = contentChild(NgClearButtonTemplateDirective, { read: TemplateRef });
 	readonly ngOptions = contentChildren(NgOptionComponent, { descendants: true });
-
 	// view children queries
 	readonly dropdownPanel = viewChild(forwardRef(() => NgDropdownPanelComponent));
 	readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
@@ -342,17 +286,18 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	// public variables
 	readonly dropdownId = newId();
 	readonly element: HTMLElement;
-
 	// variables
 	escapeHTML = true;
 	itemsList: ItemsList;
 	viewPortItems: NgOption[] = [];
 	tabFocusOnClear = signal<boolean>(true);
+	private readonly _cd = inject(ChangeDetectorRef);
+	private readonly _console = inject(ConsoleService);
+	private readonly _destroyRef = inject(DestroyRef);
 	private readonly autoFocus = inject(new HostAttributeToken('autofocus'), { optional: true });
 	// private variables
 	private readonly _defaultLabel = 'label';
 	private readonly _editableSearchTermActive = computed(() => this.editableSearchTerm() && !this.multiple());
-	private _focused: boolean;
 	private _injector = inject(Injector);
 	private _isComposing = false;
 	private _itemsAreUsed: boolean;
@@ -376,12 +321,14 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.element = _elementRef.nativeElement;
 	}
 
-	get filtered() {
-		return (!!this.searchTerm && this.searchable()) || this._isComposing;
-	}
+	private _focused: boolean;
 
 	get focused() {
 		return this._focused;
+	}
+
+	get filtered() {
+		return (!!this.searchTerm && this.searchable()) || this._isComposing;
 	}
 
 	get searchTerm() {
@@ -1009,7 +956,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const model = [];
 		for (const item of this.selectedItems) {
 			if (this.bindValue()) {
-				let value = null;
+				let value;
 				if (item.children) {
 					const groupKey = this.groupValue() ? this.bindValue() : <string>this.groupBy();
 					value = item.value[groupKey || <string>this.groupBy()];
