@@ -115,6 +115,7 @@
 					[attr.role]="item.children ? 'group' : 'option'"
 					(click)="toggleItem(item)"
 					(mouseover)="onItemHover(item)"
+					[ngClass]="item.classes"
 					[class.ng-option-disabled]="item.disabled"
 					[class.ng-option-selected]="item.selected"
 					[class.ng-optgroup]="item.children"

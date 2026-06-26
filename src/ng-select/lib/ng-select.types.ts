@@ -8,6 +8,7 @@ export interface NgOption {
 	marked?: boolean;
 	label?: string;
 	value?: string | any;
+	classes?: string;
 	parent?: NgOption;
 	children?: NgOption[];
 }

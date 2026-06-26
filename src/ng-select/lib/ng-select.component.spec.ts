@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import { Component, DebugElement, ErrorHandler, NgZone, Type, viewChild, ViewEncapsulation } from '@angular/core';
 import { SIGNAL } from '@angular/core/primitives/signals';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
@@ -1165,6 +1166,32 @@ describe('NgSelectComponent', () => {
 				];
 				tickAndDetectChanges(fixture);
 				expect(select.items().length).toEqual(2);
+			}));
+
+			it('should apply ng-option host classes to the root dropdown option', fakeAsync(() => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [(ngModel)]="selectedCityId">
+                        @for (city of cities; track city) {
+                            <ng-option [value]="city.id" [ngClass]="city.optionClass"><span>{{city.name}}</span></ng-option>
+                        }
+                    </ng-select>`,
+				);
+
+				fixture.componentInstance.cities = [
+					{ id: 1, name: 'New York', optionClass: 'custom-city' },
+					{ id: 2, name: 'London', optionClass: 'muted-city' },
+				];
+				tickAndDetectChanges(fixture);
+				select = fixture.componentInstance.select();
+				select.open();
+				tickAndDetectChanges(fixture);
+				fixture.detectChanges();
+
+				const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-dropdown-panel .ng-option');
+				expect(options[0].classList).toContain('custom-city');
+				expect(options[1].classList).toContain('muted-city');
+				expect(options[0].querySelector('span').classList).not.toContain('custom-city');
 			}));
 
 			it('should bind value', fakeAsync(() => {
@@ -5980,7 +6007,7 @@ function createEvent(target = {}) {
 @Component({
 	template: ``,
 	standalone: true,
-	imports: [NgSelectModule, FormsModule],
+	imports: [NgClass, NgSelectModule, FormsModule],
 })
 class NgSelectTestComponent {
 	readonly select = viewChild(NgSelectComponent);
