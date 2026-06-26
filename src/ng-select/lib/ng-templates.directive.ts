@@ -13,10 +13,8 @@ export class NgItemLabelDirective {
 
 	constructor() {
 		effect(() => {
-			this.element.nativeElement.innerHTML = this.escape()
-				? escapeHTML(this.ngItemLabel())
-				: this.ngItemLabel();
-		})
+			this.element.nativeElement.innerHTML = this.escape() ? escapeHTML(this.ngItemLabel()) : this.ngItemLabel();
+		});
 	}
 }
 

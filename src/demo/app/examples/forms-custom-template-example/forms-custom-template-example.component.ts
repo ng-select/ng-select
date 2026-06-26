@@ -10,14 +10,7 @@ import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
 	templateUrl: './forms-custom-template-example.component.html',
 	styleUrls: ['./forms-custom-template-example.component.scss'],
 	changeDetection: ChangeDetectionStrategy.Eager,
-	imports: [
-		FormsModule,
-		ReactiveFormsModule,
-		NgSelectComponent,
-		NgLabelTemplateDirective,
-		NgOptionTemplateDirective,
-		NgOptionHighlightDirective,
-	],
+	imports: [FormsModule, ReactiveFormsModule, NgSelectComponent, NgLabelTemplateDirective, NgOptionTemplateDirective, NgOptionHighlightDirective],
 })
 export class FormsCustomTemplateExampleComponent implements OnInit {
 	private fb = inject(FormBuilder);

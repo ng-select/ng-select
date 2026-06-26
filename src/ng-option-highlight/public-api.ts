@@ -3,4 +3,3 @@
  */
 
 export * from './lib/ng-option-highlight.directive';
-

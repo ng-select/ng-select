@@ -41,11 +41,11 @@ You are deeply familiar with:
 
 ng-select is an **Angular 22** component library published as two npm packages, with a demo application for interactive documentation.
 
-| Package | Path | Purpose |
-| ------- | ---- | ------- |
-| `@ng-select/ng-select` | `src/ng-select/` | Main select/multiselect/autocomplete component |
-| `@ng-select/ng-option-highlight` | `src/ng-option-highlight/` | Optional directive to highlight search terms in options |
-| `demo` | `src/demo/` | Documentation/demo app served locally and deployed to GitHub Pages |
+| Package                          | Path                       | Purpose                                                            |
+| -------------------------------- | -------------------------- | ------------------------------------------------------------------ |
+| `@ng-select/ng-select`           | `src/ng-select/`           | Main select/multiselect/autocomplete component                     |
+| `@ng-select/ng-option-highlight` | `src/ng-option-highlight/` | Optional directive to highlight search terms in options            |
+| `demo`                           | `src/demo/`                | Documentation/demo app served locally and deployed to GitHub Pages |
 
 - **Build/dev**: Angular CLI (`@angular/build:ng-packagr` for libraries, `@angular/build:application` for demo)
 - **Demo routing**: `src/demo/app/routes.ts` with example categories (data sources, forms, search, templates, etc.)
@@ -158,22 +158,22 @@ ng-select/
 
 ### Demo example categories (`src/demo/app/routes.ts`)
 
-| Route | Description |
-| ----- | ----------- |
-| `/data-sources` | Items from arrays, options, backend/async |
-| `/forms` | Reactive forms integration |
-| `/bindings` | `bindLabel`, `bindValue`, custom compare |
-| `/search` | Search, autocomplete, typeahead |
-| `/tags` | Custom tag creation |
-| `/templates` | Label, option, header/footer, loading templates |
-| `/multiselect` | Multiple selection patterns |
-| `/multiselect-checkbox` | Checkbox multiselect |
-| `/events` | Output events |
-| `/virtual-scroll` | Large lists |
-| `/dropdown-position` | Top/bottom/auto positioning |
-| `/append-to-element` | `appendTo` behavior |
-| `/popover` | Native Popover API |
-| `/grouping` | `groupBy` and selectable groups |
+| Route                   | Description                                     |
+| ----------------------- | ----------------------------------------------- |
+| `/data-sources`         | Items from arrays, options, backend/async       |
+| `/forms`                | Reactive forms integration                      |
+| `/bindings`             | `bindLabel`, `bindValue`, custom compare        |
+| `/search`               | Search, autocomplete, typeahead                 |
+| `/tags`                 | Custom tag creation                             |
+| `/templates`            | Label, option, header/footer, loading templates |
+| `/multiselect`          | Multiple selection patterns                     |
+| `/multiselect-checkbox` | Checkbox multiselect                            |
+| `/events`               | Output events                                   |
+| `/virtual-scroll`       | Large lists                                     |
+| `/dropdown-position`    | Top/bottom/auto positioning                     |
+| `/append-to-element`    | `appendTo` behavior                             |
+| `/popover`              | Native Popover API                              |
+| `/grouping`             | `groupBy` and selectable groups                 |
 
 Register new examples in `src/demo/app/examples/examples.ts`.
 
@@ -303,7 +303,7 @@ This project targets **Angular 22** with a signal-first component architecture i
 ### Change detection and reactivity
 
 - `NgSelectComponent` uses `ChangeDetectionStrategy.OnPush`.
-- Consumers must replace `items` arrays rather than mutating them in place (see README *Change Detection* section).
+- Consumers must replace `items` arrays rather than mutating them in place (see README _Change Detection_ section).
 - Internal state uses `signal`, `computed`, `linkedSignal`, and `effect` where appropriate.
 
 ### Input/output pattern in `NgSelectComponent`
@@ -467,9 +467,9 @@ These tips are **not** a second source of truth; they only help humans and assis
 
 ## Wrapper Files (do not duplicate content)
 
-| Location | Purpose |
-| -------- | ------- |
-| [`.cursor/rules/rules.mdc`](./.cursor/rules/rules.mdc) | Cursor always-applied rule: short pointer + critical constraints |
-| [`.github/copilot-instructions.md`](./.github/copilot-instructions.md) | GitHub Copilot: pointer to this file |
+| Location                                                               | Purpose                                                          |
+| ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| [`.cursor/rules/rules.mdc`](./.cursor/rules/rules.mdc)                 | Cursor always-applied rule: short pointer + critical constraints |
+| [`.github/copilot-instructions.md`](./.github/copilot-instructions.md) | GitHub Copilot: pointer to this file                             |
 
 When editing agent instructions, update **`AGENTS.md` first**, then adjust wrapper files to point here.

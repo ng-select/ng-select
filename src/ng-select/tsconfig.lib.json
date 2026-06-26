@@ -8,16 +8,8 @@
 		"strictNullChecks": false,
 		"strictPropertyInitialization": false,
 		"noImplicitAny": false,
-		"types": [
-			"node"
-		],
-		"lib": [
-			"ES2022",
-			"dom",
-			"esnext"
-		]
+		"types": ["node"],
+		"lib": ["ES2022", "dom", "esnext"]
 	},
-	"exclude": [
-		"**/*.spec.ts"
-	]
+	"exclude": ["**/*.spec.ts"]
 }

@@ -1,13 +1,4 @@
-import {
-	Component,
-	Directive,
-	OnInit,
-	ViewContainerRef,
-	input,
-	inject,
-	viewChild,
-	ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, Directive, OnInit, ViewContainerRef, input, inject, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { EXAMPLE_COMPONENTS } from '../../examples/examples';
 import { StackblitzButtonComponent } from './stackblitz-button/stackblitz-button.component';
 

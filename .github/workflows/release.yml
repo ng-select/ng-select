@@ -6,9 +6,8 @@ on:
       - master
 
 permissions:
-  id-token: write   # Required for npm trusted publishing (OIDC)
-  contents: write  # Required for semantic-release to push tags/commits
-
+  id-token: write # Required for npm trusted publishing (OIDC)
+  contents: write # Required for semantic-release to push tags/commits
 
 jobs:
   release:
@@ -26,8 +25,8 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "24"
-          cache: "pnpm"
+          node-version: '24'
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm i --frozen-lockfile

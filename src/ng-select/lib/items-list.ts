@@ -106,8 +106,7 @@ export class ItemsList {
 		} else if (this._ngSelect.bindValue()) {
 			findBy = (item) => !item.children && this.resolveNested(item.value, this._ngSelect.bindValue()) === value;
 		} else {
-			findBy = (item) =>
-				item.value === value || (!item.children && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel()));
+			findBy = (item) => item.value === value || (!item.children && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel()));
 		}
 		return this._items.find((item) => findBy(item));
 	}

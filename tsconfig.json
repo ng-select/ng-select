@@ -1,41 +1,32 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "esModuleInterop": true,
-    "declaration": false,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "ES2022",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "ES2022",
-      "dom"
-    ],
-    "paths": {
-      "@ng-select/ng-select": [
-        "./src/ng-select/public-api.ts"
-      ],
-      "@ng-select/ng-option-highlight": [
-        "./src/ng-option-highlight/public-api.ts"
-      ]
-    },
-    "useDefineForClassFields": false,
-    "strict": false,
-    "strictNullChecks": false,
-    "strictPropertyInitialization": false,
-    "noImplicitAny": false
-  },
-  "angularCompilerOptions": {
-    "compilationMode": "partial",
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictTemplates": false,
-    "strictInputAccessModifiers": false
-  },
+	"compileOnSave": false,
+	"compilerOptions": {
+		"outDir": "./dist/out-tsc",
+		"sourceMap": true,
+		"esModuleInterop": true,
+		"declaration": false,
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"experimentalDecorators": true,
+		"importHelpers": true,
+		"target": "ES2022",
+		"typeRoots": ["node_modules/@types"],
+		"lib": ["ES2022", "dom"],
+		"paths": {
+			"@ng-select/ng-select": ["./src/ng-select/public-api.ts"],
+			"@ng-select/ng-option-highlight": ["./src/ng-option-highlight/public-api.ts"]
+		},
+		"useDefineForClassFields": false,
+		"strict": false,
+		"strictNullChecks": false,
+		"strictPropertyInitialization": false,
+		"noImplicitAny": false
+	},
+	"angularCompilerOptions": {
+		"compilationMode": "partial",
+		"enableI18nLegacyMessageIdFormat": false,
+		"strictInjectionParameters": true,
+		"strictTemplates": false,
+		"strictInputAccessModifiers": false
+	}
 }

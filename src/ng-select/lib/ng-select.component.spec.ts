@@ -5,14 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import 'zone.js/testing';
-import {
-	getNgSelectElement,
-	getNgSelectNativeElement,
-	selectOption,
-	TestsErrorHandler,
-	tickAndDetectChanges,
-	triggerKeyDownEvent,
-} from '../testing/helpers';
+import { getNgSelectElement, getNgSelectNativeElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
 import { MockConsole, MockNgZone } from '../testing/mocks';
 import { NgSelectConfig } from './config.service';
 import { ConsoleService } from './console.service';
@@ -1924,11 +1917,7 @@ describe('NgSelectComponent', () => {
 		it('should override ariaLabelDropdown from NgSelectConfig when provided in template', fakeAsync(() => {
 			const config = new NgSelectConfig();
 			config.ariaLabelDropdown = 'Global Aria Label';
-			const fixture = createTestingModule(
-				NgSelectTestComponent,
-				`<ng-select [items]="cities" ariaLabelDropdown="Template Aria Label" />`,
-				config,
-			);
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" ariaLabelDropdown="Template Aria Label" />`, config);
 
 			const select = fixture.componentInstance.select();
 			select.open();
@@ -1961,10 +1950,7 @@ describe('NgSelectComponent', () => {
 			}));
 
 			it('should pass popover true to dropdown panel when set to true', fakeAsync(() => {
-				const fixture = createTestingModule(
-					NgSelectTestComponent,
-					`<ng-select [items]="cities" bindLabel="name" [popover]="true"></ng-select>`,
-				);
+				const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name" [popover]="true"></ng-select>`);
 
 				const select = fixture.componentInstance.select();
 				expect(select.popover()).toBe(true);
@@ -1980,10 +1966,7 @@ describe('NgSelectComponent', () => {
 			}));
 
 			it('should pass popover false to dropdown panel when explicitly set to false', fakeAsync(() => {
-				const fixture = createTestingModule(
-					NgSelectTestComponent,
-					`<ng-select [items]="cities" bindLabel="name" [popover]="false"></ng-select>`,
-				);
+				const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name" [popover]="false"></ng-select>`);
 
 				const select = fixture.componentInstance.select();
 				expect(select.popover()).toBe(false);
@@ -1999,10 +1982,7 @@ describe('NgSelectComponent', () => {
 			}));
 
 			it('should toggle popover value dynamically', fakeAsync(() => {
-				const fixture = createTestingModule(
-					NgSelectTestComponent,
-					`<ng-select [items]="cities" bindLabel="name" [popover]="popoverEnabled"></ng-select>`,
-				);
+				const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name" [popover]="popoverEnabled"></ng-select>`);
 
 				const component = fixture.componentInstance as any;
 				component.popoverEnabled = false;
@@ -2026,6 +2006,83 @@ describe('NgSelectComponent', () => {
 				const panelElement = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel');
 				expect(panelElement?.matches(':popover-open')).toBe(true);
 			}));
+
+			describe('ResizeObserver repositioning', () => {
+				let originalResizeObserver: any;
+				let observerCallback: () => void;
+				let disconnectSpy: jasmine.Spy;
+
+				beforeEach(() => {
+					originalResizeObserver = (globalThis as any).ResizeObserver;
+					disconnectSpy = jasmine.createSpy('disconnect');
+
+					(globalThis as any).ResizeObserver = class {
+						constructor(cb: () => void) {
+							observerCallback = cb;
+						}
+						observe() {}
+						disconnect = disconnectSpy;
+					};
+				});
+
+				afterEach(() => {
+					(globalThis as any).ResizeObserver = originalResizeObserver;
+				});
+
+				it('should update dropdown Y and X position when select element resizes', fakeAsync(() => {
+					const fixture = createTestingModule(
+						NgSelectTestComponent,
+						`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [popover]="true" [closeOnSelect]="false" [(ngModel)]="selectedCities"></ng-select>`,
+					);
+					tickAndDetectChanges(fixture);
+
+					const select = fixture.componentInstance.select();
+					select.open();
+					tickAndDetectChanges(fixture);
+
+					const dropdownPanel = select.dropdownPanel();
+					const updateXSpy = spyOn<any>(dropdownPanel, '_updateXPosition').and.callThrough();
+					const updateYSpy = spyOn<any>(dropdownPanel, '_updateYPosition').and.callThrough();
+
+					observerCallback();
+					tickAndDetectChanges(fixture);
+
+					expect(updateXSpy).toHaveBeenCalled();
+					expect(updateYSpy).toHaveBeenCalled();
+				}));
+
+				it('should not register ResizeObserver when popover is false', fakeAsync(() => {
+					observerCallback = undefined;
+
+					const fixture = createTestingModule(
+						NgSelectTestComponent,
+						`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [popover]="false" [closeOnSelect]="false" [(ngModel)]="selectedCities"></ng-select>`,
+					);
+					tickAndDetectChanges(fixture);
+
+					const select = fixture.componentInstance.select();
+					select.open();
+					tickAndDetectChanges(fixture);
+
+					expect(observerCallback).toBeUndefined();
+				}));
+
+				it('should disconnect ResizeObserver when component is destroyed', fakeAsync(() => {
+					const fixture = createTestingModule(
+						NgSelectTestComponent,
+						`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [popover]="true" [closeOnSelect]="false" [(ngModel)]="selectedCities"></ng-select>`,
+					);
+					tickAndDetectChanges(fixture);
+
+					const select = fixture.componentInstance.select();
+					select.open();
+					tickAndDetectChanges(fixture);
+
+					fixture.destroy();
+
+					expect(disconnectSpy).toHaveBeenCalled();
+				}));
+			});
 		});
 	});
 
@@ -5872,12 +5929,12 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
 
 function createEvent(target = {}) {
 	return {
-		preventDefault: () => { },
+		preventDefault: () => {},
 		target: {
 			className: '',
 			tagName: '',
 			classList: {
-				contains: () => { },
+				contains: () => {},
 			},
 			...target,
 		},
@@ -5954,7 +6011,7 @@ class NgSelectTestComponent {
 		},
 		{ id: 3, description: { name: 'Australia', id: 'c' } },
 	];
-	keyDownFn = () => { };
+	keyDownFn = () => {};
 
 	tagFunc(term: string) {
 		return { id: term, name: term, custom: true };
@@ -5976,27 +6033,27 @@ class NgSelectTestComponent {
 		this.visible = !this.visible;
 	}
 
-	onChange(_: any) { }
+	onChange(_: any) {}
 
-	onFocus(_: Event) { }
+	onFocus(_: Event) {}
 
-	onBlur(_: Event) { }
+	onBlur(_: Event) {}
 
-	onOpen() { }
+	onOpen() {}
 
-	onClose() { }
+	onClose() {}
 
-	onAdd(_: Event) { }
+	onAdd(_: Event) {}
 
-	onRemove(_: Event) { }
+	onRemove(_: Event) {}
 
-	onClear() { }
+	onClear() {}
 
-	onSearch(_: any) { }
+	onSearch(_: any) {}
 
-	onScroll() { }
+	onScroll() {}
 
-	onScrollToEnd() { }
+	onScrollToEnd() {}
 }
 
 @Component({

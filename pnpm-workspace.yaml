@@ -4,8 +4,8 @@ allowBuilds:
   lmdb: true
   msgpackr-extract: true
 
-overrides: 
-  esbuild: "0.28.0"
+overrides:
+  esbuild: '0.28.0'
 minimumReleaseAgeExclude:
   - '@angular-devkit/architect@0.2200.0'
   - '@angular-devkit/core@22.0.0'
