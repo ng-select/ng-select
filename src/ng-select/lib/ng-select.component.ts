@@ -51,7 +51,7 @@ import {
 	NgTypeToSearchTemplateDirective,
 } from './ng-templates.directive';
 
-import { NgTemplateOutlet } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgSelectConfig } from './config.service';
 import { ConsoleService } from './console.service';
@@ -88,7 +88,7 @@ function optionalBooleanAttribute(value: unknown): boolean | undefined {
 	],
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent],
+	imports: [NgClass, NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent],
 	host: {
 		'[class.ng-select]': 'true',
 		'[class.ng-select-single]': '!multiple()',
@@ -886,6 +886,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 					options.map((option) => ({
 						$ngOptionValue: option.value(),
 						$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
+						$ngOptionClasses: option.classes(),
 						disabled: option.disabled(),
 					})) ?? [];
 				this.items.set(items);
@@ -907,6 +908,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 					.forEach(({ option, item }) => {
 						item.disabled = option.disabled();
 						item.label = option.label() || item.label;
+						item.classes = option.classes();
 					});
 			},
 			{ injector: this._injector },

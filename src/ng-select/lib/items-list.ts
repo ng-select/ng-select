@@ -233,6 +233,7 @@ export class ItemsList {
 	mapItem(item: any, index: number): NgOption {
 		const hasNgOptionLabel = isObject(item) && '$ngOptionLabel' in item;
 		const hasNgOptionValue = isObject(item) && '$ngOptionValue' in item;
+		const hasNgOptionClasses = isObject(item) && '$ngOptionClasses' in item;
 		const label = hasNgOptionLabel ? item.$ngOptionLabel : this.resolveNested(item, this._ngSelect.bindLabel());
 		const value = hasNgOptionValue ? item.$ngOptionValue : item;
 		return {
@@ -240,6 +241,7 @@ export class ItemsList {
 			label: isDefined(label) ? label.toString() : '',
 			value,
 			disabled: item && item.disabled ? item.disabled : false,
+			classes: hasNgOptionClasses ? item.$ngOptionClasses : '',
 			htmlId: `${this._ngSelect.dropdownId}-${index}`,
 		};
 	}
