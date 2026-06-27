@@ -13,21 +13,38 @@
 			"sourceRoot": "src/ng-select",
 			"prefix": "lib",
 			"architect": {
-				"build": {
-					"builder": "@angular/build:ng-packagr",
-					"options": {
-						"tsConfig": "src/ng-select/tsconfig.lib.json",
-						"project": "src/ng-select/ng-package.json"
-					}
-				},
-				"test": {
-					"builder": "@angular/build:unit-test",
-					"options": {
-						"polyfills": ["zone.js", "zone.js/testing", "zone.js/plugins/vitest-patch"],
-						"tsConfig": "src/ng-select/tsconfig.spec.json",
-						"runnerConfig": "vitest.config.ts"
-					}
-				},
+			"build": {
+				"builder": "@angular/build:ng-packagr",
+				"options": {
+					"tsConfig": "src/ng-select/tsconfig.lib.json",
+					"project": "src/ng-select/ng-package.json"
+				}
+			},
+			"test-build": {
+				"builder": "@angular/build:application",
+				"options": {
+					"tsConfig": "src/ng-select/tsconfig.spec.json",
+					"polyfills": ["zone.js", "zone.js/testing", "zone.js/plugins/vitest-patch"]
+				}
+			},
+			"test": {
+				"builder": "@angular/build:unit-test",
+				"options": {
+				"buildTarget": "ng-select:test-build",
+				"tsConfig": "src/ng-select/tsconfig.spec.json",
+				"runnerConfig": "vitest.config.ts",
+				"setupFiles": ["src/test-setup.ts"],
+				"coverage": true,
+					"coverageExclude": [
+						"src/ng-select/testing/*",
+						"src/ng-select/*.ts",
+						"src/ng-select/lib/console.service.ts",
+						"src/ng-select/lib/search-helper.ts",
+						"src/ng-select/lib/ng-templates.directive.ts"
+					],
+					"coverageReporters": ["html", "lcovonly", "text-summary"]
+				}
+			},
 				"lint": {
 					"builder": "@angular-eslint/builder:lint",
 					"options": {
@@ -123,21 +140,31 @@
 			"sourceRoot": "src/ng-option-highlight",
 			"prefix": "lib",
 			"architect": {
-				"build": {
-					"builder": "@angular/build:ng-packagr",
-					"options": {
-						"tsConfig": "src/ng-option-highlight/tsconfig.lib.json",
-						"project": "src/ng-option-highlight/ng-package.json"
-					}
-				},
-				"test": {
-					"builder": "@angular/build:unit-test",
-					"options": {
-						"polyfills": ["zone.js", "zone.js/testing", "zone.js/plugins/vitest-patch"],
-						"tsConfig": "src/ng-option-highlight/tsconfig.spec.json",
-						"runnerConfig": "vitest.config.ts"
-					}
-				},
+			"build": {
+				"builder": "@angular/build:ng-packagr",
+				"options": {
+					"tsConfig": "src/ng-option-highlight/tsconfig.lib.json",
+					"project": "src/ng-option-highlight/ng-package.json"
+				}
+			},
+			"test-build": {
+				"builder": "@angular/build:application",
+				"options": {
+					"tsConfig": "src/ng-option-highlight/tsconfig.spec.json",
+					"polyfills": ["zone.js", "zone.js/testing", "zone.js/plugins/vitest-patch"]
+				}
+			},
+			"test": {
+				"builder": "@angular/build:unit-test",
+				"options": {
+					"buildTarget": "ng-option-highlight:test-build",
+					"tsConfig": "src/ng-option-highlight/tsconfig.spec.json",
+					"runnerConfig": "vitest.config.ts",
+					"setupFiles": ["src/test-setup.ts"],
+					"coverage": true,
+					"coverageReporters": ["html", "lcovonly", "text-summary"]
+				}
+			},
 				"lint": {
 					"builder": "@angular-eslint/builder:lint",
 					"options": {
