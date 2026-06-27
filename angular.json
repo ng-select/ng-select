@@ -32,7 +32,6 @@
 					"options": {
 						"buildTarget": "ng-select:test-build",
 						"runnerConfig": "vitest.config.ts",
-						"browsers": ["ChromiumHeadless"],
 						"coverage": true,
 						"coverageExclude": [
 							"src/ng-select/testing/*",
@@ -157,7 +156,6 @@
 					"options": {
 						"buildTarget": "ng-option-highlight:test-build",
 						"runnerConfig": "vitest.config.ts",
-						"browsers": ["ChromiumHeadless"],
 						"coverage": true,
 						"coverageReporters": ["html", "lcovonly", "text-summary"]
 					}
