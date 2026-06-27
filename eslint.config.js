@@ -28,7 +28,7 @@ module.exports = defineConfig([
 			'@typescript-eslint/explicit-member-accessibility': ['off', { accessibility: 'explicit' }],
 			'arrow-parens': ['off', 'always'],
 			'import/order': 'off',
-			'max-len': ['error', { code: 160, ignoreStrings: true, ignoreTemplateLiterals: true }],
+			'max-len': ['off'],
 			'jsdoc/newline-after-description': 'off',
 			'@angular-eslint/no-host-metadata-property': 'off',
 			'@angular-eslint/no-output-rename': 'off',
