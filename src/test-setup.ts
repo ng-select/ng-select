@@ -1,20 +1,7 @@
 // Zone.js and the Vitest patch are loaded via `polyfills` on each project's `test-build`
 // target in `angular.json`. TestBed is initialized by the Angular unit-test builder.
 
-// jsdom does not implement innerText — many specs assert on option and placeholder text.
-if (!Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'innerText')?.get) {
-	Object.defineProperty(HTMLElement.prototype, 'innerText', {
-		get(this: HTMLElement) {
-			return this.textContent ?? '';
-		},
-		set(this: HTMLElement, value: string) {
-			this.textContent = value;
-		},
-		configurable: true,
-	});
-}
-
-// jsdom does not compute layout or implement the Popover API — stub both for component specs.
+// Keep layout-dependent specs deterministic under Vitest browser mode.
 function createRect(left: number, top: number, width: number, height: number): DOMRect {
 	return {
 		left,
@@ -29,20 +16,22 @@ function createRect(left: number, top: number, width: number, height: number): D
 	} as DOMRect;
 }
 
-if (!HTMLElement.prototype.showPopover) {
-	HTMLElement.prototype.showPopover = function showPopover(this: HTMLElement) {
-		this.setAttribute('data-ng-popover-open', '');
-	};
+const originalShowPopover = HTMLElement.prototype.showPopover;
+HTMLElement.prototype.showPopover = function showPopover(this: HTMLElement) {
+	this.setAttribute('data-ng-popover-open', '');
+	originalShowPopover?.call(this);
+};
 
-	HTMLElement.prototype.hidePopover = function hidePopover(this: HTMLElement) {
-		this.removeAttribute('data-ng-popover-open');
-	};
-}
+const originalHidePopover = HTMLElement.prototype.hidePopover;
+HTMLElement.prototype.hidePopover = function hidePopover(this: HTMLElement) {
+	this.removeAttribute('data-ng-popover-open');
+	originalHidePopover?.call(this);
+};
 
 const originalMatches = Element.prototype.matches;
 Element.prototype.matches = function matches(this: Element, selectors: string): boolean {
 	if (selectors === ':popover-open') {
-		return this.hasAttribute('data-ng-popover-open');
+		return this.hasAttribute('data-ng-popover-open') || originalMatches.call(this, selectors);
 	}
 
 	return originalMatches.call(this, selectors);
