@@ -16,7 +16,21 @@ import { NgOptionComponent } from './ng-option.component';
 import { AddTagFn, NgSelectComponent } from './ng-select.component';
 import { NgSelectModule, provideNgSelect } from './ng-select.module';
 import { KeyCode, NgOption } from './ng-select.types';
-import { NgClearButtonTemplateDirective, NgFooterTemplateDirective, NgHeaderTemplateDirective, NgLabelTemplateDirective, NgLoadingSpinnerTemplateDirective, NgLoadingTextTemplateDirective, NgMultiLabelTemplateDirective, NgNotFoundTemplateDirective, NgOptgroupTemplateDirective, NgOptionTemplateDirective, NgPlaceholderTemplateDirective, NgTagTemplateDirective, NgTypeToSearchTemplateDirective } from './ng-templates.directive';
+import {
+	NgClearButtonTemplateDirective,
+	NgFooterTemplateDirective,
+	NgHeaderTemplateDirective,
+	NgLabelTemplateDirective,
+	NgLoadingSpinnerTemplateDirective,
+	NgLoadingTextTemplateDirective,
+	NgMultiLabelTemplateDirective,
+	NgNotFoundTemplateDirective,
+	NgOptgroupTemplateDirective,
+	NgOptionTemplateDirective,
+	NgPlaceholderTemplateDirective,
+	NgTagTemplateDirective,
+	NgTypeToSearchTemplateDirective,
+} from './ng-templates.directive';
 
 describe('NgSelectComponent', () => {
 	const selectTypes = [
@@ -1709,7 +1723,9 @@ describe('NgSelectComponent', () => {
 			}));
 			await tickAndDetectChanges(fixture);
 			options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
-			expect(options.length).toBe(15);
+			const { itemsPerViewport } = (select.dropdownPanel() as any)._panelService.dimensions;
+			const expectedItemsLength = Math.min(fixture.componentInstance.cities.length, itemsPerViewport + 1 + select.bufferAmount());
+			expect(options.length).toBe(expectedItemsLength);
 			expect(options[0].innerText).toBe('a');
 		});
 
@@ -2064,7 +2080,7 @@ describe('NgSelectComponent', () => {
 						constructor(cb: () => void) {
 							observerCallback = cb;
 						}
-						observe() { }
+						observe() {}
 						disconnect = disconnectSpy;
 					};
 				});
@@ -5938,11 +5954,7 @@ describe('User defined keyDown handler', () => {
 
 function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectConfig: NgSelectConfig | null = null): ComponentFixture<T> {
 	TestBed.configureTestingModule({
-		providers: [
-			{ provide: ErrorHandler, useClass: TestsErrorHandler },
-			{ provide: ConsoleService, useFactory: () => new MockConsole() },
-			...provideNgSelect(),
-		],
+		providers: [{ provide: ErrorHandler, useClass: TestsErrorHandler }, { provide: ConsoleService, useFactory: () => new MockConsole() }, ...provideNgSelect()],
 	}).overrideComponent(cmp, {
 		set: {
 			template,
@@ -5979,12 +5991,12 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
 
 function createEvent(target = {}) {
 	return {
-		preventDefault: () => { },
+		preventDefault: () => {},
 		target: {
 			className: '',
 			tagName: '',
 			classList: {
-				contains: () => { },
+				contains: () => {},
 			},
 			...target,
 		},
@@ -6071,7 +6083,7 @@ class NgSelectTestComponent {
 		},
 		{ id: 3, description: { name: 'Australia', id: 'c' } },
 	];
-	keyDownFn = () => { };
+	keyDownFn = () => {};
 
 	tagFunc(term: string) {
 		return { id: term, name: term, custom: true };
@@ -6093,27 +6105,27 @@ class NgSelectTestComponent {
 		this.visible = !this.visible;
 	}
 
-	onChange(_: any) { }
+	onChange(_: any) {}
 
-	onFocus(_: Event) { }
+	onFocus(_: Event) {}
 
-	onBlur(_: Event) { }
+	onBlur(_: Event) {}
 
-	onOpen() { }
+	onOpen() {}
 
-	onClose() { }
+	onClose() {}
 
-	onAdd(_: Event) { }
+	onAdd(_: Event) {}
 
-	onRemove(_: Event) { }
+	onRemove(_: Event) {}
 
-	onClear() { }
+	onClear() {}
 
-	onSearch(_: any) { }
+	onSearch(_: any) {}
 
-	onScroll() { }
+	onScroll() {}
 
-	onScrollToEnd() { }
+	onScrollToEnd() {}
 }
 
 @Component({
