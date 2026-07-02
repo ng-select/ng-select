@@ -1,5 +1,6 @@
 import {
 	AfterViewInit,
+	afterEveryRender,
 	booleanAttribute,
 	ChangeDetectionStrategy,
 	ChangeDetectorRef,
@@ -226,7 +227,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly bindValue = model<string>(undefined);
 	readonly appearance = model<string>(undefined);
 	readonly isOpen = model<boolean | undefined>(false);
-	readonly items = model<readonly any[]>([]);
+	readonly items = input<readonly any[] | null | undefined>([]);
 	// output events
 	readonly blurEvent = output<any>({ alias: 'blur' });
 	readonly focusEvent = output<any>({ alias: 'focus' });
@@ -392,7 +393,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 		if (itemsChange?.firstChange) {
 			this._itemsAreUsed = true;
-			this._setItems(itemsChange.currentValue || []);
+			this._setItems(itemsChange.currentValue ?? []);
 		}
 
 		if (isOpenChange) {
@@ -400,7 +401,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 
 		if (groupByChange?.firstChange && !itemsChange) {
-			this._setItems([...this.items()]);
+			this._setItems([...(this.items() ?? [])]);
 		}
 
 		this._setTabFocusOnClear();
@@ -800,7 +801,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 				untracked(() => {
 					this._itemsAreUsed = true;
-					this._setItems(items || []);
+					this._setItems(items ?? []);
 				});
 			},
 			{ injector: this._injector },
@@ -831,7 +832,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 					return;
 				}
 
-				untracked(() => this._setItems([...this.items()]));
+				untracked(() => this._setItems([...(this.items() ?? [])]));
 			},
 			{ injector: this._injector },
 		);
@@ -873,46 +874,58 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	private _setItemsFromNgOptions() {
-		effect(
-			() => {
-				const options = this.ngOptions();
-				// Wait until all ng-option inputs are initialized (avoids _groupBy crash when values load async)
-				if (options.length > 0 && !options.every((opt) => opt.isInitialized())) {
-					return;
-				}
+		const setItemsFromOptions = (detectChanges: boolean) => {
+			const options = this.ngOptions();
+			// Wait until all ng-option inputs are initialized (avoids _groupBy crash when values load async)
+			if (options.length > 0 && !options.every((opt) => opt.isInitialized())) {
+				return;
+			}
 
-				this.bindLabel.set(this._defaultLabel);
-				const items =
-					options.map((option) => ({
+			this.bindLabel.set(this._defaultLabel);
+			const items =
+				options.map((option) => {
+					option.label();
+					option.classes();
+					const element = option.elementRef.nativeElement;
+
+					return {
 						$ngOptionValue: option.value(),
-						$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
-						$ngOptionClasses: option.classes(),
+						$ngOptionLabel: element.innerHTML,
+						$ngOptionClasses: Array.from(element.classList)
+							.filter((className) => className !== 'ng-star-inserted')
+							.join(' '),
 						disabled: option.disabled(),
-					})) ?? [];
-				this.items.set(items);
-				this.itemsList.setItems(items);
-				if (this.hasValue) {
-					this.itemsList.mapSelectedItems();
-				}
+					};
+				}) ?? [];
+			this._setItems(items);
+			if (this.hasValue) {
+				this.itemsList.mapSelectedItems();
+			}
+			if (detectChanges) {
 				this._cd.detectChanges();
+			}
 
-				options
-					// find item for each option
-					.map((option) => ({
-						option,
-						item: this.itemsList.findItem(option.value()),
-					}))
-					// filter non found items
-					.filter(({ item }) => isDefined(item))
-					// process to update disabled and label
-					.forEach(({ option, item }) => {
-						item.disabled = option.disabled();
-						item.label = option.label() || item.label;
-						item.classes = option.classes();
-					});
-			},
-			{ injector: this._injector },
-		);
+			options
+				// find item for each option
+				.map((option) => ({
+					option,
+					item: this.itemsList.findItem(option.value()),
+				}))
+				// filter non found items
+				.filter(({ item }) => isDefined(item))
+				// process to update disabled and label
+				.forEach(({ option, item }) => {
+					const element = option.elementRef.nativeElement;
+					item.disabled = option.disabled();
+					item.label = element.innerHTML || item.label;
+					item.classes = Array.from(element.classList)
+						.filter((className) => className !== 'ng-star-inserted')
+						.join(' ');
+				});
+		};
+
+		effect(() => setItemsFromOptions(true), { injector: this._injector });
+		afterEveryRender(() => setItemsFromOptions(false), { injector: this._injector });
 	}
 
 	private _isValidWriteValue(value: any): boolean {
