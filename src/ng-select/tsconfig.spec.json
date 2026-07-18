@@ -2,10 +2,7 @@
 	"extends": "../../tsconfig.json",
 	"compilerOptions": {
 		"outDir": "../../out-tsc/spec",
-		"types": ["jasmine", "node"]
+		"types": ["node"]
 	},
-	"angularCompilerOptions": {
-		"enableIvy": false
-	},
-	"include": ["**/*.spec.ts", "**/*.d.ts"]
+	"include": ["**/*.spec.ts", "**/*.d.ts", "../vitest-globals.d.ts"]
 }

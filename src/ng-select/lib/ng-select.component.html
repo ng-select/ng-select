@@ -28,8 +28,7 @@
 		}
 
 		@if (multiple() && multiLabelTemplate() && selectedValues.length > 0) {
-			<ng-template [ngTemplateOutlet]="multiLabelTemplate()" [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
-			</ng-template>
+			<ng-template [ngTemplateOutlet]="multiLabelTemplate()" [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }"> </ng-template>
 		}
 
 		<div class="ng-input">
@@ -88,7 +87,7 @@
 	@let appendToValue = appendTo() || config.appendTo;
 	<ng-dropdown-panel
 		class="ng-dropdown-panel"
-		[virtualScroll]="virtualScroll() ?? !config.disableVirtualScroll ?? false"
+		[virtualScroll]="dropdownVirtualScroll()"
 		[bufferAmount]="bufferAmount()"
 		[appendTo]="appendToValue"
 		[position]="dropdownPosition()"
@@ -116,6 +115,7 @@
 					[attr.role]="item.children ? 'group' : 'option'"
 					(click)="toggleItem(item)"
 					(mouseover)="onItemHover(item)"
+					[ngClass]="item.classes"
 					[class.ng-option-disabled]="item.disabled"
 					[class.ng-option-selected]="item.selected"
 					[class.ng-optgroup]="item.children"
@@ -125,14 +125,12 @@
 					[attr.aria-selected]="item.selected"
 					[attr.id]="item?.htmlId"
 					[attr.aria-setsize]="itemsList.filteredItems.length"
-					[attr.aria-posinset]="item.index + 1">
+					[attr.aria-posinset]="(item.index ?? 0) + 1">
 					<ng-template #defaultOptionTemplate>
 						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
 					</ng-template>
 					<ng-template
-						[ngTemplateOutlet]="
-							item.children ? optgroupTemplate() || defaultOptionTemplate : optionTemplate() || defaultOptionTemplate
-						"
+						[ngTemplateOutlet]="item.children ? optgroupTemplate() || defaultOptionTemplate : optionTemplate() || defaultOptionTemplate"
 						[ngTemplateOutletContext]="{ item: item.value, item$: item, index: item.index, searchTerm: searchTerm }">
 					</ng-template>
 				</div>
@@ -152,10 +150,7 @@
 							>"{{ searchTerm }}"</span
 						>
 					</ng-template>
-					<ng-template
-						[ngTemplateOutlet]="tagTemplate() || defaultTagTemplate"
-						[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
-					</ng-template>
+					<ng-template [ngTemplateOutlet]="tagTemplate() || defaultTagTemplate" [ngTemplateOutletContext]="{ searchTerm: searchTerm }"> </ng-template>
 				</div>
 			}
 		</ng-container>
@@ -163,9 +158,7 @@
 			<ng-template #defaultNotFoundTemplate>
 				<div class="ng-option ng-option-disabled">{{ notFoundText() ?? config.notFoundText }}</div>
 			</ng-template>
-			<ng-template
-				[ngTemplateOutlet]="notFoundTemplate() || defaultNotFoundTemplate"
-				[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
+			<ng-template [ngTemplateOutlet]="notFoundTemplate() || defaultNotFoundTemplate" [ngTemplateOutletContext]="{ searchTerm: searchTerm }">
 			</ng-template>
 		}
 		@if (showTypeToSearch()) {
@@ -178,9 +171,7 @@
 			<ng-template #defaultLoadingTextTemplate>
 				<div class="ng-option ng-option-disabled">{{ loadingText() || config.loadingText }}</div>
 			</ng-template>
-			<ng-template
-				[ngTemplateOutlet]="loadingTextTemplate() || defaultLoadingTextTemplate"
-				[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
+			<ng-template [ngTemplateOutlet]="loadingTextTemplate() || defaultLoadingTextTemplate" [ngTemplateOutletContext]="{ searchTerm: searchTerm }">
 			</ng-template>
 		}
 	</ng-dropdown-panel>

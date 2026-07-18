@@ -1,18 +1,26 @@
 import { DebugElement } from '@angular/core';
-import { ComponentFixture, tick } from '@angular/core/testing';
+import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KeyCode } from '../lib/ng-select.types';
 
-export class TestsErrorHandler { }
+export class TestsErrorHandler {}
 
-export function tickAndDetectChanges(fixture: ComponentFixture<any>) {
-	fixture.detectChanges();
-	tick();
+/** Flush microtasks and macrotasks that run outside Angular's zone (e.g. virtual-scroll measurement). */
+export async function flushAsync(): Promise<void> {
+	await new Promise<void>((resolve) => queueMicrotask(resolve));
+	await new Promise<void>((resolve) => setTimeout(resolve, 0));
 }
 
-export function selectOption(fixture, key: KeyCode, index: number) {
+export async function tickAndDetectChanges(fixture: ComponentFixture<any>) {
+	fixture.detectChanges();
+	await fixture.whenStable();
+	await flushAsync();
+	fixture.detectChanges();
+}
+
+export async function selectOption(fixture: ComponentFixture<any>, key: KeyCode, index: number) {
 	triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space); // open
-	tickAndDetectChanges(fixture); // need to tick and detect changes, since dropdown fully inits after promise is resolved
+	await tickAndDetectChanges(fixture);
 	for (let i = 0; i < index; i++) {
 		triggerKeyDownEvent(getNgSelectElement(fixture), key);
 	}
@@ -30,7 +38,7 @@ export function getNgSelectNativeElement(fixture: ComponentFixture<any>): HTMLEl
 export function triggerKeyDownEvent(element: DebugElement, key: string, target: Element = null): void {
 	element.triggerEventHandler('keydown', {
 		key,
-		preventDefault: () => { },
+		preventDefault: () => {},
 		target,
 	});
 }

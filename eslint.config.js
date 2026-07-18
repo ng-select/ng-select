@@ -28,13 +28,14 @@ module.exports = defineConfig([
 			'@typescript-eslint/explicit-member-accessibility': ['off', { accessibility: 'explicit' }],
 			'arrow-parens': ['off', 'always'],
 			'import/order': 'off',
-			'max-len': ['error', { code: 160 }],
+			'max-len': ['off'],
 			'jsdoc/newline-after-description': 'off',
 			'@angular-eslint/no-host-metadata-property': 'off',
 			'@angular-eslint/no-output-rename': 'off',
 			'@angular-eslint/no-output-native': 'off',
 			'@angular-eslint/prefer-standalone': 'off',
-			"@angular-eslint/no-input-rename": 'off',
+			'@angular-eslint/no-input-rename': 'off',
+			'@angular-eslint/prefer-on-push-component-change-detection': 'off',
 			'@angular-eslint/component-selector': [
 				'error',
 				{

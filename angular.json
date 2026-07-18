@@ -20,21 +20,27 @@
 						"project": "src/ng-select/ng-package.json"
 					}
 				},
-				"test": {
-					"builder": "@angular/build:karma",
+				"test-build": {
+					"builder": "@angular/build:application",
 					"options": {
-						"polyfills": ["zone.js", "zone.js/testing"],
 						"tsConfig": "src/ng-select/tsconfig.spec.json",
-						"watch": false,
-						"codeCoverage": true,
-						"codeCoverageExclude": [
+						"polyfills": ["zone.js", "zone.js/testing", "zone.js/plugins/vitest-patch"]
+					}
+				},
+				"test": {
+					"builder": "@angular/build:unit-test",
+					"options": {
+						"buildTarget": "ng-select:test-build",
+						"runnerConfig": "vitest.config.ts",
+						"coverage": true,
+						"coverageExclude": [
 							"src/ng-select/testing/*",
 							"src/ng-select/*.ts",
 							"src/ng-select/lib/console.service.ts",
 							"src/ng-select/lib/search-helper.ts",
 							"src/ng-select/lib/ng-templates.directive.ts"
 						],
-						"karmaConfig": "src/ng-select/karma.conf.js"
+						"coverageReporters": ["html", "lcovonly", "text-summary"]
 					}
 				},
 				"lint": {
@@ -87,7 +93,6 @@
 						"deployUrl": "/ng-select/",
 						"assets": ["src/demo/favicon.ico", "src/demo/assets"],
 						"styles": ["src/demo/styles.scss"],
-						"scripts": [],
 						"browser": "src/demo/main.ts"
 					},
 					"configurations": {
@@ -139,14 +144,20 @@
 						"project": "src/ng-option-highlight/ng-package.json"
 					}
 				},
-				"test": {
-					"builder": "@angular/build:karma",
+				"test-build": {
+					"builder": "@angular/build:application",
 					"options": {
-						"polyfills": ["zone.js", "zone.js/testing"],
 						"tsConfig": "src/ng-option-highlight/tsconfig.spec.json",
-						"watch": false,
-						"codeCoverage": true,
-						"karmaConfig": "src/ng-option-highlight/karma.conf.js"
+						"polyfills": ["zone.js", "zone.js/testing", "zone.js/plugins/vitest-patch"]
+					}
+				},
+				"test": {
+					"builder": "@angular/build:unit-test",
+					"options": {
+						"buildTarget": "ng-option-highlight:test-build",
+						"runnerConfig": "vitest.config.ts",
+						"coverage": true,
+						"coverageReporters": ["html", "lcovonly", "text-summary"]
 					}
 				},
 				"lint": {

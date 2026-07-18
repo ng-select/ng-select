@@ -5,7 +5,7 @@
 	"license": "MIT",
 	"repository": "ng-select/ng-select",
 	"peerDependencies": {
-		"@angular/common": "^21.0.0",
-		"@angular/core": "^21.0.0"
+		"@angular/common": "^22.0.0",
+		"@angular/core": "^22.0.0"
 	}
 }

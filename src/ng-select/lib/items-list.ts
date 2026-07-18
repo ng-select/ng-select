@@ -106,8 +106,7 @@ export class ItemsList {
 		} else if (this._ngSelect.bindValue()) {
 			findBy = (item) => !item.children && this.resolveNested(item.value, this._ngSelect.bindValue()) === value;
 		} else {
-			findBy = (item) =>
-				item.value === value || (!item.children && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel()));
+			findBy = (item) => item.value === value || (!item.children && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel()));
 		}
 		return this._items.find((item) => findBy(item));
 	}
@@ -234,6 +233,7 @@ export class ItemsList {
 	mapItem(item: any, index: number): NgOption {
 		const hasNgOptionLabel = isObject(item) && '$ngOptionLabel' in item;
 		const hasNgOptionValue = isObject(item) && '$ngOptionValue' in item;
+		const hasNgOptionClasses = isObject(item) && '$ngOptionClasses' in item;
 		const label = hasNgOptionLabel ? item.$ngOptionLabel : this.resolveNested(item, this._ngSelect.bindLabel());
 		const value = hasNgOptionValue ? item.$ngOptionValue : item;
 		return {
@@ -241,6 +241,7 @@ export class ItemsList {
 			label: isDefined(label) ? label.toString() : '',
 			value,
 			disabled: item && item.disabled ? item.disabled : false,
+			classes: hasNgOptionClasses ? item.$ngOptionClasses : '',
 			htmlId: `${this._ngSelect.dropdownId}-${index}`,
 		};
 	}
@@ -249,15 +250,12 @@ export class ItemsList {
 		const multiple = this._ngSelect.multiple();
 		for (const selected of this.selectedItems) {
 			const bindValue = this._ngSelect.bindValue();
-			let item: NgOption | null = null;
+			const value = bindValue ? this.resolveNested(selected.value, bindValue) : selected.value;
+			const valueFound = isDefined(value);
+			let item = valueFound ? this.findItem(value) : null;
 
-			// When compareWith is used, we need to find the item using the original selected value rather than the extracted bindValue,
-			// since compareWith expects to compare against the original value
-			if (this._ngSelect.compareWith()) {
+			if (!item && !valueFound && this._ngSelect.compareWith()) {
 				item = this._items.find((item) => this._ngSelect.compareWith()(item.value, selected.value));
-			} else {
-				const value = bindValue ? this.resolveNested(selected.value, bindValue) : selected.value;
-				item = isDefined(value) ? this.findItem(value) : null;
 			}
 
 			this._selectionModel.unselect(selected, multiple);

@@ -73,10 +73,7 @@ export class DefaultSelectionModel implements SelectionModel {
 	}
 
 	private _removeChildren(parent: NgOption) {
-		this._selected = [
-			...this._selected.filter((x) => x.parent !== parent),
-			...parent.children.filter((x) => x.parent === parent && x.disabled && x.selected),
-		];
+		this._selected = [...this._selected.filter((x) => x.parent !== parent), ...parent.children.filter((x) => x.parent === parent && x.disabled && x.selected)];
 	}
 
 	private _removeParent(parent: NgOption) {

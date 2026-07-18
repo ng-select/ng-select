@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgOptionHighlightDirective } from './ng-option-highlight.directive';
 import { By } from '@angular/platform-browser';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { NgOptionHighlightDirective } from './ng-option-highlight.directive';
 
 @Component({
 	template: `
@@ -14,6 +15,7 @@ import { By } from '@angular/platform-browser';
 		}
 		<span id="test6" [ngOptionHighlight]="term">+My text is) high\\lighted</span>
 	`,
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgOptionHighlightDirective],
 })
 class TestComponent {
@@ -71,11 +73,12 @@ describe('NgOptionHighlightDirective', () => {
 		expect(span.nativeElement.textContent).toBe('My ťëxť is highlighted text');
 	});
 
-	it('should highlight text when label changed', () => {
+	it('should highlight text when label changed', async () => {
 		fixture.componentInstance.term = 'new';
 		fixture.detectChanges();
 		fixture.componentInstance.showNew = true;
 		fixture.detectChanges();
+		await fixture.whenRenderingDone();
 		const span = fixture.debugElement.query(By.css('#test5'));
 		expect(span.nativeElement.querySelector('.highlighted').innerHTML).toBe('New');
 		expect(span.nativeElement.textContent).toBe('New label');

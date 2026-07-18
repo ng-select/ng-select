@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
@@ -8,6 +8,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 	selector: 'ng-append-to-example',
 	templateUrl: './append-to-example.component.html',
 	styleUrls: ['./append-to-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, AsyncPipe],
 })
 export class AppendToExampleComponent implements OnInit {

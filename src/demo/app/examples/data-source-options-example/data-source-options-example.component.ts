@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgOptionComponent, NgSelectComponent } from '@ng-select/ng-select';
 
@@ -7,6 +7,7 @@ import { NgOptionComponent, NgSelectComponent } from '@ng-select/ng-select';
 	selector: 'ng-data-source-options-example',
 	templateUrl: './data-source-options-example.component.html',
 	styleUrls: ['./data-source-options-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, NgOptionComponent, JsonPipe],
 })
 export class DataSourceOptionsExampleComponent implements OnInit {

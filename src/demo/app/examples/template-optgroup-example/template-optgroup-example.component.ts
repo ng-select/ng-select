@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgLabelTemplateDirective, NgOptgroupTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
@@ -7,14 +7,8 @@ import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
 	selector: 'ng-template-optgroup-example',
 	templateUrl: './template-optgroup-example.component.html',
 	styleUrls: ['./template-optgroup-example.component.scss'],
-	imports: [
-		NgSelectComponent,
-		FormsModule,
-		NgLabelTemplateDirective,
-		NgOptgroupTemplateDirective,
-		NgOptionTemplateDirective,
-		NgOptionHighlightDirective,
-	],
+	changeDetection: ChangeDetectionStrategy.Eager,
+	imports: [NgSelectComponent, FormsModule, NgLabelTemplateDirective, NgOptgroupTemplateDirective, NgOptionTemplateDirective, NgOptionHighlightDirective],
 })
 export class TemplateOptgroupExampleComponent implements OnInit {
 	cities = [

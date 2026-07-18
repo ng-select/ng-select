@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgOptionComponent, NgSelectComponent } from '@ng-select/ng-select';
 
@@ -6,6 +6,7 @@ import { NgOptionComponent, NgSelectComponent } from '@ng-select/ng-select';
 	selector: 'ng-fixed-placeholder-example',
 	templateUrl: './fixed-placeholder-example.component.html',
 	styleUrls: ['./fixed-placeholder-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [FormsModule, NgSelectComponent, NgOptionComponent],
 })
 export class FixedPlaceholderExampleComponent {

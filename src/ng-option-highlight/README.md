@@ -51,4 +51,4 @@ After building your library with `ng build ng-option-highlight`, go to the dist 
 
 ### Running unit tests
 
-Run `ng test ng-option-highlight` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `ng test ng-option-highlight` to execute the unit tests via Vitest
