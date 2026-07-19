@@ -104,7 +104,7 @@
 		(outsideClick)="close()"
 		[class.ng-select-multiple]="multiple()"
 		[class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
-		[id]="dropdownId"
+		[listboxId]="dropdownId"
 		[ariaLabelDropdown]="ariaLabelDropdown() ?? config.ariaLabelDropdown"
 		[popover]="popover()">
 		<ng-container>
@@ -124,7 +124,7 @@
 					[attr.aria-selected]="item.selected"
 					[attr.id]="item?.htmlId"
 					[attr.aria-setsize]="itemsList.filteredItems.length"
-					[attr.aria-posinset]="(item.index ?? 0) + 1">
+					[attr.aria-posinset]="itemsList.filteredItems.indexOf(item) + 1 || null">
 					<ng-template #defaultOptionTemplate>
 						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
 					</ng-template>

@@ -202,6 +202,18 @@ describe('NgSelectComponent', () => {
 			expect(input.getAttribute('aria-invalid')).toBe('true');
 		});
 
+		it('should not set aria-controls while closed when input attributes are re-applied', async () => {
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" [inputAttrs]="inputAttrs"></ng-select>`);
+
+			await tickAndDetectChanges(fixture);
+
+			const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+			fixture.componentInstance.inputAttrs = { 'aria-invalid': 'true' };
+			await tickAndDetectChanges(fixture);
+
+			expect(input.hasAttribute('aria-controls')).toBe(false);
+		});
+
 		it('should update search input attributes when inputAttrs signal is set programmatically', async () => {
 			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" [inputAttrs]="inputAttrs"></ng-select>`);
 
@@ -4828,6 +4840,36 @@ describe('NgSelectComponent', () => {
 			await tickAndDetectChanges(fixture);
 
 			expect(input.getAttribute('aria-controls')).toBe(select.dropdownId);
+		});
+
+		it('should reference the element with role listbox via aria-controls on open', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+
+			const controlled = document.getElementById(input.getAttribute('aria-controls'));
+			expect(controlled).not.toBeNull();
+			expect(controlled.getAttribute('role')).toBe('listbox');
+		});
+
+		it('should set aria-controls absent on dropdown close', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Esc);
+			await tickAndDetectChanges(fixture);
+
+			expect(input.hasAttribute('aria-controls')).toBe(false);
+		});
+
+		it('should set aria-posinset and aria-setsize based on filtered items', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+			select.filter('new');
+			await tickAndDetectChanges(fixture);
+
+			const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+			expect(options.length).toBe(2);
+			expect(Array.from(options).map((option: HTMLElement) => option.getAttribute('aria-posinset'))).toEqual(['1', '2']);
+			expect(Array.from(options).map((option: HTMLElement) => option.getAttribute('aria-setsize'))).toEqual(['2', '2']);
 		});
 
 		it('should set aria-activedecendant equal to chosen item on open', async () => {

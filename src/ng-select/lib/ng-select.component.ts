@@ -1007,7 +1007,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			autocorrect: 'off',
 			autocapitalize: 'off',
 			autocomplete: 'off',
-			'aria-controls': this.dropdownId,
 			...this.inputAttrs(),
 		};
 
