@@ -41,7 +41,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 				<ng-container [ngTemplateOutlet]="headerTemplate()" [ngTemplateOutletContext]="{ searchTerm: filterValue() }" />
 			</div>
 		}
-		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host" [attr.aria-label]="ariaLabelDropdown()">
+		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host" [attr.id]="listboxId()" [attr.aria-label]="ariaLabelDropdown()">
 			<div #padding [class.total-padding]="virtualScroll()"></div>
 			<div #content [class.scrollable-content]="virtualScroll() && items().length">
 				<ng-content />
@@ -67,6 +67,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	readonly footerTemplate = input<TemplateRef<any> | undefined>(undefined);
 	readonly filterValue = input<string>(null);
 	readonly ariaLabelDropdown = input<string | null>(null);
+	readonly listboxId = input<string | null>(null);
 	/**
 	 * Which DOM event to listen to for outside click detection
 	 */
