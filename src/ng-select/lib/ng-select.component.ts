@@ -797,6 +797,12 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	onInputBlur($event: FocusEvent) {
 		this.element.classList.remove('ng-select-focused');
 		this.blurEvent.emit($event);
+		// When `selectOnTab` is enabled, commit the marked item on any focus loss, not just the literal Tab
+		// key handled in `_handleTab` (e.g. mouse click-away or assistive-technology navigation). The Tab key
+		// path calls `preventDefault()` and keeps focus, so this cannot double-select for that case.
+		if (this.selectOnTab() && this.isOpen() && !this.disabled() && this.itemsList.markedItem && !this._isComposing) {
+			this.toggleItem(this.itemsList.markedItem);
+		}
 		if (!this.isOpen() && !this.disabled()) {
 			this._onTouched();
 		}

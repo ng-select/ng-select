@@ -582,6 +582,64 @@ describe('ItemsList', () => {
 		});
 	});
 
+	describe('htmlId', () => {
+		let list: ItemsList;
+		let cmp: NgSelectComponent;
+		let cmpRef: ComponentRef<NgSelectComponent>;
+
+		beforeEach(async () => {
+			const { component, componentRef } = await ngSelectFactory();
+			cmp = component;
+			cmpRef = componentRef;
+			componentRef.setInput('bindLabel', 'name');
+			list = itemsListFactory(cmp);
+		});
+
+		function optionHtmlIds(): string[] {
+			return list.filteredItems.filter((x) => !x.children).map((x) => x.htmlId);
+		}
+
+		it('should assign a unique htmlId to every option when grouping by key', () => {
+			cmpRef.setInput('groupBy', 'groupKey');
+			list.setItems([
+				{ name: 'K1', groupKey: 'G1' },
+				{ name: 'K2', groupKey: 'G1' },
+				{ name: 'K3', groupKey: 'G2' },
+				{ name: 'K4', groupKey: 'G2' },
+			]);
+
+			const ids = optionHtmlIds();
+			expect(ids.length).toBe(4);
+			expect(new Set(ids).size).toBe(ids.length);
+		});
+
+		it('should assign a unique htmlId to every option when items are provided as nested groups', () => {
+			// #2710 — group children were re-mapped with their in-group index, producing duplicate htmlIds
+			// (e.g. `${dropdownId}-0`) across groups, so scrollTo() targeted the wrong element.
+			cmpRef.setInput('groupBy', 'accounts');
+			list.setItems([
+				{ groupName: 'G1', accounts: [{ name: 'A1' }, { name: 'A2' }] },
+				{ groupName: 'G2', accounts: [{ name: 'B1' }, { name: 'B2' }] },
+			]);
+
+			const ids = optionHtmlIds();
+			expect(ids.length).toBe(4);
+			expect(new Set(ids).size).toBe(ids.length);
+		});
+
+		it('should keep htmlId in sync with the flattened index for grouped options', () => {
+			cmpRef.setInput('groupBy', 'groupKey');
+			list.setItems([
+				{ name: 'K1', groupKey: 'G1' },
+				{ name: 'K2', groupKey: 'G2' },
+			]);
+
+			for (const item of list.filteredItems.filter((x) => !x.children)) {
+				expect(item.htmlId).toBe(`${cmp.dropdownId}-${item.index}`);
+			}
+		});
+	});
+
 	function itemsListFactory(cmp: NgSelectComponent): ItemsList {
 		return new ItemsList(cmp, new DefaultSelectionModel());
 	}

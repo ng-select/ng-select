@@ -175,6 +175,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			scrollTo = this._panelService.getScrollTo(index * itemHeight, itemHeight, this._lastScrollPosition);
 		} else {
 			const item: HTMLElement = this._dropdown.querySelector(`#${option.htmlId}`);
+			if (!item) {
+				return;
+			}
 			const lastScroll = startFromOption ? item.offsetTop : this._lastScrollPosition;
 			scrollTo = this._panelService.getScrollTo(item.offsetTop, item.clientHeight, lastScroll);
 		}
@@ -386,6 +389,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 		return Promise.resolve().then(() => {
 			const option = this._dropdown.querySelector(`#${first.htmlId}`);
+			if (!option) {
+				return this._panelService.dimensions;
+			}
 			const optionHeight = option.clientHeight;
 			this._virtualPadding().style.height = `${optionHeight * this.itemsLength}px`;
 			const panelHeight = this._scrollablePanel().clientHeight;

@@ -2594,6 +2594,41 @@ describe('NgSelectComponent', () => {
 			expect(fixture.componentInstance.select().selectedItems).toEqual([result]);
 		});
 
+		it('should select marked item on blur when [selectOnTab]="true"', async () => {
+			// #2425 — focus can leave the open control without a Tab keydown (click-away, AT navigation);
+			// the marked item should still be committed so forms using updateOn: 'blur' pick up the value.
+			const { fixture, select } = genericFixture();
+			await advanceDebounce(fixture, 200);
+			select.filter('bei');
+			await advanceDebounce(fixture, 200);
+
+			const result = expect.objectContaining({ value: fixture.componentInstance.cities[2] });
+			expect(select.isOpen()).toBeTruthy();
+			expect(select.itemsList.markedItem).toEqual(result);
+
+			select.searchInput().nativeElement.dispatchEvent(new FocusEvent('blur'));
+			await tickAndDetectChanges(fixture);
+
+			expect(select.selectedItems).toEqual([result]);
+			expect(select.isOpen()).toBeFalsy();
+		});
+
+		it('should not select marked item on blur when [selectOnTab]="false"', async () => {
+			const { fixture, select } = genericFixture();
+			fixture.componentInstance.selectOnTab = false;
+			await tickAndDetectChanges(fixture);
+			await advanceDebounce(fixture, 200);
+			select.filter('bei');
+			await advanceDebounce(fixture, 200);
+
+			expect(select.itemsList.markedItem).toBeTruthy();
+
+			select.searchInput().nativeElement.dispatchEvent(new FocusEvent('blur'));
+			await tickAndDetectChanges(fixture);
+
+			expect(select.selectedItems).toEqual([]);
+		});
+
 		it('should focus on clear button when tab pressed while not opened and clear showing', async () => {
 			const { fixture, select } = genericFixture();
 			fixture.componentInstance.tabFocusOnClearButton = true;
@@ -5182,6 +5217,19 @@ describe('NgSelectComponent', () => {
 				await tickAndDetectChanges(fixture);
 
 				expect(liveRegionText(fixture)).toBe('Loading...');
+			});
+
+			it('should announce the marked option label as it changes (issues #2758, #2589)', async () => {
+				const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name" [(ngModel)]="selectedCity"></ng-select>`);
+				await tickAndDetectChanges(fixture);
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
+				await tickAndDetectChanges(fixture);
+				expect(liveRegionText(fixture)).toBe('New York');
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
+				await tickAndDetectChanges(fixture);
+				expect(liveRegionText(fixture)).toBe('London');
 			});
 		});
 
