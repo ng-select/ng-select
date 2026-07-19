@@ -14,6 +14,7 @@ Demo routes are hash-based: `http://localhost:<port>/#/forms`, `#/data-sources`,
 ## Drive component behaviors
 
 - Theme switcher and LTR/RTL toggle are dropdowns in the demo header. Material theme is required for `appearance="outline"` / `appearance="fill"` styling.
+- When changing styles, verify all three themes (`default`, `material`, `ant`) via the switcher — theme class names are part of the public styling contract (AGENTS.md).
 - Outline-appearance selects live on `#/forms` ("Reactive form using ng-option" example).
 - To test on a non-white background: `javascript_tool` → `document.body.style.background = '#263238'` and clear card backgrounds.
 
@@ -21,15 +22,16 @@ Demo routes are hash-based: `http://localhost:<port>/#/forms`, `#/data-sources`,
 
 - **Theme resets to `default` on full page reload** (component state, not persisted) — re-select Material after any force reload before judging appearance styles.
 - **Opening a select programmatically:** dispatch `keydown` Space on the `ng-select` host element (`new KeyboardEvent('keydown', {keyCode: 32, ...})`). Synthetic `mousedown` on the container is unreliable, and coordinate clicks fight scroll jumps.
-
 - **Demo RTL does not exercise theme RTL rules.** The demo nests themes under `:host.<x>-theme ::ng-deep` (app.component.scss) and puts `dir` on an inner div, so the themes' `@include rtl` rules (`[dir='rtl'] …` at root) never match in the demo. To verify RTL as real consumers see it, set `document.documentElement.dir = 'rtl'` via javascript_tool.
-- Unit tests run in real Chromium (Vitest + browser-playwright), not jsdom — layout measurement (`offsetWidth` etc.) works in specs.
+- Unit tests run in **Vitest browser mode** — real headless Chromium via `@vitest/browser-playwright` (wired through `@angular/build:unit-test` + root `vitest.config.ts`), not jsdom — layout measurement (`offsetWidth` etc.) works in specs.
+- **Failed specs save screenshots** to `src/ng-select/lib/__screenshots__/` — read them when diagnosing a browser-mode test failure.
 
 ## Pipeline (Definition of Done, AGENTS.md)
 
 ```bash
 pnpm lint
-pnpm exec ng test ng-select --watch=false
+pnpm exec ng test ng-select --watch=false   # fast: ng-select only
+pnpm test:ci                                # full: both libraries + coverage (what CI runs)
 pnpm run build
-pnpm exec prettier --check <changed files>
+pnpm exec prettier --check <changed files>  # or: pnpm format:check (whole repo)
 ```
