@@ -2804,13 +2804,13 @@ describe('NgSelectComponent', () => {
 			expect(select.isOpen()).toBeTruthy();
 		});
 
-		it('should not close dropdown when mousedown starts inside select but click lands outside (scroll scenario)', async () => {
+		it('should stay open when the page shifts between mousedown on the select and the resulting click (#2773)', async () => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 			await tickAndDetectChanges(fixture);
 			expect(select.isOpen()).toBeTruthy();
 
-			// Simulate #2441/#2773: mousedown inside select, then the page scrolls or the
-			// DOM shifts, so the click target lands outside the component
+			// The press begins on the select, but focus-scroll moves the layout before
+			// the click event fires, so its target resolves to an unrelated element
 			document.getElementById('select').dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
 			document.getElementById('outside').click();
 
@@ -2818,7 +2818,7 @@ describe('NgSelectComponent', () => {
 			expect(select.isOpen()).toBeTruthy();
 		});
 
-		it('should close dropdown on genuine outside click (mousedown and click both outside)', async () => {
+		it('should close when the interaction starts and ends outside the component', async () => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 			await tickAndDetectChanges(fixture);
 			expect(select.isOpen()).toBeTruthy();
@@ -2831,14 +2831,15 @@ describe('NgSelectComponent', () => {
 			expect(select.isOpen()).toBeFalsy();
 		});
 
-		it('should not close dropdown when clicking an option inside shadow DOM (issue from PR #2726)', async () => {
+		it('should stay open when an option is clicked from within a shadow root (#2726)', async () => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 			await tickAndDetectChanges(fixture);
 			expect(select.isOpen()).toBeTruthy();
 
-			// Simulate an appendTo target inside a shadow root: document-level click events
-			// are retargeted to the shadow host, so only composedPath reveals that the
-			// click originated inside the dropdown
+			// Host the panel in a shadow root, as happens with an appendTo target inside
+			// a web component. The document-level listener then sees only the shadow host
+			// as event target and must trace the click via composedPath() to recognize it
+			// as an inside click
 			const host = document.createElement('div');
 			document.body.appendChild(host);
 			const shadowRoot = host.attachShadow({ mode: 'open' });
@@ -2850,6 +2851,7 @@ describe('NgSelectComponent', () => {
 
 				await tickAndDetectChanges(fixture);
 				expect(select.isOpen()).toBeTruthy();
+				expect(select.selectedItems.length).toBe(1);
 			} finally {
 				host.remove();
 			}
@@ -2905,7 +2907,7 @@ describe('NgSelectComponent', () => {
 			select = fixture.componentInstance.select();
 		});
 
-		it('should not close dropdown when mousedown starts inside select but click lands outside (scroll scenario)', async () => {
+		it('should stay open when the page shifts between mousedown on the select and the resulting click', async () => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 			await tickAndDetectChanges(fixture);
 			expect(select.isOpen()).toBeTruthy();
@@ -2917,7 +2919,7 @@ describe('NgSelectComponent', () => {
 			expect(select.isOpen()).toBeTruthy();
 		});
 
-		it('should close dropdown on genuine outside click', async () => {
+		it('should close when the interaction starts and ends outside the component', async () => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 			await tickAndDetectChanges(fixture);
 			expect(select.isOpen()).toBeTruthy();
