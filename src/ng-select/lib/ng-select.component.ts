@@ -1032,6 +1032,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 						if (!item.disabled) {
 							this.itemsList.markItem(item);
 							this._scrollToMarked();
+							// Required under zoneless CD: this subscription fires from a debounce
+							// timer, which schedules nothing by itself
 							this._cd.markForCheck();
 						}
 					} else {
@@ -1087,6 +1089,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			this.changeEvent.emit(selected[0]);
 		}
 
+		// Required under zoneless CD: sole notifier for the programmatic selection
+		// APIs (select/unselect/clearModel/clearItem) called from non-Angular contexts
 		this._cd.markForCheck();
 	}
 
