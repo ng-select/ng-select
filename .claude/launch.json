@@ -6,7 +6,7 @@
 			"runtimeExecutable": "pnpm",
 			"runtimeArgs": ["ng", "serve", "--port", "4300"],
 			"port": 4300,
-			"autoPort": false
+			"autoPort": true
 		}
 	]
 }

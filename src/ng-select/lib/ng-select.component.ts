@@ -1,4 +1,5 @@
 import {
+	afterEveryRender,
 	AfterViewInit,
 	booleanAttribute,
 	ChangeDetectionStrategy,
@@ -287,6 +288,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	// public variables
 	readonly dropdownId = newId();
 	readonly element: HTMLElement;
+	/** Width of the notched-outline gap for the floated label in the material outline appearance */
+	readonly outlineNotchWidth = signal(0);
 	// variables
 	escapeHTML = true;
 	itemsList: ItemsList;
@@ -321,6 +324,25 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.itemsList = new ItemsList(this, newSelectionModel ? newSelectionModel() : DefaultSelectionModelFactory());
 		this.element = _elementRef.nativeElement;
 		this._handleSignalChanges();
+		afterEveryRender({
+			read: () => this._measureOutlineNotch(),
+		});
+	}
+
+	/**
+	 * Measures the placeholder label so the notched outline can leave a real gap in the border
+	 * for the floated label instead of masking it with an opaque background (material theme).
+	 * The 0.75 factor matches the `scale(0.75)` the material theme applies to the floated label.
+	 */
+	private _measureOutlineNotch() {
+		if (this.appearance() !== 'outline') {
+			return;
+		}
+		const label = this.element.querySelector<HTMLElement>('.ng-select-container > .ng-value-container .ng-placeholder');
+		const width = label ? label.offsetWidth * 0.75 : 0;
+		if (width !== this.outlineNotchWidth()) {
+			this.outlineNotchWidth.set(width);
+		}
 	}
 
 	private _focused: boolean;

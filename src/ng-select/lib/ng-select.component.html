@@ -81,6 +81,14 @@
 	<span class="ng-arrow-wrapper">
 		<span class="ng-arrow"></span>
 	</span>
+
+	@if (appearance() === 'outline') {
+		<div class="ng-notched-outline" aria-hidden="true">
+			<div class="ng-notched-outline-leading"></div>
+			<div class="ng-notched-outline-notch" [style.width.px]="outlineNotchWidth()"></div>
+			<div class="ng-notched-outline-trailing"></div>
+		</div>
+	}
 </div>
 
 @if (isOpen()) {
