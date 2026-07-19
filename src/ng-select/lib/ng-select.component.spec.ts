@@ -7,7 +7,15 @@ import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import type { Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { getNgSelectElement, getNgSelectNativeElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
+import {
+	applyZonelessFixtureCompat,
+	getNgSelectElement,
+	getNgSelectNativeElement,
+	selectOption,
+	TestsErrorHandler,
+	tickAndDetectChanges,
+	triggerKeyDownEvent,
+} from '../testing/helpers';
 import { MockConsole } from '../testing/mocks';
 import { advanceDebounce, disableDebounceFakeTimers, enableDebounceFakeTimers, openSelect } from '../testing/timer-helpers';
 import { NgSelectConfig } from './config.service';
@@ -2908,7 +2916,7 @@ describe('NgSelectComponent', () => {
 				},
 			});
 			TestBed.compileComponents();
-			const partialFixture = TestBed.createComponent(NgSelectTestComponent);
+			const partialFixture = applyZonelessFixtureCompat(TestBed.createComponent(NgSelectTestComponent));
 			partialFixture.detectChanges();
 			const partialSelect = partialFixture.componentInstance.select();
 
@@ -6377,7 +6385,7 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
 		TestBed.overrideProvider(NgSelectConfig, { useValue: customNgSelectConfig });
 	}
 
-	const fixture = TestBed.createComponent(cmp);
+	const fixture = applyZonelessFixtureCompat(TestBed.createComponent(cmp));
 	fixture.detectChanges();
 	return fixture;
 }
