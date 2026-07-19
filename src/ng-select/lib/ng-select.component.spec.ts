@@ -2120,7 +2120,7 @@ describe('NgSelectComponent', () => {
 						constructor(cb: () => void) {
 							observerCallback = cb;
 						}
-						observe() { }
+						observe() {}
 						disconnect = disconnectSpy;
 					};
 				});
@@ -2804,6 +2804,57 @@ describe('NgSelectComponent', () => {
 			expect(select.isOpen()).toBeTruthy();
 		});
 
+		it('should not close dropdown when mousedown starts inside select but click lands outside (scroll scenario)', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+
+			// Simulate #2441/#2773: mousedown inside select, then the page scrolls or the
+			// DOM shifts, so the click target lands outside the component
+			document.getElementById('select').dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+			document.getElementById('outside').click();
+
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+		});
+
+		it('should close dropdown on genuine outside click (mousedown and click both outside)', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+
+			const outsideEl = document.getElementById('outside');
+			outsideEl.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+			outsideEl.click();
+
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeFalsy();
+		});
+
+		it('should not close dropdown when clicking an option inside shadow DOM (issue from PR #2726)', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+
+			// Simulate an appendTo target inside a shadow root: document-level click events
+			// are retargeted to the shadow host, so only composedPath reveals that the
+			// click originated inside the dropdown
+			const host = document.createElement('div');
+			document.body.appendChild(host);
+			const shadowRoot = host.attachShadow({ mode: 'open' });
+			shadowRoot.appendChild(document.querySelector('ng-dropdown-panel'));
+
+			try {
+				const option = shadowRoot.querySelector('.ng-option') as HTMLElement;
+				option.click();
+
+				await tickAndDetectChanges(fixture);
+				expect(select.isOpen()).toBeTruthy();
+			} finally {
+				host.remove();
+			}
+		});
+
 		it('should close dropdown when clicking outside if NgSelectConfig is provided as a partial object without outsideClickEvent', async () => {
 			// Simulate real-world usage: `{ provide: NgSelectConfig, useValue: { appendTo: 'body' } }`
 			// where outsideClickEvent is undefined because the plain object lacks that property.
@@ -2834,6 +2885,49 @@ describe('NgSelectComponent', () => {
 			document.getElementById('outside2').click();
 			await tickAndDetectChanges(partialFixture);
 			expect(partialSelect.isOpen()).toBeFalsy();
+		});
+	});
+
+	describe('Outside click without appendTo', () => {
+		let fixture: ComponentFixture<NgSelectTestComponent>;
+		let select: NgSelectComponent;
+		beforeEach(() => {
+			fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<div id="outside">Outside</div><br />
+                <ng-select id="select" [items]="cities"
+                    bindLabel="name"
+                    multiple="true"
+                    [closeOnSelect]="false"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`,
+			);
+			select = fixture.componentInstance.select();
+		});
+
+		it('should not close dropdown when mousedown starts inside select but click lands outside (scroll scenario)', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+
+			document.getElementById('select').dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+			document.getElementById('outside').click();
+
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+		});
+
+		it('should close dropdown on genuine outside click', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+
+			const outsideEl = document.getElementById('outside');
+			outsideEl.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+			outsideEl.click();
+
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeFalsy();
 		});
 	});
 
@@ -6082,12 +6176,12 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
 
 function createEvent(target = {}) {
 	return {
-		preventDefault: () => { },
+		preventDefault: () => {},
 		target: {
 			className: '',
 			tagName: '',
 			classList: {
-				contains: () => { },
+				contains: () => {},
 			},
 			...target,
 		},
@@ -6174,7 +6268,7 @@ class NgSelectTestComponent {
 		},
 		{ id: 3, description: { name: 'Australia', id: 'c' } },
 	];
-	keyDownFn = () => { };
+	keyDownFn = () => {};
 
 	tagFunc(term: string) {
 		return { id: term, name: term, custom: true };
@@ -6196,27 +6290,27 @@ class NgSelectTestComponent {
 		this.visible = !this.visible;
 	}
 
-	onChange(_: any) { }
+	onChange(_: any) {}
 
-	onFocus(_: Event) { }
+	onFocus(_: Event) {}
 
-	onBlur(_: Event) { }
+	onBlur(_: Event) {}
 
-	onOpen() { }
+	onOpen() {}
 
-	onClose() { }
+	onClose() {}
 
-	onAdd(_: Event) { }
+	onAdd(_: Event) {}
 
-	onRemove(_: Event) { }
+	onRemove(_: Event) {}
 
-	onClear() { }
+	onClear() {}
 
-	onSearch(_: any) { }
+	onSearch(_: any) {}
 
-	onScroll() { }
+	onScroll() {}
 
-	onScrollToEnd() { }
+	onScrollToEnd() {}
 }
 
 @Component({

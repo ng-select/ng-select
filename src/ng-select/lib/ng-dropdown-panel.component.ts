@@ -99,6 +99,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	private _scrollToEndFired = false;
 	private _updateScrollHeight = false;
 	private _lastScrollPosition = 0;
+	private _lastMousedownInside = false;
 
 	constructor() {
 		this._destroyRef.onDestroy(() => {
@@ -241,23 +242,39 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 
 		this._zone.runOutsideAngular(() => {
+			// Track where the interaction started. When the page scrolls or the DOM shifts
+			// between mousedown and click (e.g. focus() auto-scrolls a partially visible
+			// select into view), the click target can land outside the component even
+			// though the user pressed inside it (#2441, #2773)
+			fromEvent(this._document, 'mousedown', { capture: true })
+				.pipe(takeUntilDestroyed(this._destroyRef))
+				.subscribe(($event) => (this._lastMousedownInside = this._isEventInside($event)));
+
 			fromEvent(this._document, this.outsideClickEvent() ?? 'click', { capture: true })
 				.pipe(takeUntilDestroyed(this._destroyRef))
 				.subscribe(($event) => this._checkToClose($event));
 		});
 	}
 
-	private _checkToClose($event: any) {
-		if (this._select.contains($event.target) || this._dropdown.contains($event.target)) {
-			return;
-		}
-
-		const path = $event.path || ($event.composedPath && $event.composedPath());
-		if ($event.target && $event.target.shadowRoot && path && path[0] && this._select.contains(path[0])) {
+	private _checkToClose($event: Event) {
+		const mousedownInside = this._lastMousedownInside;
+		this._lastMousedownInside = false;
+		if (mousedownInside || this._isEventInside($event)) {
 			return;
 		}
 
 		this._zone.run(() => this.outsideClick.emit());
+	}
+
+	private _isEventInside($event: any): boolean {
+		// composedPath crosses shadow DOM boundaries, so this also covers selects and
+		// dropdowns rendered or appended inside (possibly nested) shadow roots, where
+		// document-level events are retargeted to the shadow host (#2726)
+		const path: EventTarget[] = $event.path || ($event.composedPath && $event.composedPath());
+		if (path?.length) {
+			return path.includes(this._select) || path.includes(this._dropdown);
+		}
+		return this._select.contains($event.target) || this._dropdown.contains($event.target);
 	}
 
 	private _onItemsOrShowAddTagChange(items: NgOption[] = [], showAddTag: boolean, firstChange: boolean) {
