@@ -399,6 +399,7 @@ export class ItemsList {
 				items.push(
 					...withoutGroup.map((x) => {
 						x.index = i++;
+						x.htmlId = `${this._ngSelect.dropdownId}-${x.index}`;
 						return x;
 					}),
 				);
@@ -427,6 +428,7 @@ export class ItemsList {
 				x.parent = parent;
 				x.children = undefined;
 				x.index = i++;
+				x.htmlId = `${this._ngSelect.dropdownId}-${x.index}`;
 				return x;
 			});
 			parent.children = children;
