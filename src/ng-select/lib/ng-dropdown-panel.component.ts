@@ -99,6 +99,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	private _scrollToEndFired = false;
 	private _updateScrollHeight = false;
 	private _lastScrollPosition = 0;
+	private _lastMousedownInside = false;
 
 	constructor() {
 		this._destroyRef.onDestroy(() => {
@@ -240,24 +241,47 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			return;
 		}
 
+		const outsideEvent = this.outsideClickEvent() ?? 'click';
+
 		this._zone.runOutsideAngular(() => {
-			fromEvent(this._document, this.outsideClickEvent() ?? 'click', { capture: true })
+			// A click is judged by where the press began, not where it ended. Between
+			// mousedown and click the layout can move under the cursor — focusing the
+			// select auto-scrolls it into view (#2773), or the freshly opened panel
+			// shifts the page (#2441) — leaving the click target on an unrelated
+			// element. Irrelevant when closing on mousedown itself, so skip the
+			// listener in that mode
+			if (outsideEvent === 'click') {
+				fromEvent(this._document, 'mousedown', { capture: true })
+					.pipe(takeUntilDestroyed(this._destroyRef))
+					.subscribe(($event) => (this._lastMousedownInside = this._isEventInside($event)));
+			}
+
+			fromEvent(this._document, outsideEvent, { capture: true })
 				.pipe(takeUntilDestroyed(this._destroyRef))
 				.subscribe(($event) => this._checkToClose($event));
 		});
 	}
 
-	private _checkToClose($event: any) {
-		if (this._select.contains($event.target) || this._dropdown.contains($event.target)) {
-			return;
-		}
-
-		const path = $event.path || ($event.composedPath && $event.composedPath());
-		if ($event.target && $event.target.shadowRoot && path && path[0] && this._select.contains(path[0])) {
+	private _checkToClose($event: Event) {
+		const pressStartedInside = this._lastMousedownInside;
+		this._lastMousedownInside = false;
+		if (pressStartedInside || this._isEventInside($event)) {
 			return;
 		}
 
 		this._zone.run(() => this.outsideClick.emit());
+	}
+
+	private _isEventInside($event: any): boolean {
+		// An event crossing a shadow boundary is retargeted to the shadow host, which
+		// hides its real origin from contains(). composedPath() still lists every node
+		// the event bubbled through, so matching the select or dropdown anywhere along
+		// it works identically for light DOM, shadow DOM, and nested roots (#2726)
+		const path: EventTarget[] = $event.path || ($event.composedPath && $event.composedPath());
+		if (path?.length) {
+			return path.includes(this._select) || path.includes(this._dropdown);
+		}
+		return this._select.contains($event.target) || this._dropdown.contains($event.target);
 	}
 
 	private _onItemsOrShowAddTagChange(items: NgOption[] = [], showAddTag: boolean, firstChange: boolean) {
