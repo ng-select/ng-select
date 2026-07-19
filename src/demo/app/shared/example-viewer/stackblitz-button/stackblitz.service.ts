@@ -5,7 +5,7 @@ import sdk, { Project } from '@stackblitz/sdk';
 const EXAMPLE_PATH = '/ng-select/examples/';
 const TEMPLATE_PATH = '/ng-select/assets/stackblitz/';
 
-const TEMPLATE_FILES = ['index.html', 'styles.css', 'polyfills.ts', 'data.service.ts', 'main.ts', 'app.module.ts', 'angular.json'];
+const TEMPLATE_FILES = ['index.html', 'styles.css', 'data.service.ts', 'main.ts', 'app.module.ts', 'angular.json'];
 
 const angularVersion = '>=15.0.0';
 const dependencies = {
@@ -23,7 +23,6 @@ const dependencies = {
 	'@ng-select/ng-option-highlight': '*',
 	'@ng-bootstrap/ng-bootstrap': '*',
 	rxjs: '^6.5.3 || ^7.4.0',
-	'zone.js': '^0.12.0',
 };
 
 @Injectable({
