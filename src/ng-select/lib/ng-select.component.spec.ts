@@ -1874,9 +1874,8 @@ describe('NgSelectComponent', () => {
 			);
 
 			await selectOption(fixture, KeyCode.ArrowDown, 0);
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
 		});
 
@@ -1909,7 +1908,7 @@ describe('NgSelectComponent', () => {
 			listItem.nativeElement.dispatchEvent(event);
 			await tickAndDetectChanges(fixture);
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			expect(outsideClick).not.toHaveBeenCalled();
 			expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
 			expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(1);
@@ -1945,9 +1944,8 @@ describe('NgSelectComponent', () => {
 			);
 
 			await selectOption(fixture, KeyCode.ArrowDown, 0);
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
 		});
 
@@ -1980,9 +1978,8 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.select().open();
 			fixture.detectChanges();
 			fixture.componentInstance.select().close();
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			const dropdown = <HTMLElement>document.querySelector('.ng-dropdown-panel');
 			expect(dropdown).toBeNull();
 		});
@@ -3314,7 +3311,7 @@ describe('NgSelectComponent', () => {
 
 			fixture.componentInstance.select().clearItem(fixture.componentInstance.cities[0]);
 			expect(fixture.componentInstance.select().selectedItems.length).toBe(0);
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 		});
 
 		it('should clear item even if there are no items loaded', async () => {
@@ -3335,7 +3332,7 @@ describe('NgSelectComponent', () => {
 
 			fixture.componentInstance.select().clearItem(selected);
 			expect(fixture.componentInstance.select().selectedItems.length).toBe(0);
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 		});
 
 		it('should display custom dropdown option template', async () => {
@@ -3349,9 +3346,8 @@ describe('NgSelectComponent', () => {
 			);
 
 			fixture.componentInstance.select().open();
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			const el = fixture.debugElement.query(By.css('.custom-option')).nativeElement;
 			expect(el).not.toBeNull();
 		});
@@ -3388,9 +3384,8 @@ describe('NgSelectComponent', () => {
 			);
 
 			fixture.componentInstance.select().open();
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			const header = fixture.debugElement.query(By.css('.header-label')).nativeElement;
 			expect(header.innerHTML).toBe('header');
 
@@ -3411,9 +3406,8 @@ describe('NgSelectComponent', () => {
 			const select = fixture.componentInstance.select();
 			select.filter('tag');
 			select.open();
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			const template = fixture.debugElement.query(By.css('.tag-template')).nativeElement;
 			expect(template).toBeDefined();
 		});
@@ -3438,7 +3432,7 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			fixture.componentInstance.cities = [];
 			fixture.componentInstance.citiesLoading = true;
 			await tickAndDetectChanges(fixture);
@@ -3470,7 +3464,7 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			fixture.componentInstance.cities = [];
 			fixture.componentInstance.select().open();
 			fixture.componentInstance.filter.subscribe();
@@ -3496,7 +3490,7 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			await tickAndDetectChanges(fixture);
 			const spinner = fixture.debugElement.queryAll(By.css('.custom-loadingspinner'));
 			expect(spinner.length).toBe(1);
@@ -3534,7 +3528,7 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
 			await tickAndDetectChanges(fixture);
 			await tickAndDetectChanges(fixture);
@@ -3680,8 +3674,7 @@ describe('NgSelectComponent', () => {
 			// Start with initial value
 			fixture.componentInstance.cityValue = 'initial';
 			fixture.componentInstance.label = 'Initial Label';
-			fixture.detectChanges();
-			await fixture.whenStable(); // Flush pending effects
+			await tickAndDetectChanges(fixture); // Flush pending effects
 
 			let items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].value).toBe('initial');
@@ -3690,8 +3683,7 @@ describe('NgSelectComponent', () => {
 			// Simulate delayed async update of value attribute
 			fixture.componentInstance.cityValue = 'updated';
 			fixture.componentInstance.label = 'Updated Label';
-			fixture.detectChanges();
-			await fixture.whenStable(); // Flush pending effects
+			await tickAndDetectChanges(fixture); // Flush pending effects
 
 			items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].value).toBe('updated');
@@ -4182,7 +4174,7 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.select().filter('server side tag');
 			await tickAndDetectChanges(fixture);
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			expect(<any>fixture.componentInstance.selectedCity).toEqual(
 				expect.objectContaining({
 					id: 5,
@@ -4461,7 +4453,7 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
 			fixture.detectChanges();
 			fixture.componentInstance.select().filter('bei');
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 
 			const result = expect.objectContaining({
 				value: fixture.componentInstance.cities[2],
@@ -4483,7 +4475,7 @@ describe('NgSelectComponent', () => {
 
 			await advanceDebounce(fixture, 200);
 			fixture.componentInstance.select().filter('bei');
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			expect(fixture.componentInstance.select().itemsList.markedItem).toEqual(undefined);
 		});
 
@@ -5831,9 +5823,8 @@ describe('NgSelectComponent', () => {
 			);
 
 			fixture.componentInstance.select().open();
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
 			expect(dropdown.classList.contains('someClass')).toBe(true);
 		});
@@ -5855,9 +5846,8 @@ describe('NgSelectComponent', () => {
 
 			fixture.componentInstance.visible = true;
 			fixture.componentInstance.select().open();
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
 			expect(dropdown.classList.contains('someClass')).toBe(true);
 
@@ -5883,9 +5873,8 @@ describe('NgSelectComponent', () => {
 		);
 
 		fixture.componentInstance.select().open();
-		fixture.detectChanges();
 
-		await fixture.whenStable();
+		await tickAndDetectChanges(fixture);
 		const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
 		expect(dropdown.classList.contains('someClass')).toBe(true);
 	});
@@ -5907,9 +5896,8 @@ describe('NgSelectComponent', () => {
 
 		fixture.componentInstance.visible = true;
 		fixture.componentInstance.select().open();
-		fixture.detectChanges();
 
-		await fixture.whenStable();
+		await tickAndDetectChanges(fixture);
 		const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
 		expect(dropdown.classList.contains('someClass')).toBe(true);
 
