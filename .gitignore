@@ -15,3 +15,5 @@ dist.tgz
 .nx/workspace-data
 .superpowers/
 jasmine-vitest-*.md
+.vitest-attachments
+src/ng-select/lib/__screenshots__/*

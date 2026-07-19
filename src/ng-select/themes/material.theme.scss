@@ -28,6 +28,18 @@ $ng-select-bg: #ffffff !default;
 					border-bottom: none;
 				}
 			}
+			&.ng-appearance-outline {
+				.ng-notched-outline,
+				&:hover .ng-notched-outline {
+					--ng-select-outline-width: 1px;
+					color: $ng-select-divider;
+				}
+				.ng-notched-outline-leading,
+				.ng-notched-outline-notch,
+				.ng-notched-outline-trailing {
+					border-style: dotted;
+				}
+			}
 			.ng-value-container {
 				.ng-value {
 					color: $ng-select-disabled-text;
@@ -49,10 +61,10 @@ $ng-select-bg: #ffffff !default;
 				border-width: 2px;
 			}
 			&.ng-appearance-outline {
-				&:after,
-				&:hover:after {
-					border-color: $ng-select-highlight;
-					border-width: 2px;
+				.ng-notched-outline,
+				&:hover .ng-notched-outline {
+					--ng-select-outline-width: 2px;
+					color: $ng-select-highlight;
 				}
 			}
 			&.ng-appearance-fill {
@@ -82,6 +94,9 @@ $ng-select-bg: #ffffff !default;
 			transform: translateY(-1.28125em) scale(0.75) perspective(100px) translateZ(0.001px);
 		}
 	}
+	&.ng-select-opened .ng-select-container.ng-appearance-outline .ng-notched-outline-notch {
+		border-top-width: 0;
+	}
 	.ng-select-container {
 		color: $ng-select-primary-text;
 		align-items: baseline;
@@ -98,20 +113,64 @@ $ng-select-bg: #ffffff !default;
 		&.ng-appearance-outline {
 			padding: 0 0.5em;
 			min-height: 60px;
+			// The outline is drawn by .ng-notched-outline segments so the floated label
+			// sits in a real border gap and works on any page background.
 			&:after {
-				border: solid 1px $ng-select-divider;
-				border-radius: 5px;
-				height: calc(100% - 0.5em);
-				pointer-events: none;
-				transition: border-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+				display: none;
 			}
-			&:hover:after {
-				border-color: $ng-select-primary-text;
-				border-width: 2px;
+			&:hover .ng-notched-outline {
+				--ng-select-outline-width: 2px;
+				color: $ng-select-primary-text;
+			}
+			.ng-notched-outline {
+				--ng-select-outline-width: 1px;
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				height: calc(100% - 0.5em);
+				display: flex;
+				pointer-events: none;
+				color: $ng-select-divider;
+				transition: color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+			}
+			.ng-notched-outline-leading,
+			.ng-notched-outline-notch,
+			.ng-notched-outline-trailing {
+				box-sizing: border-box;
+				height: 100%;
+				border: 0 solid currentColor;
+				transition: border-width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+			}
+			.ng-notched-outline-leading {
+				border-width: var(--ng-select-outline-width) 0 var(--ng-select-outline-width) var(--ng-select-outline-width);
+				border-radius: 5px 0 0 5px;
+				width: 0.5em;
+				flex-shrink: 0;
+				@include rtl {
+					border-width: var(--ng-select-outline-width) var(--ng-select-outline-width) var(--ng-select-outline-width) 0;
+					border-radius: 0 5px 5px 0;
+				}
+			}
+			.ng-notched-outline-notch {
+				border-width: var(--ng-select-outline-width) 0;
+				flex-shrink: 0;
+				max-width: calc(100% - 1em);
+			}
+			.ng-notched-outline-trailing {
+				border-width: var(--ng-select-outline-width) var(--ng-select-outline-width) var(--ng-select-outline-width) 0;
+				border-radius: 0 5px 5px 0;
+				flex-grow: 1;
+				@include rtl {
+					border-width: var(--ng-select-outline-width) 0 var(--ng-select-outline-width) var(--ng-select-outline-width);
+					border-radius: 5px 0 0 5px;
+				}
+			}
+			&.ng-has-value .ng-notched-outline-notch {
+				border-top-width: 0;
 			}
 			.ng-placeholder {
 				padding: 0 0.25em;
-				background-color: $ng-select-bg;
 				z-index: 1;
 			}
 			.ng-value {
@@ -214,10 +273,15 @@ $ng-select-bg: #ffffff !default;
 				}
 			}
 			.ng-appearance-outline {
-				&:after,
-				&:hover:after {
-					background-image: none;
-					border: dotted 1px $ng-select-divider;
+				.ng-notched-outline,
+				&:hover .ng-notched-outline {
+					--ng-select-outline-width: 1px;
+					color: $ng-select-divider;
+				}
+				.ng-notched-outline-leading,
+				.ng-notched-outline-notch,
+				.ng-notched-outline-trailing {
+					border-style: dotted;
 				}
 			}
 		}

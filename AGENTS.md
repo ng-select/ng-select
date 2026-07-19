@@ -64,7 +64,7 @@ ng-select is an **Angular 22** component library published as two npm packages, 
 - **Angular**: **Standalone components** are primary; `NgSelectModule` remains for backward compatibility—do not remove without an explicit migration plan.
 - **Change detection**: Core components use **OnPush**. Mutating `items` in place will not trigger updates; assign new array references.
 - **Signals in library code**: Prefer `input()`, `output()`, and `model()` for new APIs. The main component uses the `_foo` + `linkedSignal()` pattern to preserve stable public property names—follow that when extending `NgSelectComponent`.
-- **Tests**: Vitest + jsdom (`pnpm test`, `pnpm test:ci`). No Playwright e2e in this repo.
+- **Tests**: Vitest browser mode — headless **Chromium** via Playwright (`vitest.config.ts`); `pnpm test`, `pnpm test:ci`. Playwright is only the unit-test browser provider — there is no separate e2e suite.
 - **Commits**: Use [Conventional Commits](https://www.conventionalcommits.org/) format (required by semantic-release).
 
 ---
@@ -255,7 +255,7 @@ These rules come from [`.cursor/rules/rules.mdc`](./.cursor/rules/rules.mdc) and
 
 ### 10. Testing
 
-- Use Karma and Jasmine APIs (`fakeAsync`, `tick`, `TestBed`, component fixtures).
+- Use Vitest APIs (`vi.spyOn`, `expect`) with Angular testing utilities (`fakeAsync`, `tick`, `TestBed`, component fixtures).
 - Update existing specs when behavior changes; follow helpers in `src/ng-select/testing/`.
 - Test keyboard navigation, selection, and forms integration for library changes.
 
@@ -364,11 +364,11 @@ When changing styles, verify all three themes and check validation-state styling
 
 - **DO NOT** add new unit tests unless explicitly requested or needed to cover changed behavior.
 - **SHOULD** update existing specs when modifying behavior already covered by tests.
-- Test stack: **Vitest** + **jsdom** + `zone.js/testing`.
+- Test stack: **Vitest browser mode** (headless **Chromium** via `@vitest/browser-playwright`, wired through `@angular/build:unit-test` and `vitest.config.ts`) + `zone.js/testing`. Failed specs save screenshots to `src/ng-select/lib/__screenshots__/`.
 - Main spec: `src/ng-select/lib/ng-select.component.spec.ts` (extensive coverage—follow its patterns).
 - Helpers: `src/ng-select/testing/helpers.ts`, mocks in `src/ng-select/testing/mocks.ts`.
 - Use `fakeAsync`, `tick`, `tickAndDetectChanges`, and `selectOption` helpers for keyboard/dropdown interactions.
-- CI runs `pnpm test:ci` (headless Chrome) and reports coverage to Coveralls.
+- CI runs `pnpm test:ci` (headless Chromium) and reports coverage to Coveralls.
 - Code coverage excludes: `testing/*`, barrel files, `console.service.ts`, `search-helper.ts`, `ng-templates.directive.ts`.
 
 For substantial library changes:

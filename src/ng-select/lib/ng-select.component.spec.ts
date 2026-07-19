@@ -185,6 +185,34 @@ describe('NgSelectComponent', () => {
 			expect(ngSelectContainer.classList.contains('ng-appearance-outline')).toBe(true);
 			expect(ngSelectContainer.classList.contains('ng-appearance-fill')).toBe(false);
 		});
+
+		it('should render notched outline elements when appearance is outline', () => {
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select appearance="outline" placeholder="Select city"></ng-select>`);
+
+			const outline: HTMLElement = fixture.nativeElement.querySelector('.ng-select-container > .ng-notched-outline');
+			expect(outline).toBeTruthy();
+			expect(outline.querySelector('.ng-notched-outline-leading')).toBeTruthy();
+			expect(outline.querySelector('.ng-notched-outline-notch')).toBeTruthy();
+			expect(outline.querySelector('.ng-notched-outline-trailing')).toBeTruthy();
+		});
+
+		it('should not render notched outline elements for other appearances', () => {
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select placeholder="Select city"></ng-select>`);
+
+			expect(fixture.nativeElement.querySelector('.ng-notched-outline')).toBeNull();
+		});
+
+		it('should size the outline notch to the scaled placeholder width', async () => {
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select appearance="outline" placeholder="Select city"></ng-select>`);
+			await tickAndDetectChanges(fixture);
+
+			const placeholder: HTMLElement = fixture.nativeElement.querySelector('.ng-placeholder');
+			Object.defineProperty(placeholder, 'offsetWidth', { value: 100 });
+			await tickAndDetectChanges(fixture);
+
+			const notch: HTMLElement = fixture.nativeElement.querySelector('.ng-notched-outline-notch');
+			expect(notch.style.width).toBe('75px');
+		});
 	});
 
 	describe('Input attributes', () => {
