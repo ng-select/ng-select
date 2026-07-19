@@ -5612,6 +5612,27 @@ describe('Grouping', () => {
 		expect(items[11].parent).toBe(items[10]);
 	});
 
+	it('should not apply ng-option class to group header elements', async () => {
+		const fixture = createTestingModule(
+			NgSelectGroupingTestComponent,
+			`<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindLabel="name"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`,
+		);
+
+		await tickAndDetectChanges(fixture);
+		const select = fixture.componentInstance.select();
+		select.open();
+		await tickAndDetectChanges(fixture);
+		fixture.detectChanges();
+
+		const optgroup = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel .ng-optgroup');
+		expect(optgroup).toBeTruthy();
+		expect(optgroup.classList).not.toContain('ng-option');
+	});
+
 	it('should group items with children array by group key', async () => {
 		const fixture = createTestingModule(
 			NgSelectGroupingTestComponent,
