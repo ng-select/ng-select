@@ -16,7 +16,15 @@
 			@for (item of selectedItems; track trackByOption($index, item)) {
 				<div [class.ng-value-disabled]="item.disabled" class="ng-value">
 					<ng-template #defaultLabelTemplate>
-						<span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">×</span>
+						<span
+							class="ng-value-icon left"
+							role="button"
+							tabindex="0"
+							[attr.aria-label]="(removeText() ?? config.removeText) + ' ' + item.label"
+							(click)="unselect(item)"
+							(keydown)="handleRemoveKeydown($event, item)"
+							>×</span
+						>
 						<span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
 					</ng-template>
 					<ng-template
@@ -67,6 +75,7 @@
 			role="button"
 			tabindex="0"
 			[attr.tabindex]="tabFocusOnClear() ? 0 : -1"
+			[attr.aria-label]="clearAllText() || config.clearAllText"
 			title="{{ clearAllText() || config.clearAllText }}"
 			#clearButton
 			(click)="handleClearClick($event)">
@@ -186,7 +195,13 @@
 
 <!-- Always present aria-live region -->
 <div aria-atomic="true" aria-live="polite" class="ng-visually-hidden" role="status">
-	@if (isOpen() && showNoItemsFound()) {
-		{{ notFoundText() ?? config.notFoundText }}
+	@if (isOpen()) {
+		@if (showNoItemsFound()) {
+			{{ notFoundText() ?? config.notFoundText }}
+		} @else if (showTypeToSearch()) {
+			{{ typeToSearchText() || config.typeToSearchText }}
+		} @else if (loading() && itemsList.filteredItems.length === 0) {
+			{{ loadingText() || config.loadingText }}
+		}
 	}
 </div>

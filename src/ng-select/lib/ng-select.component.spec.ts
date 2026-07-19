@@ -3703,7 +3703,8 @@ describe('NgSelectComponent', () => {
 			await tickAndDetectChanges(fixture);
 			expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(2);
 
-			await selectOption(fixture, KeyCode.ArrowUp, 2);
+			// reopening marks the first selected option, so enter toggles it off directly
+			await selectOption(fixture, KeyCode.ArrowUp, 0);
 			await tickAndDetectChanges(fixture);
 			expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(1);
 			expect(fixture.componentInstance.select().selectedItems[0]).toEqual(
@@ -3731,7 +3732,8 @@ describe('NgSelectComponent', () => {
 			it('should be able to select only two elements', async () => {
 				await selectOption(fixture, KeyCode.ArrowDown, 0);
 				await selectOption(fixture, KeyCode.ArrowDown, 1);
-				await selectOption(fixture, KeyCode.ArrowDown, 1);
+				// reopening marks the first selected option, so two arrow presses target an unselected one
+				await selectOption(fixture, KeyCode.ArrowDown, 2);
 				await tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(2);
 			});
@@ -3896,7 +3898,8 @@ describe('NgSelectComponent', () => {
 				await tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(2);
 
-				await selectOption(fixture, KeyCode.ArrowUp, 2);
+				// reopening marks the first selected option, so enter toggles it off directly
+				await selectOption(fixture, KeyCode.ArrowUp, 0);
 				await tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(1);
 				expect(fixture.componentInstance.select().selectedItems[0]).toEqual(
@@ -3920,7 +3923,8 @@ describe('NgSelectComponent', () => {
 				await tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(2);
 
-				await selectOption(fixture, KeyCode.ArrowUp, 2);
+				// reopening marks the first selected option, so enter toggles it off directly
+				await selectOption(fixture, KeyCode.ArrowUp, 0);
 				await tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(1);
 				expect(fixture.componentInstance.select().selectedItems[0]).toEqual(
@@ -5053,6 +5057,172 @@ describe('NgSelectComponent', () => {
 
 			const notFoundText = fixture.componentInstance.select().notFoundText();
 			expect(notFoundText).toBe('No items found (aria-live)');
+		});
+	});
+
+	describe('Accessibility enhancements', () => {
+		function liveRegionText(fixture: ComponentFixture<NgSelectTestComponent>): string {
+			return fixture.debugElement.query(By.css('.ng-visually-hidden')).nativeElement.textContent.trim();
+		}
+
+		describe('selected value remove icon', () => {
+			it('should expose remove icon as a focusable button with aria-label', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [(ngModel)]="selectedCities"></ng-select>`,
+				);
+				fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+
+				const icon = fixture.debugElement.query(By.css('.ng-value-icon')).nativeElement;
+				expect(icon.getAttribute('role')).toBe('button');
+				expect(icon.getAttribute('tabindex')).toBe('0');
+				expect(icon.getAttribute('aria-label')).toBe('Remove New York');
+			});
+
+			it('should use custom removeText in the remove icon aria-label', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [multiple]="true" removeText="Verwijder" [(ngModel)]="selectedCities"></ng-select>`,
+				);
+				fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+
+				const icon = fixture.debugElement.query(By.css('.ng-value-icon')).nativeElement;
+				expect(icon.getAttribute('aria-label')).toBe('Verwijder New York');
+			});
+
+			it('should unselect item when enter is pressed on remove icon', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [(ngModel)]="selectedCities"></ng-select>`,
+				);
+				fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0], fixture.componentInstance.cities[1]];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+
+				const icon = fixture.debugElement.query(By.css('.ng-value-icon'));
+				icon.triggerEventHandler('keydown', { key: KeyCode.Enter, preventDefault: () => {}, stopPropagation: () => {} });
+				await tickAndDetectChanges(fixture);
+
+				const select = fixture.componentInstance.select();
+				expect(select.selectedItems.length).toBe(1);
+				expect(select.selectedItems[0].label).toBe('London');
+			});
+
+			it('should unselect item when space is pressed on remove icon', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [(ngModel)]="selectedCities"></ng-select>`,
+				);
+				fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0], fixture.componentInstance.cities[1]];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+
+				const icon = fixture.debugElement.query(By.css('.ng-value-icon'));
+				icon.triggerEventHandler('keydown', { key: KeyCode.Space, preventDefault: () => {}, stopPropagation: () => {} });
+				await tickAndDetectChanges(fixture);
+
+				expect(fixture.componentInstance.select().selectedItems.length).toBe(1);
+			});
+		});
+
+		describe('clear button', () => {
+			it('should set aria-label from clearAllText on clear button', async () => {
+				const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name" [(ngModel)]="selectedCity"></ng-select>`);
+				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+
+				const clear = fixture.debugElement.query(By.css('.ng-clear-wrapper')).nativeElement;
+				expect(clear.getAttribute('aria-label')).toBe('Clear all');
+			});
+
+			it('should clear input when space pressed while clear button focused', async () => {
+				const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name" [(ngModel)]="selectedCity"></ng-select>`);
+				const select = fixture.componentInstance.select();
+				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+
+				const handleClearClick = vi.spyOn(select, 'handleClearClick').mockReturnValue(undefined);
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space, select.clearButton().nativeElement);
+				expect(handleClearClick).toHaveBeenCalled();
+			});
+		});
+
+		describe('aria-live region', () => {
+			it('should announce typeToSearchText when type to search is shown', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [typeahead]="filter" [(ngModel)]="selectedCity"></ng-select>`,
+				);
+				fixture.componentInstance.filter.subscribe();
+				fixture.componentInstance.cities = [];
+				await tickAndDetectChanges(fixture);
+
+				fixture.componentInstance.select().open();
+				await tickAndDetectChanges(fixture);
+
+				expect(liveRegionText(fixture)).toBe('Type to search');
+			});
+
+			it('should announce loadingText while loading with no items', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [loading]="citiesLoading" [(ngModel)]="selectedCity"></ng-select>`,
+				);
+				fixture.componentInstance.cities = [];
+				fixture.componentInstance.citiesLoading = true;
+				await tickAndDetectChanges(fixture);
+
+				fixture.componentInstance.select().open();
+				await tickAndDetectChanges(fixture);
+
+				expect(liveRegionText(fixture)).toBe('Loading...');
+			});
+		});
+
+		describe('multiple select marked item on open', () => {
+			it('should mark first selected option in list order when opening', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [(ngModel)]="selectedCities"></ng-select>`,
+				);
+				fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[1], fixture.componentInstance.cities[3]];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+				await tickAndDetectChanges(fixture);
+
+				expect(fixture.componentInstance.select().itemsList.markedItem.label).toBe('London');
+			});
+		});
+
+		describe('custom clear button focus (issue #2735)', () => {
+			it('should focus clear wrapper on tab when custom clear button template is used', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [(ngModel)]="selectedCity">
+						<ng-template ng-clearbutton-tmp>
+							<div class="custom-clearbutton">X</div>
+						</ng-template>
+					</ng-select>`,
+				);
+				const select = fixture.componentInstance.select();
+				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+				expect(select.showClear()).toBeTruthy();
+
+				select.searchInput().nativeElement.focus();
+				const focusOnClear = vi.spyOn(select, 'focusOnClear').mockReturnValue(undefined);
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+				expect(focusOnClear).toHaveBeenCalled();
+			});
 		});
 	});
 

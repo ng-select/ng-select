@@ -131,6 +131,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly loadingText = linkedSignal(() => this._loadingText());
 	readonly _clearAllText = input<string>(undefined, { alias: 'clearAllText' });
 	readonly clearAllText = linkedSignal(() => this._clearAllText());
+	readonly _removeText = input<string>(undefined, { alias: 'removeText' });
+	readonly removeText = linkedSignal(() => this._removeText());
 	readonly _dropdownPosition = input<DropdownPosition>('auto', { alias: 'dropdownPosition' });
 	readonly dropdownPosition = linkedSignal(() => this._dropdownPosition());
 	readonly _appendTo = input<string>(undefined, { alias: 'appendTo' });
@@ -492,9 +494,21 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	handleKeyCodeClear($event: KeyboardEvent) {
 		switch ($event.key) {
 			case KeyCode.Enter:
+			case KeyCode.Space:
 				this.handleClearClick();
 				$event.preventDefault();
 				break;
+		}
+	}
+
+	handleRemoveKeydown($event: KeyboardEvent, item: NgOption) {
+		if (item.disabled) {
+			return;
+		}
+		if ($event.key === KeyCode.Enter || $event.key === KeyCode.Space) {
+			$event.preventDefault();
+			$event.stopPropagation();
+			this.unselect(item);
 		}
 	}
 
