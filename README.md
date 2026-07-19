@@ -345,6 +345,15 @@ This will cause the component to detect the change and update. Some might have c
 this is a pricey operation, however, it is much more performant than running `ngDoCheck` and
 constantly diffing the array.
 
+### Zoneless change detection
+
+`@ng-select/ng-select` and `@ng-select/ng-option-highlight` fully support
+[zoneless change detection](https://angular.dev/guide/zoneless) — the default for new Angular
+apps since v21. No setup is required: the libraries do not depend on `zone.js` (it is not in
+their dependency graphs) and work identically whether your app is zoneless or still uses
+`zone.js`. Both modes are covered by the unit-test suite in CI, and the
+[demo site](https://ng-select.github.io/ng-select) runs zoneless.
+
 ## Custom styles
 
 If you are not happy with default styles you can easily override them with increased selector specificity or creating your own theme. This applies if you are using no `ViewEncapsulation` or adding styles to global stylesheet. E.g.
