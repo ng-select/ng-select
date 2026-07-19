@@ -559,7 +559,7 @@ describe('ItemsList', () => {
 			expect(list.markedIndex).toBe(0);
 		});
 
-		it('should keep marked item if it is above last selected item', () => {
+		it('should mark first selected item even if another item was marked', () => {
 			list.select(list.items[10]);
 			list.markSelectedOrDefault();
 			expect(list.markedIndex).toBe(10);
@@ -568,7 +568,7 @@ describe('ItemsList', () => {
 			list.markNextItem();
 			list.markNextItem();
 			list.markSelectedOrDefault();
-			expect(list.markedIndex).toBe(13);
+			expect(list.markedIndex).toBe(10);
 		});
 
 		it('should mark first after last marked item was filtered out', () => {

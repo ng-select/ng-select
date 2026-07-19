@@ -328,12 +328,30 @@ export class ItemsList {
 			return -1;
 		}
 
-		const selectedIndex = this._filteredItems.indexOf(this.lastSelectedItem);
+		const selectedIndex = this._getFirstSelectedIndex();
 		if (this.lastSelectedItem && selectedIndex < 0) {
 			return -1;
 		}
 
-		return Math.max(this.markedIndex, selectedIndex);
+		return selectedIndex > -1 ? selectedIndex : this.markedIndex;
+	}
+
+	/**
+	 * Index of the first selected, non-disabled option in filtered list order.
+	 * Per the WAI-ARIA listbox pattern, focus lands on the first selected option when the list opens.
+	 */
+	private _getFirstSelectedIndex() {
+		let index = -1;
+		for (const selected of this.selectedItems) {
+			if (selected.disabled) {
+				continue;
+			}
+			const i = this._filteredItems.indexOf(selected);
+			if (i > -1 && (index === -1 || i < index)) {
+				index = i;
+			}
+		}
+		return index;
 	}
 
 	private _groupBy(items: NgOption[], prop: string | ((value: any) => any)): OptionGroups {
