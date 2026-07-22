@@ -40,7 +40,7 @@ export class NgOptionHighlightDirective {
 			return;
 		}
 
-		const alternationString = escapeRegExp(this.term()).replace(' ', '|');
+		const alternationString = escapeRegExp(this.term()).replace(/\s+/g, '|');
 		const termRegex = new RegExp(alternationString, 'gi');
 		this._setInnerHtml(label.replace(termRegex, `<span class=\"highlighted\">$&</span>`));
 	}
