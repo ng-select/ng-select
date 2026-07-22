@@ -1,0 +1,42 @@
+<p>
+	Compare Material theme appearances. Switch the demo theme to <strong>Material</strong> in the header to see underline, outline, and fill styles. Focus a
+	searchable control and type to check that the search input stays vertically aligned with the selected value.
+</p>
+
+<div class="form-row">
+	<div class="form-group col-md-4">
+		<label for="material-default">Default (underline)</label>
+		<ng-select id="material-default" [items]="cities" bindLabel="name" placeholder="Select city" [(ngModel)]="selectedDefault"> </ng-select>
+	</div>
+	<div class="form-group col-md-4">
+		<label for="material-outline">Outline</label>
+		<ng-select id="material-outline" appearance="outline" [items]="cities" bindLabel="name" placeholder="Select city" [(ngModel)]="selectedOutline">
+		</ng-select>
+	</div>
+	<div class="form-group col-md-4">
+		<label for="material-fill">Fill</label>
+		<ng-select id="material-fill" appearance="fill" [items]="cities" bindLabel="name" placeholder="Select city" [(ngModel)]="selectedFill"> </ng-select>
+	</div>
+</div>
+
+<div class="form-row">
+	<div class="form-group col-md-4">
+		<label for="material-outline-empty">Outline (empty / floating label)</label>
+		<ng-select
+			id="material-outline-empty"
+			appearance="outline"
+			[items]="cities"
+			bindLabel="name"
+			placeholder="Select city"
+			[(ngModel)]="selectedOutlineEmpty">
+		</ng-select>
+	</div>
+	<div class="form-group col-md-4">
+		<label for="material-outline-options">Outline with ng-option</label>
+		<ng-select id="material-outline-options" appearance="outline" placeholder="foo">
+			<ng-option>AAA</ng-option>
+			<ng-option>BBB</ng-option>
+			<ng-option>CCC</ng-option>
+		</ng-select>
+	</div>
+</div>

@@ -16,7 +16,6 @@
 						"outputPath": "dist/demo",
 						"index": "index.html",
 						"main": "main.ts",
-						"polyfills": "polyfills.ts",
 						"assets": [],
 						"styles": ["styles.css"],
 						"scripts": []
