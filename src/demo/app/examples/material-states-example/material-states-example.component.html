@@ -1,0 +1,55 @@
+<p>Disabled and clearable states for outline and fill appearances (Material theme).</p>
+
+<div class="form-row">
+	<div class="form-group col-md-6">
+		<label for="material-outline-clearable">Outline clearable</label>
+		<ng-select
+			id="material-outline-clearable"
+			appearance="outline"
+			[items]="cities"
+			bindLabel="name"
+			[clearable]="true"
+			placeholder="Select city"
+			[(ngModel)]="selectedOutline">
+		</ng-select>
+	</div>
+	<div class="form-group col-md-6">
+		<label for="material-fill-clearable">Fill clearable</label>
+		<ng-select
+			id="material-fill-clearable"
+			appearance="fill"
+			[items]="cities"
+			bindLabel="name"
+			[clearable]="true"
+			placeholder="Select city"
+			[(ngModel)]="selectedFill">
+		</ng-select>
+	</div>
+</div>
+
+<div class="form-row">
+	<div class="form-group col-md-6">
+		<label for="material-outline-disabled">Outline disabled</label>
+		<ng-select
+			id="material-outline-disabled"
+			appearance="outline"
+			[items]="cities"
+			bindLabel="name"
+			[disabled]="true"
+			placeholder="Select city"
+			[(ngModel)]="selectedOutlineDisabled">
+		</ng-select>
+	</div>
+	<div class="form-group col-md-6">
+		<label for="material-fill-disabled">Fill disabled</label>
+		<ng-select
+			id="material-fill-disabled"
+			appearance="fill"
+			[items]="cities"
+			bindLabel="name"
+			[disabled]="true"
+			placeholder="Select city"
+			[(ngModel)]="selectedFillDisabled">
+		</ng-select>
+	</div>
+</div>

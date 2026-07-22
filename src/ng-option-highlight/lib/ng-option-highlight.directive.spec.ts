@@ -23,13 +23,31 @@ class TestComponent {
 	showNew = false;
 }
 
+/**
+ * Zone/zoneless parity shim (same as ng-select's testing/helpers.ts): in a zoneless
+ * TestBed, fixture.detectChanges() only renders views Angular knows are dirty, so plain
+ * test-property mutations would be skipped by the render pass and then flagged NG0100 by
+ * the checkNoChanges pass (angular/angular#59082). Marking the root view dirty first
+ * restores identical semantics in both lanes.
+ */
+function applyZonelessFixtureCompat<T>(fixture: ComponentFixture<T>): ComponentFixture<T> {
+	const originalDetectChanges = fixture.detectChanges.bind(fixture);
+	fixture.detectChanges = (checkNoChanges?: boolean) => {
+		fixture.changeDetectorRef.markForCheck();
+		originalDetectChanges(checkNoChanges);
+	};
+	return fixture;
+}
+
 describe('NgOptionHighlightDirective', () => {
 	let fixture: ComponentFixture<TestComponent>;
 
 	beforeEach(() => {
-		fixture = TestBed.configureTestingModule({
-			imports: [TestComponent],
-		}).createComponent(TestComponent);
+		fixture = applyZonelessFixtureCompat(
+			TestBed.configureTestingModule({
+				imports: [TestComponent],
+			}).createComponent(TestComponent),
+		);
 
 		fixture.detectChanges();
 	});

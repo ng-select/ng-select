@@ -174,6 +174,7 @@ ng-select/
 | `/append-to-element`    | `appendTo` behavior                             |
 | `/popover`              | Native Popover API                              |
 | `/grouping`             | `groupBy` and selectable groups                 |
+| `/material`             | Material theme appearances (outline / fill)     |
 
 Register new examples in `src/demo/app/examples/examples.ts`.
 
