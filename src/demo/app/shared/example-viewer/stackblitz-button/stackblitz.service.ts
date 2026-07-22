@@ -72,6 +72,9 @@ export class StackblitzService {
 				fileResult = fileResult.replace('//example-template', this._exampleTemplate);
 				fileResult = fileResult.replace('//example-cmp', this._componentName);
 			}
+			if (file === 'styles.css' && this._exampleName.startsWith('material')) {
+				fileResult = fileResult.replace('@ng-select/ng-select/themes/default.theme.css', '@ng-select/ng-select/themes/material.theme.css');
+			}
 			files[file] = fileResult;
 		}
 		return files;
