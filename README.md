@@ -1,7 +1,7 @@
 [![npm version](https://badge.fury.io/js/%40ng-select%2Fng-select.svg)](https://badge.fury.io/js/%40ng-select%2Fng-select)
+[![Socket Badge](https://badge.socket.dev/npm/package/@ng-select/ng-select/23.4.0)](https://badge.socket.dev/npm/package/@ng-select/ng-select/23.4.0)
 [![Coverage Status][coveralls-image]][coveralls-url]
 [![gzip size](https://img.shields.io/badge/GZip_size-18.7%20kB-2ca5e0?style=flat-square&logo=npm&labelColor=black)](https://img.shields.io/badge/GZip_size-18.7%20kB-2ca5e0?style=flat-square&logo=npm&labelColor=black)
-[![ng-select channel on discord](https://img.shields.io/discord/873021904708059177.svg?style=flat-square)](https://discord.gg/ETyJTvKK)
 
 [coveralls-image]: https://coveralls.io/repos/github/ng-select/ng-select/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/github/ng-select/ng-select?branch=master
