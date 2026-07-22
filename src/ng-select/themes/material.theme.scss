@@ -176,6 +176,12 @@ $ng-select-bg: #ffffff !default;
 			.ng-value {
 				padding-left: 0.25em;
 			}
+			// Outline min-height (60px) is taller than the default control; pin the absolute
+			// search input to the value content offset instead of bottom: 0.4375em.
+			.ng-value-container .ng-input {
+				top: calc(0.84375em + 0.4375em);
+				bottom: auto;
+			}
 		}
 		&.ng-appearance-fill {
 			background-color: rgba(0, 0, 0, 0.06);

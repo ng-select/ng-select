@@ -17,3 +17,4 @@ dist.tgz
 jasmine-vitest-*.md
 .vitest-attachments
 src/ng-select/lib/__screenshots__/*
+/docs

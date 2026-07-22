@@ -368,6 +368,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._updateVirtualHeight(range.scrollHeight);
 		this._contentPanel().style.transform = `translateY(${range.topPadding}px)`;
 
+		// These outputs must stay template-bound in ng-select.component.html: the
+		// template listener wrapper is what schedules CD under zoneless (zone.run is a
+		// no-op there). A programmatic subscribe would need an explicit markForCheck
 		this._zone.run(() => {
 			this.update.emit(this.items().slice(range.start, range.end));
 			this.scroll.emit({ start: range.start, end: range.end });
@@ -385,6 +388,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 
 		const [first] = this.items();
+		// Relies on synchronous template execution: the emitted item renders in the
+		// same CD pass (the parent's template listener runs mid-pass and the @for sits
+		// later in the template), so the microtask below measures real DOM with and
+		// without zone.js alike
 		this.update.emit([first]);
 
 		return Promise.resolve().then(() => {

@@ -46,4 +46,9 @@ export const appRoutes: Routes = [
 		data: { title: 'Popover', examples: 'popover' },
 	},
 	{ path: 'grouping', component: RouteViewerComponent, data: { title: 'Grouping', examples: 'group' } },
+	{
+		path: 'material',
+		component: RouteViewerComponent,
+		data: { title: 'Material theme', examples: 'material' },
+	},
 ];
