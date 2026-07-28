@@ -7,7 +7,15 @@ import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import type { Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { getNgSelectElement, getNgSelectNativeElement, selectOption, TestsErrorHandler, tickAndDetectChanges, triggerKeyDownEvent } from '../testing/helpers';
+import {
+	applyZonelessFixtureCompat,
+	getNgSelectElement,
+	getNgSelectNativeElement,
+	selectOption,
+	TestsErrorHandler,
+	tickAndDetectChanges,
+	triggerKeyDownEvent,
+} from '../testing/helpers';
 import { MockConsole } from '../testing/mocks';
 import { advanceDebounce, disableDebounceFakeTimers, enableDebounceFakeTimers, openSelect } from '../testing/timer-helpers';
 import { NgSelectConfig } from './config.service';
@@ -185,6 +193,34 @@ describe('NgSelectComponent', () => {
 			expect(ngSelectContainer.classList.contains('ng-appearance-outline')).toBe(true);
 			expect(ngSelectContainer.classList.contains('ng-appearance-fill')).toBe(false);
 		});
+
+		it('should render notched outline elements when appearance is outline', () => {
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select appearance="outline" placeholder="Select city"></ng-select>`);
+
+			const outline: HTMLElement = fixture.nativeElement.querySelector('.ng-select-container > .ng-notched-outline');
+			expect(outline).toBeTruthy();
+			expect(outline.querySelector('.ng-notched-outline-leading')).toBeTruthy();
+			expect(outline.querySelector('.ng-notched-outline-notch')).toBeTruthy();
+			expect(outline.querySelector('.ng-notched-outline-trailing')).toBeTruthy();
+		});
+
+		it('should not render notched outline elements for other appearances', () => {
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select placeholder="Select city"></ng-select>`);
+
+			expect(fixture.nativeElement.querySelector('.ng-notched-outline')).toBeNull();
+		});
+
+		it('should size the outline notch to the scaled placeholder width', async () => {
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select appearance="outline" placeholder="Select city"></ng-select>`);
+			await tickAndDetectChanges(fixture);
+
+			const placeholder: HTMLElement = fixture.nativeElement.querySelector('.ng-placeholder');
+			Object.defineProperty(placeholder, 'offsetWidth', { value: 100 });
+			await tickAndDetectChanges(fixture);
+
+			const notch: HTMLElement = fixture.nativeElement.querySelector('.ng-notched-outline-notch');
+			expect(notch.style.width).toBe('75px');
+		});
 	});
 
 	describe('Input attributes', () => {
@@ -200,6 +236,18 @@ describe('NgSelectComponent', () => {
 			await tickAndDetectChanges(fixture);
 
 			expect(input.getAttribute('aria-invalid')).toBe('true');
+		});
+
+		it('should not set aria-controls while closed when input attributes are re-applied', async () => {
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" [inputAttrs]="inputAttrs"></ng-select>`);
+
+			await tickAndDetectChanges(fixture);
+
+			const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+			fixture.componentInstance.inputAttrs = { 'aria-invalid': 'true' };
+			await tickAndDetectChanges(fixture);
+
+			expect(input.hasAttribute('aria-controls')).toBe(false);
 		});
 
 		it('should update search input attributes when inputAttrs signal is set programmatically', async () => {
@@ -1834,9 +1882,8 @@ describe('NgSelectComponent', () => {
 			);
 
 			await selectOption(fixture, KeyCode.ArrowDown, 0);
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
 		});
 
@@ -1869,7 +1916,7 @@ describe('NgSelectComponent', () => {
 			listItem.nativeElement.dispatchEvent(event);
 			await tickAndDetectChanges(fixture);
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			expect(outsideClick).not.toHaveBeenCalled();
 			expect(fixture.componentInstance.select().isOpen()).toBeFalsy();
 			expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(1);
@@ -1905,9 +1952,8 @@ describe('NgSelectComponent', () => {
 			);
 
 			await selectOption(fixture, KeyCode.ArrowDown, 0);
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			expect(fixture.componentInstance.select().isOpen()).toBeTruthy();
 		});
 
@@ -1940,9 +1986,8 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.select().open();
 			fixture.detectChanges();
 			fixture.componentInstance.select().close();
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			const dropdown = <HTMLElement>document.querySelector('.ng-dropdown-panel');
 			expect(dropdown).toBeNull();
 		});
@@ -2080,7 +2125,7 @@ describe('NgSelectComponent', () => {
 						constructor(cb: () => void) {
 							observerCallback = cb;
 						}
-						observe() { }
+						observe() {}
 						disconnect = disconnectSpy;
 					};
 				});
@@ -2554,6 +2599,41 @@ describe('NgSelectComponent', () => {
 			expect(fixture.componentInstance.select().selectedItems).toEqual([result]);
 		});
 
+		it('should select marked item on blur when [selectOnTab]="true"', async () => {
+			// #2425 — focus can leave the open control without a Tab keydown (click-away, AT navigation);
+			// the marked item should still be committed so forms using updateOn: 'blur' pick up the value.
+			const { fixture, select } = genericFixture();
+			await advanceDebounce(fixture, 200);
+			select.filter('bei');
+			await advanceDebounce(fixture, 200);
+
+			const result = expect.objectContaining({ value: fixture.componentInstance.cities[2] });
+			expect(select.isOpen()).toBeTruthy();
+			expect(select.itemsList.markedItem).toEqual(result);
+
+			select.searchInput().nativeElement.dispatchEvent(new FocusEvent('blur'));
+			await tickAndDetectChanges(fixture);
+
+			expect(select.selectedItems).toEqual([result]);
+			expect(select.isOpen()).toBeFalsy();
+		});
+
+		it('should not select marked item on blur when [selectOnTab]="false"', async () => {
+			const { fixture, select } = genericFixture();
+			fixture.componentInstance.selectOnTab = false;
+			await tickAndDetectChanges(fixture);
+			await advanceDebounce(fixture, 200);
+			select.filter('bei');
+			await advanceDebounce(fixture, 200);
+
+			expect(select.itemsList.markedItem).toBeTruthy();
+
+			select.searchInput().nativeElement.dispatchEvent(new FocusEvent('blur'));
+			await tickAndDetectChanges(fixture);
+
+			expect(select.selectedItems).toEqual([]);
+		});
+
 		it('should focus on clear button when tab pressed while not opened and clear showing', async () => {
 			const { fixture, select } = genericFixture();
 			fixture.componentInstance.tabFocusOnClearButton = true;
@@ -2764,6 +2844,59 @@ describe('NgSelectComponent', () => {
 			expect(select.isOpen()).toBeTruthy();
 		});
 
+		it('should stay open when the page shifts between mousedown on the select and the resulting click (#2773)', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+
+			// The press begins on the select, but focus-scroll moves the layout before
+			// the click event fires, so its target resolves to an unrelated element
+			document.getElementById('select').dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+			document.getElementById('outside').click();
+
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+		});
+
+		it('should close when the interaction starts and ends outside the component', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+
+			const outsideEl = document.getElementById('outside');
+			outsideEl.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+			outsideEl.click();
+
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeFalsy();
+		});
+
+		it('should stay open when an option is clicked from within a shadow root (#2726)', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+
+			// Host the panel in a shadow root, as happens with an appendTo target inside
+			// a web component. The document-level listener then sees only the shadow host
+			// as event target and must trace the click via composedPath() to recognize it
+			// as an inside click
+			const host = document.createElement('div');
+			document.body.appendChild(host);
+			const shadowRoot = host.attachShadow({ mode: 'open' });
+			shadowRoot.appendChild(document.querySelector('ng-dropdown-panel'));
+
+			try {
+				const option = shadowRoot.querySelector('.ng-option') as HTMLElement;
+				option.click();
+
+				await tickAndDetectChanges(fixture);
+				expect(select.isOpen()).toBeTruthy();
+				expect(select.selectedItems.length).toBe(1);
+			} finally {
+				host.remove();
+			}
+		});
+
 		it('should close dropdown when clicking outside if NgSelectConfig is provided as a partial object without outsideClickEvent', async () => {
 			// Simulate real-world usage: `{ provide: NgSelectConfig, useValue: { appendTo: 'body' } }`
 			// where outsideClickEvent is undefined because the plain object lacks that property.
@@ -2783,7 +2916,7 @@ describe('NgSelectComponent', () => {
 				},
 			});
 			TestBed.compileComponents();
-			const partialFixture = TestBed.createComponent(NgSelectTestComponent);
+			const partialFixture = applyZonelessFixtureCompat(TestBed.createComponent(NgSelectTestComponent));
 			partialFixture.detectChanges();
 			const partialSelect = partialFixture.componentInstance.select();
 
@@ -2794,6 +2927,49 @@ describe('NgSelectComponent', () => {
 			document.getElementById('outside2').click();
 			await tickAndDetectChanges(partialFixture);
 			expect(partialSelect.isOpen()).toBeFalsy();
+		});
+	});
+
+	describe('Outside click without appendTo', () => {
+		let fixture: ComponentFixture<NgSelectTestComponent>;
+		let select: NgSelectComponent;
+		beforeEach(() => {
+			fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<div id="outside">Outside</div><br />
+                <ng-select id="select" [items]="cities"
+                    bindLabel="name"
+                    multiple="true"
+                    [closeOnSelect]="false"
+                    [(ngModel)]="selectedCity">
+                </ng-select>`,
+			);
+			select = fixture.componentInstance.select();
+		});
+
+		it('should stay open when the page shifts between mousedown on the select and the resulting click', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+
+			document.getElementById('select').dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+			document.getElementById('outside').click();
+
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+		});
+
+		it('should close when the interaction starts and ends outside the component', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeTruthy();
+
+			const outsideEl = document.getElementById('outside');
+			outsideEl.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+			outsideEl.click();
+
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBeFalsy();
 		});
 	});
 
@@ -3143,7 +3319,7 @@ describe('NgSelectComponent', () => {
 
 			fixture.componentInstance.select().clearItem(fixture.componentInstance.cities[0]);
 			expect(fixture.componentInstance.select().selectedItems.length).toBe(0);
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 		});
 
 		it('should clear item even if there are no items loaded', async () => {
@@ -3164,7 +3340,7 @@ describe('NgSelectComponent', () => {
 
 			fixture.componentInstance.select().clearItem(selected);
 			expect(fixture.componentInstance.select().selectedItems.length).toBe(0);
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 		});
 
 		it('should display custom dropdown option template', async () => {
@@ -3178,9 +3354,8 @@ describe('NgSelectComponent', () => {
 			);
 
 			fixture.componentInstance.select().open();
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			const el = fixture.debugElement.query(By.css('.custom-option')).nativeElement;
 			expect(el).not.toBeNull();
 		});
@@ -3217,9 +3392,8 @@ describe('NgSelectComponent', () => {
 			);
 
 			fixture.componentInstance.select().open();
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			const header = fixture.debugElement.query(By.css('.header-label')).nativeElement;
 			expect(header.innerHTML).toBe('header');
 
@@ -3240,9 +3414,8 @@ describe('NgSelectComponent', () => {
 			const select = fixture.componentInstance.select();
 			select.filter('tag');
 			select.open();
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			const template = fixture.debugElement.query(By.css('.tag-template')).nativeElement;
 			expect(template).toBeDefined();
 		});
@@ -3267,7 +3440,7 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			fixture.componentInstance.cities = [];
 			fixture.componentInstance.citiesLoading = true;
 			await tickAndDetectChanges(fixture);
@@ -3299,7 +3472,7 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			fixture.componentInstance.cities = [];
 			fixture.componentInstance.select().open();
 			fixture.componentInstance.filter.subscribe();
@@ -3325,7 +3498,7 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			await tickAndDetectChanges(fixture);
 			const spinner = fixture.debugElement.queryAll(By.css('.custom-loadingspinner'));
 			expect(spinner.length).toBe(1);
@@ -3363,7 +3536,7 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
 			await tickAndDetectChanges(fixture);
 			await tickAndDetectChanges(fixture);
@@ -3509,8 +3682,7 @@ describe('NgSelectComponent', () => {
 			// Start with initial value
 			fixture.componentInstance.cityValue = 'initial';
 			fixture.componentInstance.label = 'Initial Label';
-			fixture.detectChanges();
-			await fixture.whenStable(); // Flush pending effects
+			await tickAndDetectChanges(fixture); // Flush pending effects
 
 			let items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].value).toBe('initial');
@@ -3519,8 +3691,7 @@ describe('NgSelectComponent', () => {
 			// Simulate delayed async update of value attribute
 			fixture.componentInstance.cityValue = 'updated';
 			fixture.componentInstance.label = 'Updated Label';
-			fixture.detectChanges();
-			await fixture.whenStable(); // Flush pending effects
+			await tickAndDetectChanges(fixture); // Flush pending effects
 
 			items = fixture.componentInstance.select().itemsList.items;
 			expect(items[0].value).toBe('updated');
@@ -3567,7 +3738,8 @@ describe('NgSelectComponent', () => {
 			await tickAndDetectChanges(fixture);
 			expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(2);
 
-			await selectOption(fixture, KeyCode.ArrowUp, 2);
+			// reopening marks the first selected option, so enter toggles it off directly
+			await selectOption(fixture, KeyCode.ArrowUp, 0);
 			await tickAndDetectChanges(fixture);
 			expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(1);
 			expect(fixture.componentInstance.select().selectedItems[0]).toEqual(
@@ -3595,7 +3767,8 @@ describe('NgSelectComponent', () => {
 			it('should be able to select only two elements', async () => {
 				await selectOption(fixture, KeyCode.ArrowDown, 0);
 				await selectOption(fixture, KeyCode.ArrowDown, 1);
-				await selectOption(fixture, KeyCode.ArrowDown, 1);
+				// reopening marks the first selected option, so two arrow presses target an unselected one
+				await selectOption(fixture, KeyCode.ArrowDown, 2);
 				await tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(2);
 			});
@@ -3760,7 +3933,8 @@ describe('NgSelectComponent', () => {
 				await tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(2);
 
-				await selectOption(fixture, KeyCode.ArrowUp, 2);
+				// reopening marks the first selected option, so enter toggles it off directly
+				await selectOption(fixture, KeyCode.ArrowUp, 0);
 				await tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(1);
 				expect(fixture.componentInstance.select().selectedItems[0]).toEqual(
@@ -3784,7 +3958,8 @@ describe('NgSelectComponent', () => {
 				await tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(2);
 
-				await selectOption(fixture, KeyCode.ArrowUp, 2);
+				// reopening marks the first selected option, so enter toggles it off directly
+				await selectOption(fixture, KeyCode.ArrowUp, 0);
 				await tickAndDetectChanges(fixture);
 				expect((<NgOption[]>fixture.componentInstance.select().selectedItems).length).toBe(1);
 				expect(fixture.componentInstance.select().selectedItems[0]).toEqual(
@@ -4007,7 +4182,7 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.select().filter('server side tag');
 			await tickAndDetectChanges(fixture);
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Enter);
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			expect(<any>fixture.componentInstance.selectedCity).toEqual(
 				expect.objectContaining({
 					id: 5,
@@ -4286,7 +4461,7 @@ describe('NgSelectComponent', () => {
 			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
 			fixture.detectChanges();
 			fixture.componentInstance.select().filter('bei');
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 
 			const result = expect.objectContaining({
 				value: fixture.componentInstance.cities[2],
@@ -4308,7 +4483,7 @@ describe('NgSelectComponent', () => {
 
 			await advanceDebounce(fixture, 200);
 			fixture.componentInstance.select().filter('bei');
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			expect(fixture.componentInstance.select().itemsList.markedItem).toEqual(undefined);
 		});
 
@@ -4830,6 +5005,36 @@ describe('NgSelectComponent', () => {
 			expect(input.getAttribute('aria-controls')).toBe(select.dropdownId);
 		});
 
+		it('should reference the element with role listbox via aria-controls on open', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+
+			const controlled = document.getElementById(input.getAttribute('aria-controls'));
+			expect(controlled).not.toBeNull();
+			expect(controlled.getAttribute('role')).toBe('listbox');
+		});
+
+		it('should set aria-controls absent on dropdown close', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Esc);
+			await tickAndDetectChanges(fixture);
+
+			expect(input.hasAttribute('aria-controls')).toBe(false);
+		});
+
+		it('should set aria-posinset and aria-setsize based on filtered items', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+			select.filter('new');
+			await tickAndDetectChanges(fixture);
+
+			const options = fixture.debugElement.nativeElement.querySelectorAll('.ng-option');
+			expect(options.length).toBe(2);
+			expect(Array.from(options).map((option: HTMLElement) => option.getAttribute('aria-posinset'))).toEqual(['1', '2']);
+			expect(Array.from(options).map((option: HTMLElement) => option.getAttribute('aria-setsize'))).toEqual(['2', '2']);
+		});
+
 		it('should set aria-activedecendant equal to chosen item on open', async () => {
 			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
 			await tickAndDetectChanges(fixture);
@@ -4887,6 +5092,185 @@ describe('NgSelectComponent', () => {
 
 			const notFoundText = fixture.componentInstance.select().notFoundText();
 			expect(notFoundText).toBe('No items found (aria-live)');
+		});
+	});
+
+	describe('Accessibility enhancements', () => {
+		function liveRegionText(fixture: ComponentFixture<NgSelectTestComponent>): string {
+			return fixture.debugElement.query(By.css('.ng-visually-hidden')).nativeElement.textContent.trim();
+		}
+
+		describe('selected value remove icon', () => {
+			it('should expose remove icon as a focusable button with aria-label', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [(ngModel)]="selectedCities"></ng-select>`,
+				);
+				fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+
+				const icon = fixture.debugElement.query(By.css('.ng-value-icon')).nativeElement;
+				expect(icon.getAttribute('role')).toBe('button');
+				expect(icon.getAttribute('tabindex')).toBe('0');
+				expect(icon.getAttribute('aria-label')).toBe('Remove New York');
+			});
+
+			it('should use custom removeText in the remove icon aria-label', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [multiple]="true" removeText="Verwijder" [(ngModel)]="selectedCities"></ng-select>`,
+				);
+				fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0]];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+
+				const icon = fixture.debugElement.query(By.css('.ng-value-icon')).nativeElement;
+				expect(icon.getAttribute('aria-label')).toBe('Verwijder New York');
+			});
+
+			it('should unselect item when enter is pressed on remove icon', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [(ngModel)]="selectedCities"></ng-select>`,
+				);
+				fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0], fixture.componentInstance.cities[1]];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+
+				const icon = fixture.debugElement.query(By.css('.ng-value-icon'));
+				icon.triggerEventHandler('keydown', { key: KeyCode.Enter, preventDefault: () => {}, stopPropagation: () => {} });
+				await tickAndDetectChanges(fixture);
+
+				const select = fixture.componentInstance.select();
+				expect(select.selectedItems.length).toBe(1);
+				expect(select.selectedItems[0].label).toBe('London');
+			});
+
+			it('should unselect item when space is pressed on remove icon', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [(ngModel)]="selectedCities"></ng-select>`,
+				);
+				fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0], fixture.componentInstance.cities[1]];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+
+				const icon = fixture.debugElement.query(By.css('.ng-value-icon'));
+				icon.triggerEventHandler('keydown', { key: KeyCode.Space, preventDefault: () => {}, stopPropagation: () => {} });
+				await tickAndDetectChanges(fixture);
+
+				expect(fixture.componentInstance.select().selectedItems.length).toBe(1);
+			});
+		});
+
+		describe('clear button', () => {
+			it('should set aria-label from clearAllText on clear button', async () => {
+				const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name" [(ngModel)]="selectedCity"></ng-select>`);
+				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+
+				const clear = fixture.debugElement.query(By.css('.ng-clear-wrapper')).nativeElement;
+				expect(clear.getAttribute('aria-label')).toBe('Clear all');
+			});
+
+			it('should clear input when space pressed while clear button focused', async () => {
+				const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name" [(ngModel)]="selectedCity"></ng-select>`);
+				const select = fixture.componentInstance.select();
+				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+
+				const handleClearClick = vi.spyOn(select, 'handleClearClick').mockReturnValue(undefined);
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space, select.clearButton().nativeElement);
+				expect(handleClearClick).toHaveBeenCalled();
+			});
+		});
+
+		describe('aria-live region', () => {
+			it('should announce typeToSearchText when type to search is shown', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [typeahead]="filter" [(ngModel)]="selectedCity"></ng-select>`,
+				);
+				fixture.componentInstance.filter.subscribe();
+				fixture.componentInstance.cities = [];
+				await tickAndDetectChanges(fixture);
+
+				fixture.componentInstance.select().open();
+				await tickAndDetectChanges(fixture);
+
+				expect(liveRegionText(fixture)).toBe('Type to search');
+			});
+
+			it('should announce loadingText while loading with no items', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [loading]="citiesLoading" [(ngModel)]="selectedCity"></ng-select>`,
+				);
+				fixture.componentInstance.cities = [];
+				fixture.componentInstance.citiesLoading = true;
+				await tickAndDetectChanges(fixture);
+
+				fixture.componentInstance.select().open();
+				await tickAndDetectChanges(fixture);
+
+				expect(liveRegionText(fixture)).toBe('Loading...');
+			});
+
+			it('should announce the marked option label as it changes (issues #2758, #2589)', async () => {
+				const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name" [(ngModel)]="selectedCity"></ng-select>`);
+				await tickAndDetectChanges(fixture);
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
+				await tickAndDetectChanges(fixture);
+				expect(liveRegionText(fixture)).toBe('New York');
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.ArrowDown);
+				await tickAndDetectChanges(fixture);
+				expect(liveRegionText(fixture)).toBe('London');
+			});
+		});
+
+		describe('multiple select marked item on open', () => {
+			it('should mark first selected option in list order when opening', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [(ngModel)]="selectedCities"></ng-select>`,
+				);
+				fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[1], fixture.componentInstance.cities[3]];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+				await tickAndDetectChanges(fixture);
+
+				expect(fixture.componentInstance.select().itemsList.markedItem.label).toBe('London');
+			});
+		});
+
+		describe('custom clear button focus (issue #2735)', () => {
+			it('should focus clear wrapper on tab when custom clear button template is used', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities" bindLabel="name" [(ngModel)]="selectedCity">
+						<ng-template ng-clearbutton-tmp>
+							<div class="custom-clearbutton">X</div>
+						</ng-template>
+					</ng-select>`,
+				);
+				const select = fixture.componentInstance.select();
+				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+				await tickAndDetectChanges(fixture);
+				await tickAndDetectChanges(fixture);
+				expect(select.showClear()).toBeTruthy();
+
+				select.searchInput().nativeElement.focus();
+				const focusOnClear = vi.spyOn(select, 'focusOnClear').mockReturnValue(undefined);
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+				expect(focusOnClear).toHaveBeenCalled();
+			});
 		});
 	});
 
@@ -5447,9 +5831,8 @@ describe('NgSelectComponent', () => {
 			);
 
 			fixture.componentInstance.select().open();
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
 			expect(dropdown.classList.contains('someClass')).toBe(true);
 		});
@@ -5471,9 +5854,8 @@ describe('NgSelectComponent', () => {
 
 			fixture.componentInstance.visible = true;
 			fixture.componentInstance.select().open();
-			fixture.detectChanges();
 
-			await fixture.whenStable();
+			await tickAndDetectChanges(fixture);
 			const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
 			expect(dropdown.classList.contains('someClass')).toBe(true);
 
@@ -5499,9 +5881,8 @@ describe('NgSelectComponent', () => {
 		);
 
 		fixture.componentInstance.select().open();
-		fixture.detectChanges();
 
-		await fixture.whenStable();
+		await tickAndDetectChanges(fixture);
 		const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
 		expect(dropdown.classList.contains('someClass')).toBe(true);
 	});
@@ -5523,9 +5904,8 @@ describe('NgSelectComponent', () => {
 
 		fixture.componentInstance.visible = true;
 		fixture.componentInstance.select().open();
-		fixture.detectChanges();
 
-		await fixture.whenStable();
+		await tickAndDetectChanges(fixture);
 		const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
 		expect(dropdown.classList.contains('someClass')).toBe(true);
 
@@ -5568,6 +5948,27 @@ describe('Grouping', () => {
 
 		expect(items[10].label).toBe('Colombia');
 		expect(items[11].parent).toBe(items[10]);
+	});
+
+	it('should not apply ng-option class to group header elements', async () => {
+		const fixture = createTestingModule(
+			NgSelectGroupingTestComponent,
+			`<ng-select [items]="accounts"
+                        groupBy="country"
+                        bindLabel="name"
+                        [(ngModel)]="selectedAccount">
+                </ng-select>`,
+		);
+
+		await tickAndDetectChanges(fixture);
+		const select = fixture.componentInstance.select();
+		select.open();
+		await tickAndDetectChanges(fixture);
+		fixture.detectChanges();
+
+		const optgroup = fixture.debugElement.nativeElement.querySelector('.ng-dropdown-panel .ng-optgroup');
+		expect(optgroup).toBeTruthy();
+		expect(optgroup.classList).not.toContain('ng-option');
 	});
 
 	it('should group items with children array by group key', async () => {
@@ -5984,19 +6385,19 @@ function createTestingModule<T>(cmp: Type<T>, template: string, customNgSelectCo
 		TestBed.overrideProvider(NgSelectConfig, { useValue: customNgSelectConfig });
 	}
 
-	const fixture = TestBed.createComponent(cmp);
+	const fixture = applyZonelessFixtureCompat(TestBed.createComponent(cmp));
 	fixture.detectChanges();
 	return fixture;
 }
 
 function createEvent(target = {}) {
 	return {
-		preventDefault: () => { },
+		preventDefault: () => {},
 		target: {
 			className: '',
 			tagName: '',
 			classList: {
-				contains: () => { },
+				contains: () => {},
 			},
 			...target,
 		},
@@ -6083,7 +6484,7 @@ class NgSelectTestComponent {
 		},
 		{ id: 3, description: { name: 'Australia', id: 'c' } },
 	];
-	keyDownFn = () => { };
+	keyDownFn = () => {};
 
 	tagFunc(term: string) {
 		return { id: term, name: term, custom: true };
@@ -6105,27 +6506,27 @@ class NgSelectTestComponent {
 		this.visible = !this.visible;
 	}
 
-	onChange(_: any) { }
+	onChange(_: any) {}
 
-	onFocus(_: Event) { }
+	onFocus(_: Event) {}
 
-	onBlur(_: Event) { }
+	onBlur(_: Event) {}
 
-	onOpen() { }
+	onOpen() {}
 
-	onClose() { }
+	onClose() {}
 
-	onAdd(_: Event) { }
+	onAdd(_: Event) {}
 
-	onRemove(_: Event) { }
+	onRemove(_: Event) {}
 
-	onClear() { }
+	onClear() {}
 
-	onSearch(_: any) { }
+	onSearch(_: any) {}
 
-	onScroll() { }
+	onScroll() {}
 
-	onScrollToEnd() { }
+	onScrollToEnd() {}
 }
 
 @Component({

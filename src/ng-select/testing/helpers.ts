@@ -5,6 +5,26 @@ import { KeyCode } from '../lib/ng-select.types';
 
 export class TestsErrorHandler {}
 
+/**
+ * Zone/zoneless parity shim for fixtures whose templates bind plain test-component
+ * properties. In a zone TestBed, fixture.detectChanges() unconditionally re-renders the
+ * root template. In a zoneless TestBed it runs ApplicationRef.tick(), which only renders
+ * views Angular knows are dirty — a plain property mutation from test code dirties
+ * nothing, so the render pass skips the view and the dev-mode checkNoChanges pass then
+ * throws NG0100 for the drifted binding (angular/angular#59082). Marking the root view
+ * dirty first is what a real zoneless consumer's event handler would have done, and it
+ * restores identical detectChanges semantics in both lanes. Library-internal
+ * notification bugs stay detectable: checkNoChanges still verifies NgSelect's own views.
+ */
+export function applyZonelessFixtureCompat<T>(fixture: ComponentFixture<T>): ComponentFixture<T> {
+	const originalDetectChanges = fixture.detectChanges.bind(fixture);
+	fixture.detectChanges = (checkNoChanges?: boolean) => {
+		fixture.changeDetectorRef.markForCheck();
+		originalDetectChanges(checkNoChanges);
+	};
+	return fixture;
+}
+
 /** Flush microtasks and macrotasks that run outside Angular's zone (e.g. virtual-scroll measurement). */
 export async function flushAsync(): Promise<void> {
 	await new Promise<void>((resolve) => queueMicrotask(resolve));

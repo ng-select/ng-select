@@ -24,7 +24,12 @@
 					"builder": "@angular/build:application",
 					"options": {
 						"tsConfig": "src/ng-select/tsconfig.spec.json",
-						"polyfills": ["zone.js", "zone.js/testing", "zone.js/plugins/vitest-patch"]
+						"polyfills": []
+					},
+					"configurations": {
+						"zone": {
+							"polyfills": ["zone.js", "zone.js/testing", "zone.js/plugins/vitest-patch"]
+						}
 					}
 				},
 				"test": {
@@ -41,6 +46,14 @@
 							"src/ng-select/lib/ng-templates.directive.ts"
 						],
 						"coverageReporters": ["html", "lcovonly", "text-summary"]
+					}
+				},
+				"test-zone": {
+					"builder": "@angular/build:unit-test",
+					"options": {
+						"buildTarget": "ng-select:test-build:zone",
+						"runnerConfig": "vitest.config.ts",
+						"coverage": false
 					}
 				},
 				"lint": {
@@ -88,7 +101,7 @@
 							"base": "dist/demo"
 						},
 						"index": "src/demo/index.html",
-						"polyfills": ["zone.js"],
+						"polyfills": [],
 						"tsConfig": "src/demo/tsconfig.app.json",
 						"deployUrl": "/ng-select/",
 						"assets": ["src/demo/favicon.ico", "src/demo/assets"],
@@ -148,7 +161,12 @@
 					"builder": "@angular/build:application",
 					"options": {
 						"tsConfig": "src/ng-option-highlight/tsconfig.spec.json",
-						"polyfills": ["zone.js", "zone.js/testing", "zone.js/plugins/vitest-patch"]
+						"polyfills": []
+					},
+					"configurations": {
+						"zone": {
+							"polyfills": ["zone.js", "zone.js/testing", "zone.js/plugins/vitest-patch"]
+						}
 					}
 				},
 				"test": {
@@ -158,6 +176,14 @@
 						"runnerConfig": "vitest.config.ts",
 						"coverage": true,
 						"coverageReporters": ["html", "lcovonly", "text-summary"]
+					}
+				},
+				"test-zone": {
+					"builder": "@angular/build:unit-test",
+					"options": {
+						"buildTarget": "ng-option-highlight:test-build:zone",
+						"runnerConfig": "vitest.config.ts",
+						"coverage": false
 					}
 				},
 				"lint": {

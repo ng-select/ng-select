@@ -16,7 +16,15 @@
 			@for (item of selectedItems; track trackByOption($index, item)) {
 				<div [class.ng-value-disabled]="item.disabled" class="ng-value">
 					<ng-template #defaultLabelTemplate>
-						<span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">×</span>
+						<span
+							class="ng-value-icon left"
+							role="button"
+							tabindex="0"
+							[attr.aria-label]="(removeText() ?? config.removeText) + ' ' + item.label"
+							(click)="unselect(item)"
+							(keydown)="handleRemoveKeydown($event, item)"
+							>×</span
+						>
 						<span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
 					</ng-template>
 					<ng-template
@@ -67,6 +75,7 @@
 			role="button"
 			tabindex="0"
 			[attr.tabindex]="tabFocusOnClear() ? 0 : -1"
+			[attr.aria-label]="clearAllText() || config.clearAllText"
 			title="{{ clearAllText() || config.clearAllText }}"
 			#clearButton
 			(click)="handleClearClick($event)">
@@ -81,6 +90,14 @@
 	<span class="ng-arrow-wrapper">
 		<span class="ng-arrow"></span>
 	</span>
+
+	@if (appearance() === 'outline') {
+		<div class="ng-notched-outline" aria-hidden="true">
+			<div class="ng-notched-outline-leading"></div>
+			<div class="ng-notched-outline-notch" [style.width.px]="outlineNotchWidth()"></div>
+			<div class="ng-notched-outline-trailing"></div>
+		</div>
+	}
 </div>
 
 @if (isOpen()) {
@@ -104,14 +121,13 @@
 		(outsideClick)="close()"
 		[class.ng-select-multiple]="multiple()"
 		[class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
-		[id]="dropdownId"
+		[listboxId]="dropdownId"
 		[ariaLabelDropdown]="ariaLabelDropdown() ?? config.ariaLabelDropdown"
 		[popover]="popover()">
 		<ng-container>
 			@for (item of viewPortItems; track trackByOption($index, item)) {
 				<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus, @angular-eslint/template/mouse-events-have-key-events -->
 				<div
-					class="ng-option"
 					[attr.role]="item.children ? 'group' : 'option'"
 					(click)="toggleItem(item)"
 					(mouseover)="onItemHover(item)"
@@ -125,7 +141,7 @@
 					[attr.aria-selected]="item.selected"
 					[attr.id]="item?.htmlId"
 					[attr.aria-setsize]="itemsList.filteredItems.length"
-					[attr.aria-posinset]="(item.index ?? 0) + 1">
+					[attr.aria-posinset]="itemsList.filteredItems.indexOf(item) + 1 || null">
 					<ng-template #defaultOptionTemplate>
 						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
 					</ng-template>
@@ -179,7 +195,15 @@
 
 <!-- Always present aria-live region -->
 <div aria-atomic="true" aria-live="polite" class="ng-visually-hidden" role="status">
-	@if (isOpen() && showNoItemsFound()) {
-		{{ notFoundText() ?? config.notFoundText }}
+	@if (isOpen()) {
+		@if (showNoItemsFound()) {
+			{{ notFoundText() ?? config.notFoundText }}
+		} @else if (showTypeToSearch()) {
+			{{ typeToSearchText() || config.typeToSearchText }}
+		} @else if (loading() && itemsList.filteredItems.length === 0) {
+			{{ loadingText() || config.loadingText }}
+		} @else if (itemsList.markedItem) {
+			{{ itemsList.markedItem.label }}
+		}
 	}
 </div>

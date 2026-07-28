@@ -76,4 +76,19 @@ module.exports = defineConfig([
 			],
 		},
 	},
+	{
+		files: ['src/ng-select/**/*.ts', 'src/ng-option-highlight/**/*.ts'],
+		ignores: ['**/*.spec.ts', 'src/ng-select/testing/**'],
+		rules: {
+			'no-restricted-syntax': [
+				'error',
+				{
+					selector:
+						"MemberExpression[property.name='onStable'], MemberExpression[property.name='onMicrotaskEmpty'], MemberExpression[property.name='onUnstable'], MemberExpression[property.name='isStable']",
+					message:
+						'Zone-stability APIs never fire under zoneless change detection. Use afterNextRender/afterEveryRender instead (see docs/superpowers/specs/2026-07-19-zoneless-support-design.md).',
+				},
+			],
+		},
+	},
 ]);
