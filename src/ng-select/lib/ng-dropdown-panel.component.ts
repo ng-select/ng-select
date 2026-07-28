@@ -41,7 +41,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 				<ng-container [ngTemplateOutlet]="headerTemplate()" [ngTemplateOutletContext]="{ searchTerm: filterValue() }" />
 			</div>
 		}
-		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host" [attr.aria-label]="ariaLabelDropdown()">
+		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host" [attr.id]="listboxId()" [attr.aria-label]="ariaLabelDropdown()">
 			<div #padding [class.total-padding]="virtualScroll()"></div>
 			<div #content [class.scrollable-content]="virtualScroll() && items().length">
 				<ng-content />
@@ -67,6 +67,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	readonly footerTemplate = input<TemplateRef<any> | undefined>(undefined);
 	readonly filterValue = input<string>(null);
 	readonly ariaLabelDropdown = input<string | null>(null);
+	readonly listboxId = input<string | null>(null);
 	/**
 	 * Which DOM event to listen to for outside click detection
 	 */
@@ -98,6 +99,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	private _scrollToEndFired = false;
 	private _updateScrollHeight = false;
 	private _lastScrollPosition = 0;
+	private _lastMousedownInside = false;
 
 	constructor() {
 		this._destroyRef.onDestroy(() => {
@@ -173,6 +175,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			scrollTo = this._panelService.getScrollTo(index * itemHeight, itemHeight, this._lastScrollPosition);
 		} else {
 			const item: HTMLElement = this._dropdown.querySelector(`#${option.htmlId}`);
+			if (!item) {
+				return;
+			}
 			const lastScroll = startFromOption ? item.offsetTop : this._lastScrollPosition;
 			scrollTo = this._panelService.getScrollTo(item.offsetTop, item.clientHeight, lastScroll);
 		}
@@ -239,24 +244,47 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			return;
 		}
 
+		const outsideEvent = this.outsideClickEvent() ?? 'click';
+
 		this._zone.runOutsideAngular(() => {
-			fromEvent(this._document, this.outsideClickEvent() ?? 'click', { capture: true })
+			// A click is judged by where the press began, not where it ended. Between
+			// mousedown and click the layout can move under the cursor — focusing the
+			// select auto-scrolls it into view (#2773), or the freshly opened panel
+			// shifts the page (#2441) — leaving the click target on an unrelated
+			// element. Irrelevant when closing on mousedown itself, so skip the
+			// listener in that mode
+			if (outsideEvent === 'click') {
+				fromEvent(this._document, 'mousedown', { capture: true })
+					.pipe(takeUntilDestroyed(this._destroyRef))
+					.subscribe(($event) => (this._lastMousedownInside = this._isEventInside($event)));
+			}
+
+			fromEvent(this._document, outsideEvent, { capture: true })
 				.pipe(takeUntilDestroyed(this._destroyRef))
 				.subscribe(($event) => this._checkToClose($event));
 		});
 	}
 
-	private _checkToClose($event: any) {
-		if (this._select.contains($event.target) || this._dropdown.contains($event.target)) {
-			return;
-		}
-
-		const path = $event.path || ($event.composedPath && $event.composedPath());
-		if ($event.target && $event.target.shadowRoot && path && path[0] && this._select.contains(path[0])) {
+	private _checkToClose($event: Event) {
+		const pressStartedInside = this._lastMousedownInside;
+		this._lastMousedownInside = false;
+		if (pressStartedInside || this._isEventInside($event)) {
 			return;
 		}
 
 		this._zone.run(() => this.outsideClick.emit());
+	}
+
+	private _isEventInside($event: any): boolean {
+		// An event crossing a shadow boundary is retargeted to the shadow host, which
+		// hides its real origin from contains(). composedPath() still lists every node
+		// the event bubbled through, so matching the select or dropdown anywhere along
+		// it works identically for light DOM, shadow DOM, and nested roots (#2726)
+		const path: EventTarget[] = $event.path || ($event.composedPath && $event.composedPath());
+		if (path?.length) {
+			return path.includes(this._select) || path.includes(this._dropdown);
+		}
+		return this._select.contains($event.target) || this._dropdown.contains($event.target);
 	}
 
 	private _onItemsOrShowAddTagChange(items: NgOption[] = [], showAddTag: boolean, firstChange: boolean) {
@@ -340,6 +368,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._updateVirtualHeight(range.scrollHeight);
 		this._contentPanel().style.transform = `translateY(${range.topPadding}px)`;
 
+		// These outputs must stay template-bound in ng-select.component.html: the
+		// template listener wrapper is what schedules CD under zoneless (zone.run is a
+		// no-op there). A programmatic subscribe would need an explicit markForCheck
 		this._zone.run(() => {
 			this.update.emit(this.items().slice(range.start, range.end));
 			this.scroll.emit({ start: range.start, end: range.end });
@@ -357,10 +388,17 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 
 		const [first] = this.items();
+		// Relies on synchronous template execution: the emitted item renders in the
+		// same CD pass (the parent's template listener runs mid-pass and the @for sits
+		// later in the template), so the microtask below measures real DOM with and
+		// without zone.js alike
 		this.update.emit([first]);
 
 		return Promise.resolve().then(() => {
 			const option = this._dropdown.querySelector(`#${first.htmlId}`);
+			if (!option) {
+				return this._panelService.dimensions;
+			}
 			const optionHeight = option.clientHeight;
 			this._virtualPadding().style.height = `${optionHeight * this.itemsLength}px`;
 			const panelHeight = this._scrollablePanel().clientHeight;

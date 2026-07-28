@@ -559,7 +559,7 @@ describe('ItemsList', () => {
 			expect(list.markedIndex).toBe(0);
 		});
 
-		it('should keep marked item if it is above last selected item', () => {
+		it('should mark first selected item even if another item was marked', () => {
 			list.select(list.items[10]);
 			list.markSelectedOrDefault();
 			expect(list.markedIndex).toBe(10);
@@ -568,7 +568,7 @@ describe('ItemsList', () => {
 			list.markNextItem();
 			list.markNextItem();
 			list.markSelectedOrDefault();
-			expect(list.markedIndex).toBe(13);
+			expect(list.markedIndex).toBe(10);
 		});
 
 		it('should mark first after last marked item was filtered out', () => {
@@ -579,6 +579,64 @@ describe('ItemsList', () => {
 			expect(list.markedIndex).toBe(0);
 			list.markNextItem();
 			expect(list.markedIndex).toBe(0);
+		});
+	});
+
+	describe('htmlId', () => {
+		let list: ItemsList;
+		let cmp: NgSelectComponent;
+		let cmpRef: ComponentRef<NgSelectComponent>;
+
+		beforeEach(async () => {
+			const { component, componentRef } = await ngSelectFactory();
+			cmp = component;
+			cmpRef = componentRef;
+			componentRef.setInput('bindLabel', 'name');
+			list = itemsListFactory(cmp);
+		});
+
+		function optionHtmlIds(): string[] {
+			return list.filteredItems.filter((x) => !x.children).map((x) => x.htmlId);
+		}
+
+		it('should assign a unique htmlId to every option when grouping by key', () => {
+			cmpRef.setInput('groupBy', 'groupKey');
+			list.setItems([
+				{ name: 'K1', groupKey: 'G1' },
+				{ name: 'K2', groupKey: 'G1' },
+				{ name: 'K3', groupKey: 'G2' },
+				{ name: 'K4', groupKey: 'G2' },
+			]);
+
+			const ids = optionHtmlIds();
+			expect(ids.length).toBe(4);
+			expect(new Set(ids).size).toBe(ids.length);
+		});
+
+		it('should assign a unique htmlId to every option when items are provided as nested groups', () => {
+			// #2710 — group children were re-mapped with their in-group index, producing duplicate htmlIds
+			// (e.g. `${dropdownId}-0`) across groups, so scrollTo() targeted the wrong element.
+			cmpRef.setInput('groupBy', 'accounts');
+			list.setItems([
+				{ groupName: 'G1', accounts: [{ name: 'A1' }, { name: 'A2' }] },
+				{ groupName: 'G2', accounts: [{ name: 'B1' }, { name: 'B2' }] },
+			]);
+
+			const ids = optionHtmlIds();
+			expect(ids.length).toBe(4);
+			expect(new Set(ids).size).toBe(ids.length);
+		});
+
+		it('should keep htmlId in sync with the flattened index for grouped options', () => {
+			cmpRef.setInput('groupBy', 'groupKey');
+			list.setItems([
+				{ name: 'K1', groupKey: 'G1' },
+				{ name: 'K2', groupKey: 'G2' },
+			]);
+
+			for (const item of list.filteredItems.filter((x) => !x.children)) {
+				expect(item.htmlId).toBe(`${cmp.dropdownId}-${item.index}`);
+			}
 		});
 	});
 

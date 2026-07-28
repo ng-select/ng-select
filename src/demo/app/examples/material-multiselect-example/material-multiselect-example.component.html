@@ -1,0 +1,30 @@
+<p>Multiple selection with Material outline and fill appearances.</p>
+
+<div class="form-row">
+	<div class="form-group col-md-6">
+		<label for="material-multi-outline">Outline multiselect</label>
+		<ng-select
+			id="material-multi-outline"
+			appearance="outline"
+			[items]="cities"
+			bindLabel="name"
+			[multiple]="true"
+			[closeOnSelect]="false"
+			placeholder="Select cities"
+			[(ngModel)]="selectedOutline">
+		</ng-select>
+	</div>
+	<div class="form-group col-md-6">
+		<label for="material-multi-fill">Fill multiselect</label>
+		<ng-select
+			id="material-multi-fill"
+			appearance="fill"
+			[items]="cities"
+			bindLabel="name"
+			[multiple]="true"
+			[closeOnSelect]="false"
+			placeholder="Select cities"
+			[(ngModel)]="selectedFill">
+		</ng-select>
+	</div>
+</div>

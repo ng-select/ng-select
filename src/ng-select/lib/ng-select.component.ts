@@ -1,4 +1,5 @@
 import {
+	afterEveryRender,
 	AfterViewInit,
 	afterEveryRender,
 	booleanAttribute,
@@ -131,6 +132,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly loadingText = linkedSignal(() => this._loadingText());
 	readonly _clearAllText = input<string>(undefined, { alias: 'clearAllText' });
 	readonly clearAllText = linkedSignal(() => this._clearAllText());
+	readonly _removeText = input<string>(undefined, { alias: 'removeText' });
+	readonly removeText = linkedSignal(() => this._removeText());
 	readonly _dropdownPosition = input<DropdownPosition>('auto', { alias: 'dropdownPosition' });
 	readonly dropdownPosition = linkedSignal(() => this._dropdownPosition());
 	readonly _appendTo = input<string>(undefined, { alias: 'appendTo' });
@@ -288,6 +291,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	// public variables
 	readonly dropdownId = newId();
 	readonly element: HTMLElement;
+	/** Width of the notched-outline gap for the floated label in the material outline appearance */
+	readonly outlineNotchWidth = signal(0);
 	// variables
 	escapeHTML = true;
 	itemsList: ItemsList;
@@ -322,6 +327,25 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.itemsList = new ItemsList(this, newSelectionModel ? newSelectionModel() : DefaultSelectionModelFactory());
 		this.element = _elementRef.nativeElement;
 		this._handleSignalChanges();
+		afterEveryRender({
+			read: () => this._measureOutlineNotch(),
+		});
+	}
+
+	/**
+	 * Measures the placeholder label so the notched outline can leave a real gap in the border
+	 * for the floated label instead of masking it with an opaque background (material theme).
+	 * The 0.75 factor matches the `scale(0.75)` the material theme applies to the floated label.
+	 */
+	private _measureOutlineNotch() {
+		if (this.appearance() !== 'outline') {
+			return;
+		}
+		const label = this.element.querySelector<HTMLElement>('.ng-select-container > .ng-value-container .ng-placeholder');
+		const width = label ? label.offsetWidth * 0.75 : 0;
+		if (width !== this.outlineNotchWidth()) {
+			this.outlineNotchWidth.set(width);
+		}
 	}
 
 	private _focused: boolean;
@@ -471,9 +495,21 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	handleKeyCodeClear($event: KeyboardEvent) {
 		switch ($event.key) {
 			case KeyCode.Enter:
+			case KeyCode.Space:
 				this.handleClearClick();
 				$event.preventDefault();
 				break;
+		}
+	}
+
+	handleRemoveKeydown($event: KeyboardEvent, item: NgOption) {
+		if (item.disabled) {
+			return;
+		}
+		if ($event.key === KeyCode.Enter || $event.key === KeyCode.Space) {
+			$event.preventDefault();
+			$event.stopPropagation();
+			this.unselect(item);
 		}
 	}
 
@@ -762,6 +798,12 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	onInputBlur($event: FocusEvent) {
 		this.element.classList.remove('ng-select-focused');
 		this.blurEvent.emit($event);
+		// When `selectOnTab` is enabled, commit the marked item on any focus loss, not just the literal Tab
+		// key handled in `_handleTab` (e.g. mouse click-away or assistive-technology navigation). The Tab key
+		// path calls `preventDefault()` and keeps focus, so this cannot double-select for that case.
+		if (this.selectOnTab() && this.isOpen() && !this.disabled() && this.itemsList.markedItem && !this._isComposing) {
+			this.toggleItem(this.itemsList.markedItem);
+		}
 		if (!this.isOpen() && !this.disabled()) {
 			this._onTouched();
 		}
@@ -1003,6 +1045,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 						if (!item.disabled) {
 							this.itemsList.markItem(item);
 							this._scrollToMarked();
+							// Required under zoneless CD: this subscription fires from a debounce
+							// timer, which schedules nothing by itself
 							this._cd.markForCheck();
 						}
 					} else {
@@ -1020,7 +1064,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			autocorrect: 'off',
 			autocapitalize: 'off',
 			autocomplete: 'off',
-			'aria-controls': this.dropdownId,
 			...this.inputAttrs(),
 		};
 
@@ -1059,6 +1102,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			this.changeEvent.emit(selected[0]);
 		}
 
+		// Required under zoneless CD: sole notifier for the programmatic selection
+		// APIs (select/unselect/clearModel/clearItem) called from non-Angular contexts
 		this._cd.markForCheck();
 	}
 

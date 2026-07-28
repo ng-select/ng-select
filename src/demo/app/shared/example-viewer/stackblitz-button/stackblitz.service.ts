@@ -5,7 +5,7 @@ import sdk, { Project } from '@stackblitz/sdk';
 const EXAMPLE_PATH = '/ng-select/examples/';
 const TEMPLATE_PATH = '/ng-select/assets/stackblitz/';
 
-const TEMPLATE_FILES = ['index.html', 'styles.css', 'polyfills.ts', 'data.service.ts', 'main.ts', 'app.module.ts', 'angular.json'];
+const TEMPLATE_FILES = ['index.html', 'styles.css', 'data.service.ts', 'main.ts', 'app.module.ts', 'angular.json'];
 
 const angularVersion = '>=15.0.0';
 const dependencies = {
@@ -23,7 +23,6 @@ const dependencies = {
 	'@ng-select/ng-option-highlight': '*',
 	'@ng-bootstrap/ng-bootstrap': '*',
 	rxjs: '^6.5.3 || ^7.4.0',
-	'zone.js': '^0.12.0',
 };
 
 @Injectable({
@@ -72,6 +71,9 @@ export class StackblitzService {
 				fileResult = fileResult.replace('//example-import', this._exampleImport);
 				fileResult = fileResult.replace('//example-template', this._exampleTemplate);
 				fileResult = fileResult.replace('//example-cmp', this._componentName);
+			}
+			if (file === 'styles.css' && this._exampleName.startsWith('material')) {
+				fileResult = fileResult.replace('@ng-select/ng-select/themes/default.theme.css', '@ng-select/ng-select/themes/material.theme.css');
 			}
 			files[file] = fileResult;
 		}

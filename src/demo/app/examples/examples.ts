@@ -46,6 +46,9 @@ import { TemplatePlaceholderExampleComponent } from './template-placeholder-exam
 import { FixedPlaceholderExampleComponent } from './fixed-placeholder-example/fixed-placeholder-example.component';
 import { TemplateClearExampleComponent } from './template-clear-example/template-clear-example.component';
 import { PopoverExampleComponent } from './popover-example/popover-example.component';
+import { MaterialAppearancesExampleComponent } from './material-appearances-example/material-appearances-example.component';
+import { MaterialStatesExampleComponent } from './material-states-example/material-states-example.component';
+import { MaterialMultiselectExampleComponent } from './material-multiselect-example/material-multiselect-example.component';
 
 export interface Example {
 	component: any;
@@ -244,5 +247,17 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
 	'popover-example': {
 		component: PopoverExampleComponent,
 		title: 'Popover top layer',
+	},
+	'material-appearances-example': {
+		component: MaterialAppearancesExampleComponent,
+		title: 'Material appearances (default / outline / fill)',
+	},
+	'material-states-example': {
+		component: MaterialStatesExampleComponent,
+		title: 'Material outline and fill states',
+	},
+	'material-multiselect-example': {
+		component: MaterialMultiselectExampleComponent,
+		title: 'Material multiselect appearances',
 	},
 };
