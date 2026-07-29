@@ -1,5 +1,4 @@
 import {
-	afterEveryRender,
 	AfterViewInit,
 	afterEveryRender,
 	booleanAttribute,
