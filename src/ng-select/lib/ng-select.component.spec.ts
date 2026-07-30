@@ -6295,6 +6295,7 @@ describe('Grouping', () => {
 		expect(button.type).toBe('button');
 		expect(button.getAttribute('aria-expanded')).toBe('true');
 		expect(groupElement.getAttribute('aria-expanded')).toBe('true');
+		expect(groupElement.firstElementChild).toBe(button);
 		expect(itemsList.filteredItems.includes(firstGroup.children[0])).toBe(true);
 
 		button.click();
@@ -6309,6 +6310,36 @@ describe('Grouping', () => {
 
 		renderedOptions = nativeElement.querySelectorAll('.ng-option');
 		expect(renderedOptions.length).toBe(initialDomCount - childrenCount);
+	});
+
+	it('should render the collapse button at the logical end of the group', async () => {
+		const fixture = createTestingModule(
+			NgSelectGroupingTestComponent,
+			`<ng-select
+				[items]="accounts"
+				groupBy="country"
+				[collapsibleGroup]="true"
+				collapseButtonPosition="end">
+			</ng-select>`,
+		);
+
+		await tickAndDetectChanges(fixture);
+		const select = fixture.componentInstance.select();
+		select.open();
+		await tickAndDetectChanges(fixture);
+
+		const firstGroup = select.itemsList.items[0];
+		const groupElement: HTMLElement = fixture.nativeElement.querySelector('.ng-optgroup');
+		const button: HTMLButtonElement = groupElement.querySelector('.ng-option-collapse-button');
+
+		expect(groupElement.classList.contains('ng-option-collapse-button-end')).toBe(true);
+		expect(groupElement.lastElementChild).toBe(button);
+
+		button.click();
+		await tickAndDetectChanges(fixture);
+
+		expect(firstGroup.collapsed).toBe(true);
+		expect(firstGroup.selected).not.toBe(true);
 	});
 
 	it('should be collapsed by default', async () => {

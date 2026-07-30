@@ -138,6 +138,7 @@
 					[class.ng-option]="!item.children"
 					[class.ng-option-child]="!!item.parent"
 					[class.ng-option-marked]="item === itemsList.markedItem"
+					[class.ng-option-collapse-button-end]="item.children && collapsibleGroup() && collapseButtonPosition() === 'end'"
 					[attr.aria-selected]="item.selected"
 					[attr.id]="item?.htmlId"
 					[attr.aria-setsize]="itemsList.filteredItems.length"
@@ -148,11 +149,10 @@
 						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"> </span>
 					</ng-template>
 
-					@if (item.children && collapsibleGroup()) {
-						<ng-template #defaultCollapseButtonTemplate let-collapsed="collapsed">
-							<span aria-hidden="true">{{ collapsed ? '⏷' : '⏶' }}</span>
-						</ng-template>
-
+					<ng-template #defaultCollapseButtonTemplate let-collapsed="collapsed">
+						<span aria-hidden="true">{{ collapsed ? '⏷' : '⏶' }}</span>
+					</ng-template>
+					<ng-template #collapseControl>
 						<button
 							type="button"
 							tabindex="-1"
@@ -165,12 +165,20 @@
 								[ngTemplateOutletContext]="{ collapsed: item.collapsed }">
 							</ng-template>
 						</button>
+					</ng-template>
+
+					@if (item.children && collapsibleGroup() && collapseButtonPosition() === 'start') {
+						<ng-container [ngTemplateOutlet]="collapseControl"></ng-container>
 					}
 
 					<ng-template
 						[ngTemplateOutlet]="item.children ? optgroupTemplate() || defaultOptionTemplate : optionTemplate() || defaultOptionTemplate"
 						[ngTemplateOutletContext]="{ item: item.value, item$: item, index: item.index, searchTerm: searchTerm }">
 					</ng-template>
+
+					@if (item.children && collapsibleGroup() && collapseButtonPosition() === 'end') {
+						<ng-container [ngTemplateOutlet]="collapseControl"></ng-container>
+					}
 				</div>
 			}
 			@if (showAddTag) {

@@ -177,6 +177,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly collapsibleGroup = linkedSignal(() => this._collapsibleGroup());
 	readonly _collapseGroupByDefault = input(false, { alias: 'collapseGroupByDefault', transform: booleanAttribute });
 	readonly collapseGroupByDefault = linkedSignal(() => this._collapseGroupByDefault());
+	readonly _collapseButtonPosition = input<'start' | 'end'>('start', { alias: 'collapseButtonPosition' });
+	readonly collapseButtonPosition = linkedSignal(() => this._collapseButtonPosition());
 	readonly _searchFn = input(null, { alias: 'searchFn' });
 	readonly searchFn = linkedSignal(() => this._searchFn());
 	readonly _trackByFn = input(null, { alias: 'trackByFn' });
