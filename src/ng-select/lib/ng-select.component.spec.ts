@@ -6445,6 +6445,91 @@ describe('Grouping', () => {
 		expect(itemsList.filteredItems).toContain(secondGroup.children[0]);
 		expect(itemsList.selectedItems).toHaveLength(0);
 	});
+
+	it('should refresh group visibility when collapsibleGroup changes', async () => {
+		const fixture = createTestingModule(
+			NgSelectGroupingTestComponent,
+			`<ng-select
+				[items]="accounts"
+				bindLabel="name"
+				groupBy="country"
+				[collapsibleGroup]="collapsibleGroup"
+				[collapseGroupByDefault]="true">
+			</ng-select>`,
+		);
+
+		await tickAndDetectChanges(fixture);
+		const itemsList = fixture.componentInstance.select().itemsList;
+		const groups = itemsList.items.filter((item) => item.children);
+
+		expect(itemsList.filteredItems).toEqual(groups);
+
+		fixture.componentInstance.collapsibleGroup = false;
+		await tickAndDetectChanges(fixture);
+
+		expect(itemsList.filteredItems).toEqual(itemsList.items);
+		expect(groups.every((group) => !group.collapsed)).toBe(true);
+
+		fixture.componentInstance.collapsibleGroup = true;
+		await tickAndDetectChanges(fixture);
+
+		expect(itemsList.filteredItems).toEqual(groups);
+		expect(groups.every((group) => group.collapsed)).toBe(true);
+	});
+
+	it('should preserve hideSelected when collapsibleGroup changes', async () => {
+		const fixture = createTestingModule(
+			NgSelectGroupingTestComponent,
+			`<ng-select
+				[items]="accounts"
+				groupBy="country"
+				[multiple]="true"
+				[hideSelected]="true"
+				[collapsibleGroup]="collapsibleGroup"
+				[collapseGroupByDefault]="true">
+			</ng-select>`,
+		);
+
+		await tickAndDetectChanges(fixture);
+		const itemsList = fixture.componentInstance.select().itemsList;
+		const firstGroup = itemsList.items[0];
+		const selectedChild = firstGroup.children[0];
+		const unselectedChild = firstGroup.children[1];
+		itemsList.select(selectedChild);
+
+		fixture.componentInstance.collapsibleGroup = false;
+		await tickAndDetectChanges(fixture);
+
+		expect(itemsList.selectedItems).toContain(selectedChild);
+		expect(itemsList.filteredItems).not.toContain(selectedChild);
+		expect(itemsList.filteredItems).toContain(unselectedChild);
+	});
+
+	it('should preserve local search filtering when collapsibleGroup changes', async () => {
+		const fixture = createTestingModule(
+			NgSelectGroupingTestComponent,
+			`<ng-select
+				[items]="accounts"
+				bindLabel="name"
+				groupBy="country"
+				[collapsibleGroup]="collapsibleGroup"
+				[collapseGroupByDefault]="true">
+			</ng-select>`,
+		);
+
+		await tickAndDetectChanges(fixture);
+		const select = fixture.componentInstance.select();
+		const itemsList = select.itemsList;
+		const firstGroup = itemsList.items[0];
+		select.filter('Adam');
+		await tickAndDetectChanges(fixture);
+		itemsList.toggleItemCollapse(firstGroup);
+
+		fixture.componentInstance.collapsibleGroup = false;
+		await tickAndDetectChanges(fixture);
+
+		expect(itemsList.filteredItems.map((item) => item.label)).toEqual(['United States', 'Adam']);
+	});
 });
 
 describe('Input method composition', () => {
@@ -6754,6 +6839,7 @@ class EncapsulatedTestComponent extends NgSelectTestComponent {
 })
 class NgSelectGroupingTestComponent {
 	readonly select = viewChild(NgSelectComponent);
+	collapsibleGroup = true;
 	selectedAccountName = 'Adam';
 	selectedAccount = null;
 	accounts = [

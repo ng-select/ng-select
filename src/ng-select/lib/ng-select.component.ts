@@ -415,6 +415,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const itemsChange = changes.items;
 		const isOpenChange = changes.isOpen;
 		const groupByChange = changes._groupBy ?? changes.groupBy;
+		const collapsibleGroupChange = changes._collapsibleGroup ?? changes.collapsibleGroup;
 
 		if (multipleChange?.firstChange) {
 			this.itemsList.clearSelected(false);
@@ -431,6 +432,10 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 		if (groupByChange?.firstChange && !itemsChange) {
 			this._setItems([...this.items()]);
+		}
+
+		if (collapsibleGroupChange && !collapsibleGroupChange.firstChange) {
+			this.itemsList.setCollapsibleGroupState(this.collapsibleGroup() && this.collapseGroupByDefault());
 		}
 
 		this._setTabFocusOnClear();

@@ -149,6 +149,21 @@ export class ItemsList {
 		}
 	}
 
+	setCollapsibleGroupState(collapsed: boolean): void {
+		for (const item of this._items) {
+			if (item.children) {
+				item.collapsed = collapsed;
+			}
+		}
+
+		if (this._ngSelect.searchTerm && !this._ngSelect.typeahead()?.observed) {
+			this.filter(this._ngSelect.searchTerm);
+			return;
+		}
+
+		this._refreshVisibleItems();
+	}
+
 	findByLabel(term: string) {
 		term = searchHelper.stripSpecialChars(term).toLocaleLowerCase();
 		return this.filteredItems.find((item) => {
@@ -204,11 +219,7 @@ export class ItemsList {
 			}
 		}
 
-		let baseItems = this._items;
-		if (this._ngSelect.hideSelected() && this.selectedItems.length > 0) {
-			baseItems = baseItems.filter((x) => !x.selected);
-		}
-		this._filteredItems = this._getVisibleItems(baseItems);
+		this._refreshVisibleItems();
 	}
 
 	unmarkItem() {
@@ -486,5 +497,10 @@ export class ItemsList {
 		if (!this._ngSelect.collapsibleGroup()) return items;
 
 		return items.filter((item) => !(item.parent && item.parent.collapsed));
+	}
+
+	private _refreshVisibleItems(): void {
+		const items = this._ngSelect.hideSelected() && this.selectedItems.length > 0 ? this._items.filter((item) => !item.selected) : this._items;
+		this._filteredItems = this._getVisibleItems(items);
 	}
 }
