@@ -488,6 +488,80 @@ describe('ItemsList', () => {
 		});
 	});
 
+	describe('collapsible groups', () => {
+		let list: ItemsList;
+		let cmp: NgSelectComponent;
+		let cmpRef: ComponentRef<NgSelectComponent>;
+
+		beforeEach(async () => {
+			const { component, componentRef } = await ngSelectFactory();
+			cmp = component;
+			cmpRef = componentRef;
+			cmpRef.setInput('bindLabel', 'label');
+			cmpRef.setInput('groupBy', 'groupKey');
+			cmpRef.setInput('collapsibleGroup', true);
+			list = itemsListFactory(cmp);
+			cmp.itemsList = list;
+		});
+
+		const groupedItems = [
+			{ label: 'K1', groupKey: 'G1' },
+			{ label: 'K2', groupKey: 'G1' },
+			{ label: 'K3', groupKey: 'G2' },
+		];
+
+		it('should exclude children when groups are collapsed by default', () => {
+			cmpRef.setInput('collapseGroupByDefault', true);
+			list.setItems(groupedItems);
+
+			expect(list.filteredItems.map((item) => item.label)).toEqual(['G1', 'G2']);
+			expect(list.items.filter((item) => item.children).every((group) => group.collapsed)).toBe(true);
+		});
+
+		it('should restore the default collapsed state after clearing a search that matched every child', () => {
+			cmpRef.setInput('collapseGroupByDefault', true);
+			list.setItems(groupedItems);
+
+			cmp.filter('K');
+			expect(list.filteredItems).toHaveLength(list.items.length);
+			expect(list.items.filter((item) => item.children).every((group) => !group.collapsed)).toBe(true);
+
+			cmp.filter('');
+			expect(list.filteredItems.map((item) => item.label)).toEqual(['G1', 'G2']);
+			expect(list.items.filter((item) => item.children).every((group) => group.collapsed)).toBe(true);
+		});
+
+		it('should keep unmatched children filtered out when expanding during a search', () => {
+			list.setItems(groupedItems);
+			const firstGroup = list.items[0];
+
+			cmp.filter('K1');
+			expect(list.filteredItems.map((item) => item.label)).toEqual(['G1', 'K1']);
+
+			list.toggleItemCollapse(firstGroup);
+			expect(list.filteredItems.map((item) => item.label)).toEqual(['G1']);
+
+			list.toggleItemCollapse(firstGroup);
+			expect(list.filteredItems.map((item) => item.label)).toEqual(['G1', 'K1']);
+		});
+
+		it('should not reveal an unselected child while its parent remains collapsed', () => {
+			cmpRef.setInput('multiple', true);
+			cmpRef.setInput('hideSelected', true);
+			cmpRef.setInput('collapseGroupByDefault', true);
+			list.setItems(groupedItems);
+
+			const firstGroup = list.items[0];
+			const firstChild = firstGroup.children[0];
+			list.select(firstChild);
+			list.unselect(firstChild);
+
+			expect(firstGroup.collapsed).toBe(true);
+			expect(list.filteredItems).toContain(firstGroup);
+			expect(list.filteredItems).not.toContain(firstChild);
+		});
+	});
+
 	describe('map selected', () => {
 		let list: ItemsList;
 		let cmp: NgSelectComponent;
