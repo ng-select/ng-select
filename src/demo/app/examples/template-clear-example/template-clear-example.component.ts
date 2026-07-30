@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgClearButtonTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
@@ -6,6 +6,7 @@ import { NgClearButtonTemplateDirective, NgSelectComponent } from '@ng-select/ng
 	selector: 'ng-template-clear-example',
 	templateUrl: './template-clear-example.component.html',
 	styleUrls: ['./template-clear-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, NgClearButtonTemplateDirective],
 })
 export class TemplateClearExampleComponent {

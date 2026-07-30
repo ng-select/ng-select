@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgHeaderTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
@@ -6,6 +6,7 @@ import { NgHeaderTemplateDirective, NgSelectComponent } from '@ng-select/ng-sele
 	selector: 'ng-template-search-example',
 	templateUrl: './template-search-example.component.html',
 	styleUrls: ['./template-search-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, NgHeaderTemplateDirective],
 })
 export class TemplateSearchExampleComponent implements OnInit {

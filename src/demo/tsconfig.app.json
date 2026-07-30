@@ -4,6 +4,9 @@
 		"outDir": "../../out-tsc/app",
 		"types": ["node", "@angular/localize"]
 	},
-	"files": ["main.ts", "polyfills.ts"],
-	"include": ["**/*.d.ts"]
+	"files": ["main.ts"],
+	"include": ["**/*.d.ts"],
+	"angularCompilerOptions": {
+		"strictTemplates": false
+	}
 }

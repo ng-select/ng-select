@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgOptionComponent, NgSelectComponent } from '@ng-select/ng-select';
 
@@ -6,6 +6,7 @@ import { NgOptionComponent, NgSelectComponent } from '@ng-select/ng-select';
 	selector: 'ng-forms-with-options-example',
 	templateUrl: './forms-with-options-example.component.html',
 	styleUrls: ['./forms-with-options-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [FormsModule, ReactiveFormsModule, NgSelectComponent, NgOptionComponent],
 })
 export class FormsWithOptionsExampleComponent implements OnInit {

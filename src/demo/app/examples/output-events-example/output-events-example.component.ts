@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
@@ -13,6 +13,7 @@ interface Event {
 	selector: 'ng-output-events-example',
 	templateUrl: './output-events-example.component.html',
 	styleUrls: ['./output-events-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, JsonPipe],
 })
 export class OutputEventsExampleComponent {

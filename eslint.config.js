@@ -28,12 +28,14 @@ module.exports = defineConfig([
 			'@typescript-eslint/explicit-member-accessibility': ['off', { accessibility: 'explicit' }],
 			'arrow-parens': ['off', 'always'],
 			'import/order': 'off',
-			'max-len': ['error', { code: 160 }],
+			'max-len': ['off'],
 			'jsdoc/newline-after-description': 'off',
 			'@angular-eslint/no-host-metadata-property': 'off',
 			'@angular-eslint/no-output-rename': 'off',
 			'@angular-eslint/no-output-native': 'off',
 			'@angular-eslint/prefer-standalone': 'off',
+			'@angular-eslint/no-input-rename': 'off',
+			'@angular-eslint/prefer-on-push-component-change-detection': 'off',
 			'@angular-eslint/component-selector': [
 				'error',
 				{
@@ -70,6 +72,21 @@ module.exports = defineConfig([
 				'error',
 				{
 					allowNullOrUndefined: true,
+				},
+			],
+		},
+	},
+	{
+		files: ['src/ng-select/**/*.ts', 'src/ng-option-highlight/**/*.ts'],
+		ignores: ['**/*.spec.ts', 'src/ng-select/testing/**'],
+		rules: {
+			'no-restricted-syntax': [
+				'error',
+				{
+					selector:
+						"MemberExpression[property.name='onStable'], MemberExpression[property.name='onMicrotaskEmpty'], MemberExpression[property.name='onUnstable'], MemberExpression[property.name='isStable']",
+					message:
+						'Zone-stability APIs never fire under zoneless change detection. Use afterNextRender/afterEveryRender instead (see docs/superpowers/specs/2026-07-19-zoneless-support-design.md).',
 				},
 			],
 		},

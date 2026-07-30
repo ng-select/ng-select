@@ -1,4 +1,4 @@
-import { Component, NgModule } from '@angular/core';
+import { Component, NgModule, provideZonelessChangeDetection } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -23,7 +23,7 @@ export class AppComponent {}
 		ReactiveFormsModule,
 		//example-cmp
 	],
-	providers: [provideHttpClient(withFetch())],
+	providers: [provideZonelessChangeDetection(), provideHttpClient(withFetch())],
 	declarations: [AppComponent],
 	bootstrap: [AppComponent],
 })

@@ -35,6 +35,7 @@ import { OutputEventsExampleComponent } from './output-events-example/output-eve
 import { VirtualScrollExampleComponent } from './virtual-scroll-example/virtual-scroll-example.component';
 import { DropdownPositionExampleComponent } from './dropdown-position-example/dropdown-position-example.component';
 import { AppendToExampleComponent } from './append-to-example/append-to-example.component';
+import { ModalNgBootstrapExampleComponent } from './modal-ng-bootstrap-example/modal-ng-bootstrap-example.component';
 import { GroupDefaultExampleComponent } from './group-default-example/group-default-example.component';
 import { GroupFunctionExampleComponent } from './group-function-example/group-function-example.component';
 import { GroupSelectableExampleComponent } from './group-selectable-example/group-selectable-example.component';
@@ -46,6 +47,10 @@ import { FixedPlaceholderExampleComponent } from './fixed-placeholder-example/fi
 import { TemplateClearExampleComponent } from './template-clear-example/template-clear-example.component';
 import { GroupCollapsibleExampleComponent } from './group-collapsible-example/group-collapsible-example.component';
 import { TemplateCollapseExampleComponent } from './template-collapse-example/template-collapse-example.component';
+import { PopoverExampleComponent } from './popover-example/popover-example.component';
+import { MaterialAppearancesExampleComponent } from './material-appearances-example/material-appearances-example.component';
+import { MaterialStatesExampleComponent } from './material-states-example/material-states-example.component';
+import { MaterialMultiselectExampleComponent } from './material-multiselect-example/material-multiselect-example.component';
 
 export interface Example {
 	component: any;
@@ -221,6 +226,10 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
 		component: AppendToExampleComponent,
 		title: 'Append to position',
 	},
+	'modal-ng-bootstrap-example': {
+		component: ModalNgBootstrapExampleComponent,
+		title: 'Bootstrap modal',
+	},
 	'group-default-example': {
 		component: GroupDefaultExampleComponent,
 		title: 'Group by item key',
@@ -241,8 +250,24 @@ export const EXAMPLE_COMPONENTS: { [key: string]: Example } = {
 		component: GroupChildrenExampleComponent,
 		title: 'Items with already grouped children array',
 	},
-	'group-collapsible-example': {
-		component: GroupCollapsibleExampleComponent,
-		title: 'Collapsible groups',
+    'group-collapsible-example': {
+        component: GroupCollapsibleExampleComponent,
+        title: 'Collapsible groups',
+     },
+	'popover-example': {
+		component: PopoverExampleComponent,
+		title: 'Popover top layer',
+	},
+	'material-appearances-example': {
+		component: MaterialAppearancesExampleComponent,
+		title: 'Material appearances (default / outline / fill)',
+	},
+	'material-states-example': {
+		component: MaterialStatesExampleComponent,
+		title: 'Material outline and fill states',
+	},
+	'material-multiselect-example': {
+		component: MaterialMultiselectExampleComponent,
+		title: 'Material multiselect appearances',
 	},
 };

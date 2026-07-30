@@ -106,8 +106,7 @@ export class ItemsList {
 		} else if (this._ngSelect.bindValue()) {
 			findBy = (item) => !item.children && this.resolveNested(item.value, this._ngSelect.bindValue()) === value;
 		} else {
-			findBy = (item) =>
-				item.value === value || (!item.children && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel()));
+			findBy = (item) => item.value === value || (!item.children && item.label && item.label === this.resolveNested(value, this._ngSelect.bindLabel()));
 		}
 		return this._items.find((item) => findBy(item));
 	}
@@ -133,14 +132,20 @@ export class ItemsList {
 	toggleItemCollapse(item: NgOption) {
 		if (!this._ngSelect.collapsibleGroup() || !item.children) return;
 
+		const markedItem = this.markedItem;
 		item.collapsed = !item.collapsed;
 
 		if (item.collapsed) {
 			this._filteredItems = this._filteredItems.filter((x) => x.parent !== item);
+			if (markedItem?.parent === item) {
+				this.markItem(item);
+			}
+		} else if (this._ngSelect.searchTerm) {
+			this.filter(this._ngSelect.searchTerm);
 		} else {
 			const childrenToAdd = item.children.filter((child) => !(this._ngSelect.hideSelected() && child.selected));
 			// Re-sort by original index to drop them back into the correct visual order
-			this._filteredItems = [...this._filteredItems, ...childrenToAdd].toSorted((a, b) => a.index - b.index);
+			this._filteredItems = [...this._filteredItems, ...childrenToAdd].sort((a, b) => a.index - b.index);
 		}
 	}
 
@@ -189,7 +194,7 @@ export class ItemsList {
 	}
 
 	resetFilteredItems() {
-		if (this._filteredItems.length === this._items.length) {
+		if (!this._ngSelect.collapsibleGroup() && this._filteredItems.length === this._items.length) {
 			return;
 		}
 
@@ -257,6 +262,7 @@ export class ItemsList {
 	mapItem(item: any, index: number): NgOption {
 		const hasNgOptionLabel = isObject(item) && '$ngOptionLabel' in item;
 		const hasNgOptionValue = isObject(item) && '$ngOptionValue' in item;
+		const hasNgOptionClasses = isObject(item) && '$ngOptionClasses' in item;
 		const label = hasNgOptionLabel ? item.$ngOptionLabel : this.resolveNested(item, this._ngSelect.bindLabel());
 		const value = hasNgOptionValue ? item.$ngOptionValue : item;
 		return {
@@ -264,6 +270,7 @@ export class ItemsList {
 			label: isDefined(label) ? label.toString() : '',
 			value,
 			disabled: item && item.disabled ? item.disabled : false,
+			classes: hasNgOptionClasses ? item.$ngOptionClasses : '',
 			htmlId: `${this._ngSelect.dropdownId}-${index}`,
 		};
 	}
@@ -272,15 +279,12 @@ export class ItemsList {
 		const multiple = this._ngSelect.multiple();
 		for (const selected of this.selectedItems) {
 			const bindValue = this._ngSelect.bindValue();
-			let item: NgOption | null = null;
+			const value = bindValue ? this.resolveNested(selected.value, bindValue) : selected.value;
+			const valueFound = isDefined(value);
+			let item = valueFound ? this.findItem(value) : null;
 
-			// When compareWith is used, we need to find the item using the original selected value rather than the extracted bindValue,
-			// since compareWith expects to compare against the original value
-			if (this._ngSelect.compareWith()) {
+			if (!item && !valueFound && this._ngSelect.compareWith()) {
 				item = this._items.find((item) => this._ngSelect.compareWith()(item.value, selected.value));
-			} else {
-				const value = bindValue ? this.resolveNested(selected.value, bindValue) : selected.value;
-				item = isDefined(value) ? this.findItem(value) : null;
 			}
 
 			this._selectionModel.unselect(selected, multiple);
@@ -293,18 +297,23 @@ export class ItemsList {
 	}
 
 	private _showSelected(item: NgOption) {
-		this._filteredItems.push(item);
 		if (item.parent) {
 			const parent = item.parent;
 			const parentExists = this._filteredItems.find((x) => x === parent);
 			if (!parentExists) {
 				this._filteredItems.push(parent);
 			}
+			if (!(this._ngSelect.collapsibleGroup() && parent.collapsed)) {
+				this._filteredItems.push(item);
+			}
 		} else if (item.children) {
+			this._filteredItems.push(item);
 			for (const child of item.children) {
 				child.selected = false;
 				this._filteredItems.push(child);
 			}
+		} else {
+			this._filteredItems.push(item);
 		}
 		this._filteredItems = [...this._filteredItems.sort((a, b) => a.index - b.index)];
 	}
@@ -353,12 +362,30 @@ export class ItemsList {
 			return -1;
 		}
 
-		const selectedIndex = this._filteredItems.indexOf(this.lastSelectedItem);
+		const selectedIndex = this._getFirstSelectedIndex();
 		if (this.lastSelectedItem && selectedIndex < 0) {
 			return -1;
 		}
 
-		return Math.max(this.markedIndex, selectedIndex);
+		return selectedIndex > -1 ? selectedIndex : this.markedIndex;
+	}
+
+	/**
+	 * Index of the first selected, non-disabled option in filtered list order.
+	 * Per the WAI-ARIA listbox pattern, focus lands on the first selected option when the list opens.
+	 */
+	private _getFirstSelectedIndex() {
+		let index = -1;
+		for (const selected of this.selectedItems) {
+			if (selected.disabled) {
+				continue;
+			}
+			const i = this._filteredItems.indexOf(selected);
+			if (i > -1 && (index === -1 || i < index)) {
+				index = i;
+			}
+		}
+		return index;
 	}
 
 	private _groupBy(items: NgOption[], prop: string | ((value: any) => any)): OptionGroups {
@@ -406,6 +433,7 @@ export class ItemsList {
 				items.push(
 					...withoutGroup.map((x) => {
 						x.index = i++;
+						x.htmlId = `${this._ngSelect.dropdownId}-${x.index}`;
 						return x;
 					}),
 				);
@@ -435,6 +463,7 @@ export class ItemsList {
 				x.parent = parent;
 				x.children = undefined;
 				x.index = i++;
+				x.htmlId = `${this._ngSelect.dropdownId}-${x.index}`;
 				return x;
 			});
 			parent.children = children;

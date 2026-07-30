@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { appRoutes } from '../routes';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -13,6 +13,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 			}
 		</ul>
 	`,
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [RouterLinkActive, RouterLink],
 })
 export class LayoutSidenavComponent {

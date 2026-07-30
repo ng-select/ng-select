@@ -13,10 +13,8 @@ export class NgItemLabelDirective {
 
 	constructor() {
 		effect(() => {
-			this.element.nativeElement.innerHTML = this.escape()
-				? escapeHTML(this.ngItemLabel())
-				: this.ngItemLabel();
-		})
+			this.element.nativeElement.innerHTML = this.escape() ? escapeHTML(this.ngItemLabel()) : this.ngItemLabel();
+		});
 	}
 }
 
@@ -137,5 +135,5 @@ export class NgClearButtonTemplateDirective {
 // eslint-disable-next-line @angular-eslint/directive-selector
 @Directive({ selector: '[ng-collapse-button-tmp]', standalone: true })
 export class NgCollapseButtonTemplateDirective {
-	public readonly template = inject(TemplateRef<any>)
+	public readonly template = inject(TemplateRef<any>);
 }

@@ -62,7 +62,7 @@ import { DefaultSelectionModelFactory } from './selection-model';
 	],
 	providers: provideNgSelect(),
 })
-export class NgSelectModule { }
+export class NgSelectModule {}
 
 export function provideNgSelect() {
 	return [

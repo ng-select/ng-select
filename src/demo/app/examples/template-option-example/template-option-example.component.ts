@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
 import { NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
@@ -7,6 +7,7 @@ import { NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-sele
 	selector: 'ng-template-option-example',
 	templateUrl: './template-option-example.component.html',
 	styleUrls: ['./template-option-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, NgOptionTemplateDirective, NgOptionHighlightDirective],
 })
 export class TemplateOptionExampleComponent implements OnInit {

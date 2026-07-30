@@ -8,9 +8,13 @@ out-tsc
 .DS_Store
 travis_rsa
 travis_rsa.pub
-.vscode/**
 dist.tgz
 .yarn
 
 .nx/cache
 .nx/workspace-data
+.superpowers/
+jasmine-vitest-*.md
+.vitest-attachments
+src/ng-select/lib/__screenshots__/*
+/docs

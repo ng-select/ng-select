@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectComponent } from '@ng-select/ng-select';
@@ -7,6 +7,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 	selector: 'ng-forms-single-select-example',
 	templateUrl: './forms-single-select-example.component.html',
 	styleUrls: ['./forms-single-select-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [FormsModule, ReactiveFormsModule, NgSelectComponent],
 })
 export class FormsSingleSelectExampleComponent implements OnInit {

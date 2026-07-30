@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgOptionTemplateDirective, NgSelectComponent, NgSelectComponent as NgSelectComponent_1 } from '@ng-select/ng-select';
 import { delay } from 'rxjs/operators';
@@ -9,6 +9,7 @@ import { NgOptionHighlightDirective } from '@ng-select/ng-option-highlight';
 	selector: 'ng-forms-async-data-example',
 	templateUrl: './forms-async-data-example.component.html',
 	styleUrls: ['./forms-async-data-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [FormsModule, ReactiveFormsModule, NgSelectComponent_1, NgOptionTemplateDirective, NgOptionHighlightDirective],
 })
 export class FormsAsyncDataExampleComponent implements OnInit {

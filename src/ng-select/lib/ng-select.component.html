@@ -16,7 +16,15 @@
 			@for (item of selectedItems; track trackByOption($index, item)) {
 				<div [class.ng-value-disabled]="item.disabled" class="ng-value">
 					<ng-template #defaultLabelTemplate>
-						<span class="ng-value-icon left" (click)="unselect(item)" aria-hidden="true">×</span>
+						<span
+							class="ng-value-icon left"
+							role="button"
+							tabindex="0"
+							[attr.aria-label]="(removeText() ?? config.removeText) + ' ' + item.label"
+							(click)="unselect(item)"
+							(keydown)="handleRemoveKeydown($event, item)"
+							>×</span
+						>
 						<span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
 					</ng-template>
 					<ng-template
@@ -28,8 +36,7 @@
 		}
 
 		@if (multiple() && multiLabelTemplate() && selectedValues.length > 0) {
-			<ng-template [ngTemplateOutlet]="multiLabelTemplate()" [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }">
-			</ng-template>
+			<ng-template [ngTemplateOutlet]="multiLabelTemplate()" [ngTemplateOutletContext]="{ items: selectedValues, clear: clearItem }"> </ng-template>
 		}
 
 		<div class="ng-input">
@@ -68,6 +75,7 @@
 			role="button"
 			tabindex="0"
 			[attr.tabindex]="tabFocusOnClear() ? 0 : -1"
+			[attr.aria-label]="clearAllText() || config.clearAllText"
 			title="{{ clearAllText() || config.clearAllText }}"
 			#clearButton
 			(click)="handleClearClick($event)">
@@ -82,13 +90,21 @@
 	<span class="ng-arrow-wrapper">
 		<span class="ng-arrow"></span>
 	</span>
+
+	@if (appearance() === 'outline') {
+		<div class="ng-notched-outline" aria-hidden="true">
+			<div class="ng-notched-outline-leading"></div>
+			<div class="ng-notched-outline-notch" [style.width.px]="outlineNotchWidth()"></div>
+			<div class="ng-notched-outline-trailing"></div>
+		</div>
+	}
 </div>
 
 @if (isOpen()) {
 	@let appendToValue = appendTo() || config.appendTo;
 	<ng-dropdown-panel
 		class="ng-dropdown-panel"
-		[virtualScroll]="virtualScroll() ?? !config.disableVirtualScroll ?? false"
+		[virtualScroll]="dropdownVirtualScroll()"
 		[bufferAmount]="bufferAmount()"
 		[appendTo]="appendToValue"
 		[position]="dropdownPosition()"
@@ -105,16 +121,17 @@
 		(outsideClick)="close()"
 		[class.ng-select-multiple]="multiple()"
 		[class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
-		[id]="dropdownId"
-		[ariaLabelDropdown]="ariaLabelDropdown() ?? config.ariaLabelDropdown">
+		[listboxId]="dropdownId"
+		[ariaLabelDropdown]="ariaLabelDropdown() ?? config.ariaLabelDropdown"
+		[popover]="popover()">
 		<ng-container>
 			@for (item of viewPortItems; track trackByOption($index, item)) {
 				<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus, @angular-eslint/template/mouse-events-have-key-events -->
 				<div
-					class="ng-option"
 					[attr.role]="item.children ? 'group' : 'option'"
 					(click)="toggleItem(item)"
 					(mouseover)="onItemHover(item)"
+					[ngClass]="item.classes"
 					[class.ng-option-disabled]="item.disabled"
 					[class.ng-option-selected]="item.selected"
 					[class.ng-optgroup]="item.children"
@@ -124,22 +141,30 @@
 					[attr.aria-selected]="item.selected"
 					[attr.id]="item?.htmlId"
 					[attr.aria-setsize]="itemsList.filteredItems.length"
-					[attr.aria-posinset]="item.index + 1">
+					[attr.aria-posinset]="itemsList.filteredItems.indexOf(item) + 1 || null"
+					[attr.aria-expanded]="item.children && collapsibleGroup() ? !item.collapsed : null"
+					[attr.aria-keyshortcuts]="item.children && collapsibleGroup() ? 'Control+Space Meta+Space' : null">
 					<ng-template #defaultOptionTemplate>
 						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"> </span>
 					</ng-template>
 
 					@if (item.children && collapsibleGroup()) {
 						<ng-template #defaultCollapseButtonTemplate let-collapsed="collapsed">
-							<button class="ng-option-collapse-button">{{ collapsed ? '⏷' : '⏶' }}</button>
+							<span aria-hidden="true">{{ collapsed ? '⏷' : '⏶' }}</span>
 						</ng-template>
 
-						<span class="ng-option-collapse-wrapper" (click)="toggleItemCollapse($event, item)">
+						<button
+							type="button"
+							tabindex="-1"
+							class="ng-option-collapse-button ng-option-collapse-wrapper"
+							[attr.aria-expanded]="!item.collapsed"
+							[attr.aria-label]="item.collapsed ? 'Expand group' : 'Collapse group'"
+							(click)="toggleItemCollapse($event, item)">
 							<ng-template
 								[ngTemplateOutlet]="collapseButtonTemplate() || defaultCollapseButtonTemplate"
 								[ngTemplateOutletContext]="{ collapsed: item.collapsed }">
 							</ng-template>
-						</span>
+						</button>
 					}
 
 					<ng-template
@@ -163,10 +188,7 @@
 							>"{{ searchTerm }}"</span
 						>
 					</ng-template>
-					<ng-template
-						[ngTemplateOutlet]="tagTemplate() || defaultTagTemplate"
-						[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
-					</ng-template>
+					<ng-template [ngTemplateOutlet]="tagTemplate() || defaultTagTemplate" [ngTemplateOutletContext]="{ searchTerm: searchTerm }"> </ng-template>
 				</div>
 			}
 		</ng-container>
@@ -174,9 +196,7 @@
 			<ng-template #defaultNotFoundTemplate>
 				<div class="ng-option ng-option-disabled">{{ notFoundText() ?? config.notFoundText }}</div>
 			</ng-template>
-			<ng-template
-				[ngTemplateOutlet]="notFoundTemplate() || defaultNotFoundTemplate"
-				[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
+			<ng-template [ngTemplateOutlet]="notFoundTemplate() || defaultNotFoundTemplate" [ngTemplateOutletContext]="{ searchTerm: searchTerm }">
 			</ng-template>
 		}
 		@if (showTypeToSearch()) {
@@ -189,9 +209,7 @@
 			<ng-template #defaultLoadingTextTemplate>
 				<div class="ng-option ng-option-disabled">{{ loadingText() || config.loadingText }}</div>
 			</ng-template>
-			<ng-template
-				[ngTemplateOutlet]="loadingTextTemplate() || defaultLoadingTextTemplate"
-				[ngTemplateOutletContext]="{ searchTerm: searchTerm }">
+			<ng-template [ngTemplateOutlet]="loadingTextTemplate() || defaultLoadingTextTemplate" [ngTemplateOutletContext]="{ searchTerm: searchTerm }">
 			</ng-template>
 		}
 	</ng-dropdown-panel>
@@ -199,7 +217,15 @@
 
 <!-- Always present aria-live region -->
 <div aria-atomic="true" aria-live="polite" class="ng-visually-hidden" role="status">
-	@if (isOpen() && showNoItemsFound()) {
-		{{ notFoundText() ?? config.notFoundText }}
+	@if (isOpen()) {
+		@if (showNoItemsFound()) {
+			{{ notFoundText() ?? config.notFoundText }}
+		} @else if (showTypeToSearch()) {
+			{{ typeToSearchText() || config.typeToSearchText }}
+		} @else if (loading() && itemsList.filteredItems.length === 0) {
+			{{ loadingText() || config.loadingText }}
+		} @else if (itemsList.markedItem) {
+			{{ itemsList.markedItem.label }}
+		}
 	}
 </div>

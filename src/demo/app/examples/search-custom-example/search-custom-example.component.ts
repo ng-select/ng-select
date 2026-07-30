@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DataService, Person } from '../data.service';
 import { NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
@@ -6,6 +6,7 @@ import { NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-sele
 	selector: 'ng-search-custom-example',
 	templateUrl: './search-custom-example.component.html',
 	styleUrls: ['./search-custom-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, NgOptionTemplateDirective],
 })
 export class SearchCustomExampleComponent implements OnInit {

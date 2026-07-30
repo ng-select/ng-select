@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NgLoadingSpinnerTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
 	selector: 'ng-template-loading-example',
 	templateUrl: './template-loading-example.component.html',
 	styleUrls: ['./template-loading-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, NgLoadingSpinnerTemplateDirective],
 })
 export class TemplateLoadingExampleComponent implements OnInit {

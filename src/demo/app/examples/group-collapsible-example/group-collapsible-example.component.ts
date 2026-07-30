@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 
@@ -7,6 +7,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 	selector: 'ng-group-collapsible-example',
 	templateUrl: './group-collapsible-example.component.html',
 	styleUrls: ['./group-collapsible-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, JsonPipe],
 })
 export class GroupCollapsibleExampleComponent {

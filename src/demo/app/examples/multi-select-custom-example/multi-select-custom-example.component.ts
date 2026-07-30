@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DataService } from '../data.service';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { AsyncPipe, SlicePipe } from '@angular/common';
 	selector: 'ng-multi-select-custom-example',
 	templateUrl: './multi-select-custom-example.component.html',
 	styleUrls: ['./multi-select-custom-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, NgMultiLabelTemplateDirective, AsyncPipe, SlicePipe],
 })
 export class MultiSelectCustomExampleComponent implements OnInit {

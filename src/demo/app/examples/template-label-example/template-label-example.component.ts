@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgLabelTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
@@ -6,6 +6,7 @@ import { NgLabelTemplateDirective, NgSelectComponent } from '@ng-select/ng-selec
 	selector: 'ng-template-label-example',
 	templateUrl: './template-label-example.component.html',
 	styleUrls: ['./template-label-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, NgLabelTemplateDirective],
 })
 export class TemplateLabelExampleComponent implements OnInit {

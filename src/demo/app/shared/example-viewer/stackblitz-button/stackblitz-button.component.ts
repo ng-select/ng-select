@@ -1,10 +1,11 @@
-import { Component, input, inject } from '@angular/core';
+import { Component, input, inject, ChangeDetectionStrategy } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { StackblitzService } from './stackblitz.service';
 
 @Component({
 	selector: 'stackblitz-button',
 	templateUrl: './stackblitz-button.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	styles: [
 		`
 			svg {

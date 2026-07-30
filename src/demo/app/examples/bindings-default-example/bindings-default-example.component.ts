@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 
@@ -7,6 +7,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 	selector: 'ng-bindings-default-example',
 	templateUrl: './bindings-default-example.component.html',
 	styleUrls: ['./bindings-default-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, JsonPipe],
 })
 export class BindingsDefaultExampleComponent implements OnInit {

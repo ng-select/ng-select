@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { DataService, Person } from '../data.service';
 import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 	selector: 'ng-app-search-editable-example',
 	templateUrl: './search-editable-example.component.html',
 	styleUrls: ['./search-editable-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, FormsModule, AsyncPipe],
 })
 export class SearchEditableExampleComponent implements OnInit {

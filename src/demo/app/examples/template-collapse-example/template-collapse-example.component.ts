@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgCollapseButtonTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
 
@@ -6,6 +6,7 @@ import { NgCollapseButtonTemplateDirective, NgSelectComponent } from '@ng-select
 	selector: 'ng-template-collapse-example',
 	templateUrl: './template-collapse-example.component.html',
 	styleUrls: ['./template-collapse-example.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent, NgCollapseButtonTemplateDirective, FormsModule],
 })
 export class TemplateCollapseExampleComponent {

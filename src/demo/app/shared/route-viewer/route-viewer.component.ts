@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EXAMPLE_COMPONENTS } from '../../examples/examples';
 import { ExampleViewerComponent } from '../example-viewer/example-viewer.component';
@@ -6,6 +6,7 @@ import { ExampleViewerComponent } from '../example-viewer/example-viewer.compone
 @Component({
 	selector: 'ng-route-viewer',
 	templateUrl: './route-viewer.component.html',
+	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [ExampleViewerComponent],
 })
 export class RouteViewerComponent implements OnInit {

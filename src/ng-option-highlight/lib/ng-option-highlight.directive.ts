@@ -6,7 +6,6 @@ import { escapeRegExp, isDefined } from './utils';
 	standalone: true,
 })
 export class NgOptionHighlightDirective {
-
 	// Dependencies
 	private readonly element = inject(ElementRef<HTMLElement>).nativeElement;
 	private readonly renderer = inject(Renderer2);
@@ -18,8 +17,7 @@ export class NgOptionHighlightDirective {
 	public readonly term = input<string>('', { alias: 'ngOptionHighlight' });
 
 	// Computed properties
-	private readonly canHighlight = computed(
-		() => isDefined(this.term()) && isDefined(this.label()) && this.label() !== '');
+	private readonly canHighlight = computed(() => isDefined(this.term()) && isDefined(this.label()) && this.label() !== '');
 
 	// Update innerHTML using effect
 	_effectUpdateInnerHtml = effect(() => {
@@ -42,7 +40,7 @@ export class NgOptionHighlightDirective {
 			return;
 		}
 
-		const alternationString = escapeRegExp(this.term()).replace(' ', '|');
+		const alternationString = escapeRegExp(this.term()).replace(/\s+/g, '|');
 		const termRegex = new RegExp(alternationString, 'gi');
 		this._setInnerHtml(label.replace(termRegex, `<span class=\"highlighted\">$&</span>`));
 	}
