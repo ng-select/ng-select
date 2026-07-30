@@ -50,6 +50,8 @@ import { SearchEditableExampleComponent } from './search-editable-example/search
 import { TemplatePlaceholderExampleComponent } from './template-placeholder-example/template-placeholder-example.component';
 import { FixedPlaceholderExampleComponent } from './fixed-placeholder-example/fixed-placeholder-example.component';
 import { TemplateClearExampleComponent } from './template-clear-example/template-clear-example.component';
+import { GroupCollapsibleExampleComponent } from './group-collapsible-example/group-collapsible-example.component';
+import { TemplateCollapseExampleComponent } from './template-collapse-example/template-collapse-example.component';
 
 const examples = [
 	DataSourceBackendExampleComponent,
@@ -80,6 +82,7 @@ const examples = [
 	TemplateDisplayExampleComponent,
 	TemplateSearchExampleComponent,
 	TemplateLoadingExampleComponent,
+	TemplateCollapseExampleComponent,
 	MultiSelectDefaultExampleComponent,
 	MultiSelectHiddenExampleComponent,
 	MultiSelectLimitExampleComponent,
@@ -92,6 +95,7 @@ const examples = [
 	VirtualScrollExampleComponent,
 	DropdownPositionExampleComponent,
 	AppendToExampleComponent,
+	GroupCollapsibleExampleComponent,
 	ModalNgBootstrapExampleComponent,
 	GroupDefaultExampleComponent,
 	GroupFunctionExampleComponent,

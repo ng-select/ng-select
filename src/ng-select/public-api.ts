@@ -26,4 +26,5 @@ export {
 	NgTagTemplateDirective,
 	NgTypeToSearchTemplateDirective,
 	NgClearButtonTemplateDirective,
+	NgCollapseButtonTemplateDirective,
 } from './lib/ng-templates.directive';

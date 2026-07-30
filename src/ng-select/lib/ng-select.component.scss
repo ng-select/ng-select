@@ -259,6 +259,31 @@
 
 		.ng-optgroup {
 			@include wrap-text();
+
+			&.ng-option-collapse-button-end {
+				display: flex;
+				align-items: center;
+
+				> :not(.ng-option-collapse-button) {
+					min-width: 0;
+				}
+
+				.ng-option-collapse-button {
+					flex: 0 0 auto;
+					margin-inline-start: auto;
+					margin-inline-end: 0;
+				}
+			}
+
+			.ng-option-collapse-button {
+				background: transparent;
+				border: none;
+				margin-inline-end: 6px;
+			}
+
+			.ng-option-collapse-wrapper {
+				padding: 0;
+			}
 		}
 
 		.ng-option {
