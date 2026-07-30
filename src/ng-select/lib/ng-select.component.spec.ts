@@ -6408,6 +6408,43 @@ describe('Grouping', () => {
 		expect(firstGroup.collapsed).toBe(false);
 		expect(preventDefaultCalled).toBe(true);
 	});
+
+	it('should navigate to and expand non-selectable groups when all groups are collapsed', async () => {
+		const fixture = createTestingModule(
+			NgSelectGroupingTestComponent,
+			`<ng-select
+				[items]="accounts"
+				groupBy="country"
+				[collapsibleGroup]="true"
+				[collapseGroupByDefault]="true"
+				[(ngModel)]="selectedAccount">
+			</ng-select>`,
+		);
+
+		await tickAndDetectChanges(fixture);
+		const select = fixture.componentInstance.select();
+		select.open();
+		await tickAndDetectChanges(fixture);
+
+		const itemsList = select.itemsList;
+		const collapsedGroups = itemsList.filteredItems.filter((item) => item.children);
+		const firstGroup = collapsedGroups[0];
+		const secondGroup = collapsedGroups[1];
+
+		expect(firstGroup.disabled).toBe(true);
+		expect(itemsList.markedItem).toBe(firstGroup);
+
+		select.handleKeyDown({ key: KeyCode.ArrowDown, preventDefault: () => {} } as KeyboardEvent);
+		await tickAndDetectChanges(fixture);
+		expect(itemsList.markedItem).toBe(secondGroup);
+
+		select.handleKeyDown({ key: KeyCode.Space, ctrlKey: true, preventDefault: () => {} } as KeyboardEvent);
+		await tickAndDetectChanges(fixture);
+
+		expect(secondGroup.collapsed).toBe(false);
+		expect(itemsList.filteredItems).toContain(secondGroup.children[0]);
+		expect(itemsList.selectedItems).toHaveLength(0);
+	});
 });
 
 describe('Input method composition', () => {

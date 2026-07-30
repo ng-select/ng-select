@@ -236,7 +236,7 @@ export class ItemsList {
 		if (lastMarkedIndex > -1) {
 			this._markedIndex = lastMarkedIndex;
 		} else {
-			this._markedIndex = markDefault ? this.filteredItems.findIndex((x) => !x.disabled) : -1;
+			this._markedIndex = markDefault ? this.filteredItems.findIndex((x) => !this._isDisabledForNavigation(x)) : -1;
 		}
 	}
 
@@ -343,14 +343,19 @@ export class ItemsList {
 	}
 
 	private _stepToItem(steps: number) {
-		if (this._filteredItems.length === 0 || this._filteredItems.every((x) => x.disabled)) {
+		if (this._filteredItems.length === 0 || this._filteredItems.every((x) => this._isDisabledForNavigation(x))) {
 			return;
 		}
 
 		this._markedIndex = this._getNextItemIndex(steps);
-		if (this.markedItem.disabled) {
+		if (this._isDisabledForNavigation(this.markedItem)) {
 			this._stepToItem(steps);
 		}
+	}
+
+	private _isDisabledForNavigation(item: NgOption): boolean {
+		const isCollapsedGroup = this._ngSelect.collapsibleGroup() && item.children && item.collapsed;
+		return item.disabled && !isCollapsedGroup;
 	}
 
 	private _getLastMarkedIndex() {
