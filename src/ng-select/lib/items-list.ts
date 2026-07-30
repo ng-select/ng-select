@@ -319,9 +319,8 @@ export class ItemsList {
 			}
 		} else if (item.children) {
 			this._filteredItems.push(item);
-			for (const child of item.children) {
-				child.selected = false;
-				this._filteredItems.push(child);
+			if (!(this._ngSelect.collapsibleGroup() && item.collapsed)) {
+				this._filteredItems.push(...item.children.filter((child) => !child.selected));
 			}
 		} else {
 			this._filteredItems.push(item);

@@ -560,6 +560,36 @@ describe('ItemsList', () => {
 			expect(list.filteredItems).toContain(firstGroup);
 			expect(list.filteredItems).not.toContain(firstChild);
 		});
+
+		it('should not reveal children when a collapsed selected group is unselected', () => {
+			cmpRef.setInput('multiple', true);
+			cmpRef.setInput('hideSelected', true);
+			cmpRef.setInput('selectableGroup', true);
+			cmpRef.setInput('collapseGroupByDefault', true);
+			list.setItems(groupedItems);
+
+			const firstGroup = list.items[0];
+			list.select(firstGroup);
+			list.unselect(firstGroup);
+
+			expect(firstGroup.collapsed).toBe(true);
+			expect(list.filteredItems).toContain(firstGroup);
+			expect(list.filteredItems.some((item) => item.parent === firstGroup)).toBe(false);
+		});
+
+		it('should reveal children when an expanded selected group is unselected', () => {
+			cmpRef.setInput('multiple', true);
+			cmpRef.setInput('hideSelected', true);
+			cmpRef.setInput('selectableGroup', true);
+			list.setItems(groupedItems);
+
+			const firstGroup = list.items[0];
+			list.select(firstGroup);
+			list.unselect(firstGroup);
+
+			expect(firstGroup.collapsed).toBe(false);
+			expect(list.filteredItems).toEqual(expect.arrayContaining([firstGroup, ...firstGroup.children]));
+		});
 	});
 
 	describe('map selected', () => {
