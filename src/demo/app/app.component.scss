@@ -1,11 +1,3 @@
-:host.ant-theme ::ng-deep {
-	@import '../../ng-select/themes/ant.design.theme.scss';
-}
-
-:host.default-theme ::ng-deep {
-	@import '../../ng-select/themes/default.theme.scss';
-}
-
-:host.material-theme ::ng-deep {
-	@import '../../ng-select/themes/material.theme.scss';
-}
+// Theme styles moved to src/demo/styles.scss, scoped by a body-level theme class:
+// the dropdown panel renders in the CDK overlay outside this component's subtree,
+// so styles nested under :host here could not reach it.

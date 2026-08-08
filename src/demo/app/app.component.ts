@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostBinding, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { Title } from '@angular/platform-browser';
@@ -18,25 +19,47 @@ export class AppComponent implements OnInit {
 	private activatedRoute = inject(ActivatedRoute);
 	private titleService = inject(Title);
 	private config = inject(NgSelectConfig);
+	private document = inject(DOCUMENT);
 
 	title: string;
 	version: string = window['ngSelectVersion'];
 	exampleSourceUrl: string;
 	dir: 'ltr' | 'rtl' = 'ltr';
-	theme: 'default' | 'ant' | 'material' = 'default';
 
 	constructor() {
 		this.config.placeholder = 'Select item';
-		// This could be useful if you want to use appendTo in entire application without explicitly defining it. (eg: appendTo = 'body')
-		this.config.appendTo = null;
 		// set the bindValue to global config when you use the same bindValue in most of the place.
 		// You can also override bindValue for the specified template by defining `bindValue` as property
 		// Eg : <ng-select bindValue="some-new-value"></ng-select>
 		// this.config.bindValue = 'value';
+		this.applyBodyThemeClass();
+	}
+
+	// The dropdown panel renders in the CDK overlay outside this component's subtree, so the
+	// theme class must live on <body> for the theme styles (global, see styles.scss) to reach
+	// both the select and the panel
+	private _theme: 'default' | 'ant' | 'material' = 'default';
+
+	get theme(): 'default' | 'ant' | 'material' {
+		return this._theme;
+	}
+
+	set theme(value: 'default' | 'ant' | 'material') {
+		this._theme = value;
+		this.applyBodyThemeClass();
 	}
 
 	@HostBinding('class') get themeClass() {
 		return `${this.theme}-theme`;
+	}
+
+	private applyBodyThemeClass() {
+		const body = this.document?.body;
+		if (!body) {
+			return;
+		}
+		body.classList.remove('default-theme', 'ant-theme', 'material-theme');
+		body.classList.add(`${this._theme}-theme`);
 	}
 
 	ngOnInit() {

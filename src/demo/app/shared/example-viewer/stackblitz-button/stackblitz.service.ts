@@ -10,6 +10,7 @@ const TEMPLATE_FILES = ['index.html', 'styles.css', 'data.service.ts', 'main.ts'
 const angularVersion = '>=15.0.0';
 const dependencies = {
 	'@angular/animations': angularVersion,
+	'@angular/cdk': angularVersion,
 	'@angular/common': angularVersion,
 	'@angular/compiler': angularVersion,
 	'@angular/core': angularVersion,

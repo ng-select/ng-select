@@ -1,4 +1,14 @@
 import {
+	ConnectedPosition,
+	createFlexibleConnectedPositionStrategy,
+	createNoopScrollStrategy,
+	createOverlayRef,
+	FlexibleConnectedPositionStrategy,
+	OverlayRef,
+} from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { DOCUMENT } from '@angular/common';
+import {
 	afterEveryRender,
 	AfterViewInit,
 	booleanAttribute,
@@ -18,6 +28,7 @@ import {
 	InjectionToken,
 	Injector,
 	input,
+	isDevMode,
 	linkedSignal,
 	model,
 	numberAttribute,
@@ -29,6 +40,7 @@ import {
 	TemplateRef,
 	untracked,
 	viewChild,
+	ViewContainerRef,
 	ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -73,6 +85,22 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 function optionalBooleanAttribute(value: unknown): boolean | undefined {
 	return value == null ? undefined : booleanAttribute(value);
 }
+
+const DROPDOWN_POSITION_BELOW: ConnectedPosition = { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' };
+const DROPDOWN_POSITION_ABOVE: ConnectedPosition = { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom' };
+const DROPDOWN_POSITION_AFTER: ConnectedPosition = { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' };
+const DROPDOWN_POSITION_BEFORE: ConnectedPosition = { originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top' };
+
+const DROPDOWN_POSITIONS: Record<DropdownPosition, ConnectedPosition[]> = {
+	// 'auto' prefers below and flips above when the panel does not fit the viewport;
+	// the fit check measures the rendered overlay, so header/footer templates and
+	// item count are accounted for (#2687, #2575)
+	auto: [DROPDOWN_POSITION_BELOW, DROPDOWN_POSITION_ABOVE],
+	bottom: [DROPDOWN_POSITION_BELOW],
+	top: [DROPDOWN_POSITION_ABOVE],
+	right: [DROPDOWN_POSITION_AFTER],
+	left: [DROPDOWN_POSITION_BEFORE],
+};
 
 @Component({
 	selector: 'ng-select',
@@ -135,7 +163,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly removeText = linkedSignal(() => this._removeText());
 	readonly _dropdownPosition = input<DropdownPosition>('auto', { alias: 'dropdownPosition' });
 	readonly dropdownPosition = linkedSignal(() => this._dropdownPosition());
+	/** @deprecated Has no effect: the dropdown panel always renders in a CDK overlay attached to the document body. Will be removed in a future major version. */
 	readonly _appendTo = input<string>(undefined, { alias: 'appendTo' });
+	/** @deprecated Has no effect: the dropdown panel always renders in a CDK overlay attached to the document body. Will be removed in a future major version. */
 	readonly appendTo = linkedSignal(() => this._appendTo());
 	readonly _outsideClickEvent = input<'click' | 'mousedown'>(this.config.outsideClickEvent ?? 'click', { alias: 'outsideClickEvent' });
 	readonly outsideClickEvent = linkedSignal(() => this._outsideClickEvent());
@@ -222,7 +252,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly compareWith = linkedSignal(() => this._compareWith());
 	readonly _keyDownFn = input<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true, { alias: 'keyDownFn' });
 	readonly keyDownFn = linkedSignal(() => this._keyDownFn());
+	/** @deprecated Has no effect: the CDK overlay renders in the native Popover API top layer automatically in supporting browsers. Will be removed in a future major version. */
 	readonly _popover = input(false, { alias: 'popover', transform: booleanAttribute });
+	/** @deprecated Has no effect: the CDK overlay renders in the native Popover API top layer automatically in supporting browsers. Will be removed in a future major version. */
 	readonly popover = linkedSignal(() => this._popover());
 	// models
 	readonly bindLabel = model<string>(undefined);
@@ -287,6 +319,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly dropdownPanel = viewChild(forwardRef(() => NgDropdownPanelComponent));
 	readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 	readonly clearButton = viewChild<ElementRef<HTMLSpanElement>>('clearButton');
+	private readonly _dropdownTemplate = viewChild<TemplateRef<any>>('dropdownTemplate');
+	// The portal's embedded view is anchored at the template's own container so it stays
+	// part of this component's logical view tree (DI, view queries, detectChanges) while
+	// its DOM nodes live in the CDK overlay
+	private readonly _dropdownOutlet = viewChild('dropdownTemplate', { read: ViewContainerRef });
 	// public variables
 	readonly dropdownId = newId();
 	readonly element: HTMLElement;
@@ -301,9 +338,14 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	private readonly _console = inject(ConsoleService);
 	private readonly _destroyRef = inject(DestroyRef);
 	private readonly autoFocus = inject(new HostAttributeToken('autofocus'), { optional: true });
+	/** Overlay hosting the dropdown panel while open. Bound into the panel so it can request repositioning. */
+	protected dropdownOverlayRef: OverlayRef | null = null;
 	// private variables
 	private readonly _defaultLabel = 'label';
 	private readonly _editableSearchTermActive = computed(() => this.editableSearchTerm() && !this.multiple());
+	private readonly _document = inject(DOCUMENT, { optional: true });
+	private _dropdownPositionStrategy: FlexibleConnectedPositionStrategy | null = null;
+	private _dropdownPortal: TemplatePortal | null = null;
 	private _injector = inject(Injector);
 	private _isComposing = false;
 	private _itemsAreUsed: boolean;
@@ -328,6 +370,10 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._handleSignalChanges();
 		afterEveryRender({
 			read: () => this._measureOutlineNotch(),
+		});
+		this._destroyRef.onDestroy(() => {
+			this.dropdownOverlayRef?.dispose();
+			this.dropdownOverlayRef = null;
 		});
 	}
 
@@ -402,6 +448,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	ngOnInit() {
 		this._handleKeyPresses();
 		this._setInputAttributes();
+		this._warnDeprecatedInputs();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -622,6 +669,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		if (!this.searchTerm) {
 			this.focus();
 		}
+		// Attach synchronously (effects only flush on the next tick): consumers expect the
+		// panel to be in the DOM right after open() returns
+		this._syncDropdownOverlay();
 		this.detectChanges();
 	}
 
@@ -639,6 +689,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.itemsList.unmarkItem();
 		this._onTouched();
 		this.closeEvent.emit();
+		// Detach synchronously (effects only flush on the next tick): the panel must leave
+		// the DOM without relying on zone-triggered change detection (#2765)
+		this._syncDropdownOverlay();
 		this.detectChanges();
 	}
 
@@ -891,6 +944,22 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			},
 			{ injector: this._injector },
 		);
+
+		// open()/close() sync the overlay imperatively; this effect covers the paths that
+		// bypass them — an [isOpen] binding (manual mode), programmatic isOpen.set(), and
+		// dropdownPosition changes while open
+		effect(
+			() => {
+				this.isOpen();
+				this.dropdownPosition();
+				// Track the template query too: with [isOpen] pre-set, the first run can happen
+				// before view children resolve, and this re-runs the effect once they do
+				this._dropdownTemplate();
+
+				untracked(() => this._syncDropdownOverlay());
+			},
+			{ injector: this._injector },
+		);
 	}
 
 	private _setSearchTermFromItems() {
@@ -1125,11 +1194,77 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	private _onSelectionChanged() {
-		const appendTo = this.appendTo() ?? this.config.appendTo;
-		if (this.isOpen() && this.deselectOnClickValue() && appendTo) {
+		if (this.isOpen() && this.deselectOnClickValue()) {
 			// Make sure items are rendered.
 			this._cd.detectChanges();
-			this.dropdownPanel().adjustPosition();
+			this.dropdownPanel()?.adjustPosition();
+		}
+	}
+
+	/** Attaches or detaches the dropdown overlay to match the current open state. Idempotent. */
+	private _syncDropdownOverlay() {
+		if (!this._dropdownTemplate()) {
+			return;
+		}
+		if (this.isOpen()) {
+			this._openDropdownOverlay(this.dropdownPosition());
+		} else {
+			this.dropdownOverlayRef?.detach();
+		}
+	}
+
+	/**
+	 * Creates the overlay on first open and (re)attaches the dropdown template to it.
+	 * The panel always renders in the CDK overlay; `dropdownPosition` maps onto connected
+	 * positions, with `auto` falling back to the opposite side when space runs out.
+	 */
+	private _openDropdownOverlay(position: DropdownPosition) {
+		const overlayRef = this._ensureDropdownOverlay();
+		this._dropdownPositionStrategy.withPositions(DROPDOWN_POSITIONS[position] ?? DROPDOWN_POSITIONS.auto);
+		// Direction is snapshotted per open, matching how the previous implementation read
+		// `document.documentElement.dir` when positioning an appended panel
+		overlayRef.setDirection(this._document?.documentElement?.dir === 'rtl' ? 'rtl' : 'ltr');
+		// The panel tracks the width of the select; the panel keeps it in sync on host resize
+		overlayRef.updateSize({ width: this.element.getBoundingClientRect().width });
+		if (overlayRef.hasAttached()) {
+			// Only `dropdownPosition` changed while open — re-evaluate with the new positions
+			overlayRef.updatePosition();
+			return;
+		}
+		this._dropdownPortal ??= new TemplatePortal(this._dropdownTemplate(), this._dropdownOutlet());
+		overlayRef.attach(this._dropdownPortal);
+	}
+
+	private _ensureDropdownOverlay(): OverlayRef {
+		if (!this.dropdownOverlayRef) {
+			this._dropdownPositionStrategy = createFlexibleConnectedPositionStrategy(this._injector, this.element).withFlexibleDimensions(false).withPush(false);
+			this.dropdownOverlayRef = createOverlayRef(this._injector, {
+				positionStrategy: this._dropdownPositionStrategy,
+				// Ancestor-scroll repositioning is handled by the panel's capture-phase document
+				// listener, which also covers plain scroll containers that CDK's ScrollDispatcher
+				// cannot see without a `cdkScrollable` marker (#2788)
+				scrollStrategy: createNoopScrollStrategy(),
+				// Detach must remove the panel from the DOM synchronously (#2765); the panel has
+				// no CDK-driven animations to wait for
+				disableAnimations: true,
+			});
+		}
+		return this.dropdownOverlayRef;
+	}
+
+	private _warnDeprecatedInputs() {
+		if (!isDevMode()) {
+			return;
+		}
+		if (isDefined(this.appendTo() ?? this.config.appendTo)) {
+			this._console.warn(
+				'[ng-select] `appendTo` is deprecated and has no effect: the dropdown panel now always renders in an Angular CDK overlay attached to the document body. Remove the input (or the NgSelectConfig.appendTo default).',
+			);
+		}
+		if (this.popover()) {
+			this._console.warn(
+				'[ng-select] `popover` is deprecated and has no effect: the dropdown panel now renders in an Angular CDK overlay, which uses the native Popover API top layer automatically in supporting browsers.',
+			);
 		}
 	}
 

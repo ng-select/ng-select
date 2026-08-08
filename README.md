@@ -58,6 +58,7 @@ Android	2 most recent major versions
 - [Getting started](#getting-started)
 - [API](#api)
 - [Change detection](#change-detection)
+- [Dropdown panel rendering](#dropdown-panel-rendering)
 - [Custom styles](#custom-styles)
   - [Validation state](#validation-state)
 - [Contributing](#contributing)
@@ -75,7 +76,7 @@ Android	2 most recent major versions
 - [x] Flexible autocomplete with client/server filtering
 - [x] Custom search
 - [x] Custom tags
-- [x] Append to
+- [x] CDK overlay positioning (top-layer rendering, no clipping)
 - [x] Group items
 - [x] Output events
 - [x] Accessibility
@@ -88,24 +89,24 @@ Library is under active development and may have API breaking changes for subseq
 
 ## Getting started
 
-### Step 1: Install `ng-select`:
+### Step 1: Install `ng-select` and its `@angular/cdk` peer dependency:
 
 #### NPM
 
 ```shell
-npm install --save @ng-select/ng-select
+npm install --save @ng-select/ng-select @angular/cdk
 ```
 
 #### Yarn
 
 ```shell
-yarn add @ng-select/ng-select
+yarn add @ng-select/ng-select @angular/cdk
 ```
 
 #### PNPM
 
 ```shell
-pnpm add @ng-select/ng-select
+pnpm add @ng-select/ng-select @angular/cdk
 ```
 
 ### Step 2:
@@ -158,7 +159,6 @@ typically in your root component, and customize the values of its properties in 
 ```js
   constructor(private config: NgSelectConfig) {
       this.config.notFoundText = 'Custom not found';
-      this.config.appendTo = 'body';
       // set the bindValue to global config when you use the same
       // bindValue in most of the place.
       // You can also override bindValue for the specified template
@@ -224,7 +224,7 @@ map: {
 | [addTag]                    | `boolean \| ((term: string) => any \| Promise<any>)` | `false`             | no       | Allows to create custom options.                                                                                                                                                               |
 | addTagText                  | `string`                                             | `Add item`          | no       | Set custom text when using tagging                                                                                                                                                             |
 | appearance                  | `string`                                             | `underline`         | no       | Allows to select dropdown appearance. Set to `outline` or `fill` for Material form-field styles (applies only to Material theme)                                                               |
-| appendTo                    | `string`                                             | null                | no       | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative`                                                                |
+| appendTo                    | `string`                                             | null                | no       | **Deprecated — has no effect.** The dropdown panel always renders in a CDK overlay attached to the document body. See [Dropdown panel rendering](#dropdown-panel-rendering)                    |
 | bufferAmount                | `number`                                             | 4                   | no       | Used in virtual scrolling, the `bufferAmount` property controls the number of items preloaded in the background to ensure smoother and more seamless scrolling.                                |
 | bindValue                   | `string`                                             | `-`                 | no       | Object property to use for selected model. By default binds to whole object.                                                                                                                   |
 | bindLabel                   | `string`                                             | `label`             | no       | Object property to use for label. Default `label`                                                                                                                                              |
@@ -262,8 +262,8 @@ map: {
 | [selectOnTab]               | `boolean`                                            | `false`             | no       | Select marked dropdown item using tab. Default `false`                                                                                                                                         |
 | [tabFocusOnClearButton]     | `boolean`                                            | `true`              | no       | Control tab navigation behavior for the clear button. Default `true`                                                                                                                           |
 | [openOnEnter]               | `boolean`                                            | `true`              | no       | Open dropdown using enter. Default `true`                                                                                                                                                      |
-| outsideClickEvent       | `'click'` \| `'mousedown'`                           | `'click'`           | no       | Configure which DOM event type is used for outside click detection. Use `'mousedown'` to fix issues with backdrop/loading overlays that appear on dropdown open                                |
-| [popover]                   | `boolean`                                            | `false`             | no       | Display the dropdown in the top-layer using the native Popover API. Useful when the dropdown is clipped or hidden behind dialogs or other stacking contexts. Alternative to `appendTo`         |
+| outsideClickEvent           | `'click'` \| `'mousedown'`                           | `'click'`           | no       | Configure which DOM event type is used for outside click detection. Use `'mousedown'` to fix issues with backdrop/loading overlays that appear on dropdown open                                |
+| [popover]                   | `boolean`                                            | `false`             | no       | **Deprecated — has no effect.** The CDK overlay already renders in the native Popover API top layer in supporting browsers. See [Dropdown panel rendering](#dropdown-panel-rendering)          |
 | [typeahead]                 | `Subject`                                            | `-`                 | no       | Custom autocomplete or advanced filter.                                                                                                                                                        |
 | [minTermLength]             | `number`                                             | `0`                 | no       | Minimum term length to start a search. Should be used with `typeahead`                                                                                                                         |
 | typeToSearchText            | `string`                                             | `Type to search`    | no       | Set custom text when using Typeahead                                                                                                                                                           |
@@ -353,6 +353,17 @@ apps since v21. No setup is required: the libraries do not depend on `zone.js` (
 their dependency graphs) and work identically whether your app is zoneless or still uses
 `zone.js`. Both modes are covered by the unit-test suite in CI, and the
 [demo site](https://ng-select.github.io/ng-select) runs zoneless.
+
+## Dropdown panel rendering
+
+Since v24 the dropdown panel is positioned by [Angular CDK Overlay](https://material.angular.dev/cdk/overlay/overview) instead of the previous hand-rolled geometry code. `@angular/cdk` is a peer dependency — install it alongside the library. There is nothing to configure; every dropdown renders in an overlay attached to the document body, stays anchored to the select while any ancestor scrolls, resizes with the select, and `dropdownPosition="auto"` measures the real rendered panel (including header/footer templates) when deciding between top and bottom.
+
+Things to know when migrating:
+
+- **DOM location.** The panel is no longer a child of `<ng-select>` in the DOM — it lives inside `.cdk-overlay-container` (the same situation as `appendTo="body"` produced before). CSS that scoped panel styles through an ancestor of the select, like `.my-wrapper ng-dropdown-panel { ... }`, will no longer match. The panel still receives the select's `class`/`ngClass` values, so scope panel styles through those classes instead: `.my-select-class.ng-dropdown-panel .ng-option { ... }`.
+- **`appendTo` and `popover` are deprecated no-ops.** Overlay rendering already solves the clipping/stacking problems both existed for. Remove them from templates and from `NgSelectConfig`; in dev mode each logs a one-time warning per select instance.
+- **Stacking / z-index.** The hardcoded panel `z-index: 1050` is gone. In browsers with the native Popover API (all evergreen browsers), the CDK renders the overlay in the top layer, which paints above every `z-index` — including Bootstrap modals — with no configuration. In older browsers the panel falls back into `.cdk-overlay-container` with the CDK default `z-index: 1000` (declared in the `cdk-overlay` CSS layer). If you need the fallback to beat a higher stacking context such as a Bootstrap modal (`z-index: 1055`), raise the container in your global styles: `.cdk-overlay-container { z-index: 1056; }` — unlayered author CSS wins over the CDK's layered default regardless of specificity.
+- **Custom themes.** The shipped themes no longer position the panel (`top: 100%`, `bottom: 100%`, `left: 0` and friends were removed — margins, borders, shadows and radii remain). The library neutralizes those offsets for panels rendered in the overlay, so themes copied from older versions keep working, but you should remove positional offsets from `.ng-dropdown-panel` rules when you update your own theme.
 
 ## Custom styles
 

@@ -3,6 +3,21 @@
 @import 'style/sidebar';
 @import 'style/content';
 
+// ng-select themes, scoped by the body-level class kept in sync by AppComponent.
+// They must be global (not component-scoped): the dropdown panel renders in the
+// CDK overlay attached to <body>, outside the demo-app component subtree.
+body.ant-theme {
+	@import '../ng-select/themes/ant.design.theme.scss';
+}
+
+body.default-theme {
+	@import '../ng-select/themes/default.theme.scss';
+}
+
+body.material-theme {
+	@import '../ng-select/themes/material.theme.scss';
+}
+
 body {
 	position: relative;
 }

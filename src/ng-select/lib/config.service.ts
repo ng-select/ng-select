@@ -13,6 +13,7 @@ export class NgSelectConfig {
 	ariaLabelDropdown = 'Options List';
 	disableVirtualScroll = true;
 	openOnEnter = true;
+	/** @deprecated Has no effect: the dropdown panel always renders in a CDK overlay attached to the document body. Will be removed in a future major version. */
 	appendTo: string;
 	bindValue: string;
 	bindLabel: string;
