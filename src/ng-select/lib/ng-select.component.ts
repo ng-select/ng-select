@@ -324,6 +324,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	// part of this component's logical view tree (DI, view queries, detectChanges) while
 	// its DOM nodes live in the CDK overlay
 	private readonly _dropdownOutlet = viewChild('dropdownTemplate', { read: ViewContainerRef });
+	private readonly _selectContainer = viewChild<ElementRef<HTMLDivElement>>('selectContainer');
 	// public variables
 	readonly dropdownId = newId();
 	readonly element: HTMLElement;
@@ -1225,7 +1226,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		// `document.documentElement.dir` when positioning an appended panel
 		overlayRef.setDirection(this._document?.documentElement?.dir === 'rtl' ? 'rtl' : 'ltr');
 		// The panel tracks the width of the select; the panel keeps it in sync on host resize
-		overlayRef.updateSize({ width: this.element.getBoundingClientRect().width });
+		overlayRef.updateSize({ width: this._dropdownOrigin().getBoundingClientRect().width });
 		if (overlayRef.hasAttached()) {
 			// Only `dropdownPosition` changed while open — re-evaluate with the new positions
 			overlayRef.updatePosition();
@@ -1235,9 +1236,21 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		overlayRef.attach(this._dropdownPortal);
 	}
 
+	/**
+	 * The dropdown anchors to the `.ng-select-container` box, not the host: themes may pad
+	 * the host below the container (material reserves 1.25em of subscript space under the
+	 * underline), and the panel must sit flush against the visible field — the same anchor
+	 * the pre-overlay `appendTo` positioning used.
+	 */
+	private _dropdownOrigin(): HTMLElement {
+		return this._selectContainer()?.nativeElement ?? this.element;
+	}
+
 	private _ensureDropdownOverlay(): OverlayRef {
 		if (!this.dropdownOverlayRef) {
-			this._dropdownPositionStrategy = createFlexibleConnectedPositionStrategy(this._injector, this.element).withFlexibleDimensions(false).withPush(false);
+			this._dropdownPositionStrategy = createFlexibleConnectedPositionStrategy(this._injector, this._dropdownOrigin())
+				.withFlexibleDimensions(false)
+				.withPush(false);
 			this.dropdownOverlayRef = createOverlayRef(this._injector, {
 				positionStrategy: this._dropdownPositionStrategy,
 				// Ancestor-scroll repositioning is handled by the panel's capture-phase document
