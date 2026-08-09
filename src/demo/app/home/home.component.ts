@@ -1,0 +1,32 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { NgSelectComponent } from '@ng-select/ng-select';
+
+@Component({
+	selector: 'home-page',
+	templateUrl: './home.component.html',
+	styleUrls: ['./home.component.scss'],
+	changeDetection: ChangeDetectionStrategy.Eager,
+	imports: [RouterLink, FormsModule, NgSelectComponent],
+})
+export class HomeComponent {
+	features = [
+		{ icon: '🔗', title: 'Flexible bindings', text: 'Bind to primitives, objects, or nested properties with bindLabel and bindValue.' },
+		{ icon: '🧩', title: 'Custom templates', text: 'Replace labels, options, headers, footers and more with your own templates.' },
+		{ icon: '⚡', title: 'Virtual scroll', text: 'Smoothly render thousands of options with built-in virtual scrolling.' },
+		{ icon: '🔍', title: 'Typeahead search', text: 'Client and server-side filtering, autocomplete and custom search functions.' },
+		{ icon: '🏷️', title: 'Tags & multiselect', text: 'Create options on the fly, select multiple values, group items.' },
+		{ icon: '♿', title: 'Accessible', text: 'Keyboard navigation and ARIA support out of the box, zoneless-ready.' },
+	];
+
+	demoCities = [
+		{ id: 1, name: 'New York' },
+		{ id: 2, name: 'London' },
+		{ id: 3, name: 'Vilnius' },
+		{ id: 4, name: 'Paris' },
+		{ id: 5, name: 'Tokyo' },
+	];
+
+	selectedCity: number | null = null;
+}

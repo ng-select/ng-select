@@ -1,25 +1,38 @@
 /// <reference types="@angular/localize" />
 
-import { enableProdMode, importProvidersFrom } from '@angular/core';
-import { environment } from './environments/environment';
 import { provideHttpClient, withXhr } from '@angular/common/http';
-import { DataService } from './app/examples/data.service';
-import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
-import { ExamplesModule } from './app/examples/examples.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { provideRouter, withHashLocation } from '@angular/router';
-import { appRoutes } from './app/routes';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter, withHashLocation, withInMemoryScrolling } from '@angular/router';
+import {
+	NG_DOC_DEFAULT_PAGE_PROCESSORS,
+	NG_DOC_DEFAULT_PAGE_SKELETON,
+	NgDocDefaultSearchEngine,
+	provideMainPageProcessor,
+	provideNgDocApp,
+	providePageSkeleton,
+	provideSearchEngine,
+} from '@ng-doc/app';
+import { provideNgDocContext } from 'ng-doc/demo';
 import { AppComponent } from './app/app.component';
-
-if (environment.production) {
-	enableProdMode();
-}
+import { DataService } from './app/examples/data.service';
+import { appRoutes } from './app/routes';
 
 bootstrapApplication(AppComponent, {
 	providers: [
-		importProvidersFrom(BrowserModule, ExamplesModule, NgbModule),
 		provideHttpClient(withXhr()),
 		DataService,
-		provideRouter(appRoutes, withHashLocation()),
+		provideRouter(
+			appRoutes,
+			withHashLocation(),
+			withInMemoryScrolling({
+				scrollPositionRestoration: 'enabled',
+				anchorScrolling: 'enabled',
+			}),
+		),
+		provideNgDocApp(),
+		provideNgDocContext(),
+		provideSearchEngine(NgDocDefaultSearchEngine),
+		providePageSkeleton(NG_DOC_DEFAULT_PAGE_SKELETON),
+		provideMainPageProcessor(NG_DOC_DEFAULT_PAGE_PROCESSORS),
 	],
 }).catch((err) => console.error(err));

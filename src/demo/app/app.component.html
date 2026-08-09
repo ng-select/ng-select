@@ -1,13 +1,27 @@
-<layout-header [version]="version" [(dir)]="dir" [(theme)]="theme"></layout-header>
-<div class="container fill" [attr.dir]="dir">
-	<div class="row">
-		<div class="col-12 col-md-3 col-xl-3 py-3 py-md-4 bd-sidebar">
-			<layout-sidenav></layout-sidenav>
+<ng-doc-root [sidebar]="!isLandingPage" [noWidthLimit]="isLandingPage">
+	<ng-doc-navbar>
+		<div class="brand" ngDocNavbarLeft>
+			<a routerLink="/" class="brand-link">ng-select</a>
 		</div>
-		<main class="col-12 col-md-9 col-xl-8 py-3 py-md-4 pl-md-4 bd-content">
-			<div>
-				<router-outlet></router-outlet>
-			</div>
-		</main>
-	</div>
-</div>
+
+		<div class="header-controls" ngDocNavbarRight>
+			<label class="theme-picker">
+				<span class="theme-picker-label">Theme</span>
+				<select [value]="theme()" (change)="setTheme($any($event.target).value)" aria-label="ng-select theme">
+					<option value="default">Default</option>
+					<option value="material">Material</option>
+					<option value="ant">Ant Design</option>
+				</select>
+			</label>
+			<ng-doc-theme-toggle></ng-doc-theme-toggle>
+			<a href="https://www.npmjs.com/package/@ng-select/ng-select" ng-doc-button-icon ngDocTooltip="Package on npm" size="large" target="_blank">
+				<ng-doc-icon [size]="24" customIcon="npm"></ng-doc-icon>
+			</a>
+			<a href="https://github.com/ng-select/ng-select" ng-doc-button-icon ngDocTooltip="Repository on GitHub" size="large" target="_blank">
+				<ng-doc-icon [size]="24" customIcon="github"></ng-doc-icon>
+			</a>
+		</div>
+	</ng-doc-navbar>
+	<ng-doc-sidebar></ng-doc-sidebar>
+	<router-outlet></router-outlet>
+</ng-doc-root>
