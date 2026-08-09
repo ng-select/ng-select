@@ -1215,14 +1215,14 @@ describe('NgSelectComponent', () => {
                     </ng-select>`,
 				);
 				select = fixture.componentInstance.select();
-				expect(select.items().length).toEqual(5);
+				expect(select.itemsList.items.length).toEqual(5);
 
 				fixture.componentInstance.cities = [
 					{ id: 1, name: 'New York' },
 					{ id: 2, name: 'London' },
 				];
 				await tickAndDetectChanges(fixture);
-				expect(select.items().length).toEqual(2);
+				expect(select.itemsList.items.length).toEqual(2);
 			});
 
 			it('should apply ng-option host classes to the root dropdown option', async () => {
