@@ -1,6 +1,6 @@
 import { NgDocPage } from '@ng-doc/core';
-import { VirtualScrollExampleComponent } from '../../../examples/virtual-scroll-example/virtual-scroll-example.component';
-import { StackblitzButtonComponent } from '../../stackblitz-button/stackblitz-button.component';
+import { VirtualScrollExampleComponent } from '@examples/virtual-scroll-example/virtual-scroll-example.component';
+import { StackblitzButtonComponent } from '@docs/stackblitz-button/stackblitz-button.component';
 import ExamplesCategory from '../ng-doc.category';
 
 const VirtualScrollPage: NgDocPage = {

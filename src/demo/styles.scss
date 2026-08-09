@@ -32,16 +32,7 @@ body {
 	--bs-card-color: var(--ng-doc-text, inherit);
 	--bs-card-cap-bg: var(--ng-doc-base-2, rgba(0, 0, 0, 0.03));
 	--bs-card-cap-color: var(--ng-doc-text, inherit);
-}
 
-ng-select.ng-invalid.ng-touched .ng-select-container {
-	border-color: #dc3545;
-	box-shadow:
-		inset 0 1px 1px rgba(0, 0, 0, 0.075),
-		0 0 0 3px #fde6e8;
-}
-
-.card {
 	label {
 		margin-bottom: 5px;
 	}
@@ -52,6 +43,13 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
 		0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 	border: 0;
 	border-radius: 4px;
+}
+
+ng-select.ng-invalid.ng-touched .ng-select-container {
+	border-color: #dc3545;
+	box-shadow:
+		inset 0 1px 1px rgba(0, 0, 0, 0.075),
+		0 0 0 3px #fde6e8;
 }
 
 .btn + .btn {

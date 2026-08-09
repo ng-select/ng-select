@@ -1,3 +1,5 @@
+@use 'sass:meta';
+
 :host ::ng-deep {
-	@import '../../../../ng-select/themes/material.theme.scss';
+	@include meta.load-css('../../../../ng-select/themes/material.theme');
 }

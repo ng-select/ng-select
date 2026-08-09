@@ -1,6 +1,6 @@
 import { NgDocPage } from '@ng-doc/core';
-import { DropdownPositionExampleComponent } from '../../../examples/dropdown-position-example/dropdown-position-example.component';
-import { StackblitzButtonComponent } from '../../stackblitz-button/stackblitz-button.component';
+import { DropdownPositionExampleComponent } from '@examples/dropdown-position-example/dropdown-position-example.component';
+import { StackblitzButtonComponent } from '@docs/stackblitz-button/stackblitz-button.component';
 import ExamplesCategory from '../ng-doc.category';
 
 const DropdownPositionPage: NgDocPage = {

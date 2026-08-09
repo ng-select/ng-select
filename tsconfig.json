@@ -15,6 +15,8 @@
 		"paths": {
 			"@ng-select/ng-select": ["./src/ng-select/public-api.ts"],
 			"@ng-select/ng-option-highlight": ["./src/ng-option-highlight/public-api.ts"],
+			"@examples/*": ["./src/demo/app/examples/*"],
+			"@docs/*": ["./src/demo/app/docs/*"],
 			"ng-doc/demo": ["./ng-doc/demo/index.ts"]
 		},
 		"useDefineForClassFields": false,

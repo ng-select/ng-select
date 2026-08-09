@@ -1,13 +1,15 @@
+@use 'sass:meta';
+
 :host.default-theme ::ng-deep {
-	@import '../../ng-select/themes/default.theme.scss';
+	@include meta.load-css('../../ng-select/themes/default.theme');
 }
 
 :host.ant-theme ::ng-deep {
-	@import '../../ng-select/themes/ant.design.theme.scss';
+	@include meta.load-css('../../ng-select/themes/ant.design.theme');
 }
 
 :host.material-theme ::ng-deep {
-	@import '../../ng-select/themes/material.theme.scss';
+	@include meta.load-css('../../ng-select/themes/material.theme');
 }
 
 .brand {
