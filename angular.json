@@ -95,7 +95,7 @@
 			"prefix": "",
 			"architect": {
 				"build": {
-					"builder": "@angular/build:application",
+					"builder": "@ng-doc/builder:application",
 					"options": {
 						"outputPath": {
 							"base": "dist/demo"
@@ -103,36 +103,64 @@
 						"index": "src/demo/index.html",
 						"polyfills": [],
 						"tsConfig": "src/demo/tsconfig.app.json",
-						"deployUrl": "/ng-select/",
-						"assets": ["src/demo/favicon.ico", "src/demo/assets"],
-						"styles": ["src/demo/styles.scss"],
+						"assets": [
+							"src/demo/favicon.ico",
+							{
+								"glob": "**/*",
+								"input": "src/demo/assets",
+								"output": "assets"
+							},
+							{
+								"glob": "**/*",
+								"input": "src/demo/app/examples",
+								"output": "examples"
+							},
+							{
+								"glob": "**/*",
+								"input": "node_modules/@ng-doc/app/assets",
+								"output": "assets/ng-doc/app"
+							},
+							{
+								"glob": "**/*",
+								"input": "node_modules/@ng-doc/ui-kit/assets",
+								"output": "assets/ng-doc/ui-kit"
+							},
+							{
+								"glob": "**/*",
+								"input": "ng-doc/demo/assets",
+								"output": "assets/ng-doc"
+							}
+						],
+						"styles": ["node_modules/@ng-doc/app/styles/global.css", "node_modules/@ng-doc/app/styles/themes/dark.css", "src/demo/styles.scss"],
+						"allowedCommonJsDependencies": ["@ng-doc/core"],
 						"browser": "src/demo/main.ts"
 					},
 					"configurations": {
 						"production": {
-							"fileReplacements": [
-								{
-									"replace": "src/demo/environments/environment.ts",
-									"with": "src/demo/environments/environment.prod.ts"
-								}
-							],
+							"baseHref": "/ng-select/",
 							"outputHashing": "all",
 							"budgets": [
 								{
 									"type": "initial",
-									"maximumWarning": "2mb",
-									"maximumError": "5mb"
+									"maximumWarning": "4mb",
+									"maximumError": "6mb"
 								},
 								{
 									"type": "anyComponentStyle",
 									"maximumWarning": "100kb"
 								}
 							]
+						},
+						"development": {
+							"optimization": false,
+							"extractLicenses": false,
+							"sourceMap": true
 						}
-					}
+					},
+					"defaultConfiguration": "development"
 				},
 				"serve": {
-					"builder": "@angular/build:dev-server",
+					"builder": "@ng-doc/builder:dev-server",
 					"options": {
 						"buildTarget": "demo:build"
 					},
