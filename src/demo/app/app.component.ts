@@ -1,66 +1,59 @@
-import { ChangeDetectionStrategy, Component, HostBinding, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { Title } from '@angular/platform-browser';
-import { filter, map, mergeMap } from 'rxjs/operators';
+import { Location } from '@angular/common';
+import { ChangeDetectionStrategy, Component, HostBinding, inject, signal } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { NgDocNavbarComponent, NgDocRootComponent, NgDocSidebarComponent, NgDocThemeToggleComponent } from '@ng-doc/app';
+import { NgDocButtonIconComponent, NgDocIconComponent, NgDocTooltipDirective } from '@ng-doc/ui-kit';
 import { NgSelectConfig } from '@ng-select/ng-select';
-import { LayoutHeaderComponent } from './layout/header.component';
-import { LayoutSidenavComponent } from './layout/sidenav-component';
+
+export type NgSelectTheme = 'default' | 'ant' | 'material';
+
+const THEME_STORAGE_KEY = 'ng-select-theme';
 
 @Component({
 	selector: 'demo-app',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.scss'],
 	changeDetection: ChangeDetectionStrategy.Eager,
-	imports: [LayoutHeaderComponent, LayoutSidenavComponent, RouterOutlet],
+	imports: [
+		RouterOutlet,
+		RouterLink,
+		NgDocRootComponent,
+		NgDocNavbarComponent,
+		NgDocSidebarComponent,
+		NgDocThemeToggleComponent,
+		NgDocButtonIconComponent,
+		NgDocIconComponent,
+		NgDocTooltipDirective,
+	],
 })
-export class AppComponent implements OnInit {
-	private router = inject(Router);
-	private activatedRoute = inject(ActivatedRoute);
-	private titleService = inject(Title);
+export class AppComponent {
 	private config = inject(NgSelectConfig);
+	protected readonly location = inject(Location);
 
-	title: string;
-	version: string = window['ngSelectVersion'];
-	exampleSourceUrl: string;
-	dir: 'ltr' | 'rtl' = 'ltr';
-	theme: 'default' | 'ant' | 'material' = 'default';
+	readonly theme = signal<NgSelectTheme>((sessionStorage.getItem(THEME_STORAGE_KEY) as NgSelectTheme) || 'default');
 
 	constructor() {
 		this.config.placeholder = 'Select item';
-		// This could be useful if you want to use appendTo in entire application without explicitly defining it. (eg: appendTo = 'body')
 		this.config.appendTo = null;
-		// set the bindValue to global config when you use the same bindValue in most of the place.
-		// You can also override bindValue for the specified template by defining `bindValue` as property
-		// Eg : <ng-select bindValue="some-new-value"></ng-select>
-		// this.config.bindValue = 'value';
+		// Demos default to the fill appearance under the material theme; other themes ignore appearance.
+		if (this.theme() === 'material') {
+			this.config.appearance = 'fill';
+		}
 	}
 
 	@HostBinding('class') get themeClass() {
-		return `${this.theme}-theme`;
+		return `${this.theme()}-theme`;
 	}
 
-	ngOnInit() {
-		this.setTitle();
+	@HostBinding('attr.data-ng-doc-is-landing')
+	get isLandingPage(): boolean {
+		return this.location.path() === '';
 	}
 
-	private setTitle() {
-		this.router.events
-			.pipe(
-				filter((event) => event instanceof NavigationEnd),
-				map(() => this.activatedRoute),
-				map((route) => {
-					while (route.firstChild) {
-						route = route.firstChild;
-					}
-					return route;
-				}),
-				filter((route) => route.outlet === 'primary'),
-				mergeMap((route) => route.data),
-			)
-			.subscribe((event) => {
-				this.title = event['title'];
-				this.titleService.setTitle(this.title);
-				this.exampleSourceUrl = `https://github.com/ng-select/ng-select/tree/master/demo/app/examples/${event['fileName']}`;
-			});
+	setTheme(theme: string) {
+		this.theme.set(theme as NgSelectTheme);
+		sessionStorage.setItem(THEME_STORAGE_KEY, theme);
+		// Rendered selects read config (e.g. appearance) once at init, so re-init the app to apply it.
+		window.location.reload();
 	}
 }

@@ -14,7 +14,8 @@
 		"lib": ["ES2022", "dom"],
 		"paths": {
 			"@ng-select/ng-select": ["./src/ng-select/public-api.ts"],
-			"@ng-select/ng-option-highlight": ["./src/ng-option-highlight/public-api.ts"]
+			"@ng-select/ng-option-highlight": ["./src/ng-option-highlight/public-api.ts"],
+			"ng-doc/demo": ["./ng-doc/demo/index.ts"]
 		},
 		"useDefineForClassFields": false,
 		"strict": false,

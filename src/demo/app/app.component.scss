@@ -1,11 +1,76 @@
-:host.ant-theme ::ng-deep {
-	@import '../../ng-select/themes/ant.design.theme.scss';
-}
-
 :host.default-theme ::ng-deep {
 	@import '../../ng-select/themes/default.theme.scss';
 }
 
+:host.ant-theme ::ng-deep {
+	@import '../../ng-select/themes/ant.design.theme.scss';
+}
+
 :host.material-theme ::ng-deep {
 	@import '../../ng-select/themes/material.theme.scss';
+}
+
+.brand {
+	display: flex;
+	align-items: center;
+	height: 100%;
+}
+
+.brand-link {
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	text-decoration: none;
+	background: linear-gradient(90deg, var(--ng-select-brand, #667eea), var(--ng-select-brand-light, #764ba2));
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+
+	&:hover {
+		text-decoration: none;
+		filter: brightness(1.15);
+	}
+}
+
+::ng-deep ng-doc-navbar {
+	position: relative;
+
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 3px;
+		background: linear-gradient(90deg, var(--ng-select-brand, #667eea), var(--ng-select-brand-light, #764ba2));
+		z-index: 1;
+	}
+}
+
+.header-controls {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.theme-picker {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0;
+
+	.theme-picker-label {
+		font-size: 13px;
+		color: var(--ng-doc-text, inherit);
+	}
+
+	select {
+		font-size: 13px;
+		padding: 4px 8px;
+		border-radius: 6px;
+		border: 1px solid var(--ng-doc-border-color, #d4dadf);
+		background: var(--ng-doc-base-0, transparent);
+		color: var(--ng-doc-text, inherit);
+		cursor: pointer;
+	}
 }
