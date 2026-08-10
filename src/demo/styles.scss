@@ -1,5 +1,22 @@
+@use 'sass:meta';
+
 /* Global styles for the docs app. Ng-Doc's own global.css is loaded separately via angular.json. */
 @import 'bootstrap/scss/bootstrap';
+
+// ng-select themes, scoped by the body-level class kept in sync by AppComponent.
+// They must be global (not component-scoped): the dropdown panel renders in the
+// CDK overlay attached to <body>, outside the demo-app component subtree.
+body.default-theme {
+	@include meta.load-css('../ng-select/themes/default.theme');
+}
+
+body.ant-theme {
+	@include meta.load-css('../ng-select/themes/ant.design.theme');
+}
+
+body.material-theme {
+	@include meta.load-css('../ng-select/themes/material.theme');
+}
 
 /* Brand colors — purple gradient in the spirit of the old ng-kit Ng-Doc site. */
 :root {
@@ -22,14 +39,6 @@ ng-doc-page table {
 			word-break: break-word;
 		}
 	}
-}
-
-/* Ng-Doc clips demo containers with overflow: hidden, which cuts off ng-select dropdown panels.
-   Dropdowns must be able to escape the demo card. */
-ng-doc-demo-displayer,
-.ng-doc-demo,
-.ng-doc-demo-wrapper {
-	overflow: visible !important;
 }
 
 /* Bootstrap paints body/cards with its own light-only variables, which breaks Ng-Doc's
