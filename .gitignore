@@ -13,6 +13,9 @@ dist.tgz
 
 .nx/cache
 .nx/workspace-data
+
+# Ng-Doc generated files
+/ng-doc
 .superpowers/
 jasmine-vitest-*.md
 .vitest-attachments
