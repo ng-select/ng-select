@@ -27,6 +27,20 @@ body.material-theme {
 	--ng-doc-info: var(--ng-select-brand);
 }
 
+/* API tables: keep the Type column narrow and let code snippets wrap instead of
+   stretching the column to the longest signature. */
+ng-doc-page table {
+	td:nth-child(2) {
+		max-width: 420px;
+		min-width: 240px;
+
+		code {
+			white-space: normal;
+			word-break: break-word;
+		}
+	}
+}
+
 /* Bootstrap paints body/cards with its own light-only variables, which breaks Ng-Doc's
    dark mode. Point them at Ng-Doc's theme variables so both themes follow the toggle. */
 body {

@@ -48,21 +48,36 @@
 .theme-picker {
 	display: flex;
 	align-items: center;
-	gap: 6px;
-	margin: 0;
+	gap: 8px;
+	margin: 0 16px 0 0;
+	// Show the ng-select theme picker before the search box (search is the
+	// first flex child ng-doc injects into the navbar's right container).
+	order: 1;
 
 	.theme-picker-label {
-		font-size: 13px;
+		font-size: 14px;
+		font-weight: 500;
 		color: var(--ng-doc-text, inherit);
 	}
 
 	select {
-		font-size: 13px;
-		padding: 4px 8px;
-		border-radius: 6px;
+		font-size: 14px;
+		padding: 8px 12px;
+		border-radius: 8px;
 		border: 1px solid var(--ng-doc-border-color, #d4dadf);
 		background: var(--ng-doc-base-0, transparent);
 		color: var(--ng-doc-text, inherit);
 		cursor: pointer;
+	}
+}
+
+::ng-deep ng-doc-navbar .ng-doc-navbar-right {
+	ng-doc-search {
+		order: 2;
+		max-width: 220px;
+	}
+
+	.header-controls {
+		order: 3;
 	}
 }
