@@ -344,8 +344,8 @@ When adding new inputs to `NgSelectComponent`, follow this `_name` + `alias` + `
 
 ### Dropdown positioning
 
-- `NgDropdownPanelService` handles positioning, scrolling, and virtual scroll.
-- `appendTo` and `popover` are alternative strategies for overflow/stacking issues—preserve both.
+- The panel renders in an Angular CDK Overlay anchored to the select container; `NgDropdownPanelService` handles scrolling and virtual scroll measurements.
+- `appendTo` controls DOM containment of the overlay (ancestor-scoped styles, stacking context, focus enclosure) — positioning stays viewport-based. `popover` is a deprecated no-op (the overlay uses the native Popover API top layer automatically).
 
 ---
 

@@ -1388,7 +1388,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	/** Resolves the `appendTo` selector against the select's own root, so a select inside a shadow root finds hosts in that same root. */
 	private _resolveAppendToHost(selector: string): HTMLElement {
 		const root = this.element.getRootNode();
-		const scope = root instanceof ShadowRoot ? root : (this._document ?? document);
+		const scope = typeof ShadowRoot !== 'undefined' && root instanceof ShadowRoot ? root : (this._document ?? document);
 		const host = scope.querySelector<HTMLElement>(selector);
 		if (!host) {
 			throw new Error(`appendTo selector ${selector} did not found any parent element`);
