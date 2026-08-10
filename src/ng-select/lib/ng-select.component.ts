@@ -430,7 +430,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	// private variables
 	private readonly _defaultLabel = 'label';
 	private readonly _editableSearchTermActive = computed(() => this.editableSearchTerm() && !this.multiple());
-	private readonly _document = inject(DOCUMENT, { optional: true });
+	private readonly _document = inject(DOCUMENT);
 	private _dropdownPositionStrategy: FlexibleConnectedPositionStrategy | null = null;
 	private _dropdownPortal: TemplatePortal | null = null;
 	/** `appendTo` value the current overlay was created against; a change rebuilds the overlay. */
@@ -1085,13 +1085,12 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 				}
 
 				this.bindLabel.set(this._defaultLabel);
-				const items =
-					options.map((option) => ({
-						$ngOptionValue: option.value(),
-						$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
-						$ngOptionClasses: option.classes(),
-						disabled: option.disabled(),
-					})) ?? [];
+				const items = options.map((option) => ({
+					$ngOptionValue: option.value(),
+					$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
+					$ngOptionClasses: option.classes(),
+					disabled: option.disabled(),
+				}));
 				this.items.set(items);
 				this.itemsList.setItems(items);
 				if (this.hasValue) {
@@ -1156,7 +1155,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 				const isPrimitive = !isValObject && !this.bindValue();
 				if (isValObject || isPrimitive) {
 					this.itemsList.select(this.itemsList.mapItem(val, null));
-				} else if (this.bindValue()) {
+				} else {
 					item = {
 						[this.bindLabel()]: null,
 						[this.bindValue()]: val,
@@ -1388,7 +1387,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	/** Resolves the `appendTo` selector against the select's own root, so a select inside a shadow root finds hosts in that same root. */
 	private _resolveAppendToHost(selector: string): HTMLElement {
 		const root = this.element.getRootNode();
-		const scope = typeof ShadowRoot !== 'undefined' && root instanceof ShadowRoot ? root : (this._document ?? document);
+		const scope = typeof ShadowRoot !== 'undefined' && root instanceof ShadowRoot ? root : this._document;
 		const host = scope.querySelector<HTMLElement>(selector);
 		if (!host) {
 			throw new Error(`appendTo selector ${selector} did not found any parent element`);

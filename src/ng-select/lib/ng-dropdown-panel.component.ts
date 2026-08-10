@@ -272,9 +272,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			fromEvent(scrollablePanel, 'scroll')
 				.pipe(takeUntilDestroyed(this._destroyRef), auditTime(0, SCROLL_SCHEDULER))
 				.subscribe(() => {
-					if (scrollablePanel && 'scrollTop' in scrollablePanel) {
-						this._onContentScrolled(scrollablePanel.scrollTop);
-					}
+					this._onContentScrolled(scrollablePanel.scrollTop);
 				});
 		});
 	}

@@ -523,6 +523,22 @@ describe('ItemsList', () => {
 			expect(list.items[0].selected).toBeTruthy();
 		});
 
+		it('should remove selected items from filtered items when hideSelected=true', () => {
+			cmpRef.setInput('hideSelected', true);
+			list.select(list.mapItem({ name: 'Adam' }, null));
+
+			list.setItems([
+				{ name: 'Adam', country: 'United States' },
+				{ name: 'Samantha', country: 'United States' },
+			]);
+
+			list.mapSelectedItems();
+
+			expect(list.selectedItems.length).toBe(1);
+			expect(list.filteredItems.some((x) => x.label === 'Adam' && !x.children)).toBe(false);
+			expect(list.filteredItems.some((x) => x.label === 'Samantha')).toBe(true);
+		});
+
 		it('should retain items order', () => {
 			list.select(list.mapItem({ name: 'Samantha' }, null));
 			list.select(list.mapItem({ name: 'Other' }, null));
@@ -571,6 +587,14 @@ describe('ItemsList', () => {
 			expect(list.markedIndex).toBe(10);
 		});
 
+		it('should skip disabled selected items and fall back to first enabled item', () => {
+			list.select(list.items[10]);
+			list.items[10].disabled = true;
+
+			list.markSelectedOrDefault(true);
+			expect(list.markedIndex).toBe(0);
+		});
+
 		it('should mark first after last marked item was filtered out', () => {
 			list.markSelectedOrDefault(true);
 			list.markNextItem();
@@ -579,6 +603,53 @@ describe('ItemsList', () => {
 			expect(list.markedIndex).toBe(0);
 			list.markNextItem();
 			expect(list.markedIndex).toBe(0);
+		});
+	});
+
+	describe('markNextItem', () => {
+		it('should skip disabled items when stepping', async () => {
+			const { component } = await ngSelectFactory();
+			const list = itemsListFactory(component);
+			list.setItems([{ label: 'K1' }, { label: 'K2', disabled: true }, { label: 'K3' }]);
+
+			list.markSelectedOrDefault(true);
+			expect(list.markedIndex).toBe(0);
+
+			list.markNextItem();
+			expect(list.markedIndex).toBe(2);
+		});
+	});
+
+	describe('resolveNested', () => {
+		it('should return null when an intermediate key resolves to null', async () => {
+			const { component } = await ngSelectFactory();
+			const list = itemsListFactory(component);
+
+			expect(list.resolveNested({ city: null }, 'city.name')).toBeNull();
+			expect(list.resolveNested({ city: { name: 'Vilnius' } }, 'city.name')).toBe('Vilnius');
+		});
+	});
+
+	describe('groupBy', () => {
+		let list: ItemsList;
+		let cmpRef: ComponentRef<NgSelectComponent>;
+
+		beforeEach(async () => {
+			const { component, componentRef } = await ngSelectFactory();
+			cmpRef = componentRef;
+			componentRef.setInput('bindLabel', 'name');
+			list = itemsListFactory(component);
+		});
+
+		it('should map nested group to empty children when its group key is missing', () => {
+			cmpRef.setInput('groupBy', 'accounts');
+			list.setItems([{ groupName: 'G1', accounts: [{ name: 'A1' }] }, { groupName: 'G2', accounts: null }, null]);
+
+			const groups = list.items.filter((x) => x.children);
+			expect(groups.length).toBe(3);
+			expect(groups[0].children.length).toBe(1);
+			expect(groups[1].children.length).toBe(0);
+			expect(groups[2].children.length).toBe(0);
 		});
 	});
 
