@@ -10,6 +10,20 @@
 	--ng-doc-info: var(--ng-select-brand);
 }
 
+/* API tables: keep the Type column narrow and let code snippets wrap instead of
+   stretching the column to the longest signature. */
+ng-doc-page table {
+	td:nth-child(2) {
+		max-width: 420px;
+		min-width: 240px;
+
+		code {
+			white-space: normal;
+			word-break: break-word;
+		}
+	}
+}
+
 /* Ng-Doc clips demo containers with overflow: hidden, which cuts off ng-select dropdown panels.
    Dropdowns must be able to escape the demo card. */
 ng-doc-demo-displayer,

@@ -1,11 +1,11 @@
 import { NgDocPage } from '@ng-doc/core';
-import AdvancedCategory from '../ng-doc.category';
+import ReferenceCategory from '../ng-doc.category';
 
 const ApiReferencePage: NgDocPage = {
 	title: 'API Reference',
 	mdFile: './index.md',
-	order: 2,
-	category: AdvancedCategory,
+	order: 0,
+	category: ReferenceCategory,
 };
 
 export default ApiReferencePage;

@@ -1,11 +1,11 @@
 import { NgDocPage } from '@ng-doc/core';
-import GettingStartedCategory from '../ng-doc.category';
+import ReferenceCategory from '../ng-doc.category';
 
 const VersionsPage: NgDocPage = {
 	title: 'Versions',
 	mdFile: './index.md',
-	order: 4,
-	category: GettingStartedCategory,
+	order: 1,
+	category: ReferenceCategory,
 };
 
 export default VersionsPage;
