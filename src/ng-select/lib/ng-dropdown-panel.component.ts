@@ -61,8 +61,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	readonly showAddTag = input(false, { transform: booleanAttribute });
 	readonly markedItem = input<NgOption>(undefined);
 	readonly position = input<DropdownPosition>('auto');
-	/** @deprecated Has no effect: the panel always renders in the CDK overlay owned by ng-select. Will be removed in a future major version. */
-	readonly appendTo = input<string>(undefined);
 	readonly bufferAmount = input<number>(undefined);
 	readonly virtualScroll = input(false, { transform: booleanAttribute });
 	readonly headerTemplate = input<TemplateRef<any> | undefined>(undefined);

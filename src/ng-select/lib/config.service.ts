@@ -25,7 +25,7 @@ export class NgSelectConfig {
 	disableVirtualScroll = true;
 	/** Open dropdown using enter. */
 	openOnEnter = true;
-	/** @deprecated Has no effect: the dropdown panel always renders in a CDK overlay attached to the document body. Will be removed in a future major version. */
+	/** Append the dropdown overlay of every select to any element using a css selector. Painting and positioning are unaffected; the target determines DOM containment (ancestor-scoped styles, focus enclosure). */
 	appendTo: string;
 	/** Object property to use for selected model. By default binds to whole object. */
 	bindValue: string;
