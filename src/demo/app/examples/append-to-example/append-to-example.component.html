@@ -1,7 +1,8 @@
-<div class="alert alert-warning">
-	<strong><code>appendTo</code> is deprecated and has no effect.</strong> The dropdown panel now always renders in an
-	<a href="https://material.angular.dev/cdk/overlay/overview" target="_blank">Angular CDK overlay</a> attached to the document body, so the clipping and
-	stacking problems <code>appendTo</code> existed for are solved out of the box. Remove the input from your templates and from <code>NgSelectConfig</code>.
+<div class="alert alert-info">
+	The dropdown panel renders in an
+	<a href="https://material.angular.dev/cdk/overlay/overview" target="_blank">Angular CDK overlay</a> and paints in the browser's top layer wherever the
+	native Popover API is supported, so clipping and stacking are handled without configuration. Use <code>appendTo</code> only when the panel must live inside
+	a specific element in the DOM — e.g. to inherit ancestor-scoped styles or satisfy focus containment.
 </div>
 
 <p>
@@ -11,6 +12,16 @@
 
 <div class="overflow-box">
 	<ng-select [items]="people | async" bindLabel="company" placeholder="Select item" [(ngModel)]="selected"> </ng-select>
+</div>
+
+<br />
+<p>
+	With <code>appendTo</code> the overlay becomes a DOM descendant of the selected element, so ancestor-scoped css (like a theme class on the container)
+	applies to the panel. Positioning is unchanged:
+</p>
+
+<div class="overflow-box">
+	<ng-select [items]="people | async" bindLabel="company" appendTo="body" placeholder="Select item" [(ngModel)]="selected2"> </ng-select>
 </div>
 
 <br />

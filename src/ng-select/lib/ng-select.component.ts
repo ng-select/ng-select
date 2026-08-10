@@ -4,6 +4,7 @@ import {
 	createNoopScrollStrategy,
 	createOverlayRef,
 	FlexibleConnectedPositionStrategy,
+	OverlayContainer,
 	OverlayRef,
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -35,6 +36,7 @@ import {
 	OnChanges,
 	OnInit,
 	output,
+	runInInjectionContext,
 	signal,
 	SimpleChanges,
 	TemplateRef,
@@ -102,6 +104,24 @@ const DROPDOWN_POSITIONS: Record<DropdownPosition, ConnectedPosition[]> = {
 	right: [DROPDOWN_POSITION_AFTER],
 	left: [DROPDOWN_POSITION_BEFORE],
 };
+
+/**
+ * Overlay container created inside the `appendTo` host. Only used by browsers without the
+ * Popover API (where the popover insertion point cannot place the overlay host): keeping the
+ * container a descendant of the `appendTo` host preserves ancestor-scoped styles and focus
+ * containment there too. The container element carries `position: fixed`, so the connected
+ * position strategy's viewport coordinates stay valid, same as the default body container.
+ */
+class NgSelectAppendToOverlayContainer extends OverlayContainer {
+	constructor(private readonly _appendToHost: HTMLElement) {
+		super();
+	}
+
+	protected override _createContainer(): void {
+		super._createContainer();
+		this._appendToHost.appendChild(this._containerElement);
+	}
+}
 
 @Component({
 	selector: 'ng-select',
@@ -175,9 +195,14 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	/** Set the dropdown position on open */
 	readonly _dropdownPosition = input<DropdownPosition>('auto', { alias: 'dropdownPosition' });
 	readonly dropdownPosition = linkedSignal(() => this._dropdownPosition());
-	/** @deprecated Has no effect: the dropdown panel always renders in a CDK overlay attached to the document body. Will be removed in a future major version. */
+	/**
+	 * Append the dropdown overlay to any element using a css selector, resolved against the
+	 * select's own root (document or shadow root). The panel keeps its viewport-based
+	 * positioning and top-layer painting; the target controls where the overlay lives in the
+	 * DOM — ancestor-scoped styles, stacking context and focus containment. Defaults to the
+	 * document body.
+	 */
 	readonly _appendTo = input<string>(undefined, { alias: 'appendTo' });
-	/** @deprecated Has no effect: the dropdown panel always renders in a CDK overlay attached to the document body. Will be removed in a future major version. */
 	readonly appendTo = linkedSignal(() => this._appendTo());
 	/** Configure which DOM event type is used for outside click detection. Use `'mousedown'` to fix issues with backdrop/loading overlays that appear on dropdown open */
 	readonly _outsideClickEvent = input<'click' | 'mousedown'>(this.config.outsideClickEvent ?? 'click', { alias: 'outsideClickEvent' });
@@ -408,6 +433,10 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	private readonly _document = inject(DOCUMENT, { optional: true });
 	private _dropdownPositionStrategy: FlexibleConnectedPositionStrategy | null = null;
 	private _dropdownPortal: TemplatePortal | null = null;
+	/** `appendTo` value the current overlay was created against; a change rebuilds the overlay. */
+	private _overlayAppendTo: string | null = null;
+	/** Overlay container placed inside the `appendTo` host for browsers without the Popover API. */
+	private _appendToContainer: NgSelectAppendToOverlayContainer | null = null;
 	private _injector = inject(Injector);
 	private _isComposing = false;
 	private _itemsAreUsed: boolean;
@@ -433,10 +462,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		afterEveryRender({
 			read: () => this._measureOutlineNotch(),
 		});
-		this._destroyRef.onDestroy(() => {
-			this.dropdownOverlayRef?.dispose();
-			this.dropdownOverlayRef = null;
-		});
+		this._destroyRef.onDestroy(() => this._destroyDropdownOverlay());
 	}
 
 	/**
@@ -1312,11 +1338,32 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	private _ensureDropdownOverlay(): OverlayRef {
+		const appendTo = this.appendTo() ?? this.config.appendTo ?? null;
+		if (this.dropdownOverlayRef && appendTo !== this._overlayAppendTo) {
+			// `appendTo` changed since the overlay was created — rebuild against the new host
+			this._destroyDropdownOverlay();
+		}
 		if (!this.dropdownOverlayRef) {
-			this._dropdownPositionStrategy = createFlexibleConnectedPositionStrategy(this._injector, this._dropdownOrigin())
-				.withFlexibleDimensions(false)
-				.withPush(false);
-			this.dropdownOverlayRef = createOverlayRef(this._injector, {
+			let injector = this._injector;
+			let appendToHost: HTMLElement | null = null;
+			if (appendTo) {
+				appendToHost = this._resolveAppendToHost(appendTo);
+				this._appendToContainer = runInInjectionContext(this._injector, () => new NgSelectAppendToOverlayContainer(appendToHost));
+				injector = Injector.create({
+					parent: this._injector,
+					providers: [{ provide: OverlayContainer, useValue: this._appendToContainer }],
+				});
+			}
+			this._dropdownPositionStrategy = createFlexibleConnectedPositionStrategy(injector, this._dropdownOrigin()).withFlexibleDimensions(false).withPush(false);
+			if (appendToHost) {
+				// Popover-capable browsers paint the panel in the top layer regardless of where it
+				// lives in the DOM, so the `appendTo` host only determines DOM containment —
+				// ancestor-scoped styles and focus enclosure. Browsers without the Popover API fall
+				// back to the NgSelectAppendToOverlayContainer provided above instead.
+				this._dropdownPositionStrategy.withPopoverLocation({ type: 'parent', element: appendToHost });
+			}
+			this._overlayAppendTo = appendTo;
+			this.dropdownOverlayRef = createOverlayRef(injector, {
 				positionStrategy: this._dropdownPositionStrategy,
 				// Ancestor-scroll repositioning is handled by the panel's capture-phase document
 				// listener, which also covers plain scroll containers that CDK's ScrollDispatcher
@@ -1330,14 +1377,28 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		return this.dropdownOverlayRef;
 	}
 
+	private _destroyDropdownOverlay() {
+		this.dropdownOverlayRef?.dispose();
+		this.dropdownOverlayRef = null;
+		this._dropdownPositionStrategy = null;
+		this._appendToContainer?.ngOnDestroy();
+		this._appendToContainer = null;
+	}
+
+	/** Resolves the `appendTo` selector against the select's own root, so a select inside a shadow root finds hosts in that same root. */
+	private _resolveAppendToHost(selector: string): HTMLElement {
+		const root = this.element.getRootNode();
+		const scope = root instanceof ShadowRoot ? root : (this._document ?? document);
+		const host = scope.querySelector<HTMLElement>(selector);
+		if (!host) {
+			throw new Error(`appendTo selector ${selector} did not found any parent element`);
+		}
+		return host;
+	}
+
 	private _warnDeprecatedInputs() {
 		if (!isDevMode()) {
 			return;
-		}
-		if (isDefined(this.appendTo() ?? this.config.appendTo)) {
-			this._console.warn(
-				'[ng-select] `appendTo` is deprecated and has no effect: the dropdown panel now always renders in an Angular CDK overlay attached to the document body. Remove the input (or the NgSelectConfig.appendTo default).',
-			);
 		}
 		if (this.popover()) {
 			this._console.warn(

@@ -5695,8 +5695,8 @@ describe('NgSelectComponent', () => {
 		});
 	});
 
-	describe('Append to (deprecated)', () => {
-		it('should warn that appendTo is deprecated and has no effect', async () => {
+	describe('Append to', () => {
+		it('should not warn when appendTo is set', async () => {
 			const warnSpy = vi.spyOn(MockConsole.prototype, 'warn');
 			try {
 				createTestingModule(
@@ -5706,25 +5706,7 @@ describe('NgSelectComponent', () => {
                         [(ngModel)]="selectedCity">
                 </ng-select>`,
 				);
-				expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('`appendTo` is deprecated'));
-			} finally {
-				warnSpy.mockRestore();
-			}
-		});
-
-		it('should warn when appendTo comes from NgSelectConfig', async () => {
-			const config = new NgSelectConfig();
-			config.appendTo = 'body';
-			const warnSpy = vi.spyOn(MockConsole.prototype, 'warn');
-			try {
-				createTestingModule(
-					NgSelectTestComponent,
-					`<ng-select [items]="cities"
-                        [(ngModel)]="selectedCity">
-                </ng-select>`,
-					config,
-				);
-				expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('`appendTo` is deprecated'));
+				expect(warnSpy).not.toHaveBeenCalled();
 			} finally {
 				warnSpy.mockRestore();
 			}
@@ -5745,7 +5727,7 @@ describe('NgSelectComponent', () => {
 			}
 		});
 
-		it('should render the dropdown in the CDK overlay and ignore the appendTo selector', async () => {
+		it('should append the dropdown to a custom host element', async () => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`
@@ -5757,12 +5739,70 @@ describe('NgSelectComponent', () => {
 			);
 
 			await openSelect(fixture.componentInstance.select(), fixture);
-			expect(document.querySelector('.container .ng-dropdown-panel')).toBeNull();
-			const dropdown = <HTMLElement>document.querySelector('.cdk-overlay-container .ng-dropdown-panel');
+			const dropdown = <HTMLElement>document.querySelector('.container .ng-dropdown-panel');
 			expect(dropdown).not.toBeNull();
 		});
 
-		it('should not throw for an appendTo selector that matches no element', async () => {
+		it('should append the dropdown to body', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+                        appendTo="body"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+			);
+
+			await openSelect(fixture.componentInstance.select(), fixture);
+			const dropdown = <HTMLElement>document.querySelector('.ng-dropdown-panel');
+			expect(dropdown).not.toBeNull();
+			expect(dropdown.closest('ng-select')).toBeNull();
+			expect(dropdown.closest('.cdk-overlay-container')).toBeNull();
+		});
+
+		it('should apply appendTo from NgSelectConfig', async () => {
+			const config = new NgSelectConfig();
+			config.appendTo = '.config-container';
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`
+                <div class="config-container"></div>
+                <ng-select [items]="cities"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+				config,
+			);
+
+			await openSelect(fixture.componentInstance.select(), fixture);
+			expect(document.querySelector('.config-container .ng-dropdown-panel')).not.toBeNull();
+		});
+
+		it('should move the dropdown when appendTo changes between opens', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`
+                <div class="container-a"></div>
+                <div class="container-b"></div>
+                <ng-select [items]="cities"
+                        [appendTo]="appendToSelector"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+			);
+			const select = fixture.componentInstance.select();
+
+			await openSelect(select, fixture);
+			expect(document.querySelector('.container-a .ng-dropdown-panel')).not.toBeNull();
+
+			select.close();
+			await tickAndDetectChanges(fixture);
+			fixture.componentInstance.appendToSelector = '.container-b';
+			await tickAndDetectChanges(fixture);
+
+			await openSelect(select, fixture);
+			expect(document.querySelector('.container-b .ng-dropdown-panel')).not.toBeNull();
+			expect(document.querySelector('.container-a .ng-dropdown-panel')).toBeNull();
+		});
+
+		it('should throw for an appendTo selector that matches no element', async () => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [items]="cities"
@@ -5771,9 +5811,10 @@ describe('NgSelectComponent', () => {
                 </ng-select>`,
 			);
 
-			await openSelect(fixture.componentInstance.select(), fixture);
-			expect(document.querySelector('.ng-dropdown-panel')).not.toBeNull();
-			expect(fixture.componentInstance.select().isOpen()).toBe(true);
+			const select = fixture.componentInstance.select();
+			expect(() => select.open()).toThrowError('appendTo selector .does-not-exist did not found any parent element');
+			select.close();
+			await tickAndDetectChanges(fixture);
 		});
 
 		it('should size the overlay pane to match the select width', async () => {
@@ -6352,6 +6393,7 @@ class NgSelectTestComponent {
 	preventToggleOnRightClick = false;
 	searchWhileComposing = true;
 	popoverEnabled = false;
+	appendToSelector = '.container-a';
 	inputAttrs = { 'aria-invalid': 'false' };
 
 	citiesLoading = false;
