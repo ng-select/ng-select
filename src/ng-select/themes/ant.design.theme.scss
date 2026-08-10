@@ -244,33 +244,29 @@ $ng-select-marked: #e6f7ff !default;
 	}
 }
 
+// Positioning is handled by the CDK overlay; the position classes only carry the
+// border colors and the 4px gap margins against the select.
 .ng-dropdown-panel {
 	background-color: $ng-select-bg;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 	border-radius: 4px;
 	margin-top: 4px;
 	margin-bottom: 4px;
-	left: 0;
 	&.ng-select-top {
-		bottom: 100%;
 		border-bottom-color: lighten($ng-select-border, 10);
 	}
 	&.ng-select-right {
-		left: 100%;
-		top: 0;
 		border-bottom-color: lighten($ng-select-border, 10);
 		margin-top: 0;
 		margin-left: 4px;
 	}
 	&.ng-select-bottom {
-		top: 100%;
 		border-top-color: lighten($ng-select-border, 10);
 	}
 	&.ng-select-left {
-		left: calc(-100% - 4px);
-		top: 0;
 		border-bottom-color: lighten($ng-select-border, 10);
 		margin-top: 0;
+		margin-right: 4px;
 	}
 	.ng-dropdown-header {
 		border-bottom: 1px solid $ng-select-border;

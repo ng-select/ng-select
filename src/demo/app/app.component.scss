@@ -1,16 +1,6 @@
-@use 'sass:meta';
-
-:host.default-theme ::ng-deep {
-	@include meta.load-css('../../ng-select/themes/default.theme');
-}
-
-:host.ant-theme ::ng-deep {
-	@include meta.load-css('../../ng-select/themes/ant.design.theme');
-}
-
-:host.material-theme ::ng-deep {
-	@include meta.load-css('../../ng-select/themes/material.theme');
-}
+// ng-select theme styles live in src/demo/styles.scss, scoped by a body-level theme class:
+// the dropdown panel renders in the CDK overlay outside this component's subtree,
+// so styles nested under :host here could not reach it.
 
 .brand {
 	display: flex;

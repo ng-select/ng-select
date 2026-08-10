@@ -1,3 +1,4 @@
+import { ConnectionPositionPair, FlexibleConnectedPositionStrategy, OverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
 	booleanAttribute,
@@ -60,7 +61,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	readonly showAddTag = input(false, { transform: booleanAttribute });
 	readonly markedItem = input<NgOption>(undefined);
 	readonly position = input<DropdownPosition>('auto');
-	readonly appendTo = input<string>(undefined);
 	readonly bufferAmount = input<number>(undefined);
 	readonly virtualScroll = input(false, { transform: booleanAttribute });
 	readonly headerTemplate = input<TemplateRef<any> | undefined>(undefined);
@@ -72,7 +72,12 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	 * Which DOM event to listen to for outside click detection
 	 */
 	readonly outsideClickEvent = input<'click' | 'mousedown'>('click');
+	/** @deprecated Has no effect: the CDK overlay renders in the native Popover API top layer automatically in supporting browsers. Will be removed in a future major version. */
 	readonly popover = input(false, { transform: booleanAttribute });
+	/** Overlay hosting this panel. Used to request repositioning when the rendered content changes. */
+	readonly overlayRef = input<OverlayRef | null>(null);
+	/** Host `ng-select` element. The panel's DOM lives in the overlay, so the host cannot be derived from the DOM tree. */
+	readonly selectElement = input<HTMLElement>(undefined);
 	readonly update = output<any[]>();
 	readonly scroll = output<{
 		start: number;
@@ -95,19 +100,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	private readonly _contentPanel = computed(() => this.contentElementRef()?.nativeElement);
 
 	private _select: HTMLElement | undefined;
-	private _parent: HTMLElement;
 	private _scrollToEndFired = false;
 	private _updateScrollHeight = false;
 	private _lastScrollPosition = 0;
 	private _lastMousedownInside = false;
-
-	constructor() {
-		this._destroyRef.onDestroy(() => {
-			if (this.appendTo()) {
-				this._renderer.removeChild(this._dropdown.parentNode, this._dropdown);
-			}
-		});
-	}
 
 	private _currentPosition: DropdownPosition;
 
@@ -138,13 +134,12 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	}
 
 	ngOnInit() {
-		this._select = this._dropdown.parentElement;
+		this._select = this.selectElement() ?? this._dropdown.parentElement;
 		this._handleScroll();
 		this._handleOutsideClick();
-		this._appendDropdown();
 		this._setupMousedownListener();
-		this._handleWindowScroll();
-		this._showPopoverIfNeeded();
+		this._subscribeOverlayPosition();
+		this._handleDocumentScroll();
 		this._handleSelectResize();
 	}
 
@@ -193,22 +188,67 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	}
 
 	adjustPosition() {
-		this._updateYPosition();
+		this.overlayRef()?.updatePosition();
 	}
 
-	private _handleDropdownPosition() {
-		this._currentPosition = this._calculateCurrentPosition(this._dropdown);
-		if (CSS_POSITIONS.includes(this._currentPosition)) {
-			this._updateDropdownClass(this._currentPosition);
+	/**
+	 * Applies the position chosen by the overlay's position strategy to the panel and host
+	 * as `ng-select-top` / `ng-select-bottom` (and `-left` / `-right`) classes, which the
+	 * shipped themes use for borders, radius and spacing.
+	 */
+	private _setCurrentPosition(position: DropdownPosition) {
+		this._currentPosition = position;
+		if (CSS_POSITIONS.includes(position)) {
+			this._updateDropdownClass(position);
 		} else {
 			this._updateDropdownClass('bottom');
 		}
+	}
 
-		if (this.appendTo() || this.popover()) {
-			this._updateYPosition();
+	/**
+	 * Positions the freshly rendered panel. The overlay measures the real DOM, so header and
+	 * footer templates and the actual item count are part of the auto placement decision
+	 * (#2575). Only then is the panel made visible to avoid a flash at a stale position.
+	 */
+	private _positionDropdown() {
+		const overlayRef = this.overlayRef();
+		if (overlayRef) {
+			// Applies the best fitting position and synchronously emits positionChanges,
+			// which updates the position classes before the panel becomes visible
+			overlayRef.updatePosition();
+		} else if (!isDefined(this._currentPosition)) {
+			// Standalone usage without an overlay: reflect the configured side directly
+			this._setCurrentPosition(this.position() === 'auto' ? 'bottom' : this.position());
 		}
 
 		this._dropdown.style.opacity = '1';
+	}
+
+	private _subscribeOverlayPosition() {
+		const strategy = this.overlayRef()?.getConfig().positionStrategy;
+		if (!(strategy instanceof FlexibleConnectedPositionStrategy)) {
+			return;
+		}
+
+		strategy.positionChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((change) => {
+			this._setCurrentPosition(this._connectionPairToPosition(change.connectionPair));
+		});
+	}
+
+	private _connectionPairToPosition(pair: ConnectionPositionPair): DropdownPosition {
+		if (pair.originY === 'bottom' && pair.overlayY === 'top') {
+			return 'bottom';
+		}
+		if (pair.originY === 'top' && pair.overlayY === 'bottom') {
+			return 'top';
+		}
+		if (pair.originX === 'end' && pair.overlayX === 'start') {
+			return 'right';
+		}
+		if (pair.originX === 'start' && pair.overlayX === 'end') {
+			return 'left';
+		}
+		return 'bottom';
 	}
 
 	private _updateDropdownClass(currentPosition: string) {
@@ -232,9 +272,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			fromEvent(scrollablePanel, 'scroll')
 				.pipe(takeUntilDestroyed(this._destroyRef), auditTime(0, SCROLL_SCHEDULER))
 				.subscribe(() => {
-					if (scrollablePanel && 'scrollTop' in scrollablePanel) {
-						this._onContentScrolled(scrollablePanel.scrollTop);
-					}
+					this._onContentScrolled(scrollablePanel.scrollTop);
 				});
 		});
 	}
@@ -304,15 +342,19 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 	private _updateItems(firstChange: boolean) {
 		this.update.emit(this.items());
-		if (firstChange === false) {
-			return;
-		}
 
 		this._zone.runOutsideAngular(() => {
 			Promise.resolve().then(() => {
+				if (!firstChange) {
+					// The rendered option list changed while open (typeahead, filtering).
+					// Re-anchor so a top-placed panel grows upward instead of covering the
+					// select, and `auto` can flip once the content no longer fits (#2092)
+					this.overlayRef()?.updatePosition();
+					return;
+				}
 				const panelHeight = this._scrollablePanel().clientHeight;
 				this._panelService.setDimensions(0, panelHeight);
-				this._handleDropdownPosition();
+				this._positionDropdown();
 				this.scrollTo(this.markedItem(), firstChange);
 			});
 		});
@@ -323,9 +365,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			this._measureDimensions().then(() => {
 				if (firstChange) {
 					this._renderItemsRange(this._startOffset);
-					this._handleDropdownPosition();
+					this._positionDropdown();
 				} else {
 					this._renderItemsRange();
+					this.overlayRef()?.updatePosition();
 				}
 			});
 		});
@@ -421,72 +464,6 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 	}
 
-	private _calculateCurrentPosition(dropdownEl: HTMLElement) {
-		const position = this.position();
-		if (position !== 'auto') {
-			return position;
-		}
-		const selectRect: ClientRect = this._select.getBoundingClientRect();
-		const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-		const offsetTop = selectRect.top + window.pageYOffset;
-		const height = selectRect.height;
-		const dropdownHeight = dropdownEl.getBoundingClientRect().height;
-		if (offsetTop + height + dropdownHeight > scrollTop + document.documentElement.clientHeight) {
-			return 'top';
-		} else {
-			return 'bottom';
-		}
-	}
-
-	private _appendDropdown() {
-		if (!this.appendTo()) {
-			return;
-		}
-
-		this._parent = this._dropdown.shadowRoot ? this._dropdown.shadowRoot.querySelector(this.appendTo()) : document.querySelector(this.appendTo());
-		if (!this._parent) {
-			throw new Error(`appendTo selector ${this.appendTo()} did not found any parent element`);
-		}
-		this._updateXPosition();
-		this._parent.appendChild(this._dropdown);
-	}
-
-	private _updateXPosition() {
-		const select = this._select.getBoundingClientRect();
-		const parent = this._parent.getBoundingClientRect();
-		const isRTL = document.documentElement.dir === 'rtl';
-		const offsetLeft = select.left - parent.left;
-
-		if (isRTL) {
-			const offsetRight = parent.right - select.right;
-			this._dropdown.style.right = offsetRight + 'px';
-			this._dropdown.style.left = 'auto';
-		} else {
-			this._dropdown.style.left = offsetLeft + 'px';
-			this._dropdown.style.right = 'auto';
-		}
-
-		this._dropdown.style.width = select.width + 'px';
-		this._dropdown.style.minWidth = select.width + 'px';
-	}
-
-	private _updateYPosition() {
-		const select = this._select.getBoundingClientRect();
-		const parent = this._parent.getBoundingClientRect();
-		const selectContainer = this._select.querySelector('.ng-select-container') as HTMLElement;
-		const containerRect = selectContainer?.getBoundingClientRect() ?? select;
-
-		if (this._currentPosition === 'top') {
-			const offsetBottom = parent.bottom - containerRect.top;
-			this._dropdown.style.bottom = offsetBottom + 'px';
-			this._dropdown.style.top = 'auto';
-		} else if (this._currentPosition === 'bottom') {
-			const offsetTop = containerRect.bottom - parent.top;
-			this._dropdown.style.top = offsetTop + 'px';
-			this._dropdown.style.bottom = 'auto';
-		}
-	}
-
 	private _setupMousedownListener(): void {
 		this._zone.runOutsideAngular(() => {
 			fromEvent(this._dropdown, 'mousedown')
@@ -501,45 +478,38 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		});
 	}
 
-	private _handleWindowScroll() {
-		if (!this.appendTo() && !this.popover()) {
+	private _handleDocumentScroll() {
+		if (!this._document || !this.overlayRef()) {
 			return;
 		}
 		this._zone.runOutsideAngular(() => {
+			// The capture phase sees scrolls of the window and of every ancestor scroll
+			// container — including plain overflow elements that CDK's ScrollDispatcher
+			// cannot observe without a cdkScrollable marker — so the panel stays anchored
+			// to the select wherever the page moves (#2788, #2829)
 			fromEvent(this._document, 'scroll', { capture: true, passive: true })
 				.pipe(takeUntilDestroyed(this._destroyRef), auditTime(0, SCROLL_SCHEDULER))
-				.subscribe(() => {
-					this._updateXPosition();
-					this._updateYPosition();
+				.subscribe(($event) => {
+					const target = $event.target as Node | null;
+					// Scrolling the option list itself does not move the anchor
+					if (target && this._dropdown.contains(target)) {
+						return;
+					}
+					this.overlayRef().updatePosition();
 				});
 		});
 	}
 
-	private _showPopoverIfNeeded() {
-		if (!this.popover()) {
-			return;
-		}
-		if (typeof this._dropdown.showPopover === 'function') {
-			this._renderer.setAttribute(this._dropdown, 'popover', 'manual');
-			this._dropdown.showPopover();
-			this._parent = globalThis.document.body;
-			this._updateXPosition();
-			this._updateYPosition();
-		}
-	}
-
 	private _handleSelectResize() {
-		if (!this.popover() || !this._select || typeof ResizeObserver === 'undefined') {
+		const overlayRef = this.overlayRef();
+		if (!overlayRef || !this._select || typeof ResizeObserver === 'undefined') {
 			return;
 		}
 
 		this._zone.runOutsideAngular(() => {
 			const observer = new ResizeObserver(() => {
-				if (!this._parent) {
-					return;
-				}
-				this._updateXPosition();
-				this._updateYPosition();
+				overlayRef.updateSize({ width: this._select.getBoundingClientRect().width });
+				overlayRef.updatePosition();
 			});
 
 			observer.observe(this._select);
