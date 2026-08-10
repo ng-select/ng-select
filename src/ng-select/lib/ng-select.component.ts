@@ -65,6 +65,7 @@ import { DropdownPosition, KeyCode, NgOption } from './ng-select.types';
 import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
 import { isDefined, isFunction, isObject, isPromise } from './value-utils';
 
+/** DI token for SelectionModel implementation. You can provide custom implementation changing selection behaviour. */
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type AddTagFn = (term: string) => any | Promise<any>;
 export type CompareWithFn = (a: any, b: any) => boolean;
@@ -113,50 +114,73 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly ariaLabelDropdown = linkedSignal(() => this._ariaLabelDropdown());
 	readonly _ariaLabel = input<string | undefined>(undefined, { alias: 'ariaLabel' });
 	readonly ariaLabel = linkedSignal(() => this._ariaLabel());
+	/** Marks first item as focused when opening/filtering. */
 	readonly _markFirst = input(true, { alias: 'markFirst', transform: booleanAttribute });
 	readonly markFirst = linkedSignal(() => this._markFirst());
+	/** Placeholder text. */
 	readonly _placeholder = input<string>(this.config.placeholder, { alias: 'placeholder' });
 	readonly placeholder = linkedSignal(() => this._placeholder());
+	/** Set placeholder visible even when an item is selected */
 	readonly _fixedPlaceholder = input<boolean>(true, { alias: 'fixedPlaceholder' });
 	readonly fixedPlaceholder = linkedSignal(() => this._fixedPlaceholder());
+	/** Set custom text when filter returns empty result */
 	readonly _notFoundText = input<string>(undefined, { alias: 'notFoundText' });
 	readonly notFoundText = linkedSignal(() => this._notFoundText());
+	/** Set custom text when using Typeahead */
 	readonly _typeToSearchText = input<string>(undefined, { alias: 'typeToSearchText' });
 	readonly typeToSearchText = linkedSignal(() => this._typeToSearchText());
+	/** Prevent opening of ng-select on right mouse click */
 	readonly _preventToggleOnRightClick = input<boolean>(false, { alias: 'preventToggleOnRightClick' });
 	readonly preventToggleOnRightClick = linkedSignal(() => this._preventToggleOnRightClick());
+	/** Set custom text when using tagging */
 	readonly _addTagText = input<string>(undefined, { alias: 'addTagText' });
 	readonly addTagText = linkedSignal(() => this._addTagText());
+	/** Set custom text when for loading items */
 	readonly _loadingText = input<string>(undefined, { alias: 'loadingText' });
 	readonly loadingText = linkedSignal(() => this._loadingText());
+	/** Set custom text for clear all icon title */
 	readonly _clearAllText = input<string>(undefined, { alias: 'clearAllText' });
 	readonly clearAllText = linkedSignal(() => this._clearAllText());
+	/** Set custom text prefixed to the option label in the aria-label of the remove icon on selected values (multiple mode) */
 	readonly _removeText = input<string>(undefined, { alias: 'removeText' });
 	readonly removeText = linkedSignal(() => this._removeText());
+	/** Set the dropdown position on open */
 	readonly _dropdownPosition = input<DropdownPosition>('auto', { alias: 'dropdownPosition' });
 	readonly dropdownPosition = linkedSignal(() => this._dropdownPosition());
+	/** Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative` */
 	readonly _appendTo = input<string>(undefined, { alias: 'appendTo' });
 	readonly appendTo = linkedSignal(() => this._appendTo());
+	/** Configure which DOM event type is used for outside click detection. Use `'mousedown'` to fix issues with backdrop/loading overlays that appear on dropdown open */
 	readonly _outsideClickEvent = input<'click' | 'mousedown'>(this.config.outsideClickEvent ?? 'click', { alias: 'outsideClickEvent' });
 	readonly outsideClickEvent = linkedSignal(() => this._outsideClickEvent());
+	/** You can set the loading state from the outside (e.g. async items loading) */
 	readonly _loading = input(false, { alias: 'loading', transform: booleanAttribute });
 	readonly loading = linkedSignal(() => this._loading());
+	/** Whether to close the menu when a value is selected */
 	readonly _closeOnSelect = input(true, { alias: 'closeOnSelect', transform: booleanAttribute });
 	readonly closeOnSelect = linkedSignal(() => this._closeOnSelect());
+	/** Allows to hide selected items. */
 	readonly _hideSelected = input(false, { alias: 'hideSelected', transform: booleanAttribute });
 	readonly hideSelected = linkedSignal(() => this._hideSelected());
+	/** Select marked dropdown item using tab. Default `false` */
 	readonly _selectOnTab = input(false, { alias: 'selectOnTab', transform: booleanAttribute });
 	readonly selectOnTab = linkedSignal(() => this._selectOnTab());
+	/** Open dropdown using enter. Default `true` */
 	readonly _openOnEnter = input(undefined, { alias: 'openOnEnter', transform: booleanAttribute });
 	readonly openOnEnter = linkedSignal(() => this._openOnEnter());
+	/** When multiple = true, allows to set a limit number of selection. */
 	readonly _maxSelectedItems = input<number, unknown>(undefined, { alias: 'maxSelectedItems', transform: numberAttribute });
 	readonly maxSelectedItems = linkedSignal(() => this._maxSelectedItems());
+	/** Allow to group items by key or function expression */
 	readonly _groupBy = input<string | ((value: any) => any)>(undefined, { alias: 'groupBy' });
 	readonly groupBy = linkedSignal(() => this._groupBy());
+	/** Function expression to provide group value */
 	readonly _groupValue = input<GroupValueFn>(undefined, { alias: 'groupValue' });
 	readonly groupValue = linkedSignal(() => this._groupValue());
+	/** Used in virtual scrolling, the `bufferAmount` property controls the number of items preloaded in the background to ensure smoother and more seamless scrolling. */
 	readonly _bufferAmount = input(4, { alias: 'bufferAmount', transform: numberAttribute });
 	readonly bufferAmount = linkedSignal(() => this._bufferAmount());
+	/** Enable virtual scroll for better performance when rendering a lot of data */
 	readonly _virtualScroll = input<boolean | undefined, unknown>(undefined, {
 		alias: 'virtualScroll',
 		transform: optionalBooleanAttribute,
@@ -166,50 +190,71 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const value = this._virtualScroll();
 		return isDefined(value) ? value : this.isVirtualScrollDisabled(this.config);
 	});
+	/** Allow to select group when groupBy is used */
 	readonly _selectableGroup = input(false, { alias: 'selectableGroup', transform: booleanAttribute });
 	readonly selectableGroup = linkedSignal(() => this._selectableGroup());
+	/** Control tab navigation behavior for the clear button. Default `true` */
 	readonly _tabFocusOnClearButton = input<boolean | undefined>(undefined, { alias: 'tabFocusOnClearButton' });
 	readonly tabFocusOnClearButton = linkedSignal(() => this._tabFocusOnClearButton());
+	/** Indicates whether to select all children or group itself */
 	readonly _selectableGroupAsModel = input(true, { alias: 'selectableGroupAsModel', transform: booleanAttribute });
 	readonly selectableGroupAsModel = linkedSignal(() => this._selectableGroupAsModel());
+	/** Allow to filter by custom search function */
 	readonly _searchFn = input(null, { alias: 'searchFn' });
 	readonly searchFn = linkedSignal(() => this._searchFn());
+	/** Provide custom trackBy function */
 	readonly _trackByFn = input(null, { alias: 'trackByFn' });
 	readonly trackByFn = linkedSignal(() => this._trackByFn());
+	/** Clear selected values one by one when clicking backspace. Default `true` */
 	readonly _clearOnBackspace = input(true, { alias: 'clearOnBackspace', transform: booleanAttribute });
 	readonly clearOnBackspace = linkedSignal(() => this._clearOnBackspace());
+	/** Id to associate control with label. */
 	readonly _labelForId = input(null, { alias: 'labelForId' });
 	readonly labelForId = linkedSignal(() => this._labelForId());
+	/** Pass custom attributes to underlying `input` element */
 	readonly _inputAttrs = input<Record<string, string>>({}, { alias: 'inputAttrs' });
 	readonly inputAttrs = linkedSignal(() => this._inputAttrs());
+	/** Set tabindex on ng-select */
 	readonly _tabIndex = input<number, unknown>(undefined, { alias: 'tabIndex', transform: numberAttribute });
 	readonly tabIndex = linkedSignal(() => this._tabIndex());
+	/** Set ng-select as readonly. Mostly used with reactive forms. */
 	readonly _readonly = input(false, { alias: 'readonly', transform: booleanAttribute });
 	readonly readonly = linkedSignal(() => this._readonly());
+	/** Whether items should be filtered while composition started */
 	readonly _searchWhileComposing = input(true, { alias: 'searchWhileComposing', transform: booleanAttribute });
 	readonly searchWhileComposing = linkedSignal(() => this._searchWhileComposing());
+	/** Minimum term length to start a search. Should be used with `typeahead` */
 	readonly _minTermLength = input(0, { alias: 'minTermLength', transform: numberAttribute });
 	readonly minTermLength = linkedSignal(() => this._minTermLength());
+	/** Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`. */
 	readonly _editableSearchTerm = input(false, { alias: 'editableSearchTerm', transform: booleanAttribute });
 	readonly editableSearchTerm = linkedSignal(() => this._editableSearchTerm());
 	readonly _ngClass = input(null, { alias: 'ngClass' });
 	readonly ngClass = linkedSignal(() => this._ngClass());
+	/** Custom autocomplete or advanced filter. */
 	readonly _typeahead = input<Subject<string>>(undefined, { alias: 'typeahead' });
 	readonly typeahead = linkedSignal(() => this._typeahead());
+	/** Allows to select multiple items. */
 	readonly _multiple = input(false, { alias: 'multiple', transform: booleanAttribute });
 	readonly multiple = linkedSignal(() => this._multiple());
+	/** Allows to create custom options. */
 	readonly _addTag = input<boolean | AddTagFn>(false, { alias: 'addTag' });
 	readonly addTag = linkedSignal(() => this._addTag());
+	/** Allow to search for value. Default `true` */
 	readonly _searchable = input(true, { alias: 'searchable', transform: booleanAttribute });
 	readonly searchable = linkedSignal(() => this._searchable());
+	/** Allow to clear selected value. Default `true` */
 	readonly _clearable = input(true, { alias: 'clearable', transform: booleanAttribute });
 	readonly clearable = linkedSignal(() => this._clearable());
 	readonly _clearKeepsDisabledOptions = input(true, { alias: 'clearKeepsDisabledOptions', transform: booleanAttribute });
 	readonly clearKeepsDisabledOptions = linkedSignal(() => this._clearKeepsDisabledOptions());
+	/** Deselects a selected item when it is clicked in the dropdown. Default `false`. Default `true` when **multiple** is `true` */
 	readonly _deselectOnClick = input<boolean>(undefined, { alias: 'deselectOnClick' });
 	readonly deselectOnClick = linkedSignal(() => this._deselectOnClick());
+	/** Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false` */
 	readonly _clearSearchOnAdd = input(undefined, { alias: 'clearSearchOnAdd' });
 	readonly clearSearchOnAdd = linkedSignal(() => this._clearSearchOnAdd());
+	/** A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. */
 	readonly _compareWith = input(undefined, {
 		alias: 'compareWith',
 		transform: (fn: CompareWithFn | undefined) => {
@@ -220,33 +265,51 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		},
 	});
 	readonly compareWith = linkedSignal(() => this._compareWith());
+	/** Provide custom keyDown function. Executed before default handler. Return false to suppress execution of default key down handlers */
 	readonly _keyDownFn = input<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true, { alias: 'keyDownFn' });
 	readonly keyDownFn = linkedSignal(() => this._keyDownFn());
+	/** Display the dropdown in the top-layer using the native Popover API. Useful when the dropdown is clipped or hidden behind dialogs or other stacking contexts. Alternative to `appendTo` */
 	readonly _popover = input(false, { alias: 'popover', transform: booleanAttribute });
 	readonly popover = linkedSignal(() => this._popover());
 	// models
+	/** Object property to use for label. Default `label` */
 	readonly bindLabel = model<string>(undefined);
+	/** Object property to use for selected model. By default binds to whole object. */
 	readonly bindValue = model<string>(undefined);
+	/** Allows to select dropdown appearance. Set to `outline` or `fill` for Material form-field styles (applies only to Material theme) */
 	readonly appearance = model<string>(undefined);
+	/** Allows manual control of dropdown opening and closing. `true` - won't close. `false` - won't open. */
 	readonly isOpen = model<boolean | undefined>(false);
+	/** Items array */
 	readonly items = model<readonly any[]>([]);
 	// output events
+	/** Fired on select blur */
 	readonly blurEvent = output<any>({ alias: 'blur' });
+	/** Fired on select focus */
 	readonly focusEvent = output<any>({ alias: 'focus' });
+	/** Fired on model change. Outputs whole model */
 	readonly changeEvent = output<any>({ alias: 'change' });
+	/** Fired on select dropdown open */
 	readonly openEvent = output({ alias: 'open' });
+	/** Fired on select dropdown close */
 	readonly closeEvent = output({ alias: 'close' });
+	/** Fired while typing search term. Outputs search term with filtered items */
 	readonly searchEvent = output<{
 		term: string;
 		items: any[];
 	}>({ alias: 'search' });
+	/** Fired on clear icon click */
 	readonly clearEvent = output({ alias: 'clear' });
+	/** Fired when item is added while `[multiple]="true"`. Outputs added item */
 	readonly addEvent = output<any>({ alias: 'add' });
+	/** Fired when item is removed while `[multiple]="true"` */
 	readonly removeEvent = output<any>({ alias: 'remove' });
+	/** Fired when scrolled (only when `[virtualScroll]="true"`). Provides the start and end index of the currently available items. Can be used for loading more items in chunks before the user has scrolled all the way to the bottom of the list. */
 	readonly scroll = output<{
 		start: number;
 		end: number;
 	}>({ alias: 'scroll' });
+	/** Fired when scrolled to the end of items. Can be used for loading more items in chunks. */
 	readonly scrollToEnd = output<any>({ alias: 'scrollToEnd' });
 	// computed
 	readonly disabled = computed(() => this.readonly() || this._disabled());
@@ -608,6 +671,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/** Opens the select dropdown panel */
 	open() {
 		if (this.disabled() || this.isOpen() || this._manualOpen) {
 			return;
@@ -625,6 +689,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.detectChanges();
 	}
 
+	/** Closes the select dropdown panel */
 	close() {
 		if (!this.isOpen() || this._manualOpen) {
 			return;
@@ -678,10 +743,12 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._onSelectionChanged();
 	}
 
+	/** Focuses the select element */
 	focus() {
 		this.searchInput().nativeElement.focus();
 	}
 
+	/** Blurs the select element */
 	blur() {
 		this.searchInput().nativeElement.blur();
 	}
