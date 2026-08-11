@@ -219,7 +219,7 @@ Full documentation, live examples and the complete API reference live on the doc
 - [Getting started](https://ng-select.github.io/ng-select/#/getting-started/installation)
 - [Examples](https://ng-select.github.io/ng-select/#/examples/data-sources) — data sources, bindings, forms, search, tags, templates, multiselect, grouping, virtual scroll and more
 - [API reference](https://ng-select.github.io/ng-select/#/api) — inputs, outputs and methods for `NgSelectComponent`, `NgSelectConfig`, template directives and `NgOptionHighlightDirective`
-- [Custom styles and theming](https://ng-select.github.io/ng-select/#/getting-started/styling)
+- [Styling](https://ng-select.github.io/ng-select/#/getting-started/styling)
 - [Change detection notes](https://ng-select.github.io/ng-select/#/getting-started/change-detection)
 
 ## Dropdown panel rendering
