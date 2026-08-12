@@ -1,8 +1,13 @@
 name: Unpublish
 
 # Manually remove a published version from npm and delete its GitHub release/tag.
-# Requires repo secret NPM_TOKEN with permission to unpublish both packages
-# (OIDC trusted publishing supports publish only, not unpublish).
+#
+# IMPORTANT — npm auth for unpublish:
+# Automation / bypass-2FA granular tokens often "succeed" in the CLI but do NOT
+# remove the version (npm/cli#7120; registry PUT 404 is ignored). Prefer a
+# classic or granular token that can unpublish WITH otp, or run unpublish
+# interactively. This workflow verifies the version is gone and fails if not.
+# OIDC trusted publishing cannot unpublish.
 
 on:
   workflow_dispatch:
@@ -53,12 +58,16 @@ jobs:
       - name: Unpublish npm packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # Optional: set repo secret NPM_OTP when using a token that requires 2FA for unpublish
+          NPM_CONFIG_OTP: ${{ secrets.NPM_OTP }}
           VERSION: ${{ steps.ver.outputs.version }}
         run: |
           if [ -z "$NODE_AUTH_TOKEN" ]; then
-            echo "::error::Secret NPM_TOKEN is not set. Trusted publishing (OIDC) cannot unpublish; add an npm automation/granular token with unpublish access."
+            echo "::error::Secret NPM_TOKEN is not set. Trusted publishing (OIDC) cannot unpublish."
             exit 1
           fi
+
+          echo "Authenticated as: $(npm whoami 2>/dev/null || echo '(whoami failed)')"
 
           unpublish_pkg() {
             local pkg="$1"
@@ -66,8 +75,22 @@ jobs:
               echo "${pkg}@${VERSION} is not on npm; skipping."
               return 0
             fi
+
             echo "Unpublishing ${pkg}@${VERSION}…"
-            npm unpublish "${pkg}@${VERSION}" --force
+            # --loglevel verbose surfaces the registry PUT status (automation tokens
+            # often return 404 here while still exiting 0 — see npm/cli#7120).
+            npm unpublish "${pkg}@${VERSION}" --force --loglevel verbose
+
+            # Verify — do not trust the CLI exit code alone
+            if npm view "${pkg}@${VERSION}" version >/dev/null 2>&1; then
+              echo "::error::${pkg}@${VERSION} is STILL on the registry after unpublish."
+              echo "::error::Automation/bypass-2FA tokens cannot unpublish (silent no-op)."
+              echo "::error::Unpublish interactively with 2FA, or use a token + NPM_OTP that is allowed to unpublish."
+              echo "::error::Manual: npm unpublish ${pkg}@${VERSION} --force"
+              exit 1
+            fi
+
+            echo "Verified: ${pkg}@${VERSION} is gone from npm."
           }
 
           unpublish_pkg "@ng-select/ng-select"
@@ -79,15 +102,18 @@ jobs:
           TAG: ${{ steps.ver.outputs.tag }}
           REPO: ${{ github.repository }}
         run: |
+          # Prefer deleting the release (also removes the tag with --cleanup-tag).
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Deleting GitHub release $TAG…"
             gh release delete "$TAG" --yes --cleanup-tag
           else
             echo "No GitHub release named $TAG."
-            if git ls-remote --tags "https://github.com/${REPO}.git" "refs/tags/${TAG}" | grep -q "$TAG"; then
-              echo "Deleting git tag $TAG…"
-              gh api -X DELETE "repos/${REPO}/git/refs/tags/${TAG}"
-            else
-              echo "No git tag $TAG either; nothing to delete on GitHub."
-            fi
+          fi
+
+          # Ensure the tag is gone even if the release was missing or cleanup failed.
+          if git ls-remote --tags "https://github.com/${REPO}.git" "refs/tags/${TAG}" | grep -q "$TAG"; then
+            echo "Deleting git tag $TAG…"
+            gh api -X DELETE "repos/${REPO}/git/refs/tags/${TAG}"
+          else
+            echo "Git tag $TAG is absent."
           fi
