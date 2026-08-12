@@ -1,7 +1,6 @@
 import { afterNextRender, computed, effect, inject, input, signal, Directive, ElementRef, Renderer2 } from '@angular/core';
 import { escapeRegExp, isDefined } from './utils';
 
-/** Highlights the search term in an option's text. Accepts the search term; should be used on the option element. */
 @Directive({
 	selector: '[ngOptionHighlight]',
 	standalone: true,

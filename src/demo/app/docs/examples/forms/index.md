@@ -46,6 +46,7 @@ Inputs used by the examples on this page:
 | placeholder      | `string`                    | `-`         | Placeholder text.                                                                                                                |
 | labelForId       | `string`                    | `-`         | Id to associate control with label.                                                                                              |
 | appearance       | `string`                    | `underline` | Allows to select dropdown appearance. Set to `outline` or `fill` for Material form-field styles (applies only to Material theme) |
+| appendTo         | `string`                    | null        | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative`  |
 | dropdownPosition | `bottom` \| `top` \| `auto` | `auto`      | Set the dropdown position on open                                                                                                |
 | clearAllText     | `string`                    | `Clear all` | Set custom text for clear all icon title                                                                                         |
 | [selectOnTab]    | `boolean`                   | `false`     | Select marked dropdown item using tab. Default `false`                                                                           |
