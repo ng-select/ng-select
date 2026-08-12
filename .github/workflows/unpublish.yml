@@ -19,6 +19,15 @@ jobs:
   unpublish:
     runs-on: ubuntu-latest
     steps:
+      - name: Restrict to maintainer
+        env:
+          ACTOR: ${{ github.actor }}
+        run: |
+          if [ "$ACTOR" != "pavankjadda" ]; then
+            echo "::error::Only pavankjadda can run this workflow (triggered by '$ACTOR')."
+            exit 1
+          fi
+
       - name: Normalize and validate version
         id: ver
         env:
