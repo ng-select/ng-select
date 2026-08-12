@@ -85,6 +85,15 @@ async function waitForFrames(count = 2): Promise<void> {
 				height: 25px;
 				box-sizing: border-box;
 			}
+			.test-option.with-border {
+				border-bottom: 2px solid #c62828;
+			}
+			.test-option.group-row {
+				height: 36px;
+			}
+			.test-option.option-row {
+				height: 80px;
+			}
 		`,
 	],
 	template: `
@@ -104,7 +113,14 @@ async function waitForFrames(count = 2): Promise<void> {
 				(scrollToEnd)="scrollToEndCount = scrollToEndCount + 1"
 				(outsideClick)="outsideClickCount = outsideClickCount + 1">
 				@for (item of viewPortItems(); track item.htmlId) {
-					<div class="test-option" [id]="item.htmlId">{{ item.label }}</div>
+					<div
+						class="test-option"
+						[class.with-border]="borderedOptions()"
+						[class.group-row]="variableHeights() && !!item.children"
+						[class.option-row]="variableHeights() && !item.children"
+						[id]="item.htmlId">
+						{{ item.label }}
+					</div>
 				}
 				<input class="inner-input" />
 			</ng-dropdown-panel>
@@ -117,6 +133,8 @@ class NgDropdownPanelTestComponent {
 	readonly markedItem = signal<NgOption | undefined>(undefined);
 	readonly position = signal<DropdownPosition>('auto');
 	readonly virtualScroll = signal(false);
+	readonly borderedOptions = signal(false);
+	readonly variableHeights = signal(false);
 	readonly bufferAmount = signal(4);
 	readonly showAddTag = signal(false);
 	readonly outsideClickEvent = signal<'click' | 'mousedown' | null>('click');
@@ -380,6 +398,22 @@ describe('NgDropdownPanelComponent', () => {
 
 			expect(overlayRef.updatePosition).toHaveBeenCalled();
 		});
+
+		it('should refresh panelHeight when items arrive after an empty open (#2744)', async () => {
+			createFixture((host) => host.items.set([]));
+			await flushAsync();
+			fixture.detectChanges();
+
+			expect(panelService().dimensions.panelHeight).toBeLessThan(PANEL_HEIGHT);
+
+			host.items.set(createItems(30));
+			fixture.detectChanges();
+			await flushAsync();
+			fixture.detectChanges();
+
+			expect(panelService().dimensions.panelHeight).toBe(scrollHostElement().clientHeight);
+			expect(panelService().dimensions.panelHeight).toBe(PANEL_HEIGHT);
+		});
 	});
 
 	describe('virtual scroll', () => {
@@ -394,6 +428,65 @@ describe('NgDropdownPanelComponent', () => {
 			expect(padding.style.height).toBe(`${30 * ITEM_HEIGHT}px`);
 			expect(host.viewPortItems().length).toBeLessThan(host.items().length);
 			expect(host.scrollEvents.length).toBeGreaterThan(0);
+		});
+
+		it('should include option border width in virtual scroll item height', async () => {
+			createFixture((host) => {
+				host.virtualScroll.set(true);
+				host.borderedOptions.set(true);
+			});
+			await flushAsync();
+			fixture.detectChanges();
+
+			const option: HTMLElement = fixture.nativeElement.querySelector('.test-option');
+			expect(option.offsetHeight).toBeGreaterThan(option.clientHeight);
+
+			const padding: HTMLElement = fixture.nativeElement.querySelector('.total-padding');
+			expect(panelService().dimensions.itemHeight).toBe(option.offsetHeight);
+			expect(padding.style.height).toBe(`${host.items().length * option.offsetHeight}px`);
+		});
+
+		it('should measure group and option heights separately for virtual scroll (#2762)', async () => {
+			const GROUP_HEIGHT = 36;
+			const OPTION_HEIGHT = 80;
+			const groupedItems: NgOption[] = [
+				{
+					index: 0,
+					htmlId: 'group-0',
+					label: 'Group A',
+					value: { name: 'Group A' },
+					children: [],
+					disabled: true,
+				},
+				{
+					index: 1,
+					htmlId: 'option-1',
+					label: 'Option 1',
+					value: 1,
+				},
+				{
+					index: 2,
+					htmlId: 'option-2',
+					label: 'Option 2',
+					value: 2,
+				},
+			];
+			groupedItems[0].children = [groupedItems[1], groupedItems[2]];
+
+			createFixture((host) => {
+				host.virtualScroll.set(true);
+				host.variableHeights.set(true);
+				host.items.set(groupedItems);
+			});
+			await flushAsync();
+			fixture.detectChanges();
+
+			const dims = panelService().dimensions;
+			expect(dims.groupHeight).toBe(GROUP_HEIGHT);
+			expect(dims.itemHeight).toBe(OPTION_HEIGHT);
+
+			const padding: HTMLElement = fixture.nativeElement.querySelector('.total-padding');
+			expect(padding.style.height).toBe(`${GROUP_HEIGHT + OPTION_HEIGHT + OPTION_HEIGHT}px`);
 		});
 
 		it('should keep current dimensions when the first option cannot be measured', async () => {
@@ -416,6 +509,31 @@ describe('NgDropdownPanelComponent', () => {
 			fixture.detectChanges();
 
 			expect(scrollHostElement().scrollTop).toBe(20 * ITEM_HEIGHT);
+		});
+
+		it('should refresh panelHeight and scroll correctly after empty→items (#2744)', async () => {
+			createFixture((host) => {
+				host.virtualScroll.set(true);
+				host.items.set([]);
+			});
+			await flushAsync();
+			fixture.detectChanges();
+
+			host.items.set(createItems(30));
+			fixture.detectChanges();
+			await flushAsync();
+			fixture.detectChanges();
+			await waitForFrames();
+
+			expect(panelService().dimensions.panelHeight).toBe(PANEL_HEIGHT);
+			expect(panelService().dimensions.itemHeight).toBe(ITEM_HEIGHT);
+
+			const target = host.items()[20];
+			panel().scrollTo(target);
+			fixture.detectChanges();
+
+			expect(scrollHostElement().scrollTop).toBe(21 * ITEM_HEIGHT - PANEL_HEIGHT);
+			expect(host.viewPortItems().some((item) => item.htmlId === target.htmlId)).toBe(true);
 		});
 
 		it('should start from the top when the marked item fits into the panel', async () => {
