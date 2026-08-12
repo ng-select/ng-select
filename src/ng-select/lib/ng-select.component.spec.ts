@@ -4782,7 +4782,7 @@ describe('NgSelectComponent', () => {
 				expect(select.searchTerm).toBe('new');
 			});
 
-			it('should update the typeahead term when the search is cleared on add', async () => {
+			it('should clear search term without emitting on typeahead when selecting an item', async () => {
 				const fixture = createTestingModule(
 					NgSelectTestComponent,
 					`<ng-select [items]="cities"
@@ -4798,19 +4798,67 @@ describe('NgSelectComponent', () => {
 				expect(fixture.componentInstance.select().clearSearchOnAddValue()).toBeTruthy();
 				expect(fixture.componentInstance.select().closeOnSelect()).toBeFalsy();
 
-				let lastEmittedSearchTerm = '';
+				const emittedTerms: (string | null)[] = [];
 				fixture.componentInstance.filter.subscribe((value) => {
-					lastEmittedSearchTerm = value;
+					emittedTerms.push(value);
 				});
 				fixture.componentInstance.cities = [
 					{ id: 4, name: 'New York' },
 					{ id: 5, name: 'California' },
 				];
 				await tickAndDetectChanges(fixture);
-				fixture.componentInstance.select().filter('new');
-				expect(lastEmittedSearchTerm).toBe('new');
-				fixture.componentInstance.select().select(fixture.componentInstance.select().viewPortItems[0]);
-				expect(lastEmittedSearchTerm).toBe(null);
+				const select = fixture.componentInstance.select();
+				select.filter('new');
+				expect(emittedTerms).toEqual(['new']);
+				select.select(select.viewPortItems[0]);
+				expect(select.searchTerm).toBeNull();
+				expect(emittedTerms).toEqual(['new']);
+			});
+
+			it('should not emit on typeahead when closing after a search', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+                        [typeahead]="filter"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`,
+				);
+
+				const emittedTerms: (string | null)[] = [];
+				fixture.componentInstance.filter.subscribe((value) => {
+					emittedTerms.push(value);
+				});
+				await tickAndDetectChanges(fixture);
+				const select = fixture.componentInstance.select();
+				select.filter('vil');
+				expect(emittedTerms).toEqual(['vil']);
+				select.close();
+				expect(select.searchTerm).toBeNull();
+				expect(emittedTerms).toEqual(['vil']);
+			});
+
+			it('should not emit on typeahead when clearing via clear button', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+                        [typeahead]="filter"
+                        bindLabel="name"
+                        [(ngModel)]="selectedCity">
+                    </ng-select>`,
+				);
+
+				const emittedTerms: (string | null)[] = [];
+				fixture.componentInstance.filter.subscribe((value) => {
+					emittedTerms.push(value);
+				});
+				await tickAndDetectChanges(fixture);
+				const select = fixture.componentInstance.select();
+				select.filter('vil');
+				expect(emittedTerms).toEqual(['vil']);
+				select.handleClearClick();
+				expect(select.searchTerm).toBeNull();
+				expect(emittedTerms).toEqual(['vil']);
 			});
 
 			it('should respect NgSelectConfig.clearSearchOnAdd if defined', async () => {

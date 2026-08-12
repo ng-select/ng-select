@@ -1265,9 +1265,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 	private _changeSearch(searchTerm: string) {
 		this._searchTerm.set(searchTerm);
-		if (this.typeahead()?.observed) {
-			this.typeahead().next(searchTerm);
-		}
 	}
 
 	private _scrollToMarked() {
