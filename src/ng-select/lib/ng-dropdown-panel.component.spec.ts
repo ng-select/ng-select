@@ -85,6 +85,9 @@ async function waitForFrames(count = 2): Promise<void> {
 				height: 25px;
 				box-sizing: border-box;
 			}
+			.test-option.with-border {
+				border-bottom: 2px solid #c62828;
+			}
 		`,
 	],
 	template: `
@@ -104,7 +107,7 @@ async function waitForFrames(count = 2): Promise<void> {
 				(scrollToEnd)="scrollToEndCount = scrollToEndCount + 1"
 				(outsideClick)="outsideClickCount = outsideClickCount + 1">
 				@for (item of viewPortItems(); track item.htmlId) {
-					<div class="test-option" [id]="item.htmlId">{{ item.label }}</div>
+					<div class="test-option" [class.with-border]="borderedOptions()" [id]="item.htmlId">{{ item.label }}</div>
 				}
 				<input class="inner-input" />
 			</ng-dropdown-panel>
@@ -117,6 +120,7 @@ class NgDropdownPanelTestComponent {
 	readonly markedItem = signal<NgOption | undefined>(undefined);
 	readonly position = signal<DropdownPosition>('auto');
 	readonly virtualScroll = signal(false);
+	readonly borderedOptions = signal(false);
 	readonly bufferAmount = signal(4);
 	readonly showAddTag = signal(false);
 	readonly outsideClickEvent = signal<'click' | 'mousedown' | null>('click');
@@ -394,6 +398,22 @@ describe('NgDropdownPanelComponent', () => {
 			expect(padding.style.height).toBe(`${30 * ITEM_HEIGHT}px`);
 			expect(host.viewPortItems().length).toBeLessThan(host.items().length);
 			expect(host.scrollEvents.length).toBeGreaterThan(0);
+		});
+
+		it('should include option border width in virtual scroll item height', async () => {
+			createFixture((host) => {
+				host.virtualScroll.set(true);
+				host.borderedOptions.set(true);
+			});
+			await flushAsync();
+			fixture.detectChanges();
+
+			const option: HTMLElement = fixture.nativeElement.querySelector('.test-option');
+			expect(option.offsetHeight).toBeGreaterThan(option.clientHeight);
+
+			const padding: HTMLElement = fixture.nativeElement.querySelector('.total-padding');
+			expect(panelService().dimensions.itemHeight).toBe(option.offsetHeight);
+			expect(padding.style.height).toBe(`${host.items().length * option.offsetHeight}px`);
 		});
 
 		it('should keep current dimensions when the first option cannot be measured', async () => {

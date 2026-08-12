@@ -442,7 +442,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			if (!option) {
 				return this._panelService.dimensions;
 			}
-			const optionHeight = option.clientHeight;
+			const optionHeight = option.offsetHeight;
 			this._virtualPadding().style.height = `${optionHeight * this.itemsLength}px`;
 			const panelHeight = this._scrollablePanel().clientHeight;
 			this._panelService.setDimensions(optionHeight, panelHeight);
