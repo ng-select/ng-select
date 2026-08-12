@@ -1,6 +1,6 @@
 {
 	"name": "@ng-select/ng-select",
-	"version": "15.0.1",
+	"version": "23.6.0",
 	"description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
 	"author": "@ng-select/ng-select",
 	"license": "MIT",
@@ -38,6 +38,7 @@
 		}
 	},
 	"peerDependencies": {
+		"@angular/cdk": "^22.0.0",
 		"@angular/common": "^22.0.0",
 		"@angular/core": "^22.0.0",
 		"@angular/forms": "^22.0.0"

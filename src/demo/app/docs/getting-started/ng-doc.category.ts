@@ -2,7 +2,7 @@ import { NgDocCategory } from '@ng-doc/core';
 
 const GettingStartedCategory: NgDocCategory = {
 	order: 0,
-	title: 'Getting Started',
+	title: 'Docs',
 	expandable: false,
 	expanded: true,
 };
