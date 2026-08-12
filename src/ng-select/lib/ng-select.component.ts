@@ -618,6 +618,10 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 				this._handleTab($event);
 				break;
 			case KeyCode.Esc:
+				// Only consume Escape when it closes the dropdown so parent overlays/dialogs can still handle Escape when already closed
+				if (!this.isOpen() || this._manualOpen) {
+					return;
+				}
 				this.close();
 				$event.preventDefault();
 				break;

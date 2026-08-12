@@ -2360,6 +2360,39 @@ describe('NgSelectComponent', () => {
 				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Esc);
 				expect(select.isOpen()).toBe(false);
 			});
+
+			it('should call preventDefault when Escape closes the dropdown', () => {
+				select.isOpen.set(true);
+				const preventDefault = vi.fn();
+				getNgSelectElement(fixture).triggerEventHandler('keydown', {
+					key: KeyCode.Esc,
+					preventDefault,
+				});
+				expect(select.isOpen()).toBe(false);
+				expect(preventDefault).toHaveBeenCalled();
+			});
+
+			it('should not call preventDefault when Escape has no effect', () => {
+				expect(select.isOpen()).toBe(false);
+				const preventDefault = vi.fn();
+				getNgSelectElement(fixture).triggerEventHandler('keydown', {
+					key: KeyCode.Esc,
+					preventDefault,
+				});
+				expect(preventDefault).not.toHaveBeenCalled();
+			});
+
+			it('should not call preventDefault when isOpen is controlled externally', () => {
+				select.ngOnChanges(<any>{ isOpen: { currentValue: true } });
+				select.isOpen.set(true);
+				const preventDefault = vi.fn();
+				getNgSelectElement(fixture).triggerEventHandler('keydown', {
+					key: KeyCode.Esc,
+					preventDefault,
+				});
+				expect(select.isOpen()).toBe(true);
+				expect(preventDefault).not.toHaveBeenCalled();
+			});
 		});
 
 		describe('backspace', () => {
