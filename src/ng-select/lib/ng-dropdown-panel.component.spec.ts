@@ -398,6 +398,22 @@ describe('NgDropdownPanelComponent', () => {
 
 			expect(overlayRef.updatePosition).toHaveBeenCalled();
 		});
+
+		it('should refresh panelHeight when items arrive after an empty open (#2744)', async () => {
+			createFixture((host) => host.items.set([]));
+			await flushAsync();
+			fixture.detectChanges();
+
+			expect(panelService().dimensions.panelHeight).toBeLessThan(PANEL_HEIGHT);
+
+			host.items.set(createItems(30));
+			fixture.detectChanges();
+			await flushAsync();
+			fixture.detectChanges();
+
+			expect(panelService().dimensions.panelHeight).toBe(scrollHostElement().clientHeight);
+			expect(panelService().dimensions.panelHeight).toBe(PANEL_HEIGHT);
+		});
 	});
 
 	describe('virtual scroll', () => {
@@ -493,6 +509,31 @@ describe('NgDropdownPanelComponent', () => {
 			fixture.detectChanges();
 
 			expect(scrollHostElement().scrollTop).toBe(20 * ITEM_HEIGHT);
+		});
+
+		it('should refresh panelHeight and scroll correctly after empty→items (#2744)', async () => {
+			createFixture((host) => {
+				host.virtualScroll.set(true);
+				host.items.set([]);
+			});
+			await flushAsync();
+			fixture.detectChanges();
+
+			host.items.set(createItems(30));
+			fixture.detectChanges();
+			await flushAsync();
+			fixture.detectChanges();
+			await waitForFrames();
+
+			expect(panelService().dimensions.panelHeight).toBe(PANEL_HEIGHT);
+			expect(panelService().dimensions.itemHeight).toBe(ITEM_HEIGHT);
+
+			const target = host.items()[20];
+			panel().scrollTo(target);
+			fixture.detectChanges();
+
+			expect(scrollHostElement().scrollTop).toBe(21 * ITEM_HEIGHT - PANEL_HEIGHT);
+			expect(host.viewPortItems().some((item) => item.htmlId === target.htmlId)).toBe(true);
 		});
 
 		it('should start from the top when the marked item fits into the panel', async () => {

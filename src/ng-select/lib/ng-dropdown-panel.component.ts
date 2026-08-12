@@ -181,6 +181,14 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 		if (isDefined(scrollTo)) {
 			this._scrollablePanel().scrollTop = scrollTo;
+			// Programmatic scrollTop does not always deliver a `scroll` event before the next
+			// keyboard step (and animationFrame-audited listeners can lag). Keep the virtual
+			// window in sync immediately so the marked row is rendered (#2744).
+			if (this.virtualScroll()) {
+				this._onContentScrolled(scrollTo);
+			} else {
+				this._lastScrollPosition = scrollTo;
+			}
 		}
 	}
 
@@ -347,15 +355,16 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 		this._zone.runOutsideAngular(() => {
 			Promise.resolve().then(() => {
+				// Typeahead/filter can open empty (panelHeight ≈ type-to-search) then replace
+				// items while open. Refresh the scrollport height so keyboard scrollTo math
+				// matches the real max-height panel — without changing scroll position (#2744).
+				this._syncPanelHeightFromDom();
 				if (!firstChange) {
-					// The rendered option list changed while open (typeahead, filtering).
 					// Re-anchor so a top-placed panel grows upward instead of covering the
 					// select, and `auto` can flip once the content no longer fits (#2092)
 					this.overlayRef()?.updatePosition();
 					return;
 				}
-				const panelHeight = this._scrollablePanel().clientHeight;
-				this._panelService.setDimensions(0, panelHeight);
 				this._positionDropdown();
 				this.scrollTo(this.markedItem(), firstChange);
 			});
@@ -372,8 +381,25 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 					this._renderItemsRange();
 					this.overlayRef()?.updatePosition();
 				}
+				// Measurement paints only 1–2 rows, so clientHeight is content-sized; after the
+				// real range render the panel hits max-height — sync that for scrollTo (#2744).
+				this._syncPanelHeightFromDom();
 			});
 		});
+	}
+
+	/** Updates cached panelHeight from the live scrollport, preserving row-height measurements. */
+	private _syncPanelHeightFromDom() {
+		const panel = this._scrollablePanel();
+		if (!panel) {
+			return;
+		}
+		const panelHeight = panel.clientHeight;
+		if (panelHeight <= 0) {
+			return;
+		}
+		const { itemHeight, groupHeight } = this._panelService.dimensions;
+		this._panelService.setDimensions(itemHeight, panelHeight, groupHeight);
 	}
 
 	private _onContentScrolled(scrollTop: number) {
@@ -445,26 +471,46 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		// later in the template), so the microtask below measures real DOM with and
 		// without zone.js alike. Measuring both a group header and an option avoids
 		// under-sizing virtual scroll when their templates have different heights (#2762).
-		this.update.emit(toMeasure);
+		this._zone.run(() => this.update.emit(toMeasure));
 
-		return Promise.resolve().then(() => {
-			const optionEl = firstOption ? this._dropdown.querySelector(`#${firstOption.htmlId}`) : null;
-			const groupEl = firstGroup ? this._dropdown.querySelector(`#${firstGroup.htmlId}`) : null;
-			if (!optionEl && !groupEl) {
-				return this._panelService.dimensions;
-			}
+		return Promise.resolve()
+			.then(() => this._readMeasuredDimensions(items, firstOption, firstGroup))
+			.then((dims) => {
+				if (dims.itemHeight > 0) {
+					return dims;
+				}
+				// Empty→items (typeahead) can measure before the projected options paint.
+				// Retry once on the next frame (#2744).
+				return new Promise<PanelDimensions>((resolve) => {
+					requestAnimationFrame(() => {
+						this._zone.run(() => this.update.emit(toMeasure));
+						Promise.resolve().then(() => resolve(this._readMeasuredDimensions(items, firstOption, firstGroup)));
+					});
+				});
+			});
+	}
 
-			const measuredOptionHeight = optionEl?.offsetHeight ?? 0;
-			const measuredGroupHeight = groupEl?.offsetHeight ?? 0;
-			const optionHeight = measuredOptionHeight || measuredGroupHeight;
-			const groupHeight = measuredGroupHeight || measuredOptionHeight;
-
-			const panelHeight = this._scrollablePanel().clientHeight;
-			this._panelService.setDimensions(optionHeight, panelHeight, groupHeight);
-			this._virtualPadding().style.height = `${this._panelService.getScrollHeight(items)}px`;
-
+	private _readMeasuredDimensions(
+		items: NgOption[],
+		firstOption: NgOption | undefined,
+		firstGroup: NgOption | undefined,
+	): PanelDimensions {
+		const optionEl = firstOption ? this._dropdown.querySelector(`#${firstOption.htmlId}`) : null;
+		const groupEl = firstGroup ? this._dropdown.querySelector(`#${firstGroup.htmlId}`) : null;
+		if (!optionEl && !groupEl) {
 			return this._panelService.dimensions;
-		});
+		}
+
+		const measuredOptionHeight = optionEl?.offsetHeight ?? 0;
+		const measuredGroupHeight = groupEl?.offsetHeight ?? 0;
+		const optionHeight = measuredOptionHeight || measuredGroupHeight;
+		const groupHeight = measuredGroupHeight || measuredOptionHeight;
+
+		const panelHeight = this._scrollablePanel().clientHeight;
+		this._panelService.setDimensions(optionHeight, panelHeight, groupHeight);
+		this._virtualPadding().style.height = `${this._panelService.getScrollHeight(items)}px`;
+
+		return this._panelService.dimensions;
 	}
 
 	private _fireScrollToEnd(scrollTop: number) {
