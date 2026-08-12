@@ -16,7 +16,7 @@ on:
       message:
         description: 'Deprecation warning shown on npm install'
         required: false
-        default: 'This version was published in error. Use @ng-select/ng-select@23.10.0 for a safe 23.x line, or @24 for CDK Overlay and related changes. See https://github.com/ng-select/ng-select/releases'
+        default: 'This version was published in error. Use @ng-select/ng-select@23.11.0 for a safe 23.x line, or @24 for CDK Overlay and related changes. See https://github.com/ng-select/ng-select/releases'
 
 permissions:
   contents: write # Delete GitHub release and tag
