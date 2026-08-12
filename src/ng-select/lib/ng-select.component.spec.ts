@@ -6097,6 +6097,92 @@ describe('NgSelectComponent', () => {
 			expect(removeEmit).not.toHaveBeenCalled();
 		});
 
+		it('should ignore unselect when the select is disabled', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [disabled]="true" [(ngModel)]="selectedCities"></ng-select>`,
+			);
+			fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0], fixture.componentInstance.cities[1]];
+			await tickAndDetectChanges(fixture);
+			await tickAndDetectChanges(fixture);
+
+			const select = fixture.componentInstance.select();
+			const removeEmit = vi.spyOn(select.removeEvent, 'emit');
+			select.unselect(select.selectedItems[0]);
+			await tickAndDetectChanges(fixture);
+
+			expect(select.selectedItems.length).toBe(2);
+			expect(removeEmit).not.toHaveBeenCalled();
+		});
+
+		it('should ignore unselect when the item is disabled', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [(ngModel)]="selectedCities"></ng-select>`,
+			);
+			fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0], fixture.componentInstance.cities[1]];
+			await tickAndDetectChanges(fixture);
+			await tickAndDetectChanges(fixture);
+
+			const select = fixture.componentInstance.select();
+			select.selectedItems[0].disabled = true;
+			const removeEmit = vi.spyOn(select.removeEvent, 'emit');
+			select.unselect(select.selectedItems[0]);
+			await tickAndDetectChanges(fixture);
+
+			expect(select.selectedItems.length).toBe(2);
+			expect(removeEmit).not.toHaveBeenCalled();
+		});
+
+		// https://github.com/ng-select/ng-select/issues/2517
+		it('should ignore the remove icon click when the select is disabled', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [disabled]="true" [(ngModel)]="selectedCities"></ng-select>`,
+			);
+			fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0], fixture.componentInstance.cities[1]];
+			await tickAndDetectChanges(fixture);
+			await tickAndDetectChanges(fixture);
+
+			fixture.debugElement.query(By.css('.ng-value-icon')).triggerEventHandler('click', {});
+			await tickAndDetectChanges(fixture);
+
+			expect(fixture.componentInstance.select().selectedItems.length).toBe(2);
+		});
+
+		it('should ignore enter on the remove icon when the select is disabled', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [disabled]="true" [(ngModel)]="selectedCities"></ng-select>`,
+			);
+			fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0], fixture.componentInstance.cities[1]];
+			await tickAndDetectChanges(fixture);
+			await tickAndDetectChanges(fixture);
+
+			fixture.debugElement
+				.query(By.css('.ng-value-icon'))
+				.triggerEventHandler('keydown', { key: KeyCode.Enter, preventDefault: () => {}, stopPropagation: () => {} });
+			await tickAndDetectChanges(fixture);
+
+			expect(fixture.componentInstance.select().selectedItems.length).toBe(2);
+		});
+
+		it('should ignore clearItem when the select is disabled', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" bindLabel="name" [multiple]="true" [disabled]="true" [(ngModel)]="selectedCities"></ng-select>`,
+			);
+			fixture.componentInstance.selectedCities = [fixture.componentInstance.cities[0], fixture.componentInstance.cities[1]];
+			await tickAndDetectChanges(fixture);
+			await tickAndDetectChanges(fixture);
+
+			const select = fixture.componentInstance.select();
+			select.clearItem(select.selectedItems[0].value);
+			await tickAndDetectChanges(fixture);
+
+			expect(select.selectedItems.length).toBe(2);
+		});
+
 		it('should not select anything when addTag function returns a falsy value', async () => {
 			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name" [addTag]="tagFuncNull"></ng-select>`);
 

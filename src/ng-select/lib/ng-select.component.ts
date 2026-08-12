@@ -832,7 +832,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	unselect(item: NgOption) {
-		if (!item) {
+		if (!item || this.disabled() || item.disabled) {
 			return;
 		}
 
