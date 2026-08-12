@@ -661,6 +661,19 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			return false;
 		}
 		const target = $event.target as HTMLElement;
+
+		// Allow highlighting/copying the selected label when search is disabled.
+		// Skipping preventDefault + toggle lets the browser start a text selection.
+		// See https://github.com/ng-select/ng-select/issues/2669
+		const onSelectedValue = !!target.closest?.('.ng-value');
+		const onValueIcon = target.classList.contains('ng-value-icon') || !!target.closest?.('.ng-value-icon');
+		if (!this.searchable() && onSelectedValue && !onValueIcon) {
+			if (!this._focused) {
+				this.focus();
+			}
+			return;
+		}
+
 		// Skip during Angular event replay (SSR hydration): preventDefault has no effect
 		// after browser dispatch and throws — see https://github.com/ng-select/ng-select/issues/2549
 		if (target.tagName !== 'INPUT' && $event.eventPhase !== EventPhase.REPLAY) {

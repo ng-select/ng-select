@@ -5620,6 +5620,50 @@ describe('NgSelectComponent', () => {
 			});
 		});
 
+		describe('selected value text selection when not searchable (#2669)', () => {
+			beforeEach(async () => {
+				fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+                            bindLabel="name"
+                            [searchable]="false"
+                            [(ngModel)]="selectedCity">
+                    </ng-select>`,
+				);
+				select = fixture.componentInstance.select();
+				fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+				await tickAndDetectChanges(fixture);
+			});
+
+			it('should not preventDefault on mousedown of selected value label', async () => {
+				const label = fixture.debugElement.query(By.css('.ng-value-label')).nativeElement as HTMLElement;
+				const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true, button: 0 });
+				label.dispatchEvent(event);
+				await tickAndDetectChanges(fixture);
+				expect(event.defaultPrevented).toBe(false);
+			});
+
+			it('should not toggle dropdown when mousedown is on selected value label', async () => {
+				expect(select.isOpen()).toBe(false);
+				const label = fixture.debugElement.query(By.css('.ng-value-label')).nativeElement as HTMLElement;
+				label.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, button: 0 }));
+				await tickAndDetectChanges(fixture);
+				expect(select.isOpen()).toBe(false);
+			});
+
+			it('should still toggle dropdown when mousedown is on arrow', async () => {
+				const arrow = fixture.debugElement.query(By.css('.ng-arrow-wrapper')).nativeElement as HTMLElement;
+				arrow.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, button: 0 }));
+				await tickAndDetectChanges(fixture);
+				expect(select.isOpen()).toBe(true);
+			});
+
+			it('should ignore pointer events on .ng-input when not searchable', async () => {
+				const ngInput = fixture.debugElement.query(By.css('.ng-input')).nativeElement as HTMLElement;
+				expect(getComputedStyle(ngInput).pointerEvents).toBe('none');
+			});
+		});
+
 		describe('event replay', () => {
 			beforeEach(async () => {
 				fixture = createTestingModule(
