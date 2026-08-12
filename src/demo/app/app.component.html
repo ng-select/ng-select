@@ -4,15 +4,15 @@
 			<a routerLink="/" class="brand-link">ng-select</a>
 		</div>
 
-		<label class="theme-picker" ngDocNavbarRight>
-			<span class="theme-picker-label">Theme</span>
-			<select [value]="theme()" (change)="setTheme($any($event.target).value)" aria-label="ng-select theme">
-				<option value="default">Default</option>
-				<option value="material">Material</option>
-				<option value="ant">Ant Design</option>
-			</select>
-		</label>
 		<div class="header-controls" ngDocNavbarRight>
+			<label class="theme-picker">
+				<span class="theme-picker-label">Theme</span>
+				<select [value]="theme()" (change)="setTheme($any($event.target).value)" aria-label="ng-select theme">
+					<option value="default">Default</option>
+					<option value="material">Material</option>
+					<option value="ant">Ant Design</option>
+				</select>
+			</label>
 			<ng-doc-theme-toggle></ng-doc-theme-toggle>
 			<a href="https://www.npmjs.com/package/@ng-select/ng-select" ng-doc-button-icon ngDocTooltip="Package on npm" size="large" target="_blank">
 				<ng-doc-icon [size]="24" customIcon="npm"></ng-doc-icon>

@@ -1,6 +1,16 @@
-// ng-select theme styles live in src/demo/styles.scss, scoped by a body-level theme class:
-// the dropdown panel renders in the CDK overlay outside this component's subtree,
-// so styles nested under :host here could not reach it.
+@use 'sass:meta';
+
+:host.default-theme ::ng-deep {
+	@include meta.load-css('../../ng-select/themes/default.theme');
+}
+
+:host.ant-theme ::ng-deep {
+	@include meta.load-css('../../ng-select/themes/ant.design.theme');
+}
+
+:host.material-theme ::ng-deep {
+	@include meta.load-css('../../ng-select/themes/material.theme');
+}
 
 .brand {
 	display: flex;
@@ -48,36 +58,21 @@
 .theme-picker {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	margin: 0 16px 0 0;
-	// Show the ng-select theme picker before the search box (search is the
-	// first flex child ng-doc injects into the navbar's right container).
-	order: 1;
+	gap: 6px;
+	margin: 0;
 
 	.theme-picker-label {
-		font-size: 14px;
-		font-weight: 500;
+		font-size: 13px;
 		color: var(--ng-doc-text, inherit);
 	}
 
 	select {
-		font-size: 14px;
-		padding: 8px 12px;
-		border-radius: 8px;
+		font-size: 13px;
+		padding: 4px 8px;
+		border-radius: 6px;
 		border: 1px solid var(--ng-doc-border-color, #d4dadf);
 		background: var(--ng-doc-base-0, transparent);
 		color: var(--ng-doc-text, inherit);
 		cursor: pointer;
-	}
-}
-
-::ng-deep ng-doc-navbar .ng-doc-navbar-right {
-	ng-doc-search {
-		order: 2;
-		max-width: 220px;
-	}
-
-	.header-controls {
-		order: 3;
 	}
 }

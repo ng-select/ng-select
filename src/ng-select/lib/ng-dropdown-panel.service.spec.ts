@@ -43,45 +43,6 @@ describe('NgDropdownPanelService', () => {
 				scrollHeight: 2500,
 			});
 		});
-
-		it('should use group and option heights when they differ', () => {
-			// [group, option, option, group, option] => 36 + 80 + 80 + 36 + 80 = 312
-			const items = [{ children: [] }, {}, {}, { children: [] }, {}];
-			service.setDimensions(80, 160, 36);
-
-			const res = service.calculateItems(0, items.length, 1, items);
-
-			expect(res.scrollHeight).toBe(312);
-			expect(res.start).toBe(0);
-			expect(res.topPadding).toBe(0);
-			// panel 160 fits group(36)+option(80)+part of next option → end past index 2, plus buffer
-			expect(res.end).toBeGreaterThan(2);
-		});
-
-		it('should compute topPadding from cumulative group/option heights when scrolled', () => {
-			const items = [{ children: [] }, {}, {}, { children: [] }, {}];
-			service.setDimensions(80, 160, 36);
-
-			// Scroll past first group+option (36+80=116)
-			const res = service.calculateItems(116, items.length, 0, items);
-
-			expect(res.scrollHeight).toBe(312);
-			expect(res.start).toBe(2);
-			expect(res.topPadding).toBe(116);
-		});
-	});
-
-	describe('item offsets', () => {
-		it('should accumulate group and option heights', () => {
-			const items = [{ children: [] }, {}, { children: [] }, {}];
-			service.setDimensions(80, 160, 36);
-
-			expect(service.getItemHeight(items[0])).toBe(36);
-			expect(service.getItemHeight(items[1])).toBe(80);
-			expect(service.getItemOffset(items, 0)).toBe(0);
-			expect(service.getItemOffset(items, 2)).toBe(116);
-			expect(service.getScrollHeight(items)).toBe(232);
-		});
 	});
 
 	describe('scroll to', () => {

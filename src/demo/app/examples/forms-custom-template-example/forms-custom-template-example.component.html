@@ -43,6 +43,7 @@
 					bindValue="thumbnailUrl"
 					placeholder="Select photo"
 					(keyup.esc)="$event.preventDefault()"
+					appendTo="body"
 					[virtualScroll]="true"
 					formControlName="photo">
 					<ng-template ng-label-tmp let-item="item">
