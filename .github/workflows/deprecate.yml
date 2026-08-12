@@ -1,27 +1,28 @@
-name: Unpublish
+name: Deprecate
 
-# Manually remove a published version from npm and delete its GitHub release/tag.
+# Manually deprecate a published npm version and delete its GitHub release/tag.
 #
-# IMPORTANT — npm auth for unpublish:
-# Automation / bypass-2FA granular tokens often "succeed" in the CLI but do NOT
-# remove the version (npm/cli#7120; registry PUT 404 is ignored). Prefer a
-# classic or granular token that can unpublish WITH otp, or run unpublish
-# interactively. This workflow verifies the version is gone and fails if not.
-# OIDC trusted publishing cannot unpublish.
+# Prefer this over unpublish: automation / bypass-2FA tokens can usually deprecate,
+# but cannot unpublish (silent no-op — npm/cli#7120). Deprecation leaves the
+# tarball available so dependents are not broken, and shows a warning on install.
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to unpublish (e.g. 23.9.0 or v23.9.0)'
+        description: 'Version to deprecate (e.g. 23.9.0 or v23.9.0)'
         required: true
         type: string
+      message:
+        description: 'Deprecation warning shown on npm install'
+        required: false
+        default: 'This version was published in error. Use @ng-select/ng-select@23.11.0 for a safe 23.x line, or @24 for CDK Overlay and related changes. See https://github.com/ng-select/ng-select/releases'
 
 permissions:
   contents: write # Delete GitHub release and tag
 
 jobs:
-  unpublish:
+  deprecate:
     runs-on: ubuntu-latest
     steps:
       - name: Restrict to maintainer
@@ -37,6 +38,7 @@ jobs:
         id: ver
         env:
           RAW_VERSION: ${{ inputs.version }}
+          RAW_MESSAGE: ${{ inputs.message }}
         run: |
           VERSION="${RAW_VERSION#v}"
 
@@ -45,9 +47,20 @@ jobs:
             exit 1
           fi
 
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Unpublishing version $VERSION (tag v$VERSION)"
+          if [ -z "${RAW_MESSAGE// }" ]; then
+            echo "::error::Deprecation message must not be empty."
+            exit 1
+          fi
+
+          {
+            echo "version=$VERSION"
+            echo "tag=v$VERSION"
+            echo "message<<EOF"
+            echo "$RAW_MESSAGE"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "Deprecating version $VERSION (tag v$VERSION)"
 
       - name: Use Node.js
         uses: actions/setup-node@v6
@@ -55,46 +68,46 @@ jobs:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Unpublish npm packages
+      - name: Deprecate npm packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          # Optional: set repo secret NPM_OTP when using a token that requires 2FA for unpublish
+          # Optional: set repo secret NPM_OTP if the token requires 2FA for deprecate
           NPM_CONFIG_OTP: ${{ secrets.NPM_OTP }}
           VERSION: ${{ steps.ver.outputs.version }}
+          MESSAGE: ${{ steps.ver.outputs.message }}
         run: |
           if [ -z "$NODE_AUTH_TOKEN" ]; then
-            echo "::error::Secret NPM_TOKEN is not set. Trusted publishing (OIDC) cannot unpublish."
+            echo "::error::Secret NPM_TOKEN is not set. Trusted publishing (OIDC) cannot deprecate."
             exit 1
           fi
 
           echo "Authenticated as: $(npm whoami 2>/dev/null || echo '(whoami failed)')"
 
-          unpublish_pkg() {
+          deprecate_pkg() {
             local pkg="$1"
             if ! npm view "${pkg}@${VERSION}" version >/dev/null 2>&1; then
               echo "${pkg}@${VERSION} is not on npm; skipping."
               return 0
             fi
 
-            echo "Unpublishing ${pkg}@${VERSION}…"
-            # --loglevel verbose surfaces the registry PUT status (automation tokens
-            # often return 404 here while still exiting 0 — see npm/cli#7120).
-            npm unpublish "${pkg}@${VERSION}" --force --loglevel verbose
+            echo "Deprecating ${pkg}@${VERSION}…"
+            npm deprecate "${pkg}@${VERSION}" "$MESSAGE" --loglevel verbose
 
             # Verify — do not trust the CLI exit code alone
-            if npm view "${pkg}@${VERSION}" version >/dev/null 2>&1; then
-              echo "::error::${pkg}@${VERSION} is STILL on the registry after unpublish."
-              echo "::error::Automation/bypass-2FA tokens cannot unpublish (silent no-op)."
-              echo "::error::Unpublish interactively with 2FA, or use a token + NPM_OTP that is allowed to unpublish."
-              echo "::error::Manual: npm unpublish ${pkg}@${VERSION} --force"
+            local deprecated
+            deprecated="$(npm view "${pkg}@${VERSION}" deprecated 2>/dev/null || true)"
+            if [ -z "$deprecated" ]; then
+              echo "::error::${pkg}@${VERSION} is NOT marked deprecated after npm deprecate."
+              echo "::error::Check that NPM_TOKEN can write to the package (publish permission)."
+              echo "::error::Manual: npm deprecate ${pkg}@${VERSION} \"$MESSAGE\""
               exit 1
             fi
 
-            echo "Verified: ${pkg}@${VERSION} is gone from npm."
+            echo "Verified: ${pkg}@${VERSION} is deprecated — ${deprecated}"
           }
 
-          unpublish_pkg "@ng-select/ng-select"
-          unpublish_pkg "@ng-select/ng-option-highlight"
+          deprecate_pkg "@ng-select/ng-select"
+          deprecate_pkg "@ng-select/ng-option-highlight"
 
       - name: Delete GitHub release and tag
         env:

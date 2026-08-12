@@ -1,5 +1,51 @@
+@use 'sass:meta';
+@use 'bootstrap/scss/bootstrap';
+
 /* Global styles for the docs app. Ng-Doc's own global.css is loaded separately via angular.json. */
-@import 'bootstrap/scss/bootstrap';
+
+// ng-select themes, scoped by the body-level class kept in sync by AppComponent.
+// They must be global (not component-scoped): the dropdown panel renders in the
+// CDK overlay attached to <body>, outside the demo-app component subtree.
+body.default-theme {
+	@include meta.load-css('../ng-select/themes/default.theme');
+}
+
+body.ant-theme {
+	@include meta.load-css('../ng-select/themes/ant.design.theme');
+}
+
+body.material-theme {
+	@include meta.load-css('../ng-select/themes/material.theme');
+}
+
+// Dark palette used by the "Theming with CSS variables" example. Declared on <body> so it
+// reaches both the select and the dropdown panel, which renders in the CDK overlay.
+// Nothing here targets ng-select's internal classes — it only redeclares custom properties.
+body.ng-select-dark-demo {
+	--ng-select-bg: #1f2430;
+	--ng-select-border: #3a4152;
+	--ng-select-border-lighter: #3a4152;
+	--ng-select-highlight: #7aa2f7;
+	--ng-select-primary-text: #d8dee9;
+	--ng-select-value-text: #d8dee9;
+	--ng-select-input-text: #d8dee9;
+	--ng-select-placeholder: #7c8496;
+	--ng-select-arrow: #7c8496;
+	--ng-select-arrow-hover: #d8dee9;
+	--ng-select-selected: #2f3a52;
+	--ng-select-selected-text: #d8dee9;
+	--ng-select-selected-hover: #3a4763;
+	--ng-select-selected-border: #46557a;
+	--ng-select-marked: #2a3145;
+	--ng-select-marked-text: #d8dee9;
+	--ng-select-dropdown-bg: #1f2430;
+	--ng-select-dropdown-border: #3a4152;
+	--ng-select-dropdown-option-bg: #1f2430;
+	--ng-select-dropdown-option-text: #d8dee9;
+	--ng-select-dropdown-option-disabled: #5a6275;
+	--ng-select-dropdown-optgroup-text: #9aa3b8;
+	--ng-select-dropdown-optgroup-marked: #d8dee9;
+}
 
 /* Brand colors — purple gradient in the spirit of the old ng-kit Ng-Doc site. */
 :root {
@@ -10,12 +56,18 @@
 	--ng-doc-info: var(--ng-select-brand);
 }
 
-/* Ng-Doc clips demo containers with overflow: hidden, which cuts off ng-select dropdown panels.
-   Dropdowns must be able to escape the demo card. */
-ng-doc-demo-displayer,
-.ng-doc-demo,
-.ng-doc-demo-wrapper {
-	overflow: visible !important;
+/* API tables: keep the Type column narrow and let code snippets wrap instead of
+   stretching the column to the longest signature. */
+ng-doc-page table {
+	td:nth-child(2) {
+		max-width: 420px;
+		min-width: 240px;
+
+		code {
+			white-space: normal;
+			word-break: break-word;
+		}
+	}
 }
 
 /* Bootstrap paints body/cards with its own light-only variables, which breaks Ng-Doc's

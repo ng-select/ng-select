@@ -3,15 +3,15 @@ ng-select is a lightweight all-in-one UI select, multiselect and autocomplete co
 ## Install
 
 ```shell group="install" name="npm" active
-npm i @ng-select/ng-select
+npm i @ng-select/ng-select @angular/cdk
 ```
 
 ```shell group="install" name="pnpm"
-pnpm i @ng-select/ng-select
+pnpm i @ng-select/ng-select @angular/cdk
 ```
 
 ```shell group="install" name="yarn"
-yarn add @ng-select/ng-select
+yarn add @ng-select/ng-select @angular/cdk
 ```
 
 ## Import
@@ -66,7 +66,6 @@ You can set global configuration and localization messages by injecting the `NgS
 ```typescript
 constructor(private config: NgSelectConfig) {
 	this.config.notFoundText = 'Custom not found';
-	this.config.appendTo = 'body';
 	// set the bindValue to global config when you use the same
 	// bindValue in most places.
 	this.config.bindValue = 'value';
