@@ -126,8 +126,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 	private get _startOffset() {
 		if (this.markedItem()) {
-			const { itemHeight, panelHeight } = this._panelService.dimensions;
-			const offset = this.markedItem().index * itemHeight;
+			const { panelHeight } = this._panelService.dimensions;
+			const offset = this._panelService.getItemOffset(this.items(), this.markedItem().index);
 			return panelHeight > offset ? 0 : offset;
 		}
 		return 0;
@@ -166,8 +166,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 		let scrollTo;
 		if (this.virtualScroll()) {
-			const itemHeight = this._panelService.dimensions.itemHeight;
-			scrollTo = this._panelService.getScrollTo(index * itemHeight, itemHeight, this._lastScrollPosition);
+			const items = this.items();
+			const itemHeight = this._panelService.getItemHeight(option);
+			const itemTop = this._panelService.getItemOffset(items, index);
+			scrollTo = this._panelService.getScrollTo(itemTop, itemHeight, this._lastScrollPosition);
 		} else {
 			const item: HTMLElement = this._dropdown.querySelector(`#${option.htmlId}`);
 			if (!item) {
@@ -407,7 +409,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 
 		scrollTop = scrollTop || this._scrollablePanel().scrollTop;
-		const range = this._panelService.calculateItems(scrollTop, this.itemsLength, this.bufferAmount());
+		const range = this._panelService.calculateItems(scrollTop, this.itemsLength, this.bufferAmount(), this.items());
 		this._updateVirtualHeight(range.scrollHeight);
 		this._contentPanel().style.transform = `translateY(${range.topPadding}px)`;
 
@@ -430,22 +432,36 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			return Promise.resolve(this._panelService.dimensions);
 		}
 
-		const [first] = this.items();
-		// Relies on synchronous template execution: the emitted item renders in the
+		const items = this.items();
+		const firstGroup = items.find((item) => !!item.children);
+		const firstOption = items.find((item) => !item.children);
+		const toMeasure = [firstGroup, firstOption].filter((item): item is NgOption => !!item);
+		if (toMeasure.length === 0) {
+			return Promise.resolve(this._panelService.dimensions);
+		}
+
+		// Relies on synchronous template execution: the emitted items render in the
 		// same CD pass (the parent's template listener runs mid-pass and the @for sits
 		// later in the template), so the microtask below measures real DOM with and
-		// without zone.js alike
-		this.update.emit([first]);
+		// without zone.js alike. Measuring both a group header and an option avoids
+		// under-sizing virtual scroll when their templates have different heights (#2762).
+		this.update.emit(toMeasure);
 
 		return Promise.resolve().then(() => {
-			const option = this._dropdown.querySelector(`#${first.htmlId}`);
-			if (!option) {
+			const optionEl = firstOption ? this._dropdown.querySelector(`#${firstOption.htmlId}`) : null;
+			const groupEl = firstGroup ? this._dropdown.querySelector(`#${firstGroup.htmlId}`) : null;
+			if (!optionEl && !groupEl) {
 				return this._panelService.dimensions;
 			}
-			const optionHeight = option.offsetHeight;
-			this._virtualPadding().style.height = `${optionHeight * this.itemsLength}px`;
+
+			const measuredOptionHeight = optionEl?.offsetHeight ?? 0;
+			const measuredGroupHeight = groupEl?.offsetHeight ?? 0;
+			const optionHeight = measuredOptionHeight || measuredGroupHeight;
+			const groupHeight = measuredGroupHeight || measuredOptionHeight;
+
 			const panelHeight = this._scrollablePanel().clientHeight;
-			this._panelService.setDimensions(optionHeight, panelHeight);
+			this._panelService.setDimensions(optionHeight, panelHeight, groupHeight);
+			this._virtualPadding().style.height = `${this._panelService.getScrollHeight(items)}px`;
 
 			return this._panelService.dimensions;
 		});

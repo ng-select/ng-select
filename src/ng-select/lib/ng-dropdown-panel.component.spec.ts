@@ -88,6 +88,12 @@ async function waitForFrames(count = 2): Promise<void> {
 			.test-option.with-border {
 				border-bottom: 2px solid #c62828;
 			}
+			.test-option.group-row {
+				height: 36px;
+			}
+			.test-option.option-row {
+				height: 80px;
+			}
 		`,
 	],
 	template: `
@@ -107,7 +113,14 @@ async function waitForFrames(count = 2): Promise<void> {
 				(scrollToEnd)="scrollToEndCount = scrollToEndCount + 1"
 				(outsideClick)="outsideClickCount = outsideClickCount + 1">
 				@for (item of viewPortItems(); track item.htmlId) {
-					<div class="test-option" [class.with-border]="borderedOptions()" [id]="item.htmlId">{{ item.label }}</div>
+					<div
+						class="test-option"
+						[class.with-border]="borderedOptions()"
+						[class.group-row]="variableHeights() && !!item.children"
+						[class.option-row]="variableHeights() && !item.children"
+						[id]="item.htmlId">
+						{{ item.label }}
+					</div>
 				}
 				<input class="inner-input" />
 			</ng-dropdown-panel>
@@ -121,6 +134,7 @@ class NgDropdownPanelTestComponent {
 	readonly position = signal<DropdownPosition>('auto');
 	readonly virtualScroll = signal(false);
 	readonly borderedOptions = signal(false);
+	readonly variableHeights = signal(false);
 	readonly bufferAmount = signal(4);
 	readonly showAddTag = signal(false);
 	readonly outsideClickEvent = signal<'click' | 'mousedown' | null>('click');
@@ -414,6 +428,49 @@ describe('NgDropdownPanelComponent', () => {
 			const padding: HTMLElement = fixture.nativeElement.querySelector('.total-padding');
 			expect(panelService().dimensions.itemHeight).toBe(option.offsetHeight);
 			expect(padding.style.height).toBe(`${host.items().length * option.offsetHeight}px`);
+		});
+
+		it('should measure group and option heights separately for virtual scroll (#2762)', async () => {
+			const GROUP_HEIGHT = 36;
+			const OPTION_HEIGHT = 80;
+			const groupedItems: NgOption[] = [
+				{
+					index: 0,
+					htmlId: 'group-0',
+					label: 'Group A',
+					value: { name: 'Group A' },
+					children: [],
+					disabled: true,
+				},
+				{
+					index: 1,
+					htmlId: 'option-1',
+					label: 'Option 1',
+					value: 1,
+				},
+				{
+					index: 2,
+					htmlId: 'option-2',
+					label: 'Option 2',
+					value: 2,
+				},
+			];
+			groupedItems[0].children = [groupedItems[1], groupedItems[2]];
+
+			createFixture((host) => {
+				host.virtualScroll.set(true);
+				host.variableHeights.set(true);
+				host.items.set(groupedItems);
+			});
+			await flushAsync();
+			fixture.detectChanges();
+
+			const dims = panelService().dimensions;
+			expect(dims.groupHeight).toBe(GROUP_HEIGHT);
+			expect(dims.itemHeight).toBe(OPTION_HEIGHT);
+
+			const padding: HTMLElement = fixture.nativeElement.querySelector('.total-padding');
+			expect(padding.style.height).toBe(`${GROUP_HEIGHT + OPTION_HEIGHT + OPTION_HEIGHT}px`);
 		});
 
 		it('should keep current dimensions when the first option cannot be measured', async () => {
