@@ -1,0 +1,132 @@
+name: Deprecate
+
+# Manually deprecate a published npm version and delete its GitHub release/tag.
+#
+# Prefer this over unpublish: automation / bypass-2FA tokens can usually deprecate,
+# but cannot unpublish (silent no-op — npm/cli#7120). Deprecation leaves the
+# tarball available so dependents are not broken, and shows a warning on install.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to deprecate (e.g. 23.9.0 or v23.9.0)'
+        required: true
+        type: string
+      message:
+        description: 'Deprecation warning shown on npm install'
+        required: false
+        default: 'This version was published in error. Use @ng-select/ng-select@23.10.0 for a safe 23.x line, or @24 for CDK Overlay and related changes. See https://github.com/ng-select/ng-select/releases'
+
+permissions:
+  contents: write # Delete GitHub release and tag
+
+jobs:
+  deprecate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restrict to maintainer
+        env:
+          ACTOR: ${{ github.actor }}
+        run: |
+          if [ "$ACTOR" != "pavankjadda" ]; then
+            echo "::error::Only pavankjadda can run this workflow (triggered by '$ACTOR')."
+            exit 1
+          fi
+
+      - name: Normalize and validate version
+        id: ver
+        env:
+          RAW_VERSION: ${{ inputs.version }}
+          RAW_MESSAGE: ${{ inputs.message }}
+        run: |
+          VERSION="${RAW_VERSION#v}"
+
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Invalid version '$VERSION'. Expected semver like 23.9.0"
+            exit 1
+          fi
+
+          if [ -z "${RAW_MESSAGE// }" ]; then
+            echo "::error::Deprecation message must not be empty."
+            exit 1
+          fi
+
+          {
+            echo "version=$VERSION"
+            echo "tag=v$VERSION"
+            echo "message<<EOF"
+            echo "$RAW_MESSAGE"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "Deprecating version $VERSION (tag v$VERSION)"
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Deprecate npm packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # Optional: set repo secret NPM_OTP if the token requires 2FA for deprecate
+          NPM_CONFIG_OTP: ${{ secrets.NPM_OTP }}
+          VERSION: ${{ steps.ver.outputs.version }}
+          MESSAGE: ${{ steps.ver.outputs.message }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::error::Secret NPM_TOKEN is not set. Trusted publishing (OIDC) cannot deprecate."
+            exit 1
+          fi
+
+          echo "Authenticated as: $(npm whoami 2>/dev/null || echo '(whoami failed)')"
+
+          deprecate_pkg() {
+            local pkg="$1"
+            if ! npm view "${pkg}@${VERSION}" version >/dev/null 2>&1; then
+              echo "${pkg}@${VERSION} is not on npm; skipping."
+              return 0
+            fi
+
+            echo "Deprecating ${pkg}@${VERSION}…"
+            npm deprecate "${pkg}@${VERSION}" "$MESSAGE" --loglevel verbose
+
+            # Verify — do not trust the CLI exit code alone
+            local deprecated
+            deprecated="$(npm view "${pkg}@${VERSION}" deprecated 2>/dev/null || true)"
+            if [ -z "$deprecated" ]; then
+              echo "::error::${pkg}@${VERSION} is NOT marked deprecated after npm deprecate."
+              echo "::error::Check that NPM_TOKEN can write to the package (publish permission)."
+              echo "::error::Manual: npm deprecate ${pkg}@${VERSION} \"$MESSAGE\""
+              exit 1
+            fi
+
+            echo "Verified: ${pkg}@${VERSION} is deprecated — ${deprecated}"
+          }
+
+          deprecate_pkg "@ng-select/ng-select"
+          deprecate_pkg "@ng-select/ng-option-highlight"
+
+      - name: Delete GitHub release and tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.ver.outputs.tag }}
+          REPO: ${{ github.repository }}
+        run: |
+          # Prefer deleting the release (also removes the tag with --cleanup-tag).
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Deleting GitHub release $TAG…"
+            gh release delete "$TAG" --yes --cleanup-tag
+          else
+            echo "No GitHub release named $TAG."
+          fi
+
+          # Ensure the tag is gone even if the release was missing or cleanup failed.
+          if git ls-remote --tags "https://github.com/${REPO}.git" "refs/tags/${TAG}" | grep -q "$TAG"; then
+            echo "Deleting git tag $TAG…"
+            gh api -X DELETE "repos/${REPO}/git/refs/tags/${TAG}"
+          else
+            echo "Git tag $TAG is absent."
+          fi
