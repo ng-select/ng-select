@@ -1,0 +1,93 @@
+name: Unpublish
+
+# Manually remove a published version from npm and delete its GitHub release/tag.
+# Requires repo secret NPM_TOKEN with permission to unpublish both packages
+# (OIDC trusted publishing supports publish only, not unpublish).
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to unpublish (e.g. 23.9.0 or v23.9.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write # Delete GitHub release and tag
+
+jobs:
+  unpublish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restrict to maintainer
+        env:
+          ACTOR: ${{ github.actor }}
+        run: |
+          if [ "$ACTOR" != "pavankjadda" ]; then
+            echo "::error::Only pavankjadda can run this workflow (triggered by '$ACTOR')."
+            exit 1
+          fi
+
+      - name: Normalize and validate version
+        id: ver
+        env:
+          RAW_VERSION: ${{ inputs.version }}
+        run: |
+          VERSION="${RAW_VERSION#v}"
+
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Invalid version '$VERSION'. Expected semver like 23.9.0"
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Unpublishing version $VERSION (tag v$VERSION)"
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Unpublish npm packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::error::Secret NPM_TOKEN is not set. Trusted publishing (OIDC) cannot unpublish; add an npm automation/granular token with unpublish access."
+            exit 1
+          fi
+
+          unpublish_pkg() {
+            local pkg="$1"
+            if ! npm view "${pkg}@${VERSION}" version >/dev/null 2>&1; then
+              echo "${pkg}@${VERSION} is not on npm; skipping."
+              return 0
+            fi
+            echo "Unpublishing ${pkg}@${VERSION}…"
+            npm unpublish "${pkg}@${VERSION}" --force
+          }
+
+          unpublish_pkg "@ng-select/ng-select"
+          unpublish_pkg "@ng-select/ng-option-highlight"
+
+      - name: Delete GitHub release and tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.ver.outputs.tag }}
+          REPO: ${{ github.repository }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Deleting GitHub release $TAG…"
+            gh release delete "$TAG" --yes --cleanup-tag
+          else
+            echo "No GitHub release named $TAG."
+            if git ls-remote --tags "https://github.com/${REPO}.git" "refs/tags/${TAG}" | grep -q "$TAG"; then
+              echo "Deleting git tag $TAG…"
+              gh api -X DELETE "repos/${REPO}/git/refs/tags/${TAG}"
+            else
+              echo "No git tag $TAG either; nothing to delete on GitHub."
+            fi
+          fi
