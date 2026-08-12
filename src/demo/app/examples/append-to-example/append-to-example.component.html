@@ -1,35 +1,25 @@
-<div class="alert alert-info">
-	The dropdown panel renders in an
-	<a href="https://material.angular.dev/cdk/overlay/overview" target="_blank">Angular CDK overlay</a> and paints in the browser's top layer wherever the
-	native Popover API is supported, so clipping and stacking are handled without configuration. Use <code>appendTo</code> only when the panel must live inside
-	a specific element in the DOM — e.g. to inherit ancestor-scoped styles or satisfy focus containment.
-</div>
-
-<p>
-	Containers with fixed height and hidden overflow used to clip the dropdown unless you appended it to another element. With overlay rendering the panel
-	escapes the container automatically:
-</p>
+<p>By default dropdown panel is rendered as child element of ng-select, but you can append dropdown to any element using <b>appendTo</b>.</p>
+<p>If you place ng-select inside container with fixed height and hidden overflow then dropdown will not be fully visible.</p>
 
 <div class="overflow-box">
 	<ng-select [items]="people | async" bindLabel="company" placeholder="Select item" [(ngModel)]="selected"> </ng-select>
 </div>
 
 <br />
-<p>
-	With <code>appendTo</code> the overlay becomes a DOM descendant of the selected element, so ancestor-scoped css (like a theme class on the container)
-	applies to the panel. Positioning is unchanged:
-</p>
-
-<div class="overflow-box">
-	<ng-select [items]="people | async" bindLabel="company" appendTo="body" placeholder="Select item" [(ngModel)]="selected2"> </ng-select>
-</div>
+<p>It can be fixed by appending dropdown to body or other parent element. Use <b> appendTo="body" </b> only if:</p>
+<ul>
+	<li>
+		<b>The Parent has overflow: hidden or overflow: auto:</b> If the select is inside a small div (like a sidebar or a table cell) and the dropdown gets cut
+		off.
+	</li>
+	<li><b>The Parent has z-index issues:</b> If the dropdown is appearing behind another element (like a sticky header) and you can't fix it with CSS.</li>
+	<li><b>Inside a Modal/Dialog:</b> Modals often have strict boundaries that clip child elements.</li>
+</ul>
 
 <br />
-<p>Inside a scrollable container the panel stays anchored to the select while you scroll — no configuration needed:</p>
-
 <div class="scrollable-box">
 	<div class="overflow-box">
-		<ng-select [items]="people | async" bindLabel="company" placeholder="Select item" [(ngModel)]="selected3"> </ng-select>
+		<ng-select [items]="people | async" bindLabel="company" placeholder="Select item" appendTo=".scrollable-box" [(ngModel)]="selected3"> </ng-select>
 	</div>
 </div>
 
