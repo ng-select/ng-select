@@ -374,16 +374,25 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	private _updateItemsRange(firstChange: boolean) {
 		this._zone.runOutsideAngular(() => {
 			this._measureDimensions().then(() => {
+				const scrollTop = firstChange ? this._startOffset : (this._scrollablePanel()?.scrollTop ?? 0);
+				this._renderItemsRange(scrollTop);
+
+				// Measurement / a short prior list leaves the panel content-sized. After the
+				// provisional range paints, sync max-height panelHeight for scrollTo (#2744).
+				// If viewport capacity grows, re-render — otherwise DOM stays on the stale
+				// (too-small) range while dimensions already reflect the larger panel.
+				const itemsPerViewportBefore = this._panelService.dimensions.itemsPerViewport;
+				this._syncPanelHeightFromDom();
+				if (this._panelService.dimensions.itemsPerViewport !== itemsPerViewportBefore) {
+					this._lastScrollPosition = -1;
+					this._renderItemsRange(this._scrollablePanel()?.scrollTop ?? scrollTop);
+				}
+
 				if (firstChange) {
-					this._renderItemsRange(this._startOffset);
 					this._positionDropdown();
 				} else {
-					this._renderItemsRange();
 					this.overlayRef()?.updatePosition();
 				}
-				// Measurement paints only 1–2 rows, so clientHeight is content-sized; after the
-				// real range render the panel hits max-height — sync that for scrollTo (#2744).
-				this._syncPanelHeightFromDom();
 			});
 		});
 	}
