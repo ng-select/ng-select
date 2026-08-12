@@ -31,6 +31,14 @@
 		}
 	}
 
+	// When search is disabled the input is still present for focus/ARIA, but it must not
+	// intercept clicks intended for the selected value (text selection / copy).
+	&:not(.ng-select-searchable) {
+		.ng-select-container .ng-value-container .ng-input {
+			pointer-events: none;
+		}
+	}
+
 	&.ng-select-opened .ng-select-container {
 		z-index: 1001;
 	}
