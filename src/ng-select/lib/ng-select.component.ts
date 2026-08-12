@@ -45,6 +45,7 @@ import {
 	ViewContainerRef,
 	ViewEncapsulation,
 } from '@angular/core';
+import { EventPhase } from '@angular/core/primitives/event-dispatch';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, filter, map, tap } from 'rxjs/operators';
@@ -617,6 +618,10 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 				this._handleTab($event);
 				break;
 			case KeyCode.Esc:
+				// Only consume Escape when it closes the dropdown so parent overlays/dialogs can still handle Escape when already closed
+				if (!this.isOpen() || this._manualOpen) {
+					return;
+				}
 				this.close();
 				$event.preventDefault();
 				break;
@@ -656,7 +661,22 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			return false;
 		}
 		const target = $event.target as HTMLElement;
-		if (target.tagName !== 'INPUT') {
+
+		// Allow highlighting/copying the selected label when search is disabled.
+		// Skipping preventDefault + toggle lets the browser start a text selection.
+		// See https://github.com/ng-select/ng-select/issues/2669
+		const onSelectedValue = !!target.closest?.('.ng-value');
+		const onValueIcon = target.classList.contains('ng-value-icon') || !!target.closest?.('.ng-value-icon');
+		if (!this.searchable() && onSelectedValue && !onValueIcon) {
+			if (!this._focused) {
+				this.focus();
+			}
+			return;
+		}
+
+		// Skip during Angular event replay (SSR hydration): preventDefault has no effect
+		// after browser dispatch and throws — see https://github.com/ng-select/ng-select/issues/2549
+		if (target.tagName !== 'INPUT' && $event.eventPhase !== EventPhase.REPLAY) {
 			$event.preventDefault();
 		}
 
@@ -832,7 +852,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	unselect(item: NgOption) {
-		if (!item) {
+		if (!item || this.disabled() || item.disabled) {
 			return;
 		}
 
@@ -1265,9 +1285,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 	private _changeSearch(searchTerm: string) {
 		this._searchTerm.set(searchTerm);
-		if (this.typeahead()?.observed) {
-			this.typeahead().next(searchTerm);
-		}
 	}
 
 	private _scrollToMarked() {
