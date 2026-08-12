@@ -1,5 +1,6 @@
 import { NgClass } from '@angular/common';
 import { Component, DebugElement, ErrorHandler, Type, viewChild, ViewEncapsulation } from '@angular/core';
+import { EventPhase } from '@angular/core/primitives/event-dispatch';
 import { SIGNAL } from '@angular/core/primitives/signals';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
@@ -5583,6 +5584,49 @@ describe('NgSelectComponent', () => {
 				triggerMousedown();
 				await tickAndDetectChanges(fixture);
 				expect(preventDefault).not.toHaveBeenCalled();
+			});
+		});
+
+		describe('event replay', () => {
+			beforeEach(async () => {
+				fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [items]="cities"
+                            bindLabel="name"
+                            [(ngModel)]="selectedCity">
+                    </ng-select>`,
+				);
+				select = fixture.componentInstance.select();
+				await tickAndDetectChanges(fixture);
+			});
+
+			it('should not call preventDefault during Angular event replay', async () => {
+				const event = {
+					...createEvent({ tagName: 'DIV', className: 'ng-control' }),
+					eventPhase: EventPhase.REPLAY,
+				} as any;
+				const preventDefault = vi.spyOn(event, 'preventDefault').mockImplementation(() => {
+					throw new Error('`preventDefault` called during event replay.');
+				});
+
+				const control = fixture.debugElement.query(By.css('.ng-select-container'));
+				expect(() => control.triggerEventHandler('mousedown', event)).not.toThrow();
+				await tickAndDetectChanges(fixture);
+
+				expect(preventDefault).not.toHaveBeenCalled();
+				expect(select.isOpen()).toBe(true);
+			});
+
+			it('should call preventDefault for normal (non-replay) mousedown', async () => {
+				const event = createEvent({ tagName: 'DIV', className: 'ng-control' }) as any;
+				const preventDefault = vi.spyOn(event, 'preventDefault').mockReturnValue(undefined);
+
+				const control = fixture.debugElement.query(By.css('.ng-select-container'));
+				control.triggerEventHandler('mousedown', event);
+				await tickAndDetectChanges(fixture);
+
+				expect(preventDefault).toHaveBeenCalled();
+				expect(select.isOpen()).toBe(true);
 			});
 		});
 

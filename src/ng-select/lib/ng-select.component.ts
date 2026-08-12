@@ -45,6 +45,7 @@ import {
 	ViewContainerRef,
 	ViewEncapsulation,
 } from '@angular/core';
+import { EventPhase } from '@angular/core/primitives/event-dispatch';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, filter, map, tap } from 'rxjs/operators';
@@ -656,7 +657,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			return false;
 		}
 		const target = $event.target as HTMLElement;
-		if (target.tagName !== 'INPUT') {
+		// Skip during Angular event replay (SSR hydration): preventDefault has no effect
+		// after browser dispatch and throws — see https://github.com/ng-select/ng-select/issues/2549
+		if (target.tagName !== 'INPUT' && $event.eventPhase !== EventPhase.REPLAY) {
 			$event.preventDefault();
 		}
 
