@@ -1187,6 +1187,25 @@ describe('NgSelectComponent', () => {
 		});
 
 		describe('ng-option', () => {
+			it('should not render HTML from unknown ngModel when using ng-option', async () => {
+				const fixture = createTestingModule(
+					NgSelectTestComponent,
+					`<ng-select [(ngModel)]="selectedCityId">
+						<ng-option [value]="1">Yes</ng-option>
+						<ng-option [value]="2">No</ng-option>
+					</ng-select>`,
+				);
+				await tickAndDetectChanges(fixture);
+
+				fixture.componentInstance.selectedCityId = `<img src="x" onerror="window.__xss2374=1">` as any;
+				await tickAndDetectChanges(fixture);
+
+				const labelEl = document.querySelector('.ng-value-label') as HTMLElement;
+				expect(labelEl).toBeTruthy();
+				expect(labelEl.querySelector('img')).toBeNull();
+				expect(labelEl.textContent).toContain('<img');
+			});
+
 			it('should reset to empty array', async () => {
 				const fixture = createTestingModule(
 					NgSelectTestComponent,
