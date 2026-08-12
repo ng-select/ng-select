@@ -26,7 +26,7 @@
 							(keydown)="handleRemoveKeydown($event, item)"
 							>×</span
 						>
-						<span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
+						<span class="ng-value-label">{{ item.label }}</span>
 					</ng-template>
 					<ng-template
 						[ngTemplateOutlet]="labelTemplate() || defaultLabelTemplate"
@@ -145,7 +145,7 @@
 					[attr.aria-setsize]="itemsList.filteredItems.length"
 					[attr.aria-posinset]="itemsList.filteredItems.indexOf(item) + 1 || null">
 					<ng-template #defaultOptionTemplate>
-						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
+						<span class="ng-option-label">{{ item.label }}</span>
 					</ng-template>
 					<ng-template
 						[ngTemplateOutlet]="item.children ? optgroupTemplate() || defaultOptionTemplate : optionTemplate() || defaultOptionTemplate"

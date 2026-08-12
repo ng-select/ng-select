@@ -54,7 +54,6 @@ import {
 	NgClearButtonTemplateDirective,
 	NgFooterTemplateDirective,
 	NgHeaderTemplateDirective,
-	NgItemLabelDirective,
 	NgLabelTemplateDirective,
 	NgLoadingSpinnerTemplateDirective,
 	NgLoadingTextTemplateDirective,
@@ -139,7 +138,7 @@ class NgSelectAppendToOverlayContainer extends OverlayContainer {
 	],
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgClass, NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent],
+	imports: [NgClass, NgTemplateOutlet, NgDropdownPanelComponent],
 	host: {
 		'[class.ng-select]': 'true',
 		'[class.ng-select-single]': '!multiple()',
@@ -418,7 +417,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	/** Width of the notched-outline gap for the floated label in the material outline appearance */
 	readonly outlineNotchWidth = signal(0);
 	// variables
-	escapeHTML = true;
 	itemsList: ItemsList;
 	viewPortItems: NgOption[] = [];
 	tabFocusOnClear = signal<boolean>(true);
@@ -568,7 +566,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 	ngAfterViewInit() {
 		if (!this._itemsAreUsed) {
-			this.escapeHTML = false;
 			this._setItemsFromNgOptions();
 		}
 
@@ -1107,7 +1104,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 				this.bindLabel.set(this._defaultLabel);
 				const items = options.map((option) => ({
 					$ngOptionValue: option.value(),
-					$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
+					$ngOptionLabel: option.label(),
 					$ngOptionClasses: option.classes(),
 					disabled: option.disabled(),
 				}));

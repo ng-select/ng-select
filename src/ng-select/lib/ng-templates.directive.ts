@@ -1,6 +1,10 @@
 import { Directive, effect, ElementRef, inject, input, TemplateRef } from '@angular/core';
-import { escapeHTML } from './value-utils';
 
+/**
+ * @deprecated Default labels are plain text via interpolation. Prefer `{{ label }}` or
+ * custom templates (`ng-label-tmp` / `ng-option-tmp`) for rich markup. Kept for public API
+ * compatibility; always writes `textContent` (the `escape` input is ignored).
+ */
 @Directive({
 	selector: '[ngItemLabel]',
 	standalone: true,
@@ -9,11 +13,12 @@ export class NgItemLabelDirective {
 	private element = inject<ElementRef<HTMLElement>>(ElementRef);
 
 	ngItemLabel = input<string>();
+	/** @deprecated Ignored — labels are always written as text. */
 	escape = input(true);
 
 	constructor() {
 		effect(() => {
-			this.element.nativeElement.innerHTML = this.escape() ? escapeHTML(this.ngItemLabel()) : this.ngItemLabel();
+			this.element.nativeElement.textContent = this.ngItemLabel() ?? '';
 		});
 	}
 }

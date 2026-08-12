@@ -25,8 +25,8 @@ export class NgOptionComponent implements OnInit {
 	constructor() {
 		afterEveryRender(() => {
 			const element = this.elementRef.nativeElement;
-			// Update signals after render (host classes and innerHTML can be updated by bindings).
-			const currentLabel = (element.innerHTML || '').trim();
+			// textContent (not innerHTML): default labels are plain text, like Material viewValue.
+			const currentLabel = (element.textContent || '').trim();
 			if (currentLabel !== this.label()) {
 				this.label.set(currentLabel);
 			}
