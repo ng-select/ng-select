@@ -57,7 +57,6 @@ Android	2 most recent major versions
 - [Features](#features)
 - [Getting started](#getting-started)
 - [Documentation and examples](#documentation-and-examples)
-- [Dropdown panel rendering](#dropdown-panel-rendering)
 - [Contributing](#contributing)
 - [Development](#development)
 - [Inspiration](#inspiration)
@@ -73,7 +72,7 @@ Android	2 most recent major versions
 - [x] Flexible autocomplete with client/server filtering
 - [x] Custom search
 - [x] Custom tags
-- [x] CDK overlay positioning (top-layer rendering, no clipping)
+- [x] Append to
 - [x] Group items
 - [x] Output events
 - [x] Accessibility
@@ -86,24 +85,24 @@ Library is under active development and may have API breaking changes for subseq
 
 ## Getting started
 
-### Step 1: Install `ng-select` and its `@angular/cdk` peer dependency:
+### Step 1: Install `ng-select`:
 
 #### NPM
 
 ```shell
-npm install --save @ng-select/ng-select @angular/cdk
+npm install --save @ng-select/ng-select
 ```
 
 #### Yarn
 
 ```shell
-yarn add @ng-select/ng-select @angular/cdk
+yarn add @ng-select/ng-select
 ```
 
 #### PNPM
 
 ```shell
-pnpm add @ng-select/ng-select @angular/cdk
+pnpm add @ng-select/ng-select
 ```
 
 ### Step 2:
@@ -156,6 +155,7 @@ typically in your root component, and customize the values of its properties in 
 ```js
   constructor(private config: NgSelectConfig) {
       this.config.notFoundText = 'Custom not found';
+      this.config.appendTo = 'body';
       // set the bindValue to global config when you use the same
       // bindValue in most of the place.
       // You can also override bindValue for the specified template
@@ -219,19 +219,8 @@ Full documentation, live examples and the complete API reference live on the doc
 - [Getting started](https://ng-select.github.io/ng-select/#/getting-started/installation)
 - [Examples](https://ng-select.github.io/ng-select/#/examples/data-sources) — data sources, bindings, forms, search, tags, templates, multiselect, grouping, virtual scroll and more
 - [API reference](https://ng-select.github.io/ng-select/#/api) — inputs, outputs and methods for `NgSelectComponent`, `NgSelectConfig`, template directives and `NgOptionHighlightDirective`
-- [Styling](https://ng-select.github.io/ng-select/#/getting-started/styling)
+- [Custom styles and theming](https://ng-select.github.io/ng-select/#/getting-started/styling)
 - [Change detection notes](https://ng-select.github.io/ng-select/#/getting-started/change-detection)
-
-## Dropdown panel rendering
-
-Since v24 the dropdown panel is positioned by [Angular CDK Overlay](https://material.angular.dev/cdk/overlay/overview) instead of the previous hand-rolled geometry code. `@angular/cdk` is a peer dependency — install it alongside the library. There is nothing to configure; every dropdown renders in an overlay attached to the document body, stays anchored to the select while any ancestor scrolls, resizes with the select, and `dropdownPosition="auto"` measures the real rendered panel (including header/footer templates) when deciding between top and bottom.
-
-Things to know when migrating:
-
-- **DOM location.** The panel is no longer a child of `<ng-select>` in the DOM — it lives inside `.cdk-overlay-container` (the same situation as `appendTo="body"` produced before). CSS that scoped panel styles through an ancestor of the select, like `.my-wrapper ng-dropdown-panel { ... }`, will no longer match. The panel still receives the select's `class`/`ngClass` values, so scope panel styles through those classes instead: `.my-select-class.ng-dropdown-panel .ng-option { ... }`.
-- **`appendTo` changed meaning; `popover` is a deprecated no-op.** Overlay rendering already solves the clipping/stacking problems both existed for, so most usages of `appendTo` can simply be removed. It still works — but it now controls where the overlay lives **in the DOM** (ancestor-scoped styles, stacking context, focus containment) rather than how the panel is positioned; painting and positioning stay viewport-based either way. `popover` has no effect anymore (the overlay uses the native Popover API top layer automatically) and logs a one-time dev-mode warning.
-- **Stacking / z-index.** The hardcoded panel `z-index: 1050` is gone. In browsers with the native Popover API (all evergreen browsers), the CDK renders the overlay in the top layer, which paints above every `z-index` — including Bootstrap modals — with no configuration. In older browsers the panel falls back into `.cdk-overlay-container` with the CDK default `z-index: 1000` (declared in the `cdk-overlay` CSS layer). If you need the fallback to beat a higher stacking context such as a Bootstrap modal (`z-index: 1055`), raise the container in your global styles: `.cdk-overlay-container { z-index: 1056; }` — unlayered author CSS wins over the CDK's layered default regardless of specificity.
-- **Custom themes.** The shipped themes no longer position the panel (`top: 100%`, `bottom: 100%`, `left: 0` and friends were removed — margins, borders, shadows and radii remain). The library neutralizes those offsets for panels rendered in the overlay, so themes copied from older versions keep working, but you should remove positional offsets from `.ng-dropdown-panel` rules when you update your own theme.
 
 ## Contributing
 

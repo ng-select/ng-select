@@ -1,15 +1,11 @@
 import { NgDocPage } from '@ng-doc/core';
-import { CssVariablesExampleComponent } from '@examples/css-variables-example/css-variables-example.component';
 import GettingStartedCategory from '../ng-doc.category';
 
 const StylingPage: NgDocPage = {
-	title: 'Styling',
+	title: 'Custom styles',
 	mdFile: './index.md',
 	order: 1,
 	category: GettingStartedCategory,
-	demos: {
-		CssVariablesExampleComponent,
-	},
 };
 
 export default StylingPage;

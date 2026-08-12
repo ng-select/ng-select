@@ -40,29 +40,16 @@ jobs:
       - name: Semantic release
         run: npx semantic-release
 
-      - name: publish @ng-select/ng-option-highlight
-        # semantic-release only publishes @ng-select/ng-select (pkgRoot dist/ng-select).
-        # It stamps the new version into dist/ng-select/package.json only when it actually
-        # releases, so publish the highlight package only when that version is live on npm
-        # and the highlight package doesn't have it yet.
+      - name: copy @ng-select/ng-select version to @ng-select/ng-option-highlight
         run: |
-          VERSION=$(jq -r .version ./dist/ng-select/package.json)
-
-          if [ "$(npm view @ng-select/ng-select version)" != "$VERSION" ]; then
-            echo "No new @ng-select/ng-select release this run (dist has $VERSION); skipping publish."
-            exit 0
-          fi
-
-          if npm view "@ng-select/ng-option-highlight@$VERSION" version >/dev/null 2>&1; then
-            echo "@ng-select/ng-option-highlight@$VERSION already published; skipping."
-            exit 0
-          fi
-
           TEMPFILE=$(mktemp)
-          jq ".version = \"$VERSION\"" ./dist/ng-option-highlight/package.json > "$TEMPFILE"
+
+          jq ".version = $(jq .version ./dist/ng-select/package.json)" \
+            ./dist/ng-option-highlight/package.json > "$TEMPFILE"
           mv "$TEMPFILE" ./dist/ng-option-highlight/package.json
 
-          pnpm publish ./dist/ng-option-highlight --no-git-checks --provenance
+      - name: publish @ng-select/ng-option-highlight
+        run: pnpm publish ./dist/ng-option-highlight --no-git-checks --provenance
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

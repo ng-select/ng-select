@@ -1,10 +1,10 @@
 import { NgDocCategory } from '@ng-doc/core';
 
-const ReferenceCategory: NgDocCategory = {
+const AdvancedCategory: NgDocCategory = {
 	order: 1,
-	title: 'Reference',
+	title: 'Advanced',
 	expandable: false,
 	expanded: true,
 };
 
-export default ReferenceCategory;
+export default AdvancedCategory;
