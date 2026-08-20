@@ -169,7 +169,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly _placeholder = input<string>(this.config.placeholder, { alias: 'placeholder' });
 	readonly placeholder = linkedSignal(() => this._placeholder());
 	/** Set placeholder visible even when an item is selected */
-	readonly _fixedPlaceholder = input<boolean>(true, { alias: 'fixedPlaceholder' });
+	readonly _fixedPlaceholder = input<boolean>(this.config.fixedPlaceholder, { alias: 'fixedPlaceholder' });
 	readonly fixedPlaceholder = linkedSignal(() => this._fixedPlaceholder());
 	/** Set custom text when filter returns empty result */
 	readonly _notFoundText = input<string>(undefined, { alias: 'notFoundText' });
