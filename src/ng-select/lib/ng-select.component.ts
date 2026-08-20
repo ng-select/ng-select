@@ -337,6 +337,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly isOpen = model<boolean | undefined>(false);
 	/** Items array */
 	readonly items = model<readonly any[]>([]);
+	// Canonical form value state; this can serve FormValueControl in a future signal forms migration.
+	readonly value = model<any | any[]>(null);
 	// output events
 	/** Fired on select blur */
 	readonly blurEvent = output<any>({ alias: 'blur' });
@@ -443,6 +445,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	private _manualOpen: boolean;
 	private _pressedKeys: string[] = [];
 	private _primitive: any;
+	private _skipNextValueSync = false;
+	private _valueWrittenFromSelection = false;
 	private readonly _searchTerm = signal<string>(null);
 	private readonly _validTerm = computed(() => {
 		const term = this._searchTerm()?.trim();
@@ -731,12 +735,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	writeValue(value: any | any[]): void {
-		this.itemsList.clearSelected(false);
-		this._handleWriteValue(value);
-		if (this._editableSearchTermActive()) {
-			this._setSearchTermFromItems();
-		}
-		this._cd.markForCheck();
+		this._valueWrittenFromSelection = false;
+		this.value.set(value);
 	}
 
 	registerOnChange(fn: any): void {
@@ -1005,6 +1005,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 				untracked(() => {
 					this._itemsAreUsed = true;
 					this._setItems(items || []);
+					this._syncSelectionAfterItemsChange();
 				});
 			},
 			{ injector: this._injector },
@@ -1020,7 +1021,10 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 					return;
 				}
 
-				untracked(() => this.itemsList.clearSelected(false));
+				untracked(() => {
+					this.itemsList.clearSelected(false);
+					this._syncSelectionFromModel(this.value());
+				});
 			},
 			{ injector: this._injector },
 		);
@@ -1035,7 +1039,29 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 					return;
 				}
 
-				untracked(() => this._setItems([...this.items()]));
+				untracked(() => {
+					this._setItems([...this.items()]);
+					this._syncSelectionAfterItemsChange();
+				});
+			},
+			{ injector: this._injector },
+		);
+
+		effect(
+			() => {
+				const value = this.value();
+				this.bindLabel();
+				this.bindValue();
+				this.compareWith();
+				this.multiple();
+
+				if (this._skipNextValueSync) {
+					untracked(() => {
+						this._skipNextValueSync = false;
+					});
+				} else {
+					untracked(() => this._syncSelectionFromModel(value));
+				}
 			},
 			{ injector: this._injector },
 		);
@@ -1074,6 +1100,21 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];
 		this._searchTerm.set(selected?.label ?? null);
+	}
+
+	private _syncSelectionFromModel(value: any | any[]): void {
+		this.itemsList.clearSelected(false);
+		this._handleWriteValue(value);
+		if (this._editableSearchTermActive()) {
+			this._setSearchTermFromItems();
+		}
+		this._cd.markForCheck();
+	}
+
+	private _syncSelectionAfterItemsChange(): void {
+		if (!this._valueWrittenFromSelection) {
+			this._syncSelectionFromModel(this.value());
+		}
 	}
 
 	private _setItems(items: readonly any[]) {
@@ -1259,16 +1300,25 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 		const selected = this.selectedItems.map((x) => x.value);
 		if (this.multiple()) {
+			this._setValueFromSelection(model);
 			this._onChange(model);
 			this.changeEvent.emit(selected);
 		} else {
-			this._onChange(isDefined(model[0]) ? model[0] : null);
+			const value = isDefined(model[0]) ? model[0] : null;
+			this._setValueFromSelection(value);
+			this._onChange(value);
 			this.changeEvent.emit(selected[0]);
 		}
 
 		// Required under zoneless CD: sole notifier for the programmatic selection
 		// APIs (select/unselect/clearModel/clearItem) called from non-Angular contexts
 		this._cd.markForCheck();
+	}
+
+	private _setValueFromSelection(value: any | any[]): void {
+		this._skipNextValueSync = true;
+		this._valueWrittenFromSelection = true;
+		this.value.set(value);
 	}
 
 	private _clearSearch() {
