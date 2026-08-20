@@ -6141,6 +6141,37 @@ describe('NgSelectComponent', () => {
 			expect(fixture.componentInstance.select().outlineNotchWidth()).toBe(0);
 		});
 
+		it('should use fixedPlaceholder from NgSelectConfig when not provided in template', async () => {
+			const config = new NgSelectConfig();
+			config.fixedPlaceholder = false;
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" bindLabel="name" placeholder="Select City" [(ngModel)]="selectedCity"></ng-select>`,
+				config,
+			);
+
+			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+			await tickAndDetectChanges(fixture);
+
+			expect(fixture.componentInstance.select().fixedPlaceholder()).toBe(false);
+			expect(fixture.nativeElement.querySelector('.ng-placeholder')).toBeNull();
+		});
+
+		it('should override fixedPlaceholder from NgSelectConfig when provided in template', async () => {
+			const config = new NgSelectConfig();
+			config.fixedPlaceholder = false;
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [fixedPlaceholder]="true" [items]="cities" bindLabel="name" placeholder="Select City" [(ngModel)]="selectedCity"></ng-select>`,
+				config,
+			);
+
+			fixture.componentInstance.selectedCity = fixture.componentInstance.cities[0];
+			await tickAndDetectChanges(fixture);
+
+			expect(fixture.nativeElement.querySelector('.ng-placeholder')).not.toBeNull();
+		});
+
 		it('should keep placeholder visible via config.fixedPlaceholder when input is null', async () => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
