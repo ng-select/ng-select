@@ -1330,7 +1330,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		// `document.documentElement.dir` when positioning an appended panel
 		overlayRef.setDirection(this._document?.documentElement?.dir === 'rtl' ? 'rtl' : 'ltr');
 		// The panel tracks the width of the select; the panel keeps it in sync on host resize
-		overlayRef.updateSize({ width: this._dropdownOrigin().getBoundingClientRect().width });
+		overlayRef.updateSize({ minWidth: this._dropdownOrigin().getBoundingClientRect().width });
 		if (overlayRef.hasAttached()) {
 			// Only `dropdownPosition` changed while open — re-evaluate with the new positions
 			overlayRef.updatePosition();

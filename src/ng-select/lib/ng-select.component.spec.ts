@@ -6028,7 +6028,7 @@ describe('NgSelectComponent', () => {
 			await tickAndDetectChanges(fixture);
 		});
 
-		it('should size the overlay pane to match the select width', async () => {
+		it('should set the overlay pane min-width to match the select width', async () => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`
@@ -6042,7 +6042,7 @@ describe('NgSelectComponent', () => {
 
 			await openSelect(fixture.componentInstance.select(), fixture);
 			const pane = <HTMLElement>document.querySelector('.cdk-overlay-pane');
-			expect(pane.style.width).toBe('200px');
+			expect(pane.style.minWidth).toBe('200px');
 		});
 
 		it('should pass static classes into dropdown panel', async () => {

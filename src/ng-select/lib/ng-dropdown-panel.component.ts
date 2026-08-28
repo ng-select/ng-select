@@ -499,11 +499,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			});
 	}
 
-	private _readMeasuredDimensions(
-		items: NgOption[],
-		firstOption: NgOption | undefined,
-		firstGroup: NgOption | undefined,
-	): PanelDimensions {
+	private _readMeasuredDimensions(items: NgOption[], firstOption: NgOption | undefined, firstGroup: NgOption | undefined): PanelDimensions {
 		const optionEl = firstOption ? this._dropdown.querySelector(`#${firstOption.htmlId}`) : null;
 		const groupEl = firstGroup ? this._dropdown.querySelector(`#${firstGroup.htmlId}`) : null;
 		if (!optionEl && !groupEl) {
@@ -579,7 +575,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 		this._zone.runOutsideAngular(() => {
 			const observer = new ResizeObserver(() => {
-				overlayRef.updateSize({ width: this._select.getBoundingClientRect().width });
+				overlayRef.updateSize({ minWidth: this._select.getBoundingClientRect().width });
 				overlayRef.updatePosition();
 			});
 
