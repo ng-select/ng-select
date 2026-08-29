@@ -121,7 +121,7 @@
 		(scrollToEnd)="scrollToEnd.emit($event)"
 		(outsideClick)="close()"
 		[class.ng-select-multiple]="multiple()"
-		[class]="ngClass() ? ngClass() : classes"
+		[class]="panelClasses()"
 		[listboxId]="dropdownId"
 		[ariaLabelDropdown]="ariaLabelDropdown() ?? config.ariaLabelDropdown"
 		[overlayRef]="dropdownOverlayRef"
