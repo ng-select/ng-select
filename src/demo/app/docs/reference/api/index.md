@@ -22,6 +22,9 @@ Complete reference for `NgSelectComponent` and related directives and services. 
 | [groupValue]                | `(groupKey: string, children: any[]) => Object`      | -                   | Function expression to provide group value                                                                                                                                                     |
 | [selectableGroup]           | `boolean`                                            | false               | Allow to select group when groupBy is used                                                                                                                                                     |
 | [selectableGroupAsModel]    | `boolean`                                            | true                | Indicates whether to select all children or group itself                                                                                                                                       |
+| [collapsibleGroup]          | `boolean`                                            | `false`             | Adds controls for collapsing groups. The current option's group can also be toggled with `Ctrl+Space` or `Cmd+Space`.                                                                          |
+| [collapseGroupByDefault]    | `boolean`                                            | `false`             | Collapses groups by default when `collapsibleGroup` is enabled.                                                                                                                                |
+| collapseButtonPosition      | `'start'` \| `'end'`                                 | `'start'`           | Places the group collapse button at the logical start or end of the group row. Logical positioning follows the document direction for RTL support.                                             |
 | [items]                     | `Array<any>`                                         | `[]`                | Items array                                                                                                                                                                                    |
 | [loading]                   | `boolean`                                            | `-`                 | You can set the loading state from the outside (e.g. async items loading)                                                                                                                      |
 | loadingText                 | `string`                                             | `Loading...`        | Set custom text when for loading items                                                                                                                                                         |
@@ -87,21 +90,22 @@ Available on `NgSelectComponent` when accessed via a template reference variable
 
 Customize every part of the select with `ng-template` directives — see live examples on the [Templates](#/examples/templates) page.
 
-| Directive               | Customizes                           |
-| ----------------------- | ------------------------------------ |
-| `ng-label-tmp`          | Selected label (single select)       |
-| `ng-multi-label-tmp`    | Selected items (multi select)        |
-| `ng-option-tmp`         | Option rows in the dropdown          |
-| `ng-optgroup-tmp`       | Group headers when `groupBy` is used |
-| `ng-header-tmp`         | Dropdown header                      |
-| `ng-footer-tmp`         | Dropdown footer                      |
-| `ng-placeholder-tmp`    | Placeholder                          |
-| `ng-notfound-tmp`       | "No items found" message             |
-| `ng-typetosearch-tmp`   | "Type to search" message             |
-| `ng-loadingtext-tmp`    | Loading message                      |
-| `ng-loadingspinner-tmp` | Loading spinner                      |
-| `ng-clearbutton-tmp`    | Clear button                         |
-| `ng-tag-tmp`            | Tag row when `addTag` is enabled     |
+| Directive                | Customizes                           |
+| ------------------------ | ------------------------------------ |
+| `ng-label-tmp`           | Selected label (single select)       |
+| `ng-multi-label-tmp`     | Selected items (multi select)        |
+| `ng-option-tmp`          | Option rows in the dropdown          |
+| `ng-optgroup-tmp`        | Group headers when `groupBy` is used |
+| `ng-header-tmp`          | Dropdown header                      |
+| `ng-footer-tmp`          | Dropdown footer                      |
+| `ng-placeholder-tmp`     | Placeholder                          |
+| `ng-notfound-tmp`        | "No items found" message             |
+| `ng-typetosearch-tmp`    | "Type to search" message             |
+| `ng-loadingtext-tmp`     | Loading message                      |
+| `ng-loadingspinner-tmp`  | Loading spinner                      |
+| `ng-clearbutton-tmp`     | Clear button                         |
+| `ng-collapse-button-tmp` | Group collapse button                |
+| `ng-tag-tmp`             | Tag row when `addTag` is enabled     |
 
 ## Other
 

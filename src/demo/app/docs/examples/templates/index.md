@@ -54,21 +54,28 @@ ng-select lets you customize every part of the component — labels, options, he
 
 {{ NgDocActions.demo("StackblitzButtonComponent", { container: false, inputs: { example: "template-clear-example" } }) }}
 
+## Custom group collapse button
+
+{{ NgDocActions.demo("TemplateCollapseExampleComponent") }}
+
+{{ NgDocActions.demo("StackblitzButtonComponent", { container: false, inputs: { example: "template-collapse-example" } }) }}
+
 ## API
 
-| Template directive      | Purpose                                                                                                               |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `ng-label-tmp`          | Customizes how the selected item's label is rendered in the select input                                              |
-| `ng-placeholder-tmp`    | Customizes the placeholder shown when no item is selected                                                             |
-| `ng-option-tmp`         | Customizes how each option is rendered in the dropdown panel; exposes `item`, `index` and `searchTerm`                |
-| `ng-optgroup-tmp`       | Customizes how group headers are rendered when `groupBy` is used                                                      |
-| `ng-header-tmp`         | Renders custom content at the top of the dropdown panel (e.g. select/unselect all buttons or a custom search control) |
-| `ng-footer-tmp`         | Renders custom content at the bottom of the dropdown panel (e.g. selected count)                                      |
-| `ng-typetosearch-tmp`   | Customizes the message shown before the user starts typing when using `typeahead`                                     |
-| `ng-notfound-tmp`       | Customizes the message shown when the search returns no results; exposes `searchTerm`                                 |
-| `ng-loadingtext-tmp`    | Customizes the text shown while items are being loaded; exposes `searchTerm`                                          |
-| `ng-loadingspinner-tmp` | Replaces the default loading spinner with custom markup                                                               |
-| `ng-clearbutton-tmp`    | Replaces the default clear button with custom markup                                                                  |
+| Template directive       | Purpose                                                                                                               |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `ng-label-tmp`           | Customizes how the selected item's label is rendered in the select input                                              |
+| `ng-placeholder-tmp`     | Customizes the placeholder shown when no item is selected                                                             |
+| `ng-option-tmp`          | Customizes how each option is rendered in the dropdown panel; exposes `item`, `index` and `searchTerm`                |
+| `ng-optgroup-tmp`        | Customizes how group headers are rendered when `groupBy` is used                                                      |
+| `ng-header-tmp`          | Renders custom content at the top of the dropdown panel (e.g. select/unselect all buttons or a custom search control) |
+| `ng-footer-tmp`          | Renders custom content at the bottom of the dropdown panel (e.g. selected count)                                      |
+| `ng-typetosearch-tmp`    | Customizes the message shown before the user starts typing when using `typeahead`                                     |
+| `ng-notfound-tmp`        | Customizes the message shown when the search returns no results; exposes `searchTerm`                                 |
+| `ng-loadingtext-tmp`     | Customizes the text shown while items are being loaded; exposes `searchTerm`                                          |
+| `ng-loadingspinner-tmp`  | Replaces the default loading spinner with custom markup                                                               |
+| `ng-clearbutton-tmp`     | Replaces the default clear button with custom markup                                                                  |
+| `ng-collapse-button-tmp` | Replaces the collapse button shown on collapsible group headers; exposes `collapsed`                                  |
 
 ### Inputs
 

@@ -52,6 +52,7 @@ import { debounceTime, filter, map, tap } from 'rxjs/operators';
 
 import {
 	NgClearButtonTemplateDirective,
+	NgCollapseButtonTemplateDirective,
 	NgFooterTemplateDirective,
 	NgHeaderTemplateDirective,
 	NgLabelTemplateDirective,
@@ -253,6 +254,15 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	/** Indicates whether to select all children or group itself */
 	readonly _selectableGroupAsModel = input(true, { alias: 'selectableGroupAsModel', transform: booleanAttribute });
 	readonly selectableGroupAsModel = linkedSignal(() => this._selectableGroupAsModel());
+	/** Adds controls for collapsing groups. */
+	readonly _collapsibleGroup = input(false, { alias: 'collapsibleGroup', transform: booleanAttribute });
+	readonly collapsibleGroup = linkedSignal(() => this._collapsibleGroup());
+	/** Collapses groups by default when collapsible groups are enabled. */
+	readonly _collapseGroupByDefault = input(false, { alias: 'collapseGroupByDefault', transform: booleanAttribute });
+	readonly collapseGroupByDefault = linkedSignal(() => this._collapseGroupByDefault());
+	/** Places the group collapse button at the logical start or end of the group row. */
+	readonly _collapseButtonPosition = input<'start' | 'end'>('start', { alias: 'collapseButtonPosition' });
+	readonly collapseButtonPosition = linkedSignal(() => this._collapseButtonPosition());
 	/** Allow to filter by custom search function */
 	readonly _searchFn = input(null, { alias: 'searchFn' });
 	readonly searchFn = linkedSignal(() => this._searchFn());
@@ -400,6 +410,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly tagTemplate = contentChild(NgTagTemplateDirective, { read: TemplateRef });
 	readonly loadingSpinnerTemplate = contentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef });
 	readonly clearButtonTemplate = contentChild(NgClearButtonTemplateDirective, { read: TemplateRef });
+	readonly collapseButtonTemplate = contentChild(NgCollapseButtonTemplateDirective, { read: TemplateRef });
 	readonly ngOptions = contentChildren(NgOptionComponent, { descendants: true });
 	// view children queries
 	readonly dropdownPanel = viewChild(forwardRef(() => NgDropdownPanelComponent));
@@ -545,6 +556,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const itemsChange = changes.items;
 		const isOpenChange = changes.isOpen;
 		const groupByChange = changes._groupBy ?? changes.groupBy;
+		const collapsibleGroupChange = changes._collapsibleGroup ?? changes.collapsibleGroup;
 
 		if (multipleChange?.firstChange) {
 			this.itemsList.clearSelected(false);
@@ -561,6 +573,10 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 		if (groupByChange?.firstChange && !itemsChange) {
 			this._setItems([...this.items()]);
+		}
+
+		if (collapsibleGroupChange && !collapsibleGroupChange.firstChange) {
+			this.itemsList.setCollapsibleGroupState(this.collapsibleGroup() && this.collapseGroupByDefault());
 		}
 
 		this._setTabFocusOnClear();
@@ -818,6 +834,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		if (this._editableSearchTermActive()) {
 			this._setSearchTermFromItems();
 		}
+	}
+
+	toggleItemCollapse(event: Event, item: NgOption) {
+		event.stopPropagation();
+		this.itemsList.toggleItemCollapse(item);
 	}
 
 	select(item: NgOption) {
@@ -1467,6 +1488,17 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	private _handleSpace($event: KeyboardEvent) {
+		if ($event.ctrlKey || $event.metaKey) {
+			const markedItem = this.itemsList.markedItem;
+			const markedGroup = markedItem?.children ? markedItem : markedItem?.parent;
+
+			if (this.collapsibleGroup() && markedGroup) {
+				this.itemsList.toggleItemCollapse(markedGroup);
+				$event.preventDefault();
+				return;
+			}
+		}
+
 		if (this.isOpen() || this._manualOpen) {
 			return;
 		}

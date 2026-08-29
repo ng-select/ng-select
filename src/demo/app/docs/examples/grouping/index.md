@@ -30,6 +30,12 @@ Use the `groupBy` input to group options by an item key or a function expression
 
 {{ NgDocActions.demo("StackblitzButtonComponent", { container: false, inputs: { example: "group-children-example" } }) }}
 
+## Collapsible groups
+
+{{ NgDocActions.demo("GroupCollapsibleExampleComponent") }}
+
+{{ NgDocActions.demo("StackblitzButtonComponent", { container: false, inputs: { example: "group-collapsible-example" } }) }}
+
 ## API
 
 Inputs used by the examples on this page:
@@ -40,6 +46,9 @@ Inputs used by the examples on this page:
 | [groupValue]             | `(groupKey: string, children: any[]) => Object` | -                   | Function expression to provide group value                                                                                                                                                     |
 | [selectableGroup]        | `boolean`                                       | false               | Allow to select group when groupBy is used                                                                                                                                                     |
 | [selectableGroupAsModel] | `boolean`                                       | true                | Indicates whether to select all children or group itself                                                                                                                                       |
+| [collapsibleGroup]       | `boolean`                                       | `false`             | Adds controls for collapsing groups. The current option's group can also be toggled with `Ctrl+Space` or `Cmd+Space`.                                                                          |
+| [collapseGroupByDefault] | `boolean`                                       | `false`             | Collapses groups by default when `collapsibleGroup` is enabled.                                                                                                                                |
+| collapseButtonPosition   | `'start'` \| `'end'`                            | `'start'`           | Places the group collapse button at the logical start or end of the group row. Logical positioning follows the document direction for RTL support.                                             |
 | [hideSelected]           | `boolean`                                       | `false`             | Allows to hide selected items.                                                                                                                                                                 |
 | [items]                  | `Array<any>`                                    | `[]`                | Items array                                                                                                                                                                                    |
 | [multiple]               | `boolean`                                       | `false`             | Allows to select multiple items.                                                                                                                                                               |

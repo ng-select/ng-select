@@ -1,5 +1,6 @@
 import { NgDocPage } from '@ng-doc/core';
 import { TemplateClearExampleComponent } from '@examples/template-clear-example/template-clear-example.component';
+import { TemplateCollapseExampleComponent } from '@examples/template-collapse-example/template-collapse-example.component';
 import { TemplateDisplayExampleComponent } from '@examples/template-display-example/template-display-example.component';
 import { TemplateHeaderFooterExampleComponent } from '@examples/template-header-footer-example/template-header-footer-example.component';
 import { TemplateLabelExampleComponent } from '@examples/template-label-example/template-label-example.component';
@@ -27,6 +28,7 @@ const TemplatesPage: NgDocPage = {
 		TemplateSearchExampleComponent,
 		TemplateLoadingExampleComponent,
 		TemplateClearExampleComponent,
+		TemplateCollapseExampleComponent,
 	},
 };
 
