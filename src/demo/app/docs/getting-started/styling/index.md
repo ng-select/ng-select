@@ -150,6 +150,29 @@ Unlike the CSS variables, Sass overrides **do** recompute the derived shades: se
 
 For anything the variables do not cover, override the styles with increased selector specificity or create your own theme. This applies if you are using no `ViewEncapsulation` or adding styles to a global stylesheet.
 
+The dropdown panel renders in a CDK overlay, not inside `<ng-select>`. Host `class`, `[class]`, and `[ngClass]` values are mirrored onto the panel root so a single class can style both the closed control and the open list. For panel-only styling — or when host and panel need different classes — use `panelClass`:
+
+```html
+<ng-select class="custom" panelClass="custom-panel"></ng-select>
+```
+
+```css
+.ng-select.custom {
+	border: 0px;
+	min-height: 0px;
+	border-radius: 0;
+}
+.ng-select.custom .ng-select-container {
+	min-height: 0px;
+	border-radius: 0;
+}
+.custom-panel.ng-dropdown-panel {
+	max-height: 240px;
+}
+```
+
+When a shared class is enough for both the control and the panel:
+
 ```html
 <ng-select class="custom"></ng-select>
 ```
@@ -163,6 +186,9 @@ For anything the variables do not cover, override the styles with increased sele
 .ng-select.custom .ng-select-container {
 	min-height: 0px;
 	border-radius: 0;
+}
+.custom.ng-dropdown-panel .ng-option {
+	padding-left: 20px;
 }
 ```
 
