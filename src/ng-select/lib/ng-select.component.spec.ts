@@ -6108,9 +6108,94 @@ describe('NgSelectComponent', () => {
 			expect(dropdown.classList.contains('someClass')).toBe(true);
 
 			fixture.componentInstance.visible = false;
-			fixture.detectChanges();
+			await tickAndDetectChanges(fixture);
 
 			expect(dropdown.classList.contains('someClass')).toBe(false);
+		});
+
+		it('should pass [class] binding classes into dropdown panel', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+                        class="search-box"
+                        [class]="dynamicClass"
+                        [ngClass]="{ 'ng-class': visible }"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+			);
+
+			fixture.componentInstance.dynamicClass = 'dynamic-class';
+			fixture.componentInstance.select().open();
+
+			await tickAndDetectChanges(fixture);
+			const dropdown = <HTMLElement>document.querySelector('.ng-dropdown-panel');
+			expect(dropdown.classList.contains('search-box')).toBe(true);
+			expect(dropdown.classList.contains('dynamic-class')).toBe(true);
+			expect(dropdown.classList.contains('ng-class')).toBe(true);
+			expect(dropdown.classList.contains('ng-valid')).toBe(false);
+			expect(dropdown.classList.contains('ng-untouched')).toBe(false);
+			expect(dropdown.classList.contains('ng-pristine')).toBe(false);
+
+			fixture.componentInstance.dynamicClass = '';
+			fixture.componentInstance.visible = false;
+			await tickAndDetectChanges(fixture);
+
+			expect(dropdown.classList.contains('dynamic-class')).toBe(false);
+			expect(dropdown.classList.contains('ng-class')).toBe(false);
+			expect(dropdown.classList.contains('search-box')).toBe(true);
+		});
+
+		it('should pass every supported panelClass value into dropdown panel', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities"
+                        class="someClass"
+                        [panelClass]="panelClassBinding"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+			);
+
+			fixture.componentInstance.panelClassBinding = 'panel-only';
+			await tickAndDetectChanges(fixture);
+			fixture.componentInstance.select().open();
+			await tickAndDetectChanges(fixture);
+
+			const dropdown = <HTMLElement>document.querySelector('.ng-dropdown-panel');
+			expect(dropdown.classList.contains('someClass')).toBe(true);
+			expect(dropdown.classList.contains('panel-only')).toBe(true);
+
+			fixture.componentInstance.panelClassBinding = 'panel-updated';
+			await tickAndDetectChanges(fixture);
+
+			expect(dropdown.classList.contains('panel-updated')).toBe(true);
+			expect(dropdown.classList.contains('panel-only')).toBe(false);
+
+			fixture.componentInstance.panelClassBinding = ['panel-array', 'panel-shared'];
+			await tickAndDetectChanges(fixture);
+
+			expect(dropdown.classList.contains('panel-array')).toBe(true);
+			expect(dropdown.classList.contains('panel-shared')).toBe(true);
+			expect(dropdown.classList.contains('panel-updated')).toBe(false);
+
+			fixture.componentInstance.panelClassBinding = new Set(['panel-set', 'panel-shared']);
+			await tickAndDetectChanges(fixture);
+
+			expect(dropdown.classList.contains('panel-set')).toBe(true);
+			expect(dropdown.classList.contains('panel-shared')).toBe(true);
+			expect(dropdown.classList.contains('panel-array')).toBe(false);
+
+			fixture.componentInstance.panelClassBinding = {
+				'panel-map': true,
+				'panel-disabled': false,
+				someClass: false,
+			};
+			await tickAndDetectChanges(fixture);
+
+			expect(dropdown.classList.contains('panel-map')).toBe(true);
+			expect(dropdown.classList.contains('panel-disabled')).toBe(false);
+			expect(dropdown.classList.contains('panel-set')).toBe(false);
+			// panelClass is additive and cannot remove a class mirrored from the host.
+			expect(dropdown.classList.contains('someClass')).toBe(true);
 		});
 	});
 
@@ -7163,6 +7248,8 @@ class NgSelectTestComponent {
 	readonly = false;
 	dropdownPosition = 'bottom';
 	visible = true;
+	dynamicClass = '';
+	panelClassBinding: string | string[] | Set<string> | Record<string, boolean> = '';
 	minTermLength = 0;
 	filter = new Subject<string>();
 	searchFn: (term: string, item: any) => boolean = null;

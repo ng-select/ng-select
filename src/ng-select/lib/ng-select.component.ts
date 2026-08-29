@@ -84,6 +84,7 @@ export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>
 export type AddTagFn = (term: string) => any | Promise<any>;
 export type CompareWithFn = (a: any, b: any) => boolean;
 export type GroupValueFn = (key: string | any, children: any[]) => string | any;
+type ClassValue = string | string[] | Set<string> | Record<string, any>;
 
 function optionalBooleanAttribute(value: unknown): boolean | undefined {
 	return value == null ? undefined : booleanAttribute(value);
@@ -153,6 +154,37 @@ class NgSelectAppendToOverlayContainer extends OverlayContainer {
 	},
 })
 export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
+	/** Host classes managed by ng-select — excluded when mirroring consumer classes to the panel. */
+	private static readonly INTERNAL_HOST_CLASSES = new Set([
+		'ng-select',
+		'ng-select-single',
+		'ng-select-multiple',
+		'ng-select-typeahead',
+		'ng-select-taggable',
+		'ng-select-searchable',
+		'ng-select-clearable',
+		'ng-select-opened',
+		'ng-select-filtered',
+		'ng-select-disabled',
+		'ng-select-focused',
+		'ng-select-top',
+		'ng-select-bottom',
+		'ng-select-left',
+		'ng-select-right',
+	]);
+	/** Classes added by Angular itself rather than by consumer `class` bindings. */
+	private static readonly ANGULAR_MANAGED_HOST_CLASSES = new Set([
+		'ng-star-inserted',
+		'ng-untouched',
+		'ng-touched',
+		'ng-pristine',
+		'ng-dirty',
+		'ng-valid',
+		'ng-invalid',
+		'ng-pending',
+		'ng-submitted',
+	]);
+
 	readonly classes = inject(new HostAttributeToken('class'), { optional: true });
 	readonly config = inject(NgSelectConfig);
 	// signals
@@ -283,8 +315,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	/** Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`. */
 	readonly _editableSearchTerm = input(false, { alias: 'editableSearchTerm', transform: booleanAttribute });
 	readonly editableSearchTerm = linkedSignal(() => this._editableSearchTerm());
-	readonly _ngClass = input(null, { alias: 'ngClass' });
+	readonly _ngClass = input<ClassValue | null>(null, { alias: 'ngClass' });
 	readonly ngClass = linkedSignal(() => this._ngClass());
+	/** Additional CSS classes applied to the dropdown panel. Merged with mirrored host `class`, `[class]`, and `[ngClass]` values. */
+	readonly _panelClass = input<ClassValue | null>(null, { alias: 'panelClass' });
+	readonly panelClass = linkedSignal(() => this._panelClass());
 	/** Custom autocomplete or advanced filter. */
 	readonly _typeahead = input<Subject<string>>(undefined, { alias: 'typeahead' });
 	readonly typeahead = linkedSignal(() => this._typeahead());
@@ -450,6 +485,21 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const term = this._searchTerm()?.trim();
 		return term && term.length >= this.minTermLength();
 	});
+	/** Consumer classes on the host from static `class` and `[class]` bindings. */
+	private readonly _consumerHostClasses = signal<string | null>(null);
+	/** Classes forwarded to the overlay panel (mirrored host classes + `panelClass`). */
+	readonly panelClasses = computed(() => {
+		const classes = new Set<string>();
+		// Preserve explicitly declared static classes even when they share a name with
+		// a framework-managed class that is otherwise filtered from the observed host.
+		this._collectClasses(classes, this.classes);
+		this._collectClasses(classes, this._consumerHostClasses());
+		// Keep supporting `[ngClass]` when it binds only to this component input and
+		// no NgClass directive is present in the consumer's template scope.
+		this._collectClasses(classes, this.ngClass());
+		this._collectClasses(classes, this.panelClass());
+		return Array.from(classes).join(' ');
+	});
 
 	constructor() {
 		const config = this.config;
@@ -462,6 +512,15 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._handleSignalChanges();
 		afterEveryRender({
 			read: () => this._measureOutlineNotch(),
+		});
+		afterEveryRender({
+			read: () => {
+				const consumerClasses = this._readConsumerHostClasses();
+				const normalized = consumerClasses || null;
+				if (normalized !== this._consumerHostClasses()) {
+					this._consumerHostClasses.set(normalized);
+				}
+			},
 		});
 		this._destroyRef.onDestroy(() => this._destroyDropdownOverlay());
 	}
@@ -479,6 +538,44 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const width = label ? label.offsetWidth * 0.75 : 0;
 		if (width !== this.outlineNotchWidth()) {
 			this.outlineNotchWidth.set(width);
+		}
+	}
+
+	private _readConsumerHostClasses(): string {
+		return Array.from(this.element.classList)
+			.filter((className) => !NgSelectComponent.INTERNAL_HOST_CLASSES.has(className) && !NgSelectComponent.ANGULAR_MANAGED_HOST_CLASSES.has(className))
+			.join(' ');
+	}
+
+	private _collectClasses(target: Set<string>, value: ClassValue | null | undefined): void {
+		if (!value) {
+			return;
+		}
+
+		if (typeof value === 'string') {
+			this._collectClassString(target, value);
+			return;
+		}
+
+		if (Array.isArray(value) || value instanceof Set) {
+			for (const className of value) {
+				this._collectClassString(target, className);
+			}
+			return;
+		}
+
+		for (const [classNames, enabled] of Object.entries(value)) {
+			if (enabled) {
+				this._collectClassString(target, classNames);
+			}
+		}
+	}
+
+	private _collectClassString(target: Set<string>, value: string): void {
+		for (const className of value.split(/\s+/)) {
+			if (className) {
+				target.add(className);
+			}
 		}
 	}
 
