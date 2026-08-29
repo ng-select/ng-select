@@ -434,6 +434,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	private _dropdownPortal: TemplatePortal | null = null;
 	/** `appendTo` value the current overlay was created against; a change rebuilds the overlay. */
 	private _overlayAppendTo: string | null = null;
+	/** Element `appendTo` resolved to when the current overlay was created; a change rebuilds the overlay. */
+	private _overlayAppendToHost: HTMLElement | null = null;
 	/** Overlay container placed inside the `appendTo` host for browsers without the Popover API. */
 	private _appendToContainer: NgSelectAppendToOverlayContainer | null = null;
 	private _injector = inject(Injector);
@@ -1352,15 +1354,15 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 	private _ensureDropdownOverlay(): OverlayRef {
 		const appendTo = this.appendTo() ?? this.config.appendTo ?? null;
-		if (this.dropdownOverlayRef && appendTo !== this._overlayAppendTo) {
+		// Resolved per open: the selector keeps matching when the element behind it is replaced (a dialog rebuilt on reopen), and a reused overlay re-attaches into the discarded one
+		const appendToHost = appendTo ? this._resolveAppendToHost(appendTo) : null;
+		if (this.dropdownOverlayRef && (appendTo !== this._overlayAppendTo || appendToHost !== this._overlayAppendToHost)) {
 			// `appendTo` changed since the overlay was created — rebuild against the new host
 			this._destroyDropdownOverlay();
 		}
 		if (!this.dropdownOverlayRef) {
 			let injector = this._injector;
-			let appendToHost: HTMLElement | null = null;
-			if (appendTo) {
-				appendToHost = this._resolveAppendToHost(appendTo);
+			if (appendToHost) {
 				this._appendToContainer = runInInjectionContext(this._injector, () => new NgSelectAppendToOverlayContainer(appendToHost));
 				injector = Injector.create({
 					parent: this._injector,
@@ -1376,6 +1378,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 				this._dropdownPositionStrategy.withPopoverLocation({ type: 'parent', element: appendToHost });
 			}
 			this._overlayAppendTo = appendTo;
+			this._overlayAppendToHost = appendToHost;
 			this.dropdownOverlayRef = createOverlayRef(injector, {
 				positionStrategy: this._dropdownPositionStrategy,
 				// Ancestor-scroll repositioning is handled by the panel's capture-phase document
@@ -1394,6 +1397,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.dropdownOverlayRef?.dispose();
 		this.dropdownOverlayRef = null;
 		this._dropdownPositionStrategy = null;
+		this._overlayAppendToHost = null;
 		this._appendToContainer?.ngOnDestroy();
 		this._appendToContainer = null;
 	}
