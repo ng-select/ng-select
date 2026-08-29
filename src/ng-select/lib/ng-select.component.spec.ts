@@ -6013,6 +6013,36 @@ describe('NgSelectComponent', () => {
 			expect(document.querySelector('.container-a .ng-dropdown-panel')).toBeNull();
 		});
 
+		it('should rebuild the overlay when the appendTo host element is replaced between opens', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`
+                @if (visible) {
+                    <div class="container-a"></div>
+                }
+                <ng-select [items]="cities"
+                        appendTo=".container-a"
+                        [(ngModel)]="selectedCity">
+                </ng-select>`,
+			);
+			const select = fixture.componentInstance.select();
+
+			await openSelect(select, fixture);
+			expect(document.querySelector('.container-a .ng-dropdown-panel')).not.toBeNull();
+			select.close();
+			await tickAndDetectChanges(fixture);
+
+			// The host is destroyed and rebuilt while the selector keeps matching — a dialog
+			// that drops its DOM on close and recreates it on open (#2870)
+			fixture.componentInstance.visible = false;
+			await tickAndDetectChanges(fixture);
+			fixture.componentInstance.visible = true;
+			await tickAndDetectChanges(fixture);
+
+			await openSelect(select, fixture);
+			expect(document.querySelector('.container-a .ng-dropdown-panel')).not.toBeNull();
+		});
+
 		it('should throw for an appendTo selector that matches no element', async () => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
