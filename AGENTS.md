@@ -66,6 +66,7 @@ ng-select is an **Angular 22** component library published as two npm packages, 
 - **Signals in library code**: Prefer `input()`, `output()`, and `model()` for new APIs. The main component uses the `_foo` + `linkedSignal()` pattern to preserve stable public property names—follow that when extending `NgSelectComponent`.
 - **Tests**: Vitest browser mode — headless **Chromium** via Playwright (`vitest.config.ts`); `pnpm test`, `pnpm test:ci`. Playwright is only the unit-test browser provider — there is no separate e2e suite.
 - **Commits**: Use [Conventional Commits](https://www.conventionalcommits.org/) format (required by semantic-release).
+- **Attribution**: **DO NOT** list yourself, your model name, or any AI/LLM assistant as a contributor, co-author, author, or credit in any file, commit, or PR.
 
 ---
 
@@ -190,6 +191,7 @@ Register new examples in `src/demo/app/examples/examples.ts`.
 - **DO NOT** add new runtime dependencies to published packages without strong justification.
 - **DO NOT** hand-edit build output under `dist/`.
 - **DO NOT** remove `NgSelectModule` or rename CSS classes without a migration plan.
+- **DO NOT** write your name, model name, product name, or any AI/LLM identity as a contributor, co-author, author, or acknowledgement—anywhere (README, CONTRIBUTING, AUTHORS, CREDITS, changelogs, commit messages including `Co-authored-by`, PR titles/bodies, comments, or docs). Humans own attribution; assistants do not.
 
 ---
 
@@ -344,8 +346,8 @@ When adding new inputs to `NgSelectComponent`, follow this `_name` + `alias` + `
 
 ### Dropdown positioning
 
-- `NgDropdownPanelService` handles positioning, scrolling, and virtual scroll.
-- `appendTo` and `popover` are alternative strategies for overflow/stacking issues—preserve both.
+- The panel renders in an Angular CDK Overlay anchored to the select container; `NgDropdownPanelService` handles scrolling and virtual scroll measurements.
+- `appendTo` controls DOM containment of the overlay (ancestor-scoped styles, stacking context, focus enclosure) — positioning stays viewport-based. `popover` is a deprecated no-op (the overlay uses the native Popover API top layer automatically).
 
 ---
 

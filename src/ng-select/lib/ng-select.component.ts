@@ -1,4 +1,15 @@
 import {
+	ConnectedPosition,
+	createFlexibleConnectedPositionStrategy,
+	createNoopScrollStrategy,
+	createOverlayRef,
+	FlexibleConnectedPositionStrategy,
+	OverlayContainer,
+	OverlayRef,
+} from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { DOCUMENT } from '@angular/common';
+import {
 	afterEveryRender,
 	AfterViewInit,
 	booleanAttribute,
@@ -18,19 +29,23 @@ import {
 	InjectionToken,
 	Injector,
 	input,
+	isDevMode,
 	linkedSignal,
 	model,
 	numberAttribute,
 	OnChanges,
 	OnInit,
 	output,
+	runInInjectionContext,
 	signal,
 	SimpleChanges,
 	TemplateRef,
 	untracked,
 	viewChild,
+	ViewContainerRef,
 	ViewEncapsulation,
 } from '@angular/core';
+import { EventPhase } from '@angular/core/primitives/event-dispatch';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, filter, map, tap } from 'rxjs/operators';
@@ -40,7 +55,6 @@ import {
 	NgCollapseButtonTemplateDirective,
 	NgFooterTemplateDirective,
 	NgHeaderTemplateDirective,
-	NgItemLabelDirective,
 	NgLabelTemplateDirective,
 	NgLoadingSpinnerTemplateDirective,
 	NgLoadingTextTemplateDirective,
@@ -66,6 +80,7 @@ import { DropdownPosition, KeyCode, NgOption } from './ng-select.types';
 import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
 import { isDefined, isFunction, isObject, isPromise } from './value-utils';
 
+/** DI token for SelectionModel implementation. You can provide custom implementation changing selection behaviour. */
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type AddTagFn = (term: string) => any | Promise<any>;
 export type CompareWithFn = (a: any, b: any) => boolean;
@@ -73,6 +88,40 @@ export type GroupValueFn = (key: string | any, children: any[]) => string | any;
 
 function optionalBooleanAttribute(value: unknown): boolean | undefined {
 	return value == null ? undefined : booleanAttribute(value);
+}
+
+const DROPDOWN_POSITION_BELOW: ConnectedPosition = { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' };
+const DROPDOWN_POSITION_ABOVE: ConnectedPosition = { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom' };
+const DROPDOWN_POSITION_AFTER: ConnectedPosition = { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' };
+const DROPDOWN_POSITION_BEFORE: ConnectedPosition = { originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top' };
+
+const DROPDOWN_POSITIONS: Record<DropdownPosition, ConnectedPosition[]> = {
+	// 'auto' prefers below and flips above when the panel does not fit the viewport;
+	// the fit check measures the rendered overlay, so header/footer templates and
+	// item count are accounted for (#2687, #2575)
+	auto: [DROPDOWN_POSITION_BELOW, DROPDOWN_POSITION_ABOVE],
+	bottom: [DROPDOWN_POSITION_BELOW],
+	top: [DROPDOWN_POSITION_ABOVE],
+	right: [DROPDOWN_POSITION_AFTER],
+	left: [DROPDOWN_POSITION_BEFORE],
+};
+
+/**
+ * Overlay container created inside the `appendTo` host. Only used by browsers without the
+ * Popover API (where the popover insertion point cannot place the overlay host): keeping the
+ * container a descendant of the `appendTo` host preserves ancestor-scoped styles and focus
+ * containment there too. The container element carries `position: fixed`, so the connected
+ * position strategy's viewport coordinates stay valid, same as the default body container.
+ */
+class NgSelectAppendToOverlayContainer extends OverlayContainer {
+	constructor(private readonly _appendToHost: HTMLElement) {
+		super();
+	}
+
+	protected override _createContainer(): void {
+		super._createContainer();
+		this._appendToHost.appendChild(this._containerElement);
+	}
 }
 
 @Component({
@@ -90,7 +139,7 @@ function optionalBooleanAttribute(value: unknown): boolean | undefined {
 	],
 	encapsulation: ViewEncapsulation.None,
 	changeDetection: ChangeDetectionStrategy.OnPush,
-	imports: [NgClass, NgTemplateOutlet, NgItemLabelDirective, NgDropdownPanelComponent],
+	imports: [NgClass, NgTemplateOutlet, NgDropdownPanelComponent],
 	host: {
 		'[class.ng-select]': 'true',
 		'[class.ng-select-single]': '!multiple()',
@@ -114,50 +163,79 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly ariaLabelDropdown = linkedSignal(() => this._ariaLabelDropdown());
 	readonly _ariaLabel = input<string | undefined>(undefined, { alias: 'ariaLabel' });
 	readonly ariaLabel = linkedSignal(() => this._ariaLabel());
+	/** Marks first item as focused when opening/filtering. */
 	readonly _markFirst = input(true, { alias: 'markFirst', transform: booleanAttribute });
 	readonly markFirst = linkedSignal(() => this._markFirst());
+	/** Placeholder text. */
 	readonly _placeholder = input<string>(this.config.placeholder, { alias: 'placeholder' });
 	readonly placeholder = linkedSignal(() => this._placeholder());
-	readonly _fixedPlaceholder = input<boolean>(true, { alias: 'fixedPlaceholder' });
+	/** Set placeholder visible even when an item is selected */
+	readonly _fixedPlaceholder = input<boolean>(this.config.fixedPlaceholder, { alias: 'fixedPlaceholder' });
 	readonly fixedPlaceholder = linkedSignal(() => this._fixedPlaceholder());
+	/** Set custom text when filter returns empty result */
 	readonly _notFoundText = input<string>(undefined, { alias: 'notFoundText' });
 	readonly notFoundText = linkedSignal(() => this._notFoundText());
+	/** Set custom text when using Typeahead */
 	readonly _typeToSearchText = input<string>(undefined, { alias: 'typeToSearchText' });
 	readonly typeToSearchText = linkedSignal(() => this._typeToSearchText());
+	/** Prevent opening of ng-select on right mouse click */
 	readonly _preventToggleOnRightClick = input<boolean>(false, { alias: 'preventToggleOnRightClick' });
 	readonly preventToggleOnRightClick = linkedSignal(() => this._preventToggleOnRightClick());
+	/** Set custom text when using tagging */
 	readonly _addTagText = input<string>(undefined, { alias: 'addTagText' });
 	readonly addTagText = linkedSignal(() => this._addTagText());
+	/** Set custom text when for loading items */
 	readonly _loadingText = input<string>(undefined, { alias: 'loadingText' });
 	readonly loadingText = linkedSignal(() => this._loadingText());
+	/** Set custom text for clear all icon title */
 	readonly _clearAllText = input<string>(undefined, { alias: 'clearAllText' });
 	readonly clearAllText = linkedSignal(() => this._clearAllText());
+	/** Set custom text prefixed to the option label in the aria-label of the remove icon on selected values (multiple mode) */
 	readonly _removeText = input<string>(undefined, { alias: 'removeText' });
 	readonly removeText = linkedSignal(() => this._removeText());
+	/** Set the dropdown position on open */
 	readonly _dropdownPosition = input<DropdownPosition>('auto', { alias: 'dropdownPosition' });
 	readonly dropdownPosition = linkedSignal(() => this._dropdownPosition());
+	/**
+	 * Append the dropdown overlay to any element using a css selector, resolved against the
+	 * select's own root (document or shadow root). The panel keeps its viewport-based
+	 * positioning and top-layer painting; the target controls where the overlay lives in the
+	 * DOM — ancestor-scoped styles, stacking context and focus containment. Defaults to the
+	 * document body.
+	 */
 	readonly _appendTo = input<string>(undefined, { alias: 'appendTo' });
 	readonly appendTo = linkedSignal(() => this._appendTo());
+	/** Configure which DOM event type is used for outside click detection. Use `'mousedown'` to fix issues with backdrop/loading overlays that appear on dropdown open */
 	readonly _outsideClickEvent = input<'click' | 'mousedown'>(this.config.outsideClickEvent ?? 'click', { alias: 'outsideClickEvent' });
 	readonly outsideClickEvent = linkedSignal(() => this._outsideClickEvent());
+	/** You can set the loading state from the outside (e.g. async items loading) */
 	readonly _loading = input(false, { alias: 'loading', transform: booleanAttribute });
 	readonly loading = linkedSignal(() => this._loading());
+	/** Whether to close the menu when a value is selected */
 	readonly _closeOnSelect = input(true, { alias: 'closeOnSelect', transform: booleanAttribute });
 	readonly closeOnSelect = linkedSignal(() => this._closeOnSelect());
+	/** Allows to hide selected items. */
 	readonly _hideSelected = input(false, { alias: 'hideSelected', transform: booleanAttribute });
 	readonly hideSelected = linkedSignal(() => this._hideSelected());
+	/** Select marked dropdown item using tab. Default `false` */
 	readonly _selectOnTab = input(false, { alias: 'selectOnTab', transform: booleanAttribute });
 	readonly selectOnTab = linkedSignal(() => this._selectOnTab());
+	/** Open dropdown using enter. Default `true` */
 	readonly _openOnEnter = input(undefined, { alias: 'openOnEnter', transform: booleanAttribute });
 	readonly openOnEnter = linkedSignal(() => this._openOnEnter());
+	/** When multiple = true, allows to set a limit number of selection. */
 	readonly _maxSelectedItems = input<number, unknown>(undefined, { alias: 'maxSelectedItems', transform: numberAttribute });
 	readonly maxSelectedItems = linkedSignal(() => this._maxSelectedItems());
+	/** Allow to group items by key or function expression */
 	readonly _groupBy = input<string | ((value: any) => any)>(undefined, { alias: 'groupBy' });
 	readonly groupBy = linkedSignal(() => this._groupBy());
+	/** Function expression to provide group value */
 	readonly _groupValue = input<GroupValueFn>(undefined, { alias: 'groupValue' });
 	readonly groupValue = linkedSignal(() => this._groupValue());
+	/** Used in virtual scrolling, the `bufferAmount` property controls the number of items preloaded in the background to ensure smoother and more seamless scrolling. */
 	readonly _bufferAmount = input(4, { alias: 'bufferAmount', transform: numberAttribute });
 	readonly bufferAmount = linkedSignal(() => this._bufferAmount());
+	/** Enable virtual scroll for better performance when rendering a lot of data */
 	readonly _virtualScroll = input<boolean | undefined, unknown>(undefined, {
 		alias: 'virtualScroll',
 		transform: optionalBooleanAttribute,
@@ -167,56 +245,80 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const value = this._virtualScroll();
 		return isDefined(value) ? value : this.isVirtualScrollDisabled(this.config);
 	});
+	/** Allow to select group when groupBy is used */
 	readonly _selectableGroup = input(false, { alias: 'selectableGroup', transform: booleanAttribute });
 	readonly selectableGroup = linkedSignal(() => this._selectableGroup());
+	/** Control tab navigation behavior for the clear button. Default `true` */
 	readonly _tabFocusOnClearButton = input<boolean | undefined>(undefined, { alias: 'tabFocusOnClearButton' });
 	readonly tabFocusOnClearButton = linkedSignal(() => this._tabFocusOnClearButton());
+	/** Indicates whether to select all children or group itself */
 	readonly _selectableGroupAsModel = input(true, { alias: 'selectableGroupAsModel', transform: booleanAttribute });
 	readonly selectableGroupAsModel = linkedSignal(() => this._selectableGroupAsModel());
+	/** Adds controls for collapsing groups. */
 	readonly _collapsibleGroup = input(false, { alias: 'collapsibleGroup', transform: booleanAttribute });
 	readonly collapsibleGroup = linkedSignal(() => this._collapsibleGroup());
+	/** Collapses groups by default when collapsible groups are enabled. */
 	readonly _collapseGroupByDefault = input(false, { alias: 'collapseGroupByDefault', transform: booleanAttribute });
 	readonly collapseGroupByDefault = linkedSignal(() => this._collapseGroupByDefault());
+	/** Places the group collapse button at the logical start or end of the group row. */
 	readonly _collapseButtonPosition = input<'start' | 'end'>('start', { alias: 'collapseButtonPosition' });
 	readonly collapseButtonPosition = linkedSignal(() => this._collapseButtonPosition());
+	/** Allow to filter by custom search function */
 	readonly _searchFn = input(null, { alias: 'searchFn' });
 	readonly searchFn = linkedSignal(() => this._searchFn());
+	/** Provide custom trackBy function */
 	readonly _trackByFn = input(null, { alias: 'trackByFn' });
 	readonly trackByFn = linkedSignal(() => this._trackByFn());
+	/** Clear selected values one by one when clicking backspace. Default `true` */
 	readonly _clearOnBackspace = input(true, { alias: 'clearOnBackspace', transform: booleanAttribute });
 	readonly clearOnBackspace = linkedSignal(() => this._clearOnBackspace());
+	/** Id to associate control with label. */
 	readonly _labelForId = input(null, { alias: 'labelForId' });
 	readonly labelForId = linkedSignal(() => this._labelForId());
+	/** Pass custom attributes to underlying `input` element */
 	readonly _inputAttrs = input<Record<string, string>>({}, { alias: 'inputAttrs' });
 	readonly inputAttrs = linkedSignal(() => this._inputAttrs());
+	/** Set tabindex on ng-select */
 	readonly _tabIndex = input<number, unknown>(undefined, { alias: 'tabIndex', transform: numberAttribute });
 	readonly tabIndex = linkedSignal(() => this._tabIndex());
+	/** Set ng-select as readonly. Mostly used with reactive forms. */
 	readonly _readonly = input(false, { alias: 'readonly', transform: booleanAttribute });
 	readonly readonly = linkedSignal(() => this._readonly());
+	/** Whether items should be filtered while composition started */
 	readonly _searchWhileComposing = input(true, { alias: 'searchWhileComposing', transform: booleanAttribute });
 	readonly searchWhileComposing = linkedSignal(() => this._searchWhileComposing());
+	/** Minimum term length to start a search. Should be used with `typeahead` */
 	readonly _minTermLength = input(0, { alias: 'minTermLength', transform: numberAttribute });
 	readonly minTermLength = linkedSignal(() => this._minTermLength());
+	/** Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`. */
 	readonly _editableSearchTerm = input(false, { alias: 'editableSearchTerm', transform: booleanAttribute });
 	readonly editableSearchTerm = linkedSignal(() => this._editableSearchTerm());
 	readonly _ngClass = input(null, { alias: 'ngClass' });
 	readonly ngClass = linkedSignal(() => this._ngClass());
+	/** Custom autocomplete or advanced filter. */
 	readonly _typeahead = input<Subject<string>>(undefined, { alias: 'typeahead' });
 	readonly typeahead = linkedSignal(() => this._typeahead());
+	/** Allows to select multiple items. */
 	readonly _multiple = input(false, { alias: 'multiple', transform: booleanAttribute });
 	readonly multiple = linkedSignal(() => this._multiple());
+	/** Allows to create custom options. */
 	readonly _addTag = input<boolean | AddTagFn>(false, { alias: 'addTag' });
 	readonly addTag = linkedSignal(() => this._addTag());
+	/** Allow to search for value. Default `true` */
 	readonly _searchable = input(true, { alias: 'searchable', transform: booleanAttribute });
 	readonly searchable = linkedSignal(() => this._searchable());
+	/** Allow to clear selected value. Default `true` */
 	readonly _clearable = input(true, { alias: 'clearable', transform: booleanAttribute });
 	readonly clearable = linkedSignal(() => this._clearable());
 	readonly _clearKeepsDisabledOptions = input(true, { alias: 'clearKeepsDisabledOptions', transform: booleanAttribute });
 	readonly clearKeepsDisabledOptions = linkedSignal(() => this._clearKeepsDisabledOptions());
+	/** Deselects a selected item when it is clicked in the dropdown. Default `false`. Default `true` when **multiple** is `true` */
 	readonly _deselectOnClick = input<boolean>(undefined, { alias: 'deselectOnClick' });
 	readonly deselectOnClick = linkedSignal(() => this._deselectOnClick());
+	/** Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false` */
 	readonly _clearSearchOnAdd = input(undefined, { alias: 'clearSearchOnAdd' });
 	readonly clearSearchOnAdd = linkedSignal(() => this._clearSearchOnAdd());
+	/** A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. */
 	readonly _compareWith = input(undefined, {
 		alias: 'compareWith',
 		transform: (fn: CompareWithFn | undefined) => {
@@ -227,33 +329,52 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		},
 	});
 	readonly compareWith = linkedSignal(() => this._compareWith());
+	/** Provide custom keyDown function. Executed before default handler. Return false to suppress execution of default key down handlers */
 	readonly _keyDownFn = input<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true, { alias: 'keyDownFn' });
 	readonly keyDownFn = linkedSignal(() => this._keyDownFn());
+	/** @deprecated Has no effect: the CDK overlay renders in the native Popover API top layer automatically in supporting browsers. Will be removed in a future major version. */
 	readonly _popover = input(false, { alias: 'popover', transform: booleanAttribute });
+	/** @deprecated Has no effect: the CDK overlay renders in the native Popover API top layer automatically in supporting browsers. Will be removed in a future major version. */
 	readonly popover = linkedSignal(() => this._popover());
 	// models
+	/** Object property to use for label. Default `label` */
 	readonly bindLabel = model<string>(undefined);
+	/** Object property to use for selected model. By default binds to whole object. */
 	readonly bindValue = model<string>(undefined);
+	/** Allows to select dropdown appearance. Set to `outline` or `fill` for Material form-field styles (applies only to Material theme) */
 	readonly appearance = model<string>(undefined);
+	/** Allows manual control of dropdown opening and closing. `true` - won't close. `false` - won't open. */
 	readonly isOpen = model<boolean | undefined>(false);
+	/** Items array */
 	readonly items = model<readonly any[]>([]);
 	// output events
+	/** Fired on select blur */
 	readonly blurEvent = output<any>({ alias: 'blur' });
+	/** Fired on select focus */
 	readonly focusEvent = output<any>({ alias: 'focus' });
+	/** Fired on model change. Outputs whole model */
 	readonly changeEvent = output<any>({ alias: 'change' });
+	/** Fired on select dropdown open */
 	readonly openEvent = output({ alias: 'open' });
+	/** Fired on select dropdown close */
 	readonly closeEvent = output({ alias: 'close' });
+	/** Fired while typing search term. Outputs search term with filtered items */
 	readonly searchEvent = output<{
 		term: string;
 		items: any[];
 	}>({ alias: 'search' });
+	/** Fired on clear icon click */
 	readonly clearEvent = output({ alias: 'clear' });
+	/** Fired when item is added while `[multiple]="true"`. Outputs added item */
 	readonly addEvent = output<any>({ alias: 'add' });
+	/** Fired when item is removed while `[multiple]="true"` */
 	readonly removeEvent = output<any>({ alias: 'remove' });
+	/** Fired when scrolled (only when `[virtualScroll]="true"`). Provides the start and end index of the currently available items. Can be used for loading more items in chunks before the user has scrolled all the way to the bottom of the list. */
 	readonly scroll = output<{
 		start: number;
 		end: number;
 	}>({ alias: 'scroll' });
+	/** Fired when scrolled to the end of items. Can be used for loading more items in chunks. */
 	readonly scrollToEnd = output<any>({ alias: 'scrollToEnd' });
 	// computed
 	readonly disabled = computed(() => this.readonly() || this._disabled());
@@ -295,13 +416,18 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly dropdownPanel = viewChild(forwardRef(() => NgDropdownPanelComponent));
 	readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 	readonly clearButton = viewChild<ElementRef<HTMLSpanElement>>('clearButton');
+	private readonly _dropdownTemplate = viewChild<TemplateRef<any>>('dropdownTemplate');
+	// The portal's embedded view is anchored at the template's own container so it stays
+	// part of this component's logical view tree (DI, view queries, detectChanges) while
+	// its DOM nodes live in the CDK overlay
+	private readonly _dropdownOutlet = viewChild('dropdownTemplate', { read: ViewContainerRef });
+	private readonly _selectContainer = viewChild<ElementRef<HTMLDivElement>>('selectContainer');
 	// public variables
 	readonly dropdownId = newId();
 	readonly element: HTMLElement;
 	/** Width of the notched-outline gap for the floated label in the material outline appearance */
 	readonly outlineNotchWidth = signal(0);
 	// variables
-	escapeHTML = true;
 	itemsList: ItemsList;
 	viewPortItems: NgOption[] = [];
 	tabFocusOnClear = signal<boolean>(true);
@@ -309,9 +435,20 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	private readonly _console = inject(ConsoleService);
 	private readonly _destroyRef = inject(DestroyRef);
 	private readonly autoFocus = inject(new HostAttributeToken('autofocus'), { optional: true });
+	/** Overlay hosting the dropdown panel while open. Bound into the panel so it can request repositioning. */
+	protected dropdownOverlayRef: OverlayRef | null = null;
 	// private variables
 	private readonly _defaultLabel = 'label';
 	private readonly _editableSearchTermActive = computed(() => this.editableSearchTerm() && !this.multiple());
+	private readonly _document = inject(DOCUMENT);
+	private _dropdownPositionStrategy: FlexibleConnectedPositionStrategy | null = null;
+	private _dropdownPortal: TemplatePortal | null = null;
+	/** `appendTo` value the current overlay was created against; a change rebuilds the overlay. */
+	private _overlayAppendTo: string | null = null;
+	/** Element `appendTo` resolved to when the current overlay was created; a change rebuilds the overlay. */
+	private _overlayAppendToHost: HTMLElement | null = null;
+	/** Overlay container placed inside the `appendTo` host for browsers without the Popover API. */
+	private _appendToContainer: NgSelectAppendToOverlayContainer | null = null;
 	private _injector = inject(Injector);
 	private _isComposing = false;
 	private _itemsAreUsed: boolean;
@@ -337,6 +474,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		afterEveryRender({
 			read: () => this._measureOutlineNotch(),
 		});
+		this._destroyRef.onDestroy(() => this._destroyDropdownOverlay());
 	}
 
 	/**
@@ -410,6 +548,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	ngOnInit() {
 		this._handleKeyPresses();
 		this._setInputAttributes();
+		this._warnDeprecatedInputs();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -445,7 +584,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 	ngAfterViewInit() {
 		if (!this._itemsAreUsed) {
-			this.escapeHTML = false;
 			this._setItemsFromNgOptions();
 		}
 
@@ -495,6 +633,10 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 				this._handleTab($event);
 				break;
 			case KeyCode.Esc:
+				// Only consume Escape when it closes the dropdown so parent overlays/dialogs can still handle Escape when already closed
+				if (!this.isOpen() || this._manualOpen) {
+					return;
+				}
 				this.close();
 				$event.preventDefault();
 				break;
@@ -534,7 +676,22 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			return false;
 		}
 		const target = $event.target as HTMLElement;
-		if (target.tagName !== 'INPUT') {
+
+		// Allow highlighting/copying the selected label when search is disabled.
+		// Skipping preventDefault + toggle lets the browser start a text selection.
+		// See https://github.com/ng-select/ng-select/issues/2669
+		const onSelectedValue = !!target.closest?.('.ng-value');
+		const onValueIcon = target.classList.contains('ng-value-icon') || !!target.closest?.('.ng-value-icon');
+		if (!this.searchable() && onSelectedValue && !onValueIcon) {
+			if (!this._focused) {
+				this.focus();
+			}
+			return;
+		}
+
+		// Skip during Angular event replay (SSR hydration): preventDefault has no effect
+		// after browser dispatch and throws — see https://github.com/ng-select/ng-select/issues/2549
+		if (target.tagName !== 'INPUT' && $event.eventPhase !== EventPhase.REPLAY) {
 			$event.preventDefault();
 		}
 
@@ -621,6 +778,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/** Opens the select dropdown panel */
 	open() {
 		if (this.disabled() || this.isOpen() || this._manualOpen) {
 			return;
@@ -635,9 +793,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		if (!this.searchTerm) {
 			this.focus();
 		}
+		// Attach synchronously (effects only flush on the next tick): consumers expect the
+		// panel to be in the DOM right after open() returns
+		this._syncDropdownOverlay();
 		this.detectChanges();
 	}
 
+	/** Closes the select dropdown panel */
 	close() {
 		if (!this.isOpen() || this._manualOpen) {
 			return;
@@ -652,6 +814,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.itemsList.unmarkItem();
 		this._onTouched();
 		this.closeEvent.emit();
+		// Detach synchronously (effects only flush on the next tick): the panel must leave
+		// the DOM without relying on zone-triggered change detection (#2765)
+		this._syncDropdownOverlay();
 		this.detectChanges();
 	}
 
@@ -696,16 +861,18 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._onSelectionChanged();
 	}
 
+	/** Focuses the select element */
 	focus() {
 		this.searchInput().nativeElement.focus();
 	}
 
+	/** Blurs the select element */
 	blur() {
 		this.searchInput().nativeElement.blur();
 	}
 
 	unselect(item: NgOption) {
-		if (!item) {
+		if (!item || this.disabled() || item.disabled) {
 			return;
 		}
 
@@ -909,6 +1076,22 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			},
 			{ injector: this._injector },
 		);
+
+		// open()/close() sync the overlay imperatively; this effect covers the paths that
+		// bypass them — an [isOpen] binding (manual mode), programmatic isOpen.set(), and
+		// dropdownPosition changes while open
+		effect(
+			() => {
+				this.isOpen();
+				this.dropdownPosition();
+				// Track the template query too: with [isOpen] pre-set, the first run can happen
+				// before view children resolve, and this re-runs the effect once they do
+				this._dropdownTemplate();
+
+				untracked(() => this._syncDropdownOverlay());
+			},
+			{ injector: this._injector },
+		);
 	}
 
 	private _setSearchTermFromItems() {
@@ -942,13 +1125,12 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 				}
 
 				this.bindLabel.set(this._defaultLabel);
-				const items =
-					options.map((option) => ({
-						$ngOptionValue: option.value(),
-						$ngOptionLabel: option.elementRef.nativeElement.innerHTML,
-						$ngOptionClasses: option.classes(),
-						disabled: option.disabled(),
-					})) ?? [];
+				const items = options.map((option) => ({
+					$ngOptionValue: option.value(),
+					$ngOptionLabel: option.label(),
+					$ngOptionClasses: option.classes(),
+					disabled: option.disabled(),
+				}));
 				this.items.set(items);
 				this.itemsList.setItems(items);
 				if (this.hasValue) {
@@ -1013,7 +1195,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 				const isPrimitive = !isValObject && !this.bindValue();
 				if (isValObject || isPrimitive) {
 					this.itemsList.select(this.itemsList.mapItem(val, null));
-				} else if (this.bindValue()) {
+				} else {
 					item = {
 						[this.bindLabel()]: null,
 						[this.bindValue()]: val,
@@ -1123,9 +1305,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 	private _changeSearch(searchTerm: string) {
 		this._searchTerm.set(searchTerm);
-		if (this.typeahead()?.observed) {
-			this.typeahead().next(searchTerm);
-		}
 	}
 
 	private _scrollToMarked() {
@@ -1143,11 +1322,126 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	private _onSelectionChanged() {
-		const appendTo = this.appendTo() ?? this.config.appendTo;
-		if (this.isOpen() && this.deselectOnClickValue() && appendTo) {
+		if (this.isOpen() && this.deselectOnClickValue()) {
 			// Make sure items are rendered.
 			this._cd.detectChanges();
-			this.dropdownPanel().adjustPosition();
+			this.dropdownPanel()?.adjustPosition();
+		}
+	}
+
+	/** Attaches or detaches the dropdown overlay to match the current open state. Idempotent. */
+	private _syncDropdownOverlay() {
+		if (!this._dropdownTemplate()) {
+			return;
+		}
+		if (this.isOpen()) {
+			this._openDropdownOverlay(this.dropdownPosition());
+		} else {
+			this.dropdownOverlayRef?.detach();
+		}
+	}
+
+	/**
+	 * Creates the overlay on first open and (re)attaches the dropdown template to it.
+	 * The panel always renders in the CDK overlay; `dropdownPosition` maps onto connected
+	 * positions, with `auto` falling back to the opposite side when space runs out.
+	 */
+	private _openDropdownOverlay(position: DropdownPosition) {
+		const overlayRef = this._ensureDropdownOverlay();
+		this._dropdownPositionStrategy.withPositions(DROPDOWN_POSITIONS[position] ?? DROPDOWN_POSITIONS.auto);
+		// Direction is snapshotted per open, matching how the previous implementation read
+		// `document.documentElement.dir` when positioning an appended panel
+		overlayRef.setDirection(this._document?.documentElement?.dir === 'rtl' ? 'rtl' : 'ltr');
+		// The panel tracks the width of the select; the panel keeps it in sync on host resize
+		overlayRef.updateSize({ width: this._dropdownOrigin().getBoundingClientRect().width });
+		if (overlayRef.hasAttached()) {
+			// Only `dropdownPosition` changed while open — re-evaluate with the new positions
+			overlayRef.updatePosition();
+			return;
+		}
+		this._dropdownPortal ??= new TemplatePortal(this._dropdownTemplate(), this._dropdownOutlet());
+		overlayRef.attach(this._dropdownPortal);
+	}
+
+	/**
+	 * The dropdown anchors to the `.ng-select-container` box, not the host: themes may pad
+	 * the host below the container (material reserves 1.25em of subscript space under the
+	 * underline), and the panel must sit flush against the visible field — the same anchor
+	 * the pre-overlay `appendTo` positioning used.
+	 */
+	private _dropdownOrigin(): HTMLElement {
+		return this._selectContainer()?.nativeElement ?? this.element;
+	}
+
+	private _ensureDropdownOverlay(): OverlayRef {
+		const appendTo = this.appendTo() ?? this.config.appendTo ?? null;
+		// Resolved per open: the selector keeps matching when the element behind it is replaced (a dialog rebuilt on reopen), and a reused overlay re-attaches into the discarded one
+		const appendToHost = appendTo ? this._resolveAppendToHost(appendTo) : null;
+		if (this.dropdownOverlayRef && (appendTo !== this._overlayAppendTo || appendToHost !== this._overlayAppendToHost)) {
+			// `appendTo` changed since the overlay was created — rebuild against the new host
+			this._destroyDropdownOverlay();
+		}
+		if (!this.dropdownOverlayRef) {
+			let injector = this._injector;
+			if (appendToHost) {
+				this._appendToContainer = runInInjectionContext(this._injector, () => new NgSelectAppendToOverlayContainer(appendToHost));
+				injector = Injector.create({
+					parent: this._injector,
+					providers: [{ provide: OverlayContainer, useValue: this._appendToContainer }],
+				});
+			}
+			this._dropdownPositionStrategy = createFlexibleConnectedPositionStrategy(injector, this._dropdownOrigin()).withFlexibleDimensions(false).withPush(false);
+			if (appendToHost) {
+				// Popover-capable browsers paint the panel in the top layer regardless of where it
+				// lives in the DOM, so the `appendTo` host only determines DOM containment —
+				// ancestor-scoped styles and focus enclosure. Browsers without the Popover API fall
+				// back to the NgSelectAppendToOverlayContainer provided above instead.
+				this._dropdownPositionStrategy.withPopoverLocation({ type: 'parent', element: appendToHost });
+			}
+			this._overlayAppendTo = appendTo;
+			this._overlayAppendToHost = appendToHost;
+			this.dropdownOverlayRef = createOverlayRef(injector, {
+				positionStrategy: this._dropdownPositionStrategy,
+				// Ancestor-scroll repositioning is handled by the panel's capture-phase document
+				// listener, which also covers plain scroll containers that CDK's ScrollDispatcher
+				// cannot see without a `cdkScrollable` marker (#2788)
+				scrollStrategy: createNoopScrollStrategy(),
+				// Detach must remove the panel from the DOM synchronously (#2765); the panel has
+				// no CDK-driven animations to wait for
+				disableAnimations: true,
+			});
+		}
+		return this.dropdownOverlayRef;
+	}
+
+	private _destroyDropdownOverlay() {
+		this.dropdownOverlayRef?.dispose();
+		this.dropdownOverlayRef = null;
+		this._dropdownPositionStrategy = null;
+		this._overlayAppendToHost = null;
+		this._appendToContainer?.ngOnDestroy();
+		this._appendToContainer = null;
+	}
+
+	/** Resolves the `appendTo` selector against the select's own root, so a select inside a shadow root finds hosts in that same root. */
+	private _resolveAppendToHost(selector: string): HTMLElement {
+		const root = this.element.getRootNode();
+		const scope = typeof ShadowRoot !== 'undefined' && root instanceof ShadowRoot ? root : this._document;
+		const host = scope.querySelector<HTMLElement>(selector);
+		if (!host) {
+			throw new Error(`appendTo selector ${selector} did not found any parent element`);
+		}
+		return host;
+	}
+
+	private _warnDeprecatedInputs() {
+		if (!isDevMode()) {
+			return;
+		}
+		if (this.popover()) {
+			this._console.warn(
+				'[ng-select] `popover` is deprecated and has no effect: the dropdown panel now renders in an Angular CDK overlay, which uses the native Popover API top layer automatically in supporting browsers.',
+			);
 		}
 	}
 

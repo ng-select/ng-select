@@ -31,6 +31,14 @@
 		}
 	}
 
+	// When search is disabled the input is still present for focus/ARIA, but it must not
+	// intercept clicks intended for the selected value (text selection / copy).
+	&:not(.ng-select-searchable) {
+		.ng-select-container .ng-value-container .ng-input {
+			pointer-events: none;
+		}
+	}
+
 	&.ng-select-opened .ng-select-container {
 		z-index: 1001;
 	}
@@ -242,10 +250,12 @@
 
 .ng-dropdown-panel {
 	box-sizing: border-box;
-	position: absolute;
+	// The panel renders in-flow inside the CDK overlay pane: the pane (or the native
+	// popover top layer) carries positioning and stacking, while theme margins on the
+	// panel still create the gap/overlap against the select they were designed for
+	position: relative;
 	opacity: 0;
 	width: 100%;
-	z-index: 1050;
 	-webkit-overflow-scrolling: touch;
 
 	.ng-dropdown-panel-items {
@@ -326,6 +336,19 @@
 		width: 1px;
 		opacity: 0;
 	}
+}
+
+// Themes written for the pre-overlay rendering positioned the panel against the select
+// with absolute offsets (top: 100%, bottom: 100%, left: 0, ...). Inside the overlay pane
+// those offsets would displace the panel, so they are neutralized here. This rule is
+// injected after application stylesheets, letting it also cover consumer themes that
+// were copied from the old shipped ones.
+.cdk-overlay-pane .ng-dropdown-panel {
+	position: relative;
+	top: auto;
+	right: auto;
+	bottom: auto;
+	left: auto;
 }
 
 .ng-visually-hidden {

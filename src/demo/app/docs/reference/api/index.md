@@ -1,0 +1,115 @@
+Complete reference for `NgSelectComponent` and related directives and services. Every input and output below is demonstrated on the [Examples](#/examples/data-sources) pages.
+
+## Inputs
+
+| Input                       | Type                                                 | Default             | Description                                                                                                                                                                                    |
+| --------------------------- | ---------------------------------------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [addTag]                    | `boolean \| ((term: string) => any \| Promise<any>)` | `false`             | Allows to create custom options.                                                                                                                                                               |
+| addTagText                  | `string`                                             | `Add item`          | Set custom text when using tagging                                                                                                                                                             |
+| appearance                  | `string`                                             | `underline`         | Allows to select dropdown appearance. Set to `outline` or `fill` for Material form-field styles (applies only to Material theme)                                                               |
+| appendTo                    | `string`                                             | null                | Append the dropdown overlay to any element using a css selector. Painting and positioning are unaffected; the target determines DOM containment (ancestor-scoped styles, focus enclosure).     |
+| bufferAmount                | `number`                                             | 4                   | Used in virtual scrolling, the `bufferAmount` property controls the number of items preloaded in the background to ensure smoother and more seamless scrolling.                                |
+| bindValue                   | `string`                                             | `-`                 | Object property to use for selected model. By default binds to whole object.                                                                                                                   |
+| bindLabel                   | `string`                                             | `label`             | Object property to use for label. Default `label`                                                                                                                                              |
+| [closeOnSelect]             | `boolean`                                            | true                | Whether to close the menu when a value is selected                                                                                                                                             |
+| clearAllText                | `string`                                             | `Clear all`         | Set custom text for clear all icon title                                                                                                                                                       |
+| [clearable]                 | `boolean`                                            | `true`              | Allow to clear selected value. Default `true`                                                                                                                                                  |
+| [clearOnBackspace]          | `boolean`                                            | `true`              | Clear selected values one by one when clicking backspace. Default `true`                                                                                                                       |
+| [compareWith]               | `(a: any, b: any) => boolean`                        | `(a, b) => a === b` | A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. |
+| dropdownPosition            | `bottom` \| `top` \| `auto`                          | `auto`              | Set the dropdown position on open                                                                                                                                                              |
+| [fixedPlaceholder]          | `boolean`                                            | `false`             | Set placeholder visible even when an item is selected                                                                                                                                          |
+| [groupBy]                   | `string` \| `Function`                               | null                | Allow to group items by key or function expression                                                                                                                                             |
+| [groupValue]                | `(groupKey: string, children: any[]) => Object`      | -                   | Function expression to provide group value                                                                                                                                                     |
+| [selectableGroup]           | `boolean`                                            | false               | Allow to select group when groupBy is used                                                                                                                                                     |
+| [selectableGroupAsModel]    | `boolean`                                            | true                | Indicates whether to select all children or group itself                                                                                                                                       |
+| [collapsibleGroup]          | `boolean`                                            | `false`             | Adds controls for collapsing groups. The current option's group can also be toggled with `Ctrl+Space` or `Cmd+Space`.                                                                          |
+| [collapseGroupByDefault]    | `boolean`                                            | `false`             | Collapses groups by default when `collapsibleGroup` is enabled.                                                                                                                                |
+| collapseButtonPosition      | `'start'` \| `'end'`                                 | `'start'`           | Places the group collapse button at the logical start or end of the group row. Logical positioning follows the document direction for RTL support.                                             |
+| [items]                     | `Array<any>`                                         | `[]`                | Items array                                                                                                                                                                                    |
+| [loading]                   | `boolean`                                            | `-`                 | You can set the loading state from the outside (e.g. async items loading)                                                                                                                      |
+| loadingText                 | `string`                                             | `Loading...`        | Set custom text when for loading items                                                                                                                                                         |
+| labelForId                  | `string`                                             | `-`                 | Id to associate control with label.                                                                                                                                                            |
+| [markFirst]                 | `boolean`                                            | `true`              | Marks first item as focused when opening/filtering.                                                                                                                                            |
+| [isOpen]                    | `boolean`                                            | `-`                 | Allows manual control of dropdown opening and closing. `true` - won't close. `false` - won't open.                                                                                             |
+| maxSelectedItems            | `number`                                             | none                | When multiple = true, allows to set a limit number of selection.                                                                                                                               |
+| [hideSelected]              | `boolean`                                            | `false`             | Allows to hide selected items.                                                                                                                                                                 |
+| [multiple]                  | `boolean`                                            | `false`             | Allows to select multiple items.                                                                                                                                                               |
+| notFoundText                | `string`                                             | `No items found`    | Set custom text when filter returns empty result                                                                                                                                               |
+| placeholder                 | `string`                                             | `-`                 | Placeholder text.                                                                                                                                                                              |
+| removeText                  | `string`                                             | `Remove`            | Set custom text prefixed to the option label in the aria-label of the remove icon on selected values (multiple mode)                                                                           |
+| [searchable]                | `boolean`                                            | `true`              | Allow to search for value. Default `true`                                                                                                                                                      |
+| [readonly]                  | `boolean`                                            | `false`             | Set ng-select as readonly. Mostly used with reactive forms.                                                                                                                                    |
+| [searchFn]                  | `(term: string, item: any) => boolean`               | `null`              | Allow to filter by custom search function                                                                                                                                                      |
+| [searchWhileComposing]      | `boolean`                                            | `true`              | Whether items should be filtered while composition started                                                                                                                                     |
+| [trackByFn]                 | `(item: any) => any`                                 | `null`              | Provide custom trackBy function                                                                                                                                                                |
+| [clearSearchOnAdd]          | `boolean`                                            | `true`              | Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false`                                                                                   |
+| [deselectOnClick]           | `boolean`                                            | `false`             | Deselects a selected item when it is clicked in the dropdown. Default `false`. Default `true` when **multiple** is `true`                                                                      |
+| [editableSearchTerm]        | `boolean`                                            | `false`             | Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`.                                                                                             |
+| [selectOnTab]               | `boolean`                                            | `false`             | Select marked dropdown item using tab. Default `false`                                                                                                                                         |
+| [tabFocusOnClearButton]     | `boolean`                                            | `true`              | Control tab navigation behavior for the clear button. Default `true`                                                                                                                           |
+| [openOnEnter]               | `boolean`                                            | `true`              | Open dropdown using enter. Default `true`                                                                                                                                                      |
+| outsideClickEvent           | `'click'` \| `'mousedown'`                           | `'click'`           | Configure which DOM event type is used for outside click detection. Use `'mousedown'` to fix issues with backdrop/loading overlays that appear on dropdown open                                |
+| [popover]                   | `boolean`                                            | `false`             | **Deprecated — has no effect.** The CDK overlay renders in the native Popover API top layer automatically in supporting browsers.                                                              |
+| [typeahead]                 | `Subject`                                            | `-`                 | Custom autocomplete or advanced filter. Emits on typing only; select/close/clear reset the input without emitting (use `(close)` / `(clear)` to react to those).                               |
+| [minTermLength]             | `number`                                             | `0`                 | Minimum term length to start a search. Should be used with `typeahead`                                                                                                                         |
+| typeToSearchText            | `string`                                             | `Type to search`    | Set custom text when using Typeahead                                                                                                                                                           |
+| [virtualScroll]             | `boolean`                                            | false               | Enable virtual scroll for better performance when rendering a lot of data                                                                                                                      |
+| [inputAttrs]                | `{ [key: string]: string }`                          | `-`                 | Pass custom attributes to underlying `input` element                                                                                                                                           |
+| [tabIndex]                  | `number`                                             | `-`                 | Set tabindex on ng-select                                                                                                                                                                      |
+| [preventToggleOnRightClick] | `boolean`                                            | `false`             | Prevent opening of ng-select on right mouse click                                                                                                                                              |
+| [keyDownFn]                 | `($event: KeyboardEvent) => bool`                    | `true`              | Provide custom keyDown function. Executed before default handler. Return false to suppress execution of default key down handlers                                                              |
+
+## Outputs
+
+| Output        | Description                                                                                                                                                                                                                                   |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| (add)         | Fired when item is added while `[multiple]="true"`. Outputs added item                                                                                                                                                                        |
+| (blur)        | Fired on select blur                                                                                                                                                                                                                          |
+| (change)      | Fired on model change. Outputs whole model                                                                                                                                                                                                    |
+| (close)       | Fired on select dropdown close                                                                                                                                                                                                                |
+| (clear)       | Fired on clear icon click                                                                                                                                                                                                                     |
+| (focus)       | Fired on select focus                                                                                                                                                                                                                         |
+| (search)      | Fired while typing search term. Outputs search term with filtered items                                                                                                                                                                       |
+| (open)        | Fired on select dropdown open                                                                                                                                                                                                                 |
+| (remove)      | Fired when item is removed while `[multiple]="true"`                                                                                                                                                                                          |
+| (scroll)      | Fired when scrolled (only when `[virtualScroll]="true"`). Provides the start and end index of the currently available items. Can be used for loading more items in chunks before the user has scrolled all the way to the bottom of the list. |
+| (scrollToEnd) | Fired when scrolled to the end of items. Can be used for loading more items in chunks.                                                                                                                                                        |
+
+## Methods
+
+Available on `NgSelectComponent` when accessed via a template reference variable or `@ViewChild`.
+
+| Name  | Description                      |
+| ----- | -------------------------------- |
+| open  | Opens the select dropdown panel  |
+| close | Closes the select dropdown panel |
+| focus | Focuses the select element       |
+| blur  | Blurs the select element         |
+
+## Template directives
+
+Customize every part of the select with `ng-template` directives — see live examples on the [Templates](#/examples/templates) page.
+
+| Directive                | Customizes                           |
+| ------------------------ | ------------------------------------ |
+| `ng-label-tmp`           | Selected label (single select)       |
+| `ng-multi-label-tmp`     | Selected items (multi select)        |
+| `ng-option-tmp`          | Option rows in the dropdown          |
+| `ng-optgroup-tmp`        | Group headers when `groupBy` is used |
+| `ng-header-tmp`          | Dropdown header                      |
+| `ng-footer-tmp`          | Dropdown footer                      |
+| `ng-placeholder-tmp`     | Placeholder                          |
+| `ng-notfound-tmp`        | "No items found" message             |
+| `ng-typetosearch-tmp`    | "Type to search" message             |
+| `ng-loadingtext-tmp`     | Loading message                      |
+| `ng-loadingspinner-tmp`  | Loading spinner                      |
+| `ng-clearbutton-tmp`     | Clear button                         |
+| `ng-collapse-button-tmp` | Group collapse button                |
+| `ng-tag-tmp`             | Tag row when `addTag` is enabled     |
+
+## Other
+
+| Name                | Type          | Description                                                                                                                                                                             |
+| ------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [ngOptionHighlight] | directive     | Highlights search term in option. Accepts search term. Should be used on option element. [README](https://github.com/ng-select/ng-select/blob/master/src/ng-option-highlight/README.md) |
+| NgSelectConfig      | configuration | Configuration provider for the NgSelect component. You can inject this service and provide application wide configuration.                                                              |

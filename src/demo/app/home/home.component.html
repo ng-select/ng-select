@@ -1,0 +1,28 @@
+<div class="home-container">
+	<section class="hero-section">
+		<h1 class="hero-title"><span class="logo-text">ng-select</span></h1>
+		<p class="hero-description">
+			Lightweight all-in-one UI select, multiselect and autocomplete component for Angular — with custom templates, virtual scroll, tagging and full
+			theming support.
+		</p>
+		<div class="hero-actions">
+			<a routerLink="/getting-started/installation" class="btn btn-primary">Get Started</a>
+			<a routerLink="/examples/data-sources" class="btn btn-secondary">Examples</a>
+			<a href="https://github.com/ng-select/ng-select" target="_blank" class="btn btn-secondary">View on GitHub</a>
+		</div>
+
+		<div class="hero-demo">
+			<ng-select [items]="demoCities" bindLabel="name" bindValue="id" placeholder="Try me — select a city" [(ngModel)]="selectedCity"></ng-select>
+		</div>
+	</section>
+
+	<section class="features-grid">
+		@for (feature of features; track feature.title) {
+			<div class="feature-card">
+				<div class="feature-icon">{{ feature.icon }}</div>
+				<h3>{{ feature.title }}</h3>
+				<p>{{ feature.text }}</p>
+			</div>
+		}
+	</section>
+</div>

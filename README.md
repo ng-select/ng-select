@@ -56,10 +56,8 @@ Android	2 most recent major versions
 
 - [Features](#features)
 - [Getting started](#getting-started)
-- [API](#api)
-- [Change detection](#change-detection)
-- [Custom styles](#custom-styles)
-  - [Validation state](#validation-state)
+- [Documentation and examples](#documentation-and-examples)
+- [Dropdown panel rendering](#dropdown-panel-rendering)
 - [Contributing](#contributing)
 - [Development](#development)
 - [Inspiration](#inspiration)
@@ -75,7 +73,7 @@ Android	2 most recent major versions
 - [x] Flexible autocomplete with client/server filtering
 - [x] Custom search
 - [x] Custom tags
-- [x] Append to
+- [x] CDK overlay positioning (top-layer rendering, no clipping)
 - [x] Group items
 - [x] Output events
 - [x] Accessibility
@@ -88,24 +86,24 @@ Library is under active development and may have API breaking changes for subseq
 
 ## Getting started
 
-### Step 1: Install `ng-select`:
+### Step 1: Install `ng-select` and its `@angular/cdk` peer dependency:
 
 #### NPM
 
 ```shell
-npm install --save @ng-select/ng-select
+npm install --save @ng-select/ng-select @angular/cdk
 ```
 
 #### Yarn
 
 ```shell
-yarn add @ng-select/ng-select
+yarn add @ng-select/ng-select @angular/cdk
 ```
 
 #### PNPM
 
 ```shell
-pnpm add @ng-select/ng-select
+pnpm add @ng-select/ng-select @angular/cdk
 ```
 
 ### Step 2:
@@ -158,7 +156,6 @@ typically in your root component, and customize the values of its properties in 
 ```js
   constructor(private config: NgSelectConfig) {
       this.config.notFoundText = 'Custom not found';
-      this.config.appendTo = 'body';
       // set the bindValue to global config when you use the same
       // bindValue in most of the place.
       // You can also override bindValue for the specified template
@@ -215,191 +212,26 @@ map: {
 }
 ```
 
-## API
+## Documentation and examples
 
-### Inputs
+Full documentation, live examples and the complete API reference live on the docs site:
 
-| Input                       | Type                                                 | Default             | Required | Description                                                                                                                                                                                    |
-| --------------------------- | ---------------------------------------------------- | ------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [addTag]                    | `boolean \| ((term: string) => any \| Promise<any>)` | `false`             | no       | Allows to create custom options.                                                                                                                                                               |
-| addTagText                  | `string`                                             | `Add item`          | no       | Set custom text when using tagging                                                                                                                                                             |
-| appearance                  | `string`                                             | `underline`         | no       | Allows to select dropdown appearance. Set to `outline` or `fill` for Material form-field styles (applies only to Material theme)                                                               |
-| appendTo                    | `string`                                             | null                | no       | Append dropdown to body or any other element using css selector. For correct positioning `body` should have `position:relative`                                                                |
-| bufferAmount                | `number`                                             | 4                   | no       | Used in virtual scrolling, the `bufferAmount` property controls the number of items preloaded in the background to ensure smoother and more seamless scrolling.                                |
-| bindValue                   | `string`                                             | `-`                 | no       | Object property to use for selected model. By default binds to whole object.                                                                                                                   |
-| bindLabel                   | `string`                                             | `label`             | no       | Object property to use for label. Default `label`                                                                                                                                              |
-| [closeOnSelect]             | `boolean`                                            | true                | no       | Whether to close the menu when a value is selected                                                                                                                                             |
-| clearAllText                | `string`                                             | `Clear all`         | no       | Set custom text for clear all icon title                                                                                                                                                       |
-| [clearable]                 | `boolean`                                            | `true`              | no       | Allow to clear selected value. Default `true`                                                                                                                                                  |
-| [clearOnBackspace]          | `boolean`                                            | `true`              | no       | Clear selected values one by one when clicking backspace. Default `true`                                                                                                                       |
-| [compareWith]               | `(a: any, b: any) => boolean`                        | `(a, b) => a === b` | no       | A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. |
-| dropdownPosition            | `bottom` \| `top` \| `auto`                          | `auto`              | no       | Set the dropdown position on open                                                                                                                                                              |
-| [fixedPlaceholder]          | `boolean`                                            | `false`             | no       | Set placeholder visible even when an item is selected                                                                                                                                          |
-| [groupBy]                   | `string` \| `Function`                               | null                | no       | Allow to group items by key or function expression                                                                                                                                             |
-| [groupValue]                | `(groupKey: string, children: any[]) => Object`      | -                   | no       | Function expression to provide group value                                                                                                                                                     |
-| [selectableGroup]           | `boolean`                                            | false               | no       | Allow to select group when groupBy is used                                                                                                                                                     |
-| [selectableGroupAsModel]    | `boolean`                                            | true                | no       | Indicates whether to select all children or group itself                                                                                                                                       |
-| [collapsibleGroup]          | `boolean`                                            | `false`             | no       | Adds controls for collapsing groups. The current option's group can also be toggled with `Ctrl+Space` or `Cmd+Space`.                                                                          |
-| [collapseGroupByDefault]    | `boolean`                                            | `false`             | no       | Collapses groups by default when `collapsibleGroup` is enabled.                                                                                                                                |
-| collapseButtonPosition      | `'start'` \| `'end'`                                 | `'start'`           | no       | Places the group collapse button at the logical start or end of the group row. Logical positioning follows the document direction for RTL support.                                             |
-| [items]                     | `Array<any>`                                         | `[]`                | yes      | Items array                                                                                                                                                                                    |
-| [loading]                   | `boolean`                                            | `-`                 | no       | You can set the loading state from the outside (e.g. async items loading)                                                                                                                      |
-| loadingText                 | `string`                                             | `Loading...`        | no       | Set custom text when for loading items                                                                                                                                                         |
-| labelForId                  | `string`                                             | `-`                 | no       | Id to associate control with label.                                                                                                                                                            |
-| [markFirst]                 | `boolean`                                            | `true`              | no       | Marks first item as focused when opening/filtering.                                                                                                                                            |
-| [isOpen]                    | `boolean`                                            | `-`                 | no       | Allows manual control of dropdown opening and closing. `true` - won't close. `false` - won't open.                                                                                             |
-| maxSelectedItems            | `number`                                             | none                | no       | When multiple = true, allows to set a limit number of selection.                                                                                                                               |
-| [hideSelected]              | `boolean`                                            | `false`             | no       | Allows to hide selected items.                                                                                                                                                                 |
-| [multiple]                  | `boolean`                                            | `false`             | no       | Allows to select multiple items.                                                                                                                                                               |
-| notFoundText                | `string`                                             | `No items found`    | no       | Set custom text when filter returns empty result                                                                                                                                               |
-| placeholder                 | `string`                                             | `-`                 | no       | Placeholder text.                                                                                                                                                                              |
-| removeText                  | `string`                                             | `Remove`            | no       | Set custom text prefixed to the option label in the aria-label of the remove icon on selected values (multiple mode)                                                                           |
-| [searchable]                | `boolean`                                            | `true`              | no       | Allow to search for value. Default `true`                                                                                                                                                      |
-| [readonly]                  | `boolean`                                            | `false`             | no       | Set ng-select as readonly. Mostly used with reactive forms.                                                                                                                                    |
-| [searchFn]                  | `(term: string, item: any) => boolean`               | `null`              | no       | Allow to filter by custom search function                                                                                                                                                      |
-| [searchWhileComposing]      | `boolean`                                            | `true`              | no       | Whether items should be filtered while composition started                                                                                                                                     |
-| [trackByFn]                 | `(item: any) => any`                                 | `null`              | no       | Provide custom trackBy function                                                                                                                                                                |
-| [clearSearchOnAdd]          | `boolean`                                            | `true`              | no       | Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false`                                                                                   |
-| [deselectOnClick]           | `boolean`                                            | `false`             | no       | Deselects a selected item when it is clicked in the dropdown. Default `false`. Default `true` when **multiple** is `true`                                                                      |
-| [editableSearchTerm]        | `boolean`                                            | `false`             | no       | Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`.                                                                                             |
-| [selectOnTab]               | `boolean`                                            | `false`             | no       | Select marked dropdown item using tab. Default `false`                                                                                                                                         |
-| [tabFocusOnClearButton]     | `boolean`                                            | `true`              | no       | Control tab navigation behavior for the clear button. Default `true`                                                                                                                           |
-| [openOnEnter]               | `boolean`                                            | `true`              | no       | Open dropdown using enter. Default `true`                                                                                                                                                      |
-| outsideClickEvent           | `'click'` \| `'mousedown'`                           | `'click'`           | no       | Configure which DOM event type is used for outside click detection. Use `'mousedown'` to fix issues with backdrop/loading overlays that appear on dropdown open                                |
-| [popover]                   | `boolean`                                            | `false`             | no       | Display the dropdown in the top-layer using the native Popover API. Useful when the dropdown is clipped or hidden behind dialogs or other stacking contexts. Alternative to `appendTo`         |
-| [typeahead]                 | `Subject`                                            | `-`                 | no       | Custom autocomplete or advanced filter.                                                                                                                                                        |
-| [minTermLength]             | `number`                                             | `0`                 | no       | Minimum term length to start a search. Should be used with `typeahead`                                                                                                                         |
-| typeToSearchText            | `string`                                             | `Type to search`    | no       | Set custom text when using Typeahead                                                                                                                                                           |
-| [virtualScroll]             | `boolean`                                            | false               | no       | Enable virtual scroll for better performance when rendering a lot of data                                                                                                                      |
-| [inputAttrs]                | `{ [key: string]: string }`                          | `-`                 | no       | Pass custom attributes to underlying `input` element                                                                                                                                           |
-| [tabIndex]                  | `number`                                             | `-`                 | no       | Set tabindex on ng-select                                                                                                                                                                      |
-| [preventToggleOnRightClick] | `boolean`                                            | `false`             | no       | Prevent opening of ng-select on right mouse click                                                                                                                                              |
-| [keyDownFn]                 | `($event: KeyboardEvent) => bool`                    | `true`              | no       | Provide custom keyDown function. Executed before default handler. Return false to suppress execution of default key down handlers                                                              |
+- [Getting started](https://ng-select.github.io/ng-select/#/getting-started/installation)
+- [Examples](https://ng-select.github.io/ng-select/#/examples/data-sources) — data sources, bindings, forms, search, tags, templates, multiselect, grouping, virtual scroll and more
+- [API reference](https://ng-select.github.io/ng-select/#/api) — inputs, outputs and methods for `NgSelectComponent`, `NgSelectConfig`, template directives and `NgOptionHighlightDirective`
+- [Styling](https://ng-select.github.io/ng-select/#/getting-started/styling)
+- [Change detection notes](https://ng-select.github.io/ng-select/#/getting-started/change-detection)
 
-### Outputs
+## Dropdown panel rendering
 
-| Output        | Description                                                                                                                                                                                                                                   |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| (add)         | Fired when item is added while `[multiple]="true"`. Outputs added item                                                                                                                                                                        |
-| (blur)        | Fired on select blur                                                                                                                                                                                                                          |
-| (change)      | Fired on model change. Outputs whole model                                                                                                                                                                                                    |
-| (close)       | Fired on select dropdown close                                                                                                                                                                                                                |
-| (clear)       | Fired on clear icon click                                                                                                                                                                                                                     |
-| (focus)       | Fired on select focus                                                                                                                                                                                                                         |
-| (search)      | Fired while typing search term. Outputs search term with filtered items                                                                                                                                                                       |
-| (open)        | Fired on select dropdown open                                                                                                                                                                                                                 |
-| (remove)      | Fired when item is removed while `[multiple]="true"`                                                                                                                                                                                          |
-| (scroll)      | Fired when scrolled (only when `[virtualScroll]="true"`). Provides the start and end index of the currently available items. Can be used for loading more items in chunks before the user has scrolled all the way to the bottom of the list. |
-| (scrollToEnd) | Fired when scrolled to the end of items. Can be used for loading more items in chunks.                                                                                                                                                        |
+Since v24 the dropdown panel is positioned by [Angular CDK Overlay](https://material.angular.dev/cdk/overlay/overview) instead of the previous hand-rolled geometry code. `@angular/cdk` is a peer dependency — install it alongside the library. There is nothing to configure; every dropdown renders in an overlay attached to the document body, stays anchored to the select while any ancestor scrolls, resizes with the select, and `dropdownPosition="auto"` measures the real rendered panel (including header/footer templates) when deciding between top and bottom.
 
-### Methods
+Things to know when migrating:
 
-| Name  | Description                      |
-| ----- | -------------------------------- |
-| open  | Opens the select dropdown panel  |
-| close | Closes the select dropdown panel |
-| focus | Focuses the select element       |
-| blur  | Blurs the select element         |
-
-### Other
-
-| Name                    | Type          | Description                                                                                                                                                                             |
-| ----------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [ngOptionHighlight]     | directive     | Highlights search term in option. Accepts search term. Should be used on option element. [README](https://github.com/ng-select/ng-select/blob/master/src/ng-option-highlight/README.md) |
-| NgSelectConfig          | configuration | Configuration provider for the NgSelect component. You can inject this service and provide application wide configuration.                                                              |
-| SELECTION_MODEL_FACTORY | service       | DI token for SelectionModel implementation. You can provide custom implementation changing selection behaviour.                                                                         |
-
-## Custom selection logic
-
-Ng-select allows to provide custom selection implementation using `SELECTION_MODEL_FACTORY`. To override [default](https://github.com/ng-select/ng-select/blob/master/src/ng-select/lib/selection-model.ts) logic provide your factory method in your angular module.
-
-```javascript
-// app.module.ts.ts
-providers: [
-    { provide: SELECTION_MODEL_FACTORY, useValue: <SelectionModelFactory>CustomSelectionFactory }
-]
-
-// selection-model.ts
-export function CustomSelectionFactory() {
-    return new CustomSelectionModel();
-}
-
-export class CustomSelectionModel implements SelectionModel {
-    ...
-}
-```
-
-## Change Detection
-
-Ng-select component implements `OnPush` change detection which means the dirty checking checks for immutable
-data types. That means if you do object mutations like:
-
-```javascript
-this.items.push({ id: 1, name: 'New item' });
-```
-
-Component will not detect a change. Instead you need to do:
-
-```javascript
-this.items = [...this.items, { id: 1, name: 'New item' }];
-```
-
-This will cause the component to detect the change and update. Some might have concerns that
-this is a pricey operation, however, it is much more performant than running `ngDoCheck` and
-constantly diffing the array.
-
-### Zoneless change detection
-
-`@ng-select/ng-select` and `@ng-select/ng-option-highlight` fully support
-[zoneless change detection](https://angular.dev/guide/zoneless) — the default for new Angular
-apps since v21. No setup is required: the libraries do not depend on `zone.js` (it is not in
-their dependency graphs) and work identically whether your app is zoneless or still uses
-`zone.js`. Both modes are covered by the unit-test suite in CI, and the
-[demo site](https://ng-select.github.io/ng-select) runs zoneless.
-
-## Custom styles
-
-If you are not happy with default styles you can easily override them with increased selector specificity or creating your own theme. This applies if you are using no `ViewEncapsulation` or adding styles to global stylesheet. E.g.
-
-```html
-<ng-select class="custom"></ng-select>
-```
-
-```css
-.ng-select.custom {
-	border: 0px;
-	min-height: 0px;
-	border-radius: 0;
-}
-.ng-select.custom .ng-select-container {
-	min-height: 0px;
-	border-radius: 0;
-}
-```
-
-If you are using `ViewEncapsulation`, you could use special `::ng-deep` selector which will prevent scoping for nested selectors altough this is more of a workaround and we recommend using solution described above.
-
-```css
-.ng-select.custom ::ng-deep .ng-select-container {
-	min-height: 0px;
-	border-radius: 0;
-}
-```
-
-WARNING: Keep in mind that ng-deep is deprecated and there is no alternative to it yet. See [Here](https://github.com/angular/angular/issues/17867).
-
-### Validation state
-
-By default when you use reactive forms validators or template driven forms validators css class `ng-invalid` will be applied on ng-select. You can show errors state by adding custom css style
-
-```css
-ng-select.ng-invalid.ng-touched .ng-select-container {
-	border-color: #dc3545;
-	box-shadow:
-		inset 0 1px 1px rgba(0, 0, 0, 0.075),
-		0 0 0 3px #fde6e8;
-}
-```
+- **DOM location.** The panel is no longer a child of `<ng-select>` in the DOM — it lives inside `.cdk-overlay-container` (the same situation as `appendTo="body"` produced before). CSS that scoped panel styles through an ancestor of the select, like `.my-wrapper ng-dropdown-panel { ... }`, will no longer match. The panel still receives the select's `class`/`ngClass` values, so scope panel styles through those classes instead: `.my-select-class.ng-dropdown-panel .ng-option { ... }`.
+- **`appendTo` changed meaning; `popover` is a deprecated no-op.** Overlay rendering already solves the clipping/stacking problems both existed for, so most usages of `appendTo` can simply be removed. It still works — but it now controls where the overlay lives **in the DOM** (ancestor-scoped styles, stacking context, focus containment) rather than how the panel is positioned; painting and positioning stay viewport-based either way. `popover` has no effect anymore (the overlay uses the native Popover API top layer automatically) and logs a one-time dev-mode warning.
+- **Stacking / z-index.** The hardcoded panel `z-index: 1050` is gone. In browsers with the native Popover API (all evergreen browsers), the CDK renders the overlay in the top layer, which paints above every `z-index` — including Bootstrap modals — with no configuration. In older browsers the panel falls back into `.cdk-overlay-container` with the CDK default `z-index: 1000` (declared in the `cdk-overlay` CSS layer). If you need the fallback to beat a higher stacking context such as a Bootstrap modal (`z-index: 1055`), raise the container in your global styles: `.cdk-overlay-container { z-index: 1056; }` — unlayered author CSS wins over the CDK's layered default regardless of specificity.
+- **Custom themes.** The shipped themes no longer position the panel (`top: 100%`, `bottom: 100%`, `left: 0` and friends were removed — margins, borders, shadows and radii remain). The library neutralizes those offsets for panels rendered in the overlay, so themes copied from older versions keep working, but you should remove positional offsets from `.ng-dropdown-panel` rules when you update your own theme.
 
 ## Contributing
 

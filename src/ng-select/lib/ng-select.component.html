@@ -1,4 +1,5 @@
 <div
+	#selectContainer
 	(mousedown)="handleMousedown($event)"
 	[class.ng-appearance-outline]="appearance() === 'outline'"
 	[class.ng-appearance-fill]="appearance() === 'fill'"
@@ -25,7 +26,7 @@
 							(keydown)="handleRemoveKeydown($event, item)"
 							>×</span
 						>
-						<span class="ng-value-label" [ngItemLabel]="item.label" [escape]="escapeHTML"></span>
+						<span class="ng-value-label">{{ item.label }}</span>
 					</ng-template>
 					<ng-template
 						[ngTemplateOutlet]="labelTemplate() || defaultLabelTemplate"
@@ -100,13 +101,13 @@
 	}
 </div>
 
-@if (isOpen()) {
-	@let appendToValue = appendTo() || config.appendTo;
+<!-- Rendered through a TemplatePortal into the CDK overlay while the select is open;
+     the embedded view stays part of this component's view tree, only the DOM moves. -->
+<ng-template #dropdownTemplate>
 	<ng-dropdown-panel
 		class="ng-dropdown-panel"
 		[virtualScroll]="dropdownVirtualScroll()"
 		[bufferAmount]="bufferAmount()"
-		[appendTo]="appendToValue"
 		[position]="dropdownPosition()"
 		[outsideClickEvent]="outsideClickEvent()"
 		[headerTemplate]="headerTemplate()"
@@ -120,10 +121,11 @@
 		(scrollToEnd)="scrollToEnd.emit($event)"
 		(outsideClick)="close()"
 		[class.ng-select-multiple]="multiple()"
-		[class]="appendToValue ? (ngClass() ? ngClass() : classes) : null"
+		[class]="ngClass() ? ngClass() : classes"
 		[listboxId]="dropdownId"
 		[ariaLabelDropdown]="ariaLabelDropdown() ?? config.ariaLabelDropdown"
-		[popover]="popover()">
+		[overlayRef]="dropdownOverlayRef"
+		[selectElement]="element">
 		<ng-container>
 			@for (item of viewPortItems; track trackByOption($index, item)) {
 				<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus, @angular-eslint/template/mouse-events-have-key-events -->
@@ -146,7 +148,7 @@
 					[attr.aria-expanded]="item.children && collapsibleGroup() ? !item.collapsed : null"
 					[attr.aria-keyshortcuts]="item.children && collapsibleGroup() ? 'Control+Space Meta+Space' : null">
 					<ng-template #defaultOptionTemplate>
-						<span class="ng-option-label" [ngItemLabel]="item.label" [escape]="escapeHTML"> </span>
+						<span class="ng-option-label">{{ item.label }}</span>
 					</ng-template>
 
 					<ng-template #defaultCollapseButtonTemplate let-collapsed="collapsed">
@@ -221,7 +223,7 @@
 			</ng-template>
 		}
 	</ng-dropdown-panel>
-}
+</ng-template>
 
 <!-- Always present aria-live region -->
 <div aria-atomic="true" aria-live="polite" class="ng-visually-hidden" role="status">
