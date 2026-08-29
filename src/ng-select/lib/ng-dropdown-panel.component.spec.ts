@@ -735,13 +735,13 @@ describe('NgDropdownPanelComponent', () => {
 	});
 
 	describe('select resize', () => {
-		it('should sync the overlay size and position with the select width', async () => {
+		it('should sync the overlay size and position with the select min-width', async () => {
 			const overlayRef = createFakeOverlayRef();
 			createFixture((host) => host.overlayRef.set(overlayRef as unknown as OverlayRef));
 			await flushAsync();
 
 			selectHostElement().style.width = '300px';
-			await vi.waitFor(() => expect(overlayRef.updateSize).toHaveBeenCalledWith({ width: 300 }));
+			await vi.waitFor(() => expect(overlayRef.updateSize).toHaveBeenCalledWith({ minWidth: 300 }));
 			expect(overlayRef.updatePosition).toHaveBeenCalled();
 		});
 
