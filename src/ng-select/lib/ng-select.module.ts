@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
-import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
-import { NgOptionComponent } from './ng-option.component';
-import { NgSelectComponent, SELECTION_MODEL_FACTORY } from './ng-select.component';
 import {
+	NgClearButtonTemplateDirective,
 	NgFooterTemplateDirective,
 	NgHeaderTemplateDirective,
 	NgItemLabelDirective,
@@ -16,10 +14,17 @@ import {
 	NgPlaceholderTemplateDirective,
 	NgTagTemplateDirective,
 	NgTypeToSearchTemplateDirective,
-	NgClearButtonTemplateDirective,
-} from './ng-templates.directive';
+} from './directives/ng-templates.directive';
+import { NgDropdownPanelComponent } from './dropdown-panel/ng-dropdown-panel.component';
+import { NgOptionComponent } from './ng-option.component';
+import { NgSelectComponent, SELECTION_MODEL_FACTORY } from './ng-select/ng-select.component';
 import { DefaultSelectionModelFactory } from './selection-model';
 
+/**
+ * Provides the compatibility NgModule wrapper for the standalone ng-select declarations.
+ *
+ * @since 3.0.0
+ */
 @NgModule({
 	imports: [
 		NgDropdownPanelComponent,
@@ -61,6 +66,11 @@ import { DefaultSelectionModelFactory } from './selection-model';
 })
 export class NgSelectModule {}
 
+/**
+ * Provides the default ng-select selection-model dependency.
+ *
+ * @since 15.2.0
+ */
 export function provideNgSelect() {
 	return [
 		{
