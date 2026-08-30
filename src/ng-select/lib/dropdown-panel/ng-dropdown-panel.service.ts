@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
 
+/**
+ * Describes the rendered range and spacer sizes for virtual scrolling.
+ *
+ * @since 3.0.0
+ */
 export interface ItemsRangeResult {
 	scrollHeight: number;
 	topPadding: number;
@@ -7,6 +12,11 @@ export interface ItemsRangeResult {
 	end: number;
 }
 
+/**
+ * Describes measured option, group, and viewport dimensions.
+ *
+ * @since 3.0.0
+ */
 export interface PanelDimensions {
 	/** Height of a regular option row (non-group). */
 	itemHeight: number;
@@ -16,11 +26,20 @@ export interface PanelDimensions {
 	itemsPerViewport: number;
 }
 
-/** Minimal shape needed to distinguish group headers from options. */
+/**
+ * Minimal shape needed to distinguish group headers from options.
+ *
+ * @since 23.9.0
+ */
 export interface VirtualScrollItem {
 	children?: unknown;
 }
 
+/**
+ * Calculates dropdown panel dimensions, virtual-scroll ranges, and scroll offsets.
+ *
+ * @since 3.0.0
+ */
 @Injectable()
 export class NgDropdownPanelService {
 	private _dimensions: PanelDimensions = {
@@ -30,16 +49,29 @@ export class NgDropdownPanelService {
 		itemsPerViewport: 0,
 	};
 
+	/**
+	 * Gets the currently measured panel dimensions.
+	 *
+	 * @returns The dimensions.
+	 *
+	 * @since 3.0.0
+	 */
 	get dimensions() {
 		return this._dimensions;
 	}
 
-	calculateItems(
-		scrollPos: number,
-		itemsLength: number,
-		buffer: number,
-		items?: readonly VirtualScrollItem[],
-	): ItemsRangeResult {
+	/**
+	 * Calculates the virtual-scroll item range and spacer sizes.
+	 *
+	 * @param scrollPos - The scroll pos.
+	 * @param itemsLength - The items length.
+	 * @param buffer - The buffer.
+	 * @param items - The options to process.
+	 * @returns The rendered range and spacer sizes.
+	 *
+	 * @since 3.0.0
+	 */
+	calculateItems(scrollPos: number, itemsLength: number, buffer: number, items?: readonly VirtualScrollItem[]): ItemsRangeResult {
 		const d = this._dimensions;
 		const useVariableHeights = !!items && d.groupHeight > 0 && d.groupHeight !== d.itemHeight;
 
@@ -74,6 +106,15 @@ export class NgDropdownPanelService {
 		};
 	}
 
+	/**
+	 * Stores the measured item, group, and panel dimensions.
+	 *
+	 * @param itemHeight - The item height.
+	 * @param panelHeight - The panel height.
+	 * @param groupHeight - The group height.
+	 *
+	 * @since 3.0.0
+	 */
 	setDimensions(itemHeight: number, panelHeight: number, groupHeight: number = itemHeight) {
 		const effectiveItemHeight = itemHeight > 0 ? itemHeight : groupHeight;
 		const itemsPerViewport = effectiveItemHeight > 0 ? Math.max(1, Math.floor(panelHeight / effectiveItemHeight)) : 0;
@@ -85,6 +126,14 @@ export class NgDropdownPanelService {
 		};
 	}
 
+	/**
+	 * Returns the measured height for an option or group.
+	 *
+	 * @param item - The option to process.
+	 * @returns The row height in pixels.
+	 *
+	 * @since 23.9.0
+	 */
 	getItemHeight(item: VirtualScrollItem | null | undefined): number {
 		const d = this._dimensions;
 		if (item?.children) {
@@ -93,6 +142,15 @@ export class NgDropdownPanelService {
 		return d.itemHeight || d.groupHeight;
 	}
 
+	/**
+	 * Calculates an item’s vertical offset within the full option list.
+	 *
+	 * @param items - The options to process.
+	 * @param index - The index.
+	 * @returns The vertical offset in pixels.
+	 *
+	 * @since 23.9.0
+	 */
 	getItemOffset(items: readonly VirtualScrollItem[], index: number): number {
 		let offset = 0;
 		const end = Math.max(0, Math.min(index, items.length));
@@ -102,10 +160,27 @@ export class NgDropdownPanelService {
 		return offset;
 	}
 
+	/**
+	 * Calculates the total virtual-scroll content height.
+	 *
+	 * @param items - The options to process.
+	 * @returns The total scroll height in pixels.
+	 *
+	 * @since 23.9.0
+	 */
 	getScrollHeight(items: readonly VirtualScrollItem[]): number {
 		return this.getItemOffset(items, items.length);
 	}
 
+	/**
+	 * Calculates the scroll position needed to reveal an item.
+	 *
+	 * @param itemTop - The item top.
+	 * @param itemHeight - The item height.
+	 * @param lastScroll - The last scroll.
+	 *
+	 * @since 3.0.0
+	 */
 	getScrollTo(itemTop: number, itemHeight: number, lastScroll: number) {
 		const { panelHeight } = this.dimensions;
 		const itemBottom = itemTop + itemHeight;
@@ -125,11 +200,17 @@ export class NgDropdownPanelService {
 		return null;
 	}
 
-	private _calculateItemsVariable(
-		scrollPos: number,
-		items: readonly VirtualScrollItem[],
-		buffer: number,
-	): ItemsRangeResult {
+	/**
+	 * Calculates a virtual-scroll range for variable-height rows.
+	 *
+	 * @param scrollPos - The scroll pos.
+	 * @param items - The options to process.
+	 * @param buffer - The buffer.
+	 * @returns The calculate items variable result.
+	 *
+	 * @since 23.9.0
+	 */
+	private _calculateItemsVariable(scrollPos: number, items: readonly VirtualScrollItem[], buffer: number): ItemsRangeResult {
 		const { panelHeight } = this._dimensions;
 		const itemsLength = items.length;
 		const scrollHeight = this.getScrollHeight(items);

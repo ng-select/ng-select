@@ -4,10 +4,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { flushAsync } from '../testing/helpers';
+import { flushAsync } from '../../testing/helpers';
+import { DropdownPosition, NgOption } from '../types/ng-select.types';
+import { isEventInside } from './dropdown-panel-dom-events';
 import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
 import { NgDropdownPanelService } from './ng-dropdown-panel.service';
-import { DropdownPosition, NgOption } from './ng-select.types';
 
 const ITEM_HEIGHT = 25;
 const PANEL_HEIGHT = 100;
@@ -676,7 +677,7 @@ describe('NgDropdownPanelComponent', () => {
 		});
 
 		it('should detect inside events through element containment when no composed path exists', async () => {
-			const cmp = createFixture();
+			createFixture();
 			await flushAsync();
 			fixture.detectChanges();
 
@@ -686,9 +687,9 @@ describe('NgDropdownPanelComponent', () => {
 			const detachedDropdown = panelElement();
 			document.body.appendChild(detachedDropdown);
 			try {
-				expect((cmp as any)._isEventInside({ target: inSelect })).toBe(true);
-				expect((cmp as any)._isEventInside({ target: inDropdown })).toBe(true);
-				expect((cmp as any)._isEventInside({ target: document.body, composedPath: () => [] })).toBe(false);
+				expect(isEventInside({ target: inSelect } as unknown as Event, inSelect, detachedDropdown)).toBe(true);
+				expect(isEventInside({ target: inDropdown } as unknown as Event, inSelect, detachedDropdown)).toBe(true);
+				expect(isEventInside({ target: document.body, composedPath: () => [] } as unknown as Event, inSelect, detachedDropdown)).toBe(false);
 			} finally {
 				selectHostElement().appendChild(detachedDropdown);
 			}

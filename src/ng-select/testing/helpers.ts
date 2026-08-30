@@ -1,7 +1,7 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KeyCode } from '../lib/ng-select.types';
+import { KeyCode } from '../lib/types/ng-select.types';
 
 export class TestsErrorHandler {}
 

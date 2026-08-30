@@ -54,33 +54,46 @@ import {
 	NgPlaceholderTemplateDirective,
 	NgTagTemplateDirective,
 	NgTypeToSearchTemplateDirective,
-} from './directives/ng-templates.directive';
+} from '../directives/ng-templates.directive';
 
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DropdownOverlayManager } from './dropdown-panel/dropdown-overlay-manager';
-import { ClassValue, mergeClassValues, readConsumerHostClasses } from './dropdown-panel/dropdown-panel-classes';
-import { NgDropdownPanelComponent } from './dropdown-panel/ng-dropdown-panel.component';
-import { NgDropdownPanelService } from './dropdown-panel/ng-dropdown-panel.service';
-import { ItemsList } from './items-list';
-import { NgOptionComponent } from './ng-option.component';
+import { DropdownOverlayManager } from '../dropdown-panel/dropdown-overlay-manager';
+import { ClassValue, mergeClassValues, readConsumerHostClasses } from '../dropdown-panel/dropdown-panel-classes';
+import { NgDropdownPanelComponent } from '../dropdown-panel/ng-dropdown-panel.component';
+import { NgDropdownPanelService } from '../dropdown-panel/ng-dropdown-panel.service';
+import { ItemsList } from '../items-list';
+import { NgOptionComponent } from '../ng-option.component';
+import { DefaultSelectionModelFactory, SelectionModelFactory } from '../selection-model';
+import { NgSelectConfig } from '../services/config.service';
+import { ConsoleService } from '../services/console.service';
+import { newId } from '../types/id';
+import { DropdownPosition, KeyCode, NgOption } from '../types/ng-select.types';
+import { isDefined, isFunction, isObject, isPromise } from '../utils/value-utils';
 import { createUnmatchedOptionValue, selectedItemsToModel, validateWriteValue } from './ng-select-model-value';
-import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
-import { NgSelectConfig } from './services/config.service';
-import { ConsoleService } from './services/console.service';
-import { newId } from './types/id';
-import { DropdownPosition, KeyCode, NgOption } from './types/ng-select.types';
-import { isDefined, isFunction, isObject, isPromise } from './utils/value-utils';
 
 /** DI token for SelectionModel implementation. You can provide custom implementation changing selection behaviour. */
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type AddTagFn = (term: string) => any | Promise<any>;
 export type CompareWithFn = (a: any, b: any) => boolean;
 export type GroupValueFn = (key: string | any, children: any[]) => string | any;
+/**
+ * Transforms an optional attribute value while preserving `undefined`.
+ *
+ * @param value - The value to process.
+ * @returns The optional boolean attribute result.
+ *
+ * @since 22.0.0
+ */
 function optionalBooleanAttribute(value: unknown): boolean | undefined {
 	return value == null ? undefined : booleanAttribute(value);
 }
 
+/**
+ * Provides select, multiselect, autocomplete, keyboard, accessibility, and forms behavior.
+ *
+ * @since 3.0.0
+ */
 @Component({
 	selector: 'ng-select',
 	exportAs: 'ngSelect',
@@ -420,6 +433,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		);
 	});
 
+	/**
+	 * Creates an instance of NgSelectComponent.
+	 *
+	 * @since 3.0.0
+	 */
 	constructor() {
 		const config = this.config;
 		const newSelectionModel = inject<SelectionModelFactory | undefined>(SELECTION_MODEL_FACTORY, { optional: true });
@@ -452,6 +470,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	 * Measures the placeholder label so the notched outline can leave a real gap in the border
 	 * for the floated label instead of masking it with an opaque background (material theme).
 	 * The 0.75 factor matches the `scale(0.75)` the material theme applies to the floated label.
+	 *
+	 * @since 23.2.3
 	 */
 	private _measureOutlineNotch() {
 		if (this.appearance() !== 'outline') {
@@ -466,30 +486,79 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 	private _focused: boolean;
 
+	/**
+	 * Gets whether the component currently owns focus.
+	 *
+	 * @returns The focused.
+	 *
+	 * @since 20.4.2
+	 */
 	get focused() {
 		return this._focused;
 	}
 
+	/**
+	 * Gets whether search filtering or text composition is active.
+	 *
+	 * @returns The filtered.
+	 *
+	 * @since 3.0.0
+	 */
 	get filtered() {
 		return (!!this.searchTerm && this.searchable()) || this._isComposing;
 	}
 
+	/**
+	 * Gets the search term.
+	 *
+	 * @returns The search term.
+	 *
+	 * @since 20.4.2
+	 */
 	get searchTerm() {
 		return this._searchTerm();
 	}
 
+	/**
+	 * Gets the selected items.
+	 *
+	 * @returns The selected items.
+	 *
+	 * @since 3.0.0
+	 */
 	get selectedItems(): NgOption[] {
 		return this.itemsList.selectedItems;
 	}
 
+	/**
+	 * Gets the selected values.
+	 *
+	 * @returns The selected values.
+	 *
+	 * @since 3.0.0
+	 */
 	get selectedValues() {
 		return this.selectedItems.map((x) => x.value);
 	}
 
+	/**
+	 * Determines whether the component has selected values.
+	 *
+	 * @returns Whether has value.
+	 *
+	 * @since 3.0.0
+	 */
 	get hasValue() {
 		return this.selectedItems.length > 0;
 	}
 
+	/**
+	 * Gets the current panel position.
+	 *
+	 * @returns The current panel position.
+	 *
+	 * @since 3.0.0
+	 */
 	get currentPanelPosition(): DropdownPosition {
 		if (this.dropdownPanel()) {
 			return this.dropdownPanel().currentPosition;
@@ -497,6 +566,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		return undefined;
 	}
 
+	/**
+	 * Determines whether the add-tag option should be displayed.
+	 *
+	 * @returns Whether show add tag.
+	 *
+	 * @since 3.0.0
+	 */
 	get showAddTag() {
 		if (!this._validTerm()) {
 			return false;
@@ -516,12 +592,24 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.unselect(option);
 	};
 
+	/**
+	 * Initializes the instance after Angular has assigned its inputs.
+	 *
+	 * @since 3.0.0
+	 */
 	ngOnInit() {
 		this._handleKeyPresses();
 		this._setInputAttributes();
 		this._warnDeprecatedInputs();
 	}
 
+	/**
+	 * Responds to Angular input changes.
+	 *
+	 * @param changes - The changed Angular inputs.
+	 *
+	 * @since 3.0.0
+	 */
 	ngOnChanges(changes: SimpleChanges) {
 		const multipleChange = changes._multiple ?? changes.multiple;
 		const itemsChange = changes.items;
@@ -548,6 +636,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._setTabFocusOnClear();
 	}
 
+	/**
+	 * Completes initialization that depends on rendered view children.
+	 *
+	 * @since 3.0.0
+	 */
 	ngAfterViewInit() {
 		if (!this._itemsAreUsed) {
 			this._setItemsFromNgOptions();
@@ -558,6 +651,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Routes a keyboard event to the appropriate ng-select interaction handler.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
 	@HostListener('keydown', ['$event'])
 	handleKeyDown($event: KeyboardEvent) {
 		const keyName = $event.key;
@@ -571,6 +671,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Handles navigation and selection key codes.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.1.1
+	 */
 	handleKeyCode($event: KeyboardEvent) {
 		const target = $event.target;
 
@@ -581,6 +688,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Handles keyboard interaction originating from the search input.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 11.1.2
+	 */
 	handleKeyCodeInput($event: KeyboardEvent) {
 		switch ($event.key) {
 			case KeyCode.ArrowDown:
@@ -612,6 +726,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Handles keyboard interaction on the clear control.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 11.1.2
+	 */
 	handleKeyCodeClear($event: KeyboardEvent) {
 		switch ($event.key) {
 			case KeyCode.Enter:
@@ -622,6 +743,14 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Handles keyboard removal of a selected value.
+	 *
+	 * @param $event - The DOM event to process.
+	 * @param item - The option to process.
+	 *
+	 * @since 23.3.0
+	 */
 	handleRemoveKeydown($event: KeyboardEvent, item: NgOption) {
 		if (item.disabled) {
 			return;
@@ -633,6 +762,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Handles pointer interaction within the select container.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
 	handleMousedown($event: MouseEvent) {
 		if (this.disabled()) {
 			return;
@@ -686,6 +822,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Toggles the dropdown from the arrow control.
+	 *
+	 * @since 3.0.0
+	 */
 	handleArrowClick() {
 		if (this.isOpen()) {
 			this.close();
@@ -694,6 +835,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Clears the model from a pointer interaction.
+	 *
+	 * @param _event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
 	handleClearClick(_event?: MouseEvent) {
 		if (this.hasValue) {
 			this.itemsList.clearSelected(this.clearKeepsDisabledOptions());
@@ -706,6 +854,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._onSelectionChanged();
 	}
 
+	/**
+	 * Clears the selected model values and resets the search state.
+	 *
+	 * @since 3.0.0
+	 */
 	clearModel() {
 		if (!this.clearable()) {
 			return;
@@ -714,6 +867,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._updateNgModel();
 	}
 
+	/**
+	 * Writes a ControlValueAccessor model value into the component.
+	 *
+	 * @param value - The value to process.
+	 *
+	 * @since 3.0.0
+	 */
 	writeValue(value: any | any[]): void {
 		this.itemsList.clearSelected(false);
 		this._handleWriteValue(value);
@@ -723,19 +883,45 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._cd.markForCheck();
 	}
 
+	/**
+	 * Registers the ControlValueAccessor model-change callback.
+	 *
+	 * @param fn - The fn.
+	 *
+	 * @since 3.0.0
+	 */
 	registerOnChange(fn: any): void {
 		this._onChange = fn;
 	}
 
+	/**
+	 * Registers the ControlValueAccessor touched callback.
+	 *
+	 * @param fn - The fn.
+	 *
+	 * @since 3.0.0
+	 */
 	registerOnTouched(fn: any): void {
 		this._onTouched = fn;
 	}
 
+	/**
+	 * Updates the disabled state supplied by Angular forms.
+	 *
+	 * @param state - The state.
+	 *
+	 * @since 3.0.0
+	 */
 	setDisabledState(state: boolean): void {
 		this._disabled.set(state);
 		this._cd.markForCheck();
 	}
 
+	/**
+	 * Toggles the dropdown panel.
+	 *
+	 * @since 3.0.0
+	 */
 	toggle() {
 		if (!this.isOpen()) {
 			this.open();
@@ -744,7 +930,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
-	/** Opens the select dropdown panel */
+	/**
+	 * Opens the select dropdown panel
+	 *
+	 * @since 3.0.0
+	 */
 	open() {
 		if (this.disabled() || this.isOpen() || this._manualOpen) {
 			return;
@@ -765,7 +955,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.detectChanges();
 	}
 
-	/** Closes the select dropdown panel */
+	/**
+	 * Closes the select dropdown panel
+	 *
+	 * @since 3.0.0
+	 */
 	close() {
 		if (!this.isOpen() || this._manualOpen) {
 			return;
@@ -786,6 +980,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.detectChanges();
 	}
 
+	/**
+	 * Selects or unselects an option based on its current state.
+	 *
+	 * @param item - The option to process.
+	 *
+	 * @since 3.0.0
+	 */
 	toggleItem(item: NgOption) {
 		if (!item || item.disabled || this.disabled()) {
 			return;
@@ -802,6 +1003,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Selects an option according to the active selection mode.
+	 *
+	 * @param item - The option to process.
+	 *
+	 * @since 3.0.0
+	 */
 	select(item: NgOption) {
 		if (!item.selected) {
 			this.itemsList.select(item);
@@ -822,16 +1030,31 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._onSelectionChanged();
 	}
 
-	/** Focuses the select element */
+	/**
+	 * Focuses the select element
+	 *
+	 * @since 3.0.0
+	 */
 	focus() {
 		this.searchInput().nativeElement.focus();
 	}
 
-	/** Blurs the select element */
+	/**
+	 * Blurs the select element
+	 *
+	 * @since 3.0.0
+	 */
 	blur() {
 		this.searchInput().nativeElement.blur();
 	}
 
+	/**
+	 * Removes an option from the current selection.
+	 *
+	 * @param item - The option to process.
+	 *
+	 * @since 3.0.0
+	 */
 	unselect(item: NgOption) {
 		if (!item || this.disabled() || item.disabled) {
 			return;
@@ -844,6 +1067,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._onSelectionChanged();
 	}
 
+	/**
+	 * Creates and selects an option from the current search term.
+	 *
+	 * @since 3.0.0
+	 */
 	selectTag() {
 		let tag;
 		if (isFunction(this.addTag())) {
@@ -860,10 +1088,20 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Determines whether the clear control should be displayed.
+	 *
+	 * @since 3.0.0
+	 */
 	showClear() {
 		return this.clearable() && (this.hasValue || this.searchTerm) && !this.disabled();
 	}
 
+	/**
+	 * Moves keyboard focus to the clear control.
+	 *
+	 * @since 11.1.2
+	 */
 	focusOnClear() {
 		this.blur();
 		if (this.clearButton()) {
@@ -879,6 +1117,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		return item;
 	};
 
+	/**
+	 * Determines whether the empty-results message should be displayed.
+	 *
+	 * @since 3.0.0
+	 */
 	showNoItemsFound() {
 		const empty = this.itemsList.filteredItems.length === 0;
 		return (
@@ -887,15 +1130,32 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		);
 	}
 
+	/**
+	 * Determines whether the type-to-search prompt should be displayed.
+	 *
+	 * @since 3.0.0
+	 */
 	showTypeToSearch() {
 		const empty = this.itemsList.filteredItems.length === 0;
 		return empty && this.typeahead()?.observed && !this._validTerm() && !this.loading();
 	}
 
+	/**
+	 * Marks the start of an input method editor composition.
+	 *
+	 * @since 3.0.5
+	 */
 	onCompositionStart() {
 		this._isComposing = true;
 	}
 
+	/**
+	 * Finishes input method editor composition and applies the search term.
+	 *
+	 * @param term - The term.
+	 *
+	 * @since 3.0.5
+	 */
 	onCompositionEnd(term: string) {
 		this._isComposing = false;
 		if (this.searchWhileComposing()) {
@@ -905,6 +1165,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.filter(term);
 	}
 
+	/**
+	 * Filters the available options using the current search configuration.
+	 *
+	 * @param term - The term.
+	 *
+	 * @since 3.0.0
+	 */
 	filter(term: string) {
 		if (this._isComposing && !this.searchWhileComposing()) {
 			return;
@@ -926,6 +1193,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.open();
 	}
 
+	/**
+	 * Handles focus entering the search input.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
 	onInputFocus($event: FocusEvent) {
 		if (this._focused) {
 			return;
@@ -940,6 +1214,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._focused = true;
 	}
 
+	/**
+	 * Handles focus leaving the search input.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
 	onInputBlur($event: FocusEvent) {
 		this.element.classList.remove('ng-select-focused');
 		this.blurEvent.emit($event);
@@ -958,6 +1239,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._focused = false;
 	}
 
+	/**
+	 * Marks an option when pointer interaction hovers it.
+	 *
+	 * @param item - The option to process.
+	 *
+	 * @since 3.0.0
+	 */
 	onItemHover(item: NgOption) {
 		if (item.disabled) {
 			return;
@@ -965,6 +1253,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.itemsList.markItem(item);
 	}
 
+	/**
+	 * Requests an OnPush change-detection pass.
+	 *
+	 * @since 3.0.0
+	 */
 	detectChanges() {
 		if (!(<any>this._cd).destroyed) {
 			this._cd.detectChanges();
@@ -975,6 +1268,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 	private _onTouched = () => {};
 
+	/**
+	 * Registers effects that synchronize signal-based inputs with component state.
+	 *
+	 * @since 23.0.4
+	 */
 	private _handleSignalChanges() {
 		let itemsInitialized = false;
 		effect(
@@ -1055,11 +1353,23 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		);
 	}
 
+	/**
+	 * Restores the editable search term from the selected option.
+	 *
+	 * @since 3.7.3
+	 */
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];
 		this._searchTerm.set(selected?.label ?? null);
 	}
 
+	/**
+	 * Maps the bound items collection into the internal option list.
+	 *
+	 * @param items - The options to process.
+	 *
+	 * @since 3.0.0
+	 */
 	private _setItems(items: readonly any[]) {
 		const firstItem = items[0];
 		this.bindLabel.set(this.bindLabel() || this._defaultLabel);
@@ -1076,6 +1386,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Maps projected `ng-option` components into the internal option list.
+	 *
+	 * @since 3.0.0
+	 */
 	private _setItemsFromNgOptions() {
 		effect(
 			() => {
@@ -1118,6 +1433,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		);
 	}
 
+	/**
+	 * Maps a valid external model value into selected options.
+	 *
+	 * @param ngModel - The ng model.
+	 *
+	 * @since 3.0.0
+	 */
 	private _handleWriteValue(ngModel: any | any[]) {
 		const validation = validateWriteValue(ngModel, {
 			bindValue: this.bindValue(),
@@ -1148,6 +1470,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Matches typed characters to options for keyboard navigation.
+	 *
+	 * @since 3.0.0
+	 */
 	private _handleKeyPresses() {
 		if (this.searchable()) {
 			return;
@@ -1180,6 +1507,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			});
 	}
 
+	/**
+	 * Applies configured attributes to the native search input.
+	 *
+	 * @since 3.0.0
+	 */
 	private _setInputAttributes() {
 		const input = this.searchInput().nativeElement;
 		const attributes = {
@@ -1195,10 +1527,20 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Updates whether Tab should move focus to the clear control.
+	 *
+	 * @since 15.1.0
+	 */
 	private _setTabFocusOnClear() {
 		this.tabFocusOnClear.set(isDefined(this.tabFocusOnClearButton()) ? !!this.tabFocusOnClearButton() : this.config.tabFocusOnClear);
 	}
 
+	/**
+	 * Builds and emits the current ControlValueAccessor model value.
+	 *
+	 * @since 3.0.0
+	 */
 	private _updateNgModel() {
 		const model = selectedItemsToModel(
 			this.selectedItems,
@@ -1224,6 +1566,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._cd.markForCheck();
 	}
 
+	/**
+	 * Clears the current search term when configuration permits it.
+	 *
+	 * @since 3.0.0
+	 */
 	private _clearSearch() {
 		if (!this.searchTerm) {
 			return;
@@ -1233,10 +1580,22 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.itemsList.resetFilteredItems();
 	}
 
+	/**
+	 * Updates the search term and emits the search event.
+	 *
+	 * @param searchTerm - The search term.
+	 *
+	 * @since 3.0.6
+	 */
 	private _changeSearch(searchTerm: string) {
 		this._searchTerm.set(searchTerm);
 	}
 
+	/**
+	 * Scrolls the dropdown to the currently marked option.
+	 *
+	 * @since 3.0.0
+	 */
 	private _scrollToMarked() {
 		if (!this.isOpen() || !this.dropdownPanel()) {
 			return;
@@ -1244,6 +1603,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.dropdownPanel().scrollTo(this.itemsList.markedItem);
 	}
 
+	/**
+	 * Scrolls the dropdown to the add-tag option.
+	 *
+	 * @since 3.0.0
+	 */
 	private _scrollToTag() {
 		if (!this.isOpen() || !this.dropdownPanel()) {
 			return;
@@ -1251,6 +1615,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this.dropdownPanel().scrollToTag();
 	}
 
+	/**
+	 * Synchronizes search and close behavior after selection changes.
+	 *
+	 * @since 3.0.0
+	 */
 	private _onSelectionChanged() {
 		if (this.isOpen() && this.deselectOnClickValue()) {
 			// Make sure items are rendered.
@@ -1259,7 +1628,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
-	/** Attaches or detaches the dropdown overlay to match the current open state. Idempotent. */
+	/**
+	 * Attaches or detaches the dropdown overlay to match the current open state. Idempotent.
+	 *
+	 * @since 23.7.0
+	 */
 	private _syncDropdownOverlay() {
 		const template = this._dropdownTemplate();
 		const viewContainer = this._dropdownOutlet();
@@ -1285,11 +1658,18 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	 * the host below the container (material reserves 1.25em of subscript space under the
 	 * underline), and the panel must sit flush against the visible field — the same anchor
 	 * the pre-overlay `appendTo` positioning used.
+	 *
+	 * @since 23.7.0
 	 */
 	private _dropdownOrigin(): HTMLElement {
 		return this._selectContainer()?.nativeElement ?? this.element;
 	}
 
+	/**
+	 * Reports development-mode warnings for deprecated inputs.
+	 *
+	 * @since 23.7.0
+	 */
 	private _warnDeprecatedInputs() {
 		if (!isDevMode()) {
 			return;
@@ -1301,6 +1681,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Handles Tab selection, clear-control focus, and close behavior.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
 	private _handleTab($event: KeyboardEvent) {
 		if (this.isOpen() === false) {
 			if (this.showClear() && !$event.shiftKey && this.tabFocusOnClear()) {
@@ -1326,6 +1713,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Handles Enter selection and dropdown opening.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
 	private _handleEnter($event: KeyboardEvent) {
 		const openOnEnter = this.openOnEnter() ?? this.config.openOnEnter;
 		if (this.isOpen() || this._manualOpen) {
@@ -1343,6 +1737,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		$event.preventDefault();
 	}
 
+	/**
+	 * Handles Space selection and dropdown opening.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
 	private _handleSpace($event: KeyboardEvent) {
 		if (this.isOpen() || this._manualOpen) {
 			return;
@@ -1351,6 +1752,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		$event.preventDefault();
 	}
 
+	/**
+	 * Moves the marked option down or opens the dropdown.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
 	private _handleArrowDown($event: KeyboardEvent) {
 		if (this._nextItemIsTag(+1)) {
 			this.itemsList.unmarkItem();
@@ -1363,6 +1771,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		$event.preventDefault();
 	}
 
+	/**
+	 * Moves the marked option up or opens the dropdown.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
 	private _handleArrowUp($event: KeyboardEvent) {
 		if (!this.isOpen()) {
 			return;
@@ -1378,11 +1793,24 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		$event.preventDefault();
 	}
 
+	/**
+	 * Determines whether the next keyboard target is the add-tag option.
+	 *
+	 * @param nextStep - The next step.
+	 * @returns Whether next item is tag.
+	 *
+	 * @since 3.0.0
+	 */
 	private _nextItemIsTag(nextStep: number): boolean {
 		const nextIndex = this.itemsList.markedIndex + nextStep;
 		return this.addTag() && this.searchTerm && this.itemsList.markedItem && (nextIndex < 0 || nextIndex === this.itemsList.filteredItems.length);
 	}
 
+	/**
+	 * Removes the last selected value when Backspace clearing is enabled.
+	 *
+	 * @since 3.0.0
+	 */
 	private _handleBackspace() {
 		if (this.searchTerm || !this.clearable() || !this.clearOnBackspace() || !this.hasValue) {
 			return;
@@ -1395,6 +1823,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	/**
+	 * Applies configured global defaults that were not set locally.
+	 *
+	 * @param config - The global ng-select configuration.
+	 *
+	 * @since 3.0.0
+	 */
 	private _mergeGlobalConfig(config: NgSelectConfig) {
 		this.bindValue.set(this.bindValue() || config.bindValue);
 		this.bindLabel.set(this.bindLabel() || config.bindLabel);
@@ -1408,6 +1843,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	 *  @param config NgSelectConfig object
 	 *
 	 *  @returns `true` if virtual scroll is enabled, `false` otherwise
+	 *
+	 * @since 14.7.0
 	 */
 	private getVirtualScroll(config: NgSelectConfig): boolean {
 		return isDefined(this._virtualScroll()) ? this._virtualScroll()! : this.isVirtualScrollDisabled(config);
@@ -1419,6 +1856,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	 *  @param config NgSelectConfig object
 	 *
 	 *  @returns `true` if disableVirtualScroll is enabled, `false` otherwise
+	 *
+	 * @since 14.7.0
 	 */
 	private isVirtualScrollDisabled(config: NgSelectConfig) {
 		return isDefined(config.disableVirtualScroll) ? !config.disableVirtualScroll : false;

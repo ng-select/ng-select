@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 
-/** Configuration provider for the NgSelect component. You can inject this service and provide application wide configuration. */
+/**
+ * Configuration provider for the NgSelect component. You can inject this service and provide application wide configuration.
+ *
+ * @since 3.0.0
+ */
 @Injectable({ providedIn: 'root' })
 export class NgSelectConfig {
 	/** Placeholder text. */

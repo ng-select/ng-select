@@ -9,6 +9,9 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
 	test: {
 		globals: true,
+		// Component specs stub shared browser globals (for example ResizeObserver).
+		// Keep files isolated so one suite cannot restore another suite's active stub.
+		fileParallelism: false,
 		testTimeout: 30000,
 		hookTimeout: 30000,
 		coverage: {
