@@ -1,7 +1,7 @@
 {
 	"name": "@ng-select/ng-select",
 	"version": "23.6.0",
-	"description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
+	"description": "Angular select, multiselect and autocomplete with Signal Forms, Reactive Forms and Template-driven Forms support",
 	"author": "@ng-select/ng-select",
 	"license": "MIT",
 	"repository": "ng-select/ng-select",
@@ -15,6 +15,9 @@
 		"dropdown",
 		"multiselect",
 		"autocomplete",
+		"signal-forms",
+		"reactive-forms",
+		"template-driven-forms",
 		"angular2"
 	],
 	"exports": {

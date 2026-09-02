@@ -5,7 +5,7 @@ import GettingStartedCategory from '../ng-doc.category';
 const StylingPage: NgDocPage = {
 	title: 'Styling',
 	mdFile: './index.md',
-	order: 1,
+	order: 2,
 	category: GettingStartedCategory,
 	demos: {
 		CssVariablesExampleComponent,

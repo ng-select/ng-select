@@ -4,7 +4,7 @@ import GettingStartedCategory from '../ng-doc.category';
 const ChangeDetectionPage: NgDocPage = {
 	title: 'Change detection',
 	mdFile: './index.md',
-	order: 2,
+	order: 3,
 	category: GettingStartedCategory,
 };
 

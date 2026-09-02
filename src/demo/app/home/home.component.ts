@@ -1,17 +1,18 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { form, FormField } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
-	selector: 'home-page',
+	selector: 'ng-home-page',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss'],
 	changeDetection: ChangeDetectionStrategy.Eager,
-	imports: [RouterLink, FormsModule, NgSelectComponent],
+	imports: [RouterLink, FormField, NgSelectComponent],
 })
 export class HomeComponent {
 	features = [
+		{ icon: '📶', title: 'Angular Forms support', text: 'Use Signal Forms with formField, Reactive Forms or Template-driven Forms.' },
 		{ icon: '🔗', title: 'Flexible bindings', text: 'Bind to primitives, objects, or nested properties with bindLabel and bindValue.' },
 		{ icon: '🧩', title: 'Custom templates', text: 'Replace labels, options, headers, footers and more with your own templates.' },
 		{ icon: '⚡', title: 'Virtual scroll', text: 'Smoothly render thousands of options with built-in virtual scrolling.' },
@@ -28,5 +29,6 @@ export class HomeComponent {
 		{ id: 5, name: 'Tokyo' },
 	];
 
-	selectedCity: number | null = null;
+	readonly demoModel = signal({ cityId: null as number | null });
+	readonly demoForm = form(this.demoModel);
 }

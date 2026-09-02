@@ -90,7 +90,7 @@ function optionalBooleanAttribute(value: unknown): boolean | undefined {
 }
 
 /**
- * Provides select, multiselect, autocomplete, keyboard, accessibility, and forms behavior.
+ * Provides select, multiselect, autocomplete, keyboard, accessibility, and Signal, Reactive, and Template-driven Forms behavior.
  *
  * @since 3.0.0
  */
@@ -242,7 +242,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	/** Set tabindex on ng-select */
 	readonly _tabIndex = input<number, unknown>(undefined, { alias: 'tabIndex', transform: numberAttribute });
 	readonly tabIndex = linkedSignal(() => this._tabIndex());
-	/** Set ng-select as readonly. Mostly used with reactive forms. */
+	/** Prevent user changes while preserving the current selection. */
 	readonly _readonly = input(false, { alias: 'readonly', transform: booleanAttribute });
 	readonly readonly = linkedSignal(() => this._readonly());
 	/** Whether items should be filtered while composition started */
@@ -611,14 +611,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	 * @since 3.0.0
 	 */
 	ngOnChanges(changes: SimpleChanges) {
-		const multipleChange = changes._multiple ?? changes.multiple;
 		const itemsChange = changes.items;
 		const isOpenChange = changes.isOpen;
 		const groupByChange = changes._groupBy ?? changes.groupBy;
-
-		if (multipleChange?.firstChange) {
-			this.itemsList.clearSelected(false);
-		}
 
 		if (itemsChange?.firstChange) {
 			this._itemsAreUsed = true;
@@ -1436,12 +1431,12 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	/**
 	 * Maps a valid external model value into selected options.
 	 *
-	 * @param ngModel - The ng model.
+	 * @param value - The form value.
 	 *
 	 * @since 3.0.0
 	 */
-	private _handleWriteValue(ngModel: any | any[]) {
-		const validation = validateWriteValue(ngModel, {
+	private _handleWriteValue(value: any | any[]) {
+		const validation = validateWriteValue(value, {
 			bindValue: this.bindValue(),
 			compareWith: this.compareWith(),
 			multiple: this.multiple(),
@@ -1464,9 +1459,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		};
 
 		if (this.multiple()) {
-			(<any[]>ngModel).forEach((item) => select(item));
+			(<any[]>value).forEach((item) => select(item));
 		} else {
-			select(ngModel);
+			select(value);
 		}
 	}
 
@@ -1832,7 +1827,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	 */
 	private _mergeGlobalConfig(config: NgSelectConfig) {
 		this.bindValue.set(this.bindValue() || config.bindValue);
-		this.bindLabel.set(this.bindLabel() || config.bindLabel);
+		this.bindLabel.set(this.bindLabel() || config.bindLabel || this._defaultLabel);
 		this.appearance.set(this.appearance() || config.appearance);
 		this._setTabFocusOnClear();
 	}

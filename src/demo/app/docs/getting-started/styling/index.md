@@ -206,7 +206,18 @@ If you are using `ViewEncapsulation`, you could use the special `::ng-deep` sele
 
 ## Validation state
 
-By default, when you use reactive forms validators or template driven forms validators, the css class `ng-invalid` will be applied on ng-select. You can show the error state by adding a custom css style:
+Signal Forms keeps validation state on its field tree. To apply the familiar `ng-valid`, `ng-invalid`, `ng-touched`, and `ng-dirty` classes to ng-select, enable Angular's compatibility preset:
+
+```typescript
+import { provideSignalFormsConfig } from '@angular/forms/signals';
+import { NG_STATUS_CLASSES } from '@angular/forms/signals/compat';
+
+bootstrapApplication(AppComponent, {
+	providers: [provideSignalFormsConfig({ classes: NG_STATUS_CLASSES })],
+});
+```
+
+Reactive Forms and Template-driven Forms apply these classes automatically. Once the classes are enabled for the form system you use, show the error state with a custom style:
 
 ```css
 ng-select.ng-invalid.ng-touched .ng-select-container {
