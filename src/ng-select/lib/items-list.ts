@@ -384,6 +384,9 @@ export class ItemsList {
 		if (!isObject(option)) {
 			return option;
 		}
+		if (!key) {
+			return undefined;
+		}
 		if (key.indexOf('.') === -1) {
 			return option[key];
 		} else {
@@ -442,6 +445,10 @@ export class ItemsList {
 			}
 
 			this._selectionModel.unselect(selected, multiple);
+			if (item?.selected) {
+				// Already re-selected by an earlier iteration (duplicate value); drop the placeholder only
+				continue;
+			}
 			this._selectionModel.select(item || selected, multiple, this._ngSelect.selectableGroupAsModel());
 		}
 

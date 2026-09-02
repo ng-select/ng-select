@@ -24,9 +24,12 @@
 	@if (cityForm.cityIds().touched() && cityForm.cityIds().invalid()) {
 		<small class="text-danger">{{ cityForm.cityIds().errors()[0].message }}</small>
 	}
-	<p class="form-text text-muted">The form starts with selected IDs before the async item list arrives. Hiding and showing the control preserves them.</p>
+	<p class="form-text text-muted">
+		The form starts with two selected IDs before the item list exists. Load the items to see them mapped to options, and hide/show the control to see the
+		values preserved.
+	</p>
 	<button type="button" class="btn btn-sm btn-secondary" (click)="loadCities()">Load items</button>
-	<button type="button" class="btn btn-sm btn-secondary" (click)="clearCities()">Clear</button>
+	<button type="button" class="btn btn-sm btn-secondary" (click)="clearCities()">Reset demo</button>
 	<button type="button" class="btn btn-sm btn-secondary" (click)="toggleMultipleVisible()">Show/Hide</button>
 </div>
 

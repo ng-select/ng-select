@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { afterNextRender, ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { disabled, form, FormField, minLength, required } from '@angular/forms/signals';
 import { NgSelectComponent } from '@ng-select/ng-select';
 
@@ -33,19 +33,16 @@ export class FormsSignalExampleComponent {
 	readonly cityForm = form(this.model, (path) => {
 		required(path.cityId, { message: 'Choose a city' });
 		minLength(path.cityIds, 1, { message: 'Choose at least one city' });
-		disabled(path.cityId, () => this.cityDisabled());
+		disabled(path.cityId, { when: () => this.cityDisabled() });
 	});
 
-	constructor() {
-		afterNextRender(() => this.loadCities());
-	}
-
 	loadCities(): void {
-		this.asyncCities.set(this.cities);
+		this.asyncCities.set([...this.cities]);
 	}
 
 	clearCities(): void {
-		this.cityForm.cityIds().value.set([]);
+		this.asyncCities.set([]);
+		this.cityForm.cityIds().value.set([1, 3]);
 	}
 
 	toggleCityDisabled(): void {

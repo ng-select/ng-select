@@ -1,9 +1,9 @@
 import { NgDocConfiguration } from '@ng-doc/builder';
 
 const config: NgDocConfiguration = {
-	// Keep output between rebuilds so Angular's watcher does not compile while ng-doc/demo is deleted.
-	// Tradeoff: a cold start with a warm cache may skip page indexing until a doc file changes.
-	cache: true,
+	// Keep the cache off: warm-cache builds skip page indexing and ship an empty search index.
+	// `ng serve` uses ng-doc.serve.config.ts instead (wired via `ngDoc.config` in angular.json).
+	cache: false,
 	repoConfig: {
 		url: 'https://github.com/ng-select/ng-select',
 		mainBranch: 'master',
