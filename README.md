@@ -118,7 +118,7 @@ import { FormField } from '@angular/forms/signals';
 @Component({
 	selector: 'example',
 	standalone: true,
-	template: './example.component.html',
+	templateUrl: './example.component.html',
 	styleUrl: './example.component.scss',
 	imports: [FormField, NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent],
 })

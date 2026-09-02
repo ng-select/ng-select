@@ -412,6 +412,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	private _manualOpen: boolean;
 	private _pressedKeys: string[] = [];
 	private _primitive: any;
+	/** Last value written via `writeValue` or emitted via `_updateNgModel`; re-applied when mode/bindings change. */
+	private _lastWrittenValue: any | any[] = null;
 	private readonly _searchTerm = signal<string>(null);
 	private readonly _validTerm = computed(() => {
 		const term = this._searchTerm()?.trim();
@@ -870,6 +872,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	 * @since 3.0.0
 	 */
 	writeValue(value: any | any[]): void {
+		this._lastWrittenValue = value;
 		this.itemsList.clearSelected(false);
 		this._handleWriteValue(value);
 		if (this._editableSearchTermActive()) {
@@ -1297,7 +1300,34 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 					return;
 				}
 
-				untracked(() => this.itemsList.clearSelected(false));
+				untracked(() => {
+					const written = this._lastWrittenValue;
+					this._resyncSelectionFromWrittenValue();
+					const hadValue = isDefined(written) && !(Array.isArray(written) && written.length === 0);
+					if (hadValue && !this.hasValue) {
+						// The retained value cannot be represented in the new mode; emit the cleared value
+						// so the form model and the UI stay in sync
+						this._updateNgModel();
+					}
+				});
+			},
+			{ injector: this._injector },
+		);
+
+		// Re-map the retained form value when the value binding or comparator changes.
+		// bindLabel is intentionally not tracked: _setItems writes it and would loop.
+		let bindingsInitialized = false;
+		effect(
+			() => {
+				this.bindValue();
+				this.compareWith();
+
+				if (!bindingsInitialized) {
+					bindingsInitialized = true;
+					return;
+				}
+
+				untracked(() => this._resyncSelectionFromWrittenValue());
 			},
 			{ injector: this._injector },
 		);
@@ -1356,6 +1386,20 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	private _setSearchTermFromItems() {
 		const selected = this.selectedItems?.[0];
 		this._searchTerm.set(selected?.label ?? null);
+	}
+
+	/**
+	 * Re-applies the last written form value against the current mode and bindings.
+	 *
+	 * @since 24.0.5
+	 */
+	private _resyncSelectionFromWrittenValue() {
+		this.itemsList.clearSelected(false);
+		this._handleWriteValue(this._lastWrittenValue);
+		if (this._editableSearchTermActive()) {
+			this._setSearchTermFromItems();
+		}
+		this._cd.markForCheck();
 	}
 
 	/**
@@ -1453,7 +1497,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			if (item) {
 				this.itemsList.select(item);
 			} else {
-				item = createUnmatchedOptionValue(val, this.bindLabel(), this.bindValue());
+				item = createUnmatchedOptionValue(val, this.bindLabel() || this._defaultLabel, this.bindValue());
 				this.itemsList.select(this.itemsList.mapItem(item, null));
 			}
 		};
@@ -1549,10 +1593,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 		const selected = this.selectedItems.map((x) => x.value);
 		if (this.multiple()) {
+			this._lastWrittenValue = model;
 			this._onChange(model);
 			this.changeEvent.emit(selected);
 		} else {
-			this._onChange(isDefined(model[0]) ? model[0] : null);
+			const single = isDefined(model[0]) ? model[0] : null;
+			this._lastWrittenValue = single;
+			this._onChange(single);
 			this.changeEvent.emit(selected[0]);
 		}
 
