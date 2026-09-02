@@ -1,11 +1,11 @@
 import { NgDocPage } from '@ng-doc/core';
 import GettingStartedCategory from '../ng-doc.category';
 
-const CustomSelectionLogicPage: NgDocPage = {
-	title: 'Custom selection logic',
+const UsagePage: NgDocPage = {
+	title: 'Usage',
 	mdFile: './index.md',
-	order: 4,
+	order: 1,
 	category: GettingStartedCategory,
 };
 
-export default CustomSelectionLogicPage;
+export default UsagePage;

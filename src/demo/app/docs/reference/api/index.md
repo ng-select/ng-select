@@ -1,5 +1,9 @@
 Complete reference for `NgSelectComponent` and related directives and services. Every input and output below is demonstrated on the [Examples](#/examples/data-sources) pages.
 
+## Forms integration
+
+ng-select supports Signal Forms through `[formField]`, Reactive Forms through `formControl` and `formControlName`, and Template-driven Forms through `ngModel`. See the [Forms examples](#/examples/forms) for complete examples in that order.
+
 ## Inputs
 
 | Input                       | Type                                                                 | Default             | Description                                                                                                                                                                                    |
@@ -35,7 +39,7 @@ Complete reference for `NgSelectComponent` and related directives and services. 
 | placeholder                 | `string`                                                             | `-`                 | Placeholder text.                                                                                                                                                                              |
 | removeText                  | `string`                                                             | `Remove`            | Set custom text prefixed to the option label in the aria-label of the remove icon on selected values (multiple mode)                                                                           |
 | [searchable]                | `boolean`                                                            | `true`              | Allow to search for value. Default `true`                                                                                                                                                      |
-| [readonly]                  | `boolean`                                                            | `false`             | Set ng-select as readonly. Mostly used with reactive forms.                                                                                                                                    |
+| [readonly]                  | `boolean`                                                            | `false`             | Prevent user changes while preserving the current selection.                                                                                                                                   |
 | [searchFn]                  | `(term: string, item: any) => boolean`                               | `null`              | Allow to filter by custom search function                                                                                                                                                      |
 | [searchWhileComposing]      | `boolean`                                                            | `true`              | Whether items should be filtered while composition started                                                                                                                                     |
 | [trackByFn]                 | `(item: any) => any`                                                 | `null`              | Provide custom trackBy function                                                                                                                                                                |

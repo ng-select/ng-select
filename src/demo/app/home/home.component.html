@@ -2,8 +2,8 @@
 	<section class="hero-section">
 		<h1 class="hero-title"><span class="logo-text">ng-select</span></h1>
 		<p class="hero-description">
-			Lightweight all-in-one UI select, multiselect and autocomplete component for Angular — with custom templates, virtual scroll, tagging and full
-			theming support.
+			Lightweight all-in-one UI select, multiselect and autocomplete component for Angular — Signal Forms first, with Reactive Forms and Template-driven
+			Forms fully supported.
 		</p>
 		<div class="hero-actions">
 			<a routerLink="/getting-started/installation" class="btn btn-primary">Get Started</a>
@@ -12,7 +12,7 @@
 		</div>
 
 		<div class="hero-demo">
-			<ng-select [items]="demoCities" bindLabel="name" bindValue="id" placeholder="Try me — select a city" [(ngModel)]="selectedCity"></ng-select>
+			<ng-select [items]="demoCities" bindLabel="name" bindValue="id" placeholder="Try me — select a city" [formField]="demoForm.cityId" />
 		</div>
 	</section>
 

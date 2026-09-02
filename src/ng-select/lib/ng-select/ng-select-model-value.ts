@@ -40,7 +40,7 @@ export function validateWriteValue(value: any, options: Pick<ModelBindingOptions
 	}
 
 	if (options.multiple && !Array.isArray(value)) {
-		return { valid: false, warning: 'Multiple select ngModel should be array.' };
+		return { valid: false, warning: 'Multiple select form value should be an array.' };
 	}
 
 	const values = options.multiple ? value : [value];
