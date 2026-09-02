@@ -1,7 +1,7 @@
 {
 	"name": "@ng-select/ng-select",
 	"version": "23.6.0",
-	"description": "Signal Forms-first Angular select, multiselect and autocomplete with Reactive and Template-driven Forms support",
+	"description": "Angular select, multiselect and autocomplete with Signal Forms, Reactive Forms and Template-driven Forms support",
 	"author": "@ng-select/ng-select",
 	"license": "MIT",
 	"repository": "ng-select/ng-select",

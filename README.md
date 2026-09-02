@@ -170,7 +170,7 @@ typically in your root component, and customize the values of its properties in 
 
 ### Usage
 
-ng-select supports Signal Forms, Reactive Forms and Template-driven Forms. Signal Forms is the recommended starting point for new Angular 22 applications.
+ng-select supports Signal Forms, Reactive Forms and Template-driven Forms in Angular 22 applications.
 
 Define the options shared by these examples:
 

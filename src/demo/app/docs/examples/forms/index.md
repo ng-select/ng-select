@@ -1,4 +1,4 @@
-ng-select supports all three Angular form systems. Signal Forms is the recommended starting point for new Angular 22 applications, while Reactive Forms and Template-driven Forms remain fully supported through the same control value accessor.
+ng-select supports Signal Forms, Reactive Forms and Template-driven Forms through the same control value accessor.
 
 ## Signal Forms
 

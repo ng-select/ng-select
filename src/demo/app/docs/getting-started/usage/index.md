@@ -1,4 +1,4 @@
-ng-select supports Signal Forms, Reactive Forms and Template-driven Forms, in that order of recommendation for new Angular 22 code.
+ng-select supports Signal Forms, Reactive Forms and Template-driven Forms in Angular 22 applications.
 
 Define options in your consuming component:
 
