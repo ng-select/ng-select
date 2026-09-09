@@ -1,3 +1,4 @@
+import { Component, viewChild } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -7,7 +8,66 @@ import { NgSelectComponent } from './ng-select.component';
 
 import { createTestingModule, NgSelectTestComponent } from '../../testing/ng-select-test-fixtures';
 
+@Component({ selector: 'ng-select-async-items-test', template: '' })
+class AsyncItemsTestComponent {
+	readonly select = viewChild(NgSelectComponent);
+	items: { id: number; name: string; country: string }[] = [];
+	value: number | number[] = null;
+}
+
 describe('NgSelectComponent', () => {
+	describe('async option selection accessibility', () => {
+		for (const multiple of [false, true]) {
+			for (const preselected of [false, true]) {
+				it(`should set aria-selected after items arrive (multiple: ${multiple}, preselected: ${preselected})`, async () => {
+					const fixture = createTestingModule(
+						AsyncItemsTestComponent,
+						`<ng-select [items]="items" bindLabel="name" bindValue="id" [multiple]="${multiple}" [(ngModel)]="value"></ng-select>`,
+					);
+					fixture.componentInstance.value = preselected ? (multiple ? [2] : 2) : null;
+					await tickAndDetectChanges(fixture);
+
+					fixture.componentInstance.items = [
+						{ id: 1, name: 'New York', country: 'USA' },
+						{ id: 2, name: 'London', country: 'UK' },
+					];
+					await tickAndDetectChanges(fixture);
+					triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+					await tickAndDetectChanges(fixture);
+
+					const options = document.querySelectorAll<HTMLElement>('[role="option"]');
+					expect(Array.from(options, (option) => option.getAttribute('aria-selected'))).toEqual(['false', String(preselected)]);
+				});
+			}
+		}
+
+		for (const selectableGroup of [false, true]) {
+			it(`should set aria-selected on async grouped options (selectableGroup: ${selectableGroup})`, async () => {
+				const fixture = createTestingModule(
+					AsyncItemsTestComponent,
+					`<ng-select [items]="items" bindLabel="name" bindValue="id" groupBy="country"
+						[multiple]="true" [closeOnSelect]="false" [selectableGroup]="${selectableGroup}" [(ngModel)]="value"></ng-select>`,
+				);
+				await tickAndDetectChanges(fixture);
+				fixture.componentInstance.items = [
+					{ id: 1, name: 'New York', country: 'USA' },
+					{ id: 2, name: 'Boston', country: 'USA' },
+				];
+				await tickAndDetectChanges(fixture);
+				triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+				await tickAndDetectChanges(fixture);
+
+				const options = document.querySelectorAll<HTMLElement>('[role="option"]');
+				expect(Array.from(options, (option) => option.getAttribute('aria-selected'))).toEqual(['false', 'false']);
+
+				const select = fixture.componentInstance.select();
+				select.toggleItem(select.itemsList.items[selectableGroup ? 0 : 1]);
+				await tickAndDetectChanges(fixture);
+				expect(Array.from(options, (option) => option.getAttribute('aria-selected'))).toEqual(['true', String(selectableGroup)]);
+			});
+		}
+	});
+
 	describe('Accessibility', () => {
 		let fixture: ComponentFixture<NgSelectTestComponent>;
 		let select: NgSelectComponent;
