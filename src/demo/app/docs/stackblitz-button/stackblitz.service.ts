@@ -8,7 +8,7 @@ const TEMPLATE_PATH = 'assets/stackblitz/';
 
 const TEMPLATE_FILES = ['index.html', 'styles.css', 'data.service.ts', 'main.ts', 'app.module.ts', 'angular.json'];
 
-const angularVersion = '>=15.0.0';
+const angularVersion = '^22.0.0';
 const dependencies = {
 	'@angular/animations': angularVersion,
 	'@angular/cdk': angularVersion,
@@ -16,7 +16,6 @@ const dependencies = {
 	'@angular/compiler': angularVersion,
 	'@angular/core': angularVersion,
 	'@angular/forms': angularVersion,
-	'@angular/http': angularVersion,
 	'@angular/localize': angularVersion,
 	'@angular/platform-browser': angularVersion,
 	'@angular/platform-browser-dynamic': angularVersion,
@@ -24,7 +23,7 @@ const dependencies = {
 	'@ng-select/ng-select': '*',
 	'@ng-select/ng-option-highlight': '*',
 	'@ng-bootstrap/ng-bootstrap': '*',
-	rxjs: '^6.5.3 || ^7.4.0',
+	rxjs: '^7.8.0',
 };
 
 @Injectable({
@@ -66,7 +65,7 @@ export class StackblitzService {
 	}
 
 	async fetchTemplateFiles() {
-		const files: { [path: string]: string } = {};
+		const files: Record<string, string> = {};
 		for (const file of TEMPLATE_FILES) {
 			let fileResult = await this._readFile(file, TEMPLATE_PATH);
 			if (file.includes('app.module')) {
@@ -84,7 +83,7 @@ export class StackblitzService {
 
 	async fetchExampleFiles() {
 		const exampleFiles = ['html', 'scss', 'ts'].map((ex) => `${this._exampleName}.component.${ex}`);
-		const files: { [path: string]: string } = {};
+		const files: Record<string, string> = {};
 
 		for (const file of exampleFiles) {
 			const path = `src/${file}`;

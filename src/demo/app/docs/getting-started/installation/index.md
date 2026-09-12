@@ -18,24 +18,26 @@ yarn add @ng-select/ng-select @angular/cdk
 
 ### Standalone
 
-Import `NgSelectComponent` and other necessary directives directly:
+Import `NgSelectComponent` and Signal Forms' `FormField` directive. Import any template directives you use alongside them:
 
 ```typescript
 import { NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
-import { FormsModule } from '@angular/forms';
+import { FormField } from '@angular/forms/signals';
 
 @Component({
 	selector: 'example',
 	templateUrl: './example.component.html',
 	styleUrl: './example.component.scss',
-	imports: [NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent],
+	imports: [FormField, NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent],
 })
 export class ExampleComponent {}
 ```
 
+For Reactive Forms, import `ReactiveFormsModule`. For Template-driven Forms, import `FormsModule`.
+
 ### NgModule
 
-Import the `NgSelectModule` and Angular `FormsModule`:
+The standalone component is preferred. Existing NgModule applications can continue to import `NgSelectModule` with the forms module they use. This Template-driven Forms example uses `FormsModule`:
 
 ```typescript
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -70,36 +72,4 @@ constructor(private config: NgSelectConfig) {
 	// bindValue in most places.
 	this.config.bindValue = 'value';
 }
-```
-
-## Usage
-
-Define options in your consuming component:
-
-```typescript
-@Component({...})
-export class ExampleComponent {
-	selectedCar: number;
-
-	cars = [
-		{ id: 1, name: 'Volvo' },
-		{ id: 2, name: 'Saab' },
-		{ id: 3, name: 'Opel' },
-		{ id: 4, name: 'Audi' },
-	];
-}
-```
-
-In the template, use the `ng-select` component with your options:
-
-```html
-<!-- Using ng-option and for loop -->
-<ng-select [(ngModel)]="selectedCar">
-	@for (car of cars; track car.id) {
-	<ng-option [value]="car.id">{{ car.name }}</ng-option>
-	}
-</ng-select>
-
-<!-- Using items input -->
-<ng-select [items]="cars" bindLabel="name" bindValue="id" [(ngModel)]="selectedCar"></ng-select>
 ```

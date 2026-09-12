@@ -1,6 +1,10 @@
 import { afterEveryRender, booleanAttribute, ChangeDetectionStrategy, Component, ElementRef, inject, input, OnInit, signal } from '@angular/core';
 
-/** Declares an option for ng-select declared via HTML. Use the value input to bind the option's value and the element content as its label. */
+/**
+ * Declares an option for ng-select declared via HTML. Use the value input to bind the option's value and the element content as its label.
+ *
+ * @since 3.0.0
+ */
 @Component({
 	selector: 'ng-option',
 	standalone: true,
@@ -22,6 +26,11 @@ export class NgOptionComponent implements OnInit {
 	/** True when this component's inputs are initialized (after first change detection). */
 	public readonly isInitialized = signal<boolean>(false);
 
+	/**
+	 * Creates an instance of NgOptionComponent.
+	 *
+	 * @since 3.0.0
+	 */
 	constructor() {
 		afterEveryRender(() => {
 			const element = this.elementRef.nativeElement;
@@ -40,6 +49,11 @@ export class NgOptionComponent implements OnInit {
 		});
 	}
 
+	/**
+	 * Initializes the instance after Angular has assigned its inputs.
+	 *
+	 * @since 21.5.2
+	 */
 	ngOnInit(): void {
 		this.isInitialized.set(true);
 	}

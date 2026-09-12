@@ -1,0 +1,1860 @@
+import { OverlayRef } from '@angular/cdk/overlay';
+import { DOCUMENT } from '@angular/common';
+import {
+	afterEveryRender,
+	AfterViewInit,
+	booleanAttribute,
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	computed,
+	contentChild,
+	contentChildren,
+	DestroyRef,
+	effect,
+	ElementRef,
+	forwardRef,
+	HostAttributeToken,
+	HostListener,
+	inject,
+	InjectionToken,
+	Injector,
+	input,
+	isDevMode,
+	linkedSignal,
+	model,
+	numberAttribute,
+	OnChanges,
+	OnInit,
+	output,
+	signal,
+	SimpleChanges,
+	TemplateRef,
+	untracked,
+	viewChild,
+	ViewContainerRef,
+	ViewEncapsulation,
+} from '@angular/core';
+import { EventPhase } from '@angular/core/primitives/event-dispatch';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { debounceTime, filter, map, tap } from 'rxjs/operators';
+
+import {
+	NgClearButtonTemplateDirective,
+	NgFooterTemplateDirective,
+	NgHeaderTemplateDirective,
+	NgLabelTemplateDirective,
+	NgLoadingSpinnerTemplateDirective,
+	NgLoadingTextTemplateDirective,
+	NgMultiLabelTemplateDirective,
+	NgNotFoundTemplateDirective,
+	NgOptgroupTemplateDirective,
+	NgOptionTemplateDirective,
+	NgPlaceholderTemplateDirective,
+	NgTagTemplateDirective,
+	NgTypeToSearchTemplateDirective,
+} from '../directives/ng-templates.directive';
+
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DropdownOverlayManager } from '../dropdown-panel/dropdown-overlay-manager';
+import { ClassValue, mergeClassValues, readConsumerHostClasses } from '../dropdown-panel/dropdown-panel-classes';
+import { NgDropdownPanelComponent } from '../dropdown-panel/ng-dropdown-panel.component';
+import { NgDropdownPanelService } from '../dropdown-panel/ng-dropdown-panel.service';
+import { ItemsList } from '../items-list';
+import { NgOptionComponent } from '../ng-option.component';
+import { DefaultSelectionModelFactory, SelectionModelFactory } from '../selection-model';
+import { NgSelectConfig } from '../services/config.service';
+import { ConsoleService } from '../services/console.service';
+import { newId } from '../types/id';
+import { DropdownPosition, KeyCode, NgOption } from '../types/ng-select.types';
+import { isDefined, isFunction, isObject, isPromise } from '../utils/value-utils';
+import { createUnmatchedOptionValue, selectedItemsToModel, validateWriteValue } from './ng-select-model-value';
+
+/** DI token for SelectionModel implementation. You can provide custom implementation changing selection behaviour. */
+export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
+export type AddTagFn = (term: string) => any | Promise<any>;
+export type CompareWithFn = (a: any, b: any) => boolean;
+export type GroupValueFn = (key: string | any, children: any[]) => string | any;
+/**
+ * Transforms an optional attribute value while preserving `undefined`.
+ *
+ * @param value - The value to process.
+ * @returns The optional boolean attribute result.
+ *
+ * @since 22.0.0
+ */
+function optionalBooleanAttribute(value: unknown): boolean | undefined {
+	return value == null ? undefined : booleanAttribute(value);
+}
+
+/**
+ * Provides select, multiselect, autocomplete, keyboard, accessibility, and Signal, Reactive, and Template-driven Forms behavior.
+ *
+ * @since 3.0.0
+ */
+@Component({
+	selector: 'ng-select',
+	exportAs: 'ngSelect',
+	templateUrl: './ng-select.component.html',
+	styleUrls: ['./ng-select.component.scss'],
+	providers: [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: forwardRef(() => NgSelectComponent),
+			multi: true,
+		},
+		NgDropdownPanelService,
+	],
+	encapsulation: ViewEncapsulation.None,
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [NgClass, NgTemplateOutlet, NgDropdownPanelComponent],
+	host: {
+		'[class.ng-select]': 'true',
+		'[class.ng-select-single]': '!multiple()',
+		'[class.ng-select-typeahead]': 'typeahead()',
+		'[class.ng-select-multiple]': 'multiple()',
+		'[class.ng-select-taggable]': 'addTag()',
+		'[class.ng-select-searchable]': 'searchable()',
+		'[class.ng-select-clearable]': 'clearable()',
+		'[class.ng-select-opened]': 'isOpen()',
+		'[class.ng-select-filtered]': 'filtered',
+		'[class.ng-select-disabled]': 'disabled()',
+	},
+})
+export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, ControlValueAccessor {
+	readonly classes = inject(new HostAttributeToken('class'), { optional: true });
+	readonly config = inject(NgSelectConfig);
+	// signals
+	public readonly _disabled = signal<boolean>(false);
+	// inputs: underscored input() + alias + linkedSignal() for stable public names (back compat)
+	readonly _ariaLabelDropdown = input<string>(undefined, { alias: 'ariaLabelDropdown' });
+	readonly ariaLabelDropdown = linkedSignal(() => this._ariaLabelDropdown());
+	readonly _ariaLabel = input<string | undefined>(undefined, { alias: 'ariaLabel' });
+	readonly ariaLabel = linkedSignal(() => this._ariaLabel());
+	/** Marks first item as focused when opening/filtering. */
+	readonly _markFirst = input(true, { alias: 'markFirst', transform: booleanAttribute });
+	readonly markFirst = linkedSignal(() => this._markFirst());
+	/** Placeholder text. */
+	readonly _placeholder = input<string>(this.config.placeholder, { alias: 'placeholder' });
+	readonly placeholder = linkedSignal(() => this._placeholder());
+	/** Set placeholder visible even when an item is selected */
+	readonly _fixedPlaceholder = input<boolean>(this.config.fixedPlaceholder, { alias: 'fixedPlaceholder' });
+	readonly fixedPlaceholder = linkedSignal(() => this._fixedPlaceholder());
+	/** Set custom text when filter returns empty result */
+	readonly _notFoundText = input<string>(undefined, { alias: 'notFoundText' });
+	readonly notFoundText = linkedSignal(() => this._notFoundText());
+	/** Set custom text when using Typeahead */
+	readonly _typeToSearchText = input<string>(undefined, { alias: 'typeToSearchText' });
+	readonly typeToSearchText = linkedSignal(() => this._typeToSearchText());
+	/** Prevent opening of ng-select on right mouse click */
+	readonly _preventToggleOnRightClick = input<boolean>(false, { alias: 'preventToggleOnRightClick' });
+	readonly preventToggleOnRightClick = linkedSignal(() => this._preventToggleOnRightClick());
+	/** Set custom text when using tagging */
+	readonly _addTagText = input<string>(undefined, { alias: 'addTagText' });
+	readonly addTagText = linkedSignal(() => this._addTagText());
+	/** Set custom text when for loading items */
+	readonly _loadingText = input<string>(undefined, { alias: 'loadingText' });
+	readonly loadingText = linkedSignal(() => this._loadingText());
+	/** Set custom text for clear all icon title */
+	readonly _clearAllText = input<string>(undefined, { alias: 'clearAllText' });
+	readonly clearAllText = linkedSignal(() => this._clearAllText());
+	/** Set custom text prefixed to the option label in the aria-label of the remove icon on selected values (multiple mode) */
+	readonly _removeText = input<string>(undefined, { alias: 'removeText' });
+	readonly removeText = linkedSignal(() => this._removeText());
+	/** Set the dropdown position on open */
+	readonly _dropdownPosition = input<DropdownPosition>('auto', { alias: 'dropdownPosition' });
+	readonly dropdownPosition = linkedSignal(() => this._dropdownPosition());
+	/**
+	 * Append the dropdown overlay to any element using a css selector, resolved against the
+	 * select's own root (document or shadow root). The panel keeps its viewport-based
+	 * positioning and top-layer painting; the target controls where the overlay lives in the
+	 * DOM — ancestor-scoped styles, stacking context and focus containment. Defaults to the
+	 * document body.
+	 */
+	readonly _appendTo = input<string>(undefined, { alias: 'appendTo' });
+	readonly appendTo = linkedSignal(() => this._appendTo());
+	/** Configure which DOM event type is used for outside click detection. Use `'mousedown'` to fix issues with backdrop/loading overlays that appear on dropdown open */
+	readonly _outsideClickEvent = input<'click' | 'mousedown'>(this.config.outsideClickEvent ?? 'click', { alias: 'outsideClickEvent' });
+	readonly outsideClickEvent = linkedSignal(() => this._outsideClickEvent());
+	/** You can set the loading state from the outside (e.g. async items loading) */
+	readonly _loading = input(false, { alias: 'loading', transform: booleanAttribute });
+	readonly loading = linkedSignal(() => this._loading());
+	/** Whether to close the menu when a value is selected */
+	readonly _closeOnSelect = input(true, { alias: 'closeOnSelect', transform: booleanAttribute });
+	readonly closeOnSelect = linkedSignal(() => this._closeOnSelect());
+	/** Allows to hide selected items. */
+	readonly _hideSelected = input(false, { alias: 'hideSelected', transform: booleanAttribute });
+	readonly hideSelected = linkedSignal(() => this._hideSelected());
+	/** Select marked dropdown item using tab. Default `false` */
+	readonly _selectOnTab = input(false, { alias: 'selectOnTab', transform: booleanAttribute });
+	readonly selectOnTab = linkedSignal(() => this._selectOnTab());
+	/** Open dropdown using enter. Default `true` */
+	readonly _openOnEnter = input(undefined, { alias: 'openOnEnter', transform: booleanAttribute });
+	readonly openOnEnter = linkedSignal(() => this._openOnEnter());
+	/** When multiple = true, allows to set a limit number of selection. */
+	readonly _maxSelectedItems = input<number, unknown>(undefined, { alias: 'maxSelectedItems', transform: numberAttribute });
+	readonly maxSelectedItems = linkedSignal(() => this._maxSelectedItems());
+	/** Allow to group items by key or function expression */
+	readonly _groupBy = input<string | ((value: any) => any)>(undefined, { alias: 'groupBy' });
+	readonly groupBy = linkedSignal(() => this._groupBy());
+	/** Function expression to provide group value */
+	readonly _groupValue = input<GroupValueFn>(undefined, { alias: 'groupValue' });
+	readonly groupValue = linkedSignal(() => this._groupValue());
+	/** Used in virtual scrolling, the `bufferAmount` property controls the number of items preloaded in the background to ensure smoother and more seamless scrolling. */
+	readonly _bufferAmount = input(4, { alias: 'bufferAmount', transform: numberAttribute });
+	readonly bufferAmount = linkedSignal(() => this._bufferAmount());
+	/** Enable virtual scroll for better performance when rendering a lot of data */
+	readonly _virtualScroll = input<boolean | undefined, unknown>(undefined, {
+		alias: 'virtualScroll',
+		transform: optionalBooleanAttribute,
+	});
+	readonly virtualScroll = linkedSignal(() => this._virtualScroll());
+	readonly dropdownVirtualScroll = computed(() => {
+		const value = this._virtualScroll();
+		return isDefined(value) ? value : this.isVirtualScrollDisabled(this.config);
+	});
+	/** Allow to select group when groupBy is used */
+	readonly _selectableGroup = input(false, { alias: 'selectableGroup', transform: booleanAttribute });
+	readonly selectableGroup = linkedSignal(() => this._selectableGroup());
+	/** Control tab navigation behavior for the clear button. Default `true` */
+	readonly _tabFocusOnClearButton = input<boolean | undefined>(undefined, { alias: 'tabFocusOnClearButton' });
+	readonly tabFocusOnClearButton = linkedSignal(() => this._tabFocusOnClearButton());
+	/** Indicates whether to select all children or group itself */
+	readonly _selectableGroupAsModel = input(true, { alias: 'selectableGroupAsModel', transform: booleanAttribute });
+	readonly selectableGroupAsModel = linkedSignal(() => this._selectableGroupAsModel());
+	/** Allow to filter by custom search function */
+	readonly _searchFn = input(null, { alias: 'searchFn' });
+	readonly searchFn = linkedSignal(() => this._searchFn());
+	/** Provide custom trackBy function */
+	readonly _trackByFn = input(null, { alias: 'trackByFn' });
+	readonly trackByFn = linkedSignal(() => this._trackByFn());
+	/** Clear selected values one by one when clicking backspace. Default `true` */
+	readonly _clearOnBackspace = input(true, { alias: 'clearOnBackspace', transform: booleanAttribute });
+	readonly clearOnBackspace = linkedSignal(() => this._clearOnBackspace());
+	/** Id to associate control with label. */
+	readonly _labelForId = input(null, { alias: 'labelForId' });
+	readonly labelForId = linkedSignal(() => this._labelForId());
+	/** Pass custom attributes to underlying `input` element */
+	readonly _inputAttrs = input<Record<string, string>>({}, { alias: 'inputAttrs' });
+	readonly inputAttrs = linkedSignal(() => this._inputAttrs());
+	/** Set tabindex on ng-select */
+	readonly _tabIndex = input<number, unknown>(undefined, { alias: 'tabIndex', transform: numberAttribute });
+	readonly tabIndex = linkedSignal(() => this._tabIndex());
+	/** Prevent user changes while preserving the current selection. */
+	readonly _readonly = input(false, { alias: 'readonly', transform: booleanAttribute });
+	readonly readonly = linkedSignal(() => this._readonly());
+	/** Whether items should be filtered while composition started */
+	readonly _searchWhileComposing = input(true, { alias: 'searchWhileComposing', transform: booleanAttribute });
+	readonly searchWhileComposing = linkedSignal(() => this._searchWhileComposing());
+	/** Minimum term length to start a search. Should be used with `typeahead` */
+	readonly _minTermLength = input(0, { alias: 'minTermLength', transform: numberAttribute });
+	readonly minTermLength = linkedSignal(() => this._minTermLength());
+	/** Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`. */
+	readonly _editableSearchTerm = input(false, { alias: 'editableSearchTerm', transform: booleanAttribute });
+	readonly editableSearchTerm = linkedSignal(() => this._editableSearchTerm());
+	readonly _ngClass = input<ClassValue | null>(null, { alias: 'ngClass' });
+	readonly ngClass = linkedSignal(() => this._ngClass());
+	/** Additional CSS classes applied to the dropdown panel. Merged with mirrored host `class`, `[class]`, and `[ngClass]` values. */
+	readonly _panelClass = input<ClassValue | null>(null, { alias: 'panelClass' });
+	readonly panelClass = linkedSignal(() => this._panelClass());
+	/** Custom autocomplete or advanced filter. */
+	readonly _typeahead = input<Subject<string>>(undefined, { alias: 'typeahead' });
+	readonly typeahead = linkedSignal(() => this._typeahead());
+	/** Allows to select multiple items. */
+	readonly _multiple = input(false, { alias: 'multiple', transform: booleanAttribute });
+	readonly multiple = linkedSignal(() => this._multiple());
+	/** Allows to create custom options. */
+	readonly _addTag = input<boolean | AddTagFn>(false, { alias: 'addTag' });
+	readonly addTag = linkedSignal(() => this._addTag());
+	/** Allow to search for value. Default `true` */
+	readonly _searchable = input(true, { alias: 'searchable', transform: booleanAttribute });
+	readonly searchable = linkedSignal(() => this._searchable());
+	/** Allow to clear selected value. Default `true` */
+	readonly _clearable = input(true, { alias: 'clearable', transform: booleanAttribute });
+	readonly clearable = linkedSignal(() => this._clearable());
+	readonly _clearKeepsDisabledOptions = input(true, { alias: 'clearKeepsDisabledOptions', transform: booleanAttribute });
+	readonly clearKeepsDisabledOptions = linkedSignal(() => this._clearKeepsDisabledOptions());
+	/** Deselects a selected item when it is clicked in the dropdown. Default `false`. Default `true` when **multiple** is `true` */
+	readonly _deselectOnClick = input<boolean>(undefined, { alias: 'deselectOnClick' });
+	readonly deselectOnClick = linkedSignal(() => this._deselectOnClick());
+	/** Clears search input when item is selected. Default `true`. Default `false` when **closeOnSelect** is `false` */
+	readonly _clearSearchOnAdd = input(undefined, { alias: 'clearSearchOnAdd' });
+	readonly clearSearchOnAdd = linkedSignal(() => this._clearSearchOnAdd());
+	/** A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. */
+	readonly _compareWith = input(undefined, {
+		alias: 'compareWith',
+		transform: (fn: CompareWithFn | undefined) => {
+			if (fn !== undefined && fn !== null && !isFunction(fn)) {
+				throw Error('`compareWith` must be a function.');
+			}
+			return fn;
+		},
+	});
+	readonly compareWith = linkedSignal(() => this._compareWith());
+	/** Provide custom keyDown function. Executed before default handler. Return false to suppress execution of default key down handlers */
+	readonly _keyDownFn = input<(_: KeyboardEvent) => boolean>((_: KeyboardEvent) => true, { alias: 'keyDownFn' });
+	readonly keyDownFn = linkedSignal(() => this._keyDownFn());
+	/** @deprecated Has no effect: the CDK overlay renders in the native Popover API top layer automatically in supporting browsers. Will be removed in a future major version. */
+	readonly _popover = input(false, { alias: 'popover', transform: booleanAttribute });
+	/** @deprecated Has no effect: the CDK overlay renders in the native Popover API top layer automatically in supporting browsers. Will be removed in a future major version. */
+	readonly popover = linkedSignal(() => this._popover());
+	// models
+	/** Object property to use for label. Default `label` */
+	readonly bindLabel = model<string>(undefined);
+	/** Object property to use for selected model. By default binds to whole object. */
+	readonly bindValue = model<string>(undefined);
+	/** Allows to select dropdown appearance. Set to `outline` or `fill` for Material form-field styles (applies only to Material theme) */
+	readonly appearance = model<string>(undefined);
+	/** Allows manual control of dropdown opening and closing. `true` - won't close. `false` - won't open. */
+	readonly isOpen = model<boolean | undefined>(false);
+	/** Items array */
+	readonly items = model<readonly any[]>([]);
+	// output events
+	/** Fired on select blur */
+	readonly blurEvent = output<any>({ alias: 'blur' });
+	/** Fired on select focus */
+	readonly focusEvent = output<any>({ alias: 'focus' });
+	/** Fired on model change. Outputs whole model */
+	readonly changeEvent = output<any>({ alias: 'change' });
+	/** Fired on select dropdown open */
+	readonly openEvent = output({ alias: 'open' });
+	/** Fired on select dropdown close */
+	readonly closeEvent = output({ alias: 'close' });
+	/** Fired while typing search term. Outputs search term with filtered items */
+	readonly searchEvent = output<{
+		term: string;
+		items: any[];
+	}>({ alias: 'search' });
+	/** Fired on clear icon click */
+	readonly clearEvent = output({ alias: 'clear' });
+	/** Fired when item is added while `[multiple]="true"`. Outputs added item */
+	readonly addEvent = output<any>({ alias: 'add' });
+	/** Fired when item is removed while `[multiple]="true"` */
+	readonly removeEvent = output<any>({ alias: 'remove' });
+	/** Fired when scrolled (only when `[virtualScroll]="true"`). Provides the start and end index of the currently available items. Can be used for loading more items in chunks before the user has scrolled all the way to the bottom of the list. */
+	readonly scroll = output<{
+		start: number;
+		end: number;
+	}>({ alias: 'scroll' });
+	/** Fired when scrolled to the end of items. Can be used for loading more items in chunks. */
+	readonly scrollToEnd = output<any>({ alias: 'scrollToEnd' });
+	// computed
+	readonly disabled = computed(() => this.readonly() || this._disabled());
+	readonly clearSearchOnAddValue = computed(() => {
+		if (isDefined(this.clearSearchOnAdd())) {
+			return this.clearSearchOnAdd();
+		}
+		if (isDefined(this.config.clearSearchOnAdd)) {
+			return this.config.clearSearchOnAdd;
+		}
+		return this.closeOnSelect();
+	});
+	readonly deselectOnClickValue = computed(() => {
+		if (isDefined(this.deselectOnClick())) {
+			return this.deselectOnClick();
+		}
+		if (isDefined(this.config.deselectOnClick)) {
+			return this.config.deselectOnClick;
+		}
+		return this.multiple();
+	});
+	// content child queries
+	readonly optionTemplate = contentChild(NgOptionTemplateDirective, { read: TemplateRef });
+	readonly optgroupTemplate = contentChild(NgOptgroupTemplateDirective, { read: TemplateRef });
+	readonly labelTemplate = contentChild(NgLabelTemplateDirective, { read: TemplateRef });
+	readonly multiLabelTemplate = contentChild(NgMultiLabelTemplateDirective, { read: TemplateRef });
+	readonly headerTemplate = contentChild(NgHeaderTemplateDirective, { read: TemplateRef });
+	readonly footerTemplate = contentChild(NgFooterTemplateDirective, { read: TemplateRef });
+	readonly notFoundTemplate = contentChild(NgNotFoundTemplateDirective, { read: TemplateRef });
+	readonly placeholderTemplate = contentChild(NgPlaceholderTemplateDirective, { read: TemplateRef });
+	readonly typeToSearchTemplate = contentChild(NgTypeToSearchTemplateDirective, { read: TemplateRef });
+	readonly loadingTextTemplate = contentChild(NgLoadingTextTemplateDirective, { read: TemplateRef });
+	readonly tagTemplate = contentChild(NgTagTemplateDirective, { read: TemplateRef });
+	readonly loadingSpinnerTemplate = contentChild(NgLoadingSpinnerTemplateDirective, { read: TemplateRef });
+	readonly clearButtonTemplate = contentChild(NgClearButtonTemplateDirective, { read: TemplateRef });
+	readonly ngOptions = contentChildren(NgOptionComponent, { descendants: true });
+	// view children queries
+	readonly dropdownPanel = viewChild(forwardRef(() => NgDropdownPanelComponent));
+	readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
+	readonly clearButton = viewChild<ElementRef<HTMLSpanElement>>('clearButton');
+	private readonly _dropdownTemplate = viewChild<TemplateRef<any>>('dropdownTemplate');
+	// The portal's embedded view is anchored at the template's own container so it stays
+	// part of this component's logical view tree (DI, view queries, detectChanges) while
+	// its DOM nodes live in the CDK overlay
+	private readonly _dropdownOutlet = viewChild('dropdownTemplate', { read: ViewContainerRef });
+	private readonly _selectContainer = viewChild<ElementRef<HTMLDivElement>>('selectContainer');
+	// public variables
+	readonly dropdownId = newId();
+	readonly element: HTMLElement;
+	/** Width of the notched-outline gap for the floated label in the material outline appearance */
+	readonly outlineNotchWidth = signal(0);
+	// variables
+	itemsList: ItemsList;
+	viewPortItems: NgOption[] = [];
+	tabFocusOnClear = signal<boolean>(true);
+	private readonly _cd = inject(ChangeDetectorRef);
+	private readonly _console = inject(ConsoleService);
+	private readonly _destroyRef = inject(DestroyRef);
+	private readonly autoFocus = inject(new HostAttributeToken('autofocus'), { optional: true });
+	/** Overlay hosting the dropdown panel while open. Bound into the panel so it can request repositioning. */
+	protected dropdownOverlayRef: OverlayRef | null = null;
+	// private variables
+	private readonly _defaultLabel = 'label';
+	private readonly _editableSearchTermActive = computed(() => this.editableSearchTerm() && !this.multiple());
+	private readonly _document = inject(DOCUMENT);
+	private _injector = inject(Injector);
+	private readonly _dropdownOverlay: DropdownOverlayManager;
+	private _isComposing = false;
+	private _itemsAreUsed: boolean;
+	private readonly _keyPress$ = new Subject<string>();
+	private _manualOpen: boolean;
+	private _pressedKeys: string[] = [];
+	private _primitive: any;
+	private readonly _searchTerm = signal<string>(null);
+	private readonly _validTerm = computed(() => {
+		const term = this._searchTerm()?.trim();
+		return term && term.length >= this.minTermLength();
+	});
+	/** Consumer classes on the host from static `class` and `[class]` bindings. */
+	private readonly _consumerHostClasses = signal<string | null>(null);
+	/** Classes forwarded to the overlay panel (mirrored host classes + `panelClass`). */
+	readonly panelClasses = computed(() => {
+		return mergeClassValues(
+			// Preserve explicitly declared static classes even when they share a name with
+			// a framework-managed class that is otherwise filtered from the observed host.
+			this.classes,
+			this._consumerHostClasses(),
+			// Keep supporting `[ngClass]` when it binds only to this component input and
+			// no NgClass directive is present in the consumer's template scope.
+			this.ngClass(),
+			this.panelClass(),
+		);
+	});
+
+	/**
+	 * Creates an instance of NgSelectComponent.
+	 *
+	 * @since 3.0.0
+	 */
+	constructor() {
+		const config = this.config;
+		const newSelectionModel = inject<SelectionModelFactory | undefined>(SELECTION_MODEL_FACTORY, { optional: true });
+		const _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+		this._mergeGlobalConfig(config);
+		this.itemsList = new ItemsList(this, newSelectionModel ? newSelectionModel() : DefaultSelectionModelFactory());
+		this.element = _elementRef.nativeElement;
+		this._dropdownOverlay = new DropdownOverlayManager(this._injector, this._document, this.element);
+		this._handleSignalChanges();
+		afterEveryRender({
+			read: () => this._measureOutlineNotch(),
+		});
+		afterEveryRender({
+			read: () => {
+				const consumerClasses = readConsumerHostClasses(this.element);
+				const normalized = consumerClasses || null;
+				if (normalized !== this._consumerHostClasses()) {
+					this._consumerHostClasses.set(normalized);
+				}
+			},
+		});
+		this._destroyRef.onDestroy(() => {
+			this._dropdownOverlay.destroy();
+			this.dropdownOverlayRef = null;
+		});
+	}
+
+	/**
+	 * Measures the placeholder label so the notched outline can leave a real gap in the border
+	 * for the floated label instead of masking it with an opaque background (material theme).
+	 * The 0.75 factor matches the `scale(0.75)` the material theme applies to the floated label.
+	 *
+	 * @since 23.2.3
+	 */
+	private _measureOutlineNotch() {
+		if (this.appearance() !== 'outline') {
+			return;
+		}
+		const label = this.element.querySelector<HTMLElement>('.ng-select-container > .ng-value-container .ng-placeholder');
+		const width = label ? label.offsetWidth * 0.75 : 0;
+		if (width !== this.outlineNotchWidth()) {
+			this.outlineNotchWidth.set(width);
+		}
+	}
+
+	private _focused: boolean;
+
+	/**
+	 * Gets whether the component currently owns focus.
+	 *
+	 * @returns The focused.
+	 *
+	 * @since 20.4.2
+	 */
+	get focused() {
+		return this._focused;
+	}
+
+	/**
+	 * Gets whether search filtering or text composition is active.
+	 *
+	 * @returns The filtered.
+	 *
+	 * @since 3.0.0
+	 */
+	get filtered() {
+		return (!!this.searchTerm && this.searchable()) || this._isComposing;
+	}
+
+	/**
+	 * Gets the search term.
+	 *
+	 * @returns The search term.
+	 *
+	 * @since 20.4.2
+	 */
+	get searchTerm() {
+		return this._searchTerm();
+	}
+
+	/**
+	 * Gets the selected items.
+	 *
+	 * @returns The selected items.
+	 *
+	 * @since 3.0.0
+	 */
+	get selectedItems(): NgOption[] {
+		return this.itemsList.selectedItems;
+	}
+
+	/**
+	 * Gets the selected values.
+	 *
+	 * @returns The selected values.
+	 *
+	 * @since 3.0.0
+	 */
+	get selectedValues() {
+		return this.selectedItems.map((x) => x.value);
+	}
+
+	/**
+	 * Determines whether the component has selected values.
+	 *
+	 * @returns Whether has value.
+	 *
+	 * @since 3.0.0
+	 */
+	get hasValue() {
+		return this.selectedItems.length > 0;
+	}
+
+	/**
+	 * Gets the current panel position.
+	 *
+	 * @returns The current panel position.
+	 *
+	 * @since 3.0.0
+	 */
+	get currentPanelPosition(): DropdownPosition {
+		if (this.dropdownPanel()) {
+			return this.dropdownPanel().currentPosition;
+		}
+		return undefined;
+	}
+
+	/**
+	 * Determines whether the add-tag option should be displayed.
+	 *
+	 * @returns Whether show add tag.
+	 *
+	 * @since 3.0.0
+	 */
+	get showAddTag() {
+		if (!this._validTerm()) {
+			return false;
+		}
+
+		const term = this.searchTerm.toLowerCase().trim();
+		return (
+			this.addTag() &&
+			!this.itemsList.filteredItems.some((x) => x.label.toLowerCase() === term) &&
+			((!this.hideSelected() && this.isOpen()) || !this.selectedItems.some((x) => x.label.toLowerCase() === term)) &&
+			!this.loading()
+		);
+	}
+
+	clearItem = (item: any) => {
+		const option = this.selectedItems.find((x) => x.value === item);
+		this.unselect(option);
+	};
+
+	/**
+	 * Initializes the instance after Angular has assigned its inputs.
+	 *
+	 * @since 3.0.0
+	 */
+	ngOnInit() {
+		this._handleKeyPresses();
+		this._setInputAttributes();
+		this._warnDeprecatedInputs();
+	}
+
+	/**
+	 * Responds to Angular input changes.
+	 *
+	 * @param changes - The changed Angular inputs.
+	 *
+	 * @since 3.0.0
+	 */
+	ngOnChanges(changes: SimpleChanges) {
+		const itemsChange = changes.items;
+		const isOpenChange = changes.isOpen;
+		const groupByChange = changes._groupBy ?? changes.groupBy;
+
+		if (itemsChange?.firstChange) {
+			this._itemsAreUsed = true;
+			this._setItems(itemsChange.currentValue || []);
+		}
+
+		if (isOpenChange) {
+			this._manualOpen = isDefined(isOpenChange.currentValue);
+		}
+
+		if (groupByChange?.firstChange && !itemsChange) {
+			this._setItems([...this.items()]);
+		}
+
+		this._setTabFocusOnClear();
+	}
+
+	/**
+	 * Completes initialization that depends on rendered view children.
+	 *
+	 * @since 3.0.0
+	 */
+	ngAfterViewInit() {
+		if (!this._itemsAreUsed) {
+			this._setItemsFromNgOptions();
+		}
+
+		if (isDefined(this.autoFocus)) {
+			this.focus();
+		}
+	}
+
+	/**
+	 * Routes a keyboard event to the appropriate ng-select interaction handler.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
+	@HostListener('keydown', ['$event'])
+	handleKeyDown($event: KeyboardEvent) {
+		const keyName = $event.key;
+		if (Object.values(KeyCode).includes(keyName as KeyCode)) {
+			if (this.keyDownFn()($event) === false) {
+				return;
+			}
+			this.handleKeyCode($event);
+		} else if (keyName && keyName.length === 1) {
+			this._keyPress$.next(keyName.toLocaleLowerCase());
+		}
+	}
+
+	/**
+	 * Handles navigation and selection key codes.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.1.1
+	 */
+	handleKeyCode($event: KeyboardEvent) {
+		const target = $event.target;
+
+		if (this.clearButton() && this.clearButton().nativeElement === target) {
+			this.handleKeyCodeClear($event);
+		} else {
+			this.handleKeyCodeInput($event);
+		}
+	}
+
+	/**
+	 * Handles keyboard interaction originating from the search input.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 11.1.2
+	 */
+	handleKeyCodeInput($event: KeyboardEvent) {
+		switch ($event.key) {
+			case KeyCode.ArrowDown:
+				this._handleArrowDown($event);
+				break;
+			case KeyCode.ArrowUp:
+				this._handleArrowUp($event);
+				break;
+			case KeyCode.Space:
+				this._handleSpace($event);
+				break;
+			case KeyCode.Enter:
+				this._handleEnter($event);
+				break;
+			case KeyCode.Tab:
+				this._handleTab($event);
+				break;
+			case KeyCode.Esc:
+				// Only consume Escape when it closes the dropdown so parent overlays/dialogs can still handle Escape when already closed
+				if (!this.isOpen() || this._manualOpen) {
+					return;
+				}
+				this.close();
+				$event.preventDefault();
+				break;
+			case KeyCode.Backspace:
+				this._handleBackspace();
+				break;
+		}
+	}
+
+	/**
+	 * Handles keyboard interaction on the clear control.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 11.1.2
+	 */
+	handleKeyCodeClear($event: KeyboardEvent) {
+		switch ($event.key) {
+			case KeyCode.Enter:
+			case KeyCode.Space:
+				this.handleClearClick();
+				$event.preventDefault();
+				break;
+		}
+	}
+
+	/**
+	 * Handles keyboard removal of a selected value.
+	 *
+	 * @param $event - The DOM event to process.
+	 * @param item - The option to process.
+	 *
+	 * @since 23.3.0
+	 */
+	handleRemoveKeydown($event: KeyboardEvent, item: NgOption) {
+		if (item.disabled) {
+			return;
+		}
+		if ($event.key === KeyCode.Enter || $event.key === KeyCode.Space) {
+			$event.preventDefault();
+			$event.stopPropagation();
+			this.unselect(item);
+		}
+	}
+
+	/**
+	 * Handles pointer interaction within the select container.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
+	handleMousedown($event: MouseEvent) {
+		if (this.disabled()) {
+			return;
+		}
+
+		if (this.preventToggleOnRightClick() && $event.button === 2) {
+			return false;
+		}
+		const target = $event.target as HTMLElement;
+
+		// Allow highlighting/copying the selected label when search is disabled.
+		// Skipping preventDefault + toggle lets the browser start a text selection.
+		// See https://github.com/ng-select/ng-select/issues/2669
+		const onSelectedValue = !!target.closest?.('.ng-value');
+		const onValueIcon = target.classList.contains('ng-value-icon') || !!target.closest?.('.ng-value-icon');
+		if (!this.searchable() && onSelectedValue && !onValueIcon) {
+			if (!this._focused) {
+				this.focus();
+			}
+			return;
+		}
+
+		// Skip during Angular event replay (SSR hydration): preventDefault has no effect
+		// after browser dispatch and throws — see https://github.com/ng-select/ng-select/issues/2549
+		if (target.tagName !== 'INPUT' && $event.eventPhase !== EventPhase.REPLAY) {
+			$event.preventDefault();
+		}
+
+		if (target.classList.contains('ng-clear-wrapper')) {
+			// Don't handle clear on mousedown - let click event handle it
+			return;
+		}
+
+		if (target.classList.contains('ng-arrow-wrapper')) {
+			this.handleArrowClick();
+			return;
+		}
+
+		if (target.classList.contains('ng-value-icon')) {
+			return;
+		}
+
+		if (!this._focused) {
+			this.focus();
+		}
+
+		if (this.searchable()) {
+			this.open();
+		} else {
+			this.toggle();
+		}
+	}
+
+	/**
+	 * Toggles the dropdown from the arrow control.
+	 *
+	 * @since 3.0.0
+	 */
+	handleArrowClick() {
+		if (this.isOpen()) {
+			this.close();
+		} else {
+			this.open();
+		}
+	}
+
+	/**
+	 * Clears the model from a pointer interaction.
+	 *
+	 * @param _event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
+	handleClearClick(_event?: MouseEvent) {
+		if (this.hasValue) {
+			this.itemsList.clearSelected(this.clearKeepsDisabledOptions());
+			this._updateNgModel();
+		}
+		this._clearSearch();
+		this.focus();
+		this.clearEvent.emit();
+
+		this._onSelectionChanged();
+	}
+
+	/**
+	 * Clears the selected model values and resets the search state.
+	 *
+	 * @since 3.0.0
+	 */
+	clearModel() {
+		if (!this.clearable()) {
+			return;
+		}
+		this.itemsList.clearSelected(false);
+		this._updateNgModel();
+	}
+
+	/**
+	 * Writes a ControlValueAccessor model value into the component.
+	 *
+	 * @param value - The value to process.
+	 *
+	 * @since 3.0.0
+	 */
+	writeValue(value: any | any[]): void {
+		this.itemsList.clearSelected(false);
+		this._handleWriteValue(value);
+		if (this._editableSearchTermActive()) {
+			this._setSearchTermFromItems();
+		}
+		this._cd.markForCheck();
+	}
+
+	/**
+	 * Registers the ControlValueAccessor model-change callback.
+	 *
+	 * @param fn - The fn.
+	 *
+	 * @since 3.0.0
+	 */
+	registerOnChange(fn: any): void {
+		this._onChange = fn;
+	}
+
+	/**
+	 * Registers the ControlValueAccessor touched callback.
+	 *
+	 * @param fn - The fn.
+	 *
+	 * @since 3.0.0
+	 */
+	registerOnTouched(fn: any): void {
+		this._onTouched = fn;
+	}
+
+	/**
+	 * Updates the disabled state supplied by Angular forms.
+	 *
+	 * @param state - The state.
+	 *
+	 * @since 3.0.0
+	 */
+	setDisabledState(state: boolean): void {
+		this._disabled.set(state);
+		this._cd.markForCheck();
+	}
+
+	/**
+	 * Toggles the dropdown panel.
+	 *
+	 * @since 3.0.0
+	 */
+	toggle() {
+		if (!this.isOpen()) {
+			this.open();
+		} else {
+			this.close();
+		}
+	}
+
+	/**
+	 * Opens the select dropdown panel
+	 *
+	 * @since 3.0.0
+	 */
+	open() {
+		if (this.disabled() || this.isOpen() || this._manualOpen) {
+			return;
+		}
+
+		if (!this.typeahead()?.observed && !this.addTag() && this.itemsList.noItemsToSelect) {
+			return;
+		}
+		this.isOpen.set(true);
+		this.itemsList.markSelectedOrDefault(this.markFirst());
+		this.openEvent.emit();
+		if (!this.searchTerm) {
+			this.focus();
+		}
+		// Attach synchronously (effects only flush on the next tick): consumers expect the
+		// panel to be in the DOM right after open() returns
+		this._syncDropdownOverlay();
+		this.detectChanges();
+	}
+
+	/**
+	 * Closes the select dropdown panel
+	 *
+	 * @since 3.0.0
+	 */
+	close() {
+		if (!this.isOpen() || this._manualOpen) {
+			return;
+		}
+		this.isOpen.set(false);
+		this._isComposing = false;
+		if (!this._editableSearchTermActive()) {
+			this._clearSearch();
+		} else {
+			this.itemsList.resetFilteredItems();
+		}
+		this.itemsList.unmarkItem();
+		this._onTouched();
+		this.closeEvent.emit();
+		// Detach synchronously (effects only flush on the next tick): the panel must leave
+		// the DOM without relying on zone-triggered change detection (#2765)
+		this._syncDropdownOverlay();
+		this.detectChanges();
+	}
+
+	/**
+	 * Selects or unselects an option based on its current state.
+	 *
+	 * @param item - The option to process.
+	 *
+	 * @since 3.0.0
+	 */
+	toggleItem(item: NgOption) {
+		if (!item || item.disabled || this.disabled()) {
+			return;
+		}
+
+		if (this.deselectOnClickValue() && item.selected) {
+			this.unselect(item);
+		} else {
+			this.select(item);
+		}
+
+		if (this._editableSearchTermActive()) {
+			this._setSearchTermFromItems();
+		}
+	}
+
+	/**
+	 * Selects an option according to the active selection mode.
+	 *
+	 * @param item - The option to process.
+	 *
+	 * @since 3.0.0
+	 */
+	select(item: NgOption) {
+		if (!item.selected) {
+			this.itemsList.select(item);
+			if (this.clearSearchOnAddValue() && !this._editableSearchTermActive()) {
+				this._clearSearch();
+			}
+
+			this._updateNgModel();
+			if (this.multiple()) {
+				this.addEvent.emit(item.value);
+			}
+		}
+
+		if (this.closeOnSelect() || this.itemsList.noItemsToSelect) {
+			this.close();
+		}
+
+		this._onSelectionChanged();
+	}
+
+	/**
+	 * Focuses the select element
+	 *
+	 * @since 3.0.0
+	 */
+	focus() {
+		this.searchInput().nativeElement.focus();
+	}
+
+	/**
+	 * Blurs the select element
+	 *
+	 * @since 3.0.0
+	 */
+	blur() {
+		this.searchInput().nativeElement.blur();
+	}
+
+	/**
+	 * Removes an option from the current selection.
+	 *
+	 * @param item - The option to process.
+	 *
+	 * @since 3.0.0
+	 */
+	unselect(item: NgOption) {
+		if (!item || this.disabled() || item.disabled) {
+			return;
+		}
+
+		this.itemsList.unselect(item);
+		this.focus();
+		this._updateNgModel();
+		this.removeEvent.emit(item.value);
+		this._onSelectionChanged();
+	}
+
+	/**
+	 * Creates and selects an option from the current search term.
+	 *
+	 * @since 3.0.0
+	 */
+	selectTag() {
+		let tag;
+		if (isFunction(this.addTag())) {
+			tag = (<AddTagFn>this.addTag())(this.searchTerm);
+		} else {
+			tag = this._primitive ? this.searchTerm : { [this.bindLabel()]: this.searchTerm };
+		}
+
+		const handleTag = (item) => (this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item));
+		if (isPromise(tag)) {
+			tag.then((item) => this.select(handleTag(item))).catch(() => {});
+		} else if (tag) {
+			this.select(handleTag(tag));
+		}
+	}
+
+	/**
+	 * Determines whether the clear control should be displayed.
+	 *
+	 * @since 3.0.0
+	 */
+	showClear() {
+		return this.clearable() && (this.hasValue || this.searchTerm) && !this.disabled();
+	}
+
+	/**
+	 * Moves keyboard focus to the clear control.
+	 *
+	 * @since 11.1.2
+	 */
+	focusOnClear() {
+		this.blur();
+		if (this.clearButton()) {
+			this.clearButton().nativeElement.focus();
+		}
+	}
+
+	trackByOption = (_: number, item: NgOption) => {
+		if (this.trackByFn()) {
+			return this.trackByFn()(item.value);
+		}
+
+		return item;
+	};
+
+	/**
+	 * Determines whether the empty-results message should be displayed.
+	 *
+	 * @since 3.0.0
+	 */
+	showNoItemsFound() {
+		const empty = this.itemsList.filteredItems.length === 0;
+		return (
+			((empty && !this.typeahead()?.observed && !this.loading()) || (empty && this.typeahead()?.observed && this._validTerm() && !this.loading())) &&
+			!this.showAddTag
+		);
+	}
+
+	/**
+	 * Determines whether the type-to-search prompt should be displayed.
+	 *
+	 * @since 3.0.0
+	 */
+	showTypeToSearch() {
+		const empty = this.itemsList.filteredItems.length === 0;
+		return empty && this.typeahead()?.observed && !this._validTerm() && !this.loading();
+	}
+
+	/**
+	 * Marks the start of an input method editor composition.
+	 *
+	 * @since 3.0.5
+	 */
+	onCompositionStart() {
+		this._isComposing = true;
+	}
+
+	/**
+	 * Finishes input method editor composition and applies the search term.
+	 *
+	 * @param term - The term.
+	 *
+	 * @since 3.0.5
+	 */
+	onCompositionEnd(term: string) {
+		this._isComposing = false;
+		if (this.searchWhileComposing()) {
+			return;
+		}
+
+		this.filter(term);
+	}
+
+	/**
+	 * Filters the available options using the current search configuration.
+	 *
+	 * @param term - The term.
+	 *
+	 * @since 3.0.0
+	 */
+	filter(term: string) {
+		if (this._isComposing && !this.searchWhileComposing()) {
+			return;
+		}
+
+		this._searchTerm.set(term);
+		if (this.typeahead()?.observed && (this._validTerm() || this.minTermLength() === 0)) {
+			this.typeahead().next(term);
+		}
+
+		if (!this.typeahead()?.observed) {
+			this.itemsList.filter(term);
+			if (this.isOpen()) {
+				this.itemsList.markSelectedOrDefault(this.markFirst());
+			}
+		}
+
+		this.searchEvent.emit({ term, items: this.itemsList.filteredItems.map((x) => x.value) });
+		this.open();
+	}
+
+	/**
+	 * Handles focus entering the search input.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
+	onInputFocus($event: FocusEvent) {
+		if (this._focused) {
+			return;
+		}
+
+		if (this._editableSearchTermActive()) {
+			this._setSearchTermFromItems();
+		}
+
+		this.element.classList.add('ng-select-focused');
+		this.focusEvent.emit($event);
+		this._focused = true;
+	}
+
+	/**
+	 * Handles focus leaving the search input.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
+	onInputBlur($event: FocusEvent) {
+		this.element.classList.remove('ng-select-focused');
+		this.blurEvent.emit($event);
+		// When `selectOnTab` is enabled, commit the marked item on any focus loss, not just the literal Tab
+		// key handled in `_handleTab` (e.g. mouse click-away or assistive-technology navigation). The Tab key
+		// path calls `preventDefault()` and keeps focus, so this cannot double-select for that case.
+		if (this.selectOnTab() && this.isOpen() && !this.disabled() && this.itemsList.markedItem && !this._isComposing) {
+			this.toggleItem(this.itemsList.markedItem);
+		}
+		if (!this.isOpen() && !this.disabled()) {
+			this._onTouched();
+		}
+		if (this._editableSearchTermActive()) {
+			this._setSearchTermFromItems();
+		}
+		this._focused = false;
+	}
+
+	/**
+	 * Marks an option when pointer interaction hovers it.
+	 *
+	 * @param item - The option to process.
+	 *
+	 * @since 3.0.0
+	 */
+	onItemHover(item: NgOption) {
+		if (item.disabled) {
+			return;
+		}
+		this.itemsList.markItem(item);
+	}
+
+	/**
+	 * Requests an OnPush change-detection pass.
+	 *
+	 * @since 3.0.0
+	 */
+	detectChanges() {
+		if (!(<any>this._cd).destroyed) {
+			this._cd.detectChanges();
+		}
+	}
+
+	private _onChange = (_: any) => {};
+
+	private _onTouched = () => {};
+
+	/**
+	 * Registers effects that synchronize signal-based inputs with component state.
+	 *
+	 * @since 23.0.4
+	 */
+	private _handleSignalChanges() {
+		let itemsInitialized = false;
+		effect(
+			() => {
+				const items = this.items();
+
+				if (!itemsInitialized) {
+					itemsInitialized = true;
+					return;
+				}
+
+				untracked(() => {
+					this._itemsAreUsed = true;
+					this._setItems(items || []);
+				});
+			},
+			{ injector: this._injector },
+		);
+
+		let multipleInitialized = false;
+		effect(
+			() => {
+				this.multiple();
+
+				if (!multipleInitialized) {
+					multipleInitialized = true;
+					return;
+				}
+
+				untracked(() => this.itemsList.clearSelected(false));
+			},
+			{ injector: this._injector },
+		);
+
+		let groupByInitialized = false;
+		effect(
+			() => {
+				this.groupBy();
+
+				if (!groupByInitialized) {
+					groupByInitialized = true;
+					return;
+				}
+
+				untracked(() => this._setItems([...this.items()]));
+			},
+			{ injector: this._injector },
+		);
+
+		effect(
+			() => {
+				this.inputAttrs();
+				const input = this.searchInput();
+
+				if (!input) {
+					return;
+				}
+
+				untracked(() => this._setInputAttributes());
+			},
+			{ injector: this._injector },
+		);
+
+		// open()/close() sync the overlay imperatively; this effect covers the paths that
+		// bypass them — an [isOpen] binding (manual mode), programmatic isOpen.set(), and
+		// dropdownPosition changes while open
+		effect(
+			() => {
+				this.isOpen();
+				this.dropdownPosition();
+				// Track the template query too: with [isOpen] pre-set, the first run can happen
+				// before view children resolve, and this re-runs the effect once they do
+				this._dropdownTemplate();
+
+				untracked(() => this._syncDropdownOverlay());
+			},
+			{ injector: this._injector },
+		);
+	}
+
+	/**
+	 * Restores the editable search term from the selected option.
+	 *
+	 * @since 3.7.3
+	 */
+	private _setSearchTermFromItems() {
+		const selected = this.selectedItems?.[0];
+		this._searchTerm.set(selected?.label ?? null);
+	}
+
+	/**
+	 * Maps the bound items collection into the internal option list.
+	 *
+	 * @param items - The options to process.
+	 *
+	 * @since 3.0.0
+	 */
+	private _setItems(items: readonly any[]) {
+		const firstItem = items[0];
+		this.bindLabel.set(this.bindLabel() || this._defaultLabel);
+		this._primitive = isDefined(firstItem) ? !isObject(firstItem) : this._primitive || this.bindLabel() === this._defaultLabel;
+		this.itemsList.setItems(items);
+		if (items.length > 0 && this.hasValue) {
+			this.itemsList.mapSelectedItems();
+		}
+		if (this.isOpen() && isDefined(this.searchTerm) && !this.typeahead()?.observed) {
+			this.itemsList.filter(this.searchTerm);
+		}
+		if (this.typeahead()?.observed || this.isOpen()) {
+			this.itemsList.markSelectedOrDefault(this.markFirst());
+		}
+	}
+
+	/**
+	 * Maps projected `ng-option` components into the internal option list.
+	 *
+	 * @since 3.0.0
+	 */
+	private _setItemsFromNgOptions() {
+		effect(
+			() => {
+				const options = this.ngOptions();
+				// Wait until all ng-option inputs are initialized (avoids _groupBy crash when values load async)
+				if (options.length > 0 && !options.every((opt) => opt.isInitialized())) {
+					return;
+				}
+
+				this.bindLabel.set(this._defaultLabel);
+				const items = options.map((option) => ({
+					$ngOptionValue: option.value(),
+					$ngOptionLabel: option.label(),
+					$ngOptionClasses: option.classes(),
+					disabled: option.disabled(),
+				}));
+				this.items.set(items);
+				this.itemsList.setItems(items);
+				if (this.hasValue) {
+					this.itemsList.mapSelectedItems();
+				}
+				this._cd.detectChanges();
+
+				options
+					// find item for each option
+					.map((option) => ({
+						option,
+						item: this.itemsList.findItem(option.value()),
+					}))
+					// filter non found items
+					.filter(({ item }) => isDefined(item))
+					// process to update disabled and label
+					.forEach(({ option, item }) => {
+						item.disabled = option.disabled();
+						item.label = option.label() || item.label;
+						item.classes = option.classes();
+					});
+			},
+			{ injector: this._injector },
+		);
+	}
+
+	/**
+	 * Maps a valid external model value into selected options.
+	 *
+	 * @param value - The form value.
+	 *
+	 * @since 3.0.0
+	 */
+	private _handleWriteValue(value: any | any[]) {
+		const validation = validateWriteValue(value, {
+			bindValue: this.bindValue(),
+			compareWith: this.compareWith(),
+			multiple: this.multiple(),
+		});
+		if (!validation.valid) {
+			if (validation.warning) {
+				this._console.warn(validation.warning);
+			}
+			return;
+		}
+
+		const select = (val: any) => {
+			let item = this.itemsList.findItem(val);
+			if (item) {
+				this.itemsList.select(item);
+			} else {
+				item = createUnmatchedOptionValue(val, this.bindLabel(), this.bindValue());
+				this.itemsList.select(this.itemsList.mapItem(item, null));
+			}
+		};
+
+		if (this.multiple()) {
+			(<any[]>value).forEach((item) => select(item));
+		} else {
+			select(value);
+		}
+	}
+
+	/**
+	 * Matches typed characters to options for keyboard navigation.
+	 *
+	 * @since 3.0.0
+	 */
+	private _handleKeyPresses() {
+		if (this.searchable()) {
+			return;
+		}
+
+		this._keyPress$
+			.pipe(
+				takeUntilDestroyed(this._destroyRef),
+				tap((letter) => this._pressedKeys.push(letter)),
+				debounceTime(200),
+				filter(() => this._pressedKeys.length > 0),
+				map(() => this._pressedKeys.join('')),
+			)
+			.subscribe((term) => {
+				const item = this.itemsList.findByLabel(term);
+				if (item) {
+					if (this.isOpen()) {
+						if (!item.disabled) {
+							this.itemsList.markItem(item);
+							this._scrollToMarked();
+							// Required under zoneless CD: this subscription fires from a debounce
+							// timer, which schedules nothing by itself
+							this._cd.markForCheck();
+						}
+					} else {
+						this.select(item);
+					}
+				}
+				this._pressedKeys = [];
+			});
+	}
+
+	/**
+	 * Applies configured attributes to the native search input.
+	 *
+	 * @since 3.0.0
+	 */
+	private _setInputAttributes() {
+		const input = this.searchInput().nativeElement;
+		const attributes = {
+			type: 'text',
+			autocorrect: 'off',
+			autocapitalize: 'off',
+			autocomplete: 'off',
+			...this.inputAttrs(),
+		};
+
+		for (const key of Object.keys(attributes)) {
+			input.setAttribute(key, attributes[key]);
+		}
+	}
+
+	/**
+	 * Updates whether Tab should move focus to the clear control.
+	 *
+	 * @since 15.1.0
+	 */
+	private _setTabFocusOnClear() {
+		this.tabFocusOnClear.set(isDefined(this.tabFocusOnClearButton()) ? !!this.tabFocusOnClearButton() : this.config.tabFocusOnClear);
+	}
+
+	/**
+	 * Builds and emits the current ControlValueAccessor model value.
+	 *
+	 * @since 3.0.0
+	 */
+	private _updateNgModel() {
+		const model = selectedItemsToModel(
+			this.selectedItems,
+			{
+				bindValue: this.bindValue(),
+				groupBy: this.groupBy(),
+				hasGroupValue: !!this.groupValue(),
+			},
+			(value, key) => this.itemsList.resolveNested(value, key),
+		);
+
+		const selected = this.selectedItems.map((x) => x.value);
+		if (this.multiple()) {
+			this._onChange(model);
+			this.changeEvent.emit(selected);
+		} else {
+			this._onChange(isDefined(model[0]) ? model[0] : null);
+			this.changeEvent.emit(selected[0]);
+		}
+
+		// Required under zoneless CD: sole notifier for the programmatic selection
+		// APIs (select/unselect/clearModel/clearItem) called from non-Angular contexts
+		this._cd.markForCheck();
+	}
+
+	/**
+	 * Clears the current search term when configuration permits it.
+	 *
+	 * @since 3.0.0
+	 */
+	private _clearSearch() {
+		if (!this.searchTerm) {
+			return;
+		}
+
+		this._changeSearch(null);
+		this.itemsList.resetFilteredItems();
+	}
+
+	/**
+	 * Updates the search term and emits the search event.
+	 *
+	 * @param searchTerm - The search term.
+	 *
+	 * @since 3.0.6
+	 */
+	private _changeSearch(searchTerm: string) {
+		this._searchTerm.set(searchTerm);
+	}
+
+	/**
+	 * Scrolls the dropdown to the currently marked option.
+	 *
+	 * @since 3.0.0
+	 */
+	private _scrollToMarked() {
+		if (!this.isOpen() || !this.dropdownPanel()) {
+			return;
+		}
+		this.dropdownPanel().scrollTo(this.itemsList.markedItem);
+	}
+
+	/**
+	 * Scrolls the dropdown to the add-tag option.
+	 *
+	 * @since 3.0.0
+	 */
+	private _scrollToTag() {
+		if (!this.isOpen() || !this.dropdownPanel()) {
+			return;
+		}
+		this.dropdownPanel().scrollToTag();
+	}
+
+	/**
+	 * Synchronizes search and close behavior after selection changes.
+	 *
+	 * @since 3.0.0
+	 */
+	private _onSelectionChanged() {
+		if (this.isOpen() && this.deselectOnClickValue()) {
+			// Make sure items are rendered.
+			this._cd.detectChanges();
+			this.dropdownPanel()?.adjustPosition();
+		}
+	}
+
+	/**
+	 * Attaches or detaches the dropdown overlay to match the current open state. Idempotent.
+	 *
+	 * @since 23.7.0
+	 */
+	private _syncDropdownOverlay() {
+		const template = this._dropdownTemplate();
+		const viewContainer = this._dropdownOutlet();
+		if (!template || !viewContainer) {
+			return;
+		}
+		if (this.isOpen()) {
+			this._dropdownOverlay.open({
+				appendTo: this.appendTo() ?? this.config.appendTo ?? null,
+				beforeAttach: (overlayRef) => (this.dropdownOverlayRef = overlayRef),
+				origin: this._dropdownOrigin(),
+				position: this.dropdownPosition(),
+				template,
+				viewContainer,
+			});
+		} else {
+			this._dropdownOverlay.close();
+		}
+	}
+
+	/**
+	 * The dropdown anchors to the `.ng-select-container` box, not the host: themes may pad
+	 * the host below the container (material reserves 1.25em of subscript space under the
+	 * underline), and the panel must sit flush against the visible field — the same anchor
+	 * the pre-overlay `appendTo` positioning used.
+	 *
+	 * @since 23.7.0
+	 */
+	private _dropdownOrigin(): HTMLElement {
+		return this._selectContainer()?.nativeElement ?? this.element;
+	}
+
+	/**
+	 * Reports development-mode warnings for deprecated inputs.
+	 *
+	 * @since 23.7.0
+	 */
+	private _warnDeprecatedInputs() {
+		if (!isDevMode()) {
+			return;
+		}
+		if (this.popover()) {
+			this._console.warn(
+				'[ng-select] `popover` is deprecated and has no effect: the dropdown panel now renders in an Angular CDK overlay, which uses the native Popover API top layer automatically in supporting browsers.',
+			);
+		}
+	}
+
+	/**
+	 * Handles Tab selection, clear-control focus, and close behavior.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
+	private _handleTab($event: KeyboardEvent) {
+		if (this.isOpen() === false) {
+			if (this.showClear() && !$event.shiftKey && this.tabFocusOnClear()) {
+				this.focusOnClear();
+				$event.preventDefault();
+			} else if (!this.addTag()) {
+				return;
+			}
+		}
+
+		if (this.selectOnTab()) {
+			if (this.itemsList.markedItem) {
+				this.toggleItem(this.itemsList.markedItem);
+				$event.preventDefault();
+			} else if (this.showAddTag) {
+				this.selectTag();
+				$event.preventDefault();
+			} else {
+				this.close();
+			}
+		} else {
+			this.close();
+		}
+	}
+
+	/**
+	 * Handles Enter selection and dropdown opening.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
+	private _handleEnter($event: KeyboardEvent) {
+		const openOnEnter = this.openOnEnter() ?? this.config.openOnEnter;
+		if (this.isOpen() || this._manualOpen) {
+			if (this.itemsList.markedItem) {
+				this.toggleItem(this.itemsList.markedItem);
+			} else if (this.showAddTag) {
+				this.selectTag();
+			}
+		} else if (openOnEnter) {
+			this.open();
+		} else {
+			return;
+		}
+
+		$event.preventDefault();
+	}
+
+	/**
+	 * Handles Space selection and dropdown opening.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
+	private _handleSpace($event: KeyboardEvent) {
+		if (this.isOpen() || this._manualOpen) {
+			return;
+		}
+		this.open();
+		$event.preventDefault();
+	}
+
+	/**
+	 * Moves the marked option down or opens the dropdown.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
+	private _handleArrowDown($event: KeyboardEvent) {
+		if (this._nextItemIsTag(+1)) {
+			this.itemsList.unmarkItem();
+			this._scrollToTag();
+		} else {
+			this.itemsList.markNextItem();
+			this._scrollToMarked();
+		}
+		this.open();
+		$event.preventDefault();
+	}
+
+	/**
+	 * Moves the marked option up or opens the dropdown.
+	 *
+	 * @param $event - The DOM event to process.
+	 *
+	 * @since 3.0.0
+	 */
+	private _handleArrowUp($event: KeyboardEvent) {
+		if (!this.isOpen()) {
+			return;
+		}
+
+		if (this._nextItemIsTag(-1)) {
+			this.itemsList.unmarkItem();
+			this._scrollToTag();
+		} else {
+			this.itemsList.markPreviousItem();
+			this._scrollToMarked();
+		}
+		$event.preventDefault();
+	}
+
+	/**
+	 * Determines whether the next keyboard target is the add-tag option.
+	 *
+	 * @param nextStep - The next step.
+	 * @returns Whether next item is tag.
+	 *
+	 * @since 3.0.0
+	 */
+	private _nextItemIsTag(nextStep: number): boolean {
+		const nextIndex = this.itemsList.markedIndex + nextStep;
+		return this.addTag() && this.searchTerm && this.itemsList.markedItem && (nextIndex < 0 || nextIndex === this.itemsList.filteredItems.length);
+	}
+
+	/**
+	 * Removes the last selected value when Backspace clearing is enabled.
+	 *
+	 * @since 3.0.0
+	 */
+	private _handleBackspace() {
+		if (this.searchTerm || !this.clearable() || !this.clearOnBackspace() || !this.hasValue) {
+			return;
+		}
+
+		if (this.multiple()) {
+			this.unselect(this.itemsList.lastSelectedItem);
+		} else {
+			this.clearModel();
+		}
+	}
+
+	/**
+	 * Applies configured global defaults that were not set locally.
+	 *
+	 * @param config - The global ng-select configuration.
+	 *
+	 * @since 3.0.0
+	 */
+	private _mergeGlobalConfig(config: NgSelectConfig) {
+		this.bindValue.set(this.bindValue() || config.bindValue);
+		this.bindLabel.set(this.bindLabel() || config.bindLabel || this._defaultLabel);
+		this.appearance.set(this.appearance() || config.appearance);
+		this._setTabFocusOnClear();
+	}
+
+	/**
+	 * Gets virtual scroll value from input or from config
+	 *
+	 *  @param config NgSelectConfig object
+	 *
+	 *  @returns `true` if virtual scroll is enabled, `false` otherwise
+	 *
+	 * @since 14.7.0
+	 */
+	private getVirtualScroll(config: NgSelectConfig): boolean {
+		return isDefined(this._virtualScroll()) ? this._virtualScroll()! : this.isVirtualScrollDisabled(config);
+	}
+
+	/**
+	 * Gets disableVirtualScroll value from input or from config
+	 *
+	 *  @param config NgSelectConfig object
+	 *
+	 *  @returns `true` if disableVirtualScroll is enabled, `false` otherwise
+	 *
+	 * @since 14.7.0
+	 */
+	private isVirtualScrollDisabled(config: NgSelectConfig) {
+		return isDefined(config.disableVirtualScroll) ? !config.disableVirtualScroll : false;
+	}
+}

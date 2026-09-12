@@ -123,10 +123,11 @@ ng-select/
 ├── src/
 │   ├── ng-select/                    # @ng-select/ng-select library
 │   │   ├── lib/
-│   │   │   ├── ng-select.component.ts       # Main component (OnPush, signals, CVA)
-│   │   │   ├── ng-select.component.html
-│   │   │   ├── ng-select.component.scss
-│   │   │   ├── ng-dropdown-panel.component.ts
+│   │   │   ├── ng-select/                    # Main component, model helpers, and focused specs
+│   │   │   │   ├── ng-select.component.ts   # Main component (OnPush, signals, CVA)
+│   │   │   │   ├── ng-select.component.html
+│   │   │   │   └── ng-select.component.scss
+│   │   │   ├── dropdown-panel/               # Panel component, service, overlay, and positioning
 │   │   │   ├── ng-option.component.ts
 │   │   │   ├── ng-templates.directive.ts    # Template directives (ng-option-tmp, etc.)
 │   │   │   ├── items-list.ts                # Filtering, grouping, virtual scroll logic
@@ -368,7 +369,7 @@ When changing styles, verify all three themes and check validation-state styling
 - **DO NOT** add new unit tests unless explicitly requested or needed to cover changed behavior.
 - **SHOULD** update existing specs when modifying behavior already covered by tests.
 - Test stack: **Vitest browser mode** (headless **Chromium** via `@vitest/browser-playwright`, wired through `@angular/build:unit-test` and `vitest.config.ts`) + `zone.js/testing`. Failed specs save screenshots to `src/ng-select/lib/__screenshots__/`.
-- Main spec: `src/ng-select/lib/ng-select.component.spec.ts` (extensive coverage—follow its patterns).
+- Main spec: `src/ng-select/lib/ng-select/ng-select.component.spec.ts` (extensive coverage—follow its patterns).
 - Helpers: `src/ng-select/testing/helpers.ts`, mocks in `src/ng-select/testing/mocks.ts`.
 - Use `fakeAsync`, `tick`, `tickAndDetectChanges`, and `selectOption` helpers for keyboard/dropdown interactions.
 - CI runs `pnpm test:ci` (headless Chromium) and reports coverage to Coveralls.
@@ -443,8 +444,8 @@ For substantial code changes:
 - `package.json` — scripts and dependency versions
 - `angular.json` — project definitions
 - `src/ng-select/public-api.ts` — exported library surface
-- `src/ng-select/lib/ng-select.component.ts` — main component implementation
-- `src/ng-select/lib/ng-select.component.spec.ts` — behavioral test reference
+- `src/ng-select/lib/ng-select/ng-select.component.ts` — main component implementation
+- `src/ng-select/lib/ng-select/ng-select.component.spec.ts` — behavioral test reference
 - `src/demo/app/examples/` — interactive examples
 - `src/ng-option-highlight/README.md` — highlight directive usage
 

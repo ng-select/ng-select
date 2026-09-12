@@ -1,0 +1,22 @@
+<form #cityForm="ngForm" novalidate>
+	<div class="form-group">
+		<label for="template-city">Template-driven Forms select</label>
+		<ng-select
+			[items]="cities"
+			bindLabel="name"
+			bindValue="id"
+			labelForId="template-city"
+			placeholder="Select a city"
+			[(ngModel)]="model.cityId"
+			#cityId="ngModel"
+			name="cityId"
+			required />
+		@if (cityId.touched && cityId.invalid) {
+			<small class="text-danger">Choose a city</small>
+		}
+		<br />
+		<button type="button" class="btn btn-sm btn-secondary" (click)="cityForm.resetForm({ cityId: null })">Reset</button>
+	</div>
+</form>
+
+<pre>{{ model | json }}</pre>

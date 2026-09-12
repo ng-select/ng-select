@@ -4,7 +4,7 @@ import GettingStartedCategory from '../ng-doc.category';
 const CustomSelectionLogicPage: NgDocPage = {
 	title: 'Custom selection logic',
 	mdFile: './index.md',
-	order: 3,
+	order: 4,
 	category: GettingStartedCategory,
 };
 

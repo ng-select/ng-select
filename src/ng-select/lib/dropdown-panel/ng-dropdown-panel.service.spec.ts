@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { NgDropdownPanelService } from '@ng-select/ng-select';
-import { describe, beforeEach, it, expect } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('NgDropdownPanelService', () => {
 	let service: NgDropdownPanelService;

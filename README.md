@@ -77,6 +77,7 @@ Android	2 most recent major versions
 - [x] Group items
 - [x] Output events
 - [x] Accessibility
+- [x] Signal Forms, Reactive Forms and Template-driven Forms
 - [x] Good base functionality test coverage
 - [x] Themes
 
@@ -108,23 +109,25 @@ pnpm add @ng-select/ng-select @angular/cdk
 
 ### Step 2:
 
-#### Standalone: Import NgSelectComponent and other necessary directives directly:
+#### Standalone: Import `NgSelectComponent` and Signal Forms' `FormField` directive:
 
 ```typescript
 import { NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
-import { FormsModule } from '@angular/forms';
+import { FormField } from '@angular/forms/signals';
 
 @Component({
 	selector: 'example',
 	standalone: true,
 	template: './example.component.html',
 	styleUrl: './example.component.scss',
-	imports: [NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent],
+	imports: [FormField, NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent],
 })
 export class ExampleComponent {}
 ```
 
-#### NgModule: Import the NgSelectModule and angular FormsModule module:
+For Reactive Forms, import `ReactiveFormsModule`. For Template-driven Forms, import `FormsModule`.
+
+#### NgModule compatibility: Import `NgSelectModule` and the forms module your application uses:
 
 ```typescript
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -167,35 +170,68 @@ typically in your root component, and customize the values of its properties in 
 
 ### Usage
 
-Define options in your consuming component:
+ng-select supports Signal Forms, Reactive Forms and Template-driven Forms in Angular 22 applications.
 
-```js
+Define the options shared by these examples:
+
+```typescript
 @Component({...})
 export class ExampleComponent {
-
-    selectedCar: number;
-
-    cars = [
-        { id: 1, name: 'Volvo' },
-        { id: 2, name: 'Saab' },
-        { id: 3, name: 'Opel' },
-        { id: 4, name: 'Audi' },
-    ];
+	readonly cars = [
+		{ id: 1, name: 'Volvo' },
+		{ id: 2, name: 'Saab' },
+		{ id: 3, name: 'Opel' },
+		{ id: 4, name: 'Audi' },
+	];
 }
 ```
 
-In template use `ng-select` component with your options
+#### Signal Forms
+
+Bind a field from the tree returned by `form()`. A raw signal value is not a valid `formField` binding.
+
+```typescript
+import { signal } from '@angular/core';
+import { form, FormField } from '@angular/forms/signals';
+
+readonly carModel = signal({ selectedCarId: null as number | null });
+readonly carForm = form(this.carModel);
+```
+
+```html
+<ng-select [items]="cars" bindLabel="name" bindValue="id" [formField]="carForm.selectedCarId" />
+```
+
+#### Reactive Forms
+
+```typescript
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+
+readonly selectedCarId = new FormControl<number | null>(null);
+```
+
+```html
+<ng-select [items]="cars" bindLabel="name" bindValue="id" [formControl]="selectedCarId" />
+```
+
+#### Template-driven Forms
+
+```typescript
+import { FormsModule } from '@angular/forms';
+
+selectedCarId: number | null = null;
+```
 
 ```html
 <!--Using ng-option and for loop-->
-<ng-select [(ngModel)]="selectedCar">
+<ng-select [(ngModel)]="selectedCarId">
 	@for (car of cars; track car.id) {
 	<ng-option [value]="car.id">{{car.name}}</ng-option>
 	}
 </ng-select>
 
 <!--Using items input-->
-<ng-select [items]="cars" bindLabel="name" bindValue="id" [(ngModel)]="selectedCar"> </ng-select>
+<ng-select [items]="cars" bindLabel="name" bindValue="id" [(ngModel)]="selectedCarId" />
 ```
 
 For more detailed examples see [Demo](https://ng-select.github.io/ng-select#/data-sources) page
@@ -228,7 +264,7 @@ Since v24 the dropdown panel is positioned by [Angular CDK Overlay](https://mate
 
 Things to know when migrating:
 
-- **DOM location.** The panel is no longer a child of `<ng-select>` in the DOM — it lives inside `.cdk-overlay-container` (the same situation as `appendTo="body"` produced before). CSS that scoped panel styles through an ancestor of the select, like `.my-wrapper ng-dropdown-panel { ... }`, will no longer match. The panel still receives the select's `class`/`ngClass` values, so scope panel styles through those classes instead: `.my-select-class.ng-dropdown-panel .ng-option { ... }`.
+- **DOM location.** The panel is no longer a child of `<ng-select>` in the DOM — it lives inside `.cdk-overlay-container` (the same situation as `appendTo="body"` produced before). CSS that scoped panel styles through an ancestor of the select, like `.my-wrapper ng-dropdown-panel { ... }`, will no longer match. The panel still receives the select's `class`, `[class]`, and `[ngClass]` values, and you can add panel-only classes with `panelClass`. Scope panel styles through those classes: `.my-select-class.ng-dropdown-panel .ng-option { ... }`, or use separate host and panel classes: `class="my-select" panelClass="my-select-panel"`.
 - **`appendTo` changed meaning; `popover` is a deprecated no-op.** Overlay rendering already solves the clipping/stacking problems both existed for, so most usages of `appendTo` can simply be removed. It still works — but it now controls where the overlay lives **in the DOM** (ancestor-scoped styles, stacking context, focus containment) rather than how the panel is positioned; painting and positioning stay viewport-based either way. `popover` has no effect anymore (the overlay uses the native Popover API top layer automatically) and logs a one-time dev-mode warning.
 - **Stacking / z-index.** The hardcoded panel `z-index: 1050` is gone. In browsers with the native Popover API (all evergreen browsers), the CDK renders the overlay in the top layer, which paints above every `z-index` — including Bootstrap modals — with no configuration. In older browsers the panel falls back into `.cdk-overlay-container` with the CDK default `z-index: 1000` (declared in the `cdk-overlay` CSS layer). If you need the fallback to beat a higher stacking context such as a Bootstrap modal (`z-index: 1055`), raise the container in your global styles: `.cdk-overlay-container { z-index: 1056; }` — unlayered author CSS wins over the CDK's layered default regardless of specificity.
 - **Custom themes.** The shipped themes no longer position the panel (`top: 100%`, `bottom: 100%`, `left: 0` and friends were removed — margins, borders, shadows and radii remain). The library neutralizes those offsets for panels rendered in the overlay, so themes copied from older versions keep working, but you should remove positional offsets from `.ng-dropdown-panel` rules when you update your own theme.

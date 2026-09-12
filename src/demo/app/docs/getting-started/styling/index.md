@@ -150,6 +150,29 @@ Unlike the CSS variables, Sass overrides **do** recompute the derived shades: se
 
 For anything the variables do not cover, override the styles with increased selector specificity or create your own theme. This applies if you are using no `ViewEncapsulation` or adding styles to a global stylesheet.
 
+The dropdown panel renders in a CDK overlay, not inside `<ng-select>`. Host `class`, `[class]`, and `[ngClass]` values are mirrored onto the panel root so a single class can style both the closed control and the open list. For panel-only styling — or when host and panel need different classes — use `panelClass`:
+
+```html
+<ng-select class="custom" panelClass="custom-panel"></ng-select>
+```
+
+```css
+.ng-select.custom {
+	border: 0px;
+	min-height: 0px;
+	border-radius: 0;
+}
+.ng-select.custom .ng-select-container {
+	min-height: 0px;
+	border-radius: 0;
+}
+.custom-panel.ng-dropdown-panel {
+	max-height: 240px;
+}
+```
+
+When a shared class is enough for both the control and the panel:
+
 ```html
 <ng-select class="custom"></ng-select>
 ```
@@ -163,6 +186,9 @@ For anything the variables do not cover, override the styles with increased sele
 .ng-select.custom .ng-select-container {
 	min-height: 0px;
 	border-radius: 0;
+}
+.custom.ng-dropdown-panel .ng-option {
+	padding-left: 20px;
 }
 ```
 
@@ -180,7 +206,18 @@ If you are using `ViewEncapsulation`, you could use the special `::ng-deep` sele
 
 ## Validation state
 
-By default, when you use reactive forms validators or template driven forms validators, the css class `ng-invalid` will be applied on ng-select. You can show the error state by adding a custom css style:
+Signal Forms keeps validation state on its field tree. To apply the familiar `ng-valid`, `ng-invalid`, `ng-touched`, and `ng-dirty` classes to ng-select, enable Angular's compatibility preset:
+
+```typescript
+import { provideSignalFormsConfig } from '@angular/forms/signals';
+import { NG_STATUS_CLASSES } from '@angular/forms/signals/compat';
+
+bootstrapApplication(AppComponent, {
+	providers: [provideSignalFormsConfig({ classes: NG_STATUS_CLASSES })],
+});
+```
+
+Reactive Forms and Template-driven Forms apply these classes automatically. Once the classes are enabled for the form system you use, show the error state with a custom style:
 
 ```css
 ng-select.ng-invalid.ng-touched .ng-select-container {

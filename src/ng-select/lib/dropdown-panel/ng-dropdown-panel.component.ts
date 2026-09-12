@@ -1,4 +1,4 @@
-import { ConnectionPositionPair, FlexibleConnectedPositionStrategy, OverlayRef } from '@angular/cdk/overlay';
+import { FlexibleConnectedPositionStrategy, OverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
 	booleanAttribute,
@@ -24,14 +24,20 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { animationFrameScheduler, asapScheduler, fromEvent } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
+import { DropdownPanelDomEvents } from './dropdown-panel-dom-events';
+import { connectionPairToDropdownPosition, DROPDOWN_CSS_POSITIONS } from './dropdown-position';
 import { NgDropdownPanelService, PanelDimensions } from './ng-dropdown-panel.service';
 
-import { DropdownPosition, NgOption } from './ng-select.types';
-import { isDefined } from './value-utils';
+import { DropdownPosition, NgOption } from '../types/ng-select.types';
+import { isDefined } from '../utils/value-utils';
 
-const CSS_POSITIONS: readonly string[] = ['top', 'right', 'bottom', 'left'];
 const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
 
+/**
+ * Renders, positions, and virtualizes the dropdown option panel.
+ *
+ * @since 3.0.0
+ */
 @Component({
 	changeDetection: ChangeDetectionStrategy.OnPush,
 	encapsulation: ViewEncapsulation.None,
@@ -103,20 +109,40 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	private _scrollToEndFired = false;
 	private _updateScrollHeight = false;
 	private _lastScrollPosition = 0;
-	private _lastMousedownInside = false;
 
 	private _currentPosition: DropdownPosition;
 
+	/**
+	 * Gets the panel position selected by the overlay strategy.
+	 *
+	 * @returns The current position.
+	 *
+	 * @since 3.0.0
+	 */
 	get currentPosition(): DropdownPosition {
 		return this._currentPosition;
 	}
 
 	private _itemsLength: number;
 
+	/**
+	 * Gets the number of rows available to the panel.
+	 *
+	 * @returns The items length.
+	 *
+	 * @since 3.0.0
+	 */
 	private get itemsLength() {
 		return this._itemsLength;
 	}
 
+	/**
+	 * Updates the cached item count and resets dependent virtual-scroll state.
+	 *
+	 * @param value - The value to process.
+	 *
+	 * @since 3.0.0
+	 */
 	private set itemsLength(value: number) {
 		if (value !== this._itemsLength) {
 			this._itemsLength = value;
@@ -124,6 +150,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 	}
 
+	/**
+	 * Gets the rendered range’s starting vertical offset.
+	 *
+	 * @returns The start offset.
+	 *
+	 * @since 3.0.0
+	 */
 	private get _startOffset() {
 		if (this.markedItem()) {
 			const { panelHeight } = this._panelService.dimensions;
@@ -133,16 +166,34 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		return 0;
 	}
 
+	/**
+	 * Initializes the instance after Angular has assigned its inputs.
+	 *
+	 * @since 3.0.0
+	 */
 	ngOnInit() {
 		this._select = this.selectElement() ?? this._dropdown.parentElement;
 		this._handleScroll();
-		this._handleOutsideClick();
-		this._setupMousedownListener();
+		new DropdownPanelDomEvents({
+			destroyRef: this._destroyRef,
+			document: this._document,
+			dropdown: this._dropdown,
+			onOutsideClick: () => this.outsideClick.emit(),
+			outsideClickEvent: this.outsideClickEvent() ?? 'click',
+			overlayRef: this.overlayRef(),
+			select: this._select,
+			zone: this._zone,
+		}).start();
 		this._subscribeOverlayPosition();
-		this._handleDocumentScroll();
-		this._handleSelectResize();
 	}
 
+	/**
+	 * Responds to Angular input changes.
+	 *
+	 * @param changes - The changed Angular inputs.
+	 *
+	 * @since 3.0.0
+	 */
 	ngOnChanges(changes: SimpleChanges) {
 		if (changes.items) {
 			const change = changes.items;
@@ -154,6 +205,14 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 	}
 
+	/**
+	 * Scrolls until the requested option is visible.
+	 *
+	 * @param option - The option to process.
+	 * @param startFromOption - The start from option.
+	 *
+	 * @since 3.0.0
+	 */
 	scrollTo(option: NgOption, startFromOption = false) {
 		if (!option) {
 			return;
@@ -192,11 +251,21 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 	}
 
+	/**
+	 * Scrolls to the add-tag row.
+	 *
+	 * @since 3.0.0
+	 */
 	scrollToTag() {
 		const panel = this._scrollablePanel();
 		panel.scrollTop = panel.scrollHeight - panel.clientHeight;
 	}
 
+	/**
+	 * Requests that the overlay strategy recalculate the panel position.
+	 *
+	 * @since 3.0.0
+	 */
 	adjustPosition() {
 		this.overlayRef()?.updatePosition();
 	}
@@ -205,10 +274,12 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	 * Applies the position chosen by the overlay's position strategy to the panel and host
 	 * as `ng-select-top` / `ng-select-bottom` (and `-left` / `-right`) classes, which the
 	 * shipped themes use for borders, radius and spacing.
+	 *
+	 * @since 23.7.0
 	 */
 	private _setCurrentPosition(position: DropdownPosition) {
 		this._currentPosition = position;
-		if (CSS_POSITIONS.includes(position)) {
+		if (DROPDOWN_CSS_POSITIONS.includes(position)) {
 			this._updateDropdownClass(position);
 		} else {
 			this._updateDropdownClass('bottom');
@@ -219,6 +290,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	 * Positions the freshly rendered panel. The overlay measures the real DOM, so header and
 	 * footer templates and the actual item count are part of the auto placement decision
 	 * (#2575). Only then is the panel made visible to avoid a flash at a stale position.
+	 *
+	 * @since 23.7.0
 	 */
 	private _positionDropdown() {
 		const overlayRef = this.overlayRef();
@@ -234,6 +307,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._dropdown.style.opacity = '1';
 	}
 
+	/**
+	 * Subscribes to CDK overlay position changes.
+	 *
+	 * @since 23.7.0
+	 */
 	private _subscribeOverlayPosition() {
 		const strategy = this.overlayRef()?.getConfig().positionStrategy;
 		if (!(strategy instanceof FlexibleConnectedPositionStrategy)) {
@@ -241,28 +319,19 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 
 		strategy.positionChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((change) => {
-			this._setCurrentPosition(this._connectionPairToPosition(change.connectionPair));
+			this._setCurrentPosition(connectionPairToDropdownPosition(change.connectionPair));
 		});
 	}
 
-	private _connectionPairToPosition(pair: ConnectionPositionPair): DropdownPosition {
-		if (pair.originY === 'bottom' && pair.overlayY === 'top') {
-			return 'bottom';
-		}
-		if (pair.originY === 'top' && pair.overlayY === 'bottom') {
-			return 'top';
-		}
-		if (pair.originX === 'end' && pair.overlayX === 'start') {
-			return 'right';
-		}
-		if (pair.originX === 'start' && pair.overlayX === 'end') {
-			return 'left';
-		}
-		return 'bottom';
-	}
-
+	/**
+	 * Updates the position-specific CSS class on the panel.
+	 *
+	 * @param currentPosition - The current position.
+	 *
+	 * @since 7.4.0
+	 */
 	private _updateDropdownClass(currentPosition: string) {
-		CSS_POSITIONS.forEach((position) => {
+		DROPDOWN_CSS_POSITIONS.forEach((position) => {
 			const REMOVE_CSS_CLASS = `ng-select-${position}`;
 			this._renderer.removeClass(this._dropdown, REMOVE_CSS_CLASS);
 			this._renderer.removeClass(this._select, REMOVE_CSS_CLASS);
@@ -273,6 +342,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._renderer.addClass(this._select, ADD_CSS_CLASS);
 	}
 
+	/**
+	 * Subscribes to panel scrolling outside Angular change detection.
+	 *
+	 * @since 3.0.0
+	 */
 	private _handleScroll() {
 		this._zone.runOutsideAngular(() => {
 			const scrollablePanel = this._scrollablePanel();
@@ -287,54 +361,15 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		});
 	}
 
-	private _handleOutsideClick() {
-		if (!this._document) {
-			return;
-		}
-
-		const outsideEvent = this.outsideClickEvent() ?? 'click';
-
-		this._zone.runOutsideAngular(() => {
-			// A click is judged by where the press began, not where it ended. Between
-			// mousedown and click the layout can move under the cursor — focusing the
-			// select auto-scrolls it into view (#2773), or the freshly opened panel
-			// shifts the page (#2441) — leaving the click target on an unrelated
-			// element. Irrelevant when closing on mousedown itself, so skip the
-			// listener in that mode
-			if (outsideEvent === 'click') {
-				fromEvent(this._document, 'mousedown', { capture: true })
-					.pipe(takeUntilDestroyed(this._destroyRef))
-					.subscribe(($event) => (this._lastMousedownInside = this._isEventInside($event)));
-			}
-
-			fromEvent(this._document, outsideEvent, { capture: true })
-				.pipe(takeUntilDestroyed(this._destroyRef))
-				.subscribe(($event) => this._checkToClose($event));
-		});
-	}
-
-	private _checkToClose($event: Event) {
-		const pressStartedInside = this._lastMousedownInside;
-		this._lastMousedownInside = false;
-		if (pressStartedInside || this._isEventInside($event)) {
-			return;
-		}
-
-		this._zone.run(() => this.outsideClick.emit());
-	}
-
-	private _isEventInside($event: any): boolean {
-		// An event crossing a shadow boundary is retargeted to the shadow host, which
-		// hides its real origin from contains(). composedPath() still lists every node
-		// the event bubbled through, so matching the select or dropdown anywhere along
-		// it works identically for light DOM, shadow DOM, and nested roots (#2726)
-		const path: EventTarget[] = $event.path || ($event.composedPath && $event.composedPath());
-		if (path?.length) {
-			return path.includes(this._select) || path.includes(this._dropdown);
-		}
-		return this._select.contains($event.target) || this._dropdown.contains($event.target);
-	}
-
+	/**
+	 * Refreshes rendered items when options or add-tag visibility changes.
+	 *
+	 * @param items - The options to process.
+	 * @param showAddTag - The show add tag.
+	 * @param firstChange - The first change.
+	 *
+	 * @since 20.6.2
+	 */
 	private _onItemsOrShowAddTagChange(items: NgOption[] = [], showAddTag: boolean, firstChange: boolean) {
 		this._scrollToEndFired = false;
 		this.itemsLength = items.length;
@@ -350,6 +385,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 	}
 
+	/**
+	 * Rebuilds the rendered option collection and virtual-scroll measurements.
+	 *
+	 * @param firstChange - The first change.
+	 *
+	 * @since 3.0.0
+	 */
 	private _updateItems(firstChange: boolean) {
 		this.update.emit(this.items());
 
@@ -371,6 +413,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		});
 	}
 
+	/**
+	 * Recalculates the rendered virtual-scroll range.
+	 *
+	 * @param firstChange - The first change.
+	 *
+	 * @since 3.0.0
+	 */
 	private _updateItemsRange(firstChange: boolean) {
 		this._zone.runOutsideAngular(() => {
 			this._measureDimensions().then(() => {
@@ -397,7 +446,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		});
 	}
 
-	/** Updates cached panelHeight from the live scrollport, preserving row-height measurements. */
+	/**
+	 * Updates cached panelHeight from the live scrollport, preserving row-height measurements.
+	 *
+	 * @since 23.9.0
+	 */
 	private _syncPanelHeightFromDom() {
 		const panel = this._scrollablePanel();
 		if (!panel) {
@@ -411,6 +464,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._panelService.setDimensions(itemHeight, panelHeight, groupHeight);
 	}
 
+	/**
+	 * Updates virtual-scroll state for a new scroll position.
+	 *
+	 * @param scrollTop - The scroll top.
+	 *
+	 * @since 3.0.0
+	 */
 	private _onContentScrolled(scrollTop: number) {
 		if (this.virtualScroll()) {
 			this._renderItemsRange(scrollTop);
@@ -419,6 +479,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._fireScrollToEnd(scrollTop);
 	}
 
+	/**
+	 * Updates the virtual-scroll spacer height.
+	 *
+	 * @param height - The height.
+	 *
+	 * @since 3.0.0
+	 */
 	private _updateVirtualHeight(height: number) {
 		if (this._updateScrollHeight) {
 			this._virtualPadding().style.height = `${height}px`;
@@ -426,6 +493,11 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 	}
 
+	/**
+	 * Measures and applies the virtual-scroll spacer height.
+	 *
+	 * @since 5.0.1
+	 */
 	private _setVirtualHeight() {
 		if (!this._virtualPadding()) {
 			return;
@@ -434,10 +506,22 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._virtualPadding().style.height = `0px`;
 	}
 
+	/**
+	 * Resets virtual-scroll state after the item count changes.
+	 *
+	 * @since 3.0.0
+	 */
 	private _onItemsLengthChanged() {
 		this._updateScrollHeight = true;
 	}
 
+	/**
+	 * Renders the virtual-scroll range for the current scroll position.
+	 *
+	 * @param scrollTop - The scroll top.
+	 *
+	 * @since 3.0.0
+	 */
 	private _renderItemsRange(scrollTop = null) {
 		if (scrollTop && this._lastScrollPosition === scrollTop) {
 			return;
@@ -462,6 +546,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		}
 	}
 
+	/**
+	 * Measures option, group, and viewport dimensions after rendering.
+	 *
+	 * @returns The measure dimensions result.
+	 *
+	 * @since 3.0.0
+	 */
 	private _measureDimensions(): Promise<PanelDimensions> {
 		if (this._panelService.dimensions.itemHeight > 0 || this.itemsLength === 0) {
 			return Promise.resolve(this._panelService.dimensions);
@@ -499,11 +590,17 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			});
 	}
 
-	private _readMeasuredDimensions(
-		items: NgOption[],
-		firstOption: NgOption | undefined,
-		firstGroup: NgOption | undefined,
-	): PanelDimensions {
+	/**
+	 * Reads option, group, and viewport dimensions from rendered elements.
+	 *
+	 * @param items - The options to process.
+	 * @param firstOption - The first option.
+	 * @param firstGroup - The first group.
+	 * @returns The read measured dimensions result.
+	 *
+	 * @since 23.9.0
+	 */
+	private _readMeasuredDimensions(items: NgOption[], firstOption: NgOption | undefined, firstGroup: NgOption | undefined): PanelDimensions {
 		const optionEl = firstOption ? this._dropdown.querySelector(`#${firstOption.htmlId}`) : null;
 		const groupEl = firstGroup ? this._dropdown.querySelector(`#${firstGroup.htmlId}`) : null;
 		if (!optionEl && !groupEl) {
@@ -522,6 +619,13 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		return this._panelService.dimensions;
 	}
 
+	/**
+	 * Emits `scrollToEnd` once the viewport reaches the end of the content.
+	 *
+	 * @param scrollTop - The scroll top.
+	 *
+	 * @since 3.0.0
+	 */
 	private _fireScrollToEnd(scrollTop: number) {
 		if (this._scrollToEndFired || scrollTop === 0) {
 			return;
@@ -533,58 +637,5 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			this._zone.run(() => this.scrollToEnd.emit());
 			this._scrollToEndFired = true;
 		}
-	}
-
-	private _setupMousedownListener(): void {
-		this._zone.runOutsideAngular(() => {
-			fromEvent(this._dropdown, 'mousedown')
-				.pipe(takeUntilDestroyed(this._destroyRef))
-				.subscribe((event: MouseEvent) => {
-					const target = event.target as HTMLElement;
-					if (target.tagName === 'INPUT') {
-						return;
-					}
-					event.preventDefault();
-				});
-		});
-	}
-
-	private _handleDocumentScroll() {
-		if (!this._document || !this.overlayRef()) {
-			return;
-		}
-		this._zone.runOutsideAngular(() => {
-			// The capture phase sees scrolls of the window and of every ancestor scroll
-			// container — including plain overflow elements that CDK's ScrollDispatcher
-			// cannot observe without a cdkScrollable marker — so the panel stays anchored
-			// to the select wherever the page moves (#2788, #2829)
-			fromEvent(this._document, 'scroll', { capture: true, passive: true })
-				.pipe(takeUntilDestroyed(this._destroyRef), auditTime(0, SCROLL_SCHEDULER))
-				.subscribe(($event) => {
-					const target = $event.target as Node | null;
-					// Scrolling the option list itself does not move the anchor
-					if (target && this._dropdown.contains(target)) {
-						return;
-					}
-					this.overlayRef().updatePosition();
-				});
-		});
-	}
-
-	private _handleSelectResize() {
-		const overlayRef = this.overlayRef();
-		if (!overlayRef || !this._select || typeof ResizeObserver === 'undefined') {
-			return;
-		}
-
-		this._zone.runOutsideAngular(() => {
-			const observer = new ResizeObserver(() => {
-				overlayRef.updateSize({ width: this._select.getBoundingClientRect().width });
-				overlayRef.updatePosition();
-			});
-
-			observer.observe(this._select);
-			this._destroyRef.onDestroy(() => observer.disconnect());
-		});
 	}
 }

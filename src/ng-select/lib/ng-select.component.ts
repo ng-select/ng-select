@@ -1,13 +1,4 @@
-import {
-	ConnectedPosition,
-	createFlexibleConnectedPositionStrategy,
-	createNoopScrollStrategy,
-	createOverlayRef,
-	FlexibleConnectedPositionStrategy,
-	OverlayContainer,
-	OverlayRef,
-} from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
 	afterEveryRender,
@@ -36,7 +27,6 @@ import {
 	OnChanges,
 	OnInit,
 	output,
-	runInInjectionContext,
 	signal,
 	SimpleChanges,
 	TemplateRef,
@@ -64,63 +54,31 @@ import {
 	NgPlaceholderTemplateDirective,
 	NgTagTemplateDirective,
 	NgTypeToSearchTemplateDirective,
-} from './ng-templates.directive';
+} from './directives/ng-templates.directive';
 
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NgSelectConfig } from './config.service';
-import { ConsoleService } from './console.service';
-import { newId } from './id';
+import { DropdownOverlayManager } from './dropdown-panel/dropdown-overlay-manager';
+import { ClassValue, mergeClassValues, readConsumerHostClasses } from './dropdown-panel/dropdown-panel-classes';
+import { NgDropdownPanelComponent } from './dropdown-panel/ng-dropdown-panel.component';
+import { NgDropdownPanelService } from './dropdown-panel/ng-dropdown-panel.service';
 import { ItemsList } from './items-list';
-import { NgDropdownPanelComponent } from './ng-dropdown-panel.component';
-import { NgDropdownPanelService } from './ng-dropdown-panel.service';
 import { NgOptionComponent } from './ng-option.component';
-import { DropdownPosition, KeyCode, NgOption } from './ng-select.types';
+import { createUnmatchedOptionValue, selectedItemsToModel, validateWriteValue } from './ng-select-model-value';
 import { DefaultSelectionModelFactory, SelectionModelFactory } from './selection-model';
-import { isDefined, isFunction, isObject, isPromise } from './value-utils';
+import { NgSelectConfig } from './services/config.service';
+import { ConsoleService } from './services/console.service';
+import { newId } from './types/id';
+import { DropdownPosition, KeyCode, NgOption } from './types/ng-select.types';
+import { isDefined, isFunction, isObject, isPromise } from './utils/value-utils';
 
 /** DI token for SelectionModel implementation. You can provide custom implementation changing selection behaviour. */
 export const SELECTION_MODEL_FACTORY = new InjectionToken<SelectionModelFactory>('ng-select-selection-model');
 export type AddTagFn = (term: string) => any | Promise<any>;
 export type CompareWithFn = (a: any, b: any) => boolean;
 export type GroupValueFn = (key: string | any, children: any[]) => string | any;
-
 function optionalBooleanAttribute(value: unknown): boolean | undefined {
 	return value == null ? undefined : booleanAttribute(value);
-}
-
-const DROPDOWN_POSITION_BELOW: ConnectedPosition = { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' };
-const DROPDOWN_POSITION_ABOVE: ConnectedPosition = { originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom' };
-const DROPDOWN_POSITION_AFTER: ConnectedPosition = { originX: 'end', originY: 'top', overlayX: 'start', overlayY: 'top' };
-const DROPDOWN_POSITION_BEFORE: ConnectedPosition = { originX: 'start', originY: 'top', overlayX: 'end', overlayY: 'top' };
-
-const DROPDOWN_POSITIONS: Record<DropdownPosition, ConnectedPosition[]> = {
-	// 'auto' prefers below and flips above when the panel does not fit the viewport;
-	// the fit check measures the rendered overlay, so header/footer templates and
-	// item count are accounted for (#2687, #2575)
-	auto: [DROPDOWN_POSITION_BELOW, DROPDOWN_POSITION_ABOVE],
-	bottom: [DROPDOWN_POSITION_BELOW],
-	top: [DROPDOWN_POSITION_ABOVE],
-	right: [DROPDOWN_POSITION_AFTER],
-	left: [DROPDOWN_POSITION_BEFORE],
-};
-
-/**
- * Overlay container created inside the `appendTo` host. Only used by browsers without the
- * Popover API (where the popover insertion point cannot place the overlay host): keeping the
- * container a descendant of the `appendTo` host preserves ancestor-scoped styles and focus
- * containment there too. The container element carries `position: fixed`, so the connected
- * position strategy's viewport coordinates stay valid, same as the default body container.
- */
-class NgSelectAppendToOverlayContainer extends OverlayContainer {
-	constructor(private readonly _appendToHost: HTMLElement) {
-		super();
-	}
-
-	protected override _createContainer(): void {
-		super._createContainer();
-		this._appendToHost.appendChild(this._containerElement);
-	}
 }
 
 @Component({
@@ -169,7 +127,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly _placeholder = input<string>(this.config.placeholder, { alias: 'placeholder' });
 	readonly placeholder = linkedSignal(() => this._placeholder());
 	/** Set placeholder visible even when an item is selected */
-	readonly _fixedPlaceholder = input<boolean>(true, { alias: 'fixedPlaceholder' });
+	readonly _fixedPlaceholder = input<boolean>(this.config.fixedPlaceholder, { alias: 'fixedPlaceholder' });
 	readonly fixedPlaceholder = linkedSignal(() => this._fixedPlaceholder());
 	/** Set custom text when filter returns empty result */
 	readonly _notFoundText = input<string>(undefined, { alias: 'notFoundText' });
@@ -283,8 +241,11 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	/** Allow to edit search query if option selected. Default `false`. Works only if multiple is `false`. */
 	readonly _editableSearchTerm = input(false, { alias: 'editableSearchTerm', transform: booleanAttribute });
 	readonly editableSearchTerm = linkedSignal(() => this._editableSearchTerm());
-	readonly _ngClass = input(null, { alias: 'ngClass' });
+	readonly _ngClass = input<ClassValue | null>(null, { alias: 'ngClass' });
 	readonly ngClass = linkedSignal(() => this._ngClass());
+	/** Additional CSS classes applied to the dropdown panel. Merged with mirrored host `class`, `[class]`, and `[ngClass]` values. */
+	readonly _panelClass = input<ClassValue | null>(null, { alias: 'panelClass' });
+	readonly panelClass = linkedSignal(() => this._panelClass());
 	/** Custom autocomplete or advanced filter. */
 	readonly _typeahead = input<Subject<string>>(undefined, { alias: 'typeahead' });
 	readonly typeahead = linkedSignal(() => this._typeahead());
@@ -430,13 +391,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	private readonly _defaultLabel = 'label';
 	private readonly _editableSearchTermActive = computed(() => this.editableSearchTerm() && !this.multiple());
 	private readonly _document = inject(DOCUMENT);
-	private _dropdownPositionStrategy: FlexibleConnectedPositionStrategy | null = null;
-	private _dropdownPortal: TemplatePortal | null = null;
-	/** `appendTo` value the current overlay was created against; a change rebuilds the overlay. */
-	private _overlayAppendTo: string | null = null;
-	/** Overlay container placed inside the `appendTo` host for browsers without the Popover API. */
-	private _appendToContainer: NgSelectAppendToOverlayContainer | null = null;
 	private _injector = inject(Injector);
+	private readonly _dropdownOverlay: DropdownOverlayManager;
 	private _isComposing = false;
 	private _itemsAreUsed: boolean;
 	private readonly _keyPress$ = new Subject<string>();
@@ -448,6 +404,21 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const term = this._searchTerm()?.trim();
 		return term && term.length >= this.minTermLength();
 	});
+	/** Consumer classes on the host from static `class` and `[class]` bindings. */
+	private readonly _consumerHostClasses = signal<string | null>(null);
+	/** Classes forwarded to the overlay panel (mirrored host classes + `panelClass`). */
+	readonly panelClasses = computed(() => {
+		return mergeClassValues(
+			// Preserve explicitly declared static classes even when they share a name with
+			// a framework-managed class that is otherwise filtered from the observed host.
+			this.classes,
+			this._consumerHostClasses(),
+			// Keep supporting `[ngClass]` when it binds only to this component input and
+			// no NgClass directive is present in the consumer's template scope.
+			this.ngClass(),
+			this.panelClass(),
+		);
+	});
 
 	constructor() {
 		const config = this.config;
@@ -457,11 +428,24 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._mergeGlobalConfig(config);
 		this.itemsList = new ItemsList(this, newSelectionModel ? newSelectionModel() : DefaultSelectionModelFactory());
 		this.element = _elementRef.nativeElement;
+		this._dropdownOverlay = new DropdownOverlayManager(this._injector, this._document, this.element);
 		this._handleSignalChanges();
 		afterEveryRender({
 			read: () => this._measureOutlineNotch(),
 		});
-		this._destroyRef.onDestroy(() => this._destroyDropdownOverlay());
+		afterEveryRender({
+			read: () => {
+				const consumerClasses = readConsumerHostClasses(this.element);
+				const normalized = consumerClasses || null;
+				if (normalized !== this._consumerHostClasses()) {
+					this._consumerHostClasses.set(normalized);
+				}
+			},
+		});
+		this._destroyRef.onDestroy(() => {
+			this._dropdownOverlay.destroy();
+			this.dropdownOverlayRef = null;
+		});
 	}
 
 	/**
@@ -1134,32 +1118,16 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		);
 	}
 
-	private _isValidWriteValue(value: any): boolean {
-		if (!isDefined(value) || (this.multiple() && value === '') || (Array.isArray(value) && value.length === 0)) {
-			return false;
-		}
-
-		const validateBinding = (item: any): boolean => {
-			if (!isDefined(this.compareWith()) && isObject(item) && this.bindValue()) {
-				this._console.warn(`Setting object(${JSON.stringify(item)}) as your model with bindValue is not allowed unless [compareWith] is used.`);
-				return false;
-			}
-			return true;
-		};
-
-		if (this.multiple()) {
-			if (!Array.isArray(value)) {
-				this._console.warn('Multiple select ngModel should be array.');
-				return false;
-			}
-			return value.every((item) => validateBinding(item));
-		} else {
-			return validateBinding(value);
-		}
-	}
-
 	private _handleWriteValue(ngModel: any | any[]) {
-		if (!this._isValidWriteValue(ngModel)) {
+		const validation = validateWriteValue(ngModel, {
+			bindValue: this.bindValue(),
+			compareWith: this.compareWith(),
+			multiple: this.multiple(),
+		});
+		if (!validation.valid) {
+			if (validation.warning) {
+				this._console.warn(validation.warning);
+			}
 			return;
 		}
 
@@ -1168,17 +1136,8 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			if (item) {
 				this.itemsList.select(item);
 			} else {
-				const isValObject = isObject(val);
-				const isPrimitive = !isValObject && !this.bindValue();
-				if (isValObject || isPrimitive) {
-					this.itemsList.select(this.itemsList.mapItem(val, null));
-				} else {
-					item = {
-						[this.bindLabel()]: null,
-						[this.bindValue()]: val,
-					};
-					this.itemsList.select(this.itemsList.mapItem(item, null));
-				}
+				item = createUnmatchedOptionValue(val, this.bindLabel(), this.bindValue());
+				this.itemsList.select(this.itemsList.mapItem(item, null));
 			}
 		};
 
@@ -1241,21 +1200,15 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	private _updateNgModel() {
-		const model = [];
-		for (const item of this.selectedItems) {
-			if (this.bindValue()) {
-				let value;
-				if (item.children) {
-					const groupKey = this.groupValue() ? this.bindValue() : <string>this.groupBy();
-					value = item.value[groupKey || <string>this.groupBy()];
-				} else {
-					value = this.itemsList.resolveNested(item.value, this.bindValue());
-				}
-				model.push(value);
-			} else {
-				model.push(item.value);
-			}
-		}
+		const model = selectedItemsToModel(
+			this.selectedItems,
+			{
+				bindValue: this.bindValue(),
+				groupBy: this.groupBy(),
+				hasGroupValue: !!this.groupValue(),
+			},
+			(value, key) => this.itemsList.resolveNested(value, key),
+		);
 
 		const selected = this.selectedItems.map((x) => x.value);
 		if (this.multiple()) {
@@ -1308,36 +1261,23 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 
 	/** Attaches or detaches the dropdown overlay to match the current open state. Idempotent. */
 	private _syncDropdownOverlay() {
-		if (!this._dropdownTemplate()) {
+		const template = this._dropdownTemplate();
+		const viewContainer = this._dropdownOutlet();
+		if (!template || !viewContainer) {
 			return;
 		}
 		if (this.isOpen()) {
-			this._openDropdownOverlay(this.dropdownPosition());
+			this._dropdownOverlay.open({
+				appendTo: this.appendTo() ?? this.config.appendTo ?? null,
+				beforeAttach: (overlayRef) => (this.dropdownOverlayRef = overlayRef),
+				origin: this._dropdownOrigin(),
+				position: this.dropdownPosition(),
+				template,
+				viewContainer,
+			});
 		} else {
-			this.dropdownOverlayRef?.detach();
+			this._dropdownOverlay.close();
 		}
-	}
-
-	/**
-	 * Creates the overlay on first open and (re)attaches the dropdown template to it.
-	 * The panel always renders in the CDK overlay; `dropdownPosition` maps onto connected
-	 * positions, with `auto` falling back to the opposite side when space runs out.
-	 */
-	private _openDropdownOverlay(position: DropdownPosition) {
-		const overlayRef = this._ensureDropdownOverlay();
-		this._dropdownPositionStrategy.withPositions(DROPDOWN_POSITIONS[position] ?? DROPDOWN_POSITIONS.auto);
-		// Direction is snapshotted per open, matching how the previous implementation read
-		// `document.documentElement.dir` when positioning an appended panel
-		overlayRef.setDirection(this._document?.documentElement?.dir === 'rtl' ? 'rtl' : 'ltr');
-		// The panel tracks the width of the select; the panel keeps it in sync on host resize
-		overlayRef.updateSize({ width: this._dropdownOrigin().getBoundingClientRect().width });
-		if (overlayRef.hasAttached()) {
-			// Only `dropdownPosition` changed while open — re-evaluate with the new positions
-			overlayRef.updatePosition();
-			return;
-		}
-		this._dropdownPortal ??= new TemplatePortal(this._dropdownTemplate(), this._dropdownOutlet());
-		overlayRef.attach(this._dropdownPortal);
 	}
 
 	/**
@@ -1348,65 +1288,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	 */
 	private _dropdownOrigin(): HTMLElement {
 		return this._selectContainer()?.nativeElement ?? this.element;
-	}
-
-	private _ensureDropdownOverlay(): OverlayRef {
-		const appendTo = this.appendTo() ?? this.config.appendTo ?? null;
-		if (this.dropdownOverlayRef && appendTo !== this._overlayAppendTo) {
-			// `appendTo` changed since the overlay was created — rebuild against the new host
-			this._destroyDropdownOverlay();
-		}
-		if (!this.dropdownOverlayRef) {
-			let injector = this._injector;
-			let appendToHost: HTMLElement | null = null;
-			if (appendTo) {
-				appendToHost = this._resolveAppendToHost(appendTo);
-				this._appendToContainer = runInInjectionContext(this._injector, () => new NgSelectAppendToOverlayContainer(appendToHost));
-				injector = Injector.create({
-					parent: this._injector,
-					providers: [{ provide: OverlayContainer, useValue: this._appendToContainer }],
-				});
-			}
-			this._dropdownPositionStrategy = createFlexibleConnectedPositionStrategy(injector, this._dropdownOrigin()).withFlexibleDimensions(false).withPush(false);
-			if (appendToHost) {
-				// Popover-capable browsers paint the panel in the top layer regardless of where it
-				// lives in the DOM, so the `appendTo` host only determines DOM containment —
-				// ancestor-scoped styles and focus enclosure. Browsers without the Popover API fall
-				// back to the NgSelectAppendToOverlayContainer provided above instead.
-				this._dropdownPositionStrategy.withPopoverLocation({ type: 'parent', element: appendToHost });
-			}
-			this._overlayAppendTo = appendTo;
-			this.dropdownOverlayRef = createOverlayRef(injector, {
-				positionStrategy: this._dropdownPositionStrategy,
-				// Ancestor-scroll repositioning is handled by the panel's capture-phase document
-				// listener, which also covers plain scroll containers that CDK's ScrollDispatcher
-				// cannot see without a `cdkScrollable` marker (#2788)
-				scrollStrategy: createNoopScrollStrategy(),
-				// Detach must remove the panel from the DOM synchronously (#2765); the panel has
-				// no CDK-driven animations to wait for
-				disableAnimations: true,
-			});
-		}
-		return this.dropdownOverlayRef;
-	}
-
-	private _destroyDropdownOverlay() {
-		this.dropdownOverlayRef?.dispose();
-		this.dropdownOverlayRef = null;
-		this._dropdownPositionStrategy = null;
-		this._appendToContainer?.ngOnDestroy();
-		this._appendToContainer = null;
-	}
-
-	/** Resolves the `appendTo` selector against the select's own root, so a select inside a shadow root finds hosts in that same root. */
-	private _resolveAppendToHost(selector: string): HTMLElement {
-		const root = this.element.getRootNode();
-		const scope = typeof ShadowRoot !== 'undefined' && root instanceof ShadowRoot ? root : this._document;
-		const host = scope.querySelector<HTMLElement>(selector);
-		if (!host) {
-			throw new Error(`appendTo selector ${selector} did not found any parent element`);
-		}
-		return host;
 	}
 
 	private _warnDeprecatedInputs() {

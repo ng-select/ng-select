@@ -1,0 +1,33 @@
+<div class="form-group">
+	<label for="signal-city">Signal Forms single select</label>
+	<ng-select [items]="cities" bindLabel="name" bindValue="id" labelForId="signal-city" placeholder="Select a city" [formField]="cityForm.cityId" />
+	@if (cityForm.cityId().touched() && cityForm.cityId().invalid()) {
+		<small class="text-danger">{{ cityForm.cityId().errors()[0].message }}</small>
+	}
+	<br />
+	<button type="button" class="btn btn-sm btn-secondary" (click)="cityForm.cityId().reset(null)">Reset</button>
+	<button type="button" class="btn btn-sm btn-secondary" (click)="toggleCityDisabled()">Toggle disabled</button>
+</div>
+
+<div class="form-group">
+	<label for="signal-cities">Async Signal Forms multiselect</label>
+	@if (multipleVisible()) {
+		<ng-select
+			[items]="asyncCities()"
+			bindLabel="name"
+			bindValue="id"
+			labelForId="signal-cities"
+			[multiple]="true"
+			placeholder="Select cities"
+			[formField]="cityForm.cityIds" />
+	}
+	@if (cityForm.cityIds().touched() && cityForm.cityIds().invalid()) {
+		<small class="text-danger">{{ cityForm.cityIds().errors()[0].message }}</small>
+	}
+	<p class="form-text text-muted">The form starts with selected IDs before the async item list arrives. Hiding and showing the control preserves them.</p>
+	<button type="button" class="btn btn-sm btn-secondary" (click)="loadCities()">Load items</button>
+	<button type="button" class="btn btn-sm btn-secondary" (click)="clearCities()">Clear</button>
+	<button type="button" class="btn btn-sm btn-secondary" (click)="toggleMultipleVisible()">Show/Hide</button>
+</div>
+
+<pre>{{ model() | json }}</pre>

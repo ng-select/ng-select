@@ -1,3 +1,8 @@
+/**
+ * Defines the ng option contract used by ng-select.
+ *
+ * @since 3.0.0
+ */
 export interface NgOption {
 	[name: string]: any;
 

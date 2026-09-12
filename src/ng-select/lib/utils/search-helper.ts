@@ -840,6 +840,14 @@ const diacritics = {
 	'\u03C2': '\u03C3',
 };
 
+/**
+ * Normalizes accented and special characters for case-insensitive option searching.
+ *
+ * @param text - The text.
+ * @returns The strip special chars result.
+ *
+ * @since 3.0.0
+ */
 export function stripSpecialChars(text: string): string {
 	const match = (a: string): string => diacritics[a] || a;
 	// eslint-disable-next-line no-control-regex
