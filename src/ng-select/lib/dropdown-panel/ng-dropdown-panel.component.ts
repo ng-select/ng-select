@@ -240,9 +240,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 		if (isDefined(scrollTo)) {
 			this._scrollablePanel().scrollTop = scrollTo;
-			// Programmatic scrollTop does not always deliver a `scroll` event before the next
-			// keyboard step (and animationFrame-audited listeners can lag). Keep the virtual
-			// window in sync immediately so the marked row is rendered (#2744).
+			// Programmatic scrollTop may not emit `scroll` in time; sync the range now (#2744)
 			if (this.virtualScroll()) {
 				this._onContentScrolled(scrollTo);
 			} else {
@@ -296,8 +294,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	private _positionDropdown() {
 		const overlayRef = this.overlayRef();
 		if (overlayRef) {
-			// Applies the best fitting position and synchronously emits positionChanges,
-			// which updates the position classes before the panel becomes visible
+			// Apply position and emit positionChanges before the panel is visible
 			overlayRef.updatePosition();
 		} else if (!isDefined(this._currentPosition)) {
 			// Standalone usage without an overlay: reflect the configured side directly
@@ -397,13 +394,10 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 		this._zone.runOutsideAngular(() => {
 			Promise.resolve().then(() => {
-				// Typeahead/filter can open empty (panelHeight ≈ type-to-search) then replace
-				// items while open. Refresh the scrollport height so keyboard scrollTo math
-				// matches the real max-height panel — without changing scroll position (#2744).
+				// Panel may have opened empty; refresh height for scrollTo math (#2744)
 				this._syncPanelHeightFromDom();
 				if (!firstChange) {
-					// Re-anchor so a top-placed panel grows upward instead of covering the
-					// select, and `auto` can flip once the content no longer fits (#2092)
+					// Re-anchor so a top-placed panel grows upward and `auto` can flip (#2092)
 					this.overlayRef()?.updatePosition();
 					return;
 				}
@@ -424,17 +418,23 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._zone.runOutsideAngular(() => {
 			this._measureDimensions().then(() => {
 				const scrollTop = firstChange ? this._startOffset : (this._scrollablePanel()?.scrollTop ?? 0);
+				if (!firstChange) {
+					// Items changed at an unchanged scrollTop; bypass the same-position guard (#2880)
+					this._lastScrollPosition = -1;
+				}
 				this._renderItemsRange(scrollTop);
+				if (!firstChange) {
+					this._lastScrollPosition = scrollTop;
+				}
 
-				// Measurement / a short prior list leaves the panel content-sized. After the
-				// provisional range paints, sync max-height panelHeight for scrollTo (#2744).
-				// If viewport capacity grows, re-render — otherwise DOM stays on the stale
-				// (too-small) range while dimensions already reflect the larger panel.
+				// Sync panelHeight after the first paint; re-render if viewport capacity grew (#2744)
 				const itemsPerViewportBefore = this._panelService.dimensions.itemsPerViewport;
 				this._syncPanelHeightFromDom();
 				if (this._panelService.dimensions.itemsPerViewport !== itemsPerViewportBefore) {
+					const currentScrollTop = this._scrollablePanel()?.scrollTop ?? scrollTop;
 					this._lastScrollPosition = -1;
-					this._renderItemsRange(this._scrollablePanel()?.scrollTop ?? scrollTop);
+					this._renderItemsRange(currentScrollTop);
+					this._lastScrollPosition = currentScrollTop;
 				}
 
 				if (firstChange) {
@@ -532,9 +532,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._updateVirtualHeight(range.scrollHeight);
 		this._contentPanel().style.transform = `translateY(${range.topPadding}px)`;
 
-		// These outputs must stay template-bound in ng-select.component.html: the
-		// template listener wrapper is what schedules CD under zoneless (zone.run is a
-		// no-op there). A programmatic subscribe would need an explicit markForCheck
+		// Outputs must stay template-bound: the template listener schedules CD under zoneless
 		this._zone.run(() => {
 			this.update.emit(this.items().slice(range.start, range.end));
 			this.scroll.emit({ start: range.start, end: range.end });
@@ -566,11 +564,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			return Promise.resolve(this._panelService.dimensions);
 		}
 
-		// Relies on synchronous template execution: the emitted items render in the
-		// same CD pass (the parent's template listener runs mid-pass and the @for sits
-		// later in the template), so the microtask below measures real DOM with and
-		// without zone.js alike. Measuring both a group header and an option avoids
-		// under-sizing virtual scroll when their templates have different heights (#2762).
+		// Emitted items render in the same CD pass; measure both a group and an option (#2762)
 		this._zone.run(() => this.update.emit(toMeasure));
 
 		return Promise.resolve()
@@ -579,8 +573,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 				if (dims.itemHeight > 0) {
 					return dims;
 				}
-				// Empty→items (typeahead) can measure before the projected options paint.
-				// Retry once on the next frame (#2744).
+				// Options may not have painted yet; retry once next frame (#2744)
 				return new Promise<PanelDimensions>((resolve) => {
 					requestAnimationFrame(() => {
 						this._zone.run(() => this.update.emit(toMeasure));
