@@ -388,7 +388,7 @@ describe('NgSelectComponent', () => {
 			disableDebounceFakeTimers();
 		});
 
-		function genericFixture() {
+		function genericFixture(updateOn: 'change' | 'blur' = 'change') {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
 				`<ng-select [items]="cities"
@@ -397,6 +397,8 @@ describe('NgSelectComponent', () => {
 					[selectOnTab]="selectOnTab"
 					[multiple]="multiple"
 					[tabFocusOnClearButton]="tabFocusOnClearButton"
+					[closeOnSelect]="closeOnSelect"
+					[ngModelOptions]="{ updateOn: '${updateOn}' }"
 					[(ngModel)]="selectedCity" />
 				`,
 			);
@@ -453,9 +455,7 @@ describe('NgSelectComponent', () => {
 			expect(fixture.componentInstance.select().selectedItems).toEqual([result]);
 		});
 
-		it('should select marked item on blur when [selectOnTab]="true"', async () => {
-			// #2425 — focus can leave the open control without a Tab keydown (click-away, AT navigation);
-			// the marked item should still be committed so forms using updateOn: 'blur' pick up the value.
+		it('should not select marked item on blur when [selectOnTab]="true"', async () => {
 			const { fixture, select } = genericFixture();
 			await advanceDebounce(fixture, 200);
 			select.filter('bei');
@@ -468,9 +468,59 @@ describe('NgSelectComponent', () => {
 			select.searchInput().nativeElement.dispatchEvent(new FocusEvent('blur'));
 			await tickAndDetectChanges(fixture);
 
-			expect(select.selectedItems).toEqual([result]);
-			expect(select.isOpen()).toBeFalsy();
+			expect(select.selectedItems).toEqual([]);
+			expect(fixture.componentInstance.selectedCity).toBeUndefined();
 		});
+
+		for (const multiple of [false, true]) {
+			for (const updateOn of ['change', 'blur'] as const) {
+				for (const hover of [false, true]) {
+					it(`should preserve the model on click-away (multiple=${multiple}, updateOn=${updateOn}, hover=${hover})`, async () => {
+						const { fixture, select } = genericFixture(updateOn);
+						fixture.componentInstance.multiple = multiple;
+						await tickAndDetectChanges(fixture);
+						const change = vi.spyOn(select.changeEvent, 'emit');
+						select.open();
+						if (hover) {
+							select.onItemHover(select.itemsList.items[1]);
+						}
+						expect(select.itemsList.markedItem).toBeTruthy();
+						select.searchInput().nativeElement.blur();
+						document.body.click();
+						await tickAndDetectChanges(fixture);
+						expect(select.isOpen()).toBe(false);
+						expect(select.selectedItems).toEqual([]);
+						expect(fixture.componentInstance.selectedCity).toBeUndefined();
+						expect(change).not.toHaveBeenCalled();
+					});
+				}
+			}
+
+			for (const gesture of ['click', 'Tab'] as const) {
+				it(`should commit an explicit ${gesture} selection with updateOn blur (multiple=${multiple})`, async () => {
+					const { fixture, select } = genericFixture('blur');
+					fixture.componentInstance.multiple = multiple;
+					fixture.componentInstance.closeOnSelect = false;
+					await tickAndDetectChanges(fixture);
+					select.open();
+					if (gesture === 'click') {
+						document.querySelector<HTMLElement>('.ng-dropdown-panel .ng-option').click();
+					} else {
+						triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Tab);
+					}
+					await tickAndDetectChanges(fixture);
+					expect(select.selectedItems.map((item) => item.value)).toEqual([fixture.componentInstance.cities[0]]);
+					expect(fixture.componentInstance.selectedCity).toBeUndefined();
+					select.onItemHover(select.itemsList.items[1]);
+					select.searchInput().nativeElement.blur();
+					document.body.click();
+					await tickAndDetectChanges(fixture);
+					const chosenCity = fixture.componentInstance.cities[0];
+					expect(fixture.componentInstance.selectedCity).toEqual(multiple ? [chosenCity] : chosenCity);
+					expect(select.selectedItems.map((item) => item.value)).toEqual([chosenCity]);
+				});
+			}
+		}
 
 		it('should not select marked item on blur when [selectOnTab]="false"', async () => {
 			const { fixture, select } = genericFixture();
