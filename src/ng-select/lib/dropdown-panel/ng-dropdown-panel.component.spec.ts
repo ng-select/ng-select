@@ -571,6 +571,59 @@ describe('NgDropdownPanelComponent', () => {
 			expect(overlayRef.updatePosition).toHaveBeenCalled();
 		});
 
+		it('should update virtual padding when items are appended at the current scroll position (#2880)', async () => {
+			createFixture((host) => {
+				host.virtualScroll.set(true);
+				host.items.set(createItems(30));
+			});
+			await flushAsync();
+			fixture.detectChanges();
+
+			const scrollHost = scrollHostElement();
+			await dispatchScroll(scrollHost, scrollHost.scrollHeight);
+			expect(host.scrollToEndCount).toBe(1);
+
+			const paddingBefore = (fixture.nativeElement.querySelector('.total-padding') as HTMLElement).style.height;
+
+			host.items.set(createItems(60));
+			fixture.detectChanges();
+			await flushAsync();
+			fixture.detectChanges();
+
+			const padding: HTMLElement = fixture.nativeElement.querySelector('.total-padding');
+			expect(padding.style.height).not.toBe(paddingBefore);
+			expect(padding.style.height).toBe(`${60 * ITEM_HEIGHT}px`);
+		});
+
+		// https://github.com/ng-select/ng-select/issues/2880
+		it('should re-render the range when items are replaced while the panel is scrolled (#2880)', async () => {
+			createFixture((host) => {
+				host.virtualScroll.set(true);
+				host.items.set(createItems(60));
+			});
+			await flushAsync();
+			fixture.detectChanges();
+
+			const scrollHost = scrollHostElement();
+			await dispatchScroll(scrollHost, 10 * ITEM_HEIGHT);
+			fixture.detectChanges();
+			expect(host.scrollEvents.at(-1).end).toBeGreaterThan(10);
+			expect(host.viewPortItems().length).toBeLessThan(60);
+
+			host.items.set(createItems(5));
+			fixture.detectChanges();
+			await flushAsync();
+			fixture.detectChanges();
+
+			const padding: HTMLElement = fixture.nativeElement.querySelector('.total-padding');
+			expect(padding.style.height).toBe(`${5 * ITEM_HEIGHT}px`);
+			expect(host.viewPortItems().length).toBe(5);
+			expect(host.viewPortItems().every((item) => item.index < 5)).toBe(true);
+			expect(host.scrollEvents.at(-1).start).toBe(0);
+			expect(host.scrollEvents.at(-1).end).toBe(5);
+			expect(fixture.nativeElement.querySelectorAll('.test-option').length).toBe(5);
+		});
+
 		it('should render new ranges while scrolling and skip ranges for repeated scroll positions', async () => {
 			createFixture((host) => host.virtualScroll.set(true));
 			await flushAsync();
