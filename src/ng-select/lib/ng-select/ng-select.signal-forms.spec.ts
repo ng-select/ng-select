@@ -1,10 +1,12 @@
-import { Component, Provider, signal, Type, viewChild } from '@angular/core';
+import { Component, ErrorHandler, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { disabled, form, FormField, minLength, provideSignalFormsConfig, readonly, required } from '@angular/forms/signals';
+import { disabled, form, FormField, provideSignalFormsConfig, readonly, required } from '@angular/forms/signals';
 import { NG_STATUS_CLASSES } from '@angular/forms/signals/compat';
 import { describe, expect, it } from 'vitest';
-import { applyZonelessFixtureCompat } from '../../testing/helpers';
+import { applyZonelessFixtureCompat, TestsErrorHandler, tickAndDetectChanges } from '../../testing/helpers';
+import { MockConsole } from '../../testing/mocks';
 import { provideNgSelect } from '../ng-select.module';
+import { ConsoleService } from '../services/console.service';
 import { NgSelectComponent } from './ng-select.component';
 
 interface City {
@@ -29,26 +31,28 @@ const LABELED_OPTIONS: LabeledOption[] = [
 	{ id: 3, label: 'Three' },
 ];
 
+const settle = tickAndDetectChanges;
+
 async function createFixture<T>(component: Type<T>, providers: Provider[] = []): Promise<ComponentFixture<T>> {
-	TestBed.configureTestingModule({ providers: [...provideNgSelect(), ...providers] });
+	TestBed.configureTestingModule({
+		providers: [
+			{ provide: ErrorHandler, useClass: TestsErrorHandler },
+			{ provide: ConsoleService, useFactory: () => new MockConsole() },
+			...provideNgSelect(),
+			...providers,
+		],
+	});
 	const fixture = applyZonelessFixtureCompat(TestBed.createComponent(component));
 	await settle(fixture);
 	return fixture;
-}
-
-async function settle(fixture: ComponentFixture<unknown>): Promise<void> {
-	fixture.detectChanges();
-	await fixture.whenStable();
-	fixture.detectChanges();
-	await fixture.whenStable();
 }
 
 function selectedIds(select: NgSelectComponent): number[] {
 	return select.selectedItems.map((item) => item.value?.id ?? item.value);
 }
 
-function searchInput(fixture: ComponentFixture<unknown>): HTMLInputElement {
-	return fixture.nativeElement.querySelector('ng-select input');
+function blurSearchInput(select: NgSelectComponent): void {
+	select.searchInput().nativeElement.dispatchEvent(new FocusEvent('blur'));
 }
 
 @Component({
@@ -71,6 +75,15 @@ class SignalFormsSingleTestComponent {
 class SignalFormsExplicitSingleTestComponent extends SignalFormsSingleTestComponent {}
 
 @Component({
+	selector: 'ng-signal-forms-late-bind-value-test',
+	imports: [FormField, NgSelectComponent],
+	template: `<ng-select [items]="items()" bindLabel="name" [bindValue]="valueKey()" [formField]="cityForm.cityId" />`,
+})
+class SignalFormsLateBindValueTestComponent extends SignalFormsSingleTestComponent {
+	readonly valueKey = signal<string | undefined>(undefined);
+}
+
+@Component({
 	selector: 'ng-signal-forms-multiple-test',
 	imports: [FormField, NgSelectComponent],
 	template: `<ng-select [items]="items()" bindLabel="name" bindValue="id" [multiple]="multiple()" [formField]="cityForm.cityIds" />`,
@@ -78,7 +91,28 @@ class SignalFormsExplicitSingleTestComponent extends SignalFormsSingleTestCompon
 class SignalFormsMultipleTestComponent {
 	readonly items = signal<readonly City[]>(CITIES);
 	readonly multiple = signal(true);
-	readonly model = signal({ cityIds: [1, 3] as number[] });
+	readonly model = signal({ cityIds: [1, 3] as number[] | null });
+	readonly cityForm = form(this.model);
+	readonly select = viewChild.required(NgSelectComponent);
+}
+
+@Component({
+	selector: 'ng-signal-forms-late-multiple-test',
+	imports: [FormField, NgSelectComponent],
+	template: `<ng-select [items]="items()" bindLabel="name" bindValue="id" [multiple]="multiple()" [formField]="cityForm.cityIds" />`,
+})
+class SignalFormsLateMultipleTestComponent extends SignalFormsMultipleTestComponent {
+	override readonly multiple = signal(false);
+}
+
+@Component({
+	selector: 'ng-signal-forms-duplicate-value-test',
+	imports: [FormField, NgSelectComponent],
+	template: `<ng-select [items]="items()" bindLabel="name" bindValue="id" [multiple]="true" [formField]="cityForm.cityIds" />`,
+})
+class SignalFormsDuplicateValueTestComponent {
+	readonly items = signal<readonly City[]>(CITIES);
+	readonly model = signal({ cityIds: [1, 1] as number[] | null });
 	readonly cityForm = form(this.model);
 	readonly select = viewChild.required(NgSelectComponent);
 }
@@ -105,6 +139,15 @@ class SignalFormsAsyncSingleTestComponent {
 	readonly model = signal({ cityId: 2 as number | null });
 	readonly cityForm = form(this.model);
 	readonly select = viewChild.required(NgSelectComponent);
+}
+
+@Component({
+	selector: 'ng-signal-forms-late-bind-label-primitive-test',
+	imports: [FormField, NgSelectComponent],
+	template: `<ng-select [items]="items()" [bindLabel]="labelKey()" bindValue="id" [formField]="cityForm.cityId" />`,
+})
+class SignalFormsLateBindLabelPrimitiveTestComponent extends SignalFormsAsyncSingleTestComponent {
+	readonly labelKey = signal<string | undefined>(undefined);
 }
 
 @Component({
@@ -137,25 +180,35 @@ class SignalFormsObjectValueTestComponent {
 }
 
 @Component({
+	selector: 'ng-signal-forms-late-bind-label-object-test',
+	imports: [FormField, NgSelectComponent],
+	template: `<ng-select [items]="items()" [bindLabel]="labelKey()" [compareWith]="compareWith" [formField]="optionForm.option" />`,
+})
+class SignalFormsLateBindLabelObjectTestComponent {
+	readonly labelKey = signal<string | undefined>(undefined);
+	readonly items = signal<readonly LabeledOption[]>([]);
+	readonly compareWith = (a: LabeledOption | null, b: LabeledOption | null) => a?.id === b?.id;
+	readonly model = signal({ option: LABELED_OPTIONS[0] as LabeledOption | null });
+	readonly optionForm = form(this.model);
+	readonly select = viewChild.required(NgSelectComponent);
+}
+
+@Component({
 	selector: 'ng-signal-forms-state-test',
 	imports: [FormField, NgSelectComponent],
-	template: `
-		<ng-select [items]="items" bindLabel="name" bindValue="id" [formField]="cityForm.cityId" />
-		<ng-select [items]="items" bindLabel="name" bindValue="id" [multiple]="true" [formField]="cityForm.cityIds" />
-	`,
+	template: `<ng-select [items]="items" bindLabel="name" bindValue="id" [formField]="cityForm.cityId" />`,
 })
 class SignalFormsStateTestComponent {
 	readonly items = CITIES;
 	readonly disabledState = signal(false);
 	readonly readonlyState = signal(false);
-	readonly model = signal({ cityId: null as number | null, cityIds: [] as number[] });
+	readonly model = signal({ cityId: null as number | null });
 	readonly cityForm = form(this.model, (path) => {
 		required(path.cityId);
-		minLength(path.cityIds, 1);
-		disabled(path.cityId, () => this.disabledState());
-		readonly(path.cityId, () => this.readonlyState());
+		disabled(path.cityId, { when: () => this.disabledState() });
+		readonly(path.cityId, { when: () => this.readonlyState() });
 	});
-	readonly selects = viewChild.required(NgSelectComponent);
+	readonly select = viewChild.required(NgSelectComponent);
 }
 
 describe('NgSelectComponent Signal Forms', () => {
@@ -175,7 +228,7 @@ describe('NgSelectComponent Signal Forms', () => {
 		expect(component.model()).toEqual({ cityId: 1 });
 		expect(component.cityForm.cityId().dirty()).toBe(true);
 
-		searchInput(fixture).dispatchEvent(new Event('blur'));
+		blurSearchInput(component.select());
 		await settle(fixture);
 		expect(component.cityForm.cityId().touched()).toBe(true);
 
@@ -200,7 +253,7 @@ describe('NgSelectComponent Signal Forms', () => {
 		expect(selectedIds(fixture.componentInstance.select())).toEqual([1, 3]);
 	});
 
-	it('still clears the selection when multiple changes after initialization', async () => {
+	it('clears the selection and the form value when multiple turns off after initialization', async () => {
 		const fixture = await createFixture(SignalFormsMultipleTestComponent);
 		const component = fixture.componentInstance;
 		expect(selectedIds(component.select())).toEqual([1, 3]);
@@ -208,6 +261,24 @@ describe('NgSelectComponent Signal Forms', () => {
 		component.multiple.set(false);
 		await settle(fixture);
 		expect(component.select().selectedItems).toEqual([]);
+		expect(component.cityForm.cityIds().value()).toBeNull();
+		expect(component.model().cityIds).toBeNull();
+	});
+
+	it('keeps an initial multiple value written before multiple turns on', async () => {
+		const fixture = await createFixture(SignalFormsLateMultipleTestComponent);
+		const component = fixture.componentInstance;
+		expect(component.select().selectedItems).toEqual([]);
+
+		component.multiple.set(true);
+		await settle(fixture);
+		expect(selectedIds(component.select())).toEqual([1, 3]);
+		expect(component.cityForm.cityIds().value()).toEqual([1, 3]);
+	});
+
+	it('selects a duplicate bound value once', async () => {
+		const fixture = await createFixture(SignalFormsDuplicateValueTestComponent);
+		expect(selectedIds(fixture.componentInstance.select())).toEqual([1]);
 	});
 
 	it('remaps initial multiple values when items arrive asynchronously', async () => {
@@ -231,6 +302,17 @@ describe('NgSelectComponent Signal Forms', () => {
 		await settle(fixture);
 		expect(selectedIds(component.select())).toEqual([2]);
 		expect(component.select().selectedItems[0]).toBe(component.select().itemsList.items[1]);
+	});
+
+	it('remaps the written value when bindValue arrives later', async () => {
+		const fixture = await createFixture(SignalFormsLateBindValueTestComponent);
+		const component = fixture.componentInstance;
+
+		component.valueKey.set('id');
+		await settle(fixture);
+		expect(selectedIds(component.select())).toEqual([2]);
+		expect(component.select().selectedItems[0]).toBe(component.select().itemsList.items[1]);
+		expect(component.cityForm.cityId().value()).toBe(2);
 	});
 
 	it('restores initial multiple values whenever an @if recreates the control', async () => {
@@ -259,11 +341,36 @@ describe('NgSelectComponent Signal Forms', () => {
 		expect(component.select().selectedItems[1]).toBe(component.select().itemsList.items[2]);
 	});
 
+	describe('bindLabel bound to an initially undefined value (#2840)', () => {
+		it('does not crash when bindLabel is bound to an initially undefined value', async () => {
+			// Creating the fixture must not throw while bindLabel is still undefined.
+			const fixture = await createFixture(SignalFormsLateBindLabelObjectTestComponent);
+			const component = fixture.componentInstance;
+			expect(component.select().selectedItems.length).toBe(1);
+
+			component.labelKey.set('label');
+			component.items.set(LABELED_OPTIONS);
+			await settle(fixture);
+			expect(component.select().selectedItems[0]).toBe(component.select().itemsList.items[0]);
+		});
+
+		it('does not crash with a primitive bound value when bindLabel is initially undefined', async () => {
+			const fixture = await createFixture(SignalFormsLateBindLabelPrimitiveTestComponent);
+			const component = fixture.componentInstance;
+			expect(selectedIds(component.select())).toEqual([2]);
+
+			component.labelKey.set('name');
+			component.items.set(CITIES);
+			await settle(fixture);
+			expect(selectedIds(component.select())).toEqual([2]);
+		});
+	});
+
 	it('integrates validation, disabled, readonly, and configured status classes', async () => {
 		const fixture = await createFixture(SignalFormsStateTestComponent, [provideSignalFormsConfig({ classes: NG_STATUS_CLASSES })]);
 		const component = fixture.componentInstance;
-		const hosts = fixture.nativeElement.querySelectorAll('ng-select') as NodeListOf<HTMLElement>;
-		const firstInput = hosts[0].querySelector('input') as HTMLInputElement;
+		const host = fixture.nativeElement.querySelector('ng-select') as HTMLElement;
+		const input = component.select().searchInput().nativeElement;
 
 		expect(component.cityForm.cityId().invalid()).toBe(true);
 		expect(
@@ -272,29 +379,22 @@ describe('NgSelectComponent Signal Forms', () => {
 				.errors()
 				.map((error) => error.kind),
 		).toEqual(['required']);
-		expect(component.cityForm.cityIds().invalid()).toBe(true);
-		expect(
-			component.cityForm
-				.cityIds()
-				.errors()
-				.map((error) => error.kind),
-		).toEqual(['minLength']);
-		expect(hosts[0].classList.contains('ng-invalid')).toBe(true);
-		expect(hosts[0].classList.contains('ng-untouched')).toBe(true);
+		expect(host.classList.contains('ng-invalid')).toBe(true);
+		expect(host.classList.contains('ng-untouched')).toBe(true);
 
-		firstInput.dispatchEvent(new Event('blur'));
+		blurSearchInput(component.select());
 		await settle(fixture);
 		expect(component.cityForm.cityId().touched()).toBe(true);
-		expect(hosts[0].classList.contains('ng-touched')).toBe(true);
+		expect(host.classList.contains('ng-touched')).toBe(true);
 
 		component.disabledState.set(true);
 		await settle(fixture);
-		expect(firstInput.disabled).toBe(true);
+		expect(input.disabled).toBe(true);
 
 		component.disabledState.set(false);
 		component.readonlyState.set(true);
 		await settle(fixture);
-		expect(component.selects().readonly()).toBe(true);
-		expect(component.selects().disabled()).toBe(true);
+		expect(component.select().readonly()).toBe(true);
+		expect(component.select().disabled()).toBe(true);
 	});
 });

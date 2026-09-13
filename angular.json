@@ -162,7 +162,10 @@
 				"serve": {
 					"builder": "@ng-doc/builder:dev-server",
 					"options": {
-						"buildTarget": "demo:build"
+						"buildTarget": "demo:build",
+						"ngDoc": {
+							"config": "src/demo/ng-doc.serve.config.ts"
+						}
 					},
 					"configurations": {
 						"production": {
