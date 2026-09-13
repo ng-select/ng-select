@@ -684,4 +684,38 @@ describe('NgSelectComponent', () => {
 			expect(() => select.detectChanges()).not.toThrow();
 		});
 	});
+
+	describe('closeOnScroll', () => {
+		it('should close dropdown when window is scrolled and closeOnScroll is true', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" bindLabel="name" [closeOnScroll]="true" [(ngModel)]="selectedCity"></ng-select>`,
+			);
+
+			const select = fixture.componentInstance.select();
+			select.open();
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBe(true);
+
+			window.dispatchEvent(new Event('scroll', { bubbles: true }));
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBe(false);
+		});
+
+		it('should not close dropdown when window is scrolled and closeOnScroll is false', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" bindLabel="name" [closeOnScroll]="false" [(ngModel)]="selectedCity"></ng-select>`,
+			);
+
+			const select = fixture.componentInstance.select();
+			select.open();
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBe(true);
+
+			window.dispatchEvent(new Event('scroll', { bubbles: true }));
+			await tickAndDetectChanges(fixture);
+			expect(select.isOpen()).toBe(true);
+		});
+	});
 });

@@ -300,6 +300,12 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	readonly _popover = input(false, { alias: 'popover', transform: booleanAttribute });
 	/** @deprecated Has no effect: the CDK overlay renders in the native Popover API top layer automatically in supporting browsers. Will be removed in a future major version. */
 	readonly popover = linkedSignal(() => this._popover());
+	/** Close the dropdown when the scroll container (or window) is scrolled. Default `false`. */
+	readonly _closeOnScroll = input(false, { alias: 'closeOnScroll', transform: booleanAttribute });
+	readonly closeOnScroll = linkedSignal(() => this._closeOnScroll());
+	/** CSS selector for the scroll container to watch when `closeOnScroll` is `true`. Defaults to window scroll. */
+	readonly _scrollContainer = input<string>(undefined, { alias: 'scrollContainer' });
+	readonly scrollContainer = linkedSignal(() => this._scrollContainer());
 	// models
 	/** Object property to use for label. Default `label` */
 	readonly bindLabel = model<string>(undefined);
@@ -465,6 +471,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		this._destroyRef.onDestroy(() => {
 			this._dropdownOverlay.destroy();
 			this.dropdownOverlayRef = null;
+			this._removeScrollListener();
 		});
 	}
 
@@ -1256,6 +1263,27 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
+	private _scrollListener: (() => void) | null = null;
+
+	private _addScrollListener(selector: string | undefined) {
+		this._removeScrollListener();
+		const target: EventTarget = selector ? (this._document.querySelector(selector) ?? window) : window;
+		const handler = () => {
+			if (this.isOpen()) {
+				this.close();
+			}
+		};
+		target.addEventListener('scroll', handler, true);
+		this._scrollListener = () => target.removeEventListener('scroll', handler, true);
+	}
+
+	private _removeScrollListener() {
+		if (this._scrollListener) {
+			this._scrollListener();
+			this._scrollListener = null;
+		}
+	}
+
 	private _onChange = (_: any) => {};
 
 	private _onTouched = () => {};
@@ -1367,6 +1395,23 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 				this._dropdownTemplate();
 
 				untracked(() => this._syncDropdownOverlay());
+			},
+			{ injector: this._injector },
+		);
+
+		effect(
+			() => {
+				const isOpen = this.isOpen();
+				const closeOnScroll = this.closeOnScroll();
+				const scrollContainerSelector = this.scrollContainer();
+
+				untracked(() => {
+					if (isOpen && closeOnScroll) {
+						this._addScrollListener(scrollContainerSelector);
+					} else {
+						this._removeScrollListener();
+					}
+				});
 			},
 			{ injector: this._injector },
 		);
