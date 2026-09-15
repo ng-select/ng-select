@@ -198,6 +198,7 @@ describe('NgDropdownPanelComponent', () => {
 		// Let pending outside-zone microtasks from item changes settle while the fixture is still alive
 		await flushAsync();
 		vi.unstubAllGlobals();
+		vi.restoreAllMocks();
 	});
 
 	describe('standalone usage without an overlay', () => {
@@ -398,6 +399,21 @@ describe('NgDropdownPanelComponent', () => {
 			await flushAsync();
 
 			expect(overlayRef.updatePosition).toHaveBeenCalled();
+		});
+
+		// https://github.com/ng-select/ng-select/issues/2869
+		it('should not reposition the overlay when destroyed while an items update is pending (#2869)', async () => {
+			const overlayRef = createFakeOverlayRef();
+			createFixture((host) => host.overlayRef.set(overlayRef as unknown as OverlayRef));
+			await flushAsync();
+			overlayRef.updatePosition.mockClear();
+
+			host.items.set(createItems(10));
+			fixture.detectChanges();
+			fixture.destroy();
+			await flushAsync();
+
+			expect(overlayRef.updatePosition).not.toHaveBeenCalled();
 		});
 
 		it('should refresh panelHeight when items arrive after an empty open (#2744)', async () => {
@@ -657,6 +673,61 @@ describe('NgDropdownPanelComponent', () => {
 
 			await dispatchScroll(scrollHost, scrollHost.scrollHeight - 1);
 			expect(host.scrollToEndCount).toBe(1);
+		});
+
+		// https://github.com/ng-select/ng-select/issues/2869
+		describe('when destroyed while a render is pending (#2869)', () => {
+			function spyOnDestroyedOutputWarnings() {
+				const warn = vi.spyOn(console, 'warn');
+				return () => warn.mock.calls.filter(([message]) => String(message).includes('NG0953'));
+			}
+
+			it('should not emit or reposition from the pending range update', async () => {
+				const overlayRef = createFakeOverlayRef();
+				createFixture((host) => {
+					host.virtualScroll.set(true);
+					host.overlayRef.set(overlayRef as unknown as OverlayRef);
+				});
+				await flushAsync();
+				fixture.detectChanges();
+				const destroyedOutputWarnings = spyOnDestroyedOutputWarnings();
+				overlayRef.updatePosition.mockClear();
+
+				host.items.set(createItems(50));
+				fixture.detectChanges();
+				fixture.destroy();
+				await waitForFrames();
+
+				expect(destroyedOutputWarnings()).toEqual([]);
+				expect(overlayRef.updatePosition).not.toHaveBeenCalled();
+			});
+
+			it('should not emit from a scroll frame pending at destroy', async () => {
+				createFixture((host) => host.virtualScroll.set(true));
+				await flushAsync();
+				fixture.detectChanges();
+				const destroyedOutputWarnings = spyOnDestroyedOutputWarnings();
+
+				const scrollHost = scrollHostElement();
+				scrollHost.scrollTop = 10 * ITEM_HEIGHT;
+				scrollHost.dispatchEvent(new Event('scroll'));
+				fixture.destroy();
+				await waitForFrames();
+
+				expect(destroyedOutputWarnings()).toEqual([]);
+			});
+
+			it('should not emit from the pending measurement retry frame', async () => {
+				const destroyedOutputWarnings = spyOnDestroyedOutputWarnings();
+				createFixture((host) => {
+					host.virtualScroll.set(true);
+					host.renderItems = false;
+				});
+				fixture.destroy();
+				await waitForFrames();
+
+				expect(destroyedOutputWarnings()).toEqual([]);
+			});
 		});
 	});
 
