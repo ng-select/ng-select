@@ -473,6 +473,7 @@ These tips are **not** a second source of truth; they only help humans and assis
 
 | Location                                                               | Purpose                                                          |
 | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| [`.claude/CLAUDE.md`](./.claude/CLAUDE.md)                             | Claude Code: pointer + Claude-specific sizing/verification       |
 | [`.cursor/rules/rules.mdc`](./.cursor/rules/rules.mdc)                 | Cursor always-applied rule: short pointer + critical constraints |
 | [`.github/copilot-instructions.md`](./.github/copilot-instructions.md) | GitHub Copilot: pointer to this file                             |
 

@@ -49,4 +49,6 @@ export class NgSelectConfig {
 	 * (useful when backdrops load on click and would otherwise close the dropdown).
 	 */
 	outsideClickEvent: 'click' | 'mousedown' = 'click';
+	/** Close the dropdown when the page or an ancestor container scrolls. */
+	closeOnScroll = false;
 }

@@ -184,6 +184,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	/** Whether to close the menu when a value is selected */
 	readonly _closeOnSelect = input(true, { alias: 'closeOnSelect', transform: booleanAttribute });
 	readonly closeOnSelect = linkedSignal(() => this._closeOnSelect());
+	/** Close the dropdown when the page or an ancestor container scrolls. Default `false` */
+	readonly _closeOnScroll = input(this.config.closeOnScroll ?? false, { alias: 'closeOnScroll', transform: booleanAttribute });
+	readonly closeOnScroll = linkedSignal(() => this._closeOnScroll());
 	/** Allows to hide selected items. */
 	readonly _hideSelected = input(false, { alias: 'hideSelected', transform: booleanAttribute });
 	readonly hideSelected = linkedSignal(() => this._hideSelected());
@@ -1107,12 +1110,14 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
-	trackByOption = (_: number, item: NgOption) => {
+	trackByOption = (index: number, item: NgOption) => {
 		if (this.trackByFn()) {
 			return this.trackByFn()(item.value);
 		}
 
-		return item;
+		// Track by position: options are re-created on every items change, so identity tracking
+		// would replace the option DOM between mousedown and click (#2551).
+		return index;
 	};
 
 	/**
@@ -1222,12 +1227,6 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	onInputBlur($event: FocusEvent) {
 		this.element.classList.remove('ng-select-focused');
 		this.blurEvent.emit($event);
-		// When `selectOnTab` is enabled, commit the marked item on any focus loss, not just the literal Tab
-		// key handled in `_handleTab` (e.g. mouse click-away or assistive-technology navigation). The Tab key
-		// path calls `preventDefault()` and keeps focus, so this cannot double-select for that case.
-		if (this.selectOnTab() && this.isOpen() && !this.disabled() && this.itemsList.markedItem && !this._isComposing) {
-			this.toggleItem(this.itemsList.markedItem);
-		}
 		if (!this.isOpen() && !this.disabled()) {
 			this._onTouched();
 		}

@@ -120,6 +120,29 @@ describe('NgSelectComponent', () => {
 		});
 	});
 
+	describe('Option click', () => {
+		// https://github.com/ng-select/ng-select/issues/2551
+		it('should keep option elements attached when items are rebuilt between mousedown and click', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities.slice()" bindLabel="name" [(ngModel)]="selectedCity"></ng-select>`,
+			);
+			const select = fixture.componentInstance.select();
+			select.open();
+			await tickAndDetectChanges(fixture);
+
+			const option = document.querySelector<HTMLElement>('.ng-dropdown-panel .ng-option');
+			option.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+			// Simulate the change detection a zone.js app runs after mousedown
+			await tickAndDetectChanges(fixture);
+
+			expect(option.isConnected).toBe(true);
+			option.click();
+			await tickAndDetectChanges(fixture);
+			expect(fixture.componentInstance.selectedCity).toEqual(fixture.componentInstance.cities[0]);
+		});
+	});
+
 	describe('Multiple', () => {
 		let fixture: ComponentFixture<NgSelectTestComponent>;
 		let select: NgSelectComponent;
