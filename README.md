@@ -278,7 +278,7 @@ Note that we are using https://conventionalcommits.org/ commits format.
 
 Perform the _clone-to-launch_ steps with these terminal commands.
 
-### Run demo page in watch mode
+### Run docs site in watch mode
 
 ```
 git clone https://github.com/ng-select/ng-select

@@ -7,6 +7,10 @@ on:
       - '**.ts'
       - '**.html'
       - '**.scss'
+      - 'website/**'
+      - '**.mdx'
+      - '**.mjs'
+      - '**.astro'
 
 jobs:
   build:
@@ -38,7 +42,7 @@ jobs:
         run: pnpm test:ci
 
       - name: Build
-        run: pnpm build:demo
+        run: pnpm build:docs
 
       - name: Coveralls
         uses: coverallsapp/github-action@v2

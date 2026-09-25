@@ -1,0 +1,26 @@
+/* ==========================================================================
+   Page layout, matching the old Ng-Doc site: the content column starts right
+   after the sidebar (no centring gap) and grows to fill the space up to the
+   "On this page" column; 56px header; ~19.5rem sidebar.
+   ========================================================================== */
+
+:root {
+	--sl-nav-height: 3.5rem;
+	--sl-sidebar-width: 19.5rem;
+	--sl-content-width: 100%;
+	--sl-content-margin-inline: 0;
+	--sl-content-pad-x: 2.5rem;
+}
+
+@media (min-width: 72rem) {
+	:root {
+		--sl-content-pad-x: 2.5rem;
+	}
+}
+
+/* Starlight centres `.sl-container`; pin it to the start of the main pane instead. */
+.main-pane .sl-container,
+.main-pane > .content-panel > .sl-container {
+	margin-inline: var(--sl-content-margin-inline);
+	max-width: var(--sl-content-width);
+}

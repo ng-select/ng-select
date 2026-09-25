@@ -16,7 +16,8 @@ export class FormsWithOptionsExampleComponent implements OnInit {
 	heroForm: FormGroup;
 
 	ngOnInit() {
-		this.basePath = window.location.host.includes('localhost') ? '' : '/ng-select';
+		// The docs site is served under /ng-select (locally and on GitHub Pages); StackBlitz serves at the root.
+		this.basePath = window.location.pathname.startsWith('/ng-select') ? '/ng-select' : '';
 		this.heroForm = this.fb.group({
 			heroId: 'batman',
 			agree: null,

@@ -1,0 +1,113 @@
+/* ==========================================================================
+   Brand / Starlight accent palette
+   Old brand (src/demo/styles.scss): --ng-select-brand: #667eea (indigo),
+   --ng-select-brand-light: #764ba2 (purple). Re-expressed as Starlight's own
+   3-step accent scale (accent-low / accent / accent-high) instead of custom
+   `--ng-doc-*` variables, since Ng-Doc is gone and Starlight already drives
+   links, the active-nav highlight, etc. off these three variables.
+   ========================================================================== */
+
+/* Dark mode is Starlight's default `:root` (see props.css) — accent sits on a
+   near-black page background, so accent-low is a dark purple tint and
+   accent-high is a light lavender for text-on-dark. */
+:root {
+	--sl-color-accent-low: #2e2a5c;
+	--sl-color-accent: #667eea;
+	--sl-color-accent-high: #c7cdf7;
+}
+
+/* Light mode — accent-low is a light lavender tint, accent is a slightly
+   deepened brand color for AA contrast on white, accent-high is a dark
+   purple for text-on-light (headings, active nav links). */
+:root[data-theme='light'] {
+	--sl-color-accent-low: #e8eafb;
+	--sl-color-accent: #5a6fd6;
+	--sl-color-accent-high: #3c3480;
+}
+
+/* ==========================================================================
+   API reference tables — ported from styles.scss's `ng-doc-page table`
+   rule (renamed to Starlight's markdown content wrapper). Keeps the "Type"
+   column narrow and lets long signatures wrap instead of stretching the
+   table.
+   ========================================================================== */
+
+.sl-markdown-content table td:nth-child(2) {
+	max-width: 420px;
+	min-width: 240px;
+}
+
+.sl-markdown-content table td:nth-child(2) code {
+	white-space: normal;
+	word-break: break-word;
+}
+
+/* ==========================================================================
+   Theme picker — small <select> rendered in the Starlight header next to the
+   dark-mode toggle: <label class="theme-picker"><span class="theme-picker-label">
+   Theme</span><select>…</select></label>
+   ========================================================================== */
+
+.theme-picker {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: var(--sl-text-sm);
+}
+
+.theme-picker-label {
+	color: var(--sl-color-text);
+}
+
+/* Hide the text label on narrow viewports to match how Starlight's own
+   header controls stay icon/control-only on mobile; the <select> alone is
+   still fully usable. */
+@media (max-width: 50em) {
+	.theme-picker-label {
+		display: none;
+	}
+}
+
+.theme-picker select {
+	height: 2rem;
+	padding: 0 0.5rem;
+	border-radius: 0.5rem;
+	border: 1px solid var(--sl-color-gray-5);
+	background: var(--sl-color-bg-nav);
+	color: var(--sl-color-text);
+	font-size: var(--sl-text-sm);
+}
+
+/* ==========================================================================
+   Typography and layout metrics measured on the old Ng-Doc site
+   (body 16px / 24px, h1 36px, h2 26px with 56px top margin, h3 20px,
+   content column ~40rem, sidebar ~19.5rem, table of contents 14px).
+   ========================================================================== */
+
+:root {
+	--sl-line-height: 1.5;
+	--sl-text-h1: 2.25rem;
+	--sl-text-h2: 1.625rem;
+	--sl-text-h3: 1.25rem;
+	--sl-text-h4: 1.125rem;
+	--sl-content-width: 40rem;
+	--sl-sidebar-width: 19.5rem;
+}
+
+.sl-markdown-content h2:not(:where(.not-content *)) {
+	margin-top: 3.5rem;
+}
+
+.sl-markdown-content h3:not(:where(.not-content *)) {
+	margin-top: 2rem;
+}
+
+/* Ng-Doc rendered shell snippets as plain code blocks: drop Expressive Code's terminal title bar. */
+.expressive-code .frame.is-terminal > .header {
+	display: none;
+}
+
+.expressive-code .frame.is-terminal > pre {
+	border-top-left-radius: var(--ec-brdRad);
+	border-top-right-radius: var(--ec-brdRad);
+}

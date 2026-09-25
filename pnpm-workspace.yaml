@@ -7,3 +7,5 @@ allowBuilds:
 overrides:
   esbuild: '0.28.0'
 minimumReleaseAge: 1
+patchedDependencies:
+  '@analogjs/astro-angular@2.8.0-beta.11': patches/@analogjs__astro-angular@2.8.0-beta.11.patch

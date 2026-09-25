@@ -1,0 +1,32 @@
+diff --git a/src/server-ngh.js b/src/server-ngh.js
+index dda06cc02a8a093a07de77386c5e45709c95633d..e446db52326f8609020ac94381c8db6aedb9fd95 100644
+--- a/src/server-ngh.js
++++ b/src/server-ngh.js
+@@ -79,7 +79,10 @@ async function renderToStaticMarkup(Component, props, children, metadata) {
+     // Remove the hydration script, so only one is present on the page.
+     document.getElementById(HYDRATION_SCRIPT_ID)?.remove();
+     const correctedHtml = styleTags + document.body.innerHTML;
+-    platformRef.destroy();
++    // Angular 22 renderApplication already tears the platform down; a second destroy throws NG0404.
++    if (!platformRef.destroyed) {
++    	platformRef.destroy();
++    }
+     return { html: correctedHtml };
+ }
+ export default {
+diff --git a/src/server.js b/src/server.js
+index 77bf36ddabf633a714bbeb05a61c52629e8a7c46..da9117a545f075df83026e0109d90b8502e23701 100644
+--- a/src/server.js
++++ b/src/server.js
+@@ -47,7 +47,10 @@ async function renderToStaticMarkup(Component, props, children) {
+         }
+     });
+     const correctedHtml = styleTags + document.body.innerHTML;
+-    platformRef.destroy();
++    // Angular 22 renderApplication already tears the platform down; a second destroy throws NG0404.
++    if (!platformRef.destroyed) {
++    	platformRef.destroy();
++    }
+     return { html: correctedHtml };
+ }
+ export default {

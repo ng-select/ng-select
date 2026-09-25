@@ -66,11 +66,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: build demo
-        run: pnpm build:demo
+      - name: build docs
+        run: pnpm build:docs
 
-      - name: Deploy demo 🚀
+      - name: Deploy docs 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v4
         with:
           branch: gh-pages
-          folder: dist/demo/browser
+          folder: dist/docs

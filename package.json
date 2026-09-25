@@ -1,77 +1,79 @@
 {
-  "repository": "ng-select/ng-select",
-  "scripts": {
-    "ng": "ng",
-    "build": "ng build ng-select && ng build ng-option-highlight && pnpm build:themes && pnpm copy-sass",
-    "build:demo": "ng build demo --configuration production",
-    "build:themes": "sass --style=compressed src/ng-select/themes/:dist/ng-select/themes",
-    "copy-sass": "mkdir -p dist/ng-select/scss && cp src/ng-select/**/*.scss dist/ng-select/scss",
-    "start": "ng serve",
-    "test:watch": "ng test ng-select --watch",
-    "test": "ng test ng-select --coverage && ng test ng-option-highlight --coverage",
-    "test:zone": "ng run ng-select:test-zone && ng run ng-option-highlight:test-zone",
-    "test:ci": "ng test ng-select --watch=false --coverage && ng test ng-option-highlight --watch=false --coverage && ng run ng-select:test-zone --watch=false && ng run ng-option-highlight:test-zone --watch=false",
-    "lint": "ng lint ng-select && ng lint ng-option-highlight",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "postpublish": "cp dist/ng-select/package.json src/ng-select && cp dist/ng-option-highlight/package.json src/ng-option-highlight",
-    "release": "semantic-release"
-  },
-  "release": {
-    "branch": "master",
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/changelog",
-      "@semantic-release/github",
-      [
-        "@semantic-release/npm",
-        {
-          "pkgRoot": "dist/ng-select"
-        }
-      ],
-      "@semantic-release/release-notes-generator"
-    ]
-  },
-  "dependencies": {
-    "@angular/cdk": "22.2.0",
-    "@angular/common": "^22.2.0",
-    "@angular/compiler": "^22.2.0",
-    "@angular/core": "^22.2.0",
-    "@angular/forms": "^22.2.0",
-    "@angular/localize": "^22.2.0",
-    "@angular/platform-browser": "^22.2.0",
-    "@angular/router": "^22.2.0",
-    "@ng-bootstrap/ng-bootstrap": "21.0.0",
-    "@popperjs/core": "2.11.8",
-    "bootstrap": "^5.3.8",
-    "rxjs": "^7.8.2",
-    "tslib": "^2.8.1",
-    "zone.js": "~0.16.3"
-  },
-  "devDependencies": {
-    "@angular/build": "^22.2.0",
-    "@angular/cli": "^22.2.0",
-    "@angular/compiler-cli": "^22.2.0",
-    "@angular/language-service": "^22.2.0",
-    "@eslint/js": "^10.0.1",
-    "@ng-doc/app": "22.0.0-beta.2",
-    "@ng-doc/builder": "22.0.0-beta.2",
-    "@ng-doc/core": "22.0.0-beta.2",
-    "@ng-doc/ui-kit": "22.0.0-beta.2",
-    "@semantic-release/changelog": "^7.0.0",
-    "@stackblitz/sdk": "^1.11.1",
-    "@types/node": "^26.6.2",
-    "@vitest/browser-playwright": "^5.0.2",
-    "@vitest/coverage-v8": "^5.0.2",
-    "angular-eslint": "22.5.0",
-    "eslint": "10.11.0",
-    "ng-packagr": "^22.2.1",
-    "playwright": "^1.63.0",
-    "prettier": "^3.9.9",
-    "sass": "^1.105.0",
-    "semantic-release": "^25.0.9",
-    "typescript": "~6.0.3",
-    "typescript-eslint": "8.70.1",
-    "vitest": "^5.0.2"
-  }
+	"repository": "ng-select/ng-select",
+	"scripts": {
+		"ng": "ng",
+		"build": "ng build ng-select && ng build ng-option-highlight && pnpm build:themes && pnpm copy-sass",
+		"build:docs": "astro build --root website",
+		"build:themes": "sass --style=compressed src/ng-select/themes/:dist/ng-select/themes",
+		"copy-sass": "mkdir -p dist/ng-select/scss && cp src/ng-select/**/*.scss dist/ng-select/scss",
+		"start": "astro dev --root website --port 4300",
+		"docs:preview": "astro preview --root website",
+		"test:watch": "ng test ng-select --watch",
+		"test": "ng test ng-select --coverage && ng test ng-option-highlight --coverage",
+		"test:zone": "ng run ng-select:test-zone && ng run ng-option-highlight:test-zone",
+		"test:ci": "ng test ng-select --watch=false --coverage && ng test ng-option-highlight --watch=false --coverage && ng run ng-select:test-zone --watch=false && ng run ng-option-highlight:test-zone --watch=false",
+		"lint": "ng lint ng-select && ng lint ng-option-highlight",
+		"format": "prettier --write .",
+		"format:check": "prettier --check .",
+		"postpublish": "cp dist/ng-select/package.json src/ng-select && cp dist/ng-option-highlight/package.json src/ng-option-highlight",
+		"release": "semantic-release"
+	},
+	"release": {
+		"branch": "master",
+		"plugins": [
+			"@semantic-release/commit-analyzer",
+			"@semantic-release/changelog",
+			"@semantic-release/github",
+			[
+				"@semantic-release/npm",
+				{
+					"pkgRoot": "dist/ng-select"
+				}
+			],
+			"@semantic-release/release-notes-generator"
+		]
+	},
+	"dependencies": {
+		"@angular/cdk": "22.2.0",
+		"@angular/common": "^22.2.0",
+		"@angular/compiler": "^22.2.0",
+		"@angular/core": "^22.2.0",
+		"@angular/forms": "^22.2.0",
+		"@angular/platform-browser": "^22.2.0",
+		"@angular/router": "^22.2.0",
+		"@ng-bootstrap/ng-bootstrap": "21.0.0",
+		"@popperjs/core": "2.11.8",
+		"bootstrap": "^5.3.8",
+		"rxjs": "^7.8.2",
+		"tslib": "^2.8.1",
+		"zone.js": "~0.16.3"
+	},
+	"devDependencies": {
+		"@analogjs/astro-angular": "^2.8.0-beta.11",
+		"@analogjs/vite-plugin-angular": "^2.8.0-beta.11",
+		"@angular/build": "^22.2.0",
+		"@angular/cli": "^22.2.0",
+		"@angular/compiler-cli": "^22.2.0",
+		"@angular/language-service": "^22.2.0",
+		"@astrojs/mdx": "^8.0.2",
+		"@astrojs/starlight": "^0.42.4",
+		"@eslint/js": "^10.0.1",
+		"@semantic-release/changelog": "^7.0.0",
+		"@stackblitz/sdk": "^1.11.1",
+		"@types/node": "^26.6.2",
+		"@vitest/browser-playwright": "^5.0.2",
+		"@vitest/coverage-v8": "^5.0.2",
+		"angular-eslint": "22.5.0",
+		"astro": "^7.3.5",
+		"eslint": "10.11.0",
+		"ng-packagr": "^22.2.1",
+		"playwright": "^1.63.0",
+		"prettier": "^3.9.9",
+		"prettier-plugin-astro": "^1.1.0",
+		"sass": "^1.105.0",
+		"semantic-release": "^25.0.9",
+		"typescript": "~6.0.3",
+		"typescript-eslint": "8.70.1",
+		"vitest": "^5.0.2"
+	}
 }

@@ -1,0 +1,199 @@
+/* ==========================================================================
+   Starlight page chrome around the landing page (splash template).
+   The PageTitle override renders nothing on splash, but Starlight still emits
+   its (now empty) title ContentPanel, which adds 48px of padding and a
+   hairline border above the hero. Old Ng-Doc home had neither, nor a page
+   footer, and used a 1100px column with 24px gutters at every width.
+   This file is only bundled on the landing page.
+   ========================================================================== */
+
+main:has(.home-container) {
+	padding-bottom: 0;
+}
+
+main:has(.home-container) > .content-panel:not(:has(.home-container)) {
+	display: none;
+}
+
+.content-panel:has(.home-container) {
+	border-top: 0;
+	padding-inline: 1.5rem;
+}
+
+.content-panel:has(.home-container) > .sl-container {
+	max-width: none;
+}
+
+.content-panel:has(.home-container) > .sl-container > footer {
+	display: none;
+}
+
+/* ==========================================================================
+   Landing page (ported from src/demo/app/home/home.component.scss).
+   Ng-Doc tokens mapped to the closest Starlight gray per theme:
+   muted text  old #919191 / dark #818181
+   borders     old #dedede / dark #3f3f3f
+   headings    old #111111 / dark #e3e3e3
+   ========================================================================== */
+
+.home-container {
+	--landing-muted: var(--sl-color-gray-3);
+	--landing-border: var(--sl-color-gray-5);
+	--landing-border-hover: var(--sl-color-gray-4);
+	--landing-heading: var(--sl-color-white);
+
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 2rem;
+	width: 100%;
+}
+
+:root[data-theme='light'] .home-container {
+	--landing-muted: var(--sl-color-gray-4);
+	--landing-border: color-mix(in srgb, var(--sl-color-gray-5) 35%, var(--sl-color-gray-6));
+	--landing-border-hover: var(--sl-color-gray-5);
+}
+
+.home-container .hero-section {
+	text-align: center;
+	padding: 4rem 0 3rem;
+}
+
+.home-container .hero-title {
+	font-size: 3.5rem;
+	font-weight: 700;
+	margin-bottom: 1.5rem;
+	line-height: 1.2;
+}
+
+.home-container .hero-title .logo-text {
+	background: linear-gradient(135deg, var(--ng-select-brand, #667eea) 0%, var(--ng-select-brand-light, #764ba2) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.home-container .hero-description {
+	font-size: 1.25rem;
+	color: var(--landing-muted);
+	margin: 0 auto 2rem;
+	max-width: 700px;
+	line-height: 1.6;
+}
+
+.home-container .hero-actions {
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.home-container .btn {
+	padding: 0.75rem 1.5rem;
+	border-radius: 0.5rem;
+	text-decoration: none;
+	font-weight: 500;
+	transition: all 0.2s ease;
+	display: inline-block;
+	border: none;
+	cursor: pointer;
+	font-size: 1rem;
+}
+
+/* Old demo app's global `.btn + .btn { margin-left: 5px }` (Bootstrap), on top of the 1rem flex gap. */
+.home-container .btn + .btn {
+	margin-left: 5px;
+}
+
+.home-container .btn-primary {
+	background: linear-gradient(135deg, var(--ng-select-brand, #667eea) 0%, var(--ng-select-brand-light, #764ba2) 100%);
+	color: white;
+}
+
+.home-container .btn-primary:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+	color: white;
+}
+
+.home-container .btn-secondary {
+	background: transparent;
+	color: var(--sl-color-text, #333);
+	border: 2px solid var(--landing-border);
+}
+
+.home-container .btn-secondary:hover {
+	background: var(--sl-color-bg-nav);
+	border-color: var(--landing-border-hover);
+}
+
+.home-container .hero-demo {
+	max-width: 420px;
+	margin: 3rem auto 0;
+	text-align: left;
+}
+
+.home-container .features-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 1.25rem;
+	padding: 2rem 0 4rem;
+}
+
+.home-container .feature-card {
+	padding: 1.5rem;
+	border: 1px solid var(--landing-border);
+	border-radius: 0.75rem;
+	background: var(--sl-color-bg);
+	transition:
+		transform 0.2s ease,
+		box-shadow 0.2s ease,
+		border-color 0.2s ease;
+}
+
+.home-container .feature-card:hover {
+	transform: translateY(-3px);
+	border-color: var(--ng-select-brand, #667eea);
+	box-shadow: 0 6px 18px rgba(102, 126, 234, 0.12);
+}
+
+.home-container .feature-card .feature-icon {
+	font-size: 1.75rem;
+	margin-bottom: 0.5rem;
+}
+
+.home-container .feature-card h3 {
+	font-size: 1.05rem;
+	font-weight: 600;
+	line-height: 1.2;
+	margin-bottom: 0.4rem;
+	color: var(--landing-heading);
+}
+
+.home-container .feature-card p {
+	font-size: 0.92rem;
+	color: var(--landing-muted);
+	line-height: 1.5;
+	margin: 0;
+}
+
+@media (max-width: 768px) {
+	.home-container .hero-title {
+		font-size: 2.5rem;
+	}
+
+	.home-container .hero-description {
+		font-size: 1.1rem;
+	}
+
+	.home-container .hero-actions {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.home-container .hero-actions .btn {
+		width: 100%;
+		margin-left: 0;
+		text-align: center;
+	}
+}

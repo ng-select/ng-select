@@ -5,5 +5,16 @@
 	"semi": true,
 	"bracketSameLine": true,
 	"useTabs": true,
-	"endOfLine": "auto"
+	"endOfLine": "auto",
+	"plugins": [
+		"prettier-plugin-astro"
+	],
+	"overrides": [
+		{
+			"files": "*.astro",
+			"options": {
+				"parser": "astro"
+			}
+		}
+	]
 }

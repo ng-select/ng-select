@@ -1,0 +1,240 @@
+/* ==========================================================================
+   Demo wrapper (website/src/components/Demo.astro)
+   Mirrors the old Ng-Doc demo block: a bordered card with the live example, a
+   "</>" toggle in the corner that reveals the source tabs, and a small
+   "Edit in StackBlitz" link underneath. Bootstrap classes used inside the
+   examples come from bootstrap.scss; ng-select themes from ng-select-themes.scss.
+   ========================================================================== */
+
+.ng-demo {
+	margin: 1rem 0 0.25rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 8px;
+	background: var(--sl-color-bg);
+	position: relative;
+}
+
+.ng-demo__preview {
+	padding: 1.25rem 1.25rem 1.25rem;
+	/* Starlight's content typography must not leak into the Angular examples. */
+	line-height: 1.5;
+	font-size: 1rem;
+}
+
+.ng-demo__preview :is(p, label, pre, hr, h6, ul, div) {
+	margin-top: 0;
+}
+
+.ng-demo__preview p,
+.ng-demo__preview pre {
+	margin-bottom: 1rem;
+}
+
+.ng-demo__preview label {
+	display: inline-block;
+	margin-bottom: 0.5rem;
+}
+
+.ng-demo__preview pre {
+	font-size: 0.875em;
+	white-space: pre-wrap;
+	padding: 0;
+	background: none;
+	border: 0;
+}
+
+.ng-demo__preview hr {
+	margin: 1rem 0;
+	border: 0;
+	border-top: 1px solid var(--sl-color-hairline);
+	opacity: 0.6;
+}
+
+.ng-demo__preview h6 {
+	font-size: 1rem;
+	font-weight: 500;
+	line-height: 1.2;
+	margin: 0 0 0.5rem;
+	color: inherit;
+}
+
+.ng-demo__preview img {
+	display: inline;
+	vertical-align: middle;
+}
+
+.ng-demo__preview code {
+	font-size: 0.875em;
+	color: #d63384;
+	background: none;
+	padding: 0;
+	word-wrap: break-word;
+}
+
+.ng-demo__preview ul {
+	padding-left: 2rem;
+	margin-bottom: 1rem;
+}
+
+.ng-demo__preview small {
+	font-size: 0.875em;
+}
+
+/* "</>" toggle in the card's top-right corner. */
+.ng-demo__toolbar {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.5rem;
+	display: flex;
+	gap: 0.25rem;
+	z-index: 1;
+}
+
+.ng-demo__toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 6px;
+	border: 1px solid transparent;
+	background: transparent;
+	color: var(--sl-color-gray-2);
+	cursor: pointer;
+	padding: 0;
+}
+
+.ng-demo__toggle:hover,
+.ng-demo__toggle[aria-expanded='true'] {
+	background: var(--sl-color-gray-6);
+	color: var(--sl-color-text);
+	border-color: var(--sl-color-gray-5);
+}
+
+.ng-demo__toggle svg {
+	width: 1rem;
+	height: 1rem;
+}
+
+.ng-demo__source {
+	border-top: 1px solid var(--sl-color-gray-5);
+	background: var(--sl-color-gray-7, var(--sl-color-gray-6));
+}
+
+.ng-demo__source[hidden] {
+	display: none;
+}
+
+.ng-demo__source starlight-tabs {
+	margin: 0;
+}
+
+.ng-demo__source starlight-tabs > .tablist-wrapper {
+	padding: 0 0.75rem;
+	background: var(--sl-color-gray-6);
+}
+
+.ng-demo__source starlight-tabs > .tablist-wrapper ul {
+	border-bottom: 0;
+}
+
+.ng-demo__source starlight-tabs > [role='tabpanel'] {
+	margin-top: 0;
+}
+
+.ng-demo__source .expressive-code {
+	margin: 0;
+}
+
+.ng-demo__source .expressive-code .frame {
+	border-radius: 0 0 8px 8px;
+	box-shadow: none;
+}
+
+.ng-demo__source .expressive-code pre {
+	border: 0;
+	border-radius: 0 0 8px 8px;
+}
+
+/* ng-select's dropdown panel renders in the CDK overlay on <body>, outside the card. */
+.ng-dropdown-panel {
+	line-height: 1.5;
+	font-size: 1rem;
+}
+
+.ng-dropdown-panel img {
+	display: inline;
+	vertical-align: middle;
+}
+
+/* "Edit in StackBlitz" link under the card (StackblitzButton.astro). */
+.stackblitz {
+	display: block;
+	margin: 4px 0 24px;
+}
+
+.stackblitz-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	cursor: pointer;
+	text-decoration: none;
+	background: none;
+	border: 0;
+	padding: 0;
+	color: var(--sl-color-text-accent);
+	font-family: inherit;
+}
+
+.stackblitz-link:hover {
+	text-decoration: underline;
+}
+
+.stackblitz-link svg {
+	vertical-align: sub;
+}
+
+/* Ng-Doc gave table header rows a tinted background. */
+.sl-markdown-content table thead th {
+	background: var(--sl-color-gray-6);
+}
+
+/* Ng-Doc's "On this page" list had no "Overview" entry for the page title. */
+starlight-toc a[href='#_top'],
+mobile-starlight-toc a[href='#_top'] {
+	display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Remaining global rules ported from the old src/demo/styles.scss
+   -------------------------------------------------------------------------- */
+
+/* Validation state used by the forms examples. */
+ng-select.ng-invalid.ng-touched .ng-select-container {
+	border-color: #dc3545;
+	box-shadow:
+		inset 0 1px 1px rgba(0, 0, 0, 0.075),
+		0 0 0 3px #fde6e8;
+}
+
+.ng-demo .btn + .btn {
+	margin-left: 5px;
+}
+
+.ng-demo .card {
+	box-shadow:
+		0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+		0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+		0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+	border: 0;
+	border-radius: 4px;
+}
+
+.ng-demo .card label {
+	margin-bottom: 5px;
+}
+
+.ng-demo .card-body .form-group {
+	margin-bottom: 0;
+}
