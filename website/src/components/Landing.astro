@@ -1,0 +1,50 @@
+---
+import { HeroSelectComponent } from '../angular/hero-select.component.ts';
+import '../styles/landing.css';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const features = [
+	{ icon: '📶', title: 'Angular Forms support', text: 'Use Signal Forms with formField, Reactive Forms or Template-driven Forms.' },
+	{ icon: '🔗', title: 'Flexible bindings', text: 'Bind to primitives, objects, or nested properties with bindLabel and bindValue.' },
+	{ icon: '🧩', title: 'Custom templates', text: 'Replace labels, options, headers, footers and more with your own templates.' },
+	{ icon: '⚡', title: 'Virtual scroll', text: 'Smoothly render thousands of options with built-in virtual scrolling.' },
+	{ icon: '🔍', title: 'Typeahead search', text: 'Client and server-side filtering, autocomplete and custom search functions.' },
+	{ icon: '🏷️', title: 'Tags & multiselect', text: 'Create options on the fly, select multiple values, group items.' },
+	{ icon: '♿', title: 'Accessible', text: 'Keyboard navigation and ARIA support out of the box, zoneless-ready.' },
+];
+---
+
+<div class="home-container not-content">
+	<section class="hero-section">
+		<h1 class="hero-title" id="_top">
+			<span class="logo-text">ng-select</span>
+		</h1>
+		<p class="hero-description">
+			Lightweight all-in-one UI select, multiselect and autocomplete component for Angular, with Signal Forms, Reactive Forms and Template-driven Forms support.
+		</p>
+		<div class="hero-actions">
+			<a href={`${base}/getting-started/installation/`} class="btn btn-primary">
+				Get Started
+			</a>
+			<a href={`${base}/examples/data-sources/`} class="btn btn-secondary">
+				Examples
+			</a>
+			<a href="https://github.com/ng-select/ng-select" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+				View on GitHub
+			</a>
+		</div>
+
+		<HeroSelectComponent client:load />
+	</section>
+
+	<section class="features-grid">
+		{features.map((feature) => (
+			<div class="feature-card">
+				<div class="feature-icon">{feature.icon}</div>
+				<h3>{feature.title}</h3>
+				<p>{feature.text}</p>
+			</div>
+		))}
+	</section>
+</div>

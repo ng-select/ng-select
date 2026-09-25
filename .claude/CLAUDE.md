@@ -27,4 +27,4 @@ Prefer [`verify`](./skills/verify/SKILL.md). Use **pnpm**:
 - **Trivial/medium:** `pnpm lint` + `pnpm run build` (skip tests unless asked).
 - **Large / library behavior:** also run affected tests (`pnpm exec ng test ng-select --watch=false` or `pnpm test:ci`); review with Opus or Fable.
 - **Full suite:** only on request or as DoD for substantial changes (see AGENTS.md).
-- **Demo:** `preview_start {name: "demo"}` (`.claude/launch.json`, port 4300).
+- **Docs site:** `preview_start {name: "docs"}` (`.claude/launch.json`, port 4300). For docs-only changes, `pnpm build:docs` verifies the Astro build.

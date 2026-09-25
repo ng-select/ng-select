@@ -1,0 +1,14 @@
+{
+	"extends": "astro/tsconfigs/base",
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@components/*": ["src/components/*"],
+			"@examples/*": ["../src/demo/app/examples/*"],
+			"@ng-select/ng-select": ["../src/ng-select/public-api.ts"],
+			"@ng-select/ng-option-highlight": ["../src/ng-option-highlight/public-api.ts"]
+		}
+	},
+	"include": [".astro/types.d.ts", "src/**/*"],
+	"exclude": ["dist"]
+}

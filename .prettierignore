@@ -1,3 +1,5 @@
 /dist
 .angular
 src/assets/css/vendor
+website/.astro
+pnpm-lock.yaml

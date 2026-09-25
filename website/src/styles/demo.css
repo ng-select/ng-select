@@ -1,0 +1,229 @@
+/* ==========================================================================
+   Demo wrapper (website/src/components/Demo.astro)
+   Mirrors the old Ng-Doc demo block: a bordered card with the live example, a
+   "</>" toggle in the corner that reveals the source tabs, and a small
+   "Edit in StackBlitz" link underneath. Bootstrap classes used inside the
+   examples come from bootstrap.scss; ng-select themes from ng-select-themes.scss.
+   Metrics measured on the live Ng-Doc demo: 1px border / 8px radius card,
+   16px padding, a 32px control column on the right, 24px block spacing.
+   Colors come from the palette tokens in custom.css.
+   ========================================================================== */
+
+.ng-demo {
+	margin: 1.5rem 0;
+	border: 1px solid var(--ng-border);
+	border-radius: 8px;
+	background: var(--sl-color-bg);
+	position: relative;
+}
+
+.ng-demo__preview {
+	/* 16px all round plus the 32px "</>" control column on the right. */
+	padding: 1rem 3rem 1rem 1rem;
+	/* Starlight's content typography must not leak into the Angular examples. */
+	line-height: 1.5;
+	font-size: 1rem;
+}
+
+.ng-demo__preview :is(p, label, pre, hr, h6, ul, div) {
+	margin-top: 0;
+}
+
+.ng-demo__preview p,
+.ng-demo__preview pre {
+	margin-bottom: 1rem;
+}
+
+.ng-demo__preview label {
+	display: inline-block;
+	margin-bottom: 0.5rem;
+}
+
+.ng-demo__preview pre {
+	font-size: 0.875em;
+	white-space: pre-wrap;
+	padding: 0;
+	background: none;
+	border: 0;
+}
+
+.ng-demo__preview hr {
+	margin: 1rem 0;
+	border: 0;
+	border-top: 1px solid var(--sl-color-hairline);
+	opacity: 0.6;
+}
+
+.ng-demo__preview h6 {
+	font-size: 1rem;
+	font-weight: 500;
+	line-height: 1.2;
+	margin: 0 0 0.5rem;
+	color: inherit;
+}
+
+.ng-demo__preview img {
+	display: inline;
+	vertical-align: middle;
+}
+
+.ng-demo__preview code {
+	font-size: 0.875em;
+	color: #d63384;
+	background: none;
+	padding: 0;
+	word-wrap: break-word;
+}
+
+.ng-demo__preview ul {
+	padding-left: 2rem;
+	margin-bottom: 1rem;
+}
+
+.ng-demo__preview small {
+	font-size: 0.875em;
+}
+
+/* "</>" toggle in the card's top-right corner (Ng-Doc ghost icon button). */
+.ng-demo__toolbar {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	display: flex;
+	gap: 0.25rem;
+	z-index: 1;
+}
+
+.ng-demo__toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 8px;
+	border: 0;
+	background: transparent;
+	color: var(--sl-color-text);
+	cursor: pointer;
+	padding: 0;
+}
+
+/* Ng-Doc only gave the button a hover fill; the expanded state was unstyled. */
+.ng-demo__toggle:hover {
+	background: var(--ng-base-2);
+}
+
+.ng-demo__toggle svg {
+	width: 1rem;
+	height: 1rem;
+}
+
+/* Source tabs: bar, tab and panel-rule styling is shared with the content
+   <Tabs> in custom.css; only the card-specific parts are here. */
+.ng-demo__source {
+	border-top: 1px solid var(--ng-border);
+	background: var(--ng-base-1);
+}
+
+.ng-demo__source[hidden] {
+	display: none;
+}
+
+.ng-demo__source starlight-tabs {
+	margin: 0;
+}
+
+/* Inner radius of the 8px card (minus its 1px border); Ng-Doc capped the code at 400px. */
+.ng-demo__source .expressive-code :is(.frame, pre) {
+	border-radius: 0 0 7px 7px;
+}
+
+.ng-demo__source .expressive-code pre {
+	max-height: 400px;
+	overflow-y: auto;
+}
+
+/* ng-select's dropdown panel renders in the CDK overlay on <body>, outside the card. */
+.ng-dropdown-panel {
+	line-height: 1.5;
+	font-size: 1rem;
+}
+
+.ng-dropdown-panel img {
+	display: inline;
+	vertical-align: middle;
+}
+
+/* "Edit in StackBlitz" link under the card (StackblitzButton.astro) — 24px
+   below the card and Bootstrap's link blue in both modes, as on the old site. */
+.stackblitz {
+	display: block;
+	margin: 1.5rem 0;
+}
+
+.stackblitz-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	cursor: pointer;
+	text-decoration: none;
+	background: none;
+	border: 0;
+	padding: 0;
+	color: #0d6efd;
+	line-height: 1.5;
+	font-family: inherit;
+}
+
+.stackblitz-link:hover {
+	text-decoration: underline;
+}
+
+.stackblitz-link svg {
+	vertical-align: sub;
+}
+
+/* Ng-Doc gave table header rows a base-1 background (see the table rules in custom.css). */
+.sl-markdown-content table thead th {
+	background: var(--ng-base-1);
+}
+
+/* Ng-Doc's "On this page" list had no "Overview" entry for the page title. */
+starlight-toc a[href='#_top'],
+mobile-starlight-toc a[href='#_top'] {
+	display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Remaining global rules ported from the old src/demo/styles.scss
+   -------------------------------------------------------------------------- */
+
+/* Validation state used by the forms examples. */
+ng-select.ng-invalid.ng-touched .ng-select-container {
+	border-color: #dc3545;
+	box-shadow:
+		inset 0 1px 1px rgba(0, 0, 0, 0.075),
+		0 0 0 3px #fde6e8;
+}
+
+.ng-demo .btn + .btn {
+	margin-left: 5px;
+}
+
+.ng-demo .card {
+	box-shadow:
+		0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+		0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+		0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+	border: 0;
+	border-radius: 4px;
+}
+
+.ng-demo .card label {
+	margin-bottom: 5px;
+}
+
+.ng-demo .card-body .form-group {
+	margin-bottom: 0;
+}

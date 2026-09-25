@@ -2,9 +2,9 @@
 	"version": "0.0.1",
 	"configurations": [
 		{
-			"name": "demo",
+			"name": "docs",
 			"runtimeExecutable": "pnpm",
-			"runtimeArgs": ["ng", "serve", "--port", "4300"],
+			"runtimeArgs": ["exec", "astro", "dev", "--root", "website", "--port", "4300"],
 			"port": 4300,
 			"autoPort": true
 		}

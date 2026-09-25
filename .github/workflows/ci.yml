@@ -7,6 +7,10 @@ on:
       - '**.ts'
       - '**.html'
       - '**.scss'
+      - 'website/**'
+      - '**.mdx'
+      - '**.mjs'
+      - '**.astro'
 
 jobs:
   build:
@@ -17,7 +21,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
         with:
-          version: 10
+          version: 12
 
       - name: Use Node.js
         uses: actions/setup-node@v6
@@ -38,7 +42,7 @@ jobs:
         run: pnpm test:ci
 
       - name: Build
-        run: pnpm build:demo
+        run: pnpm build:docs
 
       - name: Coveralls
         uses: coverallsapp/github-action@v2
