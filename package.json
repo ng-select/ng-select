@@ -47,7 +47,6 @@
     "@angular/platform-browser": "^22.2.0",
     "@angular/platform-browser-dynamic": "^22.2.0",
     "@angular/router": "^22.2.0",
-    "@angular/ssr": "^22.2.0",
     "@ng-bootstrap/ng-bootstrap": "21.0.0",
     "@popperjs/core": "2.11.8",
     "bootstrap": "^5.3.8",
@@ -84,7 +83,7 @@
     "sass": "^1.105.0",
     "semantic-release": "^25.0.9",
     "standard-version": "^9.5.0",
-    "typescript": "~7.0.2",
+    "typescript": "~6.0.3",
     "typescript-eslint": "8.70.1",
     "vitest": "^5.0.2"
   }
