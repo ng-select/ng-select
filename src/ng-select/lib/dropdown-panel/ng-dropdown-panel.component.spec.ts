@@ -198,6 +198,12 @@ describe('NgDropdownPanelComponent', () => {
 		await waitForFrames();
 	}
 
+	/** Collects `NG0953` warnings (emit on a destroyed `OutputRef`) logged after the spy is installed. */
+	function spyOnDestroyedOutputWarnings() {
+		const warn = vi.spyOn(console, 'warn');
+		return () => warn.mock.calls.filter(([message]) => String(message).includes('NG0953'));
+	}
+
 	afterEach(async () => {
 		// Let pending outside-zone microtasks from item changes settle while the fixture is still alive
 		await flushAsync();
@@ -681,11 +687,6 @@ describe('NgDropdownPanelComponent', () => {
 
 		// https://github.com/ng-select/ng-select/issues/2869
 		describe('when destroyed while a render is pending (#2869)', () => {
-			function spyOnDestroyedOutputWarnings() {
-				const warn = vi.spyOn(console, 'warn');
-				return () => warn.mock.calls.filter(([message]) => String(message).includes('NG0953'));
-			}
-
 			it('should not emit or reposition from the pending range update', async () => {
 				const overlayRef = createFakeOverlayRef();
 				createFixture((host) => {
@@ -731,6 +732,32 @@ describe('NgDropdownPanelComponent', () => {
 				await waitForFrames();
 
 				expect(destroyedOutputWarnings()).toEqual([]);
+			});
+
+			it('should settle the measurement promise when destroyed before the retry frame', async () => {
+				const cmp = createFixture((host) => {
+					host.virtualScroll.set(true);
+					host.renderItems = false;
+				});
+				const measured: Promise<unknown> = (cmp as any)._measureDimensions();
+				fixture.destroy();
+
+				const outcome = await Promise.race([measured.then(() => 'settled'), waitForFrames().then(() => 'pending')]);
+				expect(outcome).toBe('settled');
+			});
+
+			it('should ignore scrollTo after destroy', async () => {
+				const cmp = createFixture((host) => host.virtualScroll.set(true));
+				await flushAsync();
+				fixture.detectChanges();
+				const destroyedOutputWarnings = spyOnDestroyedOutputWarnings();
+				const scrollEventsBefore = host.scrollEvents.length;
+
+				fixture.destroy();
+				expect(() => cmp.scrollTo(host.items()[20])).not.toThrow();
+
+				expect(destroyedOutputWarnings()).toEqual([]);
+				expect(host.scrollEvents.length).toBe(scrollEventsBefore);
 			});
 		});
 	});
@@ -927,6 +954,35 @@ describe('NgDropdownPanelComponent', () => {
 			await waitForFrames();
 
 			expect(host.outsideScrollCount).toBe(1);
+		});
+
+		// https://github.com/ng-select/ng-select/issues/2869
+		it('should not reposition the overlay from a document scroll pending at destroy (#2869)', async () => {
+			const overlayRef = createFakeOverlayRef();
+			createFixture((host) => host.overlayRef.set(overlayRef as unknown as OverlayRef));
+			await flushAsync();
+			await waitForFrames();
+			overlayRef.updatePosition.mockClear();
+
+			document.dispatchEvent(new Event('scroll'));
+			fixture.destroy();
+			await waitForFrames();
+
+			expect(overlayRef.updatePosition).not.toHaveBeenCalled();
+		});
+
+		it('should not emit outsideScroll from a document scroll pending at destroy (#2869)', async () => {
+			createFixture((host) => host.closeOnScroll.set(true));
+			await flushAsync();
+			await waitForFrames();
+			const destroyedOutputWarnings = spyOnDestroyedOutputWarnings();
+
+			document.dispatchEvent(new Event('scroll'));
+			fixture.destroy();
+			await waitForFrames();
+
+			expect(host.outsideScrollCount).toBe(0);
+			expect(destroyedOutputWarnings()).toEqual([]);
 		});
 	});
 

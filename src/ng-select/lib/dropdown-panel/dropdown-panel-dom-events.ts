@@ -146,7 +146,8 @@ export class DropdownPanelDomEvents {
 			const subscribe = () =>
 				// Capture sees window and arbitrary ancestor scroll containers, even without cdkScrollable.
 				fromEvent(document, 'scroll', { capture: true, passive: true })
-					.pipe(takeUntilDestroyed(destroyRef), auditTime(0, EVENT_SCHEDULER))
+					// takeUntilDestroyed last: audit flushes its pending value on completion (#2869)
+					.pipe(auditTime(0, EVENT_SCHEDULER), takeUntilDestroyed(destroyRef))
 					.subscribe((event) => {
 						const target = event.target as Node | null;
 						if (target && dropdown.contains(target)) {
