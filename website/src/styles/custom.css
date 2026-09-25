@@ -1,28 +1,82 @@
 /* ==========================================================================
-   Brand / Starlight accent palette
-   Old brand (src/demo/styles.scss): --ng-select-brand: #667eea (indigo),
-   --ng-select-brand-light: #764ba2 (purple). Re-expressed as Starlight's own
-   3-step accent scale (accent-low / accent / accent-high) instead of custom
-   `--ng-doc-*` variables, since Ng-Doc is gone and Starlight already drives
-   links, the active-nav highlight, etc. off these three variables.
+   Palette — matched to the live Ng-Doc site (computed styles measured on
+   https://ng-select.github.io/ng-select, light and dark).
+   Ng-Doc used neutral (hue-less) grays and a single primary color; Starlight's
+   gray scale and accent are remapped onto those values so that everything
+   Starlight derives from them (text, headings, borders, nav, Expressive Code
+   frames) lands on the old colors. `--ng-*` tokens cover the Ng-Doc surfaces
+   Starlight has no variable for (base-1/base-2 fills, sidebar dots, links).
+
+   Every light value lives in `:root[data-theme='light']`: these rules are
+   unlayered, so a plain `:root` declaration would also beat Starlight's
+   layered light-mode block.
    ========================================================================== */
 
-/* Dark mode is Starlight's default `:root` (see props.css) — accent sits on a
-   near-black page background, so accent-low is a dark purple tint and
-   accent-high is a light lavender for text-on-dark. */
+/* Dark mode (Starlight's default `:root`) — Ng-Doc dark theme: #292929 page,
+   #a9a9a9 text, #e3e3e3 headings, #faab00 primary, #30a5ff links. */
 :root {
-	--sl-color-accent-low: #2e2a5c;
-	--sl-color-accent: #667eea;
-	--sl-color-accent-high: #c7cdf7;
+	--sl-color-accent-low: #3d3219;
+	--sl-color-accent: #faab00;
+	--sl-color-accent-high: #faab00;
+
+	--sl-color-white: #e3e3e3;
+	--sl-color-gray-1: #c6c6c6;
+	--sl-color-gray-2: #a9a9a9;
+	--sl-color-gray-3: #818181;
+	--sl-color-gray-4: #595959;
+	--sl-color-gray-5: #3f3f3f;
+	--sl-color-gray-6: #303030;
+	--sl-color-black: #292929;
+
+	/* Ng-Doc painted header and sidebar with the page background. */
+	--sl-color-bg-nav: var(--sl-color-bg);
+	--sl-color-bg-sidebar: var(--sl-color-bg);
+
+	--ng-base-1: #303030;
+	--ng-base-2: #373737;
+	--ng-border: #3f3f3f;
+	--ng-dot: #474747;
+	--ng-hover-bg: #303030;
+	--ng-active-bg: rgba(250, 171, 0, 0.07);
+	--ng-link: #30a5ff;
+	--ng-inline-code-bg: rgba(185, 185, 185, 0.15);
+	--ng-info: #7095ff;
+	--ng-warning: #ff9f1a;
+	--ng-danger: #ff5959;
+	--ng-success: #00b74a;
+	--ng-navbar-border: #474747;
+	--ng-navbar-shadow: rgba(0, 0, 0, 0.4);
+	--ng-brand-gradient: linear-gradient(90deg, #667eea, #764ba2);
 }
 
-/* Light mode — accent-low is a light lavender tint, accent is a slightly
-   deepened brand color for AA contrast on white, accent-high is a dark
-   purple for text-on-light (headings, active nav links). */
+/* Light mode — Ng-Doc light theme: white page, #4e4e4e text, #111 headings,
+   #667eea primary (old --ng-select-brand) for links and active states. */
 :root[data-theme='light'] {
-	--sl-color-accent-low: #e8eafb;
-	--sl-color-accent: #5a6fd6;
+	--sl-color-accent-low: #eef0fd;
+	--sl-color-accent: #667eea;
 	--sl-color-accent-high: #3c3480;
+
+	--sl-color-white: #111111;
+	--sl-color-gray-1: #454545;
+	--sl-color-gray-2: #4e4e4e;
+	--sl-color-gray-3: #6e6e6e;
+	--sl-color-gray-4: #919191;
+	--sl-color-gray-5: #dedede;
+	--sl-color-gray-6: #ebebeb;
+	--sl-color-gray-7: #f6f6f6;
+	--sl-color-black: #ffffff;
+
+	--ng-base-1: #f6f6f6;
+	--ng-base-2: #ebebeb;
+	--ng-border: #dedede;
+	--ng-dot: #d1d1d1;
+	--ng-hover-bg: #f6f6f6;
+	--ng-active-bg: rgba(102, 126, 234, 0.07);
+	--ng-link: #667eea;
+	--ng-inline-code-bg: rgba(133, 133, 133, 0.15);
+	--ng-info: #667eea;
+	--ng-navbar-border: #dedede;
+	--ng-navbar-shadow: rgba(0, 0, 0, 0.15);
 }
 
 /* ==========================================================================
@@ -46,6 +100,7 @@
    Theme picker — small <select> rendered in the Starlight header next to the
    dark-mode toggle: <label class="theme-picker"><span class="theme-picker-label">
    Theme</span><select>…</select></label>
+   Styled like the old app.component.scss picker (14px, 8px 12px, 8px radius).
    ========================================================================== */
 
 .theme-picker {
@@ -57,6 +112,7 @@
 
 .theme-picker-label {
 	color: var(--sl-color-text);
+	font-weight: 500;
 }
 
 /* Hide the text label on narrow viewports to match how Starlight's own
@@ -69,19 +125,20 @@
 }
 
 .theme-picker select {
-	height: 2rem;
-	padding: 0 0.5rem;
+	padding: 0.5rem 0.75rem;
 	border-radius: 0.5rem;
-	border: 1px solid var(--sl-color-gray-5);
-	background: var(--sl-color-bg-nav);
+	border: 1px solid var(--ng-border);
+	background: var(--sl-color-bg);
 	color: var(--sl-color-text);
 	font-size: var(--sl-text-sm);
+	cursor: pointer;
 }
 
 /* ==========================================================================
-   Typography and layout metrics measured on the old Ng-Doc site
-   (body 16px / 24px, h1 36px, h2 26px with 56px top margin, h3 20px,
-   content column ~40rem, sidebar ~19.5rem, table of contents 14px).
+   Typography metrics measured on the old Ng-Doc site
+   (body 16px / 24px, h1 36px / 32px, h2 26px / 32px with 56px top margin,
+   h3 20px / 24px, content column ~40rem, sidebar ~19.5rem). The fluid page
+   layout itself (column placement, TOC width) is in layout.css.
    ========================================================================== */
 
 :root {
@@ -94,12 +151,110 @@
 	--sl-sidebar-width: 19.5rem;
 }
 
-.sl-markdown-content h2:not(:where(.not-content *)) {
+/* Headings are inline inside Starlight's `.sl-heading-wrapper`, so vertical
+   rhythm goes on the wrapper. Ng-Doc: 56px above every h2/h3, 16px when a
+   heading directly follows another heading. */
+.sl-markdown-content .sl-heading-wrapper:is(.level-h2, .level-h3) {
 	margin-top: 3.5rem;
 }
 
-.sl-markdown-content h3:not(:where(.not-content *)) {
-	margin-top: 2rem;
+.sl-markdown-content .sl-heading-wrapper + .sl-heading-wrapper {
+	margin-top: 1rem;
+}
+
+.sl-markdown-content > .sl-heading-wrapper:first-child {
+	margin-top: 0;
+}
+
+.sl-markdown-content .sl-heading-wrapper.level-h2,
+.sl-markdown-content h2:not(:where(.not-content *)) {
+	line-height: 2rem;
+}
+
+/* Page title block: breadcrumb 16px in body color, 16px below it, h1 flush
+   (Ng-Doc had no divider between the title and the page body). */
+.sl-container > nav.ng-breadcrumb {
+	font-size: var(--sl-text-base);
+	line-height: 1.5;
+	color: var(--sl-color-text);
+	margin-bottom: 1rem;
+}
+
+.sl-container > nav.ng-breadcrumb .ng-breadcrumb__sep {
+	color: inherit;
+}
+
+h1#_top {
+	margin-top: 0;
+	line-height: 2rem;
+}
+
+.content-panel + .content-panel {
+	border-top: 0;
+	padding-top: 1.3125rem;
+}
+
+.main-pane .content-panel:has(+ .content-panel) {
+	padding-bottom: 0;
+}
+
+/* Block-level content (code, tabs, tables, asides, demos) sat 24px away from
+   its neighbours; margins collapse with the 16px paragraph gap and the 56px
+   heading gap exactly like Ng-Doc's. */
+.sl-markdown-content > :is(.expressive-code, starlight-tabs, table, .starlight-aside) {
+	margin-block: 1.5rem;
+}
+
+/* Links: Ng-Doc link color, no underline until hover. */
+.sl-markdown-content a:not(:where(.not-content *)),
+.sl-markdown-content a:hover:not(:where(.not-content *)) {
+	color: var(--ng-link);
+}
+
+.sl-markdown-content a:not(:where(.not-content *)) {
+	text-decoration: none;
+}
+
+.sl-markdown-content a:hover:not(:where(.not-content *)) {
+	text-decoration: underline;
+}
+
+/* Inline code: 14px / 20px, 2px 8px, 4px radius, translucent gray chip. */
+.sl-markdown-content :not(pre) > code:not(:where(.not-content *)) {
+	margin-block: 0;
+	padding: 0.125rem 0.5rem;
+	border-radius: 4px;
+	background-color: var(--ng-inline-code-bg);
+	color: var(--sl-color-text);
+	font-size: var(--sl-text-sm);
+	line-height: 1.25rem;
+	white-space: nowrap;
+}
+
+.sl-markdown-content :is(h1, h2, h3, h4, h5, h6) code {
+	font-size: inherit;
+}
+
+/* ==========================================================================
+   Code blocks (Expressive Code) — Ng-Doc: 1px border, 8px radius, 14px / 20px
+   code, 16px padding, base-1 fill, 400px max height with scrolling.
+   EC declares its theme variables on each `.expressive-code` element (inside
+   a cascade layer), so the overrides go on the same element, unlayered.
+   ========================================================================== */
+
+.expressive-code {
+	--ec-brdRad: 7px;
+	--ec-brdCol: var(--ng-border);
+	--ec-codeBg: var(--ng-base-1);
+	--ec-frm-edBg: var(--ng-base-1);
+	--ec-frm-trmBg: var(--ng-base-1);
+	--ec-codePadBlk: 1rem;
+	--ec-codeLineHt: 1.25rem;
+}
+
+.sl-markdown-content .expressive-code pre {
+	max-height: 400px;
+	overflow-y: auto;
 }
 
 /* Ng-Doc rendered shell snippets as plain code blocks: drop Expressive Code's terminal title bar. */
@@ -108,6 +263,339 @@
 }
 
 .expressive-code .frame.is-terminal > pre {
-	border-top-left-radius: var(--ec-brdRad);
-	border-top-right-radius: var(--ec-brdRad);
+	border-top-left-radius: calc(var(--ec-brdRad) + var(--ec-brdWd));
+	border-top-right-radius: calc(var(--ec-brdRad) + var(--ec-brdWd));
+}
+
+/* ==========================================================================
+   Tabs (<Tabs> around code, installation page) — Ng-Doc tab group: one
+   bordered card, 40px base-2 tab bar, 14px tabs, 2px primary underline on the
+   selected tab, 1px rule above the code. Shared with the demo source tabs
+   (demo.css only adds the card-specific bits).
+   ========================================================================== */
+
+.sl-markdown-content > starlight-tabs {
+	border: 1px solid var(--ng-border);
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+:is(.sl-markdown-content > starlight-tabs, .ng-demo__source starlight-tabs) > .tablist-wrapper {
+	padding: 0;
+	background: var(--ng-base-2);
+}
+
+:is(.sl-markdown-content > starlight-tabs, .ng-demo__source starlight-tabs) [role='tablist'] {
+	border-bottom: 0;
+}
+
+:is(.sl-markdown-content > starlight-tabs, .ng-demo__source starlight-tabs) .tab > [role='tab'] {
+	padding: 0.5rem 1rem;
+	font-size: var(--sl-text-sm);
+	line-height: 1.5rem;
+	font-weight: 400;
+	color: var(--sl-color-text);
+	box-shadow: none;
+}
+
+:is(.sl-markdown-content > starlight-tabs, .ng-demo__source starlight-tabs) .tab > [role='tab'][aria-selected='true'] {
+	box-shadow: inset 0 -2px 0 var(--sl-color-text-accent);
+}
+
+:is(.sl-markdown-content > starlight-tabs, .ng-demo__source starlight-tabs) > [role='tabpanel'] {
+	margin-top: 0;
+	border-top: 1px solid var(--ng-border);
+}
+
+:is(.sl-markdown-content > starlight-tabs, .ng-demo__source starlight-tabs) .expressive-code {
+	margin: 0;
+}
+
+:is(.sl-markdown-content > starlight-tabs, .ng-demo__source starlight-tabs) .expressive-code :is(.frame, pre) {
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+}
+
+/* ==========================================================================
+   Tables — Ng-Doc: base-1 header row with rounded top corners, bold header,
+   16px 16px 16px 24px cells, base-2 row rules, top-aligned cells, no zebra.
+   ========================================================================== */
+
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+	padding: 1rem 1rem 1rem 1.5rem;
+	border-bottom: 1px solid var(--ng-base-2);
+	vertical-align: top;
+}
+
+.sl-markdown-content th:not(:where(.not-content *)) {
+	padding: 0.75rem 0.75rem 0.75rem 1.5rem;
+	border-bottom: 0;
+	color: var(--sl-color-text);
+	font-weight: 700;
+	vertical-align: middle;
+}
+
+.sl-markdown-content th:first-child:not(:where(.not-content *)) {
+	border-top-left-radius: 8px;
+}
+
+.sl-markdown-content th:last-child:not(:where(.not-content *)) {
+	border-top-right-radius: 8px;
+}
+
+/* ==========================================================================
+   Asides (:::note / :::caution) — Ng-Doc blockquotes: 24px icon column, no
+   title text, 10% tint with a 20% tinted 1px border, 8px radius, body color.
+   ========================================================================== */
+
+.sl-markdown-content .starlight-aside {
+	--ng-aside: var(--ng-info);
+	display: grid;
+	grid-template-columns: 1.5rem minmax(0, 1fr);
+	column-gap: 1rem;
+	align-items: start;
+	padding: 1rem;
+	border: 1px solid color-mix(in srgb, var(--ng-aside) 20%, transparent);
+	border-radius: 8px;
+	background-color: color-mix(in srgb, var(--ng-aside) 10%, transparent);
+	color: var(--sl-color-text);
+}
+
+.sl-markdown-content .starlight-aside--caution {
+	--ng-aside: var(--ng-warning);
+}
+
+.sl-markdown-content .starlight-aside--danger {
+	--ng-aside: var(--ng-danger);
+}
+
+.sl-markdown-content .starlight-aside--tip {
+	--ng-aside: var(--ng-success);
+}
+
+/* The title keeps its icon but its text ("Note", "Caution") is collapsed to 0. */
+.sl-markdown-content .starlight-aside__title {
+	grid-column: 1;
+	grid-row: 1;
+	margin: 0;
+	font-size: 0;
+	line-height: 0;
+	color: var(--ng-aside);
+}
+
+.sl-markdown-content .starlight-aside__icon {
+	font-size: 1.5rem;
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+.sl-markdown-content .starlight-aside__content {
+	grid-column: 2;
+	grid-row: 1;
+	margin-top: 0;
+}
+
+/* ==========================================================================
+   Header — Ng-Doc navbar: page background, 3px brand gradient along the top,
+   no rule until the page scrolls (scroll-driven where supported), gradient
+   22px/700 brand text, 220px filled search box pushed to the right.
+   ========================================================================== */
+
+.page > header.header {
+	background-color: var(--sl-color-bg);
+	border-bottom-color: transparent;
+}
+
+.page > header.header::before {
+	content: '';
+	position: absolute;
+	inset: 0 0 auto;
+	height: 3px;
+	background: var(--ng-brand-gradient);
+	pointer-events: none;
+	z-index: 1;
+}
+
+@keyframes ng-header-scrolled {
+	to {
+		border-bottom-color: var(--ng-navbar-border);
+		box-shadow: 0 5px 20px -5px var(--ng-navbar-shadow);
+	}
+}
+
+@supports (animation-timeline: scroll()) {
+	.page > header.header {
+		animation: ng-header-scrolled linear both;
+		animation-timeline: scroll(root block);
+		animation-range: 0 1px;
+	}
+}
+
+.site-title {
+	font-size: 1.375rem;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+}
+
+.site-title span {
+	background: var(--ng-brand-gradient);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
+.social-icons::after {
+	display: none;
+}
+
+.social-icons a {
+	color: var(--sl-color-text);
+}
+
+@media (min-width: 50rem) {
+	header .header > :has(> site-search) {
+		justify-content: flex-end;
+	}
+
+	site-search button[data-open-modal] {
+		max-width: 13.75rem;
+		border-color: transparent;
+		background-color: var(--ng-base-1);
+	}
+}
+
+/* ==========================================================================
+   Sidebar — Ng-Doc nav: no border, 40px rows at 16px, a 4px dot before every
+   entry (primary when active), active row tinted with primary text, hover
+   fill; group labels in heading color with no caret.
+   ========================================================================== */
+
+.sidebar-pane {
+	border-inline-end: 0;
+}
+
+.sidebar-content .top-level > li + li {
+	margin-top: 1rem;
+}
+
+.sidebar-content summary {
+	padding: 0.5rem;
+	line-height: 1.5;
+}
+
+.sidebar-content summary .caret {
+	display: none;
+}
+
+.sidebar-content summary .large {
+	font-size: var(--sl-text-base);
+	font-weight: 600;
+	color: var(--sl-color-white);
+}
+
+.sidebar-content summary .group-label,
+.sidebar-content ul ul a {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.sidebar-content summary .group-label::before,
+.sidebar-content ul ul a::before {
+	content: '';
+	flex: none;
+	width: 4px;
+	height: 4px;
+	border-radius: 50%;
+	background: var(--ng-dot);
+}
+
+.sidebar-content details:has(a[aria-current='page']) > summary .group-label::before {
+	background: var(--sl-color-text-accent);
+}
+
+.sidebar-content ul ul li {
+	margin-inline-start: 0;
+	border-inline-start: 0;
+	padding-inline-start: 0;
+}
+
+.sidebar-content ul ul a {
+	padding: 0.5rem 1rem 0.5rem 1.5rem;
+	border-radius: 8px;
+	font-size: var(--sl-text-base);
+	line-height: 1.5;
+	font-weight: 400;
+	color: var(--sl-color-text);
+}
+
+.sidebar-content ul ul a:hover,
+.sidebar-content ul ul a:focus {
+	background-color: var(--ng-hover-bg);
+	color: var(--sl-color-text);
+}
+
+.sidebar-content ul ul a[aria-current='page'],
+.sidebar-content ul ul a[aria-current='page']:hover,
+.sidebar-content ul ul a[aria-current='page']:focus {
+	background-color: var(--ng-active-bg);
+	color: var(--sl-color-text-accent);
+	font-weight: 400;
+}
+
+.sidebar-content ul ul a[aria-current='page']::before {
+	background: var(--sl-color-text-accent);
+}
+
+/* ==========================================================================
+   Table of contents — Ng-Doc: no "On this page" heading, 14px / 24px links in
+   body color behind a 1px rule, primary color plus a 3px bar for the active
+   entry, 8px indent for nested entries.
+   ========================================================================== */
+
+.right-sidebar {
+	border-inline-start: 0;
+}
+
+starlight-toc h2 {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+starlight-toc > nav > ul {
+	border-inline-start: 1px solid var(--ng-border);
+	padding-inline-start: 0.5rem;
+}
+
+starlight-toc a {
+	position: relative;
+	padding: 0.25rem 0.25rem 0.25rem 0.5rem;
+	border-radius: 0;
+	font-size: var(--sl-text-sm);
+	line-height: 1.5;
+	color: var(--sl-color-text);
+}
+
+starlight-toc ul ul a {
+	padding-inline-start: 1rem;
+}
+
+starlight-toc a:hover,
+starlight-toc a[aria-current='true'] {
+	color: var(--sl-color-text-accent);
+}
+
+starlight-toc a[aria-current='true']::before {
+	content: '';
+	position: absolute;
+	inset-block: 0;
+	inset-inline-start: calc(-0.5rem - 1px);
+	width: 3px;
+	border-radius: 4px;
+	background: var(--sl-color-text-accent);
 }

@@ -14,13 +14,17 @@ export default defineEcConfig({
 	frames: { extractFileNameFromCode: false },
 	// Ng-Doc rendered shell snippets as plain code blocks: use the editor frame (no terminal title bar).
 	defaultProps: { overridesByLang: { 'bash,sh,shell,shellscript,zsh,console': { frame: 'code' } } },
-	// GitHub-like block chrome: light grey canvas (#f6f8fa) in light mode, GitHub dark canvas in dark mode.
+	// Block chrome measured on the old Ng-Doc site: #f6f6f6 canvas, 1px #dedede border, 8px radius,
+	// 14px / 20px monospace, 16px vertical and 24px horizontal padding. Dark values follow ayu-dark.
 	styleOverrides: {
-		codeBackground: ({ theme }) => (theme.type === 'dark' ? '#0d1117' : '#f6f8fa'),
-		borderColor: ({ theme }) => (theme.type === 'dark' ? '#30363d' : '#d0d7de'),
-		borderRadius: '6px',
-		codeFontSize: '0.875rem',
-		codeLineHeight: '1.5',
+		codeBackground: ({ theme }) => (theme.type === 'dark' ? '#0b0e14' : '#f6f6f6'),
+		borderColor: ({ theme }) => (theme.type === 'dark' ? '#353841' : '#dedede'),
+		borderWidth: '1px',
+		borderRadius: '8px',
+		codeFontSize: '14px',
+		codeLineHeight: '1.4286',
+		codePaddingBlock: '16px',
+		codePaddingInline: '24px',
 		frames: { shadowColor: 'transparent' },
 	},
 });

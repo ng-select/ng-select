@@ -60,16 +60,21 @@ body.ng-select-dark-demo {
 // three themes' differently-named custom properties get the right dark
 // values without colliding.
 //
-// Mapping follows the brief: bg -> --sl-color-gray-6, borders ->
-// --sl-color-gray-5, primary/value/input text -> --sl-color-white,
-// selected/marked backgrounds -> --sl-color-accent-low. Secondary/placeholder/
-// disabled text use dimmer grays for readability; highlight/focus color uses
-// --sl-color-accent. Box-shadow customs (--ng-select-box-shadow,
+// Mapping: bg -> --sl-color-gray-6, borders -> --sl-color-gray-5,
+// primary/value/input text -> --sl-color-white (these grays follow the
+// Ng-Doc dark palette set in custom.css). Selected/marked backgrounds and the
+// highlight/focus color are pinned to the brand indigo ($ng-dark-selected /
+// $ng-dark-highlight) instead of --sl-color-accent*, because the site accent
+// is Ng-Doc's orange in dark mode. Secondary/placeholder/disabled text use
+// dimmer grays for readability. Box-shadow customs (--ng-select-box-shadow,
 // --ng-select-container-hover-shadow, --ng-select-dropdown-shadow) and
 // non-color customs (height, padding, font-size) are intentionally left
 // alone — they're not colors and the light-mode shadows still read fine on
 // a dark background.
 // ---------------------------------------------------------------------------
+
+$ng-dark-selected: #2e2a5c;
+$ng-dark-highlight: #667eea;
 
 :root[data-theme='dark'].default-theme {
 	--ng-select-bg: var(--sl-color-gray-6);
@@ -77,7 +82,7 @@ body.ng-select-dark-demo {
 	--ng-select-border-dark: var(--sl-color-gray-4);
 	--ng-select-border-light: var(--sl-color-gray-4);
 	--ng-select-border-lighter: var(--sl-color-gray-5);
-	--ng-select-highlight: var(--sl-color-accent);
+	--ng-select-highlight: #{$ng-dark-highlight};
 	--ng-select-primary-text: var(--sl-color-white);
 	--ng-select-value-text: var(--sl-color-white);
 	--ng-select-input-text: var(--sl-color-white);
@@ -87,11 +92,11 @@ body.ng-select-dark-demo {
 	--ng-select-arrow-hover: var(--sl-color-gray-2);
 	--ng-select-arrow-active: var(--sl-color-white);
 	--ng-select-clear: var(--sl-color-gray-3);
-	--ng-select-selected: var(--sl-color-accent-low);
+	--ng-select-selected: #{$ng-dark-selected};
 	--ng-select-selected-text: var(--sl-color-white);
 	--ng-select-selected-hover: var(--sl-color-gray-5);
 	--ng-select-selected-border: var(--sl-color-gray-4);
-	--ng-select-marked: var(--sl-color-accent-low);
+	--ng-select-marked: #{$ng-dark-selected};
 	--ng-select-marked-text: var(--sl-color-white);
 	--ng-select-dropdown-bg: var(--sl-color-gray-6);
 	--ng-select-dropdown-border: var(--sl-color-gray-5);
@@ -107,15 +112,15 @@ body.ng-select-dark-demo {
 	--ng-select-disabled-bg: var(--sl-color-gray-5);
 	--ng-select-border: var(--sl-color-gray-5);
 	--ng-select-border-lighter: var(--sl-color-gray-5);
-	--ng-select-highlight: var(--sl-color-accent);
+	--ng-select-highlight: #{$ng-dark-highlight};
 	--ng-select-primary-text: var(--sl-color-white);
 	--ng-select-disabled-text: var(--sl-color-gray-4);
 	--ng-select-placeholder: var(--sl-color-gray-3);
 	--ng-select-value-bg: var(--sl-color-gray-5);
 	--ng-select-value-border: var(--sl-color-gray-4);
-	--ng-select-selected: var(--sl-color-accent-low);
-	--ng-select-selected-bg: var(--sl-color-accent-low);
-	--ng-select-marked: var(--sl-color-accent-low);
+	--ng-select-selected: #{$ng-dark-selected};
+	--ng-select-selected-bg: #{$ng-dark-selected};
+	--ng-select-marked: #{$ng-dark-selected};
 	--ng-select-clear: var(--sl-color-gray-3);
 	--ng-select-clear-bg: var(--sl-color-gray-5);
 	--ng-select-clear-bg-hover: var(--sl-color-gray-4);
@@ -125,7 +130,7 @@ body.ng-select-dark-demo {
 
 :root[data-theme='dark'].material-theme {
 	--ng-select-bg: var(--sl-color-gray-6);
-	--ng-select-highlight: var(--sl-color-accent);
+	--ng-select-highlight: #{$ng-dark-highlight};
 	--ng-select-primary-text: var(--sl-color-white);
 	--ng-select-primary-light-text: var(--sl-color-white);
 	--ng-select-secondary-text: var(--sl-color-gray-3);
@@ -133,7 +138,7 @@ body.ng-select-dark-demo {
 	--ng-select-disabled-text: var(--sl-color-gray-4);
 	--ng-select-divider: var(--sl-color-gray-5);
 	--ng-select-underline: var(--sl-color-gray-4);
-	--ng-select-marked: var(--sl-color-accent-low);
+	--ng-select-marked: #{$ng-dark-selected};
 	--ng-select-disabled-value-text: var(--sl-color-gray-4);
 	--ng-select-fill-bg: var(--sl-color-gray-5);
 	--ng-select-fill-disabled-bg: var(--sl-color-gray-6);
