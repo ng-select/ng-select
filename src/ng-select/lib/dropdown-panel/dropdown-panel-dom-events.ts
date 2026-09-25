@@ -12,10 +12,12 @@ const EVENT_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animation
  * @since 24.0.5
  */
 export interface DropdownPanelDomEventOptions {
+	closeOnScroll: boolean;
 	destroyRef: DestroyRef;
 	document: Document | null;
 	dropdown: HTMLElement;
 	onOutsideClick: () => void;
+	onOutsideScroll: () => void;
 	outsideClickEvent: 'click' | 'mousedown';
 	overlayRef: OverlayRef | null;
 	select: HTMLElement;
@@ -130,26 +132,41 @@ export class DropdownPanelDomEvents {
 	}
 
 	/**
-	 * Repositions the overlay when the document or an ancestor scrolls.
+	 * Repositions the overlay, or closes it when `closeOnScroll` is set, when the document or an ancestor scrolls.
 	 *
 	 * @since 24.0.5
 	 */
 	private handleDocumentScroll(): void {
-		const { destroyRef, document, dropdown, overlayRef, zone } = this.options;
-		if (!document || !overlayRef) {
+		const { closeOnScroll, destroyRef, document, dropdown, onOutsideScroll, overlayRef, zone } = this.options;
+		if (!document || (!overlayRef && !closeOnScroll)) {
 			return;
 		}
 
 		zone.runOutsideAngular(() => {
-			// Capture sees window and arbitrary ancestor scroll containers, even without cdkScrollable.
-			fromEvent(document, 'scroll', { capture: true, passive: true })
-				.pipe(takeUntilDestroyed(destroyRef), auditTime(0, EVENT_SCHEDULER))
-				.subscribe((event) => {
-					const target = event.target as Node | null;
-					if (!target || !dropdown.contains(target)) {
-						overlayRef.updatePosition();
-					}
-				});
+			const subscribe = () =>
+				// Capture sees window and arbitrary ancestor scroll containers, even without cdkScrollable.
+				fromEvent(document, 'scroll', { capture: true, passive: true })
+					// takeUntilDestroyed last: audit flushes its pending value on completion (#2869)
+					.pipe(auditTime(0, EVENT_SCHEDULER), takeUntilDestroyed(destroyRef))
+					.subscribe((event) => {
+						const target = event.target as Node | null;
+						if (target && dropdown.contains(target)) {
+							return;
+						}
+						if (closeOnScroll) {
+							zone.run(onOutsideScroll);
+						} else {
+							overlayRef.updatePosition();
+						}
+					});
+
+			if (!closeOnScroll || typeof requestAnimationFrame === 'undefined') {
+				subscribe();
+				return;
+			}
+			// Scrolls queued before the panel opened (e.g. focus-scroll) dispatch before this frame's rAF callbacks, so they are skipped.
+			const frame = requestAnimationFrame(subscribe);
+			destroyRef.onDestroy(() => cancelAnimationFrame(frame));
 		});
 	}
 

@@ -78,6 +78,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	 * Which DOM event to listen to for outside click detection
 	 */
 	readonly outsideClickEvent = input<'click' | 'mousedown'>('click');
+	/** Close the dropdown when the page or an ancestor container scrolls. */
+	readonly closeOnScroll = input(false, { transform: booleanAttribute });
 	/** @deprecated Has no effect: the CDK overlay renders in the native Popover API top layer automatically in supporting browsers. Will be removed in a future major version. */
 	readonly popover = input(false, { transform: booleanAttribute });
 	/** Overlay hosting this panel. Used to request repositioning when the rendered content changes. */
@@ -91,6 +93,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	}>();
 	readonly scrollToEnd = output<void>();
 	readonly outsideClick = output<void>();
+	readonly outsideScroll = output<void>();
 	private _renderer = inject(Renderer2);
 	private _zone = inject(NgZone);
 	private _panelService = inject(NgDropdownPanelService);
@@ -175,10 +178,12 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._select = this.selectElement() ?? this._dropdown.parentElement;
 		this._handleScroll();
 		new DropdownPanelDomEvents({
+			closeOnScroll: this.closeOnScroll(),
 			destroyRef: this._destroyRef,
 			document: this._document,
 			dropdown: this._dropdown,
 			onOutsideClick: () => this.outsideClick.emit(),
+			onOutsideScroll: () => this.outsideScroll.emit(),
 			outsideClickEvent: this.outsideClickEvent() ?? 'click',
 			overlayRef: this.overlayRef(),
 			select: this._select,
@@ -214,7 +219,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	 * @since 3.0.0
 	 */
 	scrollTo(option: NgOption, startFromOption = false) {
-		if (!option) {
+		if (!option || this._destroyRef.destroyed) {
 			return;
 		}
 
@@ -256,6 +261,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	 */
 	scrollToTag() {
 		const panel = this._scrollablePanel();
+		if (!panel) {
+			return;
+		}
 		panel.scrollTop = panel.scrollHeight - panel.clientHeight;
 	}
 
@@ -533,10 +541,16 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 			return;
 		}
 
-		scrollTop = scrollTop || this._scrollablePanel().scrollTop;
+		const scrollablePanel = this._scrollablePanel();
+		const contentPanel = this._contentPanel();
+		if (!scrollablePanel || !contentPanel) {
+			return;
+		}
+
+		scrollTop = scrollTop || scrollablePanel.scrollTop;
 		const range = this._panelService.calculateItems(scrollTop, this.itemsLength, this.bufferAmount(), this.items());
 		this._updateVirtualHeight(range.scrollHeight);
-		this._contentPanel().style.transform = `translateY(${range.topPadding}px)`;
+		contentPanel.style.transform = `translateY(${range.topPadding}px)`;
 
 		// Outputs must stay template-bound: the template listener schedules CD under zoneless
 		this._zone.run(() => {
@@ -545,7 +559,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		});
 
 		if (isDefined(scrollTop) && this._lastScrollPosition === 0) {
-			this._scrollablePanel().scrollTop = scrollTop;
+			scrollablePanel.scrollTop = scrollTop;
 			this._lastScrollPosition = scrollTop;
 		}
 	}
@@ -583,6 +597,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 				return new Promise<PanelDimensions>((resolve) => {
 					requestAnimationFrame(() => {
 						if (this._destroyRef.destroyed) {
+							resolve(this._panelService.dimensions);
 							return;
 						}
 						this._zone.run(() => this.update.emit(toMeasure));

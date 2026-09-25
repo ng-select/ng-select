@@ -692,6 +692,55 @@ describe('NgSelectComponent', () => {
 		});
 	});
 
+	describe('Close on scroll', () => {
+		const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+
+		async function scrollDocument(fixture: ComponentFixture<NgSelectTestComponent>): Promise<void> {
+			// The close listener attaches one frame after open, so scroll like a user would: after the panel has settled
+			await nextFrame();
+			document.dispatchEvent(new Event('scroll'));
+			await nextFrame();
+			await tickAndDetectChanges(fixture);
+		}
+
+		it('should stay open on document scroll by default', async () => {
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name" [(ngModel)]="selectedCity"></ng-select>`);
+			const select = fixture.componentInstance.select();
+			await openSelect(select, fixture);
+
+			await scrollDocument(fixture);
+			expect(select.isOpen()).toBeTruthy();
+		});
+
+		it('should close on document scroll when closeOnScroll is set', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" bindLabel="name" [closeOnScroll]="true" [(ngModel)]="selectedCity"></ng-select>`,
+			);
+			const select = fixture.componentInstance.select();
+			await openSelect(select, fixture);
+
+			await scrollDocument(fixture);
+			expect(select.isOpen()).toBeFalsy();
+			expect(fixture.debugElement.query(By.css('ng-dropdown-panel'))).toBeNull();
+		});
+
+		it('should use closeOnScroll from NgSelectConfig when not provided in template', async () => {
+			const config = new NgSelectConfig();
+			config.closeOnScroll = true;
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" bindLabel="name" [(ngModel)]="selectedCity"></ng-select>`,
+				config,
+			);
+			const select = fixture.componentInstance.select();
+			await openSelect(select, fixture);
+
+			await scrollDocument(fixture);
+			expect(select.isOpen()).toBeFalsy();
+		});
+	});
+
 	describe('Immediate close - DOM removal without external change detection (issue #2765)', () => {
 		// close() uses detectChanges() internally to ensure the dropdown panel is
 		// removed from the DOM immediately, without relying on zone-triggered CD.

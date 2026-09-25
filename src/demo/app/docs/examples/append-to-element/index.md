@@ -18,11 +18,12 @@ The overlay renders in the browser's top layer (native Popover API) wherever sup
 
 Inputs used by the examples on this page:
 
-| Input       | Type         | Default | Description                                                                                                                                                                                |
-| ----------- | ------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| appendTo    | `string`     | null    | Append the dropdown overlay to any element using a css selector. Painting and positioning are unaffected; the target determines DOM containment (ancestor-scoped styles, focus enclosure). |
-| [items]     | `Array<any>` | `[]`    | Items array                                                                                                                                                                                |
-| bindLabel   | `string`     | `label` | Object property to use for label. Default `label`                                                                                                                                          |
-| placeholder | `string`     | `-`     | Placeholder text.                                                                                                                                                                          |
+| Input           | Type         | Default | Description                                                                                                                                                                                |
+| --------------- | ------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| appendTo        | `string`     | null    | Append the dropdown overlay to any element using a css selector. Painting and positioning are unaffected; the target determines DOM containment (ancestor-scoped styles, focus enclosure). |
+| [items]         | `Array<any>` | `[]`    | Items array                                                                                                                                                                                |
+| bindLabel       | `string`     | `label` | Object property to use for label. Default `label`                                                                                                                                          |
+| [closeOnScroll] | `boolean`    | `false` | Close the dropdown when the page or an ancestor container scrolls. Default `false`                                                                                                         |
+| placeholder     | `string`     | `-`     | Placeholder text.                                                                                                                                                                          |
 
 See the `NgSelectComponent` API reference for the complete list of inputs and outputs.
