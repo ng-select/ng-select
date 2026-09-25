@@ -1,19 +1,316 @@
-<!doctype html>
-<html lang="en" data-beasties-container>
-	<head><script>const themeId = localStorage.getItem('ng-doc-theme-id');
-
-if (themeId) {
-  const documentElement = document.documentElement;
-  documentElement.setAttribute('data-theme', themeId);
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" class="astro-mrslk3ig"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>ng-select | ng-select</title><link rel="canonical" href="https://ng-select.github.io/ng-select/"/><link rel="sitemap" href="/ng-select/sitemap-index.xml"/><script>(() => {
+	const root = document.documentElement;
+	try {
+		root.classList.add((sessionStorage.getItem('ng-select-theme') || 'default') + '-theme');
+	} catch {
+		root.classList.add('default-theme');
+	}
+	if (location.hash.startsWith('#/')) {
+		const base = "/ng-select";
+		// "#/examples/multiselect#hidden-selected-items" -> "/ng-select/examples/multiselect/#hidden-selected-items"
+		const [path, anchor] = location.hash.slice(1).split('#');
+		location.replace((path === '/' ? base + '/' : base + path.replace(/\/?$/, '/')) + (anchor ? '#' + anchor : ''));
+	}
+})();</script><link rel="shortcut icon" href="/ng-select/favicon.ico" type="image/x-icon"/><meta name="generator" content="Astro v7.3.5"/><meta name="generator" content="Starlight v0.42.4"/><meta property="og:title" content="ng-select"/><meta property="og:type" content="article"/><meta property="og:url" content="https://ng-select.github.io/ng-select/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Lightweight all-in-one UI select, multiselect and autocomplete component for Angular."/><meta property="og:site_name" content="ng-select"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Lightweight all-in-one UI select, multiselect and autocomplete component for Angular."/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-4quppnh5" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-4quppnh5" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-4quppnh5" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/ng-select/_astro/print.DNXP8c50.css" media="print"><link rel="stylesheet" href="/ng-select/_astro/common.Ca8QV_19.css"><style>@layer starlight.components{svg:where(.astro-4quppnh5){color:var(--sl-icon-color);font-size:var(--sl-icon-size, 1em);width:1em;height:1em}}
+@layer starlight.components{starlight-tabs:where(.astro-r3kbqfrk){display:block}.tablist-wrapper:where(.astro-r3kbqfrk){overflow-x:auto}:where(.astro-r3kbqfrk)[role=tablist]{display:flex;list-style:none;border-bottom:2px solid var(--sl-color-gray-5);padding:0}.tab:where(.astro-r3kbqfrk){display:flex}.tab:where(.astro-r3kbqfrk)>:where(.astro-r3kbqfrk)[role=tab]{--sl-tab-color-border: var(--sl-color-gray-5);display:flex;align-items:center;gap:.5rem;line-height:var(--sl-line-height-headings);padding:.275rem 1.25rem;text-decoration:none;box-shadow:0 2px 0 var(--sl-tab-color-border);color:var(--sl-color-gray-3);outline-offset:var(--sl-outline-offset-inside);overflow-wrap:initial}.tab:where(.astro-r3kbqfrk) :where(.astro-r3kbqfrk)[role=tab][aria-selected=true]{--sl-tab-color-border: var(--sl-color-text-accent);color:var(--sl-color-white);font-weight:600}.tablist-wrapper:where(.astro-r3kbqfrk)~[role=tabpanel]{margin-top:1rem}}
+</style><script type="module" src="/ng-select/_astro/page.Dwipeu-R.js"></script><style>main:has(.home-container){padding-bottom:0}main:has(.home-container)>.content-panel:not(:has(.home-container)){display:none}.content-panel:has(.home-container){border-top:0;padding-inline:1.5rem}.content-panel:has(.home-container)>.sl-container{max-width:none}.content-panel:has(.home-container)>.sl-container>footer{display:none}.home-container{--landing-muted: var(--sl-color-gray-3);--landing-border: var(--sl-color-gray-5);--landing-border-hover: var(--sl-color-gray-4);--landing-heading: var(--sl-color-white);max-width:1100px;margin:0 auto;padding:2rem;width:100%}:root[data-theme=light] .home-container{--landing-muted: var(--sl-color-gray-4);--landing-border: color-mix(in srgb, var(--sl-color-gray-5) 35%, var(--sl-color-gray-6));--landing-border-hover: var(--sl-color-gray-5)}.home-container .hero-section{text-align:center;padding:4rem 0 3rem}.home-container .hero-title{font-size:3.5rem;font-weight:700;margin-bottom:1.5rem;line-height:1.2}.home-container .hero-title .logo-text{background:linear-gradient(135deg,var(--ng-select-brand, #667eea) 0%,var(--ng-select-brand-light, #764ba2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.home-container .hero-description{font-size:1.25rem;color:var(--landing-muted);margin:0 auto 2rem;max-width:700px;line-height:1.6}.home-container .hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}.home-container .btn{padding:.75rem 1.5rem;border-radius:.5rem;text-decoration:none;font-weight:500;transition:all .2s ease;display:inline-block;border:none;cursor:pointer;font-size:1rem}.home-container .btn+.btn{margin-left:5px}.home-container .btn-primary{background:linear-gradient(135deg,var(--ng-select-brand, #667eea) 0%,var(--ng-select-brand-light, #764ba2) 100%);color:#fff}.home-container .btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 12px #667eea66;color:#fff}.home-container .btn-secondary{background:transparent;color:var(--sl-color-text, #333);border:2px solid var(--landing-border)}.home-container .btn-secondary:hover{background:var(--sl-color-bg-nav);border-color:var(--landing-border-hover)}.home-container .hero-demo{max-width:420px;margin:3rem auto 0;text-align:left}.home-container .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;padding:2rem 0 4rem}.home-container .feature-card{padding:1.5rem;border:1px solid var(--landing-border);border-radius:.75rem;background:var(--sl-color-bg);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}.home-container .feature-card:hover{transform:translateY(-3px);border-color:var(--ng-select-brand, #667eea);box-shadow:0 6px 18px #667eea1f}.home-container .feature-card .feature-icon{font-size:1.75rem;margin-bottom:.5rem}.home-container .feature-card h3{font-size:1.05rem;font-weight:600;line-height:1.2;margin-bottom:.4rem;color:var(--landing-heading)}.home-container .feature-card p{font-size:.92rem;color:var(--landing-muted);line-height:1.5;margin:0}@media(max-width:768px){.home-container .hero-title{font-size:2.5rem}.home-container .hero-description{font-size:1.1rem}.home-container .hero-actions{flex-direction:column;align-items:stretch}.home-container .hero-actions .btn{width:100%;margin-left:0;text-align:center}}
+</style></head><body class="astro-mrslk3ig"><a class="sl-skip-link astro-dx5x7g2c" href="#_top">Skip to content</a><div class="page sl-flex astro-bijcet6r"><header class="header astro-bijcet6r"><div class="header astro-posi33n6"><div class="title-wrapper sl-flex astro-posi33n6"><a href="/ng-select/" class="site-title sl-flex astro-rb2lnom2"><span class="astro-rb2lnom2" translate="no">ng-select</span></a></div><div class="sl-flex print:hidden astro-posi33n6"><site-search class="astro-posi33n6 astro-qoaxfqqa" data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-qoaxfqqa"><svg aria-hidden="true" class="astro-qoaxfqqa astro-4quppnh5" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block astro-qoaxfqqa" aria-hidden="true">Search</span><kbd class="sl-hidden md:sl-flex astro-qoaxfqqa" style="display: none;"><kbd class="astro-qoaxfqqa">Ctrl</kbd><kbd class="astro-qoaxfqqa">K</kbd></kbd></button><dialog style="padding:0" aria-label="Search" class="astro-qoaxfqqa"><div class="dialog-frame sl-flex astro-qoaxfqqa"><button data-close-modal class="sl-flex md:sl-hidden astro-qoaxfqqa">Cancel</button><div class="search-container astro-qoaxfqqa"><div id="starlight__search" class="astro-qoaxfqqa"></div></div></div></dialog></site-search><script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script><script type="module" src="/ng-select/_astro/Search.astro_astro_type_script_index_0_lang.VDrlq0xh.js"></script></div><div class="sl-hidden md:sl-flex print:hidden right-group astro-posi33n6"><div class="sl-flex social-icons astro-posi33n6"><a href="https://github.com/ng-select/ng-select" rel="me" class="sl-flex astro-z2iniuji"><span class="sr-only astro-z2iniuji">GitHub</span><svg aria-hidden="true" class="astro-z2iniuji astro-4quppnh5" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a><a href="https://www.npmjs.com/package/@ng-select/ng-select" rel="me" class="sl-flex astro-z2iniuji"><span class="sr-only astro-z2iniuji">npm</span><svg aria-hidden="true" class="astro-z2iniuji astro-4quppnh5" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M1.76 0h20.48a1.76 1.76 0 0 1 1.76 1.76v20.48a1.76 1.76 0 0 1-1.76 1.76H1.76A1.76 1.76 0 0 1 0 22.24V1.76A1.76 1.76 0 0 1 1.76 0zM5.11 19.16h6.93V8.8h3.47v10.36h3.47V5.34H5.13v13.82z"></path></svg></a></div><div class="theme-controls astro-phv4pw7f"><label class="theme-picker astro-phv4pw7f"><span class="theme-picker-label astro-phv4pw7f">Theme</span><select aria-label="ng-select theme" data-ng-select-theme class="astro-phv4pw7f"><option value="default" class="astro-phv4pw7f">Default</option><option value="material" class="astro-phv4pw7f">Material</option><option value="ant" class="astro-phv4pw7f">Ant Design</option></select></label><starlight-theme-select><label style="--sl-select-width: 6.25em" class="astro-qgztqyh2"><span class="sr-only astro-qgztqyh2">Select theme</span><svg aria-hidden="true" class="icon label-icon astro-qgztqyh2 astro-4quppnh5" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg><select autocomplete="off" class="astro-qgztqyh2"><option value="dark" class="astro-qgztqyh2">Dark</option><option value="light" class="astro-qgztqyh2">Light</option><option value="auto" selected class="astro-qgztqyh2">Auto</option></select><svg aria-hidden="true" class="icon caret astro-qgztqyh2 astro-4quppnh5" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg></label></starlight-theme-select><script>
+	StarlightThemeProvider.updatePickers();
+</script><script type="module">var e=`starlight-theme`,t=e=>e===`auto`||e===`dark`||e===`light`?e:`auto`,n=()=>t(typeof localStorage<`u`&&localStorage.getItem(e));function r(t){typeof localStorage<`u`&&localStorage.setItem(e,t===`light`||t===`dark`?t:``)}var i=()=>matchMedia(`(prefers-color-scheme: light)`).matches?`light`:`dark`;function a(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e===`auto`?i():e,r(e)}matchMedia(`(prefers-color-scheme: light)`).addEventListener(`change`,()=>{n()===`auto`&&a(`auto`)});var o=class extends HTMLElement{constructor(){super(),a(n()),this.querySelector(`select`)?.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&a(t(e.currentTarget.value))})}};customElements.define(`starlight-theme-select`,o);</script></div><script type="module">var e=`ng-select-theme`;function t(){try{return sessionStorage.getItem(e)||`default`}catch{return`default`}}function n(t){try{sessionStorage.setItem(e,t)}catch{}}var r=t();document.querySelectorAll(`select[data-ng-select-theme]`).forEach(e=>{e.value=r,e.addEventListener(`change`,()=>{n(e.value),window.location.reload()})});</script><script type="module">var e=class extends HTMLElement{constructor(){super();let e=this.querySelector(`select`);e&&(e.addEventListener(`change`,e=>{e.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=e.currentTarget.value)}),window.addEventListener(`pageshow`,t=>{if(!t.persisted)return;let n=e.querySelector(`option[selected]`)?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}};customElements.define(`starlight-lang-select`,e);</script></div></div></header><div class="main-frame astro-bijcet6r"><script type="module">var e=document.getElementById(`starlight__sidebar`),t=e?.querySelector(`sl-sidebar-state-persist`),n=`sl-sidebar-state`,r=()=>{let r=[],i=t?.dataset.hash||``;try{let e=sessionStorage.getItem(n),t=JSON.parse(e||`{}`);Array.isArray(t.open)&&t.hash===i&&(r=t.open)}catch{}return{hash:i,open:r,scroll:e?.scrollTop||0}},i=e=>{try{sessionStorage.setItem(n,JSON.stringify(e))}catch{}},a=()=>i(r()),o=(e,t)=>{let n=r();n.open[t]=e,i(n)};t?.addEventListener(`click`,e=>{if(!(e.target instanceof Element))return;let t=e.target.closest(`summary`)?.closest(`details`);if(!t)return;let n=t.querySelector(`sl-sidebar-restore`),r=parseInt(n?.dataset.index||``);isNaN(r)||o(!t.open,r)}),addEventListener(`visibilitychange`,()=>{document.visibilityState===`hidden`&&a()});</script><div class="lg:sl-flex astro-vw4jicpi"><div class="main-pane astro-vw4jicpi"><main data-pagefind-body class="astro-mrslk3ig" lang="en" dir="ltr"><div class="content-panel astro-sutwdtbk"><div class="sl-container astro-sutwdtbk"></div></div><div class="content-panel astro-sutwdtbk"><div class="sl-container astro-sutwdtbk"><div class="sl-markdown-content"><div class="home-container not-content"><section class="hero-section"><h1 class="hero-title" id="_top"><span class="logo-text">ng-select</span></h1><p class="hero-description">Lightweight all-in-one UI select, multiselect and autocomplete component for Angular, with Signal Forms, Reactive Forms and Template-driven Forms support.</p><div class="hero-actions"><a href="/ng-select/getting-started/installation/" class="btn btn-primary">Get Started</a><a href="/ng-select/examples/data-sources/" class="btn btn-secondary">Examples</a><a href="https://github.com/ng-select/ng-select" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">View on GitHub</a></div><style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var g=Object.defineProperty;var w=(a,s,c)=>s in a?g(a,s,{enumerable:!0,configurable:!0,writable:!0,value:c}):a[s]=c;var l=(a,s,c)=>w(a,typeof s!="symbol"?s+"":s,c);var E=new Set(["__proto__","constructor","prototype"]);{let a={0:t=>y(t),1:t=>c(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(c(t)),5:t=>new Set(c(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},s=t=>{let[p,e]=t;return p in a?a[p](e):void 0},c=t=>t.map(s),y=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([p,e])=>[p,s(e)]));class f extends HTMLElement{constructor(){super(...arguments);l(this,"Component");l(this,"hydrator");l(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let r=this.querySelectorAll("astro-slot"),n={},d=this.querySelectorAll("template[data-astro-template]");for(let o of d){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("data-astro-template")||"default"]=o.innerHTML,o.remove())}for(let o of r){let i=o.closest(this.tagName);i!=null&&i.isSameNode(this)&&(n[o.getAttribute("name")||"default"]=o.innerHTML)}let u;try{u=this.hasAttribute("props")?y(JSON.parse(this.getAttribute("props"))):{}}catch(o){let i=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(i+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${i}`,this.getAttribute("props"),o),o}let h;await this.hydrator(this)(this.Component,u,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});l(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),r.disconnect(),this.childrenConnectedCallback()},r=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});r.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}getRetryImportUrl(e){let r=new URL(e,document.baseURI);return r.searchParams.set("astro-retry",Date.now().toString()),r.toString()}async importWithRetry(e){try{return await import(e)}catch(r){return await new Promise(n=>setTimeout(n,1e3)),import(this.getRetryImportUrl(e))}}handleHydrationError(e){let r=this.getAttribute("component-url"),n=new CustomEvent("astro:hydration-error",{cancelable:!0,bubbles:!0,composed:!0,detail:{error:e,componentUrl:r}});this.dispatchEvent(n)&&console.error(`[astro-island] Error hydrating ${r}`,e)}async start(){let e=JSON.parse(this.getAttribute("opts")),r=this.getAttribute("client");if(Astro[r]===void 0){window.addEventListener(`astro:${r}`,()=>this.start(),{once:!0});return}try{await Astro[r](async()=>{let n=this.getAttribute("renderer-url");try{let[d,{default:u}]=await Promise.all([this.importWithRetry(this.getAttribute("component-url")),n?this.importWithRetry(n):Promise.resolve({default:()=>()=>{}})]),h=this.getAttribute("component-export")||"default";if(h.includes(".")){this.Component=d;for(let m of h.split(".")){if(E.has(m)||!this.Component||typeof this.Component!="object"&&typeof this.Component!="function"||!Object.hasOwn(this.Component,m))throw new Error(`Invalid component export path: ${h}`);this.Component=this.Component[m]}}else{if(E.has(h))throw new Error(`Invalid component export path: ${h}`);this.Component=d[h]}return this.hydrator=u,this.hydrate}catch(d){return this.handleHydrationError(d),()=>{}}},e,this)}catch(n){this.handleHydrationError(n)}}attributeChangedCallback(){this.hydrate()}}l(f,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",f)}})();</script><astro-island uid="1ybYqi" component-url="/ng-select/_astro/hero-select.component.vAFuPFjw.js" component-export="HeroSelectComponent" renderer-url="/ng-select/_astro/client.9bdC77lM.js" props="{}" ssr client="load" opts="{&quot;name&quot;:&quot;HeroSelectComponent&quot;,&quot;value&quot;:true}" await-children><style>@charset "UTF-8";
+.ng-select {
+  position: relative;
+  display: block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
-</script><base href="/ng-select/">
-		<meta charset="utf-8">
-		<title>ng-select — Angular select component</title>
+.ng-select div,
+.ng-select input,
+.ng-select span {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.ng-select [hidden] {
+  display: none;
+}
+.ng-select.ng-select-searchable .ng-select-container .ng-value-container .ng-input {
+  opacity: 1;
+}
+.ng-select:not(.ng-select-searchable) .ng-select-container .ng-value-container .ng-input {
+  pointer-events: none;
+}
+.ng-select.ng-select-opened .ng-select-container {
+  z-index: 1001;
+}
+.ng-select.ng-select-disabled .ng-select-container .ng-value-container .ng-placeholder,
+.ng-select.ng-select-disabled .ng-select-container .ng-value-container .ng-value {
+  user-select: none;
+  cursor: default;
+}
+.ng-select.ng-select-disabled .ng-arrow-wrapper {
+  cursor: default;
+}
+.ng-select.ng-select-filtered .ng-placeholder {
+  display: none;
+}
+.ng-select .ng-select-container {
+  cursor: default;
+  display: flex;
+  outline: none;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+.ng-select .ng-select-container .ng-value-container {
+  display: flex;
+  flex: 1;
+}
+.ng-select .ng-select-container .ng-value-container .ng-input {
+  opacity: 0;
+}
+.ng-select .ng-select-container .ng-value-container .ng-input > input {
+  box-sizing: content-box;
+  background: none transparent;
+  border: 0 none;
+  box-shadow: none;
+  outline: none;
+  padding: 0;
+  cursor: default;
+  width: 100%;
+}
+.ng-select .ng-select-container .ng-value-container .ng-input > input::-ms-clear {
+  display: none;
+}
+.ng-select .ng-select-container .ng-value-container .ng-input > input[readonly] {
+  user-select: unset;
+  width: 0;
+  padding: 0;
+}
+.ng-select.ng-select-single.ng-select-filtered .ng-select-container .ng-value-container .ng-value {
+  visibility: hidden;
+}
+.ng-select.ng-select-single .ng-select-container .ng-value-container {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value .ng-value-icon {
+  display: none;
+}
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+.ng-select.ng-select-multiple.ng-select-disabled > .ng-select-container .ng-value-container .ng-value .ng-value-icon {
+  display: none;
+}
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container {
+  flex-wrap: wrap;
+}
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-placeholder {
+  position: absolute;
+}
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+  white-space: nowrap;
+}
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value.ng-value-disabled .ng-value-icon {
+  display: none;
+}
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-icon {
+  cursor: pointer;
+}
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-input {
+  flex: 1;
+  z-index: 2;
+}
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-placeholder {
+  z-index: 1;
+}
+.ng-select .ng-clear-wrapper {
+  cursor: pointer;
+  position: relative;
+  width: 17px;
+  user-select: none;
+}
+.ng-select .ng-clear-wrapper .ng-clear {
+  display: inline-block;
+  font-size: 18px;
+  line-height: 1;
+  pointer-events: none;
+}
+.ng-select .ng-spinner-loader {
+  border-radius: 50%;
+  width: 17px;
+  height: 17px;
+  margin-right: 5px;
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 2px solid rgba(66, 66, 66, 0.2);
+  border-right: 2px solid rgba(66, 66, 66, 0.2);
+  border-bottom: 2px solid rgba(66, 66, 66, 0.2);
+  border-left: 2px solid #424242;
+  transform: translateZ(0);
+  animation: load8 0.8s infinite linear;
+}
+.ng-select .ng-spinner-loader:after {
+  border-radius: 50%;
+  width: 17px;
+  height: 17px;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+.ng-select .ng-arrow-wrapper {
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+  user-select: none;
+}
+.ng-select .ng-arrow-wrapper .ng-arrow {
+  pointer-events: none;
+  display: inline-block;
+  height: 0;
+  width: 0;
+  position: relative;
+}
 
-		<meta content="width=device-width, initial-scale=1" name="viewport">
-		<link href="favicon.ico" rel="icon" type="image/x-icon">
-	<style>body{--ng-doc-code-margin:var(--ng-doc-page-block-margin);--ng-doc-blockquote-margin:var(--ng-doc-page-block-margin);--ng-doc-tabs-margin:var(--ng-doc-page-block-margin);--ng-doc-demo-margin:var(--ng-doc-page-block-margin);--ng-doc-demo-pane-margin:var(--ng-doc-page-block-margin);--ng-doc-playground-margin:var(--ng-doc-page-block-margin)}html{-webkit-font-smoothing:antialiased}:root{--ng-doc-base-gutter:8px;--ng-doc-transition:.2s;--ng-doc-text-selection:rgba(21, 88, 214, .15);--ng-doc-white:#fff;--ng-doc-black:#000;--ng-doc-base-rgb:0 0 0;--ng-doc-base-0:var(--ng-doc-white);--ng-doc-base-1:#f6f6f6;--ng-doc-base-2:#ebebeb;--ng-doc-base-3:#dedede;--ng-doc-base-4:#d1d1d1;--ng-doc-base-5:#b8b8b8;--ng-doc-base-6:#ababab;--ng-doc-base-7:#9e9e9e;--ng-doc-base-8:#919191;--ng-doc-base-9:#858585;--ng-doc-base-10:#6e6e6e;--ng-doc-primary:#1558d6;--ng-doc-primary-text:var(--ng-doc-white);--ng-doc-alert:#ff5959;--ng-doc-alert-text:var(--ng-doc-white);--ng-doc-warning:#ff9f1a;--ng-doc-warning-text:var(--ng-doc-white);--ng-doc-info:#3f68b5;--ng-doc-info-text:var(--ng-doc-white);--ng-doc-success:#00b74a;--ng-doc-success-text:var(--ng-doc-white);--ng-doc-background:var(--ng-doc-base-0);--ng-doc-hover-background:rgba(110, 110, 110, .09);--ng-doc-border-size:1px;--ng-doc-border-color:var(--ng-doc-base-3);--ng-doc-border-hover-color:var(--ng-doc-base-5);--ng-doc-shadow-color:rgba(0, 0, 0, .15);--ng-doc-font-system:ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";--ng-doc-font-system-mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;--ng-doc-heading-font-family:var(--ng-doc-font-system);--ng-doc-heading-color:#111111;--ng-doc-font-family:var(--ng-doc-font-system);--ng-doc-font-size:calc(var(--ng-doc-base-gutter) * 2);--ng-doc-line-height:calc(var(--ng-doc-base-gutter) * 3);--ng-doc-font-weight:400;--ng-doc-code-font:var(--ng-doc-font-system-mono);--ng-doc-code-font-size:14px;--ng-doc-code-line-height:20px;--ng-doc-code-font-weight:400;--ng-doc-text:rgb(78 78 78);--ng-doc-text-muted:var(--ng-doc-base-8);--ng-doc-mark-background:rgba(255, 222, 0, .3);--ng-doc-link-color:var(--ng-doc-primary);--ng-doc-inline-code-background:var(--ng-doc-base-9);--ng-doc-inline-code-color:var(--ng-doc-text);--ng-doc-button-background:trasparent;--ng-doc-button-background-opacity:0;--ng-doc-button-color:var(--ng-doc-text);--ng-doc-button-hover-background:var(--ng-doc-base-2);--ng-doc-button-hover-color:var(--ng-doc-button-color);--ng-doc-button-active-background:var(--ng-doc-base-3);--ng-doc-button-active-color:var(--ng-doc-button-hover-color);--ng-doc-floated-border-color:transparent;--ng-doc-floated-border:2px solid var(--ng-doc-floated-border-color);--ng-doc-floated-border-shadow-color:0 1px 2px rgba(16, 24, 40, .05), 0 0 0 4px transparent;--ng-doc-floated-border-radius:var(--ng-doc-base-gutter);--ng-doc-checkbox-color:var(--ng-doc-primary);--ng-doc-checkbox-color-text:var(--ng-doc-primary-text);--ng-doc-checkbox-border:var(--ng-doc-border-size) solid var(--ng-doc-border-color);--ng-doc-checkbox-border-hover:var(--ng-doc-border-size) solid var(--ng-doc-border-hover-color);--ng-doc-input-text-align:left;--ng-doc-input-width:100%;--ng-doc-input-height:40px;--ng-doc-input-border:var(--ng-doc-border-size) solid var(--ng-doc-border-color);--ng-doc-input-border-hover:var(--ng-doc-border-size) solid var(--ng-doc-border-hover-color);--ng-doc-input-background-color:var(--ng-doc-base-0);--ng-doc-input-cursor:auto;--ng-doc-tag-background:var(--ng-doc-primary);--ng-doc-tag-color:var(--ng-doc-primary-text);--ng-doc-selection-border:2px solid var(--ng-doc-primary);--ng-doc-selection-background:transparent;--ng-doc-dot-size:calc(var(--ng-doc-base-gutter) / 2);--ng-doc-dot-background:var(--ng-doc-primary);--ng-doc-sidenav-width:300px;--ng-doc-tab-group-border-radius:var(--ng-doc-base-gutter);--ng-doc-tab-group-border:1px solid var(--ng-doc-border-color)}:root{--ng-doc-app-max-width:1450px;--ng-doc-app-horizontal-padding:calc(var(--ng-doc-base-gutter) * 3);--ng-doc-code-background:var(--ng-doc-base-1);--ng-doc-page-padding:calc(var(--ng-doc-base-gutter) * 3) var(--ng-doc-app-horizontal-padding);--ng-doc-main-padding:var(--ng-doc-navbar-height) 0 0 0;--ng-doc-page-block-margin:calc(var(--ng-doc-base-gutter) * 3) 0;--ng-doc-page-wrapper-tabs-height:calc(var(--ng-doc-base-gutter) * 6);--ng-doc-class-color:#fff;--ng-doc-class-background:#e74c3c;--ng-doc-interface-color:#fff;--ng-doc-interface-background:#3498db;--ng-doc-enum-color:#fff;--ng-doc-enum-background:#2ecc71;--ng-doc-variable-color:#fff;--ng-doc-variable-background:#f1c40f;--ng-doc-function-color:#fff;--ng-doc-function-background:#27bd09;--ng-doc-type-alias-color:#fff;--ng-doc-type-alias-background:#3e69c5;--ng-doc-selector-color:#fff;--ng-doc-selector-background:#25ac5f;--ng-doc-string-color:#fff;--ng-doc-string-background:#ff1150;--ng-doc-number-color:#fff;--ng-doc-number-background:#3498db;--ng-doc-boolean-color:#fff;--ng-doc-boolean-background:#2ecc71;--ng-doc-null-color:#fff;--ng-doc-null-background:#95a5a6;--ng-doc-undefined-color:#fff;--ng-doc-undefined-background:#bdc3c7;--ng-doc-object-color:#fff;--ng-doc-object-background:#f39c12;--ng-doc-component-decorator-color:#fff;--ng-doc-component-decorator-background:#1abc9c;--ng-doc-directive-decorator-color:#fff;--ng-doc-directive-decorator-background:#e67e22;--ng-doc-injectable-decorator-color:#fff;--ng-doc-injectable-decorator-background:#9b59b6;--ng-doc-pipe-decorator-color:#fff;--ng-doc-pipe-decorator-background:#c0392b;--ng-doc-ng-module-decorator-color:#fff;--ng-doc-ng-module-decorator-background:#27ae60;--ng-doc-input-decorator-color:#fff;--ng-doc-input-decorator-background:#13a2da;--ng-doc-output-decorator-color:#fff;--ng-doc-output-decorator-background:#daa213;--ng-doc-abstract-background:#ff5f1a;--ng-doc-abstract-color:#fff;--ng-doc-async-background:#0de311;--ng-doc-async-color:#fff;--ng-doc-protected-background:var(--ng-doc-base-7);--ng-doc-protected-color:#fff;--ng-doc-static-background:#e30dbf;--ng-doc-static-color:#fff;--ng-doc-overriden-background:#0d78e3;--ng-doc-overriden-color:#fff;--ng-doc-readonly-background:#ff2020;--ng-doc-readonly-color:#fff;--ng-doc-get-background:#2ecc3b;--ng-doc-get-color:#fff;--ng-doc-set-background:#e30dbf;--ng-doc-set-color:#fff;--ng-doc-navbar-background:var(--ng-doc-base-0);--ng-doc-navbar-height:calc(var(--ng-doc-base-gutter) * 7);--ng-doc-navbar-horizontal-padding:var(--ng-doc-app-horizontal-padding);--ng-doc-navbar-left-width:calc( var(--ng-doc-sidebar-width) - var(--ng-doc-navbar-horizontal-padding) );--ng-doc-navbar-border:1px solid var(--ng-doc-base-3);--ng-doc-sidebar-width:310px;--ng-doc-sidebar-background:var(--ng-doc-base-0);--ng-doc-sidebar-padding:calc(var(--ng-doc-base-gutter) * 2);--ng-doc-sidebar-vetical-padding:var(--ng-doc-base-gutter);--ng-doc-sidebar-horizontal-padding:var(--ng-doc-app-horizontal-padding);--ng-doc-demo-displayer-border:1px solid var(--ng-doc-border-color);--ng-doc-demo-displayer-border-radius:var(--ng-doc-base-gutter);--ng-doc-code-max-height:400px;--ng-doc-code-highlight-color:var(--ng-doc-primary);--ng-doc-toc-width:280px;--ng-doc-toc-indent:var(--ng-doc-base-gutter);--ng-doc-toc-top-padding:calc(var(--ng-doc-base-gutter) * 3);--ng-doc-search-result-color:#454545;--ng-doc-api-tag-color:#ff1111;--ng-doc-api-tag-background:rgba(255, 17, 17, .15);--ng-doc-guide-tag-color:#0086ff;--ng-doc-guide-tag-background:rgba(0, 134, 255, .15);--ng-doc-tabs-margin:calc(var(--ng-doc-base-gutter) * 4) 0px;--ng-doc-tabs-border-radius:var(--ng-doc-base-gutter)}html{overflow-y:scroll;overflow-x:hidden}html,body{font-family:var(--ng-doc-font-family);font-variant:no-contextual;color:var(--ng-doc-text);line-height:var(--ng-doc-line-height);font-weight:var(--ng-doc-font-weight);font-size:var(--ng-doc-font-size);background-color:var(--ng-doc-background);margin:0;height:100%}:root{--bs-blue:#0d6efd;--bs-indigo:#6610f2;--bs-purple:#6f42c1;--bs-pink:#d63384;--bs-red:#dc3545;--bs-orange:#fd7e14;--bs-yellow:#ffc107;--bs-green:#198754;--bs-teal:#20c997;--bs-cyan:#0dcaf0;--bs-black:#000;--bs-white:#fff;--bs-gray:#6c757d;--bs-gray-dark:#343a40;--bs-gray-100:#f8f9fa;--bs-gray-200:#e9ecef;--bs-gray-300:#dee2e6;--bs-gray-400:#ced4da;--bs-gray-500:#adb5bd;--bs-gray-600:#6c757d;--bs-gray-700:#495057;--bs-gray-800:#343a40;--bs-gray-900:#212529;--bs-primary:#0d6efd;--bs-secondary:#6c757d;--bs-success:#198754;--bs-info:#0dcaf0;--bs-warning:#ffc107;--bs-danger:#dc3545;--bs-light:#f8f9fa;--bs-dark:#212529;--bs-primary-rgb:13, 110, 253;--bs-secondary-rgb:108, 117, 125;--bs-success-rgb:25, 135, 84;--bs-info-rgb:13, 202, 240;--bs-warning-rgb:255, 193, 7;--bs-danger-rgb:220, 53, 69;--bs-light-rgb:248, 249, 250;--bs-dark-rgb:33, 37, 41;--bs-primary-text-emphasis:rgb(5.2, 44, 101.2);--bs-secondary-text-emphasis:rgb(43.2, 46.8, 50);--bs-success-text-emphasis:rgb(10, 54, 33.6);--bs-info-text-emphasis:rgb(5.2, 80.8, 96);--bs-warning-text-emphasis:rgb(102, 77.2, 2.8);--bs-danger-text-emphasis:rgb(88, 21.2, 27.6);--bs-light-text-emphasis:#495057;--bs-dark-text-emphasis:#495057;--bs-primary-bg-subtle:rgb(206.6, 226, 254.6);--bs-secondary-bg-subtle:rgb(225.6, 227.4, 229);--bs-success-bg-subtle:rgb(209, 231, 220.8);--bs-info-bg-subtle:rgb(206.6, 244.4, 252);--bs-warning-bg-subtle:rgb(255, 242.6, 205.4);--bs-danger-bg-subtle:rgb(248, 214.6, 217.8);--bs-light-bg-subtle:rgb(251.5, 252, 252.5);--bs-dark-bg-subtle:#ced4da;--bs-primary-border-subtle:rgb(158.2, 197, 254.2);--bs-secondary-border-subtle:rgb(196.2, 199.8, 203);--bs-success-border-subtle:rgb(163, 207, 186.6);--bs-info-border-subtle:rgb(158.2, 233.8, 249);--bs-warning-border-subtle:rgb(255, 230.2, 155.8);--bs-danger-border-subtle:rgb(241, 174.2, 180.6);--bs-light-border-subtle:#e9ecef;--bs-dark-border-subtle:#adb5bd;--bs-white-rgb:255, 255, 255;--bs-black-rgb:0, 0, 0;--bs-font-sans-serif:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";--bs-font-monospace:SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;--bs-gradient:linear-gradient(180deg, rgba(255, 255, 255, .15), rgba(255, 255, 255, 0));--bs-body-font-family:var(--bs-font-sans-serif);--bs-body-font-size:1rem;--bs-body-font-weight:400;--bs-body-line-height:1.5;--bs-body-color:#212529;--bs-body-color-rgb:33, 37, 41;--bs-body-bg:#fff;--bs-body-bg-rgb:255, 255, 255;--bs-emphasis-color:#000;--bs-emphasis-color-rgb:0, 0, 0;--bs-secondary-color:rgba(33, 37, 41, .75);--bs-secondary-color-rgb:33, 37, 41;--bs-secondary-bg:#e9ecef;--bs-secondary-bg-rgb:233, 236, 239;--bs-tertiary-color:rgba(33, 37, 41, .5);--bs-tertiary-color-rgb:33, 37, 41;--bs-tertiary-bg:#f8f9fa;--bs-tertiary-bg-rgb:248, 249, 250;--bs-heading-color:inherit;--bs-link-color:#0d6efd;--bs-link-color-rgb:13, 110, 253;--bs-link-decoration:underline;--bs-link-hover-color:rgb(10.4, 88, 202.4);--bs-link-hover-color-rgb:10, 88, 202;--bs-code-color:#d63384;--bs-highlight-color:#212529;--bs-highlight-bg:rgb(255, 242.6, 205.4);--bs-border-width:1px;--bs-border-style:solid;--bs-border-color:#dee2e6;--bs-border-color-translucent:rgba(0, 0, 0, .175);--bs-border-radius:.375rem;--bs-border-radius-sm:.25rem;--bs-border-radius-lg:.5rem;--bs-border-radius-xl:1rem;--bs-border-radius-xxl:2rem;--bs-border-radius-2xl:var(--bs-border-radius-xxl);--bs-border-radius-pill:50rem;--bs-box-shadow:0 .5rem 1rem rgba(0, 0, 0, .15);--bs-box-shadow-sm:0 .125rem .25rem rgba(0, 0, 0, .075);--bs-box-shadow-lg:0 1rem 3rem rgba(0, 0, 0, .175);--bs-box-shadow-inset:inset 0 1px 2px rgba(0, 0, 0, .075);--bs-focus-ring-width:.25rem;--bs-focus-ring-opacity:.25;--bs-focus-ring-color:rgba(13, 110, 253, .25);--bs-form-valid-color:#198754;--bs-form-valid-border-color:#198754;--bs-form-invalid-color:#dc3545;--bs-form-invalid-border-color:#dc3545}*,*:before,*:after{box-sizing:border-box}@media(prefers-reduced-motion:no-preference){:root{scroll-behavior:smooth}}body{margin:0;font-family:var(--bs-body-font-family);font-size:var(--bs-body-font-size);font-weight:var(--bs-body-font-weight);line-height:var(--bs-body-line-height);color:var(--bs-body-color);text-align:var(--bs-body-text-align);background-color:var(--bs-body-bg);-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,0,0,0)}:root{--bs-breakpoint-xs:0;--bs-breakpoint-sm:576px;--bs-breakpoint-md:768px;--bs-breakpoint-lg:992px;--bs-breakpoint-xl:1200px;--bs-breakpoint-xxl:1400px}:root{--bs-btn-close-filter: }:root{--bs-carousel-indicator-active-bg:#fff;--bs-carousel-caption-color:#fff;--bs-carousel-control-icon-filter: }:root{--ng-select-brand:#667eea;--ng-select-brand-light:#764ba2;--ng-doc-primary:var(--ng-select-brand);--ng-doc-text-selection:rgba(102, 126, 234, .15);--ng-doc-info:var(--ng-select-brand)}body{--bs-body-bg:var(--ng-doc-base-0, #fff);--bs-body-color:var(--ng-doc-text, #212529);background-color:var(--bs-body-bg);color:var(--bs-body-color)}</style><link rel="stylesheet" href="styles-4NVGP374.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles-4NVGP374.css"></noscript></head>
-	<body>
-		<demo-app>Loading ng-select docs</demo-app>
-	<script src="main-ZBXLUOIN.js" type="module"></script></body>
-</html>
+.ng-dropdown-panel {
+  box-sizing: border-box;
+  position: relative;
+  opacity: 0;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items {
+  display: block;
+  height: auto;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option .ng-option-label:empty:before {
+  content: "​";
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option .highlighted {
+  font-weight: bold;
+  text-decoration: underline;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.disabled {
+  cursor: default;
+}
+.ng-dropdown-panel .scroll-host {
+  overflow: hidden;
+  overflow-y: auto;
+  position: relative;
+  display: block;
+  -webkit-overflow-scrolling: touch;
+}
+.ng-dropdown-panel .scrollable-content {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+.ng-dropdown-panel .total-padding {
+  width: 1px;
+  opacity: 0;
+}
+
+.cdk-overlay-pane .ng-dropdown-panel {
+  position: relative;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+}
+
+.ng-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+  white-space: nowrap;
+}</style><ng-hero-select ng-version="22.2.0" ng-server-context="analog"><div class="hero-demo"><ng-select bindlabel="name" bindvalue="id" placeholder="Try me — select a city" class="ng-select ng-select-single ng-select-searchable ng-select-clearable"><div class="ng-select-container"><div class="ng-value-container"><!----><div class="ng-placeholder">Try me — select a city</div><!----><!----><!----><!----><div class="ng-input"><input aria-autocomplete="list" role="combobox" type="text" autocorrect="off" autocapitalize="off" autocomplete="off" value="" aria-expanded="false"></div></div><!----><!----><span class="ng-arrow-wrapper"><span class="ng-arrow"></span></span><!----></div><!----><div aria-atomic="true" aria-live="polite" role="status" class="ng-visually-hidden"><!----></div></ng-select></div></ng-hero-select><!--astro:end--></astro-island></section><section class="features-grid"><div class="feature-card"><div class="feature-icon">📶</div><h3>Angular Forms support</h3><p>Use Signal Forms with formField, Reactive Forms or Template-driven Forms.</p></div><div class="feature-card"><div class="feature-icon">🔗</div><h3>Flexible bindings</h3><p>Bind to primitives, objects, or nested properties with bindLabel and bindValue.</p></div><div class="feature-card"><div class="feature-icon">🧩</div><h3>Custom templates</h3><p>Replace labels, options, headers, footers and more with your own templates.</p></div><div class="feature-card"><div class="feature-icon">⚡</div><h3>Virtual scroll</h3><p>Smoothly render thousands of options with built-in virtual scrolling.</p></div><div class="feature-card"><div class="feature-icon">🔍</div><h3>Typeahead search</h3><p>Client and server-side filtering, autocomplete and custom search functions.</p></div><div class="feature-card"><div class="feature-icon">🏷️</div><h3>Tags &amp; multiselect</h3><p>Create options on the fly, select multiple values, group items.</p></div><div class="feature-card"><div class="feature-icon">♿</div><h3>Accessible</h3><p>Keyboard navigation and ARIA support out of the box, zoneless-ready.</p></div></section></div></div><footer class="sl-flex astro-bqzg5gf4"><div class="meta sl-flex astro-bqzg5gf4"></div><div class="pagination-links print:hidden astro-kdu5lrkc" dir="ltr"></div></footer></div></div></main></div></div></div></div></body></html>
