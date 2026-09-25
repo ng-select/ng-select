@@ -1,26 +1,56 @@
 /* ==========================================================================
-   Page layout, matching the old Ng-Doc site: the content column starts right
-   after the sidebar (no centring gap) and grows to fill the space up to the
-   "On this page" column; 56px header; ~19.5rem sidebar.
+   Page layout, matching the old Ng-Doc site: the whole app (sidebar, content,
+   "On this page") is centred as one block with a maximum width; inside it the
+   content column starts right after the sidebar and is capped at 812px, the
+   contents column follows directly; 56px header, 310px sidebar, 280px contents.
    ========================================================================== */
 
 :root {
 	--sl-nav-height: 3.5rem;
-	--sl-sidebar-width: 19.5rem;
-	--sl-content-width: 100%;
+	--sl-sidebar-width: 19.375rem; /* 310px */
+	--sl-content-width: 53.75rem; /* 812px of text plus 2 × 24px padding */
 	--sl-content-margin-inline: 0;
-	--sl-content-pad-x: 2.5rem;
+	--sl-content-pad-x: 1.5rem; /* 24px */
+	/* Max width of the centred app block, and the resulting side offset on wide viewports. */
+	--ng-toc-width: 17.5rem; /* 280px */
+	--ng-app-max-width: 90.625rem; /* 1450px */
+	--ng-app-offset: max(0px, calc((100vw - var(--ng-app-max-width)) / 2));
 }
 
-@media (min-width: 72rem) {
-	:root {
-		--sl-content-pad-x: 2.5rem;
-	}
-}
-
-/* Starlight centres `.sl-container`; pin it to the start of the main pane instead. */
+/* Starlight centres `.sl-container` inside the main pane; pin it to the start instead. */
 .main-pane .sl-container,
 .main-pane > .content-panel > .sl-container {
 	margin-inline: var(--sl-content-margin-inline);
 	max-width: var(--sl-content-width);
+}
+
+/* Header controls line up with the app block below. */
+header.header > .header {
+	max-width: var(--ng-app-max-width);
+	margin-inline: auto;
+}
+
+/* Desktop (Starlight shows the sidebar from 50rem): shift the fixed sidebar and the main frame
+   by the side offset so the block is centred, and keep the contents column inside the block. */
+@media (min-width: 50rem) {
+	.sidebar-pane {
+		inset-inline-start: var(--ng-app-offset);
+	}
+
+	.main-frame {
+		padding-inline-start: calc(var(--sl-content-inline-start) + var(--ng-app-offset));
+		padding-inline-end: var(--ng-app-offset);
+	}
+}
+
+/* Large screens (Starlight shows the contents column from 72rem): fixed 280px contents column,
+   the content pane takes the rest, so the text column is 642px at 1280px and 812px at 1450px+. */
+@media (min-width: 72rem) {
+	.right-sidebar-container {
+		width: var(--ng-toc-width);
+	}
+
+	.main-pane {
+		width: calc(100% - var(--ng-toc-width));
+	}
 }

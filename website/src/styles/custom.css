@@ -147,8 +147,6 @@
 	--sl-text-h2: 1.625rem;
 	--sl-text-h3: 1.25rem;
 	--sl-text-h4: 1.125rem;
-	--sl-content-width: 40rem;
-	--sl-sidebar-width: 19.5rem;
 }
 
 /* Headings are inline inside Starlight's `.sl-heading-wrapper`, so vertical
