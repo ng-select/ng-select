@@ -1107,12 +1107,14 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		}
 	}
 
-	trackByOption = (_: number, item: NgOption) => {
+	trackByOption = (index: number, item: NgOption) => {
 		if (this.trackByFn()) {
 			return this.trackByFn()(item.value);
 		}
 
-		return item;
+		// Track by position: options are re-created on every items change, so identity tracking
+		// would replace the option DOM between mousedown and click (#2551).
+		return index;
 	};
 
 	/**
