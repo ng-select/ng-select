@@ -351,7 +351,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 				return;
 			}
 			fromEvent(scrollablePanel, 'scroll')
-				.pipe(takeUntilDestroyed(this._destroyRef), auditTime(0, SCROLL_SCHEDULER))
+				.pipe(auditTime(0, SCROLL_SCHEDULER), takeUntilDestroyed(this._destroyRef))
 				.subscribe(() => {
 					this._onContentScrolled(scrollablePanel.scrollTop);
 				});
@@ -394,6 +394,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 
 		this._zone.runOutsideAngular(() => {
 			Promise.resolve().then(() => {
+				if (this._destroyRef.destroyed) {
+					return;
+				}
 				// Panel may have opened empty; refresh height for scrollTo math (#2744)
 				this._syncPanelHeightFromDom();
 				if (!firstChange) {
@@ -417,6 +420,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	private _updateItemsRange(firstChange: boolean) {
 		this._zone.runOutsideAngular(() => {
 			this._measureDimensions().then(() => {
+				if (this._destroyRef.destroyed) {
+					return;
+				}
 				const scrollTop = firstChange ? this._startOffset : (this._scrollablePanel()?.scrollTop ?? 0);
 				if (!firstChange) {
 					// Items changed at an unchanged scrollTop; bypass the same-position guard (#2880)
@@ -576,6 +582,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 				// Options may not have painted yet; retry once next frame (#2744)
 				return new Promise<PanelDimensions>((resolve) => {
 					requestAnimationFrame(() => {
+						if (this._destroyRef.destroyed) {
+							return;
+						}
 						this._zone.run(() => this.update.emit(toMeasure));
 						Promise.resolve().then(() => resolve(this._readMeasuredDimensions(items, firstOption, firstGroup)));
 					});
