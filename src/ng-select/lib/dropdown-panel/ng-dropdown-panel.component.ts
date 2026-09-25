@@ -78,6 +78,8 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	 * Which DOM event to listen to for outside click detection
 	 */
 	readonly outsideClickEvent = input<'click' | 'mousedown'>('click');
+	/** Close the dropdown when the page or an ancestor container scrolls. */
+	readonly closeOnScroll = input(false, { transform: booleanAttribute });
 	/** @deprecated Has no effect: the CDK overlay renders in the native Popover API top layer automatically in supporting browsers. Will be removed in a future major version. */
 	readonly popover = input(false, { transform: booleanAttribute });
 	/** Overlay hosting this panel. Used to request repositioning when the rendered content changes. */
@@ -91,6 +93,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	}>();
 	readonly scrollToEnd = output<void>();
 	readonly outsideClick = output<void>();
+	readonly outsideScroll = output<void>();
 	private _renderer = inject(Renderer2);
 	private _zone = inject(NgZone);
 	private _panelService = inject(NgDropdownPanelService);
@@ -175,10 +178,12 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		this._select = this.selectElement() ?? this._dropdown.parentElement;
 		this._handleScroll();
 		new DropdownPanelDomEvents({
+			closeOnScroll: this.closeOnScroll(),
 			destroyRef: this._destroyRef,
 			document: this._document,
 			dropdown: this._dropdown,
 			onOutsideClick: () => this.outsideClick.emit(),
+			onOutsideScroll: () => this.outsideScroll.emit(),
 			outsideClickEvent: this.outsideClickEvent() ?? 'click',
 			overlayRef: this.overlayRef(),
 			select: this._select,

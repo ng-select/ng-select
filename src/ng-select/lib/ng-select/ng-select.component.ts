@@ -184,6 +184,9 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	/** Whether to close the menu when a value is selected */
 	readonly _closeOnSelect = input(true, { alias: 'closeOnSelect', transform: booleanAttribute });
 	readonly closeOnSelect = linkedSignal(() => this._closeOnSelect());
+	/** Close the dropdown when the page or an ancestor container scrolls. Default `false` */
+	readonly _closeOnScroll = input(this.config.closeOnScroll ?? false, { alias: 'closeOnScroll', transform: booleanAttribute });
+	readonly closeOnScroll = linkedSignal(() => this._closeOnScroll());
 	/** Allows to hide selected items. */
 	readonly _hideSelected = input(false, { alias: 'hideSelected', transform: booleanAttribute });
 	readonly hideSelected = linkedSignal(() => this._hideSelected());

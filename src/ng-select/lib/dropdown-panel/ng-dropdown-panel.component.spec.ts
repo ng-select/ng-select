@@ -107,12 +107,14 @@ async function waitForFrames(count = 2): Promise<void> {
 				[bufferAmount]="bufferAmount()"
 				[showAddTag]="showAddTag()"
 				[outsideClickEvent]="outsideClickEvent()"
+				[closeOnScroll]="closeOnScroll()"
 				[overlayRef]="overlayRef()"
 				[selectElement]="selectElement()"
 				(update)="onUpdate($event)"
 				(scroll)="scrollEvents.push($event)"
 				(scrollToEnd)="scrollToEndCount = scrollToEndCount + 1"
-				(outsideClick)="outsideClickCount = outsideClickCount + 1">
+				(outsideClick)="outsideClickCount = outsideClickCount + 1"
+				(outsideScroll)="outsideScrollCount = outsideScrollCount + 1">
 				@for (item of viewPortItems(); track item.htmlId) {
 					<div
 						class="test-option"
@@ -139,6 +141,7 @@ class NgDropdownPanelTestComponent {
 	readonly bufferAmount = signal(4);
 	readonly showAddTag = signal(false);
 	readonly outsideClickEvent = signal<'click' | 'mousedown' | null>('click');
+	readonly closeOnScroll = signal(false);
 	readonly overlayRef = signal<OverlayRef | null>(null);
 	readonly selectElement = signal<HTMLElement | undefined>(undefined);
 	readonly viewPortItems = signal<NgOption[]>([]);
@@ -147,6 +150,7 @@ class NgDropdownPanelTestComponent {
 	scrollEvents: { start: number; end: number }[] = [];
 	scrollToEndCount = 0;
 	outsideClickCount = 0;
+	outsideScrollCount = 0;
 
 	onUpdate(items: NgOption[]) {
 		this.updateEvents.push(items);
@@ -856,6 +860,73 @@ describe('NgDropdownPanelComponent', () => {
 			scrollHostElement().dispatchEvent(new Event('scroll'));
 			await waitForFrames();
 			expect(overlayRef.updatePosition.mock.calls.length).toBe(calls);
+			expect(host.outsideScrollCount).toBe(0);
+		});
+
+		it('should emit outsideScroll instead of repositioning when closeOnScroll is enabled', async () => {
+			const overlayRef = createFakeOverlayRef();
+			createFixture((host) => {
+				host.overlayRef.set(overlayRef as unknown as OverlayRef);
+				host.closeOnScroll.set(true);
+			});
+			await flushAsync();
+			await waitForFrames();
+			overlayRef.updatePosition.mockClear();
+
+			document.dispatchEvent(new Event('scroll'));
+			await waitForFrames();
+
+			expect(host.outsideScrollCount).toBe(1);
+			expect(overlayRef.updatePosition).not.toHaveBeenCalled();
+		});
+
+		it('should not emit outsideScroll when the option list itself scrolls', async () => {
+			createFixture((host) => {
+				host.overlayRef.set(createFakeOverlayRef() as unknown as OverlayRef);
+				host.closeOnScroll.set(true);
+			});
+			await flushAsync();
+			await waitForFrames();
+
+			scrollHostElement().dispatchEvent(new Event('scroll'));
+			await waitForFrames();
+
+			expect(host.outsideScrollCount).toBe(0);
+		});
+
+		it('should ignore a scroll already pending when the panel opens (focus-scroll) and close on the next one', async () => {
+			createFixture((host) => host.closeOnScroll.set(true));
+			// Dispatched before the next frame: this is what a focus-induced scroll looks like to a panel that just opened
+			document.dispatchEvent(new Event('scroll'));
+			await flushAsync();
+			await waitForFrames();
+			expect(host.outsideScrollCount).toBe(0);
+
+			document.dispatchEvent(new Event('scroll'));
+			await waitForFrames();
+			expect(host.outsideScrollCount).toBe(1);
+		});
+
+		it('should not throw when the panel is destroyed before the deferred close listener attaches', async () => {
+			createFixture((host) => host.closeOnScroll.set(true));
+			fixture.destroy();
+
+			await waitForFrames();
+			document.dispatchEvent(new Event('scroll'));
+			await waitForFrames();
+
+			expect(host.outsideScrollCount).toBe(0);
+		});
+
+		it('should emit outsideScroll without an overlay when closeOnScroll is enabled', async () => {
+			createFixture((host) => host.closeOnScroll.set(true));
+			await flushAsync();
+			await waitForFrames();
+
+			document.dispatchEvent(new Event('scroll'));
+			await waitForFrames();
+
+			expect(host.outsideScrollCount).toBe(1);
 		});
 	});
 

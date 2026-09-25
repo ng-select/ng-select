@@ -33,4 +33,14 @@
 	</div>
 </div>
 
+<br />
+<p>Set <code>closeOnScroll</code> to close the panel instead when the page or an ancestor container scrolls:</p>
+
+<div class="scrollable-box">
+	<div class="overflow-box">
+		<ng-select [items]="people | async" bindLabel="company" placeholder="Select item" [closeOnScroll]="true" [(ngModel)]="selected4"> </ng-select>
+	</div>
+	<div style="height: 600px"></div>
+</div>
+
 <div style="height: 100px"></div>
