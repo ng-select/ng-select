@@ -55,6 +55,7 @@
 		"@angular/cli": "^22.2.0",
 		"@angular/compiler-cli": "^22.2.0",
 		"@angular/language-service": "^22.2.0",
+		"@angular/localize": "22.2.0",
 		"@astrojs/mdx": "^8.0.2",
 		"@astrojs/starlight": "^0.42.4",
 		"@eslint/js": "^10.0.1",
