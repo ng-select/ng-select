@@ -38,7 +38,7 @@ header.header > .header {
 	}
 
 	.main-frame {
-		padding-inline-start: calc(var(--sl-content-inline-start) + var(--ng-app-offset));
+		padding-inline-start: calc(var(--sl-content-inline-start, 0px) + var(--ng-app-offset));
 		padding-inline-end: var(--ng-app-offset);
 	}
 }
@@ -46,11 +46,17 @@ header.header > .header {
 /* Large screens (Starlight shows the contents column from 72rem): fixed 280px contents column,
    the content pane takes the rest, so the text column is 642px at 1280px and 812px at 1450px+. */
 @media (min-width: 72rem) {
-	.right-sidebar-container {
+	:root[data-has-toc] .right-sidebar-container {
 		width: var(--ng-toc-width);
 	}
 
-	.main-pane {
+	:root[data-has-toc] .main-pane {
 		width: calc(100% - var(--ng-toc-width));
 	}
+}
+
+/* Pages without a sidebar (the landing page) centre their content in the full block. */
+:root:not([data-has-sidebar]) .main-pane .sl-container {
+	margin-inline: auto;
+	max-width: var(--ng-app-max-width);
 }
