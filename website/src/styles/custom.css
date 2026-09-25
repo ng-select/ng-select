@@ -47,6 +47,12 @@
 	--ng-navbar-border: #474747;
 	--ng-navbar-shadow: rgba(0, 0, 0, 0.4);
 	--ng-brand-gradient: linear-gradient(90deg, #667eea, #764ba2);
+	/* Typography metrics measured on the old Ng-Doc site (see the "Typography" section below). */
+	--sl-line-height: 1.5;
+	--sl-text-h1: 2.25rem;
+	--sl-text-h2: 1.625rem;
+	--sl-text-h3: 1.25rem;
+	--sl-text-h4: 1.125rem;
 }
 
 /* Light mode — Ng-Doc light theme: white page, #4e4e4e text, #111 headings,
@@ -141,13 +147,7 @@
    layout itself (column placement, TOC width) is in layout.css.
    ========================================================================== */
 
-:root {
-	--sl-line-height: 1.5;
-	--sl-text-h1: 2.25rem;
-	--sl-text-h2: 1.625rem;
-	--sl-text-h3: 1.25rem;
-	--sl-text-h4: 1.125rem;
-}
+/* The typography variables themselves live in the first `:root` block above (one `:root` per file). */
 
 /* Headings are inline inside Starlight's `.sl-heading-wrapper`, so vertical
    rhythm goes on the wrapper. Ng-Doc: 56px above every h2/h3, 16px when a
