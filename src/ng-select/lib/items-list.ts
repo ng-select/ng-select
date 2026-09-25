@@ -422,6 +422,7 @@ export class ItemsList {
 			label: isDefined(label) ? label.toString() : '',
 			value,
 			disabled: item && item.disabled ? item.disabled : false,
+			selected: false,
 			classes: hasNgOptionClasses ? item.$ngOptionClasses : '',
 			htmlId: `${this._ngSelect.dropdownId}-${index}`,
 		};
