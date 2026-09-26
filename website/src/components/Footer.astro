@@ -1,0 +1,120 @@
+---
+// Starlight component override.
+// https://starlight.astro.build/guides/overriding-components/
+// Keeps Starlight's per-page footer (edit link, last updated, prev/next) and appends a
+// site-wide link footer modelled on https://analogjs.org/docs/introduction.
+import Default from '@astrojs/starlight/components/Footer.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const repo = 'https://github.com/ng-select/ng-select';
+
+const columns = [
+	{
+		heading: 'Documentation',
+		links: [
+			{ label: 'Installation', href: `${base}/getting-started/installation/` },
+			{ label: 'Usage', href: `${base}/getting-started/usage/` },
+			{ label: 'llms.txt', href: `${base}/llms.txt`, external: true },
+			{ label: 'llms-full.txt', href: `${base}/llms-full.txt`, external: true },
+		],
+	},
+	{
+		heading: 'Open source',
+		links: [
+			{ label: 'Contributors', href: `${base}/reference/contributors/` },
+			{ label: 'Contributing', href: `${repo}/blob/master/CONTRIBUTING.md`, external: true },
+			{ label: 'Sponsoring', href: `${repo}/blob/master/.github/FUNDING.yml`, external: true },
+		],
+	},
+	{
+		heading: 'More',
+		links: [
+			{ label: 'GitHub', href: repo, external: true },
+			{ label: 'npm', href: 'https://www.npmjs.com/package/@ng-select/ng-select', external: true },
+			{ label: 'Stack Overflow', href: 'https://stackoverflow.com/questions/tagged/ng-select', external: true },
+		],
+	},
+];
+---
+
+<Default {...Astro.props}>
+	<slot />
+</Default>
+
+<footer class="ng-site-footer">
+	<div class="ng-site-footer__grid">
+		<div class="ng-site-footer__brand">
+			<span class="ng-site-footer__logo">ng-select</span>
+			<a href={`${repo}/blob/master/LICENSE`} target="_blank" rel="noopener noreferrer">
+				Released under the MIT License
+			</a>
+		</div>
+		{columns.map((column) => (
+			<div>
+				<h3>{column.heading}</h3>
+				<ul>
+					{column.links.map((link) => (
+						<li>
+							<a href={link.href} {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+								{link.label}
+							</a>
+						</li>
+					))}
+				</ul>
+			</div>
+		))}
+	</div>
+</footer>
+
+<style>
+	.ng-site-footer {
+		margin-top: 3rem;
+		padding: 2.5rem 0 2rem;
+		border-top: 1px solid var(--sl-color-hairline);
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+	.ng-site-footer__grid {
+		display: grid;
+		gap: 2rem;
+		grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+	}
+	.ng-site-footer__brand {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		align-items: flex-start;
+	}
+	.ng-site-footer__logo {
+		font-size: var(--sl-text-lg);
+		font-weight: 700;
+		background: linear-gradient(135deg, var(--ng-select-brand, #667eea) 0%, var(--ng-select-brand-light, #764ba2) 100%);
+		-webkit-background-clip: text;
+		background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+	.ng-site-footer h3 {
+		margin-bottom: 0.75rem;
+		font-size: var(--sl-text-xs);
+		font-weight: 600;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: var(--sl-color-white);
+	}
+	.ng-site-footer ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+	.ng-site-footer a {
+		color: inherit;
+		text-decoration: none;
+	}
+	.ng-site-footer a:hover {
+		color: var(--sl-color-white);
+		text-decoration: underline;
+	}
+</style>

@@ -1,0 +1,113 @@
+---
+/**
+ * Contributors page body, modelled on https://analogjs.org/docs/contributors: maintainer cards with
+ * avatar and bio, then an avatar grid of everyone with commits since 2024. Data: src/data/contributors.ts.
+ */
+import { avatarUrl, contributors, maintainers } from '../data/contributors';
+
+interface Props {
+	/** Which section to render; the headings live in the MDX page so Starlight's table of contents sees them. */
+	section: 'maintainers' | 'contributors';
+}
+
+const { section } = Astro.props;
+---
+
+{section === 'maintainers' && (
+	<div class="ng-maintainers not-content">
+		{maintainers.map((person) => (
+			<article class="ng-maintainer">
+				<img src={avatarUrl(person.id, 96)} width="96" height="96" alt="" loading="lazy" />
+				<div>
+					<h3 id={person.login}>{person.name}</h3>
+					<p>{person.bio}</p>
+					<p class="ng-maintainer__links">
+						<a href={`https://github.com/${person.login}`} target="_blank" rel="noopener noreferrer">
+							GitHub
+						</a>
+						{person.website && (
+							<a href={person.website} target="_blank" rel="noopener noreferrer">
+								Website
+							</a>
+						)}
+					</p>
+				</div>
+			</article>
+		))}
+	</div>
+)}
+
+{section === 'contributors' && (
+	<ul class="ng-contributors not-content">
+		{contributors.map((person) => (
+			<li>
+				<a href={`https://github.com/${person.login}`} target="_blank" rel="noopener noreferrer" title={`@${person.login}`}>
+					<img src={avatarUrl(person.id, 64)} width="64" height="64" alt="" loading="lazy" />
+					<span>{person.name}</span>
+				</a>
+			</li>
+		))}
+	</ul>
+)}
+
+<style>
+	.ng-maintainers {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		margin-top: 1rem;
+		/* Extra breathing room before the Contributors section. */
+		margin-bottom: 3rem;
+		padding-bottom: 2rem;
+		border-bottom: 1px solid var(--sl-color-hairline);
+	}
+	.ng-maintainer {
+		display: flex;
+		gap: 1.25rem;
+		align-items: flex-start;
+	}
+	.ng-maintainer img,
+	.ng-contributors img {
+		border-radius: 50%;
+		flex-shrink: 0;
+		background: var(--sl-color-gray-6);
+	}
+	.ng-maintainer h3 {
+		margin: 0 0 0.5rem;
+		font-size: var(--sl-text-lg);
+	}
+	.ng-maintainer p {
+		margin: 0;
+		color: var(--sl-color-gray-2);
+	}
+	.ng-maintainer__links {
+		display: flex;
+		gap: 1rem;
+		margin-top: 0.5rem !important;
+		font-size: var(--sl-text-sm);
+	}
+	.ng-contributors {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+		gap: 1.5rem 1rem;
+		list-style: none;
+		margin: 1rem 0 0;
+		padding: 0;
+	}
+	.ng-contributors a {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		text-align: center;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-2);
+		text-decoration: none;
+	}
+	.ng-contributors a:hover {
+		color: var(--sl-color-white);
+	}
+	.ng-contributors a:hover img {
+		outline: 2px solid var(--sl-color-accent);
+	}
+</style>

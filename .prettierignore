@@ -3,3 +3,5 @@
 src/assets/css/vendor
 website/.astro
 pnpm-lock.yaml
+llms.txt
+llms-full.txt

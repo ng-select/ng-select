@@ -3,7 +3,7 @@
    The PageTitle override renders nothing on splash, but Starlight still emits
    its (now empty) title ContentPanel, which adds 48px of padding and a
    hairline border above the hero. Old Ng-Doc home had neither, nor a page
-   footer, and used a 1100px column with 24px gutters at every width.
+   per-page footer, and used a 1100px column with 24px gutters at every width.
    This file is only bundled on the landing page.
    ========================================================================== */
 
@@ -24,7 +24,7 @@ main:has(.home-container) > .content-panel:not(:has(.home-container)) {
 	max-width: none;
 }
 
-.content-panel:has(.home-container) > .sl-container > footer {
+.content-panel:has(.home-container) > .sl-container > footer:not(.ng-site-footer) {
 	display: none;
 }
 

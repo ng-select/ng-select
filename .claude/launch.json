@@ -7,6 +7,13 @@
 			"runtimeArgs": ["exec", "astro", "dev", "--root", "website", "--port", "4300"],
 			"port": 4300,
 			"autoPort": true
+		},
+		{
+			"name": "docs-preview",
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": ["exec", "astro", "preview", "--root", "website", "--port", "4301"],
+			"port": 4301,
+			"autoPort": true
 		}
 	]
 }

@@ -626,7 +626,7 @@ describe('ItemsList', () => {
 			const list = itemsListFactory(component);
 
 			expect(list.resolveNested({ city: null }, 'city.name')).toBeNull();
-			expect(list.resolveNested({ city: { name: 'Vilnius' } }, 'city.name')).toBe('Vilnius');
+			expect(list.resolveNested({ city: { name: 'Paris' } }, 'city.name')).toBe('Paris');
 		});
 	});
 

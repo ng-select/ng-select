@@ -17,10 +17,10 @@ export class CssVariablesExampleComponent implements OnDestroy {
 	protected readonly dark = signal(false);
 
 	cities = [
-		{ value: 1, label: 'Vilnius' },
-		{ value: 2, label: 'Kaunas' },
-		{ value: 3, label: 'Pavilnys' },
-		{ value: 4, label: 'Klaipėda' },
+		{ value: 1, label: 'New York' },
+		{ value: 2, label: 'London' },
+		{ value: 3, label: 'Paris' },
+		{ value: 4, label: 'Tokyo' },
 	];
 
 	selectedCity = 1;
