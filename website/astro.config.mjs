@@ -101,6 +101,7 @@ export default defineConfig({
 				'./src/styles/layout.css',
 			],
 			components: {
+				Footer: './src/components/Footer.astro',
 				PageTitle: './src/components/PageTitle.astro',
 				ThemeSelect: './src/components/ThemeSelect.astro',
 			},

@@ -3,7 +3,8 @@
 	"scripts": {
 		"ng": "ng",
 		"build": "ng build ng-select && ng build ng-option-highlight && pnpm build:themes && pnpm copy-sass",
-		"build:docs": "astro build --root website",
+		"build:docs": "pnpm build:llms && astro build --root website",
+		"build:llms": "node scripts/generate-llms.mjs",
 		"build:themes": "sass --style=compressed src/ng-select/themes/:dist/ng-select/themes",
 		"copy-sass": "mkdir -p dist/ng-select/scss && cp src/ng-select/**/*.scss dist/ng-select/scss",
 		"start": "astro dev --root website --port 4300",
