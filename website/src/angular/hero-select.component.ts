@@ -19,9 +19,10 @@ export class HeroSelectComponent {
 	demoCities = [
 		{ id: 1, name: 'New York' },
 		{ id: 2, name: 'London' },
-		{ id: 3, name: 'Vilnius' },
+		{ id: 3, name: 'Tokyo' },
 		{ id: 4, name: 'Paris' },
-		{ id: 5, name: 'Tokyo' },
+		{ id: 5, name: 'Beijing' },
+		{ id: 6, name: 'New Delhi' },
 	];
 
 	readonly demoModel = signal({ cityId: null as number | null });
