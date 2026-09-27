@@ -1,0 +1,62 @@
+// The Bootstrap 5 pieces the demo examples rely on, exactly as the old Ng-Doc site had them
+// (buttons, forms, cards, alerts, badges, grid, utilities, ng-bootstrap modals). Bootstrap's
+// element-level `reboot` and `type` are intentionally NOT loaded: they would fight Starlight's
+// own typography. Everything below is class-scoped, so it is safe next to Starlight.
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/variables-dark';
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/utilities';
+@import 'bootstrap/scss/root';
+@import 'bootstrap/scss/grid';
+@import 'bootstrap/scss/forms';
+@import 'bootstrap/scss/buttons';
+@import 'bootstrap/scss/transitions';
+@import 'bootstrap/scss/badge';
+@import 'bootstrap/scss/alert';
+@import 'bootstrap/scss/card';
+@import 'bootstrap/scss/close';
+@import 'bootstrap/scss/modal';
+@import 'bootstrap/scss/helpers';
+@import 'bootstrap/scss/utilities/api';
+
+// Bootstrap paints with its own light-only variables; point them at Starlight's so the demos
+// (and ng-bootstrap modals, which render outside the demo card) follow the dark-mode toggle.
+:root[data-theme='dark'] {
+	--bs-body-bg: var(--sl-color-bg);
+	--bs-body-color: var(--sl-color-text);
+	--bs-border-color: var(--sl-color-gray-5);
+	--bs-border-color-translucent: var(--sl-color-gray-5);
+	--bs-tertiary-bg: var(--sl-color-gray-6);
+	--bs-secondary-bg: var(--sl-color-gray-6);
+	--bs-emphasis-color: var(--sl-color-white);
+}
+
+// Bootstrap 4 classes still used by a few examples (Bootstrap 5 dropped them).
+.form-group {
+	margin-bottom: 1rem;
+}
+
+.ml-1 {
+	margin-left: 0.25rem !important;
+}
+
+.badge-secondary {
+	color: #fff;
+	background-color: #6c757d;
+}
+
+.close {
+	float: right;
+	font-size: 1.5rem;
+	font-weight: 700;
+	line-height: 1;
+	color: #000;
+	text-shadow: 0 1px 0 #fff;
+	opacity: 0.5;
+	background: transparent;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+}

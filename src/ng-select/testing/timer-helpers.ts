@@ -1,7 +1,7 @@
 import { ComponentFixture } from '@angular/core/testing';
 import { vi } from 'vitest';
 import { tickAndDetectChanges } from './helpers';
-import type { NgSelectComponent } from '../lib/ng-select.component';
+import type { NgSelectComponent } from '../lib/ng-select/ng-select.component';
 
 export function enableDebounceFakeTimers(): void {
 	vi.useFakeTimers({ shouldAdvanceTime: true });

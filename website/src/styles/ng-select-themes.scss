@@ -1,0 +1,151 @@
+@use 'sass:meta';
+
+// ng-select theme stylesheets, ported from src/demo/styles.scss. Loaded per the
+// active `html.<x>-theme` class kept in sync by the header theme picker.
+//
+// Global — NOT scoped to `.ng-demo` — because the dropdown panel renders in a
+// CDK overlay attached to <body>, outside any demo wrapper (see the note atop
+// demo.css for the full explanation). All three theme files declare their
+// `--ng-select-*` custom properties on `:root` (verified in
+// src/ng-select/themes/{default,ant.design,material}.theme.scss), not on
+// `.ng-select`.
+html.default-theme {
+	@include meta.load-css('../../../src/ng-select/themes/default.theme');
+}
+
+html.ant-theme {
+	@include meta.load-css('../../../src/ng-select/themes/ant.design.theme');
+}
+
+html.material-theme {
+	@include meta.load-css('../../../src/ng-select/themes/material.theme');
+}
+
+// Dark palette used by the "Theming with CSS variables" example
+// (css-variables-example). Toggled by that demo's own button — independent of
+// the site's light/dark mode. Declared on <body> so it reaches both the select
+// and the dropdown panel (CDK overlay). Ported verbatim from styles.scss.
+// Only redeclares custom properties; never targets ng-select's internal classes.
+body.ng-select-dark-demo {
+	--ng-select-bg: #1f2430;
+	--ng-select-border: #3a4152;
+	--ng-select-border-lighter: #3a4152;
+	--ng-select-highlight: #7aa2f7;
+	--ng-select-primary-text: #d8dee9;
+	--ng-select-value-text: #d8dee9;
+	--ng-select-input-text: #d8dee9;
+	--ng-select-placeholder: #7c8496;
+	--ng-select-arrow: #7c8496;
+	--ng-select-arrow-hover: #d8dee9;
+	--ng-select-selected: #2f3a52;
+	--ng-select-selected-text: #d8dee9;
+	--ng-select-selected-hover: #3a4763;
+	--ng-select-selected-border: #46557a;
+	--ng-select-marked: #2a3145;
+	--ng-select-marked-text: #d8dee9;
+	--ng-select-dropdown-bg: #1f2430;
+	--ng-select-dropdown-border: #3a4152;
+	--ng-select-dropdown-option-bg: #1f2430;
+	--ng-select-dropdown-option-text: #d8dee9;
+	--ng-select-dropdown-option-disabled: #5a6275;
+	--ng-select-dropdown-optgroup-text: #9aa3b8;
+	--ng-select-dropdown-optgroup-marked: #d8dee9;
+}
+
+// ---------------------------------------------------------------------------
+// Starlight dark mode. Page.astro sets `data-theme="dark"` on <html> by
+// default (and keeps it there unless the visitor picks light), so
+// `:root[data-theme='dark']` is the selector to hook. Each block below is
+// scoped to its own `body.<x>-theme` class (descendant of <html>) so the
+// three themes' differently-named custom properties get the right dark
+// values without colliding.
+//
+// Mapping: bg -> --sl-color-gray-6, borders -> --sl-color-gray-5,
+// primary/value/input text -> --sl-color-white (these grays follow the
+// Ng-Doc dark palette set in custom.css). Selected/marked backgrounds and the
+// highlight/focus color are pinned to the brand indigo ($ng-dark-selected /
+// $ng-dark-highlight) instead of --sl-color-accent*, because the site accent
+// is Ng-Doc's orange in dark mode. Secondary/placeholder/disabled text use
+// dimmer grays for readability. Box-shadow customs (--ng-select-box-shadow,
+// --ng-select-container-hover-shadow, --ng-select-dropdown-shadow) and
+// non-color customs (height, padding, font-size) are intentionally left
+// alone — they're not colors and the light-mode shadows still read fine on
+// a dark background.
+// ---------------------------------------------------------------------------
+
+$ng-dark-selected: #2e2a5c;
+$ng-dark-highlight: #667eea;
+
+:root[data-theme='dark'].default-theme {
+	--ng-select-bg: var(--sl-color-gray-6);
+	--ng-select-border: var(--sl-color-gray-5);
+	--ng-select-border-dark: var(--sl-color-gray-4);
+	--ng-select-border-light: var(--sl-color-gray-4);
+	--ng-select-border-lighter: var(--sl-color-gray-5);
+	--ng-select-highlight: #{$ng-dark-highlight};
+	--ng-select-primary-text: var(--sl-color-white);
+	--ng-select-value-text: var(--sl-color-white);
+	--ng-select-input-text: var(--sl-color-white);
+	--ng-select-placeholder: var(--sl-color-gray-3);
+	--ng-select-disabled-text: var(--sl-color-gray-4);
+	--ng-select-arrow: var(--sl-color-gray-3);
+	--ng-select-arrow-hover: var(--sl-color-gray-2);
+	--ng-select-arrow-active: var(--sl-color-white);
+	--ng-select-clear: var(--sl-color-gray-3);
+	--ng-select-selected: #{$ng-dark-selected};
+	--ng-select-selected-text: var(--sl-color-white);
+	--ng-select-selected-hover: var(--sl-color-gray-5);
+	--ng-select-selected-border: var(--sl-color-gray-4);
+	--ng-select-marked: #{$ng-dark-selected};
+	--ng-select-marked-text: var(--sl-color-white);
+	--ng-select-dropdown-bg: var(--sl-color-gray-6);
+	--ng-select-dropdown-border: var(--sl-color-gray-5);
+	--ng-select-dropdown-option-bg: var(--sl-color-gray-6);
+	--ng-select-dropdown-option-text: var(--sl-color-white);
+	--ng-select-dropdown-option-disabled: var(--sl-color-gray-4);
+	--ng-select-dropdown-optgroup-text: var(--sl-color-gray-3);
+	--ng-select-dropdown-optgroup-marked: var(--sl-color-white);
+}
+
+:root[data-theme='dark'].ant-theme {
+	--ng-select-bg: var(--sl-color-gray-6);
+	--ng-select-disabled-bg: var(--sl-color-gray-5);
+	--ng-select-border: var(--sl-color-gray-5);
+	--ng-select-border-lighter: var(--sl-color-gray-5);
+	--ng-select-highlight: #{$ng-dark-highlight};
+	--ng-select-primary-text: var(--sl-color-white);
+	--ng-select-disabled-text: var(--sl-color-gray-4);
+	--ng-select-placeholder: var(--sl-color-gray-3);
+	--ng-select-value-bg: var(--sl-color-gray-5);
+	--ng-select-value-border: var(--sl-color-gray-4);
+	--ng-select-selected: #{$ng-dark-selected};
+	--ng-select-selected-bg: #{$ng-dark-selected};
+	--ng-select-marked: #{$ng-dark-selected};
+	--ng-select-clear: var(--sl-color-gray-3);
+	--ng-select-clear-bg: var(--sl-color-gray-5);
+	--ng-select-clear-bg-hover: var(--sl-color-gray-4);
+	--ng-select-clear-icon: var(--sl-color-white);
+	--ng-select-dropdown-optgroup-text: var(--sl-color-gray-3);
+}
+
+:root[data-theme='dark'].material-theme {
+	--ng-select-bg: var(--sl-color-gray-6);
+	--ng-select-highlight: #{$ng-dark-highlight};
+	--ng-select-primary-text: var(--sl-color-white);
+	--ng-select-primary-light-text: var(--sl-color-white);
+	--ng-select-secondary-text: var(--sl-color-gray-3);
+	--ng-select-secondary-light-text: var(--sl-color-gray-2);
+	--ng-select-disabled-text: var(--sl-color-gray-4);
+	--ng-select-divider: var(--sl-color-gray-5);
+	--ng-select-underline: var(--sl-color-gray-4);
+	--ng-select-marked: #{$ng-dark-selected};
+	--ng-select-disabled-value-text: var(--sl-color-gray-4);
+	--ng-select-fill-bg: var(--sl-color-gray-5);
+	--ng-select-fill-disabled-bg: var(--sl-color-gray-6);
+}
+
+// Not covered above: Material theme's `.ng-dropdown-panel` elevation shadows
+// (the `box-shadow: 0 -5px 5px -3px rgba(0, 0, 0, 0.2), …` rules for each
+// position variant) are hardcoded rgba(0, 0, 0, …) values in
+// material.theme.scss, not exposed as custom properties — dark mode can't
+// adjust them without editing that file, so they're left alone.

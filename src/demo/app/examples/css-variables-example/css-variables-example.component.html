@@ -1,0 +1,16 @@
+<p>
+	No recompile, no <code>::ng-deep</code>, no extra selectors — the button below only flips a class on <code>&lt;body&gt;</code> that redeclares a handful of
+	<code>--ng-select-*</code> custom properties. Open the dropdown while the dark palette is on to see it apply to the panel too.
+</p>
+
+<button type="button" class="btn btn-secondary" (click)="toggle()">
+	{{ dark() ? 'Switch to light palette' : 'Switch to dark palette' }}
+</button>
+
+<hr />
+
+<ng-select [items]="cities" bindValue="value" bindLabel="label" [(ngModel)]="selectedCity" placeholder="Select a city"> </ng-select>
+
+<hr />
+
+<ng-select [items]="cities" bindValue="value" bindLabel="label" [multiple]="true" placeholder="Select cities"> </ng-select>

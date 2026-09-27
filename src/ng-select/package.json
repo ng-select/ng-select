@@ -1,7 +1,7 @@
 {
 	"name": "@ng-select/ng-select",
-	"version": "15.0.1",
-	"description": "Angular ng-select - All in One UI Select, Multiselect and Autocomplete",
+	"version": "23.6.0",
+	"description": "Angular select, multiselect and autocomplete with Signal Forms, Reactive Forms and Template-driven Forms support",
 	"author": "@ng-select/ng-select",
 	"license": "MIT",
 	"repository": "ng-select/ng-select",
@@ -15,6 +15,9 @@
 		"dropdown",
 		"multiselect",
 		"autocomplete",
+		"signal-forms",
+		"reactive-forms",
+		"template-driven-forms",
 		"angular2"
 	],
 	"exports": {
@@ -38,6 +41,7 @@
 		}
 	},
 	"peerDependencies": {
+		"@angular/cdk": "^22.0.0",
 		"@angular/common": "^22.0.0",
 		"@angular/core": "^22.0.0",
 		"@angular/forms": "^22.0.0"

@@ -2,10 +2,10 @@
 
 <ng-select [items]="cities" [(ngModel)]="selectedCity" bindLabel="name" bindValue="name">
 	<ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-		@if (item.name === 'Kaunas') {
+		@if (item.name === 'London') {
 			<div>{{ item.name }}</div>
 		}
-		@if (item.name !== 'Kaunas') {
+		@if (item.name !== 'London') {
 			<div style="margin: 10px 0" class="card">
 				<div class="card-body">
 					<h5 class="card-title" [ngOptionHighlight]="search">{{ item.name }}</h5>
@@ -14,7 +14,7 @@
 						<img height="15" width="15" [src]="item.avatar" />
 						Some quick example text to build
 					</p>
-					@if (item.name === 'Pavilnys') {
+					@if (item.name === 'Beijing') {
 						<div>
 							<a href="#" class="card-link">Card link</a>
 							<a href="#" class="card-link">Another link</a>

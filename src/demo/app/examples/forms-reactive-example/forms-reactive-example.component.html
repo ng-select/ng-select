@@ -1,0 +1,14 @@
+<form [formGroup]="cityForm" novalidate>
+	<div class="form-group">
+		<label for="reactive-city">Reactive Forms select</label>
+		<ng-select [items]="cities" bindLabel="name" bindValue="id" labelForId="reactive-city" placeholder="Select a city" formControlName="cityId" />
+		@if (cityForm.controls.cityId.touched && cityForm.controls.cityId.invalid) {
+			<small class="text-danger">Choose a city</small>
+		}
+		<br />
+		<button type="button" class="btn btn-sm btn-secondary" (click)="cityForm.controls.cityId.reset()">Reset</button>
+		<button type="button" class="btn btn-sm btn-secondary" (click)="toggleDisabled()">Toggle disabled</button>
+	</div>
+</form>
+
+<pre>{{ cityForm.getRawValue() | json }}</pre>

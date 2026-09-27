@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
@@ -8,12 +8,10 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 	changeDetection: ChangeDetectionStrategy.Eager,
 	imports: [NgSelectComponent],
 })
-export class DropdownPositionExampleComponent implements OnInit {
+export class DropdownPositionExampleComponent{
 	cities = [
-		{ value: 1, label: 'Vilnius' },
-		{ value: 2, label: 'Kaunas' },
-		{ value: 3, label: 'Pavilnys' },
+		{ value: 1, label: 'New York' },
+		{ value: 2, label: 'London' },
+		{ value: 3, label: 'Paris' },
 	];
-
-	ngOnInit() {}
 }

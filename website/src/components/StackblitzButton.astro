@@ -1,0 +1,144 @@
+---
+import indexHtmlTemplate from '../stackblitz/index.html?raw';
+import stylesCssTemplate from '../stackblitz/styles.css?raw';
+import dataServiceTemplate from '../stackblitz/data.service.ts?raw';
+import mainTsTemplate from '../stackblitz/main.ts?raw';
+import appModuleTemplate from '../stackblitz/app.module.ts?raw';
+import angularJsonTemplate from '../stackblitz/angular.json?raw';
+
+interface Props {
+	example: string;
+	files: { ts: string; html: string; scss: string };
+}
+
+const { example, files } = Astro.props;
+
+const templates: Record<string, string> = {
+	'index.html': indexHtmlTemplate,
+	'styles.css': stylesCssTemplate,
+	'data.service.ts': dataServiceTemplate,
+	'main.ts': mainTsTemplate,
+	'app.module.ts': appModuleTemplate,
+	'angular.json': angularJsonTemplate,
+};
+
+// Escape `<` so the JSON payload can't be broken out of by a literal `</script>` sequence.
+const payload = JSON.stringify({ example, files, templates }).replace(/</g, '\\u003c');
+---
+
+<div class="stackblitz">
+	<button type="button" class="stackblitz-link" title="Edit in StackBlitz" data-stackblitz data-example={example}>
+		<svg width="14px" height="20px" viewBox="0 0 23 34" version="1.1" xmlns="http://www.w3.org/2000/svg">
+			<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+				<g fill="#1389FD" fill-rule="nonzero">
+					<polygon points="0 19.9187087 9.87007874 19.9187087 4.12007874 34 23 13.9612393 13.0846457 13.9612393 18.7893701 0"></polygon>
+				</g>
+			</g>
+		</svg>
+		Edit in StackBlitz
+	</button>
+	<script type="application/json" data-stackblitz-payload set:html={payload} />
+</div>
+
+<script>
+	import sdk from '@stackblitz/sdk';
+	import type { Project } from '@stackblitz/sdk';
+
+	const angularVersion = '^22.0.0';
+	const dependencies = {
+		'@angular/animations': angularVersion,
+		'@angular/cdk': angularVersion,
+		'@angular/common': angularVersion,
+		'@angular/compiler': angularVersion,
+		'@angular/core': angularVersion,
+		'@angular/forms': angularVersion,
+		'@angular/localize': angularVersion,
+		'@angular/platform-browser': angularVersion,
+		'@angular/platform-browser-dynamic': angularVersion,
+		'@angular/router': angularVersion,
+		'@ng-select/ng-select': '*',
+		'@ng-select/ng-option-highlight': '*',
+		'@ng-bootstrap/ng-bootstrap': '*',
+		rxjs: '^7.8.0',
+	};
+
+	interface StackblitzPayload {
+		example: string;
+		files: { ts: string; html: string; scss: string };
+		templates: Record<string, string>;
+	}
+
+	function toPascalCase(example: string): string {
+		return example
+			.split('-')
+			.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+			.join('');
+	}
+
+	function buildProject(payload: StackblitzPayload): Project {
+		const { example, files, templates } = payload;
+		const componentName = `${toPascalCase(example)}Component`;
+		const exampleImport = `import { ${componentName} } from './src/${example}.component'`;
+		const exampleTemplate = `<ng-${example}></ng-${example}>`;
+
+		const templateFiles: Record<string, string> = {};
+		for (const [name, content] of Object.entries(templates)) {
+			let fileContent = content;
+			if (name === 'app.module.ts') {
+				fileContent = fileContent
+					.replace('//example-import', exampleImport)
+					.replace('//example-template', exampleTemplate)
+					.replace('//example-cmp', componentName);
+			}
+			if (name === 'styles.css' && example.startsWith('material')) {
+				fileContent = fileContent.replace('@ng-select/ng-select/themes/default.theme.css', '@ng-select/ng-select/themes/material.theme.css');
+			}
+			templateFiles[name] = fileContent;
+		}
+
+		const exampleFiles: Record<string, string> = {
+			[`src/${example}.component.ts`]: files.ts,
+		};
+		if (files.html) {
+			exampleFiles[`src/${example}.component.html`] = files.html;
+		}
+		// The component's styleUrls still points at the stylesheet when it is empty, so ship it either way
+		// (the old site always sent all three files).
+		if (files.scss || /styleUrls?\s*:/.test(files.ts)) {
+			exampleFiles[`src/${example}.component.scss`] = files.scss ?? '';
+		}
+
+		return {
+			files: {
+				...templateFiles,
+				...exampleFiles,
+			},
+			title: 'ng-select example',
+			description: 'ng-select example',
+			template: 'angular-cli',
+			dependencies,
+		};
+	}
+
+	function bindButton(button: HTMLElement) {
+		if (button.dataset.stackblitzBound === 'true') {
+			return;
+		}
+		button.dataset.stackblitzBound = 'true';
+
+		button.addEventListener('click', () => {
+			const wrapper = button.closest('.stackblitz');
+			const payloadScript = wrapper?.querySelector<HTMLScriptElement>('[data-stackblitz-payload]');
+			if (!payloadScript?.textContent) {
+				return;
+			}
+
+			const payload = JSON.parse(payloadScript.textContent) as StackblitzPayload;
+			const project = buildProject(payload);
+
+			sdk.openProject(project, { openFile: `src/${payload.example}.component.html` });
+		});
+	}
+
+	document.querySelectorAll<HTMLElement>('[data-stackblitz]').forEach(bindButton);
+</script>

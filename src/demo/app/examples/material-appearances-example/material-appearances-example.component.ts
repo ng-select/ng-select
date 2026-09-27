@@ -11,11 +11,11 @@ import { NgOptionComponent, NgSelectComponent } from '@ng-select/ng-select';
 })
 export class MaterialAppearancesExampleComponent {
 	cities = [
-		{ id: 1, name: 'Vilnius' },
-		{ id: 2, name: 'Kaunas' },
-		{ id: 3, name: 'Pavilnys' },
-		{ id: 4, name: 'Pabradė' },
-		{ id: 5, name: 'Klaipėda' },
+		{ id: 1, name: 'New York' },
+		{ id: 2, name: 'London' },
+		{ id: 3, name: 'Paris' },
+		{ id: 4, name: 'Tokyo' },
+		{ id: 5, name: 'New Delhi' },
 	];
 
 	selectedDefault = this.cities[0];

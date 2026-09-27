@@ -1,0 +1,51 @@
+# ng-select
+
+> ng-select is a lightweight all-in-one UI select, multiselect and autocomplete component for Angular. It is published as two npm packages: `@ng-select/ng-select` (the select component, template directives, and the `default`, `material` and `ant.design` themes) and `@ng-select/ng-option-highlight` (an optional directive that highlights the search term inside options). The component is standalone, uses OnPush change detection with signal-based inputs, integrates with Signal Forms, Reactive Forms and Template-driven Forms through `ControlValueAccessor`, and supports keyboard navigation, ARIA attributes, virtual scroll, typeahead, tagging, grouping and custom templates.
+
+- Current library version: 23.6.0 (Angular peer range ^22.0.0)
+- Install: `npm i @ng-select/ng-select @angular/cdk` (or pnpm/yarn)
+- Docs: https://ng-select.github.io/ng-select
+- Repository: https://github.com/ng-select/ng-select
+- Package: https://www.npmjs.com/package/@ng-select/ng-select
+
+## Docs
+
+- [Installation](https://ng-select.github.io/ng-select/getting-started/installation/): ng-select is a lightweight all-in-one UI select, multiselect and autocomplete component for Angular.
+- [Usage](https://ng-select.github.io/ng-select/getting-started/usage/): ng-select supports Signal Forms, Reactive Forms and Template-driven Forms in Angular 22 applications.
+- [Styling](https://ng-select.github.io/ng-select/getting-started/styling/)
+- [Change detection](https://ng-select.github.io/ng-select/getting-started/change-detection/)
+- [Custom selection logic](https://ng-select.github.io/ng-select/getting-started/custom-selection-logic/)
+
+## Reference
+
+- [API Reference](https://ng-select.github.io/ng-select/reference/api/)
+- [Versions](https://ng-select.github.io/ng-select/reference/versions/): Each major version of ng-select targets a specific range of Angular versions.
+- [Browser support](https://ng-select.github.io/ng-select/reference/browser-support/)
+- [Contributors](https://ng-select.github.io/ng-select/reference/contributors/): ng-select is maintained by a small team with help from the community. Meet the maintainers and everyone who has contributed since 2024.
+
+## Examples
+
+- [Data sources](https://ng-select.github.io/ng-select/examples/data-sources/): ng-select accepts items from an array of objects, inline `ng-option` elements, or asynchronous/observable data.
+- [Data bindings](https://ng-select.github.io/ng-select/examples/bindings/): ng-select can bind to plain values, whole objects, or nested properties using `bindLabel` and `bindValue`.
+- [Forms](https://ng-select.github.io/ng-select/examples/forms/): ng-select supports Signal Forms, Reactive Forms and Template-driven Forms through the same control value accessor.
+- [Search and autocomplete](https://ng-select.github.io/ng-select/examples/search/): Ng-select filters items as you type and supports custom search functions, server-side typeahead, and autocomplete scenarios.
+- [Tags](https://ng-select.github.io/ng-select/examples/tags/): ng-select can create new options on the fly using the `addTag` input, letting users add items that are not in the list.
+- [Templates](https://ng-select.github.io/ng-select/examples/templates/): ng-select lets you customize every part of the component — labels, options, headers, footers, and more — using `ng-template` directives.
+- [Multiselect](https://ng-select.github.io/ng-select/examples/multiselect/): Setting `[multiple]="true"` enables multiselect mode, allowing users to select more than one item at a time.
+- [Multiselect checkbox](https://ng-select.github.io/ng-select/examples/multiselect-checkbox/): Render checkboxes inside dropdown options by using custom option templates in multiselect mode.
+- [Output events](https://ng-select.github.io/ng-select/examples/events/)
+- [Virtual scroll](https://ng-select.github.io/ng-select/examples/virtual-scroll/): ng-select can render large lists efficiently by enabling `[virtualScroll]="true"`, which only renders the options currently visible in the dropdown viewport.
+- [Dropdown position](https://ng-select.github.io/ng-select/examples/dropdown-position/): Control where the dropdown panel opens relative to the select — top, bottom, or auto based on available space.
+- [Fixed placeholder](https://ng-select.github.io/ng-select/examples/fixed-placeholder/): Keep the placeholder visible even while items are selected.
+- [Append to element](https://ng-select.github.io/ng-select/examples/append-to-element/)
+- [Popover](https://ng-select.github.io/ng-select/examples/popover/)
+- [Grouping](https://ng-select.github.io/ng-select/examples/grouping/): Use the `groupBy` input to group options by an item key or a function expression.
+- [Material theme](https://ng-select.github.io/ng-select/examples/material/)
+
+## Optional
+
+- [Full documentation in one file](https://ng-select.github.io/ng-select/llms-full.txt): every docs page with demo source code
+- [README](https://github.com/ng-select/ng-select#readme): installation, API tables, change detection notes
+- [Releases](https://github.com/ng-select/ng-select/releases): release notes per version
+- [Contributing](https://github.com/ng-select/ng-select/blob/master/CONTRIBUTING.md): how to contribute
+- [ng-option-highlight](https://github.com/ng-select/ng-select/blob/master/src/ng-option-highlight/README.md): highlight directive usage

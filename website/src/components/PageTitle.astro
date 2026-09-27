@@ -1,0 +1,45 @@
+---
+// Starlight component override.
+// https://starlight.astro.build/guides/overriding-components/
+// - Landing page (splash template) renders its own hero, so Starlight's <h1> is skipped there.
+// - Everywhere else, an Ng-Doc style breadcrumb ("Examples › Multiselect") precedes the title.
+//   The group label comes from the sidebar route data, so it always matches the `sidebar` config.
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+
+const { entry, sidebar } = Astro.locals.starlightRoute;
+const isSplash = entry.data.template === 'splash';
+
+type SidebarEntry = (typeof sidebar)[number];
+const containsCurrent = (item: SidebarEntry): boolean => (item.type === 'link' ? item.isCurrent : item.entries.some(containsCurrent));
+const group = sidebar.find((item) => item.type === 'group' && containsCurrent(item))?.label;
+---
+
+{!isSplash && (
+	<>
+		{group && (
+			<nav class="ng-breadcrumb" aria-label="Breadcrumb">
+				<span>{group}</span>
+				<span class="ng-breadcrumb__sep" aria-hidden="true">
+					›
+				</span>
+				<span>{entry.data.title}</span>
+			</nav>
+		)}
+		<Default {...Astro.props}>
+			<slot />
+		</Default>
+	</>
+)}
+
+<style>
+	.ng-breadcrumb {
+		display: flex;
+		gap: 0.5rem;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+		margin-bottom: 0.5rem;
+	}
+	.ng-breadcrumb__sep {
+		color: var(--sl-color-gray-4);
+	}
+</style>

@@ -1,0 +1,71 @@
+---
+// Starlight component override: renders the default light/dark ThemeSelect,
+// preceded by an ng-select visual-theme picker. ThemeSelect is the one override
+// point Starlight renders in both the desktop header (Header) and the mobile
+// menu (MobileMenuFooter), so the picker shows up in both places.
+// The initial theme class is applied before first paint by the inline script
+// registered via Starlight's `head` option in astro.config.mjs.
+// https://starlight.astro.build/guides/overriding-components/
+import Default from '@astrojs/starlight/components/ThemeSelect.astro';
+---
+
+<div class="theme-controls">
+	<label class="theme-picker">
+		<span class="theme-picker-label">Theme</span>
+		<select aria-label="ng-select theme" data-ng-select-theme>
+			<option value="default">Default</option>
+			<option value="material">Material</option>
+			<option value="ant">Ant Design</option>
+		</select>
+	</label>
+	<Default {...Astro.props}>
+		<slot />
+	</Default>
+</div>
+
+<script>
+	// This component can render more than once per page (desktop header +
+	// mobile menu footer). A non-`is:inline` <script> is bundled and executed
+	// only once per page by Astro even so, and we sync every picker instance
+	// found in the DOM.
+	//
+	// ng-select instances read their theme class once, at initialization, so
+	// there's no live way to re-theme already-rendered selects in place. A
+	// full reload is the simplest way to apply a newly chosen theme.
+	const STORAGE_KEY = 'ng-select-theme';
+
+	function readStoredTheme(): string {
+		try {
+			return sessionStorage.getItem(STORAGE_KEY) || 'default';
+		} catch {
+			return 'default';
+		}
+	}
+
+	function storeTheme(theme: string): void {
+		try {
+			sessionStorage.setItem(STORAGE_KEY, theme);
+		} catch {
+			// Ignore storage errors (e.g. private browsing); the theme just
+			// won't persist across reloads.
+		}
+	}
+
+	const stored = readStoredTheme();
+
+	document.querySelectorAll<HTMLSelectElement>('select[data-ng-select-theme]').forEach((select) => {
+		select.value = stored;
+		select.addEventListener('change', () => {
+			storeTheme(select.value);
+			window.location.reload();
+		});
+	});
+</script>
+
+<style>
+	.theme-controls {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+</style>

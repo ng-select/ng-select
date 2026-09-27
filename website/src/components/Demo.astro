@@ -1,0 +1,88 @@
+---
+/**
+ * Renders one demo from src/demo/app/examples/<example>/ the way the old Ng-Doc site did:
+ * a bordered card with the live example, a "</>" toggle that reveals the source tabs
+ * (TypeScript, HTML, SCSS) and an "Edit in StackBlitz" link underneath.
+ * Usage in MDX: <Demo example="multi-select-default-example" />
+ */
+import { Code, TabItem, Tabs } from '@astrojs/starlight/components';
+import { DemoHostComponent } from '../angular/demo-host.component.ts';
+import StackblitzButton from './StackblitzButton.astro';
+
+interface Props {
+	example: string;
+	/** Hide the "Edit in StackBlitz" link (the old site only showed it on example pages). */
+	stackblitz?: boolean;
+}
+
+const { example, stackblitz = true } = Astro.props;
+
+const sources = import.meta.glob('../../../src/demo/app/examples/*/*.component.{ts,html,scss}', {
+	query: '?raw',
+	import: 'default',
+	eager: true,
+}) as Record<string, string>;
+
+const read = (ext: 'ts' | 'html' | 'scss'): string | undefined => sources[`../../../src/demo/app/examples/${example}/${example}.component.${ext}`];
+
+const ts = read('ts');
+const html = read('html');
+const scss = read('scss');
+if (!ts) {
+	throw new Error(`Demo "${example}" not found under src/demo/app/examples`);
+}
+const hasStyles = !!scss && scss.trim().length > 0;
+const sourceId = `ng-demo-source-${example}`;
+---
+
+<div class="ng-demo not-content" data-example={example}>
+	<div class="ng-demo__toolbar">
+		<button type="button" class="ng-demo__toggle" aria-expanded="false" aria-controls={sourceId} title="Show code" aria-label="Show code">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+				<polyline points="16 18 22 12 16 6"></polyline>
+				<polyline points="8 6 2 12 8 18"></polyline>
+			</svg>
+		</button>
+	</div>
+	<div class="ng-demo__preview">
+		<DemoHostComponent example={example} client:only="@analogjs/astro-angular" />
+	</div>
+	<div class="ng-demo__source" id={sourceId} hidden data-pagefind-ignore>
+		<Tabs>
+			<TabItem label="TypeScript">
+				<Code code={ts} lang="ts" />
+			</TabItem>
+			{html && (
+				<TabItem label="HTML">
+					<Code code={html} lang="html" />
+				</TabItem>
+			)}
+			{hasStyles && (
+				<TabItem label="SCSS">
+					<Code code={scss} lang="scss" />
+				</TabItem>
+			)}
+		</Tabs>
+	</div>
+</div>
+{stackblitz && (
+	<div class="not-content" data-pagefind-ignore>
+		<StackblitzButton example={example} files={{ ts, html: html ?? '', scss: scss ?? '' }} />
+	</div>
+)}
+
+<script>
+	// One bundled script per page: wires every demo's "</>" toggle to its source panel.
+	document.querySelectorAll<HTMLButtonElement>('.ng-demo__toggle').forEach((button) => {
+		const panel = document.getElementById(button.getAttribute('aria-controls') ?? '');
+		if (!panel) return;
+		button.addEventListener('click', () => {
+			const open = panel.hasAttribute('hidden');
+			panel.toggleAttribute('hidden', !open);
+			button.setAttribute('aria-expanded', String(open));
+			const label = open ? 'Hide code' : 'Show code';
+			button.title = label;
+			button.setAttribute('aria-label', label);
+		});
+	});
+</script>

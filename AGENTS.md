@@ -39,21 +39,21 @@ You are deeply familiar with:
 
 ## Project Summary
 
-ng-select is an **Angular 22** component library published as two npm packages, with a demo application for interactive documentation.
+ng-select is an **Angular 22** component library published as two npm packages, with an Astro + Starlight documentation site for interactive documentation and live demos.
 
-| Package                          | Path                       | Purpose                                                            |
-| -------------------------------- | -------------------------- | ------------------------------------------------------------------ |
-| `@ng-select/ng-select`           | `src/ng-select/`           | Main select/multiselect/autocomplete component                     |
-| `@ng-select/ng-option-highlight` | `src/ng-option-highlight/` | Optional directive to highlight search terms in options            |
-| `demo`                           | `src/demo/`                | Documentation/demo app served locally and deployed to GitHub Pages |
+| Package                          | Path                       | Purpose                                                                                                                                                  |
+| -------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@ng-select/ng-select`           | `src/ng-select/`           | Main select/multiselect/autocomplete component                                                                                                           |
+| `@ng-select/ng-option-highlight` | `src/ng-option-highlight/` | Optional directive to highlight search terms in options                                                                                                  |
+| `docs site`                      | `website/`                 | Astro + Starlight documentation site; demo examples remain in `src/demo/app/examples/` and are rendered as Angular islands via `@analogjs/astro-angular` |
 
-- **Build/dev**: Angular CLI (`@angular/build:ng-packagr` for libraries, `@angular/build:application` for demo)
-- **Demo routing**: `src/demo/app/routes.ts` with example categories (data sources, forms, search, templates, etc.)
+- **Build/dev**: Angular CLI (`@angular/build:ng-packagr` for libraries); Astro (`astro build --root website`) for the docs site, which renders demo examples in `src/demo/app/examples/` as Angular islands via `@analogjs/astro-angular`
+- **Docs pages**: `website/src/content/docs/{getting-started,reference,examples}/*.mdx`, rendered via the Starlight sidebar
 - **Public API**: `src/ng-select/public-api.ts`, `src/ng-option-highlight/public-api.ts`
 - **Themes**: `src/ng-select/themes/` compiled to `dist/ng-select/themes/`
 - **Current library version**: see `src/ng-select/package.json` (currently **15.0.1**)
 - **Angular peer range**: `^22.0.0` (see README version matrix)
-- **Live demo**: [https://ng-select.github.io/ng-select](https://ng-select.github.io/ng-select)
+- **Docs site**: [https://ng-select.github.io/ng-select](https://ng-select.github.io/ng-select)
 - **Repository**: [https://github.com/ng-select/ng-select](https://github.com/ng-select/ng-select)
 
 ---
@@ -66,6 +66,7 @@ ng-select is an **Angular 22** component library published as two npm packages, 
 - **Signals in library code**: Prefer `input()`, `output()`, and `model()` for new APIs. The main component uses the `_foo` + `linkedSignal()` pattern to preserve stable public property names—follow that when extending `NgSelectComponent`.
 - **Tests**: Vitest browser mode — headless **Chromium** via Playwright (`vitest.config.ts`); `pnpm test`, `pnpm test:ci`. Playwright is only the unit-test browser provider — there is no separate e2e suite.
 - **Commits**: Use [Conventional Commits](https://www.conventionalcommits.org/) format (required by semantic-release).
+- **Attribution**: **DO NOT** list yourself, your model name, or any AI/LLM assistant as a contributor, co-author, author, or credit in any file, commit, or PR.
 
 ---
 
@@ -86,15 +87,15 @@ ng-select is an **Angular 22** component library published as two npm packages, 
 # Install dependencies
 pnpm install
 
-# Start demo app (watch mode)
+# Start docs site (watch mode)
 pnpm run start
-# Runs at http://localhost:4200
+# Runs at http://localhost:4300
 
 # Build both libraries + themes
 pnpm run build
 
-# Build demo for production (GitHub Pages)
-pnpm run build:demo
+# Build docs site for production (GitHub Pages)
+pnpm run build:docs
 
 # Unit tests (both libraries, with coverage)
 pnpm run test
@@ -122,10 +123,11 @@ ng-select/
 ├── src/
 │   ├── ng-select/                    # @ng-select/ng-select library
 │   │   ├── lib/
-│   │   │   ├── ng-select.component.ts       # Main component (OnPush, signals, CVA)
-│   │   │   ├── ng-select.component.html
-│   │   │   ├── ng-select.component.scss
-│   │   │   ├── ng-dropdown-panel.component.ts
+│   │   │   ├── ng-select/                    # Main component, model helpers, and focused specs
+│   │   │   │   ├── ng-select.component.ts   # Main component (OnPush, signals, CVA)
+│   │   │   │   ├── ng-select.component.html
+│   │   │   │   └── ng-select.component.scss
+│   │   │   ├── dropdown-panel/               # Panel component, service, overlay, and positioning
 │   │   │   ├── ng-option.component.ts
 │   │   │   ├── ng-templates.directive.ts    # Template directives (ng-option-tmp, etc.)
 │   │   │   ├── items-list.ts                # Filtering, grouping, virtual scroll logic
@@ -141,42 +143,29 @@ ng-select/
 │   │   ├── lib/
 │   │   │   └── ng-option-highlight.directive.ts
 │   │   └── public-api.ts
-│   └── demo/                         # Demo/documentation application
-│       ├── app/
-│       │   ├── routes.ts             # Example category routes
-│       │   ├── examples/             # One folder per interactive example
-│       │   ├── shared/               # Route viewer, StackBlitz button, layout
-│       │   └── layout/
-│       ├── assets/stackblitz/        # StackBlitz starter files
-│       └── styles.scss
-├── dist/                             # Build output (libraries + demo)
+│   └── demo/
+│       └── app/examples/             # One folder per interactive example (Angular islands)
+├── website/                           # Astro + Starlight documentation site
+│   ├── astro.config.mjs
+│   ├── src/
+│   │   ├── content/docs/**/*.mdx     # Docs pages (getting-started, reference, examples)
+│   │   ├── components/Demo.astro     # Demo wrapper component
+│   │   ├── angular/                  # Islands: demo-host, hero
+│   │   ├── styles/
+│   │   └── stackblitz/               # StackBlitz starter files
+│   └── public/assets/
+├── dist/                             # Build output (libraries + docs site)
 ├── angular.json                      # Workspace projects: ng-select, ng-option-highlight, demo
 ├── eslint.config.js
 ├── .prettierrc.json
 └── .github/workflows/                # CI, release, CodeQL
 ```
 
-### Demo example categories (`src/demo/app/routes.ts`)
+### Docs pages and demo examples
 
-| Route                   | Description                                     |
-| ----------------------- | ----------------------------------------------- |
-| `/data-sources`         | Items from arrays, options, backend/async       |
-| `/forms`                | Reactive forms integration                      |
-| `/bindings`             | `bindLabel`, `bindValue`, custom compare        |
-| `/search`               | Search, autocomplete, typeahead                 |
-| `/tags`                 | Custom tag creation                             |
-| `/templates`            | Label, option, header/footer, loading templates |
-| `/multiselect`          | Multiple selection patterns                     |
-| `/multiselect-checkbox` | Checkbox multiselect                            |
-| `/events`               | Output events                                   |
-| `/virtual-scroll`       | Large lists                                     |
-| `/dropdown-position`    | Top/bottom/auto positioning                     |
-| `/append-to-element`    | `appendTo` behavior                             |
-| `/popover`              | Native Popover API                              |
-| `/grouping`             | `groupBy` and selectable groups                 |
-| `/material`             | Material theme appearances (outline / fill)     |
-
-Register new examples in `src/demo/app/examples/examples.ts`.
+- Docs pages live in `website/src/content/docs/{getting-started,reference,examples}/*.mdx`.
+- A live demo is embedded in a page with `<Demo example="<folder>" />`.
+- Adding an example: create `src/demo/app/examples/<name>-example/` with `<name>-example.component.{ts,html,scss}`, exporting a class named `<PascalCase(<name>-example)>Component` with selector `ng-<name>-example`, then register it in `website/src/angular/examples.registry.ts` (add a line to the registry).
 
 ---
 
@@ -190,6 +179,7 @@ Register new examples in `src/demo/app/examples/examples.ts`.
 - **DO NOT** add new runtime dependencies to published packages without strong justification.
 - **DO NOT** hand-edit build output under `dist/`.
 - **DO NOT** remove `NgSelectModule` or rename CSS classes without a migration plan.
+- **DO NOT** write your name, model name, product name, or any AI/LLM identity as a contributor, co-author, author, or acknowledgement—anywhere (README, CONTRIBUTING, AUTHORS, CREDITS, changelogs, commit messages including `Co-authored-by`, PR titles/bodies, comments, or docs). Humans own attribution; assistants do not.
 
 ---
 
@@ -344,8 +334,8 @@ When adding new inputs to `NgSelectComponent`, follow this `_name` + `alias` + `
 
 ### Dropdown positioning
 
-- `NgDropdownPanelService` handles positioning, scrolling, and virtual scroll.
-- `appendTo` and `popover` are alternative strategies for overflow/stacking issues—preserve both.
+- The panel renders in an Angular CDK Overlay anchored to the select container; `NgDropdownPanelService` handles scrolling and virtual scroll measurements.
+- `appendTo` controls DOM containment of the overlay (ancestor-scoped styles, stacking context, focus enclosure) — positioning stays viewport-based. `popover` is a deprecated no-op (the overlay uses the native Popover API top layer automatically).
 
 ---
 
@@ -366,7 +356,7 @@ When changing styles, verify all three themes and check validation-state styling
 - **DO NOT** add new unit tests unless explicitly requested or needed to cover changed behavior.
 - **SHOULD** update existing specs when modifying behavior already covered by tests.
 - Test stack: **Vitest browser mode** (headless **Chromium** via `@vitest/browser-playwright`, wired through `@angular/build:unit-test` and `vitest.config.ts`) + `zone.js/testing`. Failed specs save screenshots to `src/ng-select/lib/__screenshots__/`.
-- Main spec: `src/ng-select/lib/ng-select.component.spec.ts` (extensive coverage—follow its patterns).
+- Main spec: `src/ng-select/lib/ng-select/ng-select.component.spec.ts` (extensive coverage—follow its patterns).
 - Helpers: `src/ng-select/testing/helpers.ts`, mocks in `src/ng-select/testing/mocks.ts`.
 - Use `fakeAsync`, `tick`, `tickAndDetectChanges`, and `selectOption` helpers for keyboard/dropdown interactions.
 - CI runs `pnpm test:ci` (headless Chromium) and reports coverage to Coveralls.
@@ -383,12 +373,12 @@ For substantial library changes:
 
 ### CI (`.github/workflows/ci.yml`)
 
-On push/PR affecting `*.ts`, `*.html`, `*.scss`:
+On push/PR affecting `*.ts`, `*.html`, `*.scss`, `website/**`, `*.mdx`, `*.mjs`, `*.astro`:
 
 1. `pnpm install`
 2. `pnpm lint`
 3. `pnpm test:ci`
-4. `pnpm build:demo`
+4. `pnpm build:docs`
 5. Coveralls upload
 
 ### Release (`.github/workflows/release.yml`)
@@ -398,7 +388,7 @@ On push to `master`:
 1. `pnpm build` (libraries + themes)
 2. `semantic-release` publishes `@ng-select/ng-select` from `dist/ng-select`
 3. Version-synced publish of `@ng-select/ng-option-highlight`
-4. `pnpm build:demo` and deploy to `gh-pages`
+4. `pnpm build:docs` and deploy `dist/docs` to `gh-pages`
 
 Commits must follow Conventional Commits for semantic-release to work.
 
@@ -441,8 +431,8 @@ For substantial code changes:
 - `package.json` — scripts and dependency versions
 - `angular.json` — project definitions
 - `src/ng-select/public-api.ts` — exported library surface
-- `src/ng-select/lib/ng-select.component.ts` — main component implementation
-- `src/ng-select/lib/ng-select.component.spec.ts` — behavioral test reference
+- `src/ng-select/lib/ng-select/ng-select.component.ts` — main component implementation
+- `src/ng-select/lib/ng-select/ng-select.component.spec.ts` — behavioral test reference
 - `src/demo/app/examples/` — interactive examples
 - `src/ng-option-highlight/README.md` — highlight directive usage
 
@@ -470,6 +460,7 @@ These tips are **not** a second source of truth; they only help humans and assis
 
 | Location                                                               | Purpose                                                          |
 | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| [`.claude/CLAUDE.md`](./.claude/CLAUDE.md)                             | Claude Code: pointer + Claude-specific sizing/verification       |
 | [`.cursor/rules/rules.mdc`](./.cursor/rules/rules.mdc)                 | Cursor always-applied rule: short pointer + critical constraints |
 | [`.github/copilot-instructions.md`](./.github/copilot-instructions.md) | GitHub Copilot: pointer to this file                             |
 

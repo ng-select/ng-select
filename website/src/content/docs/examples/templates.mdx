@@ -1,0 +1,78 @@
+---
+title: Templates
+description: 'ng-select lets you customize every part of the component — labels, options, headers, footers, and more — using `ng-template` directives.'
+sidebar:
+  order: 6
+---
+
+import Demo from '@components/Demo.astro';
+
+ng-select lets you customize every part of the component — labels, options, headers, footers, and more — using `ng-template` directives.
+
+## Custom label template
+
+<Demo example="template-label-example" />
+
+## Custom placeholder template
+
+<Demo example="template-placeholder-example" />
+
+## Custom option template
+
+<Demo example="template-option-example" />
+
+## Custom optgroup template
+
+<Demo example="template-optgroup-example" />
+
+## Custom header and footer template
+
+<Demo example="template-header-footer-example" />
+
+## Custom info display templates
+
+<Demo example="template-display-example" />
+
+## Custom search control
+
+<Demo example="template-search-example" />
+
+## Custom loading spinner
+
+<Demo example="template-loading-example" />
+
+## Custom clear button
+
+<Demo example="template-clear-example" />
+
+## API
+
+| Template directive      | Purpose                                                                                                               |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `ng-label-tmp`          | Customizes how the selected item's label is rendered in the select input                                              |
+| `ng-placeholder-tmp`    | Customizes the placeholder shown when no item is selected                                                             |
+| `ng-option-tmp`         | Customizes how each option is rendered in the dropdown panel; exposes `item`, `index` and `searchTerm`                |
+| `ng-optgroup-tmp`       | Customizes how group headers are rendered when `groupBy` is used                                                      |
+| `ng-header-tmp`         | Renders custom content at the top of the dropdown panel (e.g. select/unselect all buttons or a custom search control) |
+| `ng-footer-tmp`         | Renders custom content at the bottom of the dropdown panel (e.g. selected count)                                      |
+| `ng-typetosearch-tmp`   | Customizes the message shown before the user starts typing when using `typeahead`                                     |
+| `ng-notfound-tmp`       | Customizes the message shown when the search returns no results; exposes `searchTerm`                                 |
+| `ng-loadingtext-tmp`    | Customizes the text shown while items are being loaded; exposes `searchTerm`                                          |
+| `ng-loadingspinner-tmp` | Replaces the default loading spinner with custom markup                                                               |
+| `ng-clearbutton-tmp`    | Replaces the default clear button with custom markup                                                                  |
+
+### Inputs
+
+| Input        | Type                   | Default | Description                                                                  |
+| ------------ | ---------------------- | ------- | ---------------------------------------------------------------------------- |
+| [items]      | `Array<any>`           | `[]`    | Items array                                                                  |
+| bindLabel    | `string`               | `label` | Object property to use for label. Default `label`                            |
+| bindValue    | `string`               | `-`     | Object property to use for selected model. By default binds to whole object. |
+| [multiple]   | `boolean`              | `false` | Allows to select multiple items.                                             |
+| [groupBy]    | `string` \| `Function` | null    | Allow to group items by key or function expression                           |
+| [searchable] | `boolean`              | `true`  | Allow to search for value. Default `true`                                    |
+| [loading]    | `boolean`              | `-`     | You can set the loading state from the outside (e.g. async items loading)    |
+| [typeahead]  | `Subject`              | `-`     | Custom autocomplete or advanced filter.                                      |
+| placeholder  | `string`               | `-`     | Placeholder text.                                                            |
+
+See the `NgSelectComponent` API reference for the complete list of inputs and outputs.

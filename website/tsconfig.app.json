@@ -1,0 +1,33 @@
+{
+	"extends": "./tsconfig.json",
+	"compileOnSave": false,
+	"compilerOptions": {
+		"outDir": "../dist/out-tsc/website",
+		"target": "es2022",
+		"module": "es2022",
+		"moduleResolution": "bundler",
+		"lib": ["es2022", "dom"],
+		"experimentalDecorators": true,
+		"useDefineForClassFields": false,
+		"importHelpers": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"declaration": false,
+		"noEmit": false,
+		"strict": false,
+		"strictNullChecks": false,
+		"strictPropertyInitialization": false,
+		"noImplicitAny": false,
+		"isolatedModules": false,
+		"verbatimModuleSyntax": false
+	},
+	"angularCompilerOptions": {
+		"enableI18nLegacyMessageIdFormat": false,
+		"strictInjectionParameters": true,
+		"strictInputAccessModifiers": true,
+		"strictTemplates": true
+	},
+	"files": [],
+	"include": ["src/angular/**/*.ts", "../src/demo/app/examples/**/*.ts", "../src/ng-select/**/*.ts", "../src/ng-option-highlight/**/*.ts"],
+	"exclude": ["../src/**/*.spec.ts", "../src/ng-select/testing/**", "../src/**/test-setup.ts"]
+}
