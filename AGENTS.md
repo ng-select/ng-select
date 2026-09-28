@@ -1,6 +1,6 @@
 # ng-select — instructions for AI coding assistants
 
-This file is the **single canonical repository context** for **Claude Code**, **Cursor**, **Codex**, **JetBrains AI Assistant**, **Copilot**, and any other agent. Do not treat parallel copies under `.cursor/`, `.claude/`, `.github/`, or `.aiassistant/` as separate sources of truth—those files only **point here** or add IDE wiring.
+This file is the **single canonical repository context** for **Claude Code**, **Cursor**, **Codex**, **JetBrains AI Assistant**, **Copilot**, and any other agent. Do not treat parallel copies under `.cursor/`, `.github/`, or `.aiassistant/` as separate sources of truth—those files only **point here** or add IDE wiring. Shared agent skills live in [`.agents/skills/`](./.agents/skills/).
 
 If instructions conflict, prefer **`AGENTS.md`** and the actual codebase.
 
@@ -460,7 +460,7 @@ These tips are **not** a second source of truth; they only help humans and assis
 
 | Location                                                               | Purpose                                                          |
 | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| [`.claude/CLAUDE.md`](./.claude/CLAUDE.md)                             | Claude Code: pointer + Claude-specific sizing/verification       |
+| [`.agents/skills/verify`](./.agents/skills/verify/SKILL.md)            | Agent skill: runtime verification + DoD pipeline                 |
 | [`.cursor/rules/rules.mdc`](./.cursor/rules/rules.mdc)                 | Cursor always-applied rule: short pointer + critical constraints |
 | [`.github/copilot-instructions.md`](./.github/copilot-instructions.md) | GitHub Copilot: pointer to this file                             |
 
