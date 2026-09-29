@@ -233,7 +233,7 @@
 </tr>
 <tr>
 <td>dropdownPosition</td>
-<td><code dir="auto">bottom</code> | <code dir="auto">top</code> | <code dir="auto">auto</code></td>
+<td><code dir="auto">bottom</code> | <code dir="auto">top</code> | <code dir="auto">left</code> | <code dir="auto">right</code> | <code dir="auto">auto</code></td>
 <td><code dir="auto">auto</code></td>
 <td>Set the dropdown position on open</td>
 </tr>
@@ -268,7 +268,7 @@
 <tbody>
 <tr>
 <td>(change)</td>
-<td>Fired on model change. Outputs whole model</td>
+<td>Fired on selection change. Outputs the selected item (an array when <code dir="auto">[multiple]="true"</code>) as the whole item object, not the <code dir="auto">bindValue</code>-projected model value</td>
 </tr>
 </tbody>
 </table>
