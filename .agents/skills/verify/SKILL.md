@@ -21,7 +21,7 @@ The site is served under the `/ng-select` base, also locally: `http://localhost:
 ## Gotchas
 
 - **Each demo is its own Angular app** (Astro island). `NgSelectConfig` defaults (placeholder, material `appearance`) come from `DEMO_PROVIDERS` in `demo-host.component.ts`, not from a shared root injector.
-- **Opening a select programmatically:** dispatch `keydown` Space on the `ng-select` host element (`new KeyboardEvent('keydown', {keyCode: 32, ...})`). Synthetic `mousedown` on the container is unreliable, and coordinate clicks fight scroll jumps.
+- **Opening a select programmatically:** dispatch `keydown` Space on the `ng-select` host element (`new KeyboardEvent('keydown', {key: ' ', bubbles: true})`; the handler reads `event.key`, not `keyCode`). Synthetic `mousedown` on the container is unreliable, and coordinate clicks fight scroll jumps.
 - **RTL:** there is no RTL toggle in the site; run `document.documentElement.dir = 'rtl'` in the page to exercise the themes' `[dir='rtl']` rules.
 - Unit tests run in **Vitest browser mode** — real headless Chromium via `@vitest/browser-playwright` (wired through `@angular/build:unit-test` + root `vitest.config.ts`), not jsdom — layout measurement (`offsetWidth` etc.) works in specs.
 - **Failed specs save screenshots** to a `__screenshots__/` folder next to the failing spec — read them when diagnosing a browser-mode test failure.

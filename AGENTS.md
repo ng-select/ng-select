@@ -73,13 +73,13 @@ pnpm format                                 # Prettier write (format:check to ve
 src/ng-select/
 ├── lib/
 │   ├── ng-select/                 # NgSelectComponent (.ts/.html/.scss) + focused specs
-│   ├── dropdown-panel/            # NgDropdownPanelComponent/Service, CDK overlay manager + container, positioning
+│   ├── dropdown-panel/            # NgDropdownPanelComponent/Service (virtual-scroll range), CDK overlay manager + container, positioning
 │   ├── directives/                # ng-templates.directive.ts: ng-*-tmp template directives, ngItemLabel
 │   ├── services/                  # NgSelectConfig (global defaults), ConsoleService
 │   ├── types/                     # ng-select.types.ts, id.ts
 │   ├── utils/                     # search-helper.ts, value-utils.ts
 │   ├── ng-option.component.ts
-│   ├── items-list.ts              # filtering, grouping, marking, virtual-scroll items
+│   ├── items-list.ts              # filtering, grouping, marking, selected options
 │   ├── selection-model.ts         # SelectionModel, DefaultSelectionModel(Factory)
 │   └── ng-select.module.ts        # legacy NgSelectModule
 ├── themes/                        # default, material, ant.design (+ _mixins.scss)
@@ -95,12 +95,12 @@ website/
     ├── angular/                   # demo-host.component.ts, examples.registry.ts, hero-select.component.ts
     └── stackblitz/                # StackBlitz starter files
 scripts/generate-llms.mjs
-.github/workflows/                 # ci, release, codeql, stale, deprecate
+.github/workflows/                 # ci, release, codeql, stale, deprecate, dependabot
 ```
 
 ### Docs and examples
 
-- Embed a demo in MDX with `<Demo example="<folder>" />`.
+- Embed a demo in MDX: `import Demo from '@components/Demo.astro';` then `<Demo example="<folder>" />`.
 - New example: `src/demo/app/examples/<name>-example/<name>-example.component.{ts,html,scss}`, class `<PascalCase(name)>ExampleComponent`, selector `ng-<name>-example`, then add a line to the manual registry `website/src/angular/examples.registry.ts`.
 - Each demo is its own Angular app. Demo `NgSelectConfig` defaults come from `DEMO_PROVIDERS` in `demo-host.component.ts`, not a shared root injector.
 
@@ -150,7 +150,7 @@ scripts/generate-llms.mjs
 - Vitest **browser mode**: headless Chromium via `@vitest/browser-playwright`, wired through `@angular/build:unit-test` + `vitest.config.ts`. Real layout, not jsdom. No e2e suite.
 - **Zoneless by default**; the `test-zone` target (`pnpm test:zone`, part of `test:ci`) reruns specs with zone.js.
 - Timers: `vi.useFakeTimers` via `testing/timer-helpers.ts` (`enableDebounceFakeTimers`, `advanceDebounce`, `openSelect`), not `fakeAsync`/`tick`. Other helpers: `testing/helpers.ts` (`tickAndDetectChanges`, `selectOption`, `triggerKeyDownEvent`, …), `testing/mocks.ts`.
-- Specs sit next to code; `ng-select/ng-select.component.spec.ts` is the main behavioral reference.
+- Specs sit next to code. `NgSelectComponent` behavior specs are split by area in `lib/ng-select/` (`ng-select.<area>.spec.ts`: forms, signal-forms, selection, keyboard, overlay, events, templates, accessibility); extend the matching one.
 - Failed specs save screenshots to a `__screenshots__/` folder next to the spec.
 - Don't add tests unless requested or needed to cover changed behavior; update existing specs when behavior changes.
 
