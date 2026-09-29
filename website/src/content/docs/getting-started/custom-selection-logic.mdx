@@ -8,7 +8,7 @@ ng-select allows you to provide a custom selection implementation using `SELECTI
 
 ```typescript
 // app.config.ts / app.module.ts
-providers: [{ provide: SELECTION_MODEL_FACTORY, useValue: <SelectionModelFactory>CustomSelectionFactory }];
+providers: [{ provide: SELECTION_MODEL_FACTORY, useValue: CustomSelectionFactory }];
 
 // selection-model.ts
 export function CustomSelectionFactory() {

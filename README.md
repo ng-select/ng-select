@@ -15,27 +15,31 @@ See [Demo](https://ng-select.github.io/ng-select) page.
 
 ## Versions
 
-**Warning**: Do not use versions 15.2.0, 16.0.0, 17.0.0, 18.0.0, 19.0.0, 20.0.0 as they contain unresolved issues
+**Warning**: avoid these releases:
 
-| Angular          |     ng-select      |
-| ---------------- | :----------------: |
-| >=22.0.0 <23.0.0 |      v23.x.x       |
-| >=21.0.0 <22.0.0 |      v21.x.x       |
-| >=20.0.0 <21.0.0 | <=15.1.3, >=20.0.1 |
-| >=19.0.0 <20.0.0 |       v14.x        |
-| >=18.0.0 <19.0.0 |       v13.x        |
-| >=17.0.0 <18.0.0 |       v12.x        |
-| >=16.0.0 <17.0.0 |       v11.x        |
-| >=15.0.0 <16.0.0 |       v10.x        |
-| >=14.0.0 <15.0.0 |        v9.x        |
-| >=13.0.0 <14.0.0 |        v8.x        |
-| >=12.0.0 <13.0.0 |        v7.x        |
-| >=11.0.0 <12.0.0 |        v6.x        |
-| >=10.0.0 <11.0.0 |        v5.x        |
-| >=9.0.0 <10.0.0  |        v4.x        |
-| >=8.0.0 <9.0.0   |        v3.x        |
-| >=6.0.0 <8.0.0   |        v2.x        |
-| v5.x.x           |        v1.x        |
+- 15.2.0, 16.0.0, 17.0.0, 18.0.0, 19.0.0, 20.0.0 contain unresolved issues.
+- 23.0.0 declares Angular 21 peer dependencies by mistake; use 23.0.1 or later.
+- 23.7.0 – 23.10.0 shipped the CDK Overlay migration (a breaking change) as minor releases. Use 23.11.0 or later for the 23.x line, or upgrade to 24.x.
+
+| Angular          |             ng-select             |
+| ---------------- | :-------------------------------: |
+| >=22.0.0 <23.0.0 |  v24.x.x (CDK Overlay), v23.x.x   |
+| >=21.0.0 <22.0.0 |              v21.x.x              |
+| >=20.0.0 <21.0.0 | 15.0.1 – 15.1.3, v20.x (>=20.0.1) |
+| >=19.0.0 <20.0.0 |           v14.x, 15.0.0           |
+| >=18.0.0 <19.0.0 |               v13.x               |
+| >=17.0.0 <18.0.0 |               v12.x               |
+| >=16.0.0 <17.0.0 |               v11.x               |
+| >=15.0.0 <16.0.0 |               v10.x               |
+| >=14.0.0 <15.0.0 |               v9.x                |
+| >=13.0.0 <14.0.0 |               v8.x                |
+| >=12.0.0 <13.0.0 |               v7.x                |
+| >=11.0.0 <12.0.0 |               v6.x                |
+| >=10.0.0 <11.0.0 |               v5.x                |
+| >=9.0.0 <10.0.0  |               v4.x                |
+| >=8.0.0 <9.0.0   |               v3.x                |
+| >=6.0.0 <8.0.0   |               v2.x                |
+| v5.x.x           |               v1.x                |
 
 ---
 
@@ -234,7 +238,7 @@ selectedCarId: number | null = null;
 <ng-select [items]="cars" bindLabel="name" bindValue="id" [(ngModel)]="selectedCarId" />
 ```
 
-For more detailed examples see [Demo](https://ng-select.github.io/ng-select#/data-sources) page
+For more detailed examples see [Demo](https://ng-select.github.io/ng-select/examples/data-sources/) page
 
 ### SystemJS
 
@@ -252,11 +256,11 @@ map: {
 
 Full documentation, live examples and the complete API reference live on the docs site:
 
-- [Getting started](https://ng-select.github.io/ng-select/#/getting-started/installation)
-- [Examples](https://ng-select.github.io/ng-select/#/examples/data-sources) — data sources, bindings, forms, search, tags, templates, multiselect, grouping, virtual scroll and more
-- [API reference](https://ng-select.github.io/ng-select/#/api) — inputs, outputs and methods for `NgSelectComponent`, `NgSelectConfig`, template directives and `NgOptionHighlightDirective`
-- [Styling](https://ng-select.github.io/ng-select/#/getting-started/styling)
-- [Change detection notes](https://ng-select.github.io/ng-select/#/getting-started/change-detection)
+- [Getting started](https://ng-select.github.io/ng-select/getting-started/installation/)
+- [Examples](https://ng-select.github.io/ng-select/examples/data-sources/) — data sources, bindings, forms, search, tags, templates, multiselect, grouping, virtual scroll and more
+- [API reference](https://ng-select.github.io/ng-select/reference/api/) — inputs, outputs and methods for `NgSelectComponent`, `NgSelectConfig`, template directives and `NgOptionHighlightDirective`
+- [Styling](https://ng-select.github.io/ng-select/getting-started/styling/)
+- [Change detection notes](https://ng-select.github.io/ng-select/getting-started/change-detection/)
 
 ## Dropdown panel rendering
 
@@ -265,7 +269,7 @@ Since v24 the dropdown panel is positioned by [Angular CDK Overlay](https://mate
 Things to know when migrating:
 
 - **DOM location.** The panel is no longer a child of `<ng-select>` in the DOM — it lives inside `.cdk-overlay-container` (the same situation as `appendTo="body"` produced before). CSS that scoped panel styles through an ancestor of the select, like `.my-wrapper ng-dropdown-panel { ... }`, will no longer match. The panel still receives the select's `class`, `[class]`, and `[ngClass]` values, and you can add panel-only classes with `panelClass`. Scope panel styles through those classes: `.my-select-class.ng-dropdown-panel .ng-option { ... }`, or use separate host and panel classes: `class="my-select" panelClass="my-select-panel"`.
-- **`appendTo` changed meaning; `popover` is a deprecated no-op.** Overlay rendering already solves the clipping/stacking problems both existed for, so most usages of `appendTo` can simply be removed. It still works — but it now controls where the overlay lives **in the DOM** (ancestor-scoped styles, stacking context, focus containment) rather than how the panel is positioned; painting and positioning stay viewport-based either way. `popover` has no effect anymore (the overlay uses the native Popover API top layer automatically) and logs a one-time dev-mode warning.
+- **`appendTo` changed meaning; `popover` is a deprecated no-op.** Overlay rendering already solves the clipping/stacking problems both existed for, so most usages of `appendTo` can simply be removed. It still works — but it now controls where the overlay lives **in the DOM** (ancestor-scoped styles, stacking context, focus containment) rather than how the panel is positioned; painting and positioning stay viewport-based either way. `popover` has no effect anymore (the overlay uses the native Popover API top layer automatically) and logs a dev-mode warning for each `ng-select` instance that sets it.
 - **Stacking / z-index.** The hardcoded panel `z-index: 1050` is gone. In browsers with the native Popover API (all evergreen browsers), the CDK renders the overlay in the top layer, which paints above every `z-index` — including Bootstrap modals — with no configuration. In older browsers the panel falls back into `.cdk-overlay-container` with the CDK default `z-index: 1000` (declared in the `cdk-overlay` CSS layer). If you need the fallback to beat a higher stacking context such as a Bootstrap modal (`z-index: 1055`), raise the container in your global styles: `.cdk-overlay-container { z-index: 1056; }` — unlayered author CSS wins over the CDK's layered default regardless of specificity.
 - **Custom themes.** The shipped themes no longer position the panel (`top: 100%`, `bottom: 100%`, `left: 0` and friends were removed — margins, borders, shadows and radii remain). The library neutralizes those offsets for panels rendered in the overlay, so themes copied from older versions keep working, but you should remove positional offsets from `.ng-dropdown-panel` rules when you update your own theme.
 

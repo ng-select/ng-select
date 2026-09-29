@@ -1,9 +1,0 @@
----
-alwaysApply: true
----
-
-# ng-select — Cursor rules
-
-**Canonical instructions:** [AGENTS.md](../../AGENTS.md)
-
-Read `AGENTS.md` for full project context, architecture, commands, testing, and release workflow. The rules below are a short always-applied summary—do not treat this file as a second source of truth.

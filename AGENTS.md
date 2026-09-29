@@ -1,467 +1,181 @@
 # ng-select — instructions for AI coding assistants
 
-This file is the **single canonical repository context** for **Claude Code**, **Cursor**, **Codex**, **JetBrains AI Assistant**, **Copilot**, and any other agent. Do not treat parallel copies under `.cursor/`, `.claude/`, `.github/`, or `.aiassistant/` as separate sources of truth—those files only **point here** or add IDE wiring.
-
-If instructions conflict, prefer **`AGENTS.md`** and the actual codebase.
+This file is the **single canonical repository context** for every coding agent (Claude Code, Cursor, Codex, JetBrains AI Assistant, Copilot, …). Tool-specific files, if any, should only point here. Shared agent skills live in [`.agents/skills/`](./.agents/skills/). If instructions conflict, prefer this file and the actual codebase.
 
 ---
 
 ## Prime Directive
 
-When changing code in ng-select, preserve **public API compatibility**, **accessibility**, **keyboard navigation**, and **OnPush-friendly data flow**. This is a widely consumed Angular component library—breaking changes require deliberate versioning and release notes. Prefer established local patterns over new abstractions.
-
----
-
-## System Persona
-
-You are a senior **Angular 22** + **TypeScript** engineer working on **ng-select**, a lightweight Angular UI library for select, multiselect, and autocomplete.
-
-You understand that this codebase ships reusable components to npm, so correctness, backward compatibility, accessibility, predictable change detection, and clear public APIs matter more than clever abstractions.
-
-You must first inspect nearby library code before implementing changes. Follow existing patterns for inputs/outputs, templates, services, selection models, themes, and tests. Keep changes scoped and treat keyboard handling, ARIA behavior, forms integration (`ControlValueAccessor`), and dropdown positioning as sensitive user-facing behavior.
-
----
-
-## Technical Expertise
-
-You are deeply familiar with:
-
-- **Angular 22** standalone components, signals, and library packaging via **ng-packagr**
-- **Signal-based inputs/outputs** (`input()`, `output()`, `model()`, `linkedSignal()`, `computed()`, `effect()`)
-- **OnPush** change detection and immutable collection updates
-- **ControlValueAccessor** integration with template-driven and reactive forms
-- **Vitest** + **zone.js** unit testing with `fakeAsync`, `tick`, and component fixtures
-- **SCSS** themes (`default`, `material`, `ant.design`)
-- **pnpm**, **TypeScript 6**, **ESLint 10** + **angular-eslint**, and **Prettier**
-- **semantic-release** and npm publishing for `@ng-select/ng-select` and `@ng-select/ng-option-highlight`
+ng-select is a widely consumed **Angular 22** component library (select, multiselect, autocomplete) published to npm. Preserve **public API compatibility**, **accessibility**, **keyboard navigation**, **forms integration**, and **OnPush-friendly data flow**. Breaking changes require deliberate versioning and release notes. Inspect nearby code first and prefer established local patterns over new abstractions.
 
 ---
 
 ## Project Summary
 
-ng-select is an **Angular 22** component library published as two npm packages, with an Astro + Starlight documentation site for interactive documentation and live demos.
+| Package                          | Path                       | Purpose                                                                                                      |
+| -------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `@ng-select/ng-select`           | `src/ng-select/`           | Main select/multiselect/autocomplete component                                                               |
+| `@ng-select/ng-option-highlight` | `src/ng-option-highlight/` | `NgOptionHighlightDirective` (`[ngOptionHighlight]`): highlights the search term in option labels            |
+| docs site                        | `website/`                 | Astro + Starlight; demos in `src/demo/app/examples/` render as Angular islands via `@analogjs/astro-angular` |
 
-| Package                          | Path                       | Purpose                                                                                                                                                  |
-| -------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@ng-select/ng-select`           | `src/ng-select/`           | Main select/multiselect/autocomplete component                                                                                                           |
-| `@ng-select/ng-option-highlight` | `src/ng-option-highlight/` | Optional directive to highlight search terms in options                                                                                                  |
-| `docs site`                      | `website/`                 | Astro + Starlight documentation site; demo examples remain in `src/demo/app/examples/` and are rendered as Angular islands via `@analogjs/astro-angular` |
-
-- **Build/dev**: Angular CLI (`@angular/build:ng-packagr` for libraries); Astro (`astro build --root website`) for the docs site, which renders demo examples in `src/demo/app/examples/` as Angular islands via `@analogjs/astro-angular`
-- **Docs pages**: `website/src/content/docs/{getting-started,reference,examples}/*.mdx`, rendered via the Starlight sidebar
-- **Public API**: `src/ng-select/public-api.ts`, `src/ng-option-highlight/public-api.ts`
-- **Themes**: `src/ng-select/themes/` compiled to `dist/ng-select/themes/`
-- **Current library version**: see `src/ng-select/package.json` (currently **15.0.1**)
-- **Angular peer range**: `^22.0.0` (see README version matrix)
-- **Docs site**: [https://ng-select.github.io/ng-select](https://ng-select.github.io/ng-select)
-- **Repository**: [https://github.com/ng-select/ng-select](https://github.com/ng-select/ng-select)
+- **Stack**: Angular 22, TypeScript 6, `@angular/cdk` (dropdown overlay), ng-packagr (`@angular/build:ng-packagr`), Vitest browser mode, ESLint 10 + angular-eslint, Prettier, pnpm.
+- **Public API**: `src/ng-select/public-api.ts`, `src/ng-option-highlight/public-api.ts`. User docs: `README.md` and `website/src/content/docs/reference/api.mdx`.
+- **Versions**: semantic-release versions from git tags. **v24.x** (CDK Overlay) and **v23.x** (no Overlay from 23.11.0; 23.7.0–23.10.0 shipped it by mistake) both target Angular `^22.0.0`. The `version` in `src/*/package.json` is not bumped in-repo; run `pnpm view @ng-select/ng-select version` for the latest release. Compatibility matrix: `website/src/content/docs/reference/versions.mdx` and README.
+- **Peers**: `@angular/{cdk,common,core,forms}` `^22.0.0` (ng-option-highlight: `common`, `core`).
+- **Links**: [docs](https://ng-select.github.io/ng-select) · [repository](https://github.com/ng-select/ng-select)
 
 ---
 
-## Quick constraints (do not skip)
+## Rules
 
-- **Package manager**: **pnpm** only (`pnpm install`, `pnpm run …`). Do not use npm or yarn.
-- **Angular**: **Standalone components** are primary; `NgSelectModule` remains for backward compatibility—do not remove without an explicit migration plan.
-- **Change detection**: Core components use **OnPush**. Mutating `items` in place will not trigger updates; assign new array references.
-- **Signals in library code**: Prefer `input()`, `output()`, and `model()` for new APIs. The main component uses the `_foo` + `linkedSignal()` pattern to preserve stable public property names—follow that when extending `NgSelectComponent`.
-- **Tests**: Vitest browser mode — headless **Chromium** via Playwright (`vitest.config.ts`); `pnpm test`, `pnpm test:ci`. Playwright is only the unit-test browser provider — there is no separate e2e suite.
-- **Commits**: Use [Conventional Commits](https://www.conventionalcommits.org/) format (required by semantic-release).
-- **Attribution**: **DO NOT** list yourself, your model name, or any AI/LLM assistant as a contributor, co-author, author, or credit in any file, commit, or PR.
-
----
-
-## Before Editing
-
-- **MUST** inspect nearby files for existing implementation patterns.
-- **MUST** check `public-api.ts` exports and README API tables before adding or renaming public members.
-- **MUST** consider backward compatibility for inputs, outputs, CSS class names, and DOM structure used by consumers.
-- **SHOULD** add or update a demo example when introducing user-visible behavior.
-- **SHOULD** search the codebase for similar implementations before creating new helpers.
-- **DO NOT** touch generated or build-output files manually (`dist/`, coverage output).
+- **pnpm only**. Never npm or yarn.
+- **Public API**: check `public-api.ts`, README, and `reference/api.mdx` before adding, renaming, or removing public members, and document new user-facing inputs/outputs there. Keep inputs, outputs, CSS class names, and DOM structure backward compatible.
+- **OnPush**: consumers must replace `items`/model arrays rather than mutate them; library code uses immutable updates too.
+- **Standalone**: all components and directives are standalone. Keep `NgSelectModule` for backward compatibility; never add new NgModules.
+- **Reuse** existing helpers (`utils/value-utils.ts`, `utils/search-helper.ts`, `items-list.ts`, `selection-model.ts`); search for similar code before adding helpers.
+- **Dependencies**: no new runtime dependencies in published packages without strong justification.
+- **Generated files**: never hand-edit `dist/`, coverage output, or `llms.txt`/`llms-full.txt` (regenerated by `pnpm build:llms` from the MDX docs and examples).
+- **User-visible behavior**: add or update a demo example.
+- **Commits**: [Conventional Commits](https://www.conventionalcommits.org/); semantic-release derives versions from them.
+- **Attribution**: **DO NOT** list yourself, your model name, or any AI/LLM as author, co-author, contributor, or credit anywhere: files, changelogs, comments, docs, commit messages (including `Co-authored-by` trailers), PR titles or bodies.
 
 ---
 
-## Core Commands
+## Agent Workflow
+
+- Execute implementation with Opus (medium effort) or Sonnet agents, parallelizing independent work aggressively for speed. Use up to 100 agents for max speed.
+- Use as many parallel agents as useful without duplicating work or making conflicting edits: give each a non-overlapping file scope and a complete brief (files, constraints from this file, done criteria).
+
+---
+
+## Commands
 
 ```bash
-# Install dependencies
 pnpm install
-
-# Start docs site (watch mode)
-pnpm run start
-# Runs at http://localhost:4300
-
-# Build both libraries + themes
-pnpm run build
-
-# Build docs site for production (GitHub Pages)
-pnpm run build:docs
-
-# Unit tests (both libraries, with coverage)
-pnpm run test
-
-# Unit tests in watch mode (ng-select only)
-pnpm run test:watch
-
-# Unit tests for CI (headless Chrome)
-pnpm run test:ci
-
-# Lint both libraries
-pnpm run lint
-
-# Format (Prettier config present; no npm script — run directly)
-pnpm exec prettier --write .
-pnpm exec prettier --check .
+pnpm start                                  # docs site at http://localhost:4300/ng-select/
+pnpm build                                  # both libraries + compiled themes + SCSS copies → dist/
+pnpm build:docs                             # llms.txt + Astro build → dist/docs
+pnpm docs:preview                           # serve the built docs site
+pnpm test                                   # both libraries, zoneless, with coverage
+pnpm test:watch                             # ng-select only, watch mode
+pnpm test:zone                              # both libraries on the zone.js lane
+pnpm test:ci                                # what CI runs: zoneless + coverage, then zone.js lane
+pnpm exec ng test ng-select --watch=false   # fast single-library run
+pnpm lint                                   # ESLint, both libraries
+pnpm format                                 # Prettier write (format:check to verify)
 ```
 
 ---
 
-## Architecture and Locations
+## Layout
 
 ```
-ng-select/
-├── src/
-│   ├── ng-select/                    # @ng-select/ng-select library
-│   │   ├── lib/
-│   │   │   ├── ng-select/                    # Main component, model helpers, and focused specs
-│   │   │   │   ├── ng-select.component.ts   # Main component (OnPush, signals, CVA)
-│   │   │   │   ├── ng-select.component.html
-│   │   │   │   └── ng-select.component.scss
-│   │   │   ├── dropdown-panel/               # Panel component, service, overlay, and positioning
-│   │   │   ├── ng-option.component.ts
-│   │   │   ├── ng-templates.directive.ts    # Template directives (ng-option-tmp, etc.)
-│   │   │   ├── items-list.ts                # Filtering, grouping, virtual scroll logic
-│   │   │   ├── selection-model.ts           # Selection behavior + SELECTION_MODEL_FACTORY
-│   │   │   ├── config.service.ts            # NgSelectConfig global defaults
-│   │   │   ├── ng-select.types.ts
-│   │   │   └── ng-select.module.ts          # Legacy NgModule wrapper
-│   │   ├── themes/                   # SCSS themes (default, material, ant.design)
-│   │   ├── testing/                  # Test helpers and mocks
-│   │   ├── public-api.ts
-│   │   └── ng-package.json
-│   ├── ng-option-highlight/          # @ng-select/ng-option-highlight library
-│   │   ├── lib/
-│   │   │   └── ng-option-highlight.directive.ts
-│   │   └── public-api.ts
-│   └── demo/
-│       └── app/examples/             # One folder per interactive example (Angular islands)
-├── website/                           # Astro + Starlight documentation site
-│   ├── astro.config.mjs
-│   ├── src/
-│   │   ├── content/docs/**/*.mdx     # Docs pages (getting-started, reference, examples)
-│   │   ├── components/Demo.astro     # Demo wrapper component
-│   │   ├── angular/                  # Islands: demo-host, hero
-│   │   ├── styles/
-│   │   └── stackblitz/               # StackBlitz starter files
-│   └── public/assets/
-├── dist/                             # Build output (libraries + docs site)
-├── angular.json                      # Workspace projects: ng-select, ng-option-highlight, demo
-├── eslint.config.js
-├── .prettierrc.json
-└── .github/workflows/                # CI, release, CodeQL
+src/ng-select/
+├── lib/
+│   ├── ng-select/                 # NgSelectComponent (.ts/.html/.scss) + focused specs
+│   ├── dropdown-panel/            # NgDropdownPanelComponent/Service (virtual-scroll range), CDK overlay manager + container, positioning
+│   ├── directives/                # ng-templates.directive.ts: ng-*-tmp template directives, ngItemLabel
+│   ├── services/                  # NgSelectConfig (global defaults), ConsoleService
+│   ├── types/                     # ng-select.types.ts, id.ts
+│   ├── utils/                     # search-helper.ts, value-utils.ts
+│   ├── ng-option.component.ts
+│   ├── items-list.ts              # filtering, grouping, marking, selected options
+│   ├── selection-model.ts         # SelectionModel, DefaultSelectionModel(Factory)
+│   └── ng-select.module.ts        # legacy NgSelectModule
+├── themes/                        # default, material, ant.design (+ _mixins.scss)
+├── testing/                       # helpers, mocks, fixtures, timer helpers
+└── public-api.ts
+src/ng-option-highlight/lib/       # ng-option-highlight.directive.ts
+src/demo/app/examples/             # one folder per demo (no app shell)
+website/
+├── astro.config.mjs               # base /ng-select, outDir ../dist/docs
+└── src/
+    ├── content/docs/{getting-started,reference,examples}/*.mdx
+    ├── components/                # Demo.astro, ThemeSelect.astro (theme switcher)
+    ├── angular/                   # demo-host.component.ts, examples.registry.ts, hero-select.component.ts
+    └── stackblitz/                # StackBlitz starter files
+scripts/generate-llms.mjs
+.github/workflows/                 # ci, release, codeql, stale, deprecate, dependabot
 ```
 
-### Docs pages and demo examples
+### Docs and examples
 
-- Docs pages live in `website/src/content/docs/{getting-started,reference,examples}/*.mdx`.
-- A live demo is embedded in a page with `<Demo example="<folder>" />`.
-- Adding an example: create `src/demo/app/examples/<name>-example/` with `<name>-example.component.{ts,html,scss}`, exporting a class named `<PascalCase(<name>-example)>Component` with selector `ng-<name>-example`, then register it in `website/src/angular/examples.registry.ts` (add a line to the registry).
-
----
-
-## Critical Rules
-
-- **MUST** preserve public API surface exported from `public-api.ts` unless intentionally releasing a breaking change.
-- **MUST** maintain keyboard navigation, focus management, and ARIA attributes when touching dropdown or selection logic.
-- **MUST** keep `ControlValueAccessor` behavior correct for single and multiple modes.
-- **MUST** prefer existing utilities (`value-utils.ts`, `search-helper.ts`, `items-list.ts`, `selection-model.ts`) over duplicating logic.
-- **MUST** use immutable updates for `items` and selected model values (OnPush requirement—documented in README).
-- **DO NOT** add new runtime dependencies to published packages without strong justification.
-- **DO NOT** hand-edit build output under `dist/`.
-- **DO NOT** remove `NgSelectModule` or rename CSS classes without a migration plan.
-- **DO NOT** write your name, model name, product name, or any AI/LLM identity as a contributor, co-author, author, or acknowledgement—anywhere (README, CONTRIBUTING, AUTHORS, CREDITS, changelogs, commit messages including `Co-authored-by`, PR titles/bodies, comments, or docs). Humans own attribution; assistants do not.
+- Embed a demo in MDX: `import Demo from '@components/Demo.astro';` then `<Demo example="<folder>" />`.
+- New example: `src/demo/app/examples/<name>-example/<name>-example.component.{ts,html,scss}`, class `<PascalCase(name)>ExampleComponent`, selector `ng-<name>-example`, then add a line to the manual registry `website/src/angular/examples.registry.ts`.
+- Each demo is its own Angular app. Demo `NgSelectConfig` defaults come from `DEMO_PROVIDERS` in `demo-host.component.ts`, not a shared root injector.
 
 ---
 
-## Angular Coding Standards
+## Angular Conventions
 
-These rules come from [`.cursor/rules/rules.mdc`](./.cursor/rules/rules.mdc) and apply to all new and modified code. When a rule conflicts with an established pattern in the file you are editing, follow the local pattern unless you are intentionally modernizing that area.
+- Target Angular 22 / TypeScript 6 APIs; no deprecated APIs.
+- New code: `input()`, `output()`, `model()`, `signal()`, `computed()`, `effect()`, `linkedSignal()`, `inject()`, and control flow (`@if`, `@for`, `@switch`). No new `@Input`/`@Output`; don't rewrite unrelated legacy code.
+- **`NgSelectComponent` inputs** use a backward-compatible pattern. Follow it when adding inputs:
 
-### 1. Use Latest Angular and TypeScript
+  ```typescript
+  readonly _placeholder = input<string>(this.config.placeholder, { alias: 'placeholder' });
+  readonly placeholder = linkedSignal(() => this._placeholder());
+  ```
 
-- Target **Angular 22** and **TypeScript 6** (see root `package.json`).
-- Reference Angular 22 APIs and features only.
-- Do not use deprecated or removed APIs from older versions.
+  `bindLabel`, `bindValue`, `appearance`, `isOpen`, and `items` are `model()`s; outputs use `output({ alias })`. Give inputs an explicit type and, for booleans, `transform: booleanAttribute`.
 
-### 2. Modern Angular Features
+- **DI**: `providedIn: 'root'` unless scoped (`NgDropdownPanelService` is provided per `NgSelectComponent`). Global defaults via `NgSelectConfig`; selection override via the `SELECTION_MODEL_FACTORY` token (defined in `ng-select.component.ts`).
+- **Selectors** (ESLint-enforced): elements `ng-*` kebab-case, attribute directives `ng*` camelCase.
+- **Templates**: preserve content projection and the template directives (`ng-option-tmp`, `ng-label-tmp`, …).
+- **Types**: explicit types in new code; avoid `any` (ESLint allows it). `tsconfig.json` is `strict: false`, so match the surrounding file.
+- Libraries never do HTTP or hold app state; keep data loading (`HttpClient`, RxJS) in demo examples.
+- JSDoc public inputs, outputs, and methods.
 
-- Prefer Angular control flow (`@for`, `@if`, `@switch`) over legacy structural directives (`*ngFor`, `*ngIf`, `*ngSwitch`).
-- Use Angular signals for state management and reactivity.
-- Use `input()`, `output()`, and `model()` for component communication in new code.
-- Examples: `signal()`, `computed()`, `effect()`, `linkedSignal()`.
+### Sensitive behavior
 
-### 3. No Legacy Decorators
-
-- Do not use `@Input` or `@Output` in **new** library or demo code.
-- Use signal inputs/outputs and modern Angular data-flow patterns.
-- Existing code may still use decorators—do not rewrite unrelated legacy usage unless requested.
-
-### 4. Template Syntax and Style
-
-- Use the latest template syntax and best practices.
-- Use `<ng-container>` for structural grouping when needed.
-- Prefer control flow over structural directives in new templates.
-- Use proper Angular template binding syntax.
-
-### 5. Component Architecture
-
-- Prefer **standalone** components; avoid new `NgModule` feature modules.
-- Encapsulate features in self-contained, reusable components.
-- Import dependencies directly in `imports` arrays rather than through modules.
-- Exception: keep `NgSelectModule` exported for backward compatibility—do not add new NgModules.
-
-### 6. Type Safety and Strictness
-
-- Provide explicit types for functions, variables, and observables in new code.
-- Use proper TypeScript typing for Angular constructs.
-- Avoid `any` unless absolutely necessary (ESLint allows it in this repo, but prefer narrowing).
-- Note: root `tsconfig.json` currently has `strict: false` for historical compatibility—match surrounding file strictness when editing existing code.
-
-### 7. Dependency Injection
-
-- Use `@Injectable({ providedIn: 'root' })` for services unless a different scope is required.
-- Prefer Angular DI (`inject()`, injection tokens) over manual instantiation.
-- Use injection tokens for configuration (`NgSelectConfig`, `SELECTION_MODEL_FACTORY`).
-
-### 8. API Communication (demo only)
-
-- Demo examples that fetch data use `HttpClient` with typed responses and RxJS.
-- The published libraries do not perform HTTP—keep network logic in demo examples, not library packages.
-
-### 9. State Management
-
-- Use signals for component-level state in new code.
-- Avoid heavy state libraries (NgRx, etc.).
-- RxJS remains appropriate for `typeahead` streams and async demo data—follow existing patterns.
-
-### 10. Testing
-
-- Use Vitest APIs (`vi.spyOn`, `expect`) with Angular testing utilities (`fakeAsync`, `tick`, `TestBed`, component fixtures).
-- Update existing specs when behavior changes; follow helpers in `src/ng-select/testing/`.
-- Test keyboard navigation, selection, and forms integration for library changes.
-
-### 11. Accessibility
-
-- Follow WCAG guidelines and Angular accessibility best practices.
-- Use proper ARIA attributes and semantic HTML.
-- Keyboard navigation and screen-reader support are core to ng-select—regressions are high severity.
-- ESLint enables `angular.configs.templateAccessibility` for templates.
-
-### 12. Documentation and Comments
-
-- Comment public APIs, inputs, and outputs.
-- Follow the Angular style guide for structure and naming.
-- Use JSDoc for complex functions and services.
-- Document new component inputs, outputs, and lifecycle behavior in README when user-facing.
-
-### 13. No Deprecated APIs
-
-- Do not introduce deprecated Angular APIs, patterns, or features.
-- Check [update.angular.io](https://update.angular.io/) for breaking changes when upgrading.
-
-### 14. Package Manager
-
-- Always use **pnpm** for installs and scripts.
-
-### Code Generation Checklist
-
-When generating Angular code:
-
-- Use the latest Angular syntax and patterns.
-- Include proper TypeScript typing.
-- Use signals for state management.
-- Implement proper error handling where applicable.
-- Follow Angular style guide conventions.
-- Include accessibility considerations.
-- Update or extend existing tests when behavior changes.
+- **Forms**: one `NG_VALUE_ACCESSOR` serves `ngModel`, reactive forms, and signal forms (`[formField]` via CVA interop). All three must keep working in single and multiple mode, including `disabled`/`readonly` and validation classes (`ng-invalid`, `ng-touched`).
+- **Selection**: default logic in `selection-model.ts`, overridable via `SELECTION_MODEL_FACTORY`. Don't change default semantics without single + multiple tests.
+- **Dropdown**: the panel renders in a CDK Overlay anchored to the select. `appendTo` controls DOM containment only (positioning stays viewport-based); `popover` is a deprecated no-op. `NgDropdownPanelService` does virtual-scroll measurement.
+- **Accessibility**: keyboard navigation (arrows, Enter, Escape, Tab, Backspace), focus management, and ARIA (`ariaLabel`, `ariaLabelDropdown`, `labelForId`, aria-live status) are core; regressions are high severity. ESLint enables `templateAccessibility`.
+- **Virtual/infinite scroll** interacts with `ItemsList` and scroll events; test with large datasets.
+- **Typeahead**: `typeahead` is a consumer-owned `Subject<string>`; the library emits terms once `minTermLength` is met and never debounces.
 
 ---
 
-## Angular 22 Library Conventions
+## Themes
 
-This project targets **Angular 22** with a signal-first component architecture in the core library. Follow what nearby code already does.
-
-### Change detection and reactivity
-
-- `NgSelectComponent` uses `ChangeDetectionStrategy.OnPush`.
-- Consumers must replace `items` arrays rather than mutating them in place (see README _Change Detection_ section).
-- Internal state uses `signal`, `computed`, `linkedSignal`, and `effect` where appropriate.
-
-### Input/output pattern in `NgSelectComponent`
-
-The main component uses a backward-compatible input pattern:
-
-```typescript
-readonly _placeholder = input<string>(this.config.placeholder, { alias: 'placeholder' });
-readonly placeholder = linkedSignal(() => this._placeholder());
-```
-
-When adding new inputs to `NgSelectComponent`, follow this `_name` + `alias` + `linkedSignal` pattern so existing template bindings and programmatic access keep working.
-
-### Components and modules
-
-- `NgSelectComponent`, `NgOptionComponent`, `NgDropdownPanelComponent`, and template directives are **standalone**.
-- `NgSelectModule` re-exports them and provides `SELECTION_MODEL_FACTORY` via `provideNgSelect()` for legacy consumers.
-- **DO NOT** create new NgModules for library features.
-- Selector conventions (enforced by ESLint): element `ng-*` (kebab-case), attribute directives `ng*` (camelCase).
-
-### Templates
-
-- Prefer Angular control flow (`@for`, `@if`, `@switch`) in demo examples and new template code.
-- Library templates use content projection and `ng-template` directives (`ng-option-tmp`, `ng-label-tmp`, etc.)—preserve these APIs.
-
-### Forms integration
-
-- `NgSelectComponent` implements `ControlValueAccessor` via `NG_VALUE_ACCESSOR`.
-- Demo examples show both template-driven (`ngModel`) and reactive forms usage.
-- Preserve `readonly`, `disabled`, and validation CSS class behavior (`ng-invalid`, `ng-touched`).
-
-### Selection model
-
-- Default selection logic lives in `selection-model.ts`.
-- Consumers can override via `SELECTION_MODEL_FACTORY` injection token.
-- **DO NOT** change default selection semantics without tests covering single and multiple modes.
-
-### Dropdown positioning
-
-- The panel renders in an Angular CDK Overlay anchored to the select container; `NgDropdownPanelService` handles scrolling and virtual scroll measurements.
-- `appendTo` controls DOM containment of the overlay (ancestor-scoped styles, stacking context, focus enclosure) — positioning stays viewport-based. `popover` is a deprecated no-op (the overlay uses the native Popover API top layer automatically).
+- `src/ng-select/themes/*.theme.scss` → `dist/ng-select/themes/*.theme.css` (`build:themes`); SCSS copied to `dist/ng-select/scss/` (`copy-sass`).
+- `ViewEncapsulation.None`: styles are global and theme class names are part of the public styling contract.
+- When changing styles, verify all three themes (docs site theme switcher) and validation-state styling.
 
 ---
 
-## Themes and Styling
+## Testing
 
-- Source themes: `src/ng-select/themes/*.theme.scss`
-- Built CSS: `dist/ng-select/themes/*.theme.css` (via `pnpm run build:themes`)
-- SCSS copies: `dist/ng-select/scss/` (via `pnpm run copy-sass`)
-- `ViewEncapsulation.None` on the main component—styles are global; theme class names are part of the public styling contract.
-- Demo supports `default`, `ant`, and `material` theme switching via `AppComponent`.
-
-When changing styles, verify all three themes and check validation-state styling documented in README.
-
----
-
-## Testing Expectations
-
-- **DO NOT** add new unit tests unless explicitly requested or needed to cover changed behavior.
-- **SHOULD** update existing specs when modifying behavior already covered by tests.
-- Test stack: **Vitest browser mode** (headless **Chromium** via `@vitest/browser-playwright`, wired through `@angular/build:unit-test` and `vitest.config.ts`) + `zone.js/testing`. Failed specs save screenshots to `src/ng-select/lib/__screenshots__/`.
-- Main spec: `src/ng-select/lib/ng-select/ng-select.component.spec.ts` (extensive coverage—follow its patterns).
-- Helpers: `src/ng-select/testing/helpers.ts`, mocks in `src/ng-select/testing/mocks.ts`.
-- Use `fakeAsync`, `tick`, `tickAndDetectChanges`, and `selectOption` helpers for keyboard/dropdown interactions.
-- CI runs `pnpm test:ci` (headless Chromium) and reports coverage to Coveralls.
-- Code coverage excludes: `testing/*`, barrel files, `console.service.ts`, `search-helper.ts`, `ng-templates.directive.ts`.
-
-For substantial library changes:
-
-- Run `pnpm lint`, `pnpm test` (or `pnpm test:ci`), and `pnpm build` when practical.
-- Add a demo example when the change is user-visible.
-
----
-
-## Release and CI
-
-### CI (`.github/workflows/ci.yml`)
-
-On push/PR affecting `*.ts`, `*.html`, `*.scss`, `website/**`, `*.mdx`, `*.mjs`, `*.astro`:
-
-1. `pnpm install`
-2. `pnpm lint`
-3. `pnpm test:ci`
-4. `pnpm build:docs`
-5. Coveralls upload
-
-### Release (`.github/workflows/release.yml`)
-
-On push to `master`:
-
-1. `pnpm build` (libraries + themes)
-2. `semantic-release` publishes `@ng-select/ng-select` from `dist/ng-select`
-3. Version-synced publish of `@ng-select/ng-option-highlight`
-4. `pnpm build:docs` and deploy `dist/docs` to `gh-pages`
-
-Commits must follow Conventional Commits for semantic-release to work.
-
----
-
-## Accessibility
-
-- Keyboard navigation (arrows, Enter, Escape, Tab, Backspace) is core functionality—regressions are high severity.
-- ARIA labels (`ariaLabel`, `ariaLabelDropdown`, `labelForId`) support screen readers.
-- Template accessibility rules are enabled in ESLint (`angular.configs.templateAccessibility`).
-- Test keyboard flows in specs when changing dropdown or focus behavior.
-
----
-
-## Special Considerations
-
-- **Backward compatibility** is the highest priority for library API, DOM structure, and CSS hooks.
-- **Virtual scroll** and **infinite scroll** interact with `ItemsList` and scroll events—test with large datasets.
-- **Typeahead** uses RxJS `Subject`—preserve debounce and min-term-length behavior.
-- **patch-package** runs on `postinstall`/`prepare`—do not remove without checking for patches.
-- Path aliases in `tsconfig.json` map `@ng-select/ng-select` and `@ng-select/ng-option-highlight` to source for local development.
+- Vitest **browser mode**: headless Chromium via `@vitest/browser-playwright`, wired through `@angular/build:unit-test` + `vitest.config.ts`. Real layout, not jsdom. No e2e suite.
+- **Zoneless by default**; the `test-zone` target (`pnpm test:zone`, part of `test:ci`) reruns specs with zone.js.
+- Timers: `vi.useFakeTimers` via `testing/timer-helpers.ts` (`enableDebounceFakeTimers`, `advanceDebounce`, `openSelect`), not `fakeAsync`/`tick`. Other helpers: `testing/helpers.ts` (`tickAndDetectChanges`, `selectOption`, `triggerKeyDownEvent`, …), `testing/mocks.ts`.
+- Specs sit next to code. `NgSelectComponent` behavior specs are split by area in `lib/ng-select/` (`ng-select.<area>.spec.ts`: forms, signal-forms, selection, keyboard, overlay, events, templates, accessibility); extend the matching one.
+- Failed specs save screenshots to a `__screenshots__/` folder next to the spec.
+- Don't add tests unless requested or needed to cover changed behavior; update existing specs when behavior changes.
 
 ---
 
 ## Definition of Done
 
-For substantial code changes:
-
-- Run lint, tests, and build when practical.
-- Report any checks that were skipped or failed.
-- Summarize changed files and behavior.
-- Call out public API, accessibility, theming, or test coverage impacts when relevant.
-- Update README or demo examples if user-facing behavior or API changed.
-
----
-
-## Useful References
-
-- `README.md` — installation, API tables, change detection, custom styles
-- `package.json` — scripts and dependency versions
-- `angular.json` — project definitions
-- `src/ng-select/public-api.ts` — exported library surface
-- `src/ng-select/lib/ng-select/ng-select.component.ts` — main component implementation
-- `src/ng-select/lib/ng-select/ng-select.component.spec.ts` — behavioral test reference
-- `src/demo/app/examples/` — interactive examples
-- `src/ng-option-highlight/README.md` — highlight directive usage
+- Trivial/medium changes: `pnpm lint` + `pnpm build`.
+- Library behavior: also `pnpm exec ng test ng-select --watch=false` (or `pnpm test:ci`).
+- Docs/examples: `pnpm build:docs`.
+- Formatting: `pnpm exec prettier --check <changed files>`.
+- Report skipped or failed checks; call out public API, accessibility, theming, and coverage impacts; update README/docs/examples when user-facing behavior or API changed.
+- Runtime verification recipe: [`.agents/skills/verify`](./.agents/skills/verify/SKILL.md).
 
 ---
 
-## IDE and Editor Setup (optional)
+## CI and Release
 
-These tips are **not** a second source of truth; they only help humans and assistants working inside an IDE.
-
-### JetBrains (WebStorm, IntelliJ, etc.)
-
-- In **Settings → Languages & Frameworks → Node.js**, prefer **pnpm** for installs/scripts.
-- Enable the **Angular** plugin for standalone components, templates, and library paths.
-- Wire **ESLint** to `eslint.config.js`. Formatting: `pnpm exec prettier --write .`
-- Create run configurations from `package.json` for `start`, `build`, `test`, `lint`.
-
-### VS Code / Cursor
-
-- Use workspace ESLint settings; run `pnpm lint` before commit.
-- Run `pnpm exec prettier --check .` for formatting verification.
+- **`ci.yml`** (every PR; pushes touching `ts`, `html`, `scss`, `mdx`, `mjs`, `astro`, `website/**`): install → Playwright Chromium → `lint` → `test:ci` → `build:docs` → Coveralls.
+- **`release.yml`** (push to `master`): `pnpm build` → semantic-release publishes `@ng-select/ng-select` from `dist/ng-select` → version-synced `@ng-select/ng-option-highlight` → `build:docs` → deploy `dist/docs` to `gh-pages`.
 
 ---
 
-## Wrapper Files (do not duplicate content)
+## Tooling Notes
 
-| Location                                                               | Purpose                                                          |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| [`.claude/CLAUDE.md`](./.claude/CLAUDE.md)                             | Claude Code: pointer + Claude-specific sizing/verification       |
-| [`.cursor/rules/rules.mdc`](./.cursor/rules/rules.mdc)                 | Cursor always-applied rule: short pointer + critical constraints |
-| [`.github/copilot-instructions.md`](./.github/copilot-instructions.md) | GitHub Copilot: pointer to this file                             |
-
-When editing agent instructions, update **`AGENTS.md` first**, then adjust wrapper files to point here.
+- `pnpm-workspace.yaml` `patchedDependencies` patches `@analogjs/astro-angular` (`patches/`); re-check the patch when upgrading it.
+- `tsconfig.json` path aliases map `@ng-select/ng-select`, `@ng-select/ng-option-highlight`, and `@examples/*` to source.
+- IDEs: use pnpm, the workspace `eslint.config.js`, and Prettier (`.prettierrc.json`).
