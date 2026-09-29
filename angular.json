@@ -41,9 +41,9 @@
 						"coverageExclude": [
 							"src/ng-select/testing/*",
 							"src/ng-select/*.ts",
-							"src/ng-select/lib/console.service.ts",
-							"src/ng-select/lib/search-helper.ts",
-							"src/ng-select/lib/ng-templates.directive.ts"
+							"src/ng-select/lib/services/console.service.ts",
+							"src/ng-select/lib/utils/search-helper.ts",
+							"src/ng-select/lib/directives/ng-templates.directive.ts"
 						],
 						"coverageReporters": ["html", "lcovonly", "text-summary"]
 					}
