@@ -89,65 +89,360 @@
 <div class="sl-heading-wrapper level-h2"><h2 id="forms-integration">Forms integration</h2><a class="sl-anchor-link" href="#forms-integration"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Forms integration”</span></a></div>
 <p>ng-select supports Signal Forms through <code dir="auto">[formField]</code>, Reactive Forms through <code dir="auto">formControl</code> and <code dir="auto">formControlName</code>, and Template-driven Forms through <code dir="auto">ngModel</code>. See the <a href="/ng-select/examples/forms/">Forms examples</a> for complete examples in that order.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="inputs">Inputs</h2><a class="sl-anchor-link" href="#inputs"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Inputs”</span></a></div>
-<p>| Input                       | Type                                                                 | Default                         | Description                                                                                                                                                                                                                                                                                                   |
-| --------------------------- | -------------------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | ------------------------------------------ |
-| [addTag]                    | <code dir="auto">boolean \| ((term: string) =&gt; any \| Promise&lt;any&gt;)</code>                 | <code dir="auto">false</code>                         | Allows to create custom options.                                                                                                                                                                                                                                                                              |
-| addTagText                  | <code dir="auto">string</code>                                                             | <code dir="auto">Add item</code>                      | Set custom text when using tagging                                                                                                                                                                                                                                                                            |
-| appearance                  | <code dir="auto">string</code>                                                             | <code dir="auto">underline</code>                     | Allows to select dropdown appearance. Set to <code dir="auto">outline</code> or <code dir="auto">fill</code> for Material form-field styles (applies only to Material theme)                                                                                                                                                                              |
-| appendTo                    | <code dir="auto">string</code>                                                             | null                            | Append the dropdown overlay to any element using a css selector. Painting and positioning are unaffected; the target determines DOM containment (ancestor-scoped styles, focus enclosure).                                                                                                                    |
-| ariaLabel                   | <code dir="auto">string</code>                                                             | <code dir="auto">-</code>                             | Sets <code dir="auto">aria-label</code> on the combobox input.                                                                                                                                                                                                                                                                      |
-| ariaLabelDropdown           | <code dir="auto">string</code>                                                             | <code dir="auto">Options List</code>                  | Sets <code dir="auto">aria-label</code> on the dropdown listbox.                                                                                                                                                                                                                                                                    |
-| bufferAmount                | <code dir="auto">number</code>                                                             | 4                               | Used in virtual scrolling, the <code dir="auto">bufferAmount</code> property controls the number of items preloaded in the background to ensure smoother and more seamless scrolling.                                                                                                                                               |
-| bindValue                   | <code dir="auto">string</code>                                                             | <code dir="auto">-</code>                             | Object property to use for selected model. By default binds to whole object.                                                                                                                                                                                                                                  |
-| bindLabel                   | <code dir="auto">string</code>                                                             | <code dir="auto">label</code>                         | Object property to use for label. Default <code dir="auto">label</code>                                                                                                                                                                                                                                                             |
-| [closeOnSelect]             | <code dir="auto">boolean</code>                                                            | true                            | Whether to close the menu when a value is selected                                                                                                                                                                                                                                                            |
-| [closeOnScroll]             | <code dir="auto">boolean</code>                                                            | false                           | Close the dropdown when the page or an ancestor container scrolls. Default <code dir="auto">false</code>                                                                                                                                                                                                                            |
-| clearAllText                | <code dir="auto">string</code>                                                             | <code dir="auto">Clear all</code>                     | Set custom text for clear all icon title                                                                                                                                                                                                                                                                      |
-| [clearable]                 | <code dir="auto">boolean</code>                                                            | <code dir="auto">true</code>                          | Allow to clear selected value. Default <code dir="auto">true</code>                                                                                                                                                                                                                                                                 |
-| [clearKeepsDisabledOptions] | <code dir="auto">boolean</code>                                                            | <code dir="auto">true</code>                          | Keep selected disabled options when the clear button is used. <code dir="auto">clearModel()</code> always clears them.                                                                                                                                                                                                              |
-| [clearOnBackspace]          | <code dir="auto">boolean</code>                                                            | <code dir="auto">true</code>                          | With an empty search term, Backspace removes the last selected item (clears the value in single mode). Requires <code dir="auto">[clearable]="true"</code>                                                                                                                                                                          |
-| [compareWith]               | <code dir="auto">(a: any, b: any) =&gt; boolean</code>                                        | <code dir="auto">undefined</code>                     | A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. When not set, options are matched by their <code dir="auto">bindValue</code> property if set, otherwise by identity or equal labels. |
-| dropdownPosition            | <code dir="auto">bottom</code> | <code dir="auto">top</code> | <code dir="auto">left</code> | <code dir="auto">right</code> | <code dir="auto">auto</code>                     | <code dir="auto">auto</code>                          | Set the dropdown position on open. <code dir="auto">auto</code> opens below and flips above when there is not enough room                                                                                                                                                                                                           |
-| [fixedPlaceholder]          | <code dir="auto">boolean</code>                                                            | <code dir="auto">true</code>                          | Keep the placeholder rendered when an item is selected. Visibility is theme-dependent: the default and Ant Design themes hide it once a value is set, the Material theme floats it as a label                                                                                                                 |
-| [groupBy]                   | <code dir="auto">string</code> | <code dir="auto">Function</code>                                               | null                            | Allow to group items by key or function expression                                                                                                                                                                                                                                                            |
-| [groupValue]                | <code dir="auto">(groupKey: string                                                   | any, children: any[]) =&gt; string | any</code>                                                                                                                                                                                                                                                                                                          | -   | Function expression to provide group value |
-| [selectableGroup]           | <code dir="auto">boolean</code>                                                            | false                           | Allow to select group when groupBy is used                                                                                                                                                                                                                                                                    |
-| [selectableGroupAsModel]    | <code dir="auto">boolean</code>                                                            | true                            | Indicates whether to select all children or group itself                                                                                                                                                                                                                                                      |
-| [items]                     | <code dir="auto">Array&lt;any&gt;</code>                                                         | <code dir="auto">[]</code>                            | Items array                                                                                                                                                                                                                                                                                                   |
-| [loading]                   | <code dir="auto">boolean</code>                                                            | <code dir="auto">false</code>                         | You can set the loading state from the outside (e.g. async items loading)                                                                                                                                                                                                                                     |
-| loadingText                 | <code dir="auto">string</code>                                                             | <code dir="auto">Loading...</code>                    | Set custom text when for loading items                                                                                                                                                                                                                                                                        |
-| labelForId                  | <code dir="auto">string</code>                                                             | <code dir="auto">-</code>                             | Id to associate control with label.                                                                                                                                                                                                                                                                           |
-| [markFirst]                 | <code dir="auto">boolean</code>                                                            | <code dir="auto">true</code>                          | Marks first item as focused when opening/filtering.                                                                                                                                                                                                                                                           |
-| [isOpen]                    | <code dir="auto">boolean</code>                                                            | <code dir="auto">-</code>                             | Allows manual control of dropdown opening and closing. <code dir="auto">true</code> - won't close. <code dir="auto">false</code> - won't open. Binding a non-null value enables manual mode, where user interaction and <code dir="auto">open()</code>/<code dir="auto">close()</code> do nothing.                                                                                                    |
-| maxSelectedItems            | <code dir="auto">number</code>                                                             | none                            | When multiple = true, allows to set a limit number of selection.                                                                                                                                                                                                                                              |
-| [hideSelected]              | <code dir="auto">boolean</code>                                                            | <code dir="auto">false</code>                         | Allows to hide selected items.                                                                                                                                                                                                                                                                                |
-| [multiple]                  | <code dir="auto">boolean</code>                                                            | <code dir="auto">false</code>                         | Allows to select multiple items.                                                                                                                                                                                                                                                                              |
-| notFoundText                | <code dir="auto">string</code>                                                             | <code dir="auto">No items found</code>                | Set custom text when filter returns empty result                                                                                                                                                                                                                                                              |
-| placeholder                 | <code dir="auto">string</code>                                                             | <code dir="auto">-</code>                             | Placeholder text.                                                                                                                                                                                                                                                                                             |
-| removeText                  | <code dir="auto">string</code>                                                             | <code dir="auto">Remove</code>                        | Set custom text prefixed to the option label in the aria-label of the remove icon on selected values (multiple mode)                                                                                                                                                                                          |
-| [searchable]                | <code dir="auto">boolean</code>                                                            | <code dir="auto">true</code>                          | Allow to search for value. Default <code dir="auto">true</code>                                                                                                                                                                                                                                                                     |
-| [readonly]                  | <code dir="auto">boolean</code>                                                            | <code dir="auto">false</code>                         | Prevent user changes while preserving the current selection.                                                                                                                                                                                                                                                  |
-| [searchFn]                  | <code dir="auto">(term: string, item: any) =&gt; boolean</code>                               | <code dir="auto">null</code>                          | Allow to filter by custom search function                                                                                                                                                                                                                                                                     |
-| [searchWhileComposing]      | <code dir="auto">boolean</code>                                                            | <code dir="auto">true</code>                          | Whether items should be filtered while composition started                                                                                                                                                                                                                                                    |
-| [trackByFn]                 | <code dir="auto">(item: any) =&gt; any</code>                                                 | <code dir="auto">null</code>                          | Provide custom trackBy function                                                                                                                                                                                                                                                                               |
-| [clearSearchOnAdd]          | <code dir="auto">boolean</code>                                                            | <code dir="auto">true</code>                          | Clears search input when item is selected. Default <code dir="auto">true</code>. Default <code dir="auto">false</code> when <strong>closeOnSelect</strong> is <code dir="auto">false</code>                                                                                                                                                                                                  |
-| [deselectOnClick]           | <code dir="auto">boolean</code>                                                            | <code dir="auto">false</code>                         | Deselects a selected item when it is clicked in the dropdown. Default <code dir="auto">false</code>. Default <code dir="auto">true</code> when <strong>multiple</strong> is <code dir="auto">true</code>                                                                                                                                                                                     |
-| [editableSearchTerm]        | <code dir="auto">boolean</code>                                                            | <code dir="auto">false</code>                         | Allow to edit search query if option selected. Default <code dir="auto">false</code>. Works only if multiple is <code dir="auto">false</code>.                                                                                                                                                                                                            |
-| [selectOnTab]               | <code dir="auto">boolean</code>                                                            | <code dir="auto">false</code>                         | Select marked dropdown item using tab. Default <code dir="auto">false</code>                                                                                                                                                                                                                                                        |
-| [tabFocusOnClearButton]     | <code dir="auto">boolean</code>                                                            | <code dir="auto">true</code>                          | Control tab navigation behavior for the clear button. Default <code dir="auto">true</code>                                                                                                                                                                                                                                          |
-| [openOnEnter]               | <code dir="auto">boolean</code>                                                            | <code dir="auto">true</code>                          | Open dropdown using enter. Default <code dir="auto">true</code>                                                                                                                                                                                                                                                                     |
-| outsideClickEvent           | <code dir="auto">'click'</code> | <code dir="auto">'mousedown'</code>                                           | <code dir="auto">'click'</code>                       | Configure which DOM event type is used for outside click detection. Use <code dir="auto">'mousedown'</code> to fix issues with backdrop/loading overlays that appear on dropdown open                                                                                                                                               |
-| [popover]                   | <code dir="auto">boolean</code>                                                            | <code dir="auto">false</code>                         | <strong>Deprecated — has no effect.</strong> The CDK overlay renders in the native Popover API top layer automatically in supporting browsers.                                                                                                                                                                             |
-| [typeahead]                 | <code dir="auto">Subject</code>                                                            | <code dir="auto">-</code>                             | Custom autocomplete or advanced filter. Emits on typing only; select/close/clear reset the input without emitting (use <code dir="auto">(close)</code> / <code dir="auto">(clear)</code> to react to those).                                                                                                                                              |
-| [minTermLength]             | <code dir="auto">number</code>                                                             | <code dir="auto">0</code>                             | Minimum term length to start a search. Should be used with <code dir="auto">typeahead</code>                                                                                                                                                                                                                                        |
-| typeToSearchText            | <code dir="auto">string</code>                                                             | <code dir="auto">Type to search</code>                | Set custom text when using Typeahead                                                                                                                                                                                                                                                                          |
-| [virtualScroll]             | <code dir="auto">boolean</code>                                                            | false                           | Enable virtual scroll for better performance when rendering a lot of data                                                                                                                                                                                                                                     |
-| [inputAttrs]                | <code dir="auto">{ [key: string]: string }</code>                                          | <code dir="auto">-</code>                             | Pass custom attributes to underlying <code dir="auto">input</code> element                                                                                                                                                                                                                                                          |
-| [ngClass]                   | <code dir="auto">string</code> | <code dir="auto">string[]</code> | <code dir="auto">Set&lt;string&gt;</code> | <code dir="auto">Record&lt;string, boolean&gt;</code> | <code dir="auto">-</code>                             | Classes bound with <code dir="auto">[ngClass]</code> are also mirrored onto the dropdown panel.                                                                                                                                                                                                                                     |
-| [panelClass]                | <code dir="auto">string</code> | <code dir="auto">string[]</code> | <code dir="auto">Set&lt;string&gt;</code> | <code dir="auto">Record&lt;string, boolean&gt;</code> | <code dir="auto">-</code>                             | Additional CSS classes applied to the dropdown panel. Merged with mirrored host <code dir="auto">class</code>, <code dir="auto">[class]</code>, and <code dir="auto">[ngClass]</code> values. Preferred for panel-only styling.                                                                                                                                                 |
-| [tabIndex]                  | <code dir="auto">number</code>                                                             | <code dir="auto">-</code>                             | Set tabindex on the inner search <code dir="auto">input</code>                                                                                                                                                                                                                                                                      |
-| [preventToggleOnRightClick] | <code dir="auto">boolean</code>                                                            | <code dir="auto">false</code>                         | Prevent opening of ng-select on right mouse click                                                                                                                                                                                                                                                             |
-| [keyDownFn]                 | <code dir="auto">($event: KeyboardEvent) =&gt; boolean</code>                                 | <code dir="auto">(_) =&gt; true</code>                   | Custom handler for control keys (Tab, Enter, Escape, Space, ArrowUp, ArrowDown, Backspace). Runs before the built-in handling; return <code dir="auto">false</code> to suppress it                                                                                                                                                  |</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[addTag]</td>
+<td><code dir="auto">boolean | ((term: string) =&gt; any | Promise&lt;any&gt;)</code></td>
+<td><code dir="auto">false</code></td>
+<td>Allows to create custom options.</td>
+</tr>
+<tr>
+<td>addTagText</td>
+<td><code dir="auto">string</code></td>
+<td><code dir="auto">Add item</code></td>
+<td>Set custom text when using tagging</td>
+</tr>
+<tr>
+<td>appearance</td>
+<td><code dir="auto">string</code></td>
+<td><code dir="auto">underline</code></td>
+<td>Allows to select dropdown appearance. Set to <code dir="auto">outline</code> or <code dir="auto">fill</code> for Material form-field styles (applies only to Material theme)</td>
+</tr>
+<tr>
+<td>appendTo</td>
+<td><code dir="auto">string</code></td>
+<td>null</td>
+<td>Append the dropdown overlay to any element using a css selector. Painting and positioning are unaffected; the target determines DOM containment (ancestor-scoped styles, focus enclosure).</td>
+</tr>
+<tr>
+<td>ariaLabel</td>
+<td><code dir="auto">string</code></td>
+<td><code dir="auto">-</code></td>
+<td>Sets <code dir="auto">aria-label</code> on the combobox input.</td>
+</tr>
+<tr>
+<td>ariaLabelDropdown</td>
+<td><code dir="auto">string</code></td>
+<td><code dir="auto">Options List</code></td>
+<td>Sets <code dir="auto">aria-label</code> on the dropdown listbox.</td>
+</tr>
+<tr>
+<td>bufferAmount</td>
+<td><code dir="auto">number</code></td>
+<td>4</td>
+<td>Used in virtual scrolling, the <code dir="auto">bufferAmount</code> property controls the number of items preloaded in the background to ensure smoother and more seamless scrolling.</td>
+</tr>
+<tr>
+<td>bindValue</td>
+<td><code dir="auto">string</code></td>
+<td><code dir="auto">-</code></td>
+<td>Object property to use for selected model. By default binds to whole object.</td>
+</tr>
+<tr>
+<td>bindLabel</td>
+<td><code dir="auto">string</code></td>
+<td><code dir="auto">label</code></td>
+<td>Object property to use for label. Default <code dir="auto">label</code></td>
+</tr>
+<tr>
+<td>[closeOnSelect]</td>
+<td><code dir="auto">boolean</code></td>
+<td>true</td>
+<td>Whether to close the menu when a value is selected</td>
+</tr>
+<tr>
+<td>[closeOnScroll]</td>
+<td><code dir="auto">boolean</code></td>
+<td>false</td>
+<td>Close the dropdown when the page or an ancestor container scrolls. Default <code dir="auto">false</code></td>
+</tr>
+<tr>
+<td>clearAllText</td>
+<td><code dir="auto">string</code></td>
+<td><code dir="auto">Clear all</code></td>
+<td>Set custom text for clear all icon title</td>
+</tr>
+<tr>
+<td>[clearable]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">true</code></td>
+<td>Allow to clear selected value. Default <code dir="auto">true</code></td>
+</tr>
+<tr>
+<td>[clearKeepsDisabledOptions]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">true</code></td>
+<td>Keep selected disabled options when the clear button is used. <code dir="auto">clearModel()</code> always clears them.</td>
+</tr>
+<tr>
+<td>[clearOnBackspace]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">true</code></td>
+<td>With an empty search term, Backspace removes the last selected item (clears the value in single mode). Requires <code dir="auto">[clearable]="true"</code></td>
+</tr>
+<tr>
+<td>[compareWith]</td>
+<td><code dir="auto">(a: any, b: any) =&gt; boolean</code></td>
+<td><code dir="auto">undefined</code></td>
+<td>A function to compare the option values with the selected values. The first argument is a value from an option. The second is a value from the selection(model). A boolean should be returned. When not set, options are matched by their <code dir="auto">bindValue</code> property if set, otherwise by identity or equal labels.</td>
+</tr>
+<tr>
+<td>dropdownPosition</td>
+<td><code dir="auto">bottom</code> | <code dir="auto">top</code> | <code dir="auto">left</code> | <code dir="auto">right</code> | <code dir="auto">auto</code></td>
+<td><code dir="auto">auto</code></td>
+<td>Set the dropdown position on open. <code dir="auto">auto</code> opens below and flips above when there is not enough room</td>
+</tr>
+<tr>
+<td>[fixedPlaceholder]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">true</code></td>
+<td>Keep the placeholder rendered when an item is selected. Visibility is theme-dependent: the default and Ant Design themes hide it once a value is set, the Material theme floats it as a label</td>
+</tr>
+<tr>
+<td>[groupBy]</td>
+<td><code dir="auto">string</code> | <code dir="auto">Function</code></td>
+<td>null</td>
+<td>Allow to group items by key or function expression</td>
+</tr>
+<tr>
+<td>[groupValue]</td>
+<td><code dir="auto">(groupKey: string | any, children: any[]) =&gt; string | any</code></td>
+<td><code dir="auto">-</code></td>
+<td>Function expression to provide group value</td>
+</tr>
+<tr>
+<td>[selectableGroup]</td>
+<td><code dir="auto">boolean</code></td>
+<td>false</td>
+<td>Allow to select group when groupBy is used</td>
+</tr>
+<tr>
+<td>[selectableGroupAsModel]</td>
+<td><code dir="auto">boolean</code></td>
+<td>true</td>
+<td>Indicates whether to select all children or group itself</td>
+</tr>
+<tr>
+<td>[items]</td>
+<td><code dir="auto">Array&lt;any&gt;</code></td>
+<td><code dir="auto">[]</code></td>
+<td>Items array</td>
+</tr>
+<tr>
+<td>[loading]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">false</code></td>
+<td>You can set the loading state from the outside (e.g. async items loading)</td>
+</tr>
+<tr>
+<td>loadingText</td>
+<td><code dir="auto">string</code></td>
+<td><code dir="auto">Loading...</code></td>
+<td>Set custom text when for loading items</td>
+</tr>
+<tr>
+<td>labelForId</td>
+<td><code dir="auto">string</code></td>
+<td><code dir="auto">-</code></td>
+<td>Id to associate control with label.</td>
+</tr>
+<tr>
+<td>[markFirst]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">true</code></td>
+<td>Marks first item as focused when opening/filtering.</td>
+</tr>
+<tr>
+<td>[isOpen]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">-</code></td>
+<td>Allows manual control of dropdown opening and closing. <code dir="auto">true</code> - won't close. <code dir="auto">false</code> - won't open. Binding a non-null value enables manual mode, where user interaction and <code dir="auto">open()</code>/<code dir="auto">close()</code> do nothing.</td>
+</tr>
+<tr>
+<td>maxSelectedItems</td>
+<td><code dir="auto">number</code></td>
+<td>none</td>
+<td>When multiple = true, allows to set a limit number of selection.</td>
+</tr>
+<tr>
+<td>[hideSelected]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">false</code></td>
+<td>Allows to hide selected items.</td>
+</tr>
+<tr>
+<td>[multiple]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">false</code></td>
+<td>Allows to select multiple items.</td>
+</tr>
+<tr>
+<td>notFoundText</td>
+<td><code dir="auto">string</code></td>
+<td><code dir="auto">No items found</code></td>
+<td>Set custom text when filter returns empty result</td>
+</tr>
+<tr>
+<td>placeholder</td>
+<td><code dir="auto">string</code></td>
+<td><code dir="auto">-</code></td>
+<td>Placeholder text.</td>
+</tr>
+<tr>
+<td>removeText</td>
+<td><code dir="auto">string</code></td>
+<td><code dir="auto">Remove</code></td>
+<td>Set custom text prefixed to the option label in the aria-label of the remove icon on selected values (multiple mode)</td>
+</tr>
+<tr>
+<td>[searchable]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">true</code></td>
+<td>Allow to search for value. Default <code dir="auto">true</code></td>
+</tr>
+<tr>
+<td>[readonly]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">false</code></td>
+<td>Prevent user changes while preserving the current selection.</td>
+</tr>
+<tr>
+<td>[searchFn]</td>
+<td><code dir="auto">(term: string, item: any) =&gt; boolean</code></td>
+<td><code dir="auto">null</code></td>
+<td>Allow to filter by custom search function</td>
+</tr>
+<tr>
+<td>[searchWhileComposing]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">true</code></td>
+<td>Whether items should be filtered while composition started</td>
+</tr>
+<tr>
+<td>[trackByFn]</td>
+<td><code dir="auto">(item: any) =&gt; any</code></td>
+<td><code dir="auto">null</code></td>
+<td>Provide custom trackBy function</td>
+</tr>
+<tr>
+<td>[clearSearchOnAdd]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">true</code></td>
+<td>Clears search input when item is selected. Default <code dir="auto">true</code>. Default <code dir="auto">false</code> when <strong>closeOnSelect</strong> is <code dir="auto">false</code></td>
+</tr>
+<tr>
+<td>[deselectOnClick]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">false</code></td>
+<td>Deselects a selected item when it is clicked in the dropdown. Default <code dir="auto">false</code>. Default <code dir="auto">true</code> when <strong>multiple</strong> is <code dir="auto">true</code></td>
+</tr>
+<tr>
+<td>[editableSearchTerm]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">false</code></td>
+<td>Allow to edit search query if option selected. Default <code dir="auto">false</code>. Works only if multiple is <code dir="auto">false</code>.</td>
+</tr>
+<tr>
+<td>[selectOnTab]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">false</code></td>
+<td>Select marked dropdown item using tab. Default <code dir="auto">false</code></td>
+</tr>
+<tr>
+<td>[tabFocusOnClearButton]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">true</code></td>
+<td>Control tab navigation behavior for the clear button. Default <code dir="auto">true</code></td>
+</tr>
+<tr>
+<td>[openOnEnter]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">true</code></td>
+<td>Open dropdown using enter. Default <code dir="auto">true</code></td>
+</tr>
+<tr>
+<td>outsideClickEvent</td>
+<td><code dir="auto">'click'</code> | <code dir="auto">'mousedown'</code></td>
+<td><code dir="auto">'click'</code></td>
+<td>Configure which DOM event type is used for outside click detection. Use <code dir="auto">'mousedown'</code> to fix issues with backdrop/loading overlays that appear on dropdown open</td>
+</tr>
+<tr>
+<td>[popover]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">false</code></td>
+<td><strong>Deprecated — has no effect.</strong> The CDK overlay renders in the native Popover API top layer automatically in supporting browsers.</td>
+</tr>
+<tr>
+<td>[typeahead]</td>
+<td><code dir="auto">Subject</code></td>
+<td><code dir="auto">-</code></td>
+<td>Custom autocomplete or advanced filter. Emits on typing only; select/close/clear reset the input without emitting (use <code dir="auto">(close)</code> / <code dir="auto">(clear)</code> to react to those).</td>
+</tr>
+<tr>
+<td>[minTermLength]</td>
+<td><code dir="auto">number</code></td>
+<td><code dir="auto">0</code></td>
+<td>Minimum term length to start a search. Should be used with <code dir="auto">typeahead</code></td>
+</tr>
+<tr>
+<td>typeToSearchText</td>
+<td><code dir="auto">string</code></td>
+<td><code dir="auto">Type to search</code></td>
+<td>Set custom text when using Typeahead</td>
+</tr>
+<tr>
+<td>[virtualScroll]</td>
+<td><code dir="auto">boolean</code></td>
+<td>false</td>
+<td>Enable virtual scroll for better performance when rendering a lot of data</td>
+</tr>
+<tr>
+<td>[inputAttrs]</td>
+<td><code dir="auto">{ [key: string]: string }</code></td>
+<td><code dir="auto">-</code></td>
+<td>Pass custom attributes to underlying <code dir="auto">input</code> element</td>
+</tr>
+<tr>
+<td>[ngClass]</td>
+<td><code dir="auto">string</code> | <code dir="auto">string[]</code> | <code dir="auto">Set&lt;string&gt;</code> | <code dir="auto">Record&lt;string, boolean&gt;</code></td>
+<td><code dir="auto">-</code></td>
+<td>Classes bound with <code dir="auto">[ngClass]</code> are also mirrored onto the dropdown panel.</td>
+</tr>
+<tr>
+<td>[panelClass]</td>
+<td><code dir="auto">string</code> | <code dir="auto">string[]</code> | <code dir="auto">Set&lt;string&gt;</code> | <code dir="auto">Record&lt;string, boolean&gt;</code></td>
+<td><code dir="auto">-</code></td>
+<td>Additional CSS classes applied to the dropdown panel. Merged with mirrored host <code dir="auto">class</code>, <code dir="auto">[class]</code>, and <code dir="auto">[ngClass]</code> values. Preferred for panel-only styling.</td>
+</tr>
+<tr>
+<td>[tabIndex]</td>
+<td><code dir="auto">number</code></td>
+<td><code dir="auto">-</code></td>
+<td>Set tabindex on the inner search <code dir="auto">input</code></td>
+</tr>
+<tr>
+<td>[preventToggleOnRightClick]</td>
+<td><code dir="auto">boolean</code></td>
+<td><code dir="auto">false</code></td>
+<td>Prevent opening of ng-select on right mouse click</td>
+</tr>
+<tr>
+<td>[keyDownFn]</td>
+<td><code dir="auto">($event: KeyboardEvent) =&gt; boolean</code></td>
+<td><code dir="auto">(_) =&gt; true</code></td>
+<td>Custom handler for control keys (Tab, Enter, Escape, Space, ArrowUp, ArrowDown, Backspace). Runs before the built-in handling; return <code dir="auto">false</code> to suppress it</td>
+</tr>
+</tbody>
+</table>
 <div class="sl-heading-wrapper level-h2"><h2 id="outputs">Outputs</h2><a class="sl-anchor-link" href="#outputs"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Outputs”</span></a></div>
 <table>
 <thead>
