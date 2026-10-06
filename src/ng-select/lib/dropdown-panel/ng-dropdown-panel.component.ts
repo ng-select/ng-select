@@ -14,6 +14,7 @@ import {
 	OnInit,
 	output,
 	Renderer2,
+	signal,
 	SimpleChanges,
 	TemplateRef,
 	viewChild,
@@ -50,7 +51,7 @@ const SCROLL_SCHEDULER = typeof requestAnimationFrame !== 'undefined' ? animatio
 		}
 		<div #scroll role="listbox" class="ng-dropdown-panel-items scroll-host" [attr.id]="listboxId()" [attr.aria-label]="ariaLabelDropdown()">
 			<div #padding [class.total-padding]="virtualScroll()"></div>
-			<div #content [class.scrollable-content]="virtualScroll() && items().length">
+			<div #content [class.scrollable-content]="virtualScroll() && items().length" [style.transform]="contentTransform()">
 				<ng-content />
 			</div>
 		</div>
@@ -107,6 +108,9 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 	private readonly _virtualPadding = computed(() => this.paddingElementRef()?.nativeElement);
 	private readonly _scrollablePanel = computed(() => this.scrollElementRef()?.nativeElement);
 	private readonly _contentPanel = computed(() => this.contentElementRef()?.nativeElement);
+
+	/** Offset of the rendered virtual-scroll range. Template-bound so it renders in the same pass as the range's rows (#2899). */
+	protected readonly contentTransform = signal<string | null>(null);
 
 	private _select: HTMLElement | undefined;
 	private _scrollToEndFired = false;
@@ -550,7 +554,7 @@ export class NgDropdownPanelComponent implements OnInit, OnChanges {
 		scrollTop = scrollTop || scrollablePanel.scrollTop;
 		const range = this._panelService.calculateItems(scrollTop, this.itemsLength, this.bufferAmount(), this.items());
 		this._updateVirtualHeight(range.scrollHeight);
-		contentPanel.style.transform = `translateY(${range.topPadding}px)`;
+		this.contentTransform.set(`translateY(${range.topPadding}px)`);
 
 		// Outputs must stay template-bound: the template listener schedules CD under zoneless
 		this._zone.run(() => {

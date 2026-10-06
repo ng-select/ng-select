@@ -198,6 +198,19 @@ describe('NgDropdownPanelComponent', () => {
 		await waitForFrames();
 	}
 
+	/** Ids of rendered rows that are not drawn at their own offset in the full list. */
+	function misalignedRows(): string[] {
+		const scrollHost = scrollHostElement();
+		const hostTop = scrollHost.getBoundingClientRect().top;
+		return Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('.test-option'))
+			.filter((row) => {
+				const index = Number(row.id.replace('test-option-', ''));
+				const offset = row.getBoundingClientRect().top - hostTop + scrollHost.scrollTop;
+				return Math.abs(offset - index * ITEM_HEIGHT) > 1;
+			})
+			.map((row) => row.id);
+	}
+
 	/** Collects `NG0953` warnings (emit on a destroyed `OutputRef`) logged after the spy is installed. */
 	function spyOnDestroyedOutputWarnings() {
 		const warn = vi.spyOn(console, 'warn');
@@ -670,6 +683,26 @@ describe('NgDropdownPanelComponent', () => {
 			scrollHost.dispatchEvent(new Event('scroll'));
 			await waitForFrames();
 			expect(host.scrollEvents.length).toBe(renderedRanges + 1);
+		});
+
+		// https://github.com/ng-select/ng-select/issues/2899
+		it('should move the rendered range in the same render as its rows (#2899)', async () => {
+			createFixture((host) => host.virtualScroll.set(true));
+			await flushAsync();
+			fixture.detectChanges();
+
+			// Rows still on screen when a new range is computed, before change detection renders it
+			const misalignedOnScroll: string[][] = [];
+			panel().scroll.subscribe(() => misalignedOnScroll.push(misalignedRows()));
+
+			const scrollHost = scrollHostElement();
+			for (const row of [2, 6, 10, 14]) {
+				await dispatchScroll(scrollHost, row * ITEM_HEIGHT);
+				fixture.detectChanges();
+				expect(misalignedRows()).toEqual([]);
+			}
+
+			expect(misalignedOnScroll).toEqual([[], [], [], []]);
 		});
 
 		it('should emit scrollToEnd once when the virtual panel is scrolled to the bottom', async () => {
