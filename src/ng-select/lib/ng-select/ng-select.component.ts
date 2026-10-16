@@ -490,6 +490,7 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	}
 
 	private _focused: boolean;
+	private _toggleOnValueClick = false;
 
 	/**
 	 * Gets whether the component currently owns focus.
@@ -780,11 +781,13 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		const target = $event.target as HTMLElement;
 
 		// Allow highlighting/copying the selected label when search is disabled.
-		// Skipping preventDefault + toggle lets the browser start a text selection.
-		// See https://github.com/ng-select/ng-select/issues/2669
+		// Skipping preventDefault lets the browser start a text selection; the toggle is
+		// deferred to the click so a plain click still opens the dropdown.
+		// See https://github.com/ng-select/ng-select/issues/2669 and #2865
 		const onSelectedValue = !!target.closest?.('.ng-value');
 		const onValueIcon = target.classList.contains('ng-value-icon') || !!target.closest?.('.ng-value-icon');
-		if (!this.searchable() && onSelectedValue && !onValueIcon) {
+		this._toggleOnValueClick = !this.searchable() && onSelectedValue && !onValueIcon;
+		if (this._toggleOnValueClick) {
 			if (!this._focused) {
 				this.focus();
 			}
@@ -820,6 +823,22 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 		} else {
 			this.toggle();
 		}
+	}
+
+	/**
+	 * Toggles the dropdown after a click on a selected value of a non-searchable select,
+	 * unless the pointer gesture selected label text.
+	 */
+	protected handleValueClick() {
+		if (!this._toggleOnValueClick) {
+			return;
+		}
+		this._toggleOnValueClick = false;
+		const selection = this._document.getSelection?.();
+		if (selection && !selection.isCollapsed && this.element.contains(selection.anchorNode)) {
+			return;
+		}
+		this.toggle();
 	}
 
 	/**
