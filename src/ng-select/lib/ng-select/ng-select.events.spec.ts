@@ -1,7 +1,8 @@
 import { EventPhase } from '@angular/core/primitives/event-dispatch';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { getNgSelectElement, tickAndDetectChanges, triggerKeyDownEvent } from '../../testing/helpers';
 import { MockConsole } from '../../testing/mocks';
 import { NgSelectConfig } from '../services/config.service';
@@ -299,10 +300,79 @@ describe('NgSelectComponent', () => {
 				expect(event.defaultPrevented).toBe(false);
 			});
 
-			it('should not toggle dropdown when mousedown is on selected value label', async () => {
+			it('should not toggle dropdown on mousedown alone on selected value label', async () => {
 				expect(select.isOpen()).toBe(false);
 				const label = fixture.debugElement.query(By.css('.ng-value-label')).nativeElement as HTMLElement;
 				label.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, button: 0 }));
+				await tickAndDetectChanges(fixture);
+				expect(select.isOpen()).toBe(false);
+			});
+
+			it('should toggle dropdown when selected value label is clicked (#2865)', async () => {
+				const label = fixture.debugElement.query(By.css('.ng-value-label')).nativeElement as HTMLElement;
+				const click = async () => {
+					label.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, button: 0 }));
+					label.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }));
+					await tickAndDetectChanges(fixture);
+				};
+
+				await click();
+				expect(select.isOpen()).toBe(true);
+
+				await click();
+				expect(select.isOpen()).toBe(false);
+			});
+
+			it('should not toggle dropdown when the click selected label text', async () => {
+				const label = fixture.debugElement.query(By.css('.ng-value-label')).nativeElement as HTMLElement;
+				label.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, button: 0 }));
+				document.getSelection().selectAllChildren(label);
+				label.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }));
+				await tickAndDetectChanges(fixture);
+				expect(select.isOpen()).toBe(false);
+				document.getSelection().removeAllRanges();
+			});
+
+			describe('with real pointer input (#2865)', () => {
+				const getLabel = () => fixture.debugElement.query(By.css('.ng-value-label')).nativeElement as HTMLElement;
+
+				afterEach(() => document.getSelection().removeAllRanges());
+
+				it('should toggle dropdown when the selected value text is clicked', async () => {
+					await userEvent.click(getLabel());
+					await tickAndDetectChanges(fixture);
+					expect(select.isOpen()).toBe(true);
+
+					await userEvent.click(getLabel());
+					await tickAndDetectChanges(fixture);
+					expect(select.isOpen()).toBe(false);
+				});
+
+				it('should select the value text without opening dropdown when dragging over it', async () => {
+					const label = getLabel();
+					const { width, height } = label.getBoundingClientRect();
+					await userEvent.dragAndDrop(label, label, {
+						sourcePosition: { x: 1, y: height / 2 },
+						targetPosition: { x: width - 1, y: height / 2 },
+					});
+					await tickAndDetectChanges(fixture);
+
+					expect(document.getSelection().toString().trim()).not.toBe('');
+					expect(select.isOpen()).toBe(false);
+				});
+
+				it('should open dropdown when clicking the value text after selecting it', async () => {
+					document.getSelection().selectAllChildren(getLabel());
+
+					await userEvent.click(getLabel());
+					await tickAndDetectChanges(fixture);
+					expect(select.isOpen()).toBe(true);
+				});
+			});
+
+			it('should not toggle dropdown on click without a preceding mousedown on the label', async () => {
+				const container = fixture.debugElement.query(By.css('.ng-select-container')).nativeElement as HTMLElement;
+				container.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }));
 				await tickAndDetectChanges(fixture);
 				expect(select.isOpen()).toBe(false);
 			});
