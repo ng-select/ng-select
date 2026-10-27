@@ -1,6 +1,8 @@
+<!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -->
 <div
 	#selectContainer
 	(mousedown)="handleMousedown($event)"
+	(click)="handleValueClick()"
 	[class.ng-appearance-outline]="appearance() === 'outline'"
 	[class.ng-appearance-fill]="appearance() === 'fill'"
 	[class.ng-has-value]="hasValue"
