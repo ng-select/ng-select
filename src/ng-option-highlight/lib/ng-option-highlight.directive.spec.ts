@@ -23,6 +23,25 @@ class TestComponent {
 	showNew = false;
 }
 
+@Component({
+	template: `
+		<span id="bound-label" [ngOptionHighlight]="term">{{ label }}</span>
+		<span id="nested-label" [ngOptionHighlight]="term"
+			><b>{{ label }}</b></span
+		>
+		@for (item of items; track $index) {
+			<span class="filtered-option" [ngOptionHighlight]="term">{{ item.name }}</span>
+		}
+	`,
+	changeDetection: ChangeDetectionStrategy.Eager,
+	imports: [NgOptionHighlightDirective],
+})
+class RecycledLabelTestComponent {
+	term: string;
+	label = 'Apple';
+	items = [{ name: 'Apple' }, { name: 'Banana' }, { name: 'Cherry' }];
+}
+
 /**
  * Zone/zoneless parity shim (same as ng-select's testing/helpers.ts): in a zoneless
  * TestBed, fixture.detectChanges() only renders views Angular knows are dirty, so plain
@@ -37,6 +56,11 @@ function applyZonelessFixtureCompat<T>(fixture: ComponentFixture<T>): ComponentF
 		originalDetectChanges(checkNoChanges);
 	};
 	return fixture;
+}
+
+async function flushAsync(): Promise<void> {
+	await new Promise<void>((resolve) => queueMicrotask(resolve));
+	await new Promise<void>((resolve) => setTimeout(resolve, 0));
 }
 
 describe('NgOptionHighlightDirective', () => {
@@ -129,5 +153,94 @@ describe('NgOptionHighlightDirective', () => {
 		fixture.detectChanges();
 		expect(span.nativeElement.querySelectorAll('.highlighted')[0].innerHTML).toBe('high\\l');
 		expect(span.nativeElement.textContent).toBe('+My text is) high\\lighted');
+	});
+});
+
+describe('NgOptionHighlightDirective with recycled content', () => {
+	let fixture: ComponentFixture<RecycledLabelTestComponent>;
+
+	beforeEach(() => {
+		fixture = applyZonelessFixtureCompat(
+			TestBed.configureTestingModule({
+				imports: [RecycledLabelTestComponent],
+			}).createComponent(RecycledLabelTestComponent),
+		);
+
+		fixture.detectChanges();
+	});
+
+	it('should highlight the current label when the label and term change together', async () => {
+		fixture.componentInstance.term = 'ch';
+		fixture.componentInstance.label = 'Cherry';
+		fixture.detectChanges();
+		await fixture.whenRenderingDone();
+
+		const span = fixture.debugElement.query(By.css('#bound-label'));
+		expect(span.nativeElement.textContent).toBe('Cherry');
+		expect(span.nativeElement.querySelectorAll('.highlighted')).toHaveLength(1);
+		expect(span.nativeElement.querySelector('.highlighted').innerHTML).toBe('Ch');
+	});
+
+	it('should update the highlighted label when only the label changes', async () => {
+		fixture.componentInstance.term = 'ch';
+		fixture.detectChanges();
+		await fixture.whenRenderingDone();
+
+		fixture.componentInstance.label = 'Cherry';
+		fixture.detectChanges();
+		await fixture.whenRenderingDone();
+		await flushAsync();
+
+		const span = fixture.debugElement.query(By.css('#bound-label'));
+		expect(span.nativeElement.textContent).toBe('Cherry');
+		expect(span.nativeElement.querySelectorAll('.highlighted')).toHaveLength(1);
+		expect(span.nativeElement.querySelector('.highlighted').innerHTML).toBe('Ch');
+	});
+
+	it('should restore the plain label when the term is cleared', async () => {
+		fixture.componentInstance.term = 'ch';
+		fixture.componentInstance.label = 'Cherry';
+		fixture.detectChanges();
+		await fixture.whenRenderingDone();
+
+		fixture.componentInstance.term = '';
+		fixture.detectChanges();
+		await fixture.whenRenderingDone();
+
+		const span = fixture.debugElement.query(By.css('#bound-label'));
+		expect(span.nativeElement.innerHTML).toBe('Cherry');
+		expect(span.nativeElement.querySelector('.highlighted')).toBeNull();
+	});
+
+	it('should render the current item label when index-tracked views are reused', async () => {
+		fixture.componentInstance.term = 'ch';
+		fixture.detectChanges();
+		await fixture.whenRenderingDone();
+
+		fixture.componentInstance.items = [{ name: 'Cherry' }];
+		fixture.detectChanges();
+		await fixture.whenRenderingDone();
+		await flushAsync();
+
+		const options = fixture.debugElement.queryAll(By.css('.filtered-option'));
+		expect(options.length).toBe(1);
+		expect(options[0].nativeElement.textContent).toBe('Cherry');
+		expect(options[0].nativeElement.querySelectorAll('.highlighted')).toHaveLength(1);
+		expect(options[0].nativeElement.querySelector('.highlighted').innerHTML).toBe('Ch');
+	});
+
+	it('should preserve nested markup and update it when the label changes', async () => {
+		fixture.componentInstance.term = 'ch';
+		fixture.detectChanges();
+		await fixture.whenRenderingDone();
+
+		fixture.componentInstance.label = 'Cherry';
+		fixture.detectChanges();
+		await fixture.whenRenderingDone();
+		await flushAsync();
+
+		const span = fixture.debugElement.query(By.css('#nested-label'));
+		expect(span.nativeElement.innerHTML).toBe('<b><span class="highlighted">Ch</span>erry</b>');
+		expect(span.nativeElement.textContent).toBe('Cherry');
 	});
 });
