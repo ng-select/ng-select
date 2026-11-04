@@ -5974,8 +5974,8 @@ packages:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
 
-  lodash-es@4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+  lodash-es@4.18.1:
+    resolution: {integrity: sha512-J8xewKD/Gk22OZbhpOVSwcs60zhd95ESDwezOFuA3/099925PdHJ7OFHNTGtajL3AlZkykD32HykiMo+BIBI8A==}
 
   lodash.capitalize@4.2.1:
     resolution: {integrity: sha512-kZzYOKspf8XVX5AvmQF94gQW0lejFVgb80G85bU4ZWzoJ6C03PQg3coYAUpSTpQWelrZELd3XWgHzw4Ck5kaIw==}
@@ -11631,7 +11631,7 @@ snapshots:
     dependencies:
       '@semantic-release/error': 4.0.0
       aggregate-error: 5.0.0
-      lodash-es: 4.17.21
+      lodash-es: 4.18.1
       semantic-release: 25.0.9(supports-color@8.1.1)(typescript@6.0.3)
 
   '@semantic-release/commit-analyzer@13.0.1(semantic-release@25.0.9(supports-color@8.1.1)(typescript@6.0.3))(supports-color@8.1.1)':
@@ -11642,7 +11642,7 @@ snapshots:
       conventional-commits-parser: 6.2.1
       debug: 4.4.3(supports-color@8.1.1)
       import-from-esm: 2.0.0(supports-color@8.1.1)
-      lodash-es: 4.17.21
+      lodash-es: 4.18.1
       micromatch: 4.0.8
       semantic-release: 25.0.9(supports-color@8.1.1)(typescript@6.0.3)
     transitivePeerDependencies:
@@ -11663,7 +11663,7 @@ snapshots:
       http-proxy-agent: 7.0.2(supports-color@8.1.1)
       https-proxy-agent: 7.0.6(supports-color@8.1.1)
       issue-parser: 7.0.1
-      lodash-es: 4.17.21
+      lodash-es: 4.18.1
       mime: 4.1.0
       p-filter: 4.1.0
       semantic-release: 25.0.9(supports-color@8.1.1)(typescript@6.0.3)
@@ -11680,7 +11680,7 @@ snapshots:
       env-ci: 11.2.0
       execa: 9.6.0
       fs-extra: 11.3.2
-      lodash-es: 4.17.21
+      lodash-es: 4.18.1
       nerf-dart: 1.0.0
       normalize-url: 8.1.0
       npm: 11.6.2
@@ -11701,7 +11701,7 @@ snapshots:
       get-stream: 7.0.1
       import-from-esm: 2.0.0(supports-color@8.1.1)
       into-stream: 7.0.0
-      lodash-es: 4.17.21
+      lodash-es: 4.18.1
       read-package-up: 11.0.0
       semantic-release: 25.0.9(supports-color@8.1.1)(typescript@6.0.3)
     transitivePeerDependencies:
@@ -14589,7 +14589,7 @@ snapshots:
     dependencies:
       p-locate: 5.0.0
 
-  lodash-es@4.17.21: {}
+  lodash-es@4.18.1: {}
 
   lodash.capitalize@4.2.1: {}
 
@@ -16208,7 +16208,7 @@ snapshots:
       hook-std: 4.0.0
       hosted-git-info: 9.0.2
       import-from-esm: 2.0.0(supports-color@8.1.1)
-      lodash-es: 4.17.21
+      lodash-es: 4.18.1
       marked: 15.0.12
       marked-terminal: 7.3.0(marked@15.0.12)
       micromatch: 4.0.8
