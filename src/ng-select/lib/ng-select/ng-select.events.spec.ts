@@ -653,11 +653,11 @@ describe('NgSelectComponent', () => {
 			expect(select.itemsList.items.length).toBe(10);
 		});
 
-		it('should clear items when items signal is set to null', async () => {
+		it('should clear items when items input is set to null', async () => {
 			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name"></ng-select>`);
 
 			const select = fixture.componentInstance.select();
-			select.items.set(null);
+			fixture.componentInstance.cities = null;
 			await tickAndDetectChanges(fixture);
 
 			expect(select.itemsList.items.length).toBe(0);
