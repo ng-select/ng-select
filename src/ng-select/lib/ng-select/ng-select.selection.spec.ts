@@ -516,6 +516,40 @@ describe('NgSelectComponent', () => {
 			expect(fixture.componentInstance.selectedCity).toBe(<any>'Copenhagen');
 		});
 
+		it('should ignore the add tag option after disabling the open select', async () => {
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="citiesNames" [addTag]="true"></ng-select>`);
+			const select = fixture.componentInstance.select();
+			const changed = vi.spyOn(select.changeEvent, 'emit');
+
+			select.filter('Copenhagen');
+			await tickAndDetectChanges(fixture);
+			const addTag = document.querySelector<HTMLElement>('.ng-option:has(.ng-tag-label)');
+			expect(addTag).not.toBeNull();
+
+			select.setDisabledState(true);
+			await tickAndDetectChanges(fixture);
+			addTag?.click();
+			await tickAndDetectChanges(fixture);
+
+			expect(select.selectedItems).toEqual([]);
+			expect(changed).not.toHaveBeenCalled();
+		});
+
+		it('should ignore a pending tag when the select becomes disabled', async () => {
+			const fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" bindLabel="name" [addTag]="tagFuncPromise"></ng-select>`);
+			const select = fixture.componentInstance.select();
+			const changed = vi.spyOn(select.changeEvent, 'emit');
+
+			select.filter('pending tag');
+			await tickAndDetectChanges(fixture);
+			select.selectTag();
+			select.setDisabledState(true);
+			await tickAndDetectChanges(fixture);
+
+			expect(select.selectedItems).toEqual([]);
+			expect(changed).not.toHaveBeenCalled();
+		});
+
 		it('should add tag as string when there are no items', async () => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,

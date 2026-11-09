@@ -1074,6 +1074,10 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 	 * @since 3.0.0
 	 */
 	selectTag() {
+		if (this.disabled()) {
+			return;
+		}
+
 		let tag;
 		if (isFunction(this.addTag())) {
 			tag = (<AddTagFn>this.addTag())(this.searchTerm);
@@ -1081,11 +1085,19 @@ export class NgSelectComponent implements OnChanges, OnInit, AfterViewInit, Cont
 			tag = this._primitive ? this.searchTerm : { [this.bindLabel()]: this.searchTerm };
 		}
 
-		const handleTag = (item) => (this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item));
+		const handleTag = (item) => {
+			if (this.disabled()) {
+				return;
+			}
+
+			const option = this.typeahead()?.observed || !this.isOpen() ? this.itemsList.mapItem(item, null) : this.itemsList.addItem(item);
+			this.select(option);
+		};
+
 		if (isPromise(tag)) {
-			tag.then((item) => this.select(handleTag(item))).catch(() => {});
+			tag.then(handleTag).catch(() => {});
 		} else if (tag) {
-			this.select(handleTag(tag));
+			handleTag(tag);
 		}
 	}
 
