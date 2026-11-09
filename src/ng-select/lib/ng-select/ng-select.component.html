@@ -163,6 +163,7 @@
 					(mouseover)="itemsList.unmarkItem()"
 					role="option"
 					[attr.aria-selected]="false"
+					[attr.aria-disabled]="disabled()"
 					(click)="selectTag()">
 					<ng-template #defaultTagTemplate>
 						<span
