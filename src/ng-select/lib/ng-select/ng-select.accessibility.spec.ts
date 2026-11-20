@@ -205,6 +205,27 @@ describe('NgSelectComponent', () => {
 		});
 	});
 
+	describe('Accessibility with isOpen bound to undefined', () => {
+		let fixture: ComponentFixture<NgSelectTestComponent>;
+		let input: HTMLInputElement;
+
+		beforeEach(async () => {
+			fixture = createTestingModule(NgSelectTestComponent, `<ng-select [items]="cities" [isOpen]="undefined" bindLabel="name"></ng-select>`);
+			input = fixture.debugElement.query(By.css('input')).nativeElement;
+		});
+
+		it('should set aria-expanded to false at start', async () => {
+			expect(input.getAttribute('aria-expanded')).toBe('false');
+		});
+
+		it('should set aria-expanded to true on open', async () => {
+			triggerKeyDownEvent(getNgSelectElement(fixture), KeyCode.Space);
+			await tickAndDetectChanges(fixture);
+
+			expect(input.getAttribute('aria-expanded')).toBe('true');
+		});
+	});
+
 	describe('Accessibility enhancements', () => {
 		function liveRegionText(fixture: ComponentFixture<NgSelectTestComponent>): string {
 			return fixture.debugElement.query(By.css('.ng-visually-hidden')).nativeElement.textContent.trim();
