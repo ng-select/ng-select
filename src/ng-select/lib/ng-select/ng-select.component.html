@@ -10,7 +10,9 @@
 			<ng-template #defaultPlaceholderTemplate>
 				<div class="ng-placeholder">{{ placeholder() ?? config.placeholder }}</div>
 			</ng-template>
-			<ng-template [ngTemplateOutlet]="placeholderTemplate() || defaultPlaceholderTemplate"> </ng-template>
+			@if (!filtered || !placeholderTemplate()) {
+				<ng-template [ngTemplateOutlet]="placeholderTemplate() || defaultPlaceholderTemplate"> </ng-template>
+			}
 		}
 
 		@if ((!multiLabelTemplate() || !multiple()) && selectedItems.length > 0) {

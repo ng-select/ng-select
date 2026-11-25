@@ -406,6 +406,28 @@ describe('NgSelectComponent', () => {
 			expect(fixture.debugElement.query(By.css('.ng-placeholder'))).toBeFalsy();
 		});
 
+		it('should hide ng-placeholder template while typing', async () => {
+			const fixture = createTestingModule(
+				NgSelectTestComponent,
+				`<ng-select [items]="cities" bindLabel="name" [(ngModel)]="selectedCity">
+					<ng-template ng-placeholder-tmp>
+						<div class="placeholder-template">Select your city</div>
+					</ng-template>
+                </ng-select>`,
+			);
+
+			await tickAndDetectChanges(fixture);
+			expect(fixture.debugElement.query(By.css('.placeholder-template'))).toBeTruthy();
+
+			fixture.componentInstance.select().filter('vil');
+			await tickAndDetectChanges(fixture);
+			expect(fixture.debugElement.query(By.css('.placeholder-template'))).toBeFalsy();
+
+			fixture.componentInstance.select().filter('');
+			await tickAndDetectChanges(fixture);
+			expect(fixture.debugElement.query(By.css('.placeholder-template'))).toBeTruthy();
+		});
+
 		it('should display ng-placeholder if an item is selected', async () => {
 			const fixture = createTestingModule(
 				NgSelectTestComponent,
